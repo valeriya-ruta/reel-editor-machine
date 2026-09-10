@@ -1,0 +1,524 @@
+<title>Never Say, Always Show</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+  :root {
+    --bg:        #faf7f7;
+    --surface:   #ffffff;
+    --wash:      #f3ebed;
+    --text:      #171219;
+    --text-dim:  #6f646c;
+    --accent:    #b4122f;
+    --accent-soft: #ff6e9c;
+    --rule:      #e7dee1;
+    --rule-firm: #d3c5ca;
+    --shadow:    0 1px 2px rgba(23,18,25,.05), 0 8px 24px -12px rgba(23,18,25,.18);
+
+    --display: "Familjen Grotesk", "Segoe UI", system-ui, sans-serif;
+    --body:    "Public Sans", "Segoe UI", system-ui, sans-serif;
+    --mono:    "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:        #141016;
+      --surface:   #1d171f;
+      --wash:      #251d27;
+      --text:      #f2ecee;
+      --text-dim:  #a2949c;
+      --accent:    #ff4d6d;
+      --accent-soft: #ff9cbb;
+      --rule:      #302832;
+      --rule-firm: #453947;
+      --shadow:    0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:        #141016;
+    --surface:   #1d171f;
+    --wash:      #251d27;
+    --text:      #f2ecee;
+    --text-dim:  #a2949c;
+    --accent:    #ff4d6d;
+    --accent-soft: #ff9cbb;
+    --rule:      #302832;
+    --rule-firm: #453947;
+    --shadow:    0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 28px 120px; }
+
+  header.top { padding: 72px 0 40px; border-bottom: 2px solid var(--text); }
+  .eyebrow {
+    font-family: var(--mono); font-size: 11.5px; font-weight: 500;
+    letter-spacing: .16em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 18px;
+  }
+  h1 {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(40px, 7vw, 66px); line-height: 1.0;
+    letter-spacing: -0.03em; margin: 0 0 20px; text-wrap: balance;
+  }
+  .standfirst {
+    font-size: 18.5px; line-height: 1.55; color: var(--text-dim);
+    max-width: 60ch; margin: 0;
+  }
+  .standfirst strong { color: var(--text); font-weight: 600; }
+  .sourced {
+    margin-top: 26px; font-family: var(--mono); font-size: 12px;
+    color: var(--text-dim); display: flex; flex-wrap: wrap; gap: 6px 20px;
+  }
+
+  section { padding-top: 66px; }
+
+  h2 {
+    font-family: var(--display); font-weight: 600; font-size: 15px;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 8px;
+  }
+  h3 {
+    font-family: var(--display); font-weight: 600;
+    font-size: clamp(25px, 3.4vw, 34px); line-height: 1.12;
+    letter-spacing: -0.02em; margin: 0 0 18px; text-wrap: balance;
+  }
+  h4 { font-family: var(--display); font-weight: 600; font-size: 19px; line-height: 1.25; margin: 0 0 8px; }
+  p { max-width: 66ch; margin: 0 0 16px; }
+  p:last-child { margin-bottom: 0; }
+  strong { font-weight: 600; }
+  em { font-style: italic; color: var(--text-dim); }
+
+  .t { font-family: var(--mono); font-size: .89em; font-weight: 500; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .uk { font-family: var(--display); font-weight: 600; }
+
+  /* ---------- the rule ---------- */
+
+  .rule-card {
+    margin: 34px 0 10px;
+    border: 2px solid var(--text);
+    padding: 34px 34px 30px;
+    background: var(--surface);
+  }
+  .rule-uk {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(30px, 5vw, 46px); line-height: 1.04;
+    letter-spacing: -0.025em; margin: 0 0 6px; color: var(--accent);
+  }
+  .rule-en {
+    font-family: var(--mono); font-size: 12.5px; letter-spacing: .13em;
+    text-transform: uppercase; color: var(--text-dim); margin: 0 0 20px;
+  }
+  .rule-card p { font-size: 17px; max-width: 62ch; }
+
+  /* ---------- worked examples ---------- */
+
+  .beat {
+    border-top: 1px solid var(--rule);
+    padding: 30px 0 34px;
+  }
+  .beat-top {
+    display: flex; flex-wrap: wrap; align-items: baseline;
+    gap: 8px 16px; margin-bottom: 6px;
+  }
+  .tc {
+    font-family: var(--mono); font-size: 13px; font-weight: 700;
+    color: var(--accent); font-variant-numeric: tabular-nums;
+  }
+  .comp {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--text-dim);
+    border: 1px solid var(--rule-firm); padding: 3px 9px;
+  }
+  .comp.full { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .line {
+    font-family: var(--display); font-weight: 600; font-size: 21px;
+    line-height: 1.3; margin: 0 0 3px; max-width: 40ch;
+  }
+  .gloss { font-size: 13.5px; color: var(--text-dim); margin: 0 0 20px; font-style: italic; }
+
+  .versions { display: grid; grid-template-columns: repeat(auto-fit, minmax(272px, 1fr)); gap: 16px; }
+  .v { padding: 16px 18px 17px; font-size: 14.5px; line-height: 1.55; }
+  .v b {
+    display: block; font-family: var(--mono); font-size: 10px;
+    letter-spacing: .13em; text-transform: uppercase; margin-bottom: 7px;
+  }
+  .v.weak { background: var(--wash); color: var(--text-dim); }
+  .v.weak b { color: var(--text-dim); }
+  .v.strong { background: var(--surface); border: 1px solid var(--rule-firm); box-shadow: var(--shadow); }
+  .v.strong b { color: var(--accent); }
+  .v.strong { max-width: none; }
+  .spec {
+    margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--rule);
+    font-family: var(--mono); font-size: 11.5px; line-height: 1.6;
+    color: var(--text-dim); font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- composition table ---------- */
+
+  .tablewrap { overflow-x: auto; margin: 26px 0 10px; }
+  table { border-collapse: collapse; width: 100%; min-width: 580px; font-size: 14.5px; }
+  caption {
+    text-align: left; font-family: var(--mono); font-size: 11px;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--text-dim); padding-bottom: 10px;
+  }
+  th, td { text-align: left; padding: 11px 16px 11px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  thead th {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--text-dim); font-weight: 500;
+    border-bottom: 1px solid var(--rule-firm);
+  }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 13.5px; white-space: nowrap; }
+  td strong { font-family: var(--display); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* ---------- steps ---------- */
+
+  ol.steps { list-style: none; margin: 26px 0 0; padding: 0; counter-reset: s; }
+  ol.steps > li {
+    counter-increment: s; display: grid; grid-template-columns: 52px 1fr;
+    gap: 22px; padding: 22px 0; border-top: 1px solid var(--rule);
+  }
+  ol.steps > li::before {
+    content: counter(s, decimal-leading-zero);
+    font-family: var(--mono); font-size: 13px; font-weight: 700;
+    color: var(--accent); padding-top: 5px; font-variant-numeric: tabular-nums;
+  }
+  .step-body > p { font-size: 15.5px; }
+  .step-body > p:first-of-type { margin-top: 2px; }
+
+  /* ---------- callout ---------- */
+
+  .finding { border-left: 3px solid var(--accent); padding: 4px 0 4px 22px; margin: 30px 0; }
+  .finding p { font-size: 18px; line-height: 1.5; max-width: 58ch; }
+
+  .budget {
+    background: var(--surface); border: 1px solid var(--rule);
+    box-shadow: var(--shadow); padding: 30px 32px; margin: 30px 0 0;
+  }
+  .budget h4 { margin-bottom: 14px; }
+  .budget ul { margin: 0; padding-left: 20px; }
+  .budget li { margin-bottom: 11px; max-width: 62ch; font-size: 15.5px; }
+  .budget li:last-child { margin-bottom: 0; }
+
+  .ask {
+    border: 2px solid var(--accent); padding: 30px 32px; margin: 30px 0 0;
+    background: var(--surface);
+  }
+  .ask h4 { color: var(--accent); }
+  .ask ul { margin: 14px 0 0; padding-left: 20px; }
+  .ask li { margin-bottom: 9px; max-width: 62ch; font-size: 15.5px; }
+  .badtext {
+    font-family: var(--mono); font-size: 13px; margin: 16px 0;
+    display: grid; grid-template-columns: auto auto 1fr; gap: 5px 12px;
+    align-items: baseline;
+  }
+  .badtext s { color: var(--text-dim); }
+  .badtext i { color: var(--accent); font-style: normal; font-weight: 700; }
+
+  footer {
+    margin-top: 74px; padding-top: 22px; border-top: 2px solid var(--text);
+    font-family: var(--mono); font-size: 12px; color: var(--text-dim);
+    display: flex; flex-wrap: wrap; gap: 6px 24px;
+  }
+
+  @media (max-width: 620px) {
+    .wrap { padding: 0 20px 80px; }
+    ol.steps > li { grid-template-columns: 1fr; gap: 10px; }
+    ol.steps > li::before { padding-top: 0; }
+    .rule-card, .budget, .ask { padding: 24px 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="top">
+    <p class="eyebrow">Reel 2 · Fathom · worked in full</p>
+    <h1>Never say,<br>always show</h1>
+    <p class="standfirst">The subtitles already carry every word. So the graphics carry <strong>none</strong> — they carry mechanism, quantity and change instead. Eleven beats from your actual reel 2 script, each specified as something that <em>happens</em> rather than something that appears.</p>
+    <div class="sourced">
+      <span>51.5s runtime</span>
+      <span>11 beats · one every 4.7s</span>
+      <span>Timecodes from your locked cut</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>The rule</h2>
+
+    <div class="rule-card">
+      <p class="rule-uk">Не кажи — покажи</p>
+      <p class="rule-en">No word appears in a graphic that the subtitle is already saying</p>
+      <p>Stronger than avoiding duplicates: <strong>the graphic contains no language at all.</strong> Language is the subtitle's job and it is already doing it. What the graphic owes the viewer is the thing the words can't deliver — a mechanism running, a quantity moving, a connection being made.</p>
+      <p style="margin-top:14px">The test: <strong>mute the video and hide the subtitles. Can you still tell what this beat is about?</strong> If the answer needs the words, the graphic isn't finished.</p>
+    </div>
+
+    <div class="finding">
+      <p>Two exceptions, both narrow. Words <em>inside a depicted interface</em> are fine — a comment box with text being typed is showing an action, not captioning one. And a number is not a word: <span class="t">1200 ₴</span> is a quantity, and quantities are exactly what type is for.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Pacing</h2>
+    <h3>A visual event every 3–5 seconds</h3>
+    <p>Your delivery is slow and expert, not a barrage, and the cuts already give the eye somewhere to go. What they don't give is <em>new information</em> — a cut re-frames the same person saying the next sentence. So the beat rate sits on top of the cut rate, not instead of it.</p>
+    <p>For 51.5 seconds that's <strong>11 to 17 events</strong>. Your reel 2 script produces eleven naturally, listed below — which means the structure is already there in the writing. Nothing has to be invented to hit the rate.</p>
+  </section>
+
+  <section>
+    <h2>The eleven beats</h2>
+    <h3>Reel 2, specified</h3>
+    <p>Timecodes are from your locked cut. Each beat gives the lazy version first so the difference is legible, then the mechanism to actually build.</p>
+
+    <div class="beat">
+      <div class="beat-top"><span class="tc">0.0 – 6.5s</span><span class="comp">Overlay</span></div>
+      <p class="line">«…постійно проводить дзвінки, консультації, планування»</p>
+      <p class="gloss">constantly runs calls, consultations, planning</p>
+      <div class="versions">
+        <div class="v weak"><b>Weak</b>Three labelled chips appear: calls / consultations / planning.</div>
+        <div class="v strong"><b>Mechanism</b>A calendar week grid fills in, slot by slot, faster and faster — three blocks, then five, then eleven — until the week is solid and there is no white space left. She is talking over a schedule visibly running out of room.
+        <div class="spec">grid 5×6 · blocks land 0.10s apart, accelerating · no labels, no times · ends full and holds</div></div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-top"><span class="tc">8.06s</span><span class="comp">Overlay</span></div>
+      <p class="line">«…записати всі ідеї, оновити CRM, надіслати офер»</p>
+      <p class="gloss">write up all the ideas, update the CRM, send the offer</p>
+      <div class="versions">
+        <div class="v weak"><b>Weak</b>A panel with three text rows, one per task.</div>
+        <div class="v strong"><b>Mechanism</b>Three task cards drop onto a stack, each landing heavier than the last and knocking the pile further off-square. Glyphs only — a notepad, a database, an envelope. By the third card the stack is visibly leaning and unstable.
+        <div class="spec">card in 0.22s, drop from y −60 · stack tilt 0° → 4° → 9° · lands on each named task</div></div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-top"><span class="tc">15.30s</span><span class="comp">Overlay</span></div>
+      <p class="line">«…відкладаєш на потім і воно там просто зависає»</p>
+      <p class="gloss">you put it off and it just hangs there</p>
+      <div class="versions">
+        <div class="v weak"><b>Weak</b>The word <span class="uk">ЗАВИСАЄ</span>, glowing.</div>
+        <div class="v strong"><b>Mechanism</b>The leaning stack from the previous beat desaturates to grey, and a loading ring starts turning on top of it — and never completes. It slows, stutters, and is still going when we cut away. <strong>The one legal loop in the reel:</strong> here the loop <em>is</em> the meaning.
+        <div class="spec">same position as 8.06s — it must be the same object · ring 1.4s/rev, easing to 2.6s/rev · never closes</div></div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-top"><span class="tc">18.5s</span><span class="comp">Overlay</span></div>
+      <p class="line">«…автоматично, швидко, надійно, українською мовою»</p>
+      <p class="gloss">automatically, fast, reliably, in Ukrainian</p>
+      <div class="versions">
+        <div class="v weak"><b>Weak</b>Four ticks with four labels.</div>
+        <div class="v strong"><b>Mechanism</b>The grey stuck ring snaps to red and completes in one fast sweep, then four check marks stamp in around it, one per quality. Same object again — the problem resolving in place is more persuasive than a new graphic arriving.
+        <div class="spec">ring completes 0.30s · checks stamp 0.18s apart · scale 1.3 → 1 overshoot</div></div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-top"><span class="tc">22.16s</span><span class="comp full">Fullscreen</span></div>
+      <p class="line">«…і головне безкоштовно»</p>
+      <p class="gloss">and most importantly, free</p>
+      <div class="versions">
+        <div class="v weak"><b>Weak</b><span class="uk">БЕЗКОШТОВНО</span> in glowing type — which is also the word the subtitle is showing at that exact frame.</div>
+        <div class="v strong"><b>Mechanism</b><span class="t">1200 ₴</span> in heavy glowing type. The digits roll down odometer-style, accelerating as they fall, and the type physically loses weight and glow as the number drops. It hits <span class="t">0 ₴</span> and the zero lands hard with one pink pulse. The relief is in the motion, not the value.
+        <div class="spec">count 0.85s, ease-in then hard stop · weight 700 → 400 across the fall · pulse on 0 only, 0.20s</div></div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-top"><span class="tc">26.84s</span><span class="comp">Split screen</span></div>
+      <p class="line">«…нереальні відгуки від великих команд»</p>
+      <p class="gloss">unreal feedback from big teams</p>
+      <div class="versions">
+        <div class="v weak"><b>Weak</b>The Telegram screenshot, centred, with a glow around it.</div>
+        <div class="v strong"><b>Mechanism</b>She slides to the left 55% of the frame; the right side becomes a message column. The real testimonial rises from the bottom edge at a slight angle, then two more partial bubbles stack in behind it — only the first is readable. The implication of more is the point, not the content of any one.
+        <div class="spec">her slide 0.35s power3.out · bubbles 0.20s apart, +2° / −3° rotation · rear bubbles 55% and 30% opacity</div></div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-top"><span class="tc">33.14s</span><span class="comp">Overlay</span></div>
+      <p class="line">«…платформа під назвою Fathom»</p>
+      <p class="gloss">a platform called Fathom</p>
+      <div class="versions">
+        <div class="v weak"><b>Weak</b>The name in big type.</div>
+        <div class="v strong"><b>Mechanism</b>The single moment a mark is allowed to just arrive. The Fathom logo tile drops in with one hard overshoot and sits still. This beat is deliberately the simplest in the reel — it is a name being introduced, and the next beat is the biggest thing in the video, so this one gets out of its way.
+        <div class="spec">0.16s, back.out(2.6) · holds 1.4s · no glow, no build</div></div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-top"><span class="tc">34.10 – 39.5s</span><span class="comp full">Fullscreen</span></div>
+      <p class="line">«…реєструєшся, підключаєш її до свого Клода чи чат GPT, підключаєш свої таск-менеджери, CRM-системи»</p>
+      <p class="gloss">you sign up, connect it to your Claude or ChatGPT, connect your task managers, CRM systems</p>
+      <div class="versions">
+        <div class="v weak"><b>Weak</b>Four rows of text, one per thing you connect.</div>
+        <div class="v strong"><b>Mechanism</b><strong>The flowchart, and the centrepiece of the reel.</strong> A call node sits top. A glowing line draws downward into a Fathom node at centre. Then three lines branch out, each drawing on the word that names it, each terminating in a node that ignites <em>as the line reaches it</em> — not before. Five seconds, the longest hold in the video, because this is the actual explanation.
+        <div class="spec">each line 0.35s via stroke-dashoffset · node ignites +0.05s after arrival · branches fire on «клода» 35.84 / «таск» ~37.2 / «CRM» ~38.4</div></div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-top"><span class="tc">41.64s</span><span class="comp">Behind her</span></div>
+      <p class="line">«…яка одразу після дзвінка сама все це робить»</p>
+      <p class="gloss">which does all of it by itself, right after the call</p>
+      <div class="versions">
+        <div class="v weak"><b>Weak</b>The word <span class="uk">АВТОМАТИЗАЦІЯ</span> glowing behind her.</div>
+        <div class="v strong"><b>Mechanism</b>The same flowchart returns at 40% scale in the upper third, behind her. One bright pulse travels the entire chain in a single unbroken sweep — call → Fathom → all three outputs — and each output ticks as it is reached. It runs exactly twice, then stops. She does nothing while it happens, which is the whole argument.
+        <div class="spec">reuses the 34.10s asset — the viewer already knows it, so it reads with no labels at 40% · sweep 0.80s · exactly 2 cycles · 0.5s gap between</div></div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-top"><span class="tc">46.02s</span><span class="comp">Overlay</span></div>
+      <p class="line">«…буквально за годину»</p>
+      <p class="gloss">in literally an hour</p>
+      <div class="versions">
+        <div class="v weak"><b>Weak</b>A clock appears and sits there.</div>
+        <div class="v strong"><b>Mechanism</b>A bare dial, no numerals. The hand sweeps one full revolution while the dial fills with red behind it, clockwise from twelve. On completion the whole thing compresses to a single dot and vanishes. One hour, shown as one rotation, gone.
+        <div class="spec">sweep 0.90s linear · fill tracks the hand exactly · collapse 0.18s power2.in</div></div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-top"><span class="tc">48.94s</span><span class="comp">Overlay</span></div>
+      <p class="line">«…напиши слово «дзвінок» в коментарі»</p>
+      <p class="gloss">write the word "дзвінок" in the comments — but see the discrepancy below</p>
+      <div class="versions">
+        <div class="v weak"><b>Weak</b>Glowing <span class="uk">ДЗВІНОК</span> — duplicating both the subtitle and the word she is speaking.</div>
+        <div class="v strong"><b>Mechanism</b>A comment field slides up. The cursor blinks. The word types itself in, character by character. The send arrow fills and pulses once. The word is on screen — but as content inside a depicted interface, which is showing the action rather than captioning it.
+        <div class="spec">field in 0.25s · typing 22ms/char · cursor 530ms blink · arrow fills 0.20s, single pulse · sits above the caption band</div></div>
+      </div>
+      <p style="margin-top:16px; font-size:14.5px; max-width:62ch;"><strong>Needs a decision.</strong> The written script says <span class="uk">«система»</span>. The recorded take says <span class="uk">«дзвінок»</span> — the ending was improvised. The typed word has to match what's spoken, so tell me which one is the real CTA and whether the caption should follow the take or the script.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Composition</h2>
+    <h3>Where she goes, and why</h3>
+    <p>Moving her is allowed and it should be used — but each of the four options means something different, and picking the wrong one is what makes an edit feel like flashing for its own sake.</p>
+
+    <div class="tablewrap">
+      <table>
+        <caption>Four positions · reel 2 usage</caption>
+        <thead><tr><th>Position</th><th>Use when</th><th>Budget</th><th>Cost</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Overlay</strong></td>
+            <td>The graphic is an aside — it supports the sentence but isn't the sentence.</td>
+            <td class="num">6 of 11</td>
+            <td>None. Default.</td>
+          </tr>
+          <tr>
+            <td><strong>Behind her</strong></td>
+            <td>The graphic is context or environment — something happening around her, not to her.</td>
+            <td class="num">1 of 11</td>
+            <td>No matting available, so it must live in frame margins she doesn't occupy — upper third only.</td>
+          </tr>
+          <tr>
+            <td><strong>Split screen</strong></td>
+            <td>Two things must be seen at once, or she is reacting to the thing.</td>
+            <td class="num">1 of 11</td>
+            <td>Strong move. Once per reel or it stops reading as special.</td>
+          </tr>
+          <tr>
+            <td><strong>Fullscreen</strong></td>
+            <td>The graphic <em>is</em> the explanation for three seconds or more.</td>
+            <td class="num">2 of 11</td>
+            <td>Removes her presence. Two per reel is the ceiling.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="margin-top:20px">The constraint worth knowing: <strong>"behind her" cannot mean matting.</strong> Background removal runs at 3.2 seconds per frame on your machine — three hours for one reel. So anything behind her has to be composed into the space she isn't standing in, which for your framing means the upper third. That's a real limit on the idea, not a preference.</p>
+  </section>
+
+  <section>
+    <h2>Process</h2>
+    <h3>The order to work in</h3>
+
+    <ol class="steps">
+      <li><div class="step-body">
+        <h4>Read the script and mark every claim that has a shape</h4>
+        <p>Not every sentence — every claim with a quantity, a sequence, a connection, or a change of state. Those are the only things that can be shown. Aim for one every 3–5 seconds; if the script gives you fewer, the script is the problem, not the animation.</p>
+      </div></li>
+      <li><div class="step-body">
+        <h4>For each one, write the verb before the noun</h4>
+        <p>Not "a chart of the cost" — "the cost falls to zero". Not "a diagram of the setup" — "a line connects the call to the tool". If you can't write a verb, you have a label, and labels are the subtitle's job.</p>
+      </div></li>
+      <li><div class="step-body">
+        <h4>Delete every word from the graphic</h4>
+        <p>Then check what's left still reads. Numbers stay. Interface text stays. Everything else has to become a glyph, a shape, or a motion — or the beat gets cut.</p>
+      </div></li>
+      <li><div class="step-body">
+        <h4>Choose the position, and justify it in one sentence</h4>
+        <p>Overlay, behind, split, or fullscreen — using the budget above. If the justification is "it looks better big", it's an overlay.</p>
+      </div></li>
+      <li><div class="step-body">
+        <h4>Reuse an object rather than introducing a new one</h4>
+        <p>Three of reel 2's eleven beats are the same stack, and two are the same flowchart. A returning object carries everything it meant last time, so the second appearance costs nothing to read and lands harder.</p>
+      </div></li>
+      <li><div class="step-body">
+        <h4>Put every element on its word</h4>
+        <p>Each branch of the flowchart fires on the word that names it. Uneven spacing is correct — evenly spaced elements look automated.</p>
+      </div></li>
+      <li><div class="step-body">
+        <h4>Land it and leave it alone</h4>
+        <p>Once something has arrived it does not drift, pulse or breathe. The only exception in the whole reel is the loading ring at 15.30s, where the loop is the meaning.</p>
+      </div></li>
+      <li><div class="step-body">
+        <h4>Watch it once at full speed, sound off, subtitles covered</h4>
+        <p>If you can follow the argument, it works. If you need the words back, go to step 2.</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Inputs</h2>
+    <h3>Answering the subtitle question</h3>
+
+    <div class="ask">
+      <h4>Nothing — you already sent the scripts</h4>
+      <p>All six are now saved in the project as <span class="t">SCRIPTS.md</span>, which is where every spelling should come from. I had been reading text out of the speech-recognition JSON, which is why an earlier version of this page quoted <span class="uk">FATAM</span> and <span class="uk">надіслати ОВ</span> back at you. Corrected throughout.</p>
+      <p style="margin-top:14px">What the recognition actually got wrong on reel 2:</p>
+      <div class="badtext">
+        <s>FATAM</s><i>→</i><span>Fathom</span>
+        <s>надіслати ОВ</s><i>→</i><span>надіслати офер</span>
+        <s>сірем систему</s><i>→</i><span>CRM-системи</span>
+        <s>тест-менеджер</s><i>→</i><span>таск-менеджери</span>
+        <s>експерка</s><i>→</i><span>експертка</span>
+      </div>
+      <p><strong>So the division is:</strong> the script is truth for <em>spelling</em>, the recorded audio is truth for <em>what was said and when</em>. They diverge — you improvised the ending, and the line «Тепер у них немає більше цих проблем» isn't in the cut at all. Alignment has to reconcile the two rather than trust either alone, and anywhere they disagree is a question for you, not a guess for me.</p>
+      <p style="margin-top:14px"><strong>On taking over the subtitles</strong> — the accuracy argument for it is gone, since I already have your text either way. What's left is control, and it's a smaller case than I made it sound: a takeover could hide the subtitle instead of fighting it, split screen could reposition it, and a word could lift out of it into the design. Worth it if you want those three things; not worth a re-export if you don't. Your call, and staying as you are is a perfectly good answer.</p>
+    </div>
+
+    <div class="budget">
+      <h4>And the logos for the flowchart</h4>
+      <p style="margin-bottom:14px">The chain at <span class="t">34.10s</span> is built from marks, and right now the assets folder has Reddit and Telegram only. I need Google Meet (or whatever you call from), Fathom, Claude, ChatGPT, and the actual task manager and CRM you use.</p>
+      <p><strong>My recommendation is to not use real logos for most of them.</strong> Instagram's gradient and Slack's colours will fight deep red and pink, and pasted brand marks are the fastest way to make a frame look like a template. Use monochrome glyph nodes in your palette for the chain, and keep the real marks only for <strong>Fathom</strong> and <strong>Claude / ChatGPT</strong>, where recognition is the actual point. Tell me if you'd rather have all six real and I'll build it that way.</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Reels 2026-09</span>
+    <span>Reel 2 · 51.5s · 11 beats</span>
+    <span>#b4122f · #ff6e9c</span>
+    <span>Google Sans</span>
+  </footer>
+
+</div>

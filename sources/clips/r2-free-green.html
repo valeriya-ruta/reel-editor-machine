@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>r2 — 1200 ₴ → безкоштовно (green screen)</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Google Sans";
+        src: url("../assets/fonts/GoogleSans.ttf") format("truetype");
+        font-weight: 400 700;
+        font-display: block;
+      }
+
+      :root {
+        --red: #b4122f;
+        --pink: #ff6e9c;
+        --ink: #17141c;
+        --mute: #8b8590;
+        --key: #00ff00;
+      }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; background: var(--key); }
+
+      #root {
+        position: relative;
+        width: 1080px; height: 1920px;
+        overflow: hidden;
+        background: var(--key);
+        font-family: "Google Sans", system-ui, sans-serif;
+      }
+
+      /* Chroma-key rules that also happen to look expensive:
+         hard edges, no soft shadows (they key as green haze), solid fills,
+         no glow. Restraint reads as premium; neon reads as template. */
+
+      #card {
+        position: absolute; left: 130px; top: 780px;
+        width: 820px; height: 360px;
+        border-radius: 40px;
+        background: #ffffff;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        overflow: hidden;
+      }
+
+      #price {
+        font-size: 176px; line-height: 1;
+        font-variation-settings: "wght" 700, "GRAD" 200;
+        letter-spacing: -0.05em;
+        color: var(--red);
+        white-space: nowrap;
+      }
+      #price .cur { font-size: 116px; margin-left: 12px; }
+
+      #per {
+        margin-top: 14px;
+        font-size: 38px; letter-spacing: 0.02em;
+        font-variation-settings: "wght" 400, "GRAD" 0;
+        color: var(--mute);
+      }
+
+      /* the second state — same card, inverted */
+      #card2 {
+        position: absolute; left: 130px; top: 780px;
+        width: 820px; height: 360px;
+        border-radius: 40px;
+        background: var(--red);
+        display: grid; place-items: center;
+        overflow: hidden;
+      }
+      #free {
+        font-size: 92px; line-height: 1;
+        font-variation-settings: "wght" 700, "GRAD" 200;
+        letter-spacing: -0.03em;
+        color: #ffffff;
+        white-space: nowrap;
+      }
+      #free span { display: inline-block; }
+
+      /* one accent bar, the only decorative element in the whole thing */
+      #bar {
+        position: absolute; left: 130px; top: 1122px;
+        width: 820px; height: 18px;
+        background: var(--pink);
+        transform-origin: 0% 50%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-width="1080" data-height="1920" data-duration="4.2">
+      <div id="card">
+        <div id="price">1200<span class="cur">₴</span></div>
+        <div id="per">на місяць</div>
+      </div>
+
+      <div id="card2"><div id="free"></div></div>
+      <div id="bar"></div>
+    </div>
+
+    <script>
+      const WORD = "БЕЗКОШТОВНО";
+
+      function build() {
+        const free = document.getElementById("free");
+        free.innerHTML = WORD.split("").map(function (c) { return "<span>" + c + "</span>"; }).join("");
+        const letters = free.querySelectorAll("span");
+
+        const tl = gsap.timeline({ paused: true });
+
+        gsap.set("#card", { scaleY: 0.7, opacity: 0, transformOrigin: "50% 50%" });
+        gsap.set(["#price", "#per"], { y: 26, opacity: 0 });
+        gsap.set("#card2", { scaleX: 0, transformOrigin: "50% 50%" });
+        gsap.set(letters, { opacity: 0, y: 22 });
+        gsap.set("#bar", { scaleX: 0 });
+
+        /* the price arrives plainly. No bounce — confident, not springy. */
+        tl.to("#card", { scaleY: 1, opacity: 1, duration: 0.44, ease: "power3.out" }, 0.08);
+        tl.to("#price", { y: 0, opacity: 1, duration: 0.36, ease: "power3.out" }, 0.24);
+        tl.to("#per", { y: 0, opacity: 1, duration: 0.32, ease: "power3.out" }, 0.34);
+
+        /* the swap: the white card wipes away as the red one wipes in from the
+           same centre line. One gesture, not an explosion. */
+        tl.to(["#price", "#per"], { y: -18, opacity: 0, duration: 0.22, ease: "power2.in" }, 1.55);
+        tl.to("#card", { scaleX: 0, duration: 0.34, ease: "power3.inOut" }, 1.7);
+        tl.to("#card2", { scaleX: 1, duration: 0.42, ease: "power3.inOut" }, 1.86);
+
+        tl.to(letters, {
+          opacity: 1, y: 0,
+          duration: 0.34, ease: "power3.out",
+          stagger: { each: 0.022, from: "start" },
+        }, 2.12);
+
+        tl.to("#bar", { scaleX: 1, duration: 0.46, ease: "power3.inOut" }, 2.2);
+
+        /* out — the same wipe, reversed. It leaves the way it came. */
+        tl.to("#bar", { scaleX: 0, duration: 0.28, ease: "power3.in", transformOrigin: "100% 50%" }, 3.7);
+        tl.to(letters, { opacity: 0, y: -14, duration: 0.2, ease: "power2.in", stagger: 0.012 }, 3.7);
+        tl.to("#card2", { scaleX: 0, duration: 0.34, ease: "power3.inOut" }, 3.82);
+
+        window.__timelines["main"] = tl;
+      }
+
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>

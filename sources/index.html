@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Рілс 2 — Fathom</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Google Sans";
+        src: url("assets/fonts/GoogleSans.ttf") format("truetype");
+        font-weight: 400 700;
+        font-display: block;
+      }
+      :root {
+        --red: #b4122f;
+        --red-deep: #8d0d24;
+        --pink: #ff6e9c;
+        --ink: #17141c;
+        --paper: #fdf1f4;
+        --ua-blue: #0057b7;
+        --ua-gold: #ffd700;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #000; }
+      #root {
+        position: relative; width: 1080px; height: 1920px;
+        overflow: hidden; background: #000;
+        font-family: "Google Sans", system-ui, sans-serif;
+      }
+
+      #splitBg { position: absolute; inset: 0; background: var(--paper); }
+      #plateWrap { position: absolute; inset: 0; overflow: hidden; }
+      video.plate { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; object-fit: cover; }
+
+      /* ============================================================
+         Everything is CENTRED and wide. Her head starts at y≈575 and
+         the burned-in captions sit at y 1445–1498, so graphics live
+         in y 60–540, full width — never pushed into a corner.
+         No graphic contains a word; the subtitles carry the language.
+         ============================================================ */
+
+      /* ---------- B1 : the week booking itself solid ---------- */
+      #calHalo {
+        position: absolute; left: 90px; top: 20px; width: 900px; height: 480px;
+        background: radial-gradient(closest-side,
+          rgba(255,110,156,0.32), rgba(255,110,156,0.09) 62%, rgba(255,110,156,0));
+      }
+      /* 7 columns — a week — 4 rows deep */
+      #cal { position: absolute; left: 188px; top: 112px; width: 704px; height: 302px; }
+      .cellBg {
+        position: absolute; width: 92px; height: 68px; border-radius: 14px;
+        border: 5px solid rgba(255,255,255,0.44);
+      }
+      .cell {
+        position: absolute; width: 92px; height: 68px; border-radius: 14px;
+        background: #fff; box-shadow: 0 8px 18px rgba(8,6,12,0.36);
+      }
+
+      /* ---------- B2–B4 : the work that piles up after every call ---------- */
+      #stack { position: absolute; left: 190px; top: 90px; width: 700px; height: 400px; }
+      .card {
+        position: absolute; left: 40px; width: 620px; height: 116px;
+        border-radius: 24px; background: #fff; overflow: hidden;
+        box-shadow: 0 16px 34px rgba(8,6,12,0.44);
+        display: flex; align-items: center;
+      }
+      .card .tile { width: 112px; height: 116px; flex: none; }
+      .card .bars { flex: 1; padding: 0 30px; display: flex; flex-direction: column; gap: 15px; }
+      .card .bar { height: 17px; border-radius: 9px; background: #d8ccd1; }
+      .card .bar.b2 { width: 74%; }
+      .card .bar.b3 { width: 48%; }
+      #c1 { top: 0px; } #c2 { top: 136px; } #c3 { top: 272px; }
+      #c1 .tile { background: var(--pink); }
+      #c2 .tile { background: var(--red); }
+      #c3 .tile { background: var(--red-deep); }
+
+      /* the two rails that try to squeeze the work into the call itself */
+      .vice {
+        position: absolute; left: 0; width: 700px; height: 26px;
+        border-radius: 13px; background: var(--red);
+        box-shadow: 0 0 34px rgba(255,110,156,0.75);
+      }
+      #viceTop { top: -70px; }
+      #viceBot { top: 444px; }
+
+      /* sized to hug the dumped pile, not the whole stack area */
+      #stall {
+        position: absolute; left: 16px; top: 108px; width: 668px; height: 348px;
+        border-radius: 30px; background: rgba(96,88,94,0.68);
+      }
+      #spin { position: absolute; left: 270px; top: 202px; }
+
+      /* ---------- B5 : the four things it is ---------- */
+      #qbar {
+        position: absolute; left: 120px; top: 168px; width: 840px; height: 200px;
+        border-radius: 46px; background: #fff;
+        box-shadow: 0 0 64px rgba(255,110,156,0.55), 0 22px 48px rgba(8,6,12,0.46);
+        display: flex; align-items: center; justify-content: space-around; padding: 0 34px;
+      }
+      .qslot { width: 132px; height: 132px; flex: none; }
+      .qdisc {
+        width: 132px; height: 132px; border-radius: 50%;
+        background: var(--red); display: grid; place-items: center;
+      }
+      #qFlag {
+        width: 168px; height: 116px; border-radius: 20px; overflow: hidden;
+        box-shadow: 0 8px 20px rgba(8,6,12,0.34);
+      }
+      #qFlag i { display: block; height: 58px; }
+      #qFlag .b { background: var(--ua-blue); }
+      #qFlag .g { background: var(--ua-gold); }
+
+      /* ---------- B6 : the price falling to nothing ---------- */
+      #priceWrap { position: absolute; left: 0; top: 246px; width: 1080px; text-align: center; }
+      #priceNum {
+        display: inline-block; font-size: 188px; line-height: 1;
+        font-variation-settings: "wght" 700, "GRAD" 200;
+        letter-spacing: -0.04em; color: var(--red);
+        font-variant-numeric: tabular-nums;
+      }
+      #priceCur {
+        display: inline-block; margin-left: 26px;
+        font-size: 116px; line-height: 1;
+        font-variation-settings: "wght" 700, "GRAD" 150; color: var(--red);
+      }
+      #priceRule {
+        margin: 34px auto 0; width: 360px; height: 16px; border-radius: 8px;
+        background: var(--pink); transform-origin: 50% 50%;
+      }
+
+      /* ---------- B7 : the testimonials ---------- */
+      #otzWrap { position: absolute; left: 130px; top: 60px; width: 820px; height: 600px; }
+      .ghostMsg {
+        position: absolute; height: 88px; border-radius: 24px; background: #fff;
+        box-shadow: 0 14px 30px rgba(8,6,12,0.42);
+      }
+      #gm1 { left: 100px; top: 0px; width: 620px; }
+      #gm2 { left: 50px; top: 44px; width: 720px; }
+      #otzyv {
+        position: absolute; left: 0; top: 100px; width: 820px;
+        border-radius: 28px; overflow: hidden;
+        box-shadow: 0 0 64px rgba(255,110,156,0.5), 0 24px 54px rgba(8,6,12,0.5);
+      }
+      #otzyv img { display: block; width: 100%; }
+
+      /* ---------- B8 : what connects to what ---------- */
+      #card7 {
+        position: absolute; left: 50px; top: 60px; width: 980px; height: 1268px;
+        border-radius: 52px; background: var(--paper);
+        box-shadow: 0 0 90px rgba(255,110,156,0.45), 0 30px 70px rgba(8,6,12,0.5);
+      }
+      /* wires and nodes ride together so one transform moves the whole diagram */
+      #diagram { position: absolute; inset: 0; }
+      #flow { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+
+      .node {
+        position: absolute; background: #fff; border-radius: 34px;
+        border: 12px solid var(--red);
+        display: flex; align-items: center; justify-content: center; gap: 26px;
+      }
+      .node img { display: block; }
+      #nMeet { left: 340px; top: 175px; width: 400px; height: 120px; }
+      #nMeet img { width: 300px; }
+      #nHub {
+        left: 280px; top: 520px; width: 520px; height: 175px;
+        border-width: 14px;
+        box-shadow: 0 0 80px rgba(255,110,156,0.85);
+      }
+      #nHub img { width: 400px; }
+      #nAI   { left: 95px;  top: 1000px; width: 300px; height: 190px; }
+      #nAI img { width: 108px; }
+      #nTask { left: 435px; top: 1000px; width: 210px; height: 190px; }
+      #nTask img { width: 128px; }
+      #nCrm  { left: 725px; top: 1000px; width: 210px; height: 190px; }
+
+      /* ---------- B9 : an hour, as one revolution ---------- */
+      #clockHalo {
+        position: absolute; left: 386px; top: 130px; width: 308px; height: 308px;
+        border-radius: 50%; box-shadow: 0 0 70px 8px rgba(255,110,156,0.55);
+      }
+      #clock { position: absolute; left: 386px; top: 130px; width: 308px; height: 308px; }
+
+      /* ---------- B10 : the comment being written ---------- */
+      #cmt {
+        position: absolute; left: 150px; top: 300px; width: 780px; height: 122px;
+        border-radius: 61px; background: #fff;
+        box-shadow: 0 0 54px rgba(255,110,156,0.55), 0 18px 40px rgba(8,6,12,0.45);
+        display: flex; align-items: center; padding: 0 16px 0 20px;
+      }
+      #cmtAv { width: 82px; height: 82px; border-radius: 50%; background: #ddd0d5; flex: none; }
+      #cmtText {
+        flex: 1; padding: 0 22px; font-size: 50px; color: var(--ink);
+        font-variation-settings: "wght" 700, "GRAD" 150;
+        white-space: nowrap; overflow: hidden;
+      }
+      #caret {
+        display: inline-block; width: 5px; height: 52px; vertical-align: -9px;
+        background: var(--red); margin-left: 4px;
+      }
+      #cmtSend {
+        width: 90px; height: 90px; border-radius: 50%; flex: none;
+        background: var(--red); position: relative;
+        box-shadow: 0 0 30px rgba(255,110,156,0.8);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="51.548" data-fps="60">
+
+      <div id="splitBg"></div>
+
+      <div id="plateWrap">
+        <video id="vid" class="plate" src="assets/reel-02-base.mp4"
+               data-start="0" data-duration="51.548" data-media-start="0" muted playsinline></video>
+      </div>
+
+      <div id="calHalo"></div>
+      <div id="cal"></div>
+
+      <div id="stack">
+        <div class="card" id="c1">
+          <span class="tile">
+            <svg viewBox="0 0 112 116" width="112" height="116">
+              <rect x="32" y="26" width="48" height="64" rx="9" fill="none" stroke="#fff" stroke-width="9"/>
+              <line x1="45" y1="46" x2="69" y2="46" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+              <line x1="45" y1="58" x2="69" y2="58" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+              <line x1="45" y1="70" x2="61" y2="70" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="bars"><i class="bar"></i><i class="bar b2"></i><i class="bar b3"></i></span>
+        </div>
+        <div class="card" id="c2">
+          <span class="tile">
+            <svg viewBox="0 0 112 116" width="112" height="116">
+              <ellipse cx="56" cy="36" rx="26" ry="11" fill="none" stroke="#fff" stroke-width="9"/>
+              <path d="M30 36 v18 a26 11 0 0 0 52 0 v-18" fill="none" stroke="#fff" stroke-width="9"/>
+              <path d="M30 54 v18 a26 11 0 0 0 52 0 v-18" fill="none" stroke="#fff" stroke-width="9"/>
+            </svg>
+          </span>
+          <span class="bars"><i class="bar"></i><i class="bar b2"></i><i class="bar b3"></i></span>
+        </div>
+        <div class="card" id="c3">
+          <span class="tile">
+            <svg viewBox="0 0 112 116" width="112" height="116">
+              <rect x="28" y="34" width="56" height="44" rx="8" fill="none" stroke="#fff" stroke-width="9"/>
+              <path d="M30 38 L56 60 L82 38" fill="none" stroke="#fff" stroke-width="9"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="bars"><i class="bar"></i><i class="bar b2"></i><i class="bar b3"></i></span>
+        </div>
+
+        <div class="vice" id="viceTop"></div>
+        <div class="vice" id="viceBot"></div>
+
+        <div id="stall"></div>
+
+        <svg id="spin" viewBox="0 0 160 160" width="160" height="160">
+          <circle cx="80" cy="80" r="60" fill="none" stroke="rgba(23,20,28,0.35)" stroke-width="18"/>
+          <circle id="spinArc" cx="80" cy="80" r="60" fill="none" stroke="#ff6e9c"
+                  stroke-width="18" stroke-linecap="round" transform="rotate(-90 80 80)"/>
+        </svg>
+      </div>
+
+      <!-- automatic · fast · reliable · in Ukrainian -->
+      <div id="qbar">
+        <span class="qslot" id="q1"><span class="qdisc">
+          <svg viewBox="0 0 132 132" width="132" height="132">
+            <path d="M100 46 a40 40 0 1 0 8 26" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
+            <path d="M74 22 L102 44 L74 62 Z" fill="#fff"/>
+          </svg>
+        </span></span>
+        <span class="qslot" id="q2"><span class="qdisc">
+          <svg viewBox="0 0 132 132" width="132" height="132">
+            <path d="M74 24 L46 70 L64 70 L56 108 L88 60 L68 60 Z" fill="#fff"
+                  stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+          </svg>
+        </span></span>
+        <span class="qslot" id="q3"><span class="qdisc">
+          <svg viewBox="0 0 132 132" width="132" height="132">
+            <path d="M66 24 L102 40 v26 c0 26 -18 38 -36 44 c-18 -6 -36 -18 -36 -44 V40 Z"
+                  fill="none" stroke="#fff" stroke-width="12" stroke-linejoin="round"/>
+            <path d="M50 66 L62 78 L84 52" fill="none" stroke="#fff" stroke-width="12"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span></span>
+        <span class="qslot" id="q4" style="width:168px;height:116px">
+          <span id="qFlag"><i class="b"></i><i class="g"></i></span>
+        </span>
+      </div>
+
+      <div id="priceWrap">
+        <span id="priceNum">1200</span><span id="priceCur">₴</span>
+        <div id="priceRule"></div>
+      </div>
+
+      <div id="otzWrap">
+        <div class="ghostMsg" id="gm1"></div>
+        <div class="ghostMsg" id="gm2"></div>
+        <div id="otzyv"><img src="assets/otzyv.jpg" alt="" /></div>
+      </div>
+
+      <div id="card7"></div>
+      <div id="diagram">
+        <svg id="flow" viewBox="0 0 1080 1920">
+          <path id="w1" d="M540 295 L540 520"           fill="none" stroke="#ff6e9c" stroke-width="15" stroke-linecap="round"/>
+          <path id="w2" d="M540 695 L540 900"           fill="none" stroke="#ff6e9c" stroke-width="15" stroke-linecap="round"/>
+          <path id="w3" d="M540 900 L245 900 L245 1000" fill="none" stroke="#ff6e9c" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+          <path id="w4" d="M540 900 L540 1000"          fill="none" stroke="#ff6e9c" stroke-width="15" stroke-linecap="round"/>
+          <path id="w5" d="M540 900 L830 900 L830 1000" fill="none" stroke="#ff6e9c" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <path id="p1" d="M540 295 L540 520"           fill="none" stroke="#fff" stroke-width="15" stroke-linecap="round"/>
+          <path id="p2" d="M540 695 L540 900"           fill="none" stroke="#fff" stroke-width="15" stroke-linecap="round"/>
+          <path id="p3" d="M540 900 L245 900 L245 1000" fill="none" stroke="#fff" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+          <path id="p4" d="M540 900 L540 1000"          fill="none" stroke="#fff" stroke-width="15" stroke-linecap="round"/>
+          <path id="p5" d="M540 900 L830 900 L830 1000" fill="none" stroke="#fff" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+
+        <div class="node" id="nMeet"><img src="assets/meet.png" alt="" /></div>
+        <div class="node" id="nHub"><img src="assets/fathom.png" alt="" /></div>
+        <div class="node" id="nAI">
+          <img src="assets/claude.webp" alt="" />
+          <img src="assets/chatgpt.png" alt="" />
+        </div>
+        <div class="node" id="nTask"><img src="assets/notion.png" alt="" /></div>
+        <div class="node" id="nCrm">
+          <svg viewBox="0 0 210 190" width="150" height="136">
+            <g stroke="#b4122f" stroke-width="13" fill="none">
+              <ellipse cx="105" cy="62" rx="48" ry="20"/>
+              <path d="M57 62 v32 a48 20 0 0 0 96 0 v-32"/>
+              <path d="M57 94 v32 a48 20 0 0 0 96 0 v-32"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div id="clockHalo"></div>
+      <svg id="clock" viewBox="0 0 308 308">
+        <circle cx="154" cy="154" r="126" fill="rgba(141,13,36,0.92)"/>
+        <circle cx="154" cy="154" r="126" fill="none" stroke="rgba(255,255,255,0.26)" stroke-width="20"/>
+        <circle id="cArc" cx="154" cy="154" r="126" fill="none" stroke="#ff6e9c"
+                stroke-width="20" stroke-linecap="round" transform="rotate(-90 154 154)"/>
+        <line id="cHand" x1="154" y1="154" x2="154" y2="52" stroke="#fff" stroke-width="17" stroke-linecap="round"/>
+        <circle cx="154" cy="154" r="16" fill="#fff"/>
+      </svg>
+
+      <div id="cmt">
+        <span id="cmtAv"></span>
+        <span id="cmtText"></span>
+        <span id="cmtSend">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <path d="M32 26 L58 45 L32 64" fill="none" stroke="#fff" stroke-width="10"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </div>
+
+      <audio id="vo" src="assets/reel-02-base.mp4" data-start="0" data-duration="51.548" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      /* Word timings measured off her locked cut. Elements land on the word
+         that names them, which is why the spacing is uneven. */
+      const W = {
+        dzvinky: 2.24, konsult: 2.66, planning: 3.44,
+        zapysaty: 6.28, onovyty: 7.68, nadislaty: 8.52,
+        abo1: 9.74, namah: 10.06, pidChas: 12.24, dzvinka: 12.54,
+        abo2: 13.38, vidklad: 13.58, potim: 14.20,
+        prosto: 15.02, zavysaje: 15.30, takOt: 16.12,
+        avto: 18.50, shvydko: 19.26, nadiyno: 19.62, ukr: 20.48,
+        bezkosht: 22.16,
+        vidhuky: 26.84,
+        fathom: 33.14, reyestr: 34.10, pidkl: 34.84,
+        klod: 35.84, task: 37.90, crm: 38.64,
+        odrazu: 41.64,
+        hodynu: 46.02,
+        slovo: 48.94
+      };
+
+      const CAL_COLS = 7, CAL_ROWS = 4, CAL_N = CAL_COLS * CAL_ROWS;
+      /* Fixed permutation so the week fills scattered, not as a wipe.
+         Deterministic by construction — no random anywhere in this file. */
+      const CAL_ORDER = [0,15,8,23,3,18,11,26,5,20,13,1,16,9,24,6,21,14,2,17,10,25,4,19,12,27,7,22];
+
+      function buildCalendar() {
+        const cal = document.getElementById("cal");
+        for (let pass = 0; pass < 2; pass++) {
+          for (let i = 0; i < CAL_N; i++) {
+            const d = document.createElement("i");
+            d.className = pass === 0 ? "cellBg" : "cell";
+            d.style.left = (i % CAL_COLS) * 102 + "px";
+            d.style.top = Math.floor(i / CAL_COLS) * 78 + "px";
+            cal.appendChild(d);
+          }
+        }
+        return cal.querySelectorAll(".cell");
+      }
+
+      function dash(el) {
+        const L = el.getTotalLength();
+        gsap.set(el, { strokeDasharray: L, strokeDashoffset: L });
+        return L;
+      }
+
+      function build() {
+        const tl = gsap.timeline({ paused: true });
+        const cells = buildCalendar();
+
+        const WORD = "дзвінок";
+        const cmtText = document.getElementById("cmtText");
+        const typedNode = document.createTextNode("");
+        const caret = document.createElement("i");
+        caret.id = "caret";
+        cmtText.appendChild(typedNode);
+        cmtText.appendChild(caret);
+
+        /* ---------- resting state: nothing but her ---------- */
+        gsap.set("#splitBg", { opacity: 0 });
+        gsap.set(["#cal", "#calHalo"], { opacity: 0 });
+        gsap.set(cells, { opacity: 0, scale: 0.55, transformOrigin: "50% 50%" });
+        gsap.set(".card", { opacity: 0 });
+        gsap.set(".vice", { opacity: 0 });
+        gsap.set("#stall", { opacity: 0 });
+        gsap.set("#spin", { opacity: 0 });
+        gsap.set("#qbar", { opacity: 0 });
+        gsap.set([".qslot"], { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" });
+        gsap.set("#priceWrap", { opacity: 0 });
+        gsap.set("#priceRule", { scaleX: 0 });
+        gsap.set("#otzWrap", { opacity: 0 });
+        gsap.set(["#gm1", "#gm2"], { opacity: 0, y: 26 });
+        gsap.set("#otzyv", { opacity: 0, y: 54, scale: 0.94, transformOrigin: "50% 100%" });
+        gsap.set("#card7", { opacity: 0 });
+        gsap.set("#diagram", { opacity: 0 });
+        gsap.set(".node", { opacity: 0, transformOrigin: "50% 50%" });
+        gsap.set(["#clock", "#clockHalo"], { opacity: 0, scale: 0.9, transformOrigin: "50% 50%" });
+        gsap.set("#cmt", { opacity: 0 });
+        gsap.set("#caret", { opacity: 0 });
+        gsap.set("#cmtSend", { backgroundColor: "#ddd0d5" });
+
+        const wires  = ["#w1", "#w2", "#w3", "#w4", "#w5"];
+        const pulses = ["#p1", "#p2", "#p3", "#p4", "#p5"];
+        wires.forEach(s => dash(document.querySelector(s)));
+        const pulseLen = pulses.map(s => document.querySelector(s).getTotalLength());
+        gsap.set(pulses, { opacity: 0 });
+
+        const cArc = document.querySelector("#cArc");
+        const cLen = 2 * Math.PI * 126;
+        gsap.set(cArc, { strokeDasharray: cLen, strokeDashoffset: cLen });
+        // svgOrigin is the reliable pivot for SVG — transformOrigin resolves
+        // against the bounding box, which made the hand fly off before.
+        gsap.set("#cHand", { rotation: 0, svgOrigin: "154 154" });
+
+        const spinArc = document.querySelector("#spinArc");
+        const sLen = 2 * Math.PI * 60;
+        gsap.set(spinArc, { strokeDasharray: sLen, strokeDashoffset: sLen * 0.72,
+                            rotation: 0, svgOrigin: "80 80" });
+
+        /* ============================================================
+           B1 · 2.24–5.90 — a week booking itself solid
+           ============================================================ */
+        tl.to("#cal",     { opacity: 1, duration: 0.20 }, W.dzvinky - 0.10);
+        tl.to("#calHalo", { opacity: 1, duration: 0.40 }, W.dzvinky - 0.10);
+        for (let k = 0; k < CAL_N; k++) {
+          const at = W.dzvinky + 2.20 * Math.pow(k / (CAL_N - 1), 0.58);
+          tl.to(cells[CAL_ORDER[k]],
+                { opacity: 1, scale: 1, duration: 0.13, ease: "back.out(2.2)" }, at);
+        }
+        tl.to(cells, { backgroundColor: "#b4122f", duration: 0.24, ease: "power2.out" }, 4.60);
+        tl.to("#calHalo", { opacity: 0, duration: 0.44 }, 5.24);
+        tl.to("#cal", { opacity: 0, scale: 0.96, transformOrigin: "50% 50%",
+                        duration: 0.24, ease: "power2.in" }, 5.58);
+
+        /* ============================================================
+           B2 · 6.28–9.30 — the pile of work after every call
+           ============================================================ */
+        // rotation stays tiny — these cards are 620 wide, so 5° throws the far
+        // end 54px and the stack stops reading as a stack
+        const pile = [["#c1", W.zapysaty, 0], ["#c2", W.onovyty, -1.5], ["#c3", W.nadislaty, 2.5]];
+        pile.forEach(function (p) {
+          gsap.set(p[0], { y: -80, rotation: 0, transformOrigin: "50% 50%" });
+          tl.to(p[0], { opacity: 1, y: 0, rotation: p[2], duration: 0.28, ease: "back.out(1.8)" }, p[1]);
+        });
+
+        /* ============================================================
+           B3 · 9.74–13.16 — trying to fit it into the call itself
+           Two rails close on the stack. It compresses, holds strained,
+           and does not fit.
+           ============================================================ */
+        tl.to(".vice", { opacity: 1, duration: 0.18 }, W.abo1);
+        tl.to("#viceTop", { y: 158, duration: 0.44, ease: "power3.inOut" }, W.namah);
+        tl.to("#viceBot", { y: -158, duration: 0.44, ease: "power3.inOut" }, W.namah);
+        tl.to(["#c1", "#c2", "#c3"], { scaleY: 0.70, duration: 0.44, ease: "power3.inOut" }, W.namah);
+        tl.to("#c1", { y: 118, duration: 0.44, ease: "power3.inOut" }, W.namah);
+        tl.to("#c2", { y: 40,  duration: 0.44, ease: "power3.inOut" }, W.namah);
+        tl.to("#c3", { y: -38, duration: 0.44, ease: "power3.inOut" }, W.namah);
+        // it strains against the rails, then they give up
+        tl.to(["#viceTop", "#viceBot"], { x: 0, duration: 0.10, ease: "power2.inOut" }, W.pidChas);
+        tl.to("#viceTop", { y: -70, opacity: 0, duration: 0.30, ease: "power2.in" }, W.dzvinka + 0.30);
+        tl.to("#viceBot", { y: 0, opacity: 0, duration: 0.30, ease: "power2.in" }, W.dzvinka + 0.30);
+
+        /* ============================================================
+           B4 · 13.38–15.02 — so it gets pushed to later
+           ============================================================ */
+        tl.to(["#c1", "#c2", "#c3"], { scaleY: 1, duration: 0.26, ease: "power2.out" }, W.abo2);
+        // dumped into a pile: 60px of each card still showing, so it reads as
+        // three things put off, not one card
+        [["#c1", 130, -2], ["#c2", 84, 2], ["#c3", 38, 5]].forEach(function (q, i) {
+          tl.to(q[0], { y: q[1], rotation: q[2], duration: 0.34,
+                        ease: "power3.out" }, W.vidklad + i * 0.12);
+        });
+
+        /* ============================================================
+           B5 · 15.02–16.42 — and there it jams
+           Short and violent, not a slow decay: the word «зависає» is one
+           second long and she is already onto the fix by 16.12.
+           ============================================================ */
+        tl.to("#stall", { opacity: 1, duration: 0.18, ease: "power2.out" }, W.prosto);
+        tl.to("#spin",  { opacity: 1, duration: 0.14 }, W.prosto + 0.06);
+        tl.to(spinArc, {
+          keyframes: [
+            { rotation: 500, duration: 0.46, ease: "power1.out" },
+            { rotation: 548, duration: 0.16, ease: "power2.out" },
+            { rotation: 566, duration: 0.14, ease: "power2.out" },
+            { rotation: 572, duration: 0.12, ease: "power2.out" }
+          ]
+        }, W.prosto + 0.06);
+        tl.to(["#c1", "#c2", "#c3", "#stall", "#spin"],
+              { opacity: 0, y: "-=30", duration: 0.26, ease: "power2.in" }, W.takOt);
+
+        /* ============================================================
+           B6 · 18.50–21.90 — automatic, fast, reliable, in Ukrainian
+           ============================================================ */
+        tl.to("#qbar", { opacity: 1, duration: 0.22, ease: "power3.out" }, W.avto - 0.14);
+        [["#q1", W.avto], ["#q2", W.shvydko], ["#q3", W.nadiyno], ["#q4", W.ukr]].forEach(function (q) {
+          tl.to(q[0], { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(3)" }, q[1]);
+        });
+        tl.to("#qbar", { opacity: 0, y: -34, duration: 0.26, ease: "power2.in" }, 21.72);
+
+        /* ============================================================
+           B7 · 22.16–24.70 — she moves aside, the price falls to nothing
+           The only time she is repositioned: 2.4s, at the peak.
+           ============================================================ */
+        const priceProxy = { v: 1200 };
+        const priceNum = document.getElementById("priceNum");
+
+        tl.to("#splitBg", { opacity: 1, duration: 0.22 }, W.bezkosht - 0.24);
+        tl.to("#plateWrap", {
+          scale: 0.60, x: 0, y: 152, borderRadius: 70,
+          transformOrigin: "50% 50%", duration: 0.42, ease: "power3.inOut"
+        }, W.bezkosht - 0.24);
+        tl.to("#priceWrap", { opacity: 1, duration: 0.20 }, W.bezkosht - 0.02);
+
+        tl.to(priceProxy, {
+          v: 0, duration: 0.86, ease: "power3.in",
+          onUpdate: function () { priceNum.textContent = Math.round(priceProxy.v); }
+        }, W.bezkosht + 0.04);
+        tl.fromTo("#priceNum",
+          { textShadow: "0 0 40px rgba(255,110,156,0.85)" },
+          { textShadow: "0 0 0px rgba(255,110,156,0)", duration: 0.86,
+            ease: "power3.in", immediateRender: false },
+          W.bezkosht + 0.04);
+        tl.to("#priceNum", {
+          scale: 1.14, textShadow: "0 0 70px rgba(255,110,156,1)",
+          transformOrigin: "50% 50%", duration: 0.16, ease: "power3.out"
+        }, W.bezkosht + 0.90);
+        tl.to("#priceNum", { scale: 1, duration: 0.34, ease: "power2.out" }, W.bezkosht + 1.06);
+        tl.to("#priceRule", { scaleX: 1, duration: 0.40, ease: "power3.out" }, W.bezkosht + 0.98);
+
+        tl.to("#priceWrap", { opacity: 0, duration: 0.24, ease: "power2.in" }, 24.28);
+        tl.to("#plateWrap", { scale: 1, x: 0, y: 0, borderRadius: 0,
+                              duration: 0.44, ease: "power3.inOut" }, 24.24);
+        tl.to("#splitBg", { opacity: 0, duration: 0.24 }, 24.52);
+
+        /* ============================================================
+           B8 · 26.84–30.60 — more of them than fit on screen
+           ============================================================ */
+        tl.to("#otzWrap", { opacity: 1, duration: 0.20 }, W.vidhuky - 0.06);
+        tl.to("#otzyv", { opacity: 1, y: 0, scale: 1, duration: 0.40, ease: "power3.out" }, W.vidhuky);
+        tl.to("#gm2", { opacity: 0.80, y: 0, duration: 0.30, ease: "power3.out" }, W.vidhuky + 0.62);
+        tl.to("#gm1", { opacity: 0.52, y: 0, duration: 0.30, ease: "power3.out" }, W.vidhuky + 1.02);
+        tl.to("#otzWrap", { opacity: 0, y: -40, duration: 0.30, ease: "power2.in" }, 30.20);
+
+        /* ============================================================
+           B9 · 33.14–40.42 — what actually connects to what
+           The hub lands alone first, and the wires grow out of it, so the
+           viewer waits for each one instead of reading it all at once.
+           ============================================================ */
+        tl.to("#card7",  { opacity: 1, duration: 0.001 }, W.fathom);   // hard cut
+        tl.to("#diagram",{ opacity: 1, duration: 0.001 }, W.fathom);
+        tl.fromTo("#nHub", { scale: 0.72, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.30, ease: "back.out(2.4)" }, W.fathom);
+
+        tl.fromTo("#nMeet", { scale: 0.8, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.24, ease: "back.out(2.2)" }, W.reyestr);
+        tl.to("#w1", { strokeDashoffset: 0, duration: 0.34, ease: "power2.out" }, W.reyestr + 0.16);
+        tl.to("#w2", { strokeDashoffset: 0, duration: 0.32, ease: "power2.out" }, W.pidkl + 0.10);
+
+        [["#w3", "#nAI",   W.klod],
+         ["#w4", "#nTask", W.task],
+         ["#w5", "#nCrm",  W.crm]].forEach(function (q) {
+          tl.to(q[0], { strokeDashoffset: 0, duration: 0.36, ease: "power2.out" }, q[2]);
+          tl.fromTo(q[1], { scale: 0.78, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.26, ease: "back.out(2.6)" }, q[2] + 0.30);
+        });
+
+        tl.to("#card7",  { opacity: 0, duration: 0.28, ease: "power2.in" }, 40.42);
+        tl.to("#diagram",{ opacity: 0, duration: 0.28, ease: "power2.in" }, 40.42);
+
+        /* ============================================================
+           B10 · 41.64–44.60 — the same diagram, running by itself
+           Centred, not tucked in a corner. Same element, so it still
+           reads with nothing labelled.
+           ============================================================ */
+        tl.set("#diagram", {
+          transformOrigin: "515px 682px", scale: 0.46, x: 25, y: -379
+        }, 41.20);
+        tl.to("#diagram", { opacity: 1, duration: 0.24 }, W.odrazu - 0.16);
+
+        function sweep(t0) {
+          pulses.forEach(function (sel, i) {
+            const L = pulseLen[i];
+            gsap.set(sel, { strokeDasharray: "52 " + (L + 52) });
+            const seq = [0, 0.16, 0.34, 0.34, 0.34];   // the branches fire together
+            const at = t0 + seq[i];
+            tl.set(sel, { opacity: 1, strokeDashoffset: L }, at);
+            tl.to(sel, { strokeDashoffset: -52, duration: 0.30, ease: "none" }, at);
+            tl.set(sel, { opacity: 0 }, at + 0.30);
+          });
+        }
+        sweep(W.odrazu);
+        sweep(W.odrazu + 1.46);
+
+        tl.to("#diagram", { opacity: 0, duration: 0.26, ease: "power2.in" }, 44.34);
+
+        /* ============================================================
+           B11 · 45.70–47.90 — an hour, as one revolution
+           ============================================================ */
+        tl.to(["#clock", "#clockHalo"],
+              { opacity: 1, scale: 1, duration: 0.28, ease: "power3.out" }, 45.70);
+        tl.to("#cHand", { rotation: 360, duration: 0.90, ease: "none" }, W.hodynu);
+        tl.to(cArc, { strokeDashoffset: 0, duration: 0.90, ease: "none" }, W.hodynu);
+        tl.to("#clock", { scale: 1.06, duration: 0.12, ease: "power3.out" }, W.hodynu + 0.90);
+        tl.to("#clock", { scale: 1, duration: 0.26, ease: "power2.out" }, W.hodynu + 1.02);
+        tl.to(["#clock", "#clockHalo"],
+              { opacity: 0, scale: 0.12, duration: 0.24, ease: "power2.in" }, 47.52);
+
+        /* ============================================================
+           B12 · 48.70–end — the comment being written
+           The only place a word is allowed: it is the thing she is asking
+           the viewer to type, shown inside the field they will type it in.
+           ============================================================ */
+        const typed = { n: 0 };
+        gsap.set("#cmt", { y: 44, scale: 0.94, transformOrigin: "50% 50%" });
+        tl.to("#cmt", { opacity: 1, y: 0, scale: 1, duration: 0.30, ease: "power3.out" }, 48.70);
+        tl.to("#caret", { opacity: 1, duration: 0.10 }, 48.86);
+        tl.to(typed, {
+          n: WORD.length, duration: 0.46, ease: "none",
+          onUpdate: function () { typedNode.nodeValue = WORD.slice(0, Math.floor(typed.n)); }
+        }, W.slovo);
+        tl.to("#caret", { opacity: 0, duration: 0.12 }, W.slovo + 0.54);
+        tl.to("#cmtSend", { backgroundColor: "#b4122f", duration: 0.24, ease: "power2.out" }, W.slovo + 0.62);
+        tl.to("#cmtSend", { scale: 1.16, transformOrigin: "50% 50%", duration: 0.14, ease: "power3.out" }, W.slovo + 0.80);
+        tl.to("#cmtSend", { scale: 1, duration: 0.30, ease: "power2.out" }, W.slovo + 0.94);
+
+        window.__timelines["main"] = tl;
+      }
+
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>

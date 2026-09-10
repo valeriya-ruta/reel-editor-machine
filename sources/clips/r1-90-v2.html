@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>r1 — 90% це тестування (v2)</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Google Sans";
+        src: url("../assets/fonts/GoogleSans.ttf") format("truetype");
+        font-weight: 400 700;
+        font-display: block;
+      }
+      :root { --red: #b4122f; --pink: #ff6e9c; }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; background: #000; }
+      #root {
+        position: relative; width: 1080px; height: 1920px;
+        overflow: hidden; background: #000;
+        font-family: "Google Sans", system-ui, sans-serif;
+      }
+
+      /* v2 restraint:
+         - smaller overall (amateur reads as "too big for the frame")
+         - ring 22px not 34px
+         - glow radius 22px not 60px, and only on two elements, not everything
+         - the label is a clean solid pill, no halo
+         - more empty space around it                                          */
+
+      #ring { position: absolute; left: 350px; top: 760px; width: 380px; height: 380px; }
+      #pct {
+        position: absolute; left: 350px; top: 862px; width: 380px;
+        text-align: center;
+        font-size: 128px; line-height: 1;
+        font-variation-settings: "wght" 700, "GRAD" 160;
+        letter-spacing: -0.045em;
+        color: #fff;
+      }
+      #cap {
+        position: absolute; left: 0; top: 1196px; width: 1080px; text-align: center;
+      }
+      #capInner {
+        display: inline-block;
+        padding: 16px 34px; border-radius: 999px;
+        background: var(--red); color: #fff;
+        font-size: 32px; letter-spacing: 0.14em;
+        font-variation-settings: "wght" 700, "GRAD" 100;
+      }
+      /* one contained glow, not a haze */
+      #halo {
+        position: absolute; left: 350px; top: 760px;
+        width: 380px; height: 380px; border-radius: 50%;
+        box-shadow: 0 0 40px 2px rgba(255, 110, 156, 0.42);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-width="1080" data-height="1920" data-duration="3.2">
+      <div id="halo"></div>
+      <svg id="ring" viewBox="0 0 380 380">
+        <circle cx="190" cy="190" r="150" fill="#b4122f" />
+        <circle cx="190" cy="190" r="172" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="22" />
+        <circle id="arc" cx="190" cy="190" r="172" fill="none"
+                stroke="#ff6e9c" stroke-width="22" stroke-linecap="round"
+                transform="rotate(-90 190 190)" />
+      </svg>
+      <div id="pct">0%</div>
+      <div id="cap"><span id="capInner">ЦЕ ТЕСТУВАННЯ</span></div>
+    </div>
+
+    <script>
+      const R = 172, CIRC = 2 * Math.PI * R;
+
+      function build() {
+        const tl = gsap.timeline({ paused: true });
+        const pct = document.getElementById("pct");
+
+        gsap.set(["#ring", "#halo"], { scale: 0.82, opacity: 0, transformOrigin: "50% 50%" });
+        gsap.set("#arc", { strokeDasharray: CIRC, strokeDashoffset: CIRC });
+        gsap.set("#pct", { opacity: 0 });
+        gsap.set("#capInner", { opacity: 0, y: 16 });
+
+        // measured, not springy
+        tl.to(["#ring", "#halo"], { scale: 1, opacity: 1, duration: 0.38, ease: "power3.out" }, 0.05);
+        tl.to("#pct", { opacity: 1, duration: 0.24, ease: "power2.out" }, 0.2);
+
+        const c = { v: 0 };
+        tl.to(c, {
+          v: 90, duration: 0.9, ease: "power2.out",
+          onUpdate: function () { pct.textContent = Math.round(c.v) + "%"; },
+        }, 0.28);
+        tl.to("#arc", { strokeDashoffset: CIRC * 0.1, duration: 0.9, ease: "power2.out" }, 0.28);
+
+        tl.to("#capInner", { opacity: 1, y: 0, duration: 0.28, ease: "power3.out" }, 1.02);
+
+        tl.to(["#ring", "#halo", "#pct"], { opacity: 0, scale: 0.96, duration: 0.26, ease: "power2.in" }, 2.8);
+        tl.to("#capInner", { opacity: 0, y: -12, duration: 0.24, ease: "power2.in" }, 2.8);
+
+        window.__timelines["main"] = tl;
+      }
+
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+# Video and audio never go in the repo. Git stores every version of a binary
+# forever, so one 580 MB recording would bloat the clone permanently for no
+# benefit. Footage moves separately; the repo carries the system that edits it.
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.wav
+*.m4a
+*.mp3
+
+# Rendered output
+renders/
+REEL-*.mp4
+
+# Generated during a build — reproducible from the source
+study/
+work/r3/*.jpg
+work/r3/*.png
+work/r3/stills/
+work/r3/ex/
+work/r3/mob/
+work/r3/band/
+work/r3/verify/
+work/ref/thumbs/
+
+# Superseded: the loose-overlay-clip model, kept on disk but not in the system
+# (STYLE.md §6)
+ANIMATIONS/
+
+# Other creators' reels, kept locally as reference only
+Examples/
+reference reel/
+
+__pycache__/
+*.pyc
+node_modules/
+.DS_Store
+Thumbs.db
