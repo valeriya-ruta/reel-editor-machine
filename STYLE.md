@@ -10,9 +10,22 @@ contract: what to build against, and what her machine will tolerate.
 ## 1. The delivery model
 
 **She makes the base edit. I add the animations and render the final video.**
-Never re-cut her footage. Never matte her out — background removal runs at
-3.2 s/frame on her laptop, which is three hours a reel, and the masks had
-visible artifacts she rejected.
+Never re-cut her footage.
+
+**Matte her per beat, never per reel.** Both halves of the old blanket ban have
+been retested (2026-09-10). The artifacts are gone: `u2net_human_seg` holds the
+flyaway strands at her hairline cleanly with no fringe. The cost has not moved —
+**3.3 s/frame, CPU only**, because her Vega 10 gives ONNX no GPU provider. That
+is ~4 minutes for a 2-second beat, and *two hours* for a whole reel, which is
+the opposite of the lightness on her machine this pipeline exists to protect.
+
+Her call on when: *"lets do it per few beats, cause its needed only sometimes,
+when there are big things behind me."* So the trigger is **size**, not
+availability — a brand tile, a big card, a takeover-scale object that wants to
+pass behind her head. A chip or a caption does not earn four minutes; those
+still follow §3 and sit below her. Use `tools/matte.py` to cut it and
+`k.matte()` to place it; the matte layer sits above every graphic and below the
+scrim, so one call per beat is enough.
 
 There are **two variants**, and which one applies changes how much freedom the
 animation has:
@@ -96,11 +109,13 @@ graphic will not fit above her head, put it **below** her — over her chest or
 the counter — instead of over her face. The band rule loses to her face every
 time. The exception is a takeover, which owns the whole frame anyway.
 
-She would prefer graphics **masked behind her head** and accepts that we don't:
-*"I would prefer if you use the mask so that it's actually behind my head, but
-it's okay, we can survive without it."* Matting is 3.2 s/frame — about 10 minutes
-per 3-second beat — so it is affordable for one or two specific beats if she ever
-asks, but not for a whole reel.
+She has always wanted graphics **masked behind her head** — *"I would prefer if
+you use the mask so that it's actually behind my head, but it's okay, we can
+survive without it"* — and as of 2026-09-10 she gets it on the beats that earn
+it. See §1: big object behind her, `tools/matte.py`, four minutes. This is now
+the better answer to a graphic that will not fit above her head; putting it low
+over her chest is the fallback when the object is small enough not to be worth a
+matte.
 
 **No full-frame takeovers.** A full cover hides her subtitles while she is still
 talking. Use a large **inset card** — reel 2 uses `x 50–1030, y 60–1328`, which

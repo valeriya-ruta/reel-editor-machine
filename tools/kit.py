@@ -165,6 +165,7 @@ class Kit(object):
         self.gfx_top, self.gfx_bot = gfx_top, gfx_bot
         self._sq = []
         self._css = []
+        self._mattes = []
         # §5a.1 + §5a.9 — the takeover pane is the largest surface in any reel,
         # so it is the one place a square corner is unmissable. It already
         # carries a backdrop-filter, so clipping it costs nothing against the
@@ -181,6 +182,29 @@ class Kit(object):
 
     def css(self, block):
         self._css.append(block)
+
+    # -- masking -------------------------------------------------------------
+    def matte(self, name, start, dur):
+        """Put her back on top for one beat, so the graphic under her reads as
+        being *behind* her instead of stuck to her head.
+
+        `tools/matte.py` makes the clip. It is the same pixels as the plate,
+        cut out of its background, played at the same composition time — so it
+        lands exactly over itself and only the removed background lets the
+        graphic through. Mattes are collected here and emitted above every
+        graphic but below the scrim, which is what makes one call enough.
+
+        Per-beat only, and only when something big goes behind her: see
+        STYLE.md §1 for the arithmetic that makes a whole reel a bad idea.
+        """
+        self._mattes.append(
+            '      <video id="matte-%s" class="plate matte" '
+            'src="assets/mattes/%s.webm"
+'
+            '             data-start="%.3f" data-duration="%.3f" '
+            'data-media-start="0"
+'
+            '             muted playsinline></video>' % (name, name, start, dur))
 
     # -- emoji ---------------------------------------------------------------
     @staticmethod
@@ -283,7 +307,7 @@ class Kit(object):
              data-start="0" data-duration="%(dur).3f" data-media-start="0"
              muted playsinline></video>
 %(gfx)s
-
+%(mattes)s
       <div id="scrim"></div>
       %(caps)s
 
@@ -308,5 +332,7 @@ class Kit(object):
 </html>
 ''' % {"title": esc(title), "css": css, "w": self.w, "h": self.h,
        "dur": self.dur, "fps": self.fps, "plate": plate,
-       "gfx": gfx_html, "caps": self.caption_html(caps, blackout),
+       "gfx": gfx_html, "mattes": "
+".join(self._mattes),
+       "caps": self.caption_html(caps, blackout),
        "capjs": self.caption_js(caps, blackout, scrim_off), "gfxjs": gfx_js}
