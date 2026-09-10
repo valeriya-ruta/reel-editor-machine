@@ -51,6 +51,9 @@ def b02_ai_deck():
     html = '''
       <div class="g" id="g2">
         <div class="deck" id="g2d">%s%s%s</div>
+        <!-- STYLE.md §5a.11: this glyph renders as Noto on the cloud
+             renderer, i.e. the Android poop. Swap to k.emoji("poop") the
+             moment assets/emoji/poop.png exists — nothing else changes. -->
         <div class="verdict" id="g2v">💩</div>
       </div>''' % (slide("g2s0"), slide("g2s1"), slide("g2s2"))
     js = '''

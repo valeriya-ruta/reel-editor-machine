@@ -182,16 +182,15 @@ def b06_mobbin_mark():
     """«Платформа називається Мобін» — the real mark."""
     html = '''
       <div class="g" id="g6">
-        <div class="tile brand" id="g6t"><img src="assets/logos/mobbin-mark.png" alt=""></div>
-        <div class="halo" id="g6h"></div>
+        <div class="lit" id="g6g">
+          <div class="tile brand" id="g6t"><img src="assets/logos/mobbin-mark.png" alt=""></div>
+        </div>
       </div>'''
     js = '''
   gsap.set("#g6", {autoAlpha: 0});
   gsap.set("#g6t", {scale: 0.3, transformOrigin: "50% 50%"});
-  gsap.set("#g6h", {scale: 0.4, autoAlpha: 0, transformOrigin: "50% 50%"});
   tl.to("#g6", {autoAlpha: 1, duration: 0.14}, 28.70);
   tl.to("#g6t", {scale: 1, duration: 0.42, ease: "back.out(2)"}, 28.80);
-  tl.to("#g6h", {scale: 1, autoAlpha: 1, duration: 0.40, ease: "power2.out"}, 28.90);
   tl.to("#g6", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 30.70);'''
     return html, js
 
@@ -455,8 +454,11 @@ k.css('''
     .valcard.big span { font-size: 150px; line-height: 150px; }
 
     /* b06 / b10 — brand tiles */
+    /* §5a.10 — no filter here at all: the clip-path below would eat it. The
+       light lives on the .lit wrapper, and only b06 uses one, because the
+       glow belongs to the beat's subject and b10's subject is the wire. */
     .tile.brand { width: 340px; height: 340px; left: 370px; top: 130px;
-                  filter: var(--glow) var(--cast); }
+                  filter: none; }
     .tile.brand img { height: 190px; width: auto; }
     .tile.brand.sm { width: 260px; height: 260px; top: 180px; }
     .tile.brand.sm img { height: 146px; }
@@ -465,8 +467,7 @@ k.css('''
                              border-radius: 60px; }
     #g10m { left: 120px; }
     #g10c { left: 660px; }
-    .halo { width: 520px; height: 520px; left: 280px; top: 40px;
-            opacity: 0.55; }
+
 
     /* b07 — the wall */
     .masonry { position: absolute; left: 79px; top: 30px; width: 922px;

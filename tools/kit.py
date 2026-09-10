@@ -56,9 +56,10 @@ TOKENS = """
 
       /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
          Light coming off the object, not the object sitting on a surface. */
-      --glow: drop-shadow(0 0 16px rgba(255,110,156,0.90))
-              drop-shadow(0 0 44px rgba(255,110,156,0.60))
-              drop-shadow(0 0 90px rgba(255,110,156,0.35));
+      --glow: drop-shadow(0 0 10px rgba(255,196,218,0.95))
+              drop-shadow(0 0 26px rgba(255,110,156,0.85))
+              drop-shadow(0 0 64px rgba(255,110,156,0.55))
+              drop-shadow(0 0 120px rgba(255,110,156,0.32));
       --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
                    drop-shadow(0 0 60px rgba(255,110,156,0.30));
 
@@ -79,8 +80,11 @@ SURFACES = """
 
     /* A takeover: a tinted pane laid ON the footage, with a real margin so it
        reads as an object rather than a blur applied to the video. */
+    /* The inset pane is a *pane*: 44/64 margin so the footage shows past it,
+       and corners, because a full-bleed hard-cornered rectangle is a bug she
+       has reported. base_css() squircles it; this radius is the fallback. */
     .ground { position: absolute; left: 44px; top: 64px;
-              width: 992px; height: 1792px;
+              width: 992px; height: 1792px; border-radius: 68px;
               background: linear-gradient(158deg, rgba(196,20,52,0.62) 0%,
                           rgba(141,13,36,0.70) 100%);
               -webkit-backdrop-filter: blur(30px) saturate(1.5);
@@ -127,6 +131,23 @@ SURFACES = """
             filter: drop-shadow(0 10px 22px rgba(26,30,39,0.24)); }
     .node.hub { fill: #b4122f; stroke: #fff; }
 
+    /* §5a.10 — the glow rides a WRAPPER, never the clipped element itself.
+       clip-path is applied *after* filter, so a drop-shadow declared on the
+       same element as the clip is cut away with everything else outside the
+       silhouette and the object ends up with no light at all. Put the clip on
+       the shape and the filter on its parent: the parent filters the already
+       clipped bitmap, so the light traces the squircle and survives. */
+    .lit { position: absolute; inset: 0; pointer-events: none;
+           filter: var(--glow); }
+    .lit.soft { filter: var(--glow-soft); }
+
+    /* Emoji are images, never glyphs. The render runs on someone else's
+       Chrome, so a literal 💩 in the HTML comes out in whatever emoji font
+       that machine has — Noto on the cloud renderer, Segoe on hers, Apple on
+       nobody's. She wants the Apple set, so the artwork ships in assets/emoji
+       and the glyph never appears in a composition. */
+    .emoji { display: block; width: auto; image-rendering: auto; }
+
     .halo { position: absolute; border-radius: 50%; pointer-events: none;
             background: radial-gradient(circle, rgba(255,110,156,0.5) 0%,
                         rgba(255,110,156,0) 70%); }
@@ -144,6 +165,13 @@ class Kit(object):
         self.gfx_top, self.gfx_bot = gfx_top, gfx_bot
         self._sq = []
         self._css = []
+        # §5a.1 + §5a.9 — the takeover pane is the largest surface in any reel,
+        # so it is the one place a square corner is unmissable. It already
+        # carries a backdrop-filter, so clipping it costs nothing against the
+        # heavy-overlay budget (that budget counts elements, not properties).
+        # Built in here rather than left to each build, because reel 4 shipped
+        # without it.
+        self.squircle(".ground", 992, 1792, 68)
 
     # -- §5a.1 continuous-curvature corners ---------------------------------
     def squircle(self, selector, w, h, r, s=0.6):
@@ -153,6 +181,17 @@ class Kit(object):
 
     def css(self, block):
         self._css.append(block)
+
+    # -- emoji ---------------------------------------------------------------
+    @staticmethod
+    def emoji(name, cls="", eid=""):
+        """An emoji as an <img>, because a text glyph renders in the render
+        machine's emoji font and not in Apple's. `name` is the file stem under
+        assets/emoji (see the README there for the naming). A missing file is a
+        hard failure in `hyperframes check`, which is the point: it cannot
+        silently fall back to the wrong artwork."""
+        return '<img class="emoji%s"%s src="assets/emoji/%s.png" alt="">' % (
+            (" " + cls) if cls else "", (' id="%s"' % eid) if eid else "", name)
 
     # -- captions ------------------------------------------------------------
     @staticmethod

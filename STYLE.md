@@ -257,19 +257,62 @@ silhouette. Layer three — a tight core, a mid bloom and a wide falloff — or 
 reads as a blurry outline rather than light:
 
 ```css
---glow: drop-shadow(0 0 16px rgba(255,110,156,0.90))
-        drop-shadow(0 0 44px rgba(255,110,156,0.60))
-        drop-shadow(0 0 90px rgba(255,110,156,0.35));
+--glow: drop-shadow(0 0 10px rgba(255,196,218,0.95))   /* hot core */
+        drop-shadow(0 0 26px rgba(255,110,156,0.85))   /* bloom    */
+        drop-shadow(0 0 64px rgba(255,110,156,0.55))   /* mid      */
+        drop-shadow(0 0 120px rgba(255,110,156,0.32)); /* falloff  */
 ```
 
-Use `filter: var(--glow) var(--cast)` together: the glow is the light, the cast
-is still the weight. Because these are `filter` drop-shadows they follow the
-clipped silhouette, so a squircled tile glows as a squircle rather than a box.
-Reserve it for the beat's subject — everything glowing is nothing glowing.
+The first layer is near-white on purpose. A glow that is the same pink all the
+way through reads as a coloured outline; the thing that makes an object read as
+*emitting* is a core hotter than its own colour. Four layers, not three: the
+extra one is paying back the contrast that `var(--cast)` used to fake.
+
+**Never chain `var(--cast)` after it.** That was the reel 4 mistake, and she
+caught it twice: the cast is a dark pool 24px *below* the object, so the eye
+reads the dark half first and the whole thing goes back to being an underglow no
+matter how bright the light is. An object that emits light does not also sit on
+a surface — pick one. `filter: var(--glow)`, full stop.
+
+**Put the glow on a wrapper, never on the clipped element.** `clip-path` is
+applied *after* `filter`, so a `drop-shadow` declared on the same element as the
+clip is cut away with everything else outside the silhouette — the object ends
+up with no light at all, and the beat looks like the glow simply failed. It did.
+Clip the shape, filter its parent:
+
+```html
+<div class="lit">                       <!-- filter: var(--glow) -->
+  <div class="tile brand">…</div>        <!-- clip-path: path(…)   -->
+</div>
+```
+
+The parent filters the already-clipped bitmap, so the light traces the squircle
+and survives. `.lit` is in the kit. Reserve it for the beat's subject —
+everything glowing is nothing glowing.
+
+**And never fake it with a `.halo` div.** A radial-gradient placed after the
+element paints *over* it, washing the mark pink and reading as a soft blob
+rather than emitted light. Reel 4's Mobbin tile had one, and it was doing all
+the visible work while the real glow sat clipped and invisible underneath —
+which is why removing the cast shadow alone did not fix her note.
 
 The old `.halo` (a radial-gradient behind the element) is weaker and squarer;
 prefer the filter. Keep the radial only where the light needs to exist
 independently of an object, like a burst.
+
+**11 · Emoji are images, never glyphs.** A literal `💩` in the HTML renders in
+whatever emoji font the *render machine* has — Noto Color Emoji on the cloud
+renderer, which is the Android look. Ruta wants the Apple set. So the artwork
+lives in `assets/emoji/` as PNG and goes in through `Kit.emoji("poop")`, sized
+by `height` in the beat's CSS rather than by `font-size`. Reel 5 shipped with
+the glyph; that is the whole reason this rule exists.
+
+**12 · A takeover pane has corners.** §5a.9 gives the frosted pane a 44/64px
+margin so the footage reads past it — and then the corners have to be rounded or
+it is just a rectangle laid over her, which is what reel 4 shipped. `.ground` is
+squircled by `Kit.__init__` now, so no build can forget it. The general form:
+the bigger the surface, the more a square corner costs, so the *largest* thing
+on screen is the last place to economise on the clip-path budget.
 
 **Motion.** The material has to react, or it is a flat fill that happens to be
 moving. Glass picks up tint from whatever passes behind it; the specular streak
