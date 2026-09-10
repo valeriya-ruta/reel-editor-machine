@@ -249,6 +249,28 @@ card detaches from nothing.
 pill, one wide squircle. All-same-shape-different-length is why a grid reads as
 texture instead of composition.
 
+**10 · Glow sits *around* the object, not under it.** Her note on reel 4: *"it's
+an overglow, not underglow, and i want it a bit stronger, not just as a
+shadow."* A drop-shadow with an offset reads as the object sitting on a surface;
+a glow is light coming **off** it, so the offset is zero and it wraps the whole
+silhouette. Layer three — a tight core, a mid bloom and a wide falloff — or it
+reads as a blurry outline rather than light:
+
+```css
+--glow: drop-shadow(0 0 16px rgba(255,110,156,0.90))
+        drop-shadow(0 0 44px rgba(255,110,156,0.60))
+        drop-shadow(0 0 90px rgba(255,110,156,0.35));
+```
+
+Use `filter: var(--glow) var(--cast)` together: the glow is the light, the cast
+is still the weight. Because these are `filter` drop-shadows they follow the
+clipped silhouette, so a squircled tile glows as a squircle rather than a box.
+Reserve it for the beat's subject — everything glowing is nothing glowing.
+
+The old `.halo` (a radial-gradient behind the element) is weaker and squarer;
+prefer the filter. Keep the radial only where the light needs to exist
+independently of an object, like a burst.
+
 **Motion.** The material has to react, or it is a flat fill that happens to be
 moving. Glass picks up tint from whatever passes behind it; the specular streak
 travels along the edge as a panel moves; radii stretch slightly on fast motion

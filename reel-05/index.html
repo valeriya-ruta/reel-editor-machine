@@ -38,6 +38,14 @@
                    inset 0 -2px 0 rgba(255,255,255,0.10),
                    inset 0 0 0 1.5px rgba(255,255,255,0.30);
 
+      /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
+         Light coming off the object, not the object sitting on a surface. */
+      --glow: drop-shadow(0 0 16px rgba(255,110,156,0.90))
+              drop-shadow(0 0 44px rgba(255,110,156,0.60))
+              drop-shadow(0 0 90px rgba(255,110,156,0.35));
+      --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
+                   drop-shadow(0 0 60px rgba(255,110,156,0.30));
+
       --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
               drop-shadow(0 24px 48px rgba(26,30,39,0.14));
       --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))
@@ -131,7 +139,11 @@
     .slide .ph { height: 34px; border-radius: 11px; margin-bottom: 16px;
                  width: 62%; }
     .slide .pr { height: 17px; border-radius: 7px; margin-bottom: 11px; }
-    .deck { position: absolute; left: 75px; top: 210px; width: 930px;
+    .verdict { position: absolute; left: 0; width: 1080px; top: 300px;
+               text-align: center; font-size: 260px; line-height: 260px;
+               filter: drop-shadow(0 18px 40px rgba(26,30,39,0.45)); }
+
+    .deck { position: absolute; left: 75px; top: 130px; width: 930px;
             display: flex; gap: 15px; justify-content: center; }
 
     /* b01 — depth against surface */
@@ -301,16 +313,9 @@
 
       <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="swg" gradientUnits="userSpaceOnUse" x1="70" y1="0" x2="820" y2="0"><stop offset="0" stop-color="#ff8ab0"/><stop offset="1" stop-color="#d0173a"/></linearGradient></defs></svg>
 
-      <div class="g" id="g1">
-        <div class="stackwrap" id="g1w">
-          <i class="sl s1" id="g1a"></i><i class="sl s2" id="g1b"></i>
-          <i class="sl s3" id="g1c"></i><i class="sl s4" id="g1d"></i>
-        </div>
-        <i class="sl thin" id="g1t"></i>
-      </div>
-
       <div class="g" id="g2">
         <div class="deck" id="g2d"><span class="slide " id="g2s0"><b class="ph"></b><b class="pr"></b><b class="pr"></b><b class="pr"></b></span><span class="slide " id="g2s1"><b class="ph"></b><b class="pr"></b><b class="pr"></b><b class="pr"></b></span><span class="slide " id="g2s2"><b class="ph"></b><b class="pr"></b><b class="pr"></b><b class="pr"></b></span></div>
+        <div class="verdict" id="g2v">💩</div>
       </div>
 
       <div class="g" id="g3">
@@ -1141,17 +1146,6 @@
   tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 87.520);
 
-  /* b01_expert_depth */
-
-  gsap.set("#g1", {autoAlpha: 0});
-  gsap.set("#g1 .sl", {autoAlpha: 0, y: 30});
-  tl.to("#g1", {autoAlpha: 1, duration: 0.16}, 0.90);
-  ["#g1a","#g1b","#g1c","#g1d"].forEach(function (s, i) {
-    tl.to(s, {autoAlpha: 1, y: 0, duration: 0.22, ease: "power3.out"}, 1.12 + i * 0.11);
-  });
-  // «по верхах» — the shallow one, alone
-  tl.to("#g1t", {autoAlpha: 1, y: 0, duration: 0.22, ease: "power3.out"}, 3.26);
-  tl.to("#g1", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 4.60);
   /* b02_ai_deck */
 
   gsap.set("#g2", {autoAlpha: 0});
@@ -1161,9 +1155,15 @@
   ["#g2s0","#g2s1","#g2s2"].forEach(function (s, i) {
     tl.to(s, {autoAlpha: 1, scale: 1, duration: 0.26, ease: "back.out(2)"}, 6.30 + i * 0.14);
   });
-  tl.to("#g2d", {scale: 1.03, duration: 0.16, ease: "power3.out",
-                 transformOrigin: "50% 50%"}, 10.76);
-  tl.to("#g2d", {scale: 1, duration: 0.30, ease: "power2.out"}, 10.92);
+  // «зазвичай фігня» — the verdict lands on the deck
+  gsap.set("#g2v", {scale: 0.2, autoAlpha: 0, y: -70, rotation: -14,
+                    transformOrigin: "50% 50%"});
+  tl.to("#g2v", {scale: 1, autoAlpha: 1, y: 0, rotation: 0,
+                 duration: 0.34, ease: "back.out(2.6)"}, 8.30);
+  tl.to("#g2d", {scale: 0.95, duration: 0.30, ease: "power2.out"}, 8.34);
+  // «виглядають класно, робляться швидко» — said over the verdict, deadpan
+  tl.to("#g2v", {rotation: 6, duration: 0.20, ease: "power3.out"}, 10.76);
+  tl.to("#g2v", {rotation: 0, duration: 0.34, ease: "power2.out"}, 10.96);
   tl.to("#g2", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 12.60);
   /* b03_too_much_too_little */
 

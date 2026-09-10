@@ -39,32 +39,6 @@ def slide(sid, cls="", rows=3):
 
 # ---------------------------------------------------------------- A · the problem
 
-@beat
-def b01_expert_depth():
-    """«Якщо ти реальна експертка, а не просто хтось, хто вивчив тему по верхах»
-
-    Depth against surface: a thick stack of slides beside a single thin one.
-    """
-    html = '''
-      <div class="g" id="g1">
-        <div class="stackwrap" id="g1w">
-          <i class="sl s1" id="g1a"></i><i class="sl s2" id="g1b"></i>
-          <i class="sl s3" id="g1c"></i><i class="sl s4" id="g1d"></i>
-        </div>
-        <i class="sl thin" id="g1t"></i>
-      </div>'''
-    js = '''
-  gsap.set("#g1", {autoAlpha: 0});
-  gsap.set("#g1 .sl", {autoAlpha: 0, y: 30});
-  tl.to("#g1", {autoAlpha: 1, duration: 0.16}, 0.90);
-  ["#g1a","#g1b","#g1c","#g1d"].forEach(function (s, i) {
-    tl.to(s, {autoAlpha: 1, y: 0, duration: 0.22, ease: "power3.out"}, 1.12 + i * 0.11);
-  });
-  // «по верхах» — the shallow one, alone
-  tl.to("#g1t", {autoAlpha: 1, y: 0, duration: 0.22, ease: "power3.out"}, 3.26);
-  tl.to("#g1", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 4.60);'''
-    return html, js
-
 
 @beat
 def b02_ai_deck():
@@ -77,6 +51,7 @@ def b02_ai_deck():
     html = '''
       <div class="g" id="g2">
         <div class="deck" id="g2d">%s%s%s</div>
+        <div class="verdict" id="g2v">💩</div>
       </div>''' % (slide("g2s0"), slide("g2s1"), slide("g2s2"))
     js = '''
   gsap.set("#g2", {autoAlpha: 0});
@@ -86,9 +61,15 @@ def b02_ai_deck():
   ["#g2s0","#g2s1","#g2s2"].forEach(function (s, i) {
     tl.to(s, {autoAlpha: 1, scale: 1, duration: 0.26, ease: "back.out(2)"}, 6.30 + i * 0.14);
   });
-  tl.to("#g2d", {scale: 1.03, duration: 0.16, ease: "power3.out",
-                 transformOrigin: "50% 50%"}, 10.76);
-  tl.to("#g2d", {scale: 1, duration: 0.30, ease: "power2.out"}, 10.92);
+  // «зазвичай фігня» — the verdict lands on the deck
+  gsap.set("#g2v", {scale: 0.2, autoAlpha: 0, y: -70, rotation: -14,
+                    transformOrigin: "50% 50%"});
+  tl.to("#g2v", {scale: 1, autoAlpha: 1, y: 0, rotation: 0,
+                 duration: 0.34, ease: "back.out(2.6)"}, 8.30);
+  tl.to("#g2d", {scale: 0.95, duration: 0.30, ease: "power2.out"}, 8.34);
+  // «виглядають класно, робляться швидко» — said over the verdict, deadpan
+  tl.to("#g2v", {rotation: 6, duration: 0.20, ease: "power3.out"}, 10.76);
+  tl.to("#g2v", {rotation: 0, duration: 0.34, ease: "power2.out"}, 10.96);
   tl.to("#g2", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 12.60);'''
     return html, js
 
@@ -468,7 +449,11 @@ k.css('''
     .slide .ph { height: 34px; border-radius: 11px; margin-bottom: 16px;
                  width: 62%; }
     .slide .pr { height: 17px; border-radius: 7px; margin-bottom: 11px; }
-    .deck { position: absolute; left: 75px; top: 210px; width: 930px;
+    .verdict { position: absolute; left: 0; width: 1080px; top: 300px;
+               text-align: center; font-size: 260px; line-height: 260px;
+               filter: drop-shadow(0 18px 40px rgba(26,30,39,0.45)); }
+
+    .deck { position: absolute; left: 75px; top: 130px; width: 930px;
             display: flex; gap: 15px; justify-content: center; }
 
     /* b01 — depth against surface */

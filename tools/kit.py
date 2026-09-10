@@ -54,6 +54,14 @@ TOKENS = """
                    inset 0 -2px 0 rgba(255,255,255,0.10),
                    inset 0 0 0 1.5px rgba(255,255,255,0.30);
 
+      /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
+         Light coming off the object, not the object sitting on a surface. */
+      --glow: drop-shadow(0 0 16px rgba(255,110,156,0.90))
+              drop-shadow(0 0 44px rgba(255,110,156,0.60))
+              drop-shadow(0 0 90px rgba(255,110,156,0.35));
+      --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
+                   drop-shadow(0 0 60px rgba(255,110,156,0.30));
+
       --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
               drop-shadow(0 24px 48px rgba(26,30,39,0.14));
       --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))

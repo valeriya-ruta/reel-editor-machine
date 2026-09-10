@@ -286,10 +286,10 @@ def b10_wire():
         <div class="tile brand sm" id="g10m"><img src="assets/logos/mobbin-mark.png" alt=""></div>
         <div class="tile brand sm claude" id="g10c"><img src="assets/logos/claude-tile.png" alt=""></div>
         <svg id="g10svg" viewBox="0 0 1080 120" width="1080" height="120">
-          <defs><linearGradient id="wg" gradientUnits="userSpaceOnUse" x1="420" y1="0" x2="640" y2="0">
+          <defs><linearGradient id="wg" gradientUnits="userSpaceOnUse" x1="372" y1="0" x2="668" y2="0">
             <stop offset="0" stop-color="#ff8ab0"/><stop offset="1" stop-color="#d0173a"/>
           </linearGradient></defs>
-          <path class="wire" id="g10w" d="M 420 60 H 640"/>
+          <path class="wire" id="g10w" d="M 372 60 H 668"/>
         </svg>
         <i class="pkt" id="g10k1"></i><i class="pkt" id="g10k2"></i><i class="pkt" id="g10k3"></i>
       </div>'''
@@ -310,7 +310,7 @@ def b10_wire():
   [52.20, 53.30, 54.40].forEach(function (t, i) {
     var s = "#g10k" + (i + 1);
     tl.to(s, {autoAlpha: 1, duration: 0.10}, t);
-    tl.to(s, {x: 184, duration: 0.62, ease: "power1.inOut"}, t + 0.04);
+    tl.to(s, {x: 236, duration: 0.62, ease: "power1.inOut"}, t + 0.04);
     tl.to(s, {autoAlpha: 0, duration: 0.12}, t + 0.56);
   });
   tl.to("#g10", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 56.40);'''
@@ -455,15 +455,18 @@ k.css('''
     .valcard.big span { font-size: 150px; line-height: 150px; }
 
     /* b06 / b10 — brand tiles */
-    .tile.brand { width: 340px; height: 340px; left: 370px; top: 130px; }
+    .tile.brand { width: 340px; height: 340px; left: 370px; top: 130px;
+                  filter: var(--glow) var(--cast); }
     .tile.brand img { height: 190px; width: auto; }
     .tile.brand.sm { width: 260px; height: 260px; top: 180px; }
     .tile.brand.sm img { height: 146px; }
-    .tile.claude { background: none; box-shadow: none; }
-    .tile.claude img { width: 260px; height: 260px; }
+    .tile.brand.claude { background: none; box-shadow: none; }
+    .tile.brand.claude img { width: 260px; height: 260px;
+                             border-radius: 60px; }
     #g10m { left: 120px; }
     #g10c { left: 660px; }
-    .halo { width: 520px; height: 520px; left: 280px; top: 40px; }
+    .halo { width: 520px; height: 520px; left: 280px; top: 40px;
+            opacity: 0.55; }
 
     /* b07 — the wall */
     .masonry { position: absolute; left: 79px; top: 30px; width: 922px;
@@ -484,7 +487,7 @@ k.css('''
     #g10svg { position: absolute; left: 0; top: 250px; overflow: visible; }
     .wire { stroke: url(#wg); stroke-width: 24; }
     .pkt { position: absolute; display: block; width: 62px; height: 62px;
-           border-radius: 50%; background: var(--lit); left: 428px; top: 279px;
+           border-radius: 50%; background: var(--lit); left: 392px; top: 279px;
            filter: drop-shadow(0 0 26px rgba(255,110,156,0.9)); }
 
     /* b11 — found versus invented */

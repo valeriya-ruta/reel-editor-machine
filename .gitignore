@@ -19,13 +19,13 @@ REEL-*.mp4
 
 # Generated during a build — reproducible from the source
 study/
-work/r3/*.jpg
-work/r3/*.png
-work/r3/stills/
-work/r3/ex/
-work/r3/mob/
-work/r3/band/
-work/r3/verify/
+work/r*/*.jpg
+work/r*/*.png
+work/r*/stills/
+work/r*/ex/
+work/r*/mob/
+work/r*/band/
+work/r*/verify/
 work/ref/thumbs/
 
 # Superseded: the loose-overlay-clip model, kept on disk but not in the system
