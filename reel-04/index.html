@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 4 — Мобін</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+    @font-face {
+      font-family: "ProductSans";
+      src: url("assets/fonts/ProductSans-Black.woff") format("woff");
+      font-weight: 900; font-style: normal; font-display: block;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px;
+            overflow: hidden; background: #000;
+            font-family: "ProductSans", system-ui, sans-serif;
+      --surface:        #fdf6f6;
+      --container:      #f4dde2;
+      --container-high: #ecc8d0;
+      --graphite:       rgba(23,20,28,0.13);
+      --accent:         #b4122f;
+      --accent-deep:    #8d0d24;
+      --pink:           #ff6e9c;
+      --ink:            #17141c;
+
+      --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
+      --lit-blush:  linear-gradient(115deg, #fffdfd 0%, #fdf1f4 100%);
+      --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
+      --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
+      --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
+
+      --rim: inset 0 1.5px 0 rgba(255,255,255,0.92),
+             inset 0 -1.5px 0 rgba(255,255,255,0.14),
+             inset 0 0 0 1px rgba(255,255,255,0.28);
+      --rim-dark: inset 0 1.5px 0 rgba(255,255,255,0.16),
+                  inset 0 0 0 1px rgba(255,255,255,0.08);
+      --rim-glass: inset 0 2px 0 rgba(255,255,255,0.70),
+                   inset 0 -2px 0 rgba(255,255,255,0.10),
+                   inset 0 0 0 1.5px rgba(255,255,255,0.30);
+
+      --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
+              drop-shadow(0 24px 48px rgba(26,30,39,0.14));
+      --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))
+                 drop-shadow(0 12px 24px rgba(26,30,39,0.12));
+ }
+    .plate { position: absolute; inset: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    #scrim { position: absolute; left: 20px; top: 1247px;
+             width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png");
+             background-size: 100% 100%; background-repeat: no-repeat;
+             opacity: 0; visibility: hidden; pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; top: 1413px;
+           height: 118px; line-height: 118px; text-align: center;
+           color: #fff; font-size: 90px; font-weight: 900;
+           letter-spacing: -0.015em; white-space: nowrap;
+           opacity: 0; visibility: hidden; }
+    .g { position: absolute; left: 0; top: 40px; width: 1080px;
+         height: 600px; opacity: 0; visibility: hidden; }
+    .g.full { top: 0; height: 1920px; }
+
+    /* §5a.9 — glass over her footage is the house look. Panels only; an
+       edge-to-edge frosted ground blurs her out of her own reel. */
+    .glass { background: rgba(255,255,255,0.15);
+             -webkit-backdrop-filter: blur(24px) saturate(1.4);
+             backdrop-filter: blur(24px) saturate(1.4);
+             box-shadow: var(--rim); filter: var(--cast); }
+
+    /* A takeover: a tinted pane laid ON the footage, with a real margin so it
+       reads as an object rather than a blur applied to the video. */
+    .ground { position: absolute; left: 44px; top: 64px;
+              width: 992px; height: 1792px;
+              background: linear-gradient(158deg, rgba(196,20,52,0.62) 0%,
+                          rgba(141,13,36,0.70) 100%);
+              -webkit-backdrop-filter: blur(30px) saturate(1.5);
+              backdrop-filter: blur(30px) saturate(1.5);
+              box-shadow: var(--rim-glass); filter: var(--cast); }
+
+    .card { position: absolute; background: var(--lit-blush);
+            filter: var(--cast); box-shadow: var(--rim); }
+    .card.ink { background: var(--lit-ink); box-shadow: var(--rim-dark); }
+    .card.accent { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+
+    .tile { position: absolute; display: grid; place-items: center;
+            background: var(--lit-blush); filter: var(--cast);
+            box-shadow: var(--rim); }
+
+    /* §5a.3 — bar rhythm. One thick heading, then ragged body. Uniform bars
+       read as a loading state; ragged ones read as an abstracted screen. */
+    .ph { display: block; height: 66px; border-radius: 18px;
+          background: var(--lit-accent); margin-bottom: 26px;
+          box-shadow: var(--rim-dark); }
+    .pr { display: block; height: 40px; border-radius: 12px;
+          background: var(--graphite); margin-bottom: 18px; }
+    .pr:nth-of-type(2) { width: 94%; }
+    .pr:nth-of-type(3) { width: 71%; }
+    .pr:nth-of-type(4) { width: 43%; }
+
+    .phone { position: absolute; background: var(--lit-blush);
+             overflow: hidden; filter: var(--cast); box-shadow: var(--rim); }
+    .phone video, .phone img { width: 100%; height: 100%; object-fit: cover;
+                               display: block; }
+
+    /* a value in its own card — her reference's "big number" pattern, minus
+       the label, because a graphic here carries no words */
+    .valcard { position: absolute; background: rgba(255,255,255,0.16);
+               -webkit-backdrop-filter: blur(16px) saturate(1.3);
+               backdrop-filter: blur(16px) saturate(1.3);
+               box-shadow: var(--rim-dark);
+               display: grid; place-items: center; }
+    .valcard span { color: #fff; font-weight: 900; letter-spacing: -0.04em; }
+
+    .wire { fill: none; stroke-width: 20; stroke-linecap: round;
+            filter: drop-shadow(0 8px 18px rgba(26,30,39,0.22)); }
+    .node { fill: #fdf6f6; stroke: #b4122f; stroke-width: 16;
+            filter: drop-shadow(0 10px 22px rgba(26,30,39,0.24)); }
+    .node.hub { fill: #b4122f; stroke: #fff; }
+
+    .halo { position: absolute; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(255,110,156,0.5) 0%,
+                        rgba(255,110,156,0) 70%); }
+    .ring { position: absolute; border-radius: 50%; pointer-events: none;
+            border: 18px solid rgba(255,110,156,0.92);
+            filter: drop-shadow(0 0 40px rgba(255,110,156,0.55)); }
+
+    /* b01 — the easy part */
+    .fnlist { left: 160px; top: 90px; width: 760px; height: 380px;
+              padding: 44px; display: flex; flex-direction: column; gap: 26px; }
+    .fnrow { position: relative; display: block; height: 62px;
+             border-radius: 20px; background: var(--container); overflow: hidden; }
+    .fnrow:nth-child(2) { width: 82%; }
+    .fnrow:nth-child(3) { width: 64%; }
+    .fnrow:nth-child(4) { width: 45%; }
+    .fnfill { position: absolute; inset: 0; display: block;
+              background: var(--graphite); }
+    /* §5a.4 — the accent lands once, on the first row */
+    #b1r0 .fnfill { background: var(--lit-accent); }
+
+    /* b02 — the screen, then its pieces */
+    .phone { left: 380px; top: 30px; width: 320px; height: 580px; }
+    .pscr { position: absolute; left: 18px; top: 18px; width: 284px;
+            height: 544px; display: block; background: var(--lit);
+            padding: 30px 26px; }
+    .pscr .ph, .pscr .pr { position: relative; }
+    /* the pieces, once they are no longer a screen */
+    .loose { position: absolute; display: block; left: 430px; top: 290px;
+             border-radius: 18px; filter: var(--cast-sm); }
+    .loose.l0 { width: 220px; height: 62px; background: var(--lit-accent); }
+    .loose.l1 { width: 170px; height: 44px; background: var(--container-high); }
+    .loose.l2 { width: 250px; height: 44px; background: var(--container); }
+    .loose.l3 { width: 130px; height: 44px; background: var(--container-high); }
+
+    /* b03 — references going past */
+    .refstrip { position: absolute; left: 84px; top: 150px; width: 912px;
+                display: flex; gap: 22px; align-items: flex-start; }
+    .refcard { display: block; width: 138px; height: 250px; padding: 16px 14px;
+               background: var(--lit-blush); overflow: hidden;
+               filter: var(--cast-sm); box-shadow: var(--rim); }
+    .refcard.r1 { height: 210px; } .refcard.r2 { height: 280px; }
+    .refcard .ph { height: 34px; border-radius: 11px; margin-bottom: 12px; }
+    .refcard .pr { height: 16px; border-radius: 7px; margin-bottom: 9px; }
+
+    /* b04 — the considered surface */
+    .plaque { position: absolute; left: 210px; top: 105px; width: 660px;
+              height: 380px; padding: 44px; }
+    .plaque .ph { background: var(--lit-accent); height: 54px;
+                  border-radius: 16px; margin-bottom: 20px; width: 58%; }
+    .plaque .pr { height: 24px; border-radius: 9px; margin-bottom: 14px;
+                  background: rgba(255,255,255,0.34); }
+    .plaquerow { position: absolute; left: 44px; bottom: 40px;
+                 display: flex; gap: 14px; }
+    .chip { display: block; width: 96px; height: 44px; border-radius: 16px;
+            background: rgba(255,255,255,0.42); }
+    .chip.wide { width: 150px; }
+    .ring { width: 460px; height: 460px; left: 310px; top: 55px; }
+
+    /* b05 / b12 — numbers */
+    .valcard.big { left: 250px; top: 140px; width: 580px; height: 280px; }
+    .valcard.big span { font-size: 150px; line-height: 150px; }
+
+    /* b06 / b10 — brand tiles */
+    .tile.brand { width: 340px; height: 340px; left: 370px; top: 130px; }
+    .tile.brand img { height: 190px; width: auto; }
+    .tile.brand.sm { width: 260px; height: 260px; top: 180px; }
+    .tile.brand.sm img { height: 146px; }
+    .tile.claude { background: none; box-shadow: none; }
+    .tile.claude img { width: 260px; height: 260px; }
+    #g10m { left: 120px; }
+    #g10c { left: 660px; }
+    .halo { width: 520px; height: 520px; left: 280px; top: 40px; }
+
+    /* b07 — the wall */
+    .masonry { position: absolute; left: 79px; top: 30px; width: 922px;
+               display: flex; flex-wrap: wrap; gap: 26px;
+               align-content: flex-start; justify-content: center; }
+    .mt { display: block; width: 290px; padding: 22px 20px;
+          background: var(--lit-blush); overflow: hidden;
+          filter: var(--cast-sm); box-shadow: var(--rim); }
+    .mt .ph { height: 48px; border-radius: 14px; margin-bottom: 16px; }
+    .mt .pr { height: 22px; border-radius: 8px; margin-bottom: 12px; }
+    .m0 { height: 200px; } .m1 { height: 162px; } .m2 { height: 228px; }
+    .m3 { height: 180px; } .m4 { height: 210px; }
+
+    /* b08 / b09 — her capture, framed on the pane */
+    .phone.capture { left: 230px; top: 150px; width: 620px; height: 1102px; }
+
+    /* b10 — the wire */
+    #g10svg { position: absolute; left: 0; top: 250px; overflow: visible; }
+    .wire { stroke: url(#wg); stroke-width: 24; }
+    .pkt { position: absolute; display: block; width: 62px; height: 62px;
+           border-radius: 50%; background: var(--lit); left: 428px; top: 279px;
+           filter: drop-shadow(0 0 26px rgba(255,110,156,0.9)); }
+
+    /* b11 — found versus invented */
+    .pairrow { position: absolute; left: 190px; top: 90px; width: 700px;
+               display: flex; justify-content: space-between; }
+    .mini { display: block; width: 300px; height: 400px; padding: 30px 26px;
+            background: var(--lit-blush); overflow: hidden;
+            filter: var(--cast); box-shadow: var(--rim); }
+    .mini.fake { background: linear-gradient(115deg, #f7f2f3 0%, #efe6e8 100%);
+                 box-shadow: inset 0 0 0 3px rgba(180,18,47,0.18); }
+    .mini.fake .ph { background: var(--graphite); }
+
+    /* b13 — the comment field */
+    .cmt { left: 130px; top: 190px; width: 820px; height: 190px;
+           padding: 0 40px; display: flex; align-items: center; gap: 10px;
+           font-size: 62px; font-weight: 900; color: var(--ink); }
+    .caret { display: inline-block; width: 7px; height: 66px;
+             background: var(--accent); }
+    .cmtsend { position: absolute; right: 36px; width: 108px; height: 108px;
+               border-radius: 50%; background: var(--lit-accent);
+               box-shadow: var(--rim-dark); }
+
+
+    .fnrow { border-radius: 20px; }
+    .refcard { border-radius: 34px; }
+    .refcard.r1 { border-radius: 32px; }
+    .refcard.r2 { border-radius: 36px; }
+    .mt { border-radius: 44px; }
+    .mini { border-radius: 52px; }
+
+    .fnlist { clip-path: path('M 660.8 0 c 33.091 0 49.636 0 64.521 7.584 a 62 62 0 0 1 27.095 27.095 c 7.584 14.885 7.584 31.43 7.584 64.521 L 760 280.8 c 0 33.091 0 49.636 -7.584 64.521 a 62 62 0 0 1 -27.095 27.095 c -14.885 7.584 -31.43 7.584 -64.521 7.584 L 99.2 380 c -33.091 0 -49.636 0 -64.521 -7.584 a 62 62 0 0 1 -27.095 -27.095 c -7.584 -14.885 -7.584 -31.43 -7.584 -64.521 L 0 99.2 c 0 -33.091 0 -49.636 7.584 -64.521 a 62 62 0 0 1 27.095 -27.095 c 14.885 -7.584 31.43 -7.584 64.521 -7.584 Z'); }
+    .phone { clip-path: path('M 211.2 0 c 36.293 0 54.439 0 70.765 8.318 a 68 68 0 0 1 29.717 29.717 c 8.318 16.325 8.318 34.472 8.318 70.765 L 320 471.2 c 0 36.293 0 54.439 -8.318 70.765 a 68 68 0 0 1 -29.717 29.717 c -16.325 8.318 -34.472 8.318 -70.765 8.318 L 108.8 580 c -36.293 0 -54.439 0 -70.765 -8.318 a 68 68 0 0 1 -29.717 -29.717 c -8.318 -16.325 -8.318 -34.472 -8.318 -70.765 L 0 108.8 c 0 -36.293 0 -54.439 8.318 -70.765 a 68 68 0 0 1 29.717 -29.717 c 16.325 -8.318 34.472 -8.318 70.765 -8.318 Z'); }
+    .pscr { clip-path: path('M 200.8 0 c 27.753 0 41.63 0 54.114 6.361 a 52 52 0 0 1 22.725 22.725 c 6.361 12.484 6.361 26.361 6.361 54.114 L 284 460.8 c 0 27.753 0 41.63 -6.361 54.114 a 52 52 0 0 1 -22.725 22.725 c -12.484 6.361 -26.361 6.361 -54.114 6.361 L 83.2 544 c -27.753 0 -41.63 0 -54.114 -6.361 a 52 52 0 0 1 -22.725 -22.725 c -6.361 -12.484 -6.361 -26.361 -6.361 -54.114 L 0 83.2 c 0 -27.753 0 -41.63 6.361 -54.114 a 52 52 0 0 1 22.725 -22.725 c 12.484 -6.361 26.361 -6.361 54.114 -6.361 Z'); }
+    .plaque { clip-path: path('M 564 0 c 32.023 0 48.035 0 62.439 7.34 a 60 60 0 0 1 26.221 26.221 c 7.34 14.405 7.34 30.416 7.34 62.439 L 660 284 c 0 32.023 0 48.035 -7.34 62.439 a 60 60 0 0 1 -26.221 26.221 c -14.405 7.34 -30.416 7.34 -62.439 7.34 L 96 380 c -32.023 0 -48.035 0 -62.439 -7.34 a 60 60 0 0 1 -26.221 -26.221 c -7.34 -14.405 -7.34 -30.416 -7.34 -62.439 L 0 96 c 0 -32.023 0 -48.035 7.34 -62.439 a 60 60 0 0 1 26.221 -26.221 c 14.405 -7.34 30.416 -7.34 62.439 -7.34 Z'); }
+    .valcard.big { clip-path: path('M 487.2 0 c 30.956 0 46.434 0 60.358 7.095 a 58 58 0 0 1 25.347 25.347 c 7.095 13.925 7.095 29.402 7.095 60.358 L 580 187.2 c 0 30.956 0 46.434 -7.095 60.358 a 58 58 0 0 1 -25.347 25.347 c -13.925 7.095 -29.402 7.095 -60.358 7.095 L 92.8 280 c -30.956 0 -46.434 0 -60.358 -7.095 a 58 58 0 0 1 -25.347 -25.347 c -7.095 -13.925 -7.095 -29.402 -7.095 -60.358 L 0 92.8 c 0 -30.956 0 -46.434 7.095 -60.358 a 58 58 0 0 1 25.347 -25.347 c 13.925 -7.095 29.402 -7.095 60.358 -7.095 Z'); }
+    .tile.brand { clip-path: path('M 205.6 0 c 44.832 0 67.249 0 87.415 10.275 a 84 84 0 0 1 36.709 36.709 c 10.275 20.167 10.275 42.583 10.275 87.415 L 340 205.6 c 0 44.832 0 67.249 -10.275 87.415 a 84 84 0 0 1 -36.709 36.709 c -20.167 10.275 -42.583 10.275 -87.415 10.275 L 134.4 340 c -44.832 0 -67.249 0 -87.415 -10.275 a 84 84 0 0 1 -36.709 -36.709 c -10.275 -20.167 -10.275 -42.583 -10.275 -87.415 L 0 134.4 c 0 -44.832 0 -67.249 10.275 -87.415 a 84 84 0 0 1 36.709 -36.709 c 20.167 -10.275 42.583 -10.275 87.415 -10.275 Z'); }
+    .tile.brand.sm { clip-path: path('M 154.4 0 c 35.225 0 52.838 0 68.683 8.074 a 66 66 0 0 1 28.843 28.843 c 8.074 15.845 8.074 33.458 8.074 68.683 L 260 154.4 c 0 35.225 0 52.838 -8.074 68.683 a 66 66 0 0 1 -28.843 28.843 c -15.845 8.074 -33.458 8.074 -68.683 8.074 L 105.6 260 c -35.225 0 -52.838 0 -68.683 -8.074 a 66 66 0 0 1 -28.843 -28.843 c -8.074 -15.845 -8.074 -33.458 -8.074 -68.683 L 0 105.6 c 0 -35.225 0 -52.838 8.074 -68.683 a 66 66 0 0 1 28.843 -28.843 c 15.845 -8.074 33.458 -8.074 68.683 -8.074 Z'); }
+    .phone.capture { clip-path: path('M 501.6 0 c 39.495 0 59.243 0 77.009 9.052 a 74 74 0 0 1 32.339 32.339 c 9.052 17.766 9.052 37.513 9.052 77.009 L 620 983.6 c 0 39.495 0 59.243 -9.052 77.009 a 74 74 0 0 1 -32.339 32.339 c -17.766 9.052 -37.513 9.052 -77.009 9.052 L 118.4 1102 c -39.495 0 -59.243 0 -77.009 -9.052 a 74 74 0 0 1 -32.339 -32.339 c -9.052 -17.766 -9.052 -37.513 -9.052 -77.009 L 0 118.4 c 0 -39.495 0 -59.243 9.052 -77.009 a 74 74 0 0 1 32.339 -32.339 c 17.766 -9.052 37.513 -9.052 77.009 -9.052 Z'); }
+    .cmt { clip-path: path('M 736.8 0 c 27.753 0 41.63 0 54.114 6.361 a 52 52 0 0 1 22.725 22.725 c 6.361 12.484 6.361 26.361 6.361 54.114 L 820 106.8 c 0 27.753 0 41.63 -6.361 54.114 a 52 52 0 0 1 -22.725 22.725 c -12.484 6.361 -26.361 6.361 -54.114 6.361 L 83.2 190 c -27.753 0 -41.63 0 -54.114 -6.361 a 52 52 0 0 1 -22.725 -22.725 c -6.361 -12.484 -6.361 -26.361 -6.361 -54.114 L 0 83.2 c 0 -27.753 0 -41.63 6.361 -54.114 a 52 52 0 0 1 22.725 -22.725 c 12.484 -6.361 26.361 -6.361 54.114 -6.361 Z'); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="67.400" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="67.400" data-media-start="0"
+             muted playsinline></video>
+
+      <div class="g" id="g1">
+        <div class="card fnlist" id="g1c"><i class="fnrow" id="b1r0"><b class="fnfill"></b></i><i class="fnrow" id="b1r1"><b class="fnfill"></b></i><i class="fnrow" id="b1r2"><b class="fnfill"></b></i><i class="fnrow" id="b1r3"><b class="fnfill"></b></i></div>
+      </div>
+
+      <div class="g" id="g2">
+        <div class="phone" id="g2p">
+          <span class="pscr" id="g2s">
+            <b class="ph" id="g2e0"></b>
+            <b class="pr" id="g2e1"></b>
+            <b class="pr" id="g2e2"></b>
+            <b class="pr" id="g2e3"></b>
+          </span>
+        </div>
+        <i class="loose l0" id="g2l0"></i><i class="loose l1" id="g2l1"></i>
+        <i class="loose l2" id="g2l2"></i><i class="loose l3" id="g2l3"></i>
+      </div>
+
+      <div class="g" id="g3">
+        <div class="refstrip" id="g3s"><span class="refcard r0" id="g3c0"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span><span class="refcard r1" id="g3c1"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span><span class="refcard r2" id="g3c2"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span><span class="refcard r0" id="g3c3"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span><span class="refcard r1" id="g3c4"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span><span class="refcard r2" id="g3c5"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span></div>
+      </div>
+
+      <div class="g" id="g4">
+        <div class="glass plaque" id="g4p">
+          <b class="ph" id="g4h"></b>
+          <b class="pr"></b><b class="pr"></b><b class="pr"></b>
+          <span class="plaquerow"><i class="chip"></i><i class="chip"></i><i class="chip wide"></i></span>
+        </div>
+        <div class="ring" id="g4r"></div>
+      </div>
+
+      <div class="g" id="g5">
+        <div class="valcard big" id="g5v"><span>500 ₴</span></div>
+      </div>
+
+      <div class="g" id="g6">
+        <div class="tile brand" id="g6t"><img src="assets/logos/mobbin-mark.png" alt=""></div>
+        <div class="halo" id="g6h"></div>
+      </div>
+
+      <div class="g" id="g7">
+        <div class="masonry" id="g7m"><span class="mt m0" id="g7t0"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span><span class="mt m1" id="g7t1"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span><span class="mt m2" id="g7t2"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span><span class="mt m3" id="g7t3"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span><span class="mt m4" id="g7t4"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span><span class="mt m0" id="g7t5"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span><span class="mt m1" id="g7t6"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span><span class="mt m2" id="g7t7"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span><span class="mt m3" id="g7t8"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span></div>
+      </div>
+
+      <div class="g full" id="g8">
+        <div class="ground" id="g8bg"></div>
+        <div class="phone capture" id="g8f">
+          <video id="g8v" src="assets/mobbin-swipe.mp4"
+                 data-start="36.55" data-duration="4.60" data-media-start="0"
+                 muted playsinline></video>
+        </div>
+      </div>
+
+      <div class="g full" id="g9">
+        <div class="ground" id="g9bg"></div>
+        <div class="phone capture" id="g9f">
+          <video id="g9v" src="assets/mobbin-search.mp4"
+                 data-start="41.90" data-duration="3.70" data-media-start="0"
+                 muted playsinline></video>
+        </div>
+      </div>
+
+      <div class="g" id="g10">
+        <div class="tile brand sm" id="g10m"><img src="assets/logos/mobbin-mark.png" alt=""></div>
+        <div class="tile brand sm claude" id="g10c"><img src="assets/logos/claude-tile.png" alt=""></div>
+        <svg id="g10svg" viewBox="0 0 1080 120" width="1080" height="120">
+          <defs><linearGradient id="wg" gradientUnits="userSpaceOnUse" x1="420" y1="0" x2="640" y2="0">
+            <stop offset="0" stop-color="#ff8ab0"/><stop offset="1" stop-color="#d0173a"/>
+          </linearGradient></defs>
+          <path class="wire" id="g10w" d="M 420 60 H 640"/>
+        </svg>
+        <i class="pkt" id="g10k1"></i><i class="pkt" id="g10k2"></i><i class="pkt" id="g10k3"></i>
+      </div>
+
+      <div class="g" id="g11">
+        <div class="pairrow" id="g11r">
+          <span class="mini real" id="g11a"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span>
+          <span class="mini fake" id="g11b"><b class="ph"></b><b class="pr"></b><b class="pr"></b></span>
+        </div>
+      </div>
+
+      <div class="g" id="g12">
+        <div class="valcard big" id="g12v"><span>−10%</span></div>
+      </div>
+
+      <div class="g" id="g13">
+        <div class="card cmt" id="g13c">
+          <span class="cmttext" id="g13t"></span><i class="caret" id="g13k"></i>
+          <span class="cmtsend" id="g13s"></span>
+        </div>
+      </div>
+
+      <div id="scrim"></div>
+      <div class="cap" id="cap0">РОЗРОБИТИ</div>
+      <div class="cap" id="cap1">ФУНКЦІЇ</div>
+      <div class="cap" id="cap2">ДОДАТКУ</div>
+      <div class="cap" id="cap3">–</div>
+      <div class="cap" id="cap4">ЦЕ</div>
+      <div class="cap" id="cap5">НАЙПРОСТІША</div>
+      <div class="cap" id="cap6">ЧАСТИНА.</div>
+      <div class="cap" id="cap7">НАЙВАЖЧЕ</div>
+      <div class="cap" id="cap8">ЗРОБИТИ</div>
+      <div class="cap" id="cap9">ТАК,</div>
+      <div class="cap" id="cap10">ЩОБ В</div>
+      <div class="cap" id="cap11">НЬОМУ ВИГЛЯДАТИ</div>
+      <div class="cap" id="cap12">ЯК</div>
+      <div class="cap" id="cap13">СПРАВЖНІЙ</div>
+      <div class="cap" id="cap14">ДОДАТОК,</div>
+      <div class="cap" id="cap15">А</div>
+      <div class="cap" id="cap16">НЕ</div>
+      <div class="cap" id="cap17">ПРОСТО</div>
+      <div class="cap" id="cap18">НАБІР</div>
+      <div class="cap" id="cap19">ЦИФР,</div>
+      <div class="cap" id="cap20">БУКВ</div>
+      <div class="cap" id="cap21">І</div>
+      <div class="cap" id="cap22">КНОПОК,</div>
+      <div class="cap" id="cap23">РОЗКИДАНИХ</div>
+      <div class="cap" id="cap24">ПО</div>
+      <div class="cap" id="cap25">ЕКРАНУ.</div>
+      <div class="cap" id="cap26">І</div>
+      <div class="cap" id="cap27">ЦЕ</div>
+      <div class="cap" id="cap28">НЕ</div>
+      <div class="cap" id="cap29">ТОМУ,</div>
+      <div class="cap" id="cap30">ЩО</div>
+      <div class="cap" id="cap31">Я</div>
+      <div class="cap" id="cap32">ПОГАНО</div>
+      <div class="cap" id="cap33">РОЗУМІЮ</div>
+      <div class="cap" id="cap34">ДИЗАЙН</div>
+      <div class="cap" id="cap35">НАВПАКИ,</div>
+      <div class="cap" id="cap36">Я</div>
+      <div class="cap" id="cap37">ВВАЖАЮ,</div>
+      <div class="cap" id="cap38">ЩО</div>
+      <div class="cap" id="cap39">В МЕНЕ</div>
+      <div class="cap" id="cap40">З</div>
+      <div class="cap" id="cap41">ЦИМ</div>
+      <div class="cap" id="cap42">ДУЖЕ</div>
+      <div class="cap" id="cap43">НАВІТЬ</div>
+      <div class="cap" id="cap44">НЕ</div>
+      <div class="cap" id="cap45">ПОГАНО.</div>
+      <div class="cap" id="cap46">АЛЕ</div>
+      <div class="cap" id="cap47">НАВІТЬ</div>
+      <div class="cap" id="cap48">З</div>
+      <div class="cap" id="cap49">РОЗВИНУТОЮ</div>
+      <div class="cap" id="cap50">НАДИВЛЕНІСТЮ</div>
+      <div class="cap" id="cap51">ЗРОБИТИ</div>
+      <div class="cap" id="cap52">ТАК,</div>
+      <div class="cap" id="cap53">ЩОБ</div>
+      <div class="cap" id="cap54">ДОДАТОК</div>
+      <div class="cap" id="cap55">ВИГЛЯДАВ</div>
+      <div class="cap" id="cap56">ДОРОГО</div>
+      <div class="cap" id="cap57">І</div>
+      <div class="cap" id="cap58">ПРОДУМАНО,</div>
+      <div class="cap" id="cap59">ДОСИТЬ</div>
+      <div class="cap" id="cap60">СКЛАДНО.</div>
+      <div class="cap" id="cap61">ТАК</div>
+      <div class="cap" id="cap62">ОТ</div>
+      <div class="cap" id="cap63">Є</div>
+      <div class="cap" id="cap64">ЛАЙФХАК,</div>
+      <div class="cap" id="cap65">ЯКИЙ</div>
+      <div class="cap" id="cap66">КОШТУЄ</div>
+      <div class="cap" id="cap67">ЛИШЕ</div>
+      <div class="cap" id="cap68">500</div>
+      <div class="cap" id="cap69">ГРИВЕНЬ</div>
+      <div class="cap" id="cap70">НА</div>
+      <div class="cap" id="cap71">МІСЯЦЬ</div>
+      <div class="cap" id="cap72">І</div>
+      <div class="cap" id="cap73">ВІН</div>
+      <div class="cap" id="cap74">ПОВНІСТЮ</div>
+      <div class="cap" id="cap75">ЗМІНИВ</div>
+      <div class="cap" id="cap76">ТЕ,</div>
+      <div class="cap" id="cap77">ЯК Я</div>
+      <div class="cap" id="cap78">РОЗРОБЛЯЮ</div>
+      <div class="cap" id="cap79">ДОДАТКИ.</div>
+      <div class="cap" id="cap80">ПЛАТФОРМА</div>
+      <div class="cap" id="cap81">НАЗИВАЄТЬСЯ</div>
+      <div class="cap" id="cap82">МОБІН,</div>
+      <div class="cap" id="cap83">І ЦЕ,</div>
+      <div class="cap" id="cap84">ПО</div>
+      <div class="cap" id="cap85">СУТІ,</div>
+      <div class="cap" id="cap86">ПІНТЕРЕСТ</div>
+      <div class="cap" id="cap87">ДЛЯ</div>
+      <div class="cap" id="cap88">РОЗРОБНИКІВ.</div>
+      <div class="cap" id="cap89">ТАМ</div>
+      <div class="cap" id="cap90">ЗІБРАНІ</div>
+      <div class="cap" id="cap91">ВСІ</div>
+      <div class="cap" id="cap92">НАЙКРАЩІ</div>
+      <div class="cap" id="cap93">ДОДАТКИ,</div>
+      <div class="cap" id="cap94">І</div>
+      <div class="cap" id="cap95">В</div>
+      <div class="cap" id="cap96">КОЖНОГО</div>
+      <div class="cap" id="cap97">Є</div>
+      <div class="cap" id="cap98">НЕ</div>
+      <div class="cap" id="cap99">ПРОСТО</div>
+      <div class="cap" id="cap100">СКРІНШОТИ,</div>
+      <div class="cap" id="cap101">А СКРІНШОТИ</div>
+      <div class="cap" id="cap102">КОЖНОГО</div>
+      <div class="cap" id="cap103">ЕТАПУ</div>
+      <div class="cap" id="cap104">КОРИСТУВАННЯ</div>
+      <div class="cap" id="cap105">КОЖЕН</div>
+      <div class="cap" id="cap106">ЕКРАН</div>
+      <div class="cap" id="cap107">МОЖНА</div>
+      <div class="cap" id="cap108">ШУКАТИ</div>
+      <div class="cap" id="cap109">САМЕ</div>
+      <div class="cap" id="cap110">ПІД</div>
+      <div class="cap" id="cap111">СВОЇ</div>
+      <div class="cap" id="cap112">ПРОБЛЕМИ.</div>
+      <div class="cap" id="cap113">ТОБТО</div>
+      <div class="cap" id="cap114">ОНБОРДИНГ,</div>
+      <div class="cap" id="cap115">СПИСОК</div>
+      <div class="cap" id="cap116">ЗАДАЧ,</div>
+      <div class="cap" id="cap117">БУДЬ-ЩО.</div>
+      <div class="cap" id="cap118">А</div>
+      <div class="cap" id="cap119">НАЙВАЖЛИВІШЕ</div>
+      <div class="cap" id="cap120">У</div>
+      <div class="cap" id="cap121">МОБІНА</div>
+      <div class="cap" id="cap122">Є</div>
+      <div class="cap" id="cap123">БЕЗКОШТОВНИЙ</div>
+      <div class="cap" id="cap124">MCP,</div>
+      <div class="cap" id="cap125">ЯКИЙ</div>
+      <div class="cap" id="cap126">ПІДКЛЮЧАЄТЬСЯ</div>
+      <div class="cap" id="cap127">ПРЯМО</div>
+      <div class="cap" id="cap128">ДО</div>
+      <div class="cap" id="cap129">ШТУЧНОГО</div>
+      <div class="cap" id="cap130">ІНТЕЛЕКТУ.</div>
+      <div class="cap" id="cap131">ТОБТО</div>
+      <div class="cap" id="cap132">МІЙ</div>
+      <div class="cap" id="cap133">КЛОД</div>
+      <div class="cap" id="cap134">САМ</div>
+      <div class="cap" id="cap135">ЗАХОДИТЬ</div>
+      <div class="cap" id="cap136">ТУДИ,</div>
+      <div class="cap" id="cap137">ДИВИТЬСЯ,</div>
+      <div class="cap" id="cap138">ШУКАЄ</div>
+      <div class="cap" id="cap139">ВАРІАНТИ</div>
+      <div class="cap" id="cap140">ПІД</div>
+      <div class="cap" id="cap141">ЗАДАЧУ</div>
+      <div class="cap" id="cap142">І</div>
+      <div class="cap" id="cap143">ВЖЕ</div>
+      <div class="cap" id="cap144">НА ОСНОВІ</div>
+      <div class="cap" id="cap145">ЦЬОГО</div>
+      <div class="cap" id="cap146">РОЗРОБЛЯЄ</div>
+      <div class="cap" id="cap147">МЕНІ</div>
+      <div class="cap" id="cap148">ДИЗАЙН,</div>
+      <div class="cap" id="cap149">А НЕ</div>
+      <div class="cap" id="cap150">ВИГАДУЄ</div>
+      <div class="cap" id="cap151">З</div>
+      <div class="cap" id="cap152">ГОЛОВИ.</div>
+      <div class="cap" id="cap153">І ЯКЩО</div>
+      <div class="cap" id="cap154">ТИ ЗАРЕЄСТРУЄШСЯ</div>
+      <div class="cap" id="cap155">ЗА</div>
+      <div class="cap" id="cap156">МОЇМ</div>
+      <div class="cap" id="cap157">ПОСИЛАННЯМ,</div>
+      <div class="cap" id="cap158">ТО В ТЕБЕ</div>
+      <div class="cap" id="cap159">БУДЕ</div>
+      <div class="cap" id="cap160">ЗНИЖКА</div>
+      <div class="cap" id="cap161">10%.</div>
+      <div class="cap" id="cap162">МЄЛОЧЬ,</div>
+      <div class="cap" id="cap163">АЛЕ</div>
+      <div class="cap" id="cap164">ПРИЄМНО)</div>
+      <div class="cap" id="cap165">ПИШИ</div>
+      <div class="cap" id="cap166">«ЗНИЖКА»</div>
+      <div class="cap" id="cap167">В</div>
+      <div class="cap" id="cap168">КОМЕНТАРІ,</div>
+      <div class="cap" id="cap169">І</div>
+      <div class="cap" id="cap170">Я</div>
+      <div class="cap" id="cap171">СКИНУ</div>
+      <div class="cap" id="cap172">ТОБІ</div>
+      <div class="cap" id="cap173">ПОСИЛАННЯ</div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="67.400" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  tl.set("#cap0", {autoAlpha: 1}, 0.540);
+  tl.set("#cap0", {autoAlpha: 0}, 0.935);
+  tl.set("#cap1", {autoAlpha: 1}, 1.020);
+  tl.set("#cap1", {autoAlpha: 0}, 1.255);
+  tl.set("#cap2", {autoAlpha: 1}, 1.340);
+  tl.set("#cap2", {autoAlpha: 0}, 1.695);
+  tl.set("#cap3", {autoAlpha: 1}, 1.780);
+  tl.set("#cap3", {autoAlpha: 0}, 1.915);
+  tl.set("#cap4", {autoAlpha: 1}, 2.000);
+  tl.set("#cap4", {autoAlpha: 0}, 2.100);
+  tl.set("#cap5", {autoAlpha: 1}, 2.160);
+  tl.set("#cap5", {autoAlpha: 0}, 2.715);
+  tl.set("#cap6", {autoAlpha: 1}, 2.800);
+  tl.set("#cap6", {autoAlpha: 0}, 3.315);
+  tl.set("#cap7", {autoAlpha: 1}, 3.400);
+  tl.set("#cap7", {autoAlpha: 0}, 3.715);
+  tl.set("#cap8", {autoAlpha: 1}, 3.800);
+  tl.set("#cap8", {autoAlpha: 0}, 4.075);
+  tl.set("#cap9", {autoAlpha: 1}, 4.160);
+  tl.set("#cap9", {autoAlpha: 0}, 4.355);
+  tl.set("#cap10", {autoAlpha: 1}, 4.440);
+  tl.set("#cap10", {autoAlpha: 0}, 4.540);
+  tl.set("#cap11", {autoAlpha: 1}, 4.620);
+  tl.set("#cap11", {autoAlpha: 0}, 5.015);
+  tl.set("#cap12", {autoAlpha: 1}, 5.100);
+  tl.set("#cap12", {autoAlpha: 0}, 5.295);
+  tl.set("#cap13", {autoAlpha: 1}, 5.380);
+  tl.set("#cap13", {autoAlpha: 0}, 5.775);
+  tl.set("#cap14", {autoAlpha: 1}, 5.860);
+  tl.set("#cap14", {autoAlpha: 0}, 6.475);
+  tl.set("#cap15", {autoAlpha: 1}, 6.560);
+  tl.set("#cap15", {autoAlpha: 0}, 6.660);
+  tl.set("#cap16", {autoAlpha: 1}, 6.680);
+  tl.set("#cap16", {autoAlpha: 0}, 6.780);
+  tl.set("#cap17", {autoAlpha: 1}, 6.800);
+  tl.set("#cap17", {autoAlpha: 0}, 6.955);
+  tl.set("#cap18", {autoAlpha: 1}, 7.040);
+  tl.set("#cap18", {autoAlpha: 0}, 7.275);
+  tl.set("#cap19", {autoAlpha: 1}, 7.360);
+  tl.set("#cap19", {autoAlpha: 0}, 7.795);
+  tl.set("#cap20", {autoAlpha: 1}, 7.880);
+  tl.set("#cap20", {autoAlpha: 0}, 7.980);
+  tl.set("#cap21", {autoAlpha: 1}, 8.060);
+  tl.set("#cap21", {autoAlpha: 0}, 8.160);
+  tl.set("#cap22", {autoAlpha: 1}, 8.180);
+  tl.set("#cap22", {autoAlpha: 0}, 8.535);
+  tl.set("#cap23", {autoAlpha: 1}, 8.620);
+  tl.set("#cap23", {autoAlpha: 0}, 9.055);
+  tl.set("#cap24", {autoAlpha: 1}, 9.140);
+  tl.set("#cap24", {autoAlpha: 0}, 9.255);
+  tl.set("#cap25", {autoAlpha: 1}, 9.340);
+  tl.set("#cap25", {autoAlpha: 0}, 9.695);
+  tl.set("#cap26", {autoAlpha: 1}, 9.780);
+  tl.set("#cap26", {autoAlpha: 0}, 9.880);
+  tl.set("#cap27", {autoAlpha: 1}, 9.940);
+  tl.set("#cap27", {autoAlpha: 0}, 10.040);
+  tl.set("#cap28", {autoAlpha: 1}, 10.080);
+  tl.set("#cap28", {autoAlpha: 0}, 10.180);
+  tl.set("#cap29", {autoAlpha: 1}, 10.240);
+  tl.set("#cap29", {autoAlpha: 0}, 10.415);
+  tl.set("#cap30", {autoAlpha: 1}, 10.500);
+  tl.set("#cap30", {autoAlpha: 0}, 10.600);
+  tl.set("#cap31", {autoAlpha: 1}, 10.640);
+  tl.set("#cap31", {autoAlpha: 0}, 10.740);
+  tl.set("#cap32", {autoAlpha: 1}, 10.800);
+  tl.set("#cap32", {autoAlpha: 0}, 11.175);
+  tl.set("#cap33", {autoAlpha: 1}, 11.260);
+  tl.set("#cap33", {autoAlpha: 0}, 11.595);
+  tl.set("#cap34", {autoAlpha: 1}, 11.680);
+  tl.set("#cap34", {autoAlpha: 0}, 12.055);
+  tl.set("#cap35", {autoAlpha: 1}, 12.140);
+  tl.set("#cap35", {autoAlpha: 0}, 12.395);
+  tl.set("#cap36", {autoAlpha: 1}, 12.480);
+  tl.set("#cap36", {autoAlpha: 0}, 12.580);
+  tl.set("#cap37", {autoAlpha: 1}, 12.660);
+  tl.set("#cap37", {autoAlpha: 0}, 12.875);
+  tl.set("#cap38", {autoAlpha: 1}, 12.960);
+  tl.set("#cap38", {autoAlpha: 0}, 13.060);
+  tl.set("#cap39", {autoAlpha: 1}, 13.080);
+  tl.set("#cap39", {autoAlpha: 0}, 13.215);
+  tl.set("#cap40", {autoAlpha: 1}, 13.300);
+  tl.set("#cap40", {autoAlpha: 0}, 13.400);
+  tl.set("#cap41", {autoAlpha: 1}, 13.420);
+  tl.set("#cap41", {autoAlpha: 0}, 13.520);
+  tl.set("#cap42", {autoAlpha: 1}, 13.580);
+  tl.set("#cap42", {autoAlpha: 0}, 13.815);
+  tl.set("#cap43", {autoAlpha: 1}, 13.900);
+  tl.set("#cap43", {autoAlpha: 0}, 14.055);
+  tl.set("#cap44", {autoAlpha: 1}, 14.140);
+  tl.set("#cap44", {autoAlpha: 0}, 14.240);
+  tl.set("#cap45", {autoAlpha: 1}, 14.320);
+  tl.set("#cap45", {autoAlpha: 0}, 14.835);
+  tl.set("#cap46", {autoAlpha: 1}, 14.920);
+  tl.set("#cap46", {autoAlpha: 0}, 15.075);
+  tl.set("#cap47", {autoAlpha: 1}, 15.160);
+  tl.set("#cap47", {autoAlpha: 0}, 15.375);
+  tl.set("#cap48", {autoAlpha: 1}, 15.460);
+  tl.set("#cap48", {autoAlpha: 0}, 15.575);
+  tl.set("#cap49", {autoAlpha: 1}, 15.660);
+  tl.set("#cap49", {autoAlpha: 0}, 16.202);
+  tl.set("#cap50", {autoAlpha: 1}, 16.287);
+  tl.set("#cap50", {autoAlpha: 0}, 16.955);
+  tl.set("#cap51", {autoAlpha: 1}, 17.040);
+  tl.set("#cap51", {autoAlpha: 0}, 17.395);
+  tl.set("#cap52", {autoAlpha: 1}, 17.480);
+  tl.set("#cap52", {autoAlpha: 0}, 17.735);
+  tl.set("#cap53", {autoAlpha: 1}, 17.820);
+  tl.set("#cap53", {autoAlpha: 0}, 17.920);
+  tl.set("#cap54", {autoAlpha: 1}, 17.920);
+  tl.set("#cap54", {autoAlpha: 0}, 18.235);
+  tl.set("#cap55", {autoAlpha: 1}, 18.320);
+  tl.set("#cap55", {autoAlpha: 0}, 18.735);
+  tl.set("#cap56", {autoAlpha: 1}, 18.820);
+  tl.set("#cap56", {autoAlpha: 0}, 19.155);
+  tl.set("#cap57", {autoAlpha: 1}, 19.240);
+  tl.set("#cap57", {autoAlpha: 0}, 19.340);
+  tl.set("#cap58", {autoAlpha: 1}, 19.380);
+  tl.set("#cap58", {autoAlpha: 0}, 20.395);
+  tl.set("#cap59", {autoAlpha: 1}, 20.480);
+  tl.set("#cap59", {autoAlpha: 0}, 20.580);
+  tl.set("#cap60", {autoAlpha: 1}, 20.600);
+  tl.set("#cap60", {autoAlpha: 0}, 20.915);
+  tl.set("#cap61", {autoAlpha: 1}, 21.000);
+  tl.set("#cap61", {autoAlpha: 0}, 21.100);
+  tl.set("#cap62", {autoAlpha: 1}, 21.180);
+  tl.set("#cap62", {autoAlpha: 0}, 21.280);
+  tl.set("#cap63", {autoAlpha: 1}, 21.320);
+  tl.set("#cap63", {autoAlpha: 0}, 21.420);
+  tl.set("#cap64", {autoAlpha: 1}, 21.460);
+  tl.set("#cap64", {autoAlpha: 0}, 21.875);
+  tl.set("#cap65", {autoAlpha: 1}, 21.960);
+  tl.set("#cap65", {autoAlpha: 0}, 22.060);
+  tl.set("#cap66", {autoAlpha: 1}, 22.080);
+  tl.set("#cap66", {autoAlpha: 0}, 22.375);
+  tl.set("#cap67", {autoAlpha: 1}, 22.460);
+  tl.set("#cap67", {autoAlpha: 0}, 23.275);
+  tl.set("#cap68", {autoAlpha: 1}, 23.360);
+  tl.set("#cap68", {autoAlpha: 0}, 23.815);
+  tl.set("#cap69", {autoAlpha: 1}, 23.900);
+  tl.set("#cap69", {autoAlpha: 0}, 24.335);
+  tl.set("#cap70", {autoAlpha: 1}, 24.420);
+  tl.set("#cap70", {autoAlpha: 0}, 24.520);
+  tl.set("#cap71", {autoAlpha: 1}, 24.600);
+  tl.set("#cap71", {autoAlpha: 0}, 25.255);
+  tl.set("#cap72", {autoAlpha: 1}, 25.340);
+  tl.set("#cap72", {autoAlpha: 0}, 25.440);
+  tl.set("#cap73", {autoAlpha: 1}, 25.460);
+  tl.set("#cap73", {autoAlpha: 0}, 25.575);
+  tl.set("#cap74", {autoAlpha: 1}, 25.660);
+  tl.set("#cap74", {autoAlpha: 0}, 25.935);
+  tl.set("#cap75", {autoAlpha: 1}, 26.020);
+  tl.set("#cap75", {autoAlpha: 0}, 26.235);
+  tl.set("#cap76", {autoAlpha: 1}, 26.320);
+  tl.set("#cap76", {autoAlpha: 0}, 26.535);
+  tl.set("#cap77", {autoAlpha: 1}, 26.620);
+  tl.set("#cap77", {autoAlpha: 0}, 26.735);
+  tl.set("#cap78", {autoAlpha: 1}, 26.820);
+  tl.set("#cap78", {autoAlpha: 0}, 27.115);
+  tl.set("#cap79", {autoAlpha: 1}, 27.200);
+  tl.set("#cap79", {autoAlpha: 0}, 27.935);
+  tl.set("#cap80", {autoAlpha: 1}, 28.020);
+  tl.set("#cap80", {autoAlpha: 0}, 28.355);
+  tl.set("#cap81", {autoAlpha: 1}, 28.440);
+  tl.set("#cap81", {autoAlpha: 0}, 29.195);
+  tl.set("#cap82", {autoAlpha: 1}, 29.280);
+  tl.set("#cap82", {autoAlpha: 0}, 29.935);
+  tl.set("#cap83", {autoAlpha: 1}, 30.020);
+  tl.set("#cap83", {autoAlpha: 0}, 30.275);
+  tl.set("#cap84", {autoAlpha: 1}, 30.360);
+  tl.set("#cap84", {autoAlpha: 0}, 30.460);
+  tl.set("#cap85", {autoAlpha: 1}, 30.480);
+  tl.set("#cap85", {autoAlpha: 0}, 30.995);
+  tl.set("#cap86", {autoAlpha: 1}, 31.080);
+  tl.set("#cap86", {autoAlpha: 0}, 31.275);
+  tl.set("#cap87", {autoAlpha: 1}, 31.360);
+  tl.set("#cap87", {autoAlpha: 0}, 31.460);
+  tl.set("#cap88", {autoAlpha: 1}, 31.500);
+  tl.set("#cap88", {autoAlpha: 0}, 32.175);
+  tl.set("#cap89", {autoAlpha: 1}, 32.260);
+  tl.set("#cap89", {autoAlpha: 0}, 32.395);
+  tl.set("#cap90", {autoAlpha: 1}, 32.480);
+  tl.set("#cap90", {autoAlpha: 0}, 32.955);
+  tl.set("#cap91", {autoAlpha: 1}, 33.040);
+  tl.set("#cap91", {autoAlpha: 0}, 33.475);
+  tl.set("#cap92", {autoAlpha: 1}, 33.560);
+  tl.set("#cap92", {autoAlpha: 0}, 34.275);
+  tl.set("#cap93", {autoAlpha: 1}, 34.360);
+  tl.set("#cap93", {autoAlpha: 0}, 35.035);
+  tl.set("#cap94", {autoAlpha: 1}, 35.120);
+  tl.set("#cap94", {autoAlpha: 0}, 35.220);
+  tl.set("#cap95", {autoAlpha: 1}, 35.300);
+  tl.set("#cap95", {autoAlpha: 0}, 35.400);
+  tl.set("#cap96", {autoAlpha: 1}, 35.420);
+  tl.set("#cap96", {autoAlpha: 0}, 35.575);
+  tl.set("#cap97", {autoAlpha: 1}, 35.660);
+  tl.set("#cap97", {autoAlpha: 0}, 35.760);
+  tl.set("#cap98", {autoAlpha: 1}, 35.820);
+  tl.set("#cap98", {autoAlpha: 0}, 35.935);
+  tl.set("#cap99", {autoAlpha: 1}, 36.020);
+  tl.set("#cap99", {autoAlpha: 0}, 36.155);
+  tl.set("#cap100", {autoAlpha: 1}, 36.240);
+  tl.set("#cap100", {autoAlpha: 0}, 36.895);
+  tl.set("#cap101", {autoAlpha: 1}, 36.980);
+  tl.set("#cap101", {autoAlpha: 0}, 37.735);
+  tl.set("#cap102", {autoAlpha: 1}, 37.820);
+  tl.set("#cap102", {autoAlpha: 0}, 38.235);
+  tl.set("#cap103", {autoAlpha: 1}, 38.320);
+  tl.set("#cap103", {autoAlpha: 0}, 38.775);
+  tl.set("#cap104", {autoAlpha: 1}, 38.860);
+  tl.set("#cap104", {autoAlpha: 0}, 39.555);
+  tl.set("#cap105", {autoAlpha: 1}, 39.640);
+  tl.set("#cap105", {autoAlpha: 0}, 39.895);
+  tl.set("#cap106", {autoAlpha: 1}, 39.980);
+  tl.set("#cap106", {autoAlpha: 0}, 40.135);
+  tl.set("#cap107", {autoAlpha: 1}, 40.220);
+  tl.set("#cap107", {autoAlpha: 0}, 40.375);
+  tl.set("#cap108", {autoAlpha: 1}, 40.460);
+  tl.set("#cap108", {autoAlpha: 0}, 40.855);
+  tl.set("#cap109", {autoAlpha: 1}, 40.940);
+  tl.set("#cap109", {autoAlpha: 0}, 41.335);
+  tl.set("#cap110", {autoAlpha: 1}, 41.420);
+  tl.set("#cap110", {autoAlpha: 0}, 41.520);
+  tl.set("#cap111", {autoAlpha: 1}, 41.560);
+  tl.set("#cap111", {autoAlpha: 0}, 41.715);
+  tl.set("#cap112", {autoAlpha: 1}, 41.800);
+  tl.set("#cap112", {autoAlpha: 0}, 42.155);
+  tl.set("#cap113", {autoAlpha: 1}, 42.240);
+  tl.set("#cap113", {autoAlpha: 0}, 42.395);
+  tl.set("#cap114", {autoAlpha: 1}, 42.480);
+  tl.set("#cap114", {autoAlpha: 0}, 43.075);
+  tl.set("#cap115", {autoAlpha: 1}, 43.160);
+  tl.set("#cap115", {autoAlpha: 0}, 43.415);
+  tl.set("#cap116", {autoAlpha: 1}, 43.500);
+  tl.set("#cap116", {autoAlpha: 0}, 43.895);
+  tl.set("#cap117", {autoAlpha: 1}, 43.980);
+  tl.set("#cap117", {autoAlpha: 0}, 44.598);
+  tl.set("#cap118", {autoAlpha: 1}, 44.683);
+  tl.set("#cap118", {autoAlpha: 0}, 44.783);
+  tl.set("#cap119", {autoAlpha: 1}, 44.800);
+  tl.set("#cap119", {autoAlpha: 0}, 45.835);
+  tl.set("#cap120", {autoAlpha: 1}, 45.920);
+  tl.set("#cap120", {autoAlpha: 0}, 46.020);
+  tl.set("#cap121", {autoAlpha: 1}, 46.040);
+  tl.set("#cap121", {autoAlpha: 0}, 46.255);
+  tl.set("#cap122", {autoAlpha: 1}, 46.340);
+  tl.set("#cap122", {autoAlpha: 0}, 46.695);
+  tl.set("#cap123", {autoAlpha: 1}, 46.780);
+  tl.set("#cap123", {autoAlpha: 0}, 47.835);
+  tl.set("#cap124", {autoAlpha: 1}, 47.920);
+  tl.set("#cap124", {autoAlpha: 0}, 48.675);
+  tl.set("#cap125", {autoAlpha: 1}, 48.760);
+  tl.set("#cap125", {autoAlpha: 0}, 48.860);
+  tl.set("#cap126", {autoAlpha: 1}, 48.860);
+  tl.set("#cap126", {autoAlpha: 0}, 49.555);
+  tl.set("#cap127", {autoAlpha: 1}, 49.640);
+  tl.set("#cap127", {autoAlpha: 0}, 49.935);
+  tl.set("#cap128", {autoAlpha: 1}, 50.020);
+  tl.set("#cap128", {autoAlpha: 0}, 50.315);
+  tl.set("#cap129", {autoAlpha: 1}, 50.400);
+  tl.set("#cap129", {autoAlpha: 0}, 50.655);
+  tl.set("#cap130", {autoAlpha: 1}, 50.740);
+  tl.set("#cap130", {autoAlpha: 0}, 51.355);
+  tl.set("#cap131", {autoAlpha: 1}, 51.440);
+  tl.set("#cap131", {autoAlpha: 0}, 51.855);
+  tl.set("#cap132", {autoAlpha: 1}, 51.940);
+  tl.set("#cap132", {autoAlpha: 0}, 52.115);
+  tl.set("#cap133", {autoAlpha: 1}, 52.200);
+  tl.set("#cap133", {autoAlpha: 0}, 52.595);
+  tl.set("#cap134", {autoAlpha: 1}, 52.680);
+  tl.set("#cap134", {autoAlpha: 0}, 52.995);
+  tl.set("#cap135", {autoAlpha: 1}, 53.080);
+  tl.set("#cap135", {autoAlpha: 0}, 53.535);
+  tl.set("#cap136", {autoAlpha: 1}, 53.620);
+  tl.set("#cap136", {autoAlpha: 0}, 54.255);
+  tl.set("#cap137", {autoAlpha: 1}, 54.340);
+  tl.set("#cap137", {autoAlpha: 0}, 54.955);
+  tl.set("#cap138", {autoAlpha: 1}, 55.040);
+  tl.set("#cap138", {autoAlpha: 0}, 55.375);
+  tl.set("#cap139", {autoAlpha: 1}, 55.460);
+  tl.set("#cap139", {autoAlpha: 0}, 55.695);
+  tl.set("#cap140", {autoAlpha: 1}, 55.780);
+  tl.set("#cap140", {autoAlpha: 0}, 55.880);
+  tl.set("#cap141", {autoAlpha: 1}, 55.960);
+  tl.set("#cap141", {autoAlpha: 0}, 56.275);
+  tl.set("#cap142", {autoAlpha: 1}, 56.360);
+  tl.set("#cap142", {autoAlpha: 0}, 56.460);
+  tl.set("#cap143", {autoAlpha: 1}, 56.520);
+  tl.set("#cap143", {autoAlpha: 0}, 56.620);
+  tl.set("#cap144", {autoAlpha: 1}, 56.700);
+  tl.set("#cap144", {autoAlpha: 0}, 57.015);
+  tl.set("#cap145", {autoAlpha: 1}, 57.100);
+  tl.set("#cap145", {autoAlpha: 0}, 57.335);
+  tl.set("#cap146", {autoAlpha: 1}, 57.420);
+  tl.set("#cap146", {autoAlpha: 0}, 57.815);
+  tl.set("#cap147", {autoAlpha: 1}, 57.900);
+  tl.set("#cap147", {autoAlpha: 0}, 58.095);
+  tl.set("#cap148", {autoAlpha: 1}, 58.180);
+  tl.set("#cap148", {autoAlpha: 0}, 58.575);
+  tl.set("#cap149", {autoAlpha: 1}, 58.660);
+  tl.set("#cap149", {autoAlpha: 0}, 58.775);
+  tl.set("#cap150", {autoAlpha: 1}, 58.860);
+  tl.set("#cap150", {autoAlpha: 0}, 59.135);
+  tl.set("#cap151", {autoAlpha: 1}, 59.220);
+  tl.set("#cap151", {autoAlpha: 0}, 59.320);
+  tl.set("#cap152", {autoAlpha: 1}, 59.360);
+  tl.set("#cap152", {autoAlpha: 0}, 59.775);
+  tl.set("#cap153", {autoAlpha: 1}, 59.860);
+  tl.set("#cap153", {autoAlpha: 0}, 59.995);
+  tl.set("#cap154", {autoAlpha: 1}, 60.080);
+  tl.set("#cap154", {autoAlpha: 0}, 60.715);
+  tl.set("#cap155", {autoAlpha: 1}, 60.800);
+  tl.set("#cap155", {autoAlpha: 0}, 60.900);
+  tl.set("#cap156", {autoAlpha: 1}, 60.960);
+  tl.set("#cap156", {autoAlpha: 0}, 61.135);
+  tl.set("#cap157", {autoAlpha: 1}, 61.220);
+  tl.set("#cap157", {autoAlpha: 0}, 61.615);
+  tl.set("#cap158", {autoAlpha: 1}, 61.700);
+  tl.set("#cap158", {autoAlpha: 0}, 61.835);
+  tl.set("#cap159", {autoAlpha: 1}, 61.920);
+  tl.set("#cap159", {autoAlpha: 0}, 62.020);
+  tl.set("#cap160", {autoAlpha: 1}, 62.100);
+  tl.set("#cap160", {autoAlpha: 0}, 62.435);
+  tl.set("#cap161", {autoAlpha: 1}, 62.520);
+  tl.set("#cap161", {autoAlpha: 0}, 63.355);
+  tl.set("#cap162", {autoAlpha: 1}, 63.440);
+  tl.set("#cap162", {autoAlpha: 0}, 63.975);
+  tl.set("#cap163", {autoAlpha: 1}, 64.060);
+  tl.set("#cap163", {autoAlpha: 0}, 64.295);
+  tl.set("#cap164", {autoAlpha: 1}, 64.380);
+  tl.set("#cap164", {autoAlpha: 0}, 64.815);
+  tl.set("#cap165", {autoAlpha: 1}, 64.900);
+  tl.set("#cap165", {autoAlpha: 0}, 65.135);
+  tl.set("#cap166", {autoAlpha: 1}, 65.220);
+  tl.set("#cap166", {autoAlpha: 0}, 65.515);
+  tl.set("#cap167", {autoAlpha: 1}, 65.600);
+  tl.set("#cap167", {autoAlpha: 0}, 65.700);
+  tl.set("#cap168", {autoAlpha: 1}, 65.740);
+  tl.set("#cap168", {autoAlpha: 0}, 66.075);
+  tl.set("#cap169", {autoAlpha: 1}, 66.160);
+  tl.set("#cap169", {autoAlpha: 0}, 66.260);
+  tl.set("#cap170", {autoAlpha: 1}, 66.280);
+  tl.set("#cap170", {autoAlpha: 0}, 66.395);
+  tl.set("#cap171", {autoAlpha: 1}, 66.480);
+  tl.set("#cap171", {autoAlpha: 0}, 66.635);
+  tl.set("#cap172", {autoAlpha: 1}, 66.720);
+  tl.set("#cap172", {autoAlpha: 0}, 66.835);
+  tl.set("#cap173", {autoAlpha: 1}, 66.920);
+  tl.set("#cap173", {autoAlpha: 0}, 67.380);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.240);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 67.480);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 36.100);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 41.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 41.500);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 45.400);
+
+  /* b01_functions_are_easy */
+
+  gsap.set("#g1", {autoAlpha: 0});
+  gsap.set("#g1c", {scale: 0.92, transformOrigin: "50% 50%"});
+  gsap.set(".fnfill", {scaleX: 0, transformOrigin: "0% 50%"});
+  tl.to("#g1", {autoAlpha: 1, duration: 0.16}, 1.70);
+  tl.to("#g1c", {scale: 1, duration: 0.30, ease: "power3.out"}, 1.70);
+  ["#b1r0 .fnfill","#b1r1 .fnfill","#b1r2 .fnfill","#b1r3 .fnfill"].forEach(function (s, i) {
+    tl.to(s, {scaleX: 1, duration: 0.16, ease: "power2.out"}, 2.16 + i * 0.17);
+  });
+  tl.to("#g1", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 4.30);
+  /* b02_real_app_then_scatter */
+
+  gsap.set("#g2", {autoAlpha: 0});
+  gsap.set("#g2p", {scale: 0.74, transformOrigin: "50% 50%"});
+  gsap.set(["#g2e0","#g2e1","#g2e2","#g2e3"], {autoAlpha: 0, y: 26});
+  tl.to("#g2", {autoAlpha: 1, duration: 0.18}, 4.90);
+  tl.to("#g2p", {scale: 1, duration: 0.38, ease: "back.out(1.7)"}, 4.90);
+  ["#g2e0","#g2e1","#g2e2","#g2e3"].forEach(function (s, i) {
+    tl.to(s, {autoAlpha: 1, y: 0, duration: 0.20, ease: "power3.out"}, 5.38 + i * 0.13);
+  });
+  // «розкиданих по екрану» — the phone goes and its parts are left loose in
+  // the frame. Scattering them inside the phone was invisible: clip-path
+  // clips descendants, so they simply vanished at the bezel.
+  tl.to("#g2p", {scale: 0.9, autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 8.62);
+  gsap.set(".loose", {autoAlpha: 0, scale: 0.7, transformOrigin: "50% 50%"});
+  var LP = [[-250, -140, -17], [210, -40, 12], [-170, 110, -8], [250, 170, 19]];
+  ["#g2l0", "#g2l1", "#g2l2", "#g2l3"].forEach(function (s, i) {
+    tl.fromTo(s, {x: 0, y: 0, rotation: 0},
+              {x: LP[i][0], y: LP[i][1], rotation: LP[i][2], autoAlpha: 1,
+               scale: 1, duration: 0.34, ease: "power4.out"}, 8.62 + i * 0.07);
+  });
+  tl.to("#g2", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 10.70);
+  /* b03_reference_stream */
+
+  gsap.set("#g3", {autoAlpha: 0});
+  gsap.set(".refcard", {autoAlpha: 0, x: 150, scale: 0.9});
+  tl.to("#g3", {autoAlpha: 1, duration: 0.16}, 15.30);
+  tl.to(".refcard", {autoAlpha: 1, x: 0, scale: 1, duration: 0.34,
+                     ease: "power3.out", stagger: 0.055}, 15.30);
+  tl.to("#g3s", {x: -46, duration: 2.0, ease: "none"}, 16.29);
+  tl.to("#g3", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 17.90);
+  /* b04_expensive */
+
+  gsap.set("#g4", {autoAlpha: 0});
+  gsap.set("#g4p", {scale: 0.86, transformOrigin: "50% 50%"});
+  gsap.set("#g4r", {scale: 0.5, autoAlpha: 0, transformOrigin: "50% 50%"});
+  tl.to("#g4", {autoAlpha: 1, duration: 0.18}, 18.40);
+  tl.to("#g4p", {scale: 1, duration: 0.44, ease: "back.out(1.6)"}, 18.40);
+  tl.to("#g4r", {scale: 1.4, autoAlpha: 0.85, duration: 0.20, ease: "power2.out"}, 18.82);
+  tl.to("#g4r", {scale: 2.0, autoAlpha: 0, duration: 0.46, ease: "power2.out"}, 19.02);
+  tl.to("#g4", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 21.30);
+  /* b05_five_hundred */
+
+  gsap.set("#g5", {autoAlpha: 0});
+  gsap.set("#g5v", {scale: 0.7, transformOrigin: "50% 50%"});
+  tl.to("#g5", {autoAlpha: 1, duration: 0.14}, 22.90);
+  tl.to("#g5v", {scale: 1, duration: 0.42, ease: "back.out(2)"}, 23.10);
+  tl.to("#g5", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 26.00);
+  /* b06_mobbin_mark */
+
+  gsap.set("#g6", {autoAlpha: 0});
+  gsap.set("#g6t", {scale: 0.3, transformOrigin: "50% 50%"});
+  gsap.set("#g6h", {scale: 0.4, autoAlpha: 0, transformOrigin: "50% 50%"});
+  tl.to("#g6", {autoAlpha: 1, duration: 0.14}, 28.70);
+  tl.to("#g6t", {scale: 1, duration: 0.42, ease: "back.out(2)"}, 28.80);
+  tl.to("#g6h", {scale: 1, autoAlpha: 1, duration: 0.40, ease: "power2.out"}, 28.90);
+  tl.to("#g6", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 30.70);
+  /* b07_pinterest_wall */
+
+  gsap.set("#g7", {autoAlpha: 0});
+  gsap.set(".mt", {scale: 0, transformOrigin: "50% 50%"});
+  tl.to("#g7", {autoAlpha: 1, duration: 0.16}, 30.90);
+  tl.to(".mt", {scale: 1, duration: 0.32, ease: "back.out(2)", stagger: 0.038}, 31.08);
+  tl.to("#g7", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 35.10);
+  /* b08_every_stage */
+
+  gsap.set("#g8", {autoAlpha: 0});
+  gsap.set("#g8bg", {autoAlpha: 0});
+  gsap.set("#g8f", {scale: 0.88, autoAlpha: 0, transformOrigin: "50% 50%"});
+  tl.to("#g8", {autoAlpha: 1, duration: 0.10}, 36.40);
+  tl.to("#g8bg", {autoAlpha: 1, duration: 0.26, ease: "power2.out"}, 36.40);
+  tl.to("#g8f", {scale: 1, autoAlpha: 1, duration: 0.40, ease: "power3.out"}, 36.50);
+  tl.to("#g8", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 40.90);
+  /* b09_search_by_need */
+
+  gsap.set("#g9", {autoAlpha: 0});
+  gsap.set("#g9bg", {autoAlpha: 0});
+  gsap.set("#g9f", {scale: 0.88, autoAlpha: 0, transformOrigin: "50% 50%"});
+  tl.to("#g9", {autoAlpha: 1, duration: 0.10}, 41.80);
+  tl.to("#g9bg", {autoAlpha: 1, duration: 0.24, ease: "power2.out"}, 41.80);
+  tl.to("#g9f", {scale: 1, autoAlpha: 1, duration: 0.36, ease: "power3.out"}, 41.86);
+  tl.to("#g9", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 45.30);
+  /* b10_wire */
+
+  gsap.set("#g10", {autoAlpha: 0});
+  gsap.set("#g10m", {scale: 0.5, autoAlpha: 0, transformOrigin: "50% 50%"});
+  gsap.set("#g10c", {scale: 0.5, autoAlpha: 0, transformOrigin: "50% 50%"});
+  gsap.set([".pkt"], {autoAlpha: 0, x: 0});
+  (function () {
+    var p = document.getElementById("g10w"), L = p.getTotalLength();
+    gsap.set(p, {strokeDasharray: L, strokeDashoffset: L});
+  })();
+  tl.to("#g10", {autoAlpha: 1, duration: 0.16}, 46.40);
+  tl.to("#g10m", {scale: 1, autoAlpha: 1, duration: 0.28, ease: "back.out(2.2)"}, 46.40);
+  tl.to("#g10c", {scale: 1, autoAlpha: 1, duration: 0.28, ease: "back.out(2.2)"}, 46.60);
+  tl.to("#g10w", {strokeDashoffset: 0, duration: 0.36, ease: "power2.out"}, 47.92);
+  // «мій Клод сам заходить туди» — it goes and fetches, three times over
+  [52.20, 53.30, 54.40].forEach(function (t, i) {
+    var s = "#g10k" + (i + 1);
+    tl.to(s, {autoAlpha: 1, duration: 0.10}, t);
+    tl.to(s, {x: 184, duration: 0.62, ease: "power1.inOut"}, t + 0.04);
+    tl.to(s, {autoAlpha: 0, duration: 0.12}, t + 0.56);
+  });
+  tl.to("#g10", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 56.40);
+  /* b11_not_invented */
+
+  gsap.set("#g11", {autoAlpha: 0});
+  gsap.set(["#g11a","#g11b"], {scale: 0.7, autoAlpha: 0, transformOrigin: "50% 50%"});
+  tl.to("#g11", {autoAlpha: 1, duration: 0.16}, 57.40);
+  tl.to("#g11a", {scale: 1, autoAlpha: 1, duration: 0.30, ease: "back.out(2)"}, 57.40);
+  tl.to("#g11b", {scale: 1, autoAlpha: 1, duration: 0.30, ease: "back.out(2)"}, 57.60);
+  // «не вигадує» — the imagined one comes apart and goes
+  tl.to("#g11b", {rotation: 9, y: 40, autoAlpha: 0, duration: 0.50,
+                  ease: "power2.in", transformOrigin: "50% 50%"}, 58.86);
+  tl.to("#g11", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 60.20);
+  /* b12_discount */
+
+  gsap.set("#g12", {autoAlpha: 0});
+  gsap.set("#g12v", {scale: 0.7, transformOrigin: "50% 50%"});
+  tl.to("#g12", {autoAlpha: 1, duration: 0.14}, 62.10);
+  tl.to("#g12v", {scale: 1, duration: 0.40, ease: "back.out(2.2)"}, 62.30);
+  tl.to("#g12", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 64.40);
+  /* b13_comment */
+
+  var WORD = "знижка";
+  var typed = {n: 0};
+  var node = document.createTextNode("");
+  document.getElementById("g13t").appendChild(node);
+  gsap.set("#g13", {autoAlpha: 0});
+  gsap.set("#g13c", {y: 40, scale: 0.94, transformOrigin: "50% 50%"});
+  gsap.set("#g13k", {autoAlpha: 0});
+  tl.to("#g13", {autoAlpha: 1, duration: 0.16}, 64.70);
+  tl.to("#g13c", {y: 0, scale: 1, duration: 0.32, ease: "power3.out"}, 64.70);
+  tl.to("#g13k", {autoAlpha: 1, duration: 0.10}, 64.90);
+  tl.to(typed, {n: WORD.length, duration: 0.48, ease: "none",
+        onUpdate: function () { node.nodeValue = WORD.slice(0, Math.floor(typed.n)); }}, 65.22);
+  tl.to("#g13k", {autoAlpha: 0, duration: 0.12}, 65.78);
+  tl.to("#g13s", {scale: 1.16, duration: 0.14, ease: "power3.out",
+                  transformOrigin: "50% 50%"}, 65.92);
+  tl.to("#g13s", {scale: 1, duration: 0.28, ease: "power2.out"}, 66.06);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>

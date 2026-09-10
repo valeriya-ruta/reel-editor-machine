@@ -9,6 +9,10 @@
 *.m4a
 *.mp3
 
+# Footage pulled from Drive arrives without a file extension, so the *.mp4
+# rules above do not catch it. Ignore the whole landing folder.
+work/incoming/
+
 # Rendered output
 renders/
 REEL-*.mp4

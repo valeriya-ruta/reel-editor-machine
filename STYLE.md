@@ -187,6 +187,18 @@ smoothing at 60% as a `clip-path`. Verified to render, and `filter:
 drop-shadow()` survives the clip where `box-shadow` would not — so a clipped
 card takes its shadow from `filter`, not `box-shadow`.
 
+> ⚠ **There is a budget, and blowing it turns the render black.** `lint` counts
+> every element carrying `clip-path`, `filter: blur` or a `radial-gradient` —
+> including hidden ones — and warns near ~36. Its field note: a composition with
+> ~40 *"captures solid-black for the first ~half of the render, recovering near
+> the end"*, identically across every capture path. Reel 4 hit 36 by squircling
+> everything and had to be pulled back.
+>
+> So squircle the **large** surfaces only — cards, tiles, phones, panes, roughly
+> `r ≥ 50` — and give small or repeated elements (bars, chips, list cells, wall
+> tiles) a plain `border-radius`. At 138px wide with `r=34` the two are
+> indistinguishable anyway, which §5a.2 already implies.
+
 **2 · Concentric radii.** `inner = outer − padding`. A card at 44 with 16px
 padding puts its children at 28, never at 44. Radius also scales with size: a
 26px-tall bar and a 360px tile must not share one.

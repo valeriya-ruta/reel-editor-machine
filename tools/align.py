@@ -20,7 +20,9 @@ Whatever the phonetic key cannot call is printed as REVIEW for her to settle.
 
 usage: align.py <words.json> <script.txt> <out.json>
 """
+import io
 import json
+import os
 import re
 import sys
 from difflib import SequenceMatcher
@@ -41,26 +43,33 @@ BRANDS = ["Клод Дизайн", "Клод Код", "Клод", "Клоді", 
           "скіл", "брейншторм", "брейнштормі", "вайбкодинг", "вайбкодити",
           "Рута", "Руту", "Руті", "Рути"]
 
-# Read by hand off the audio where neither the lexicon nor the phonetic key
-# can call it: whisper produced a non-word and she plainly said the script's
-# line. Keyed by the ASR start time of the block.
-FIXES = {
-    5.16:  "мого серіалу",       # «моєї серіали» is not Ukrainian
-    22.44: "що почну",           # «пішну» is not a word
-    41.98: "саме",               # «сам би» — one word split in two
-    90.16: "схожі додатки,",     # «хочуть додаток» inverts her meaning
-    # Her script writes «вебкодинг», but she does not say it. Three separate
-    # whisper passes over this audio give «вайп-кодинг» / «вайкоди» /
-    # «випкодити» -- always /vaj/, never /web/. STYLE.md §2: wording comes from
-    # the delivered audio. Spelled as the Ukrainian term, not as whisper wrote it.
-    5.92:  "вайбкодинг,",
-    8.80:  "вайбкодити.",
-}
+# Read by hand off the audio where neither the lexicon nor the phonetic key can
+# call it: whisper produced a non-word and she plainly said the script's line.
+# Per-reel, keyed by the ASR start time of the block, loaded from a fixes.json
+# sitting next to the script -- these are specific to one recording, so they do
+# not belong in the code.
+FIXES = {}
+
+
+def load_fixes(script_path):
+    p = os.path.join(os.path.dirname(script_path) or ".", "fixes.json")
+    if os.path.exists(p):
+        raw = json.load(io.open(p, encoding="utf-8"))
+        return dict((float(k), v) for k, v in raw.items())
+    return {}
 
 # One spelling per name for the whole reel, keyed by the normalised token.
+# (first stem, second stem) -> the pair as it should read
+# Two-word product names, only where the pair genuinely needs forcing. Kept
+# empty by default: the block redistribution already writes whatever spelling
+# the script uses, and she spells the same product differently across scripts.
+PHRASES = []
+
 CANON = {"brainstorm": "брейншторм", "mobin": "Mobbin", "mobbin": "Mobbin",
-         "cloud": "Клод", "claude": "Claude", "skill": "скіл",
-         "design": "Дизайн", "code": "Код"}
+         "cloud": "Клод", "claude": "Claude", "skill": "скіл"}
+# «design» and «code» are deliberately absent: they are ordinary words on their
+# own, and she spells the product differently in different scripts (reel 3
+# writes «Клод Дизайн», reel 5 writes «Claude Design»). The script wins.
 
 # whisper writes her Ukrainian product names in English: Cloud, Skill, Mobin
 LAT = {"c": "к", "q": "к", "k": "к", "x": "кс", "l": "л", "o": "о", "u": "у",
@@ -104,6 +113,8 @@ def sounds_alike(written, heard):
 
 
 def main():
+    global FIXES
+    FIXES = load_fixes(sys.argv[2])
     asr = json.load(open(sys.argv[1], encoding="utf-8"))["words"]
 
     # script tokens, minus standalone punctuation (an em dash is not a caption)
@@ -226,6 +237,19 @@ def main():
             review.append(rec)
         else:
             improv.append(rec)
+
+    # Product names that span two captions. A single-token canon cannot fix
+    # these: «дизайн» is a normal Ukrainian word on its own and only becomes
+    # «Design» when it follows the brand.
+    for i in range(len(out) - 1):
+        first, second = norm(out[i]["w"]), norm(out[i + 1]["w"])
+        for a_, b_, rep in PHRASES:
+            if first.endswith(a_) and second.startswith(b_):
+                tail = out[i + 1]["w"][len(rep[1]):] if False else ""
+                punct = re.sub(r"^[\w'’ʼ-]+", "", out[i + 1]["w"])
+                out[i]["w"] = rep[0] + re.sub(r"^[\w'’ʼ-]+", "", out[i]["w"])
+                out[i + 1]["w"] = rep[1] + punct
+                out[i]["src"] = out[i + 1]["src"] = "script-fixed"
 
     # A preposition with no timing rides on the caption that follows it.
     for i, w in enumerate(out):
