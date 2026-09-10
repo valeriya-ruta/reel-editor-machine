@@ -34,6 +34,12 @@ first for the same kind of work. Hence:
 - **`Edit`, never re-`Write`.** A whole `build.py` rewrite parks 10–24k tokens in
   context permanently. `reel-03/build.py` went in three times.
 
+`/reel` is installed twice: `.claude/skills/reel/` here (wins inside the repo,
+versioned with the pipeline) and `~/.claude/skills/reel/` as a thin launcher so a
+chat opened anywhere can still start one. **The launcher hard-codes this repo's
+absolute path** — if the repo moves, update it. `.claude/agents/reel-verify.md`
+is the cheap inspection subagent the run dispatches to.
+
 ## The pipeline
 
 ```
