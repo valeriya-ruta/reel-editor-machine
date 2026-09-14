@@ -708,7 +708,10 @@ def b15_forget_then_capture():
     tl.set("#g15t" + i, {y: 0, scale: 1}, t);
     tl.to("#g15t" + i, {autoAlpha: 1, duration: 0.20, ease: "back.out(2)"}, t);
   });
-  tl.to("#g15 .task", {autoAlpha: 0, duration: 0.18}, 67.20);'''
+  tl.to("#g15 .task", {autoAlpha: 0, duration: 0.18}, 67.20);
+  // and the wrapper with them — an empty .g left visible renders nothing, but
+  // tools/review.py is right to call it a graphic sitting there for 65 s.
+  tl.set("#g15", {autoAlpha: 0}, 67.22);'''
     return html, js
 
 
