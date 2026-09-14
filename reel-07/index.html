@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 7 — системи</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+    @font-face {
+      font-family: "ProductSans";
+      src: url("assets/fonts/ProductSans-Black.woff") format("woff");
+      font-weight: 900; font-style: normal; font-display: block;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px;
+            overflow: hidden; background: #000;
+            font-family: "ProductSans", system-ui, sans-serif;
+      --surface:        #fdf6f6;
+      --container:      #f4dde2;
+      --container-high: #ecc8d0;
+      --graphite:       rgba(23,20,28,0.13);
+      --accent:         #b4122f;
+      --accent-deep:    #8d0d24;
+      --pink:           #ff6e9c;
+      --ink:            #17141c;
+
+      --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
+      --lit-blush:  linear-gradient(115deg, #fffdfd 0%, #fdf1f4 100%);
+      --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
+      --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
+      --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
+
+      --rim: inset 0 1.5px 0 rgba(255,255,255,0.92),
+             inset 0 -1.5px 0 rgba(255,255,255,0.14),
+             inset 0 0 0 1px rgba(255,255,255,0.28);
+      --rim-dark: inset 0 1.5px 0 rgba(255,255,255,0.16),
+                  inset 0 0 0 1px rgba(255,255,255,0.08);
+      --rim-glass: inset 0 2px 0 rgba(255,255,255,0.70),
+                   inset 0 -2px 0 rgba(255,255,255,0.10),
+                   inset 0 0 0 1.5px rgba(255,255,255,0.30);
+
+      /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
+         Light coming off the object, not the object sitting on a surface. */
+      --glow: drop-shadow(0 0 10px rgba(255,196,218,0.95))
+              drop-shadow(0 0 26px rgba(255,110,156,0.85))
+              drop-shadow(0 0 64px rgba(255,110,156,0.55))
+              drop-shadow(0 0 120px rgba(255,110,156,0.32));
+      --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
+                   drop-shadow(0 0 60px rgba(255,110,156,0.30));
+
+      --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
+              drop-shadow(0 24px 48px rgba(26,30,39,0.14));
+      --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))
+                 drop-shadow(0 12px 24px rgba(26,30,39,0.12));
+ }
+    .plate { position: absolute; inset: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    #scrim { position: absolute; left: 20px; top: 1247px;
+             width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png");
+             background-size: 100% 100%; background-repeat: no-repeat;
+             opacity: 0; visibility: hidden; pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; top: 1413px;
+           height: 118px; line-height: 118px; text-align: center;
+           color: #fff; font-size: 90px; font-weight: 900;
+           letter-spacing: -0.015em; white-space: nowrap;
+           opacity: 0; visibility: hidden; }
+    .g { position: absolute; left: 0; top: 40px; width: 1080px;
+         height: 600px; opacity: 0; visibility: hidden; }
+    .g.full { top: 0; height: 1920px; }
+
+    /* §5a.9 — glass over her footage is the house look. Panels only; an
+       edge-to-edge frosted ground blurs her out of her own reel. */
+    .glass { background: rgba(255,255,255,0.15);
+             -webkit-backdrop-filter: blur(24px) saturate(1.4);
+             backdrop-filter: blur(24px) saturate(1.4);
+             box-shadow: var(--rim); filter: var(--cast); }
+
+    /* A takeover: a tinted pane laid ON the footage, with a real margin so it
+       reads as an object rather than a blur applied to the video. */
+    /* The inset pane is a *pane*: 44/64 margin so the footage shows past it,
+       and corners, because a full-bleed hard-cornered rectangle is a bug she
+       has reported. base_css() squircles it; this radius is the fallback. */
+    .ground { position: absolute; left: 44px; top: 64px;
+              width: 992px; height: 1792px; border-radius: 68px;
+              background: linear-gradient(158deg, rgba(196,20,52,0.62) 0%,
+                          rgba(141,13,36,0.70) 100%);
+              -webkit-backdrop-filter: blur(30px) saturate(1.5);
+              backdrop-filter: blur(30px) saturate(1.5);
+              box-shadow: var(--rim-glass); filter: var(--cast); }
+
+    .card { position: absolute; background: var(--lit-blush);
+            filter: var(--cast); box-shadow: var(--rim); }
+    .card.ink { background: var(--lit-ink); box-shadow: var(--rim-dark); }
+    .card.accent { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+
+    .tile { position: absolute; display: grid; place-items: center;
+            background: var(--lit-blush); filter: var(--cast);
+            box-shadow: var(--rim); }
+
+    /* §5a.3 — bar rhythm. One thick heading, then ragged body. Uniform bars
+       read as a loading state; ragged ones read as an abstracted screen. */
+    .ph { display: block; height: 66px; border-radius: 18px;
+          background: var(--lit-accent); margin-bottom: 26px;
+          box-shadow: var(--rim-dark); }
+    .pr { display: block; height: 40px; border-radius: 12px;
+          background: var(--graphite); margin-bottom: 18px; }
+    .pr:nth-of-type(2) { width: 94%; }
+    .pr:nth-of-type(3) { width: 71%; }
+    .pr:nth-of-type(4) { width: 43%; }
+
+    .phone { position: absolute; background: var(--lit-blush);
+             overflow: hidden; filter: var(--cast); box-shadow: var(--rim); }
+    .phone video, .phone img { width: 100%; height: 100%; object-fit: cover;
+                               display: block; }
+
+    /* a value in its own card — her reference's "big number" pattern, minus
+       the label, because a graphic here carries no words */
+    .valcard { position: absolute; background: rgba(255,255,255,0.16);
+               -webkit-backdrop-filter: blur(16px) saturate(1.3);
+               backdrop-filter: blur(16px) saturate(1.3);
+               box-shadow: var(--rim-dark);
+               display: grid; place-items: center; }
+    .valcard span { color: #fff; font-weight: 900; letter-spacing: -0.04em; }
+
+    .wire { fill: none; stroke-width: 20; stroke-linecap: round;
+            filter: drop-shadow(0 8px 18px rgba(26,30,39,0.22)); }
+    .node { fill: #fdf6f6; stroke: #b4122f; stroke-width: 16;
+            filter: drop-shadow(0 10px 22px rgba(26,30,39,0.24)); }
+    .node.hub { fill: #b4122f; stroke: #fff; }
+
+    /* §5a.10 — the glow rides a WRAPPER, never the clipped element itself.
+       clip-path is applied *after* filter, so a drop-shadow declared on the
+       same element as the clip is cut away with everything else outside the
+       silhouette and the object ends up with no light at all. Put the clip on
+       the shape and the filter on its parent: the parent filters the already
+       clipped bitmap, so the light traces the squircle and survives. */
+    .lit { position: absolute; inset: 0; pointer-events: none;
+           filter: var(--glow); }
+    .lit.soft { filter: var(--glow-soft); }
+
+    /* Emoji are images, never glyphs. The render runs on someone else's
+       Chrome, so a literal 💩 in the HTML comes out in whatever emoji font
+       that machine has — Noto on the cloud renderer, Segoe on hers, Apple on
+       nobody's. She wants the Apple set, so the artwork ships in assets/emoji
+       and the glyph never appears in a composition. */
+    .emoji { display: block; width: auto; image-rendering: auto; }
+
+    .halo { position: absolute; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(255,110,156,0.5) 0%,
+                        rgba(255,110,156,0) 70%); }
+    .ring { position: absolute; border-radius: 50%; pointer-events: none;
+            border: 18px solid rgba(255,110,156,0.92);
+            filter: drop-shadow(0 0 40px rgba(255,110,156,0.55)); }
+
+    /* ---- the board: 3x2, centred, inside the clear band (STYLE.md §3) ---- */
+    .board { position: absolute; left: 60px; top: 36px; width: 960px;
+             height: 520px; display: grid; gap: 40px;
+             grid-template-columns: repeat(3, 1fr);
+             grid-template-rows: repeat(2, 1fr); }
+    /* An empty slot has to read as an object over a dark kitchen, so it runs
+       warmer and brighter than plain glass: 0.15 alpha disappeared entirely in
+       the first snapshot pass. */
+    .slot { position: relative;
+            background: linear-gradient(158deg, rgba(255,255,255,0.30) 0%,
+                        rgba(255,214,225,0.20) 100%);
+            -webkit-backdrop-filter: blur(26px) saturate(1.6);
+            backdrop-filter: blur(26px) saturate(1.6);
+            box-shadow: var(--rim-glass); filter: var(--cast); }
+    .slotwrap { position: relative; }
+    .slotwrap .tile.brand { position: absolute; inset: 0; display: grid;
+                            place-items: center; background: var(--lit-blush); }
+    .mk { display: block; width: 62%; height: auto; object-fit: contain; }
+    .mk.wide { width: 84%; }
+
+    /* ---- RUTA: type as a mark, her call. Stroke thickens Black further. ---- */
+    .wordmark { font-size: 74px; font-weight: 900; color: var(--accent);
+                letter-spacing: -0.045em; line-height: 1;
+                -webkit-text-stroke: 4px var(--accent); }
+    .wordmark.big { font-size: 150px; -webkit-text-stroke: 7px var(--accent); }
+
+    /* ---- a number on its own: the one word §4 allows ---- */
+    .num { position: absolute; left: 0; width: 1080px; text-align: center;
+           font-size: 220px; font-weight: 900; color: #fff;
+           letter-spacing: -0.05em; text-shadow: 0 18px 60px rgba(8,6,12,0.55); }
+    .num small { font-size: 0.46em; letter-spacing: -0.02em; }
+
+    /* ---- calendar glyph ---- */
+    .cal { position: absolute; width: 210px; height: 200px;
+           background: var(--lit); box-shadow: var(--rim);
+           filter: var(--cast); border-radius: 34px; overflow: hidden; }
+    .cal .top { position: absolute; left: 0; top: 0; width: 100%; height: 50px;
+                background: var(--lit-accent); }
+    .cal .grid { position: absolute; left: 18px; top: 72px; right: 18px;
+                 display: grid; gap: 9px; grid-template-columns: repeat(4, 1fr); }
+    .cal .grid i { display: block; height: 22px; border-radius: 7px;
+                   background: var(--graphite); }
+    .cal .grid i.on { background: var(--accent); }
+
+    /* ---- chat volley ---- */
+    .bub { position: absolute; height: 92px; border-radius: 46px;
+           background: var(--lit); box-shadow: var(--rim);
+           filter: var(--cast-sm); }
+    .bub.them { background: var(--lit-accent); }
+    .linkchip { position: absolute; height: 104px; border-radius: 52px;
+                background: var(--lit-accent); box-shadow: var(--rim-dark);
+                display: grid; place-items: center; }
+    .linkchip b { display: block; width: 96px; height: 16px; border-radius: 8px;
+                  background: #fff; }
+
+    /* ---- waveform -> text ---- */
+    .wave { position: absolute; display: flex; align-items: center; gap: 11px; }
+    .wave i { display: block; width: 14px; border-radius: 7px;
+              background: var(--pink); }
+
+    /* ---- database / CRM ---- */
+    .db { position: absolute; width: 190px; height: 200px; }
+    .db i { position: absolute; left: 0; width: 190px; height: 58px;
+            border-radius: 95px / 29px; background: var(--lit-accent);
+            box-shadow: var(--rim-dark); }
+    .row { position: absolute; display: grid; gap: 14px; }
+    .row .cell { height: 78px; border-radius: 20px; background: var(--container);
+                 box-shadow: var(--rim); }
+    .row .cell.on { background: var(--lit-accent); }
+
+    /* ---- checklist ---- */
+    .task { position: absolute; height: 96px; border-radius: 28px;
+            background: var(--lit); box-shadow: var(--rim);
+            filter: var(--cast-sm); display: flex; align-items: center;
+            padding: 0 28px; gap: 24px; }
+    .task .box { width: 52px; height: 52px; border-radius: 16px;
+                 background: var(--container-high); flex: none; }
+    .task.done .box { background: var(--lit-accent); }
+    .task .line { height: 20px; border-radius: 10px; background: var(--graphite);
+                  flex: 1; }
+
+    /* ---- content fan ---- */
+    .cc { position: absolute; width: 220px; height: 300px;
+          background: var(--lit-blush); box-shadow: var(--rim);
+          filter: var(--cast); padding: 26px; }
+    .cc b { display: block; border-radius: 8px; background: var(--graphite);
+            height: 16px; margin-bottom: 14px; }
+    .cc b:first-child { height: 28px; background: var(--lit-accent); width: 70%; }
+
+    /* ---- four panes around the hub ---- */
+    .pane { position: absolute; width: 200px; height: 150px; border-radius: 34px;
+            background: linear-gradient(158deg, rgba(255,255,255,0.34) 0%,
+                        rgba(255,214,225,0.24) 100%);
+            -webkit-backdrop-filter: blur(20px) saturate(1.6);
+            backdrop-filter: blur(20px) saturate(1.6);
+            box-shadow: var(--rim-glass); filter: var(--cast); padding: 22px; }
+    .pane b { display: block; height: 15px; border-radius: 8px;
+              background: rgba(255,255,255,0.94); margin-bottom: 13px; }
+    .pane b:nth-child(2) { width: 78%; }
+    .pane b:nth-child(3) { width: 52%; }
+
+
+    /* b03 — the three things you stop knowing */
+    .lost { position: absolute; left: 0; width: 1080px; text-align: center;
+            top: 250px; }
+    .lost .arrowin, .lost .coin, .lost .head {
+        display: inline-block; filter: var(--cast); }
+    .lost .arrowin { width: 190px; height: 190px; border-radius: 50%;
+                     background: var(--lit-accent); box-shadow: var(--rim-dark);
+                     clip-path: polygon(50% 0, 100% 55%, 74% 55%, 74% 100%,
+                                        26% 100%, 26% 55%, 0 55%); }
+    .lost .coin { width: 190px; height: 190px; border-radius: 50%;
+                  background: var(--lit-pink); box-shadow: var(--rim-dark); }
+    .lost .head { width: 170px; height: 190px; border-radius: 86px 86px 44px 44px;
+                  background: var(--lit); box-shadow: var(--rim); }
+
+    /* b09 — transcript lines and the replay that is struck out.
+       The kit's .pr is graphite at 13% alpha, which is built for a light card
+       ground and is simply not there over her kitchen: the first snapshot pass
+       showed a heading bar and nothing under it. Over footage the body bars
+       have to carry their own light. */
+    .lines { position: absolute; }
+    .lines .pr { background: rgba(255,255,255,0.88); box-shadow: var(--rim);
+                 height: 34px; }
+    .scrub { position: absolute; height: 40px; }
+    .scrub .track { position: absolute; left: 0; top: 14px; width: 100%;
+                    height: 14px; border-radius: 7px;
+                    background: rgba(255,255,255,0.30); }
+    .scrub .knob { position: absolute; left: 132px; top: 0; width: 40px;
+                   height: 40px; border-radius: 50%; background: #fff;
+                   box-shadow: 0 6px 16px rgba(8,6,12,0.4); }
+    .scrub .strike { position: absolute; left: 0; top: 14px; width: 100%;
+                     height: 14px; border-radius: 7px; background: var(--accent);
+                     transform: rotate(-6deg); transform-origin: 0 50%; }
+
+    /* b12 — a cake, drawn */
+    .cake { position: absolute; width: 300px; height: 282px;
+            transform-origin: 50% 100%; }
+    .cake .body { position: absolute; left: 0; bottom: 0; width: 300px;
+                  height: 140px; border-radius: 26px; background: var(--lit-accent);
+                  box-shadow: var(--rim-dark); }
+    .cake .ice { position: absolute; left: 8px; bottom: 124px; width: 284px;
+                 height: 62px; border-radius: 24px; background: var(--lit-blush);
+                 box-shadow: var(--rim); }
+    .cake .candle { position: absolute; left: 140px; bottom: 178px; width: 20px;
+                    height: 68px; border-radius: 8px; background: var(--lit-pink); }
+    .cake .flame { position: absolute; left: 134px; bottom: 240px; width: 32px;
+                   height: 44px; border-radius: 12px 12px 12px 12px / 18px 18px 12px 12px;
+                   background: #ffd9a0;
+                   filter: drop-shadow(0 0 18px rgba(255,196,218,0.95))
+                           drop-shadow(0 0 40px rgba(255,110,156,0.7)); }
+
+    /* b10 — the database glyph animates its plates in */
+    .db i { transform: scaleX(0); transform-origin: 50% 50%; }
+
+    /* b13 / b16 — the Notion mark, dropped onto a tile that already exists */
+    .ontile { position: absolute; inset: 0; opacity: 0; visibility: hidden;
+              transform: scale(0.8); }
+
+    /* b15 — the checklist inside the board tile */
+    .chk { display: grid; gap: 14px; }
+    .chk i { display: block; width: 150px; height: 26px; border-radius: 13px;
+             background: var(--graphite); }
+    .chk i:first-child { background: var(--lit-accent); }
+
+    /* b17 — process vs result */
+    .mess { position: absolute; width: 320px; height: 340px; }
+    .mess span { position: absolute; border-radius: 22px;
+                 background: var(--lit-blush); box-shadow: var(--rim);
+                 filter: var(--cast-sm); }
+    .mess span:nth-child(1) { left: 0;   top: 20px;  width: 190px; height: 90px;
+                              transform: rotate(-4deg); }
+    .mess span:nth-child(2) { left: 120px; top: 96px; width: 200px; height: 84px;
+                              transform: rotate(3deg); }
+    .mess span:nth-child(3) { left: 10px; top: 180px; width: 170px; height: 96px;
+                              transform: rotate(2deg); }
+    .mess span:nth-child(4) { left: 150px; top: 240px; width: 160px; height: 80px;
+                              transform: rotate(-5deg); }
+    .mess span:nth-child(5) { left: 60px;  top: 0;    width: 120px; height: 70px;
+                              transform: rotate(6deg); }
+
+    /* b18 — the quote that lifts out of the call */
+    .cc.call { background: var(--lit-accent); }
+    .cc.call b { background: rgba(255,255,255,0.5); }
+    .cc.call b:first-child { background: #fff; }
+    .quote { position: absolute; left: 330px; top: 170px; width: 420px;
+             height: 120px; border-radius: 34px; background: var(--lit-pink);
+             box-shadow: var(--rim-dark); filter: var(--cast); }
+
+    /* b22 — a thousand of them, then one */
+    /* 11 x 11 at 74px + 16px gap = y 60-1050: past her shoulders, which is
+       the point — it goes behind her rather than stopping politely above. */
+    .wall { position: absolute; left: 40px; top: 60px; width: 1000px;
+            display: grid; gap: 16px; grid-template-columns: repeat(11, 1fr); }
+    .wall .wt { display: block; height: 74px; border-radius: 18px;
+                background: rgba(255,255,255,0.62); box-shadow: var(--rim);
+                filter: var(--cast-sm); }
+    .tile.brand.one { position: absolute; left: 330px; top: 190px; width: 420px;
+                      height: 260px; display: grid; place-items: center; }
+    #g22lit { position: absolute; left: 330px; top: 190px; width: 420px;
+              height: 260px; inset: auto; }
+
+    /* b07 — the booking that travels the wire */
+    .pip { position: absolute; left: 0; top: 0; width: 28px; height: 28px;
+           border-radius: 50%; background: #fff;
+           filter: drop-shadow(0 0 14px rgba(255,196,218,0.95))
+                   drop-shadow(0 0 34px rgba(255,110,156,0.8)); }
+
+    /* b23 — the cheap pair */
+    .tile.brand.pair { width: 290px; height: 290px; }
+
+    /* b25 — the hub the four panes belong to */
+    .tile.brand.hub { position: absolute; left: 440px; top: 218px;
+                      width: 200px; height: 200px; display: grid;
+                      place-items: center; }
+
+    /* b24 — the alternative she did not take */
+    .alt { position: absolute; width: 180px; height: 180px; border-radius: 46px;
+           background: var(--lit); box-shadow: var(--rim); filter: var(--cast);
+           display: grid; place-items: center; }
+    .alt .mk { width: 58%; }
+
+    .ground { clip-path: path('M 883.2 0 c 36.293 0 54.439 0 70.765 8.318 a 68 68 0 0 1 29.717 29.717 c 8.318 16.325 8.318 34.472 8.318 70.765 L 992 1683.2 c 0 36.293 0 54.439 -8.318 70.765 a 68 68 0 0 1 -29.717 29.717 c -16.325 8.318 -34.472 8.318 -70.765 8.318 L 108.8 1792 c -36.293 0 -54.439 0 -70.765 -8.318 a 68 68 0 0 1 -29.717 -29.717 c -8.318 -16.325 -8.318 -34.472 -8.318 -70.765 L 0 108.8 c 0 -36.293 0 -54.439 8.318 -70.765 a 68 68 0 0 1 29.717 -29.717 c 16.325 -8.318 34.472 -8.318 70.765 -8.318 Z'); }
+    .slot { clip-path: path('M 206.6 0 c 28.821 0 43.231 0 56.196 6.606 a 54 54 0 0 1 23.599 23.599 c 6.606 12.964 6.606 27.375 6.606 56.196 L 293 153.6 c 0 28.821 0 43.231 -6.606 56.196 a 54 54 0 0 1 -23.599 23.599 c -12.964 6.606 -27.375 6.606 -56.196 6.606 L 86.4 240 c -28.821 0 -43.231 0 -56.196 -6.606 a 54 54 0 0 1 -23.599 -23.599 c -6.606 -12.964 -6.606 -27.375 -6.606 -56.196 L 0 86.4 c 0 -28.821 0 -43.231 6.606 -56.196 a 54 54 0 0 1 23.599 -23.599 c 12.964 -6.606 27.375 -6.606 56.196 -6.606 Z'); }
+    .slotwrap .tile.brand { clip-path: path('M 206.6 0 c 28.821 0 43.231 0 56.196 6.606 a 54 54 0 0 1 23.599 23.599 c 6.606 12.964 6.606 27.375 6.606 56.196 L 293 153.6 c 0 28.821 0 43.231 -6.606 56.196 a 54 54 0 0 1 -23.599 23.599 c -12.964 6.606 -27.375 6.606 -56.196 6.606 L 86.4 240 c -28.821 0 -43.231 0 -56.196 -6.606 a 54 54 0 0 1 -23.599 -23.599 c -6.606 -12.964 -6.606 -27.375 -6.606 -56.196 L 0 86.4 c 0 -28.821 0 -43.231 6.606 -56.196 a 54 54 0 0 1 23.599 -23.599 c 12.964 -6.606 27.375 -6.606 56.196 -6.606 Z'); }
+    .tile.brand.one { clip-path: path('M 320.8 0 c 33.091 0 49.636 0 64.521 7.584 a 62 62 0 0 1 27.095 27.095 c 7.584 14.885 7.584 31.43 7.584 64.521 L 420 160.8 c 0 33.091 0 49.636 -7.584 64.521 a 62 62 0 0 1 -27.095 27.095 c -14.885 7.584 -31.43 7.584 -64.521 7.584 L 99.2 260 c -33.091 0 -49.636 0 -64.521 -7.584 a 62 62 0 0 1 -27.095 -27.095 c -7.584 -14.885 -7.584 -31.43 -7.584 -64.521 L 0 99.2 c 0 -33.091 0 -49.636 7.584 -64.521 a 62 62 0 0 1 27.095 -27.095 c 14.885 -7.584 31.43 -7.584 64.521 -7.584 Z'); }
+    .tile.brand.pair { clip-path: path('M 178 0 c 37.36 0 56.041 0 72.846 8.563 a 70 70 0 0 1 30.591 30.591 c 8.563 16.806 8.563 35.486 8.563 72.846 L 290 178 c 0 37.36 0 56.041 -8.563 72.846 a 70 70 0 0 1 -30.591 30.591 c -16.806 8.563 -35.486 8.563 -72.846 8.563 L 112 290 c -37.36 0 -56.041 0 -72.846 -8.563 a 70 70 0 0 1 -30.591 -30.591 c -8.563 -16.806 -8.563 -35.486 -8.563 -72.846 L 0 112 c 0 -37.36 0 -56.041 8.563 -72.846 a 70 70 0 0 1 30.591 -30.591 c 16.806 -8.563 35.486 -8.563 72.846 -8.563 Z'); }
+    .tile.brand.hub { clip-path: path('M 120 0 c 26.686 0 40.029 0 52.033 6.116 a 50 50 0 0 1 21.851 21.851 c 6.116 12.004 6.116 25.347 6.116 52.033 L 200 120 c 0 26.686 0 40.029 -6.116 52.033 a 50 50 0 0 1 -21.851 21.851 c -12.004 6.116 -25.347 6.116 -52.033 6.116 L 80 200 c -26.686 0 -40.029 0 -52.033 -6.116 a 50 50 0 0 1 -21.851 -21.851 c -6.116 -12.004 -6.116 -25.347 -6.116 -52.033 L 0 80 c 0 -26.686 0 -40.029 6.116 -52.033 a 50 50 0 0 1 21.851 -21.851 c 12.004 -6.116 25.347 -6.116 52.033 -6.116 Z'); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="133.267" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="133.267" data-media-start="0"
+             muted playsinline></video>
+
+      <div class="g full" id="gboard"><div class="board"><div class="slot" id="sl0"></div><div class="slot" id="sl1"></div><div class="slot" id="sl2"></div><div class="slot" id="sl3"></div><div class="slot" id="sl4"></div><div class="slot" id="sl5"></div></div><div class="board" id="boardfill"><div class="slotwrap " id="tl0"><div class="tile brand"><img class="mk " src="assets/logos/cal-mark.png" alt=""></div></div><div class="slotwrap " id="tl1"><div class="tile brand"><img class="mk wide" src="assets/logos/fathom-word.png" alt=""></div></div><div class="slotwrap " id="tl2"><div class="tile brand"><span class="db" id="tldb"><i style="top:12px"></i><i style="top:70px"></i><i style="top:128px"></i></span></div><div class="tile brand ontile" id="tl2notion"><img class="mk " src="assets/logos/notion-mark.png" alt=""></div></div><div class="slotwrap " id="tl3"><div class="tile brand"><span class="chk"><i></i><i></i><i></i></span></div><div class="tile brand ontile" id="tl3notion"><img class="mk " src="assets/logos/notion-mark.png" alt=""></div></div><div class="slotwrap " id="tl4"><div class="lit soft"></div><div class="tile brand"><span class="wordmark">RUTA</span></div></div><div class="slotwrap " id="tl5"><div class="tile brand"><img class="mk " src="assets/logos/claude-tile.png" alt=""></div></div></div></div>
+
+      <div class="g full" id="g2">
+        <svg id="g2clock" width="300" height="300" viewBox="0 0 300 300"
+             style="position:absolute;left:390px;top:146px">
+          <circle cx="150" cy="150" r="118" fill="none" stroke="rgba(255,255,255,0.30)"
+                  stroke-width="16"/>
+          <path id="g2arc" d="M150 32 A118 118 0 0 1 150 268" fill="none"
+                stroke="#ff6e9c" stroke-width="20" stroke-linecap="round"
+                stroke-dasharray="371" stroke-dashoffset="371"/>
+          <line id="g2hand" x1="150" y1="150" x2="150" y2="52" stroke="#fff"
+                stroke-width="18" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <div class="g full" id="g6">
+        <div class="linkchip" id="g6link" style="left:390px;top:300px;width:300px">
+          <b></b>
+        </div>
+        <div class="cal" style="left:435px;top:236px" id="g6cal"><span class="top"></span><span class="grid"><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span></div>
+      </div>
+
+      <div class="g full" id="g7">
+        <div class="tile brand pair" id="g7a" style="left:150px;top:200px"><img class="mk " src="assets/logos/cal-mark.png" alt=""></div>
+        <div class="tile brand pair" id="g7b" style="left:640px;top:200px"><img class="mk " src="assets/logos/gcal-mark.png" alt=""></div>
+        <svg width="1080" height="600" viewBox="0 0 1080 600"
+             style="position:absolute;left:0;top:0">
+          <path id="g7wire" class="wire" stroke="#ff6e9c"
+                d="M440 345 C 500 345, 580 345, 640 345"
+                stroke-dasharray="200" stroke-dashoffset="200"/>
+        </svg>
+        <span class="pip" id="g7pip"></span>
+      </div>
+
+      <div class="g full" id="g9">
+        <div class="wave" id="g9w" style="left:180px;top:250px;width:720px;
+             height:200px;justify-content:center"><i style="height:34px"></i><i style="height:72px"></i><i style="height:128px"></i><i style="height:96px"></i><i style="height:168px"></i><i style="height:62px"></i><i style="height:140px"></i><i style="height:104px"></i><i style="height:188px"></i><i style="height:76px"></i><i style="height:132px"></i><i style="height:54px"></i><i style="height:160px"></i><i style="height:92px"></i><i style="height:118px"></i><i style="height:44px"></i><i style="height:150px"></i><i style="height:86px"></i><i style="height:126px"></i><i style="height:60px"></i></div>
+        <div class="lines" id="g9t" style="left:230px;top:236px;width:620px">
+          <b class="ph"></b><b class="pr"></b><b class="pr"></b><b class="pr"></b>
+        </div>
+        <div class="scrub" id="g9s" style="left:230px;top:430px;width:620px">
+          <span class="track"></span><span class="knob"></span>
+          <span class="strike" id="g9x"></span>
+        </div>
+      </div>
+
+      <div class="g full" id="g11">
+        <div class="row" id="g11r" style="left:110px;top:250px;width:860px;
+             grid-template-columns:repeat(3,1fr)"><span class="cell" id="g11c0"></span><span class="cell" id="g11c1"></span><span class="cell" id="g11c2"></span><span class="cell" id="g11c3"></span><span class="cell" id="g11c4"></span><span class="cell" id="g11c5"></span></div>
+      </div>
+
+      <div class="g full" id="g12">
+        <div class="cake" id="g12c" style="left:428px;top:250px">
+          <span class="flame"></span><span class="candle"></span>
+          <span class="ice"></span><span class="body"></span>
+        </div>
+      </div>
+<div class="g full" id="g15"><div class="task" id="g15t0" style="left:190px;top:210px;width:700px"><span class="box"></span><span class="line"></span></div><div class="task" id="g15t1" style="left:216px;top:330px;width:648px"><span class="box"></span><span class="line"></span></div><div class="task" id="g15t2" style="left:242px;top:450px;width:596px"><span class="box"></span><span class="line"></span></div></div>
+
+      <div class="g full" id="g17">
+        <div class="cc" id="g17r" style="left:600px;top:200px">
+          <b></b><b></b><b></b><b></b>
+        </div>
+        <div class="mess" id="g17p" style="left:170px;top:180px">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <div class="g full" id="g18">
+        <div class="cc call" id="g18call" style="left:430px;top:250px">
+          <b></b><b></b><b></b>
+        </div>
+        <div class="cc" id="g18c0" style="left:120px;top:250px"><b></b><b></b><b></b></div><div class="cc" id="g18c1" style="left:345px;top:250px"><b></b><b></b><b></b></div><div class="cc" id="g18c2" style="left:570px;top:250px"><b></b><b></b><b></b></div><div class="cc" id="g18c3" style="left:795px;top:250px"><b></b><b></b><b></b></div>
+        <span class="quote" id="g18q"></span>
+      </div>
+
+      <div class="g full" id="g20">
+        <div class="wave" id="g20w" style="left:400px;top:150px;width:280px;
+             height:140px;justify-content:center"><i style="height:30px"></i><i style="height:64px"></i><i style="height:108px"></i><i style="height:78px"></i><i style="height:130px"></i><i style="height:52px"></i><i style="height:96px"></i><i style="height:70px"></i><i style="height:118px"></i><i style="height:44px"></i></div>
+        <div class="cc" id="g20a" style="left:110px;top:330px"><b></b><b></b><b></b></div>
+        <div class="cc" id="g20b" style="left:430px;top:330px"><b></b><b></b><b></b></div>
+        <div class="cc" id="g20c" style="left:750px;top:330px"><b></b><b></b><b></b></div>
+      </div>
+
+      <div class="g full" id="g21">
+        <div class="num" id="g21n" style="top:210px">10<small>€</small></div>
+      </div>
+
+      <div class="g full" id="g22">
+        <div class="wall" id="g22wall"><span class="wt" id="g22w0"></span><span class="wt" id="g22w1"></span><span class="wt" id="g22w2"></span><span class="wt" id="g22w3"></span><span class="wt" id="g22w4"></span><span class="wt" id="g22w5"></span><span class="wt" id="g22w6"></span><span class="wt" id="g22w7"></span><span class="wt" id="g22w8"></span><span class="wt" id="g22w9"></span><span class="wt" id="g22w10"></span><span class="wt" id="g22w11"></span><span class="wt" id="g22w12"></span><span class="wt" id="g22w13"></span><span class="wt" id="g22w14"></span><span class="wt" id="g22w15"></span><span class="wt" id="g22w16"></span><span class="wt" id="g22w17"></span><span class="wt" id="g22w18"></span><span class="wt" id="g22w19"></span><span class="wt" id="g22w20"></span><span class="wt" id="g22w21"></span><span class="wt" id="g22w22"></span><span class="wt" id="g22w23"></span><span class="wt" id="g22w24"></span><span class="wt" id="g22w25"></span><span class="wt" id="g22w26"></span><span class="wt" id="g22w27"></span><span class="wt" id="g22w28"></span><span class="wt" id="g22w29"></span><span class="wt" id="g22w30"></span><span class="wt" id="g22w31"></span><span class="wt" id="g22w32"></span><span class="wt" id="g22w33"></span><span class="wt" id="g22w34"></span><span class="wt" id="g22w35"></span><span class="wt" id="g22w36"></span><span class="wt" id="g22w37"></span><span class="wt" id="g22w38"></span><span class="wt" id="g22w39"></span><span class="wt" id="g22w40"></span><span class="wt" id="g22w41"></span><span class="wt" id="g22w42"></span><span class="wt" id="g22w43"></span><span class="wt" id="g22w44"></span><span class="wt" id="g22w45"></span><span class="wt" id="g22w46"></span><span class="wt" id="g22w47"></span><span class="wt" id="g22w48"></span><span class="wt" id="g22w49"></span><span class="wt" id="g22w50"></span><span class="wt" id="g22w51"></span><span class="wt" id="g22w52"></span><span class="wt" id="g22w53"></span><span class="wt" id="g22w54"></span><span class="wt" id="g22w55"></span><span class="wt" id="g22w56"></span><span class="wt" id="g22w57"></span><span class="wt" id="g22w58"></span><span class="wt" id="g22w59"></span><span class="wt" id="g22w60"></span><span class="wt" id="g22w61"></span><span class="wt" id="g22w62"></span><span class="wt" id="g22w63"></span><span class="wt" id="g22w64"></span><span class="wt" id="g22w65"></span><span class="wt" id="g22w66"></span><span class="wt" id="g22w67"></span><span class="wt" id="g22w68"></span><span class="wt" id="g22w69"></span><span class="wt" id="g22w70"></span><span class="wt" id="g22w71"></span><span class="wt" id="g22w72"></span><span class="wt" id="g22w73"></span><span class="wt" id="g22w74"></span><span class="wt" id="g22w75"></span><span class="wt" id="g22w76"></span><span class="wt" id="g22w77"></span><span class="wt" id="g22w78"></span><span class="wt" id="g22w79"></span><span class="wt" id="g22w80"></span><span class="wt" id="g22w81"></span><span class="wt" id="g22w82"></span><span class="wt" id="g22w83"></span><span class="wt" id="g22w84"></span><span class="wt" id="g22w85"></span><span class="wt" id="g22w86"></span><span class="wt" id="g22w87"></span><span class="wt" id="g22w88"></span><span class="wt" id="g22w89"></span><span class="wt" id="g22w90"></span><span class="wt" id="g22w91"></span><span class="wt" id="g22w92"></span><span class="wt" id="g22w93"></span><span class="wt" id="g22w94"></span><span class="wt" id="g22w95"></span><span class="wt" id="g22w96"></span><span class="wt" id="g22w97"></span><span class="wt" id="g22w98"></span><span class="wt" id="g22w99"></span><span class="wt" id="g22w100"></span><span class="wt" id="g22w101"></span><span class="wt" id="g22w102"></span><span class="wt" id="g22w103"></span><span class="wt" id="g22w104"></span><span class="wt" id="g22w105"></span><span class="wt" id="g22w106"></span><span class="wt" id="g22w107"></span><span class="wt" id="g22w108"></span><span class="wt" id="g22w109"></span><span class="wt" id="g22w110"></span><span class="wt" id="g22w111"></span><span class="wt" id="g22w112"></span><span class="wt" id="g22w113"></span><span class="wt" id="g22w114"></span><span class="wt" id="g22w115"></span><span class="wt" id="g22w116"></span><span class="wt" id="g22w117"></span><span class="wt" id="g22w118"></span><span class="wt" id="g22w119"></span><span class="wt" id="g22w120"></span></div>
+        <div class="lit soft" id="g22lit"></div>
+        <div class="tile brand one" id="g22one">
+          <span class="wordmark big">RUTA</span>
+        </div>
+      </div>
+
+      <div class="g full" id="g23">
+        <div class="tile brand pair" id="g23a" style="left:180px;top:220px">
+          <img class="mk " src="assets/logos/notion-mark.png" alt="">
+        </div>
+        <div class="tile brand pair" id="g23b" style="left:610px;top:220px">
+          <img class="mk " src="assets/logos/claude-tile.png" alt="">
+        </div>
+      </div>
+
+      <div class="g full" id="g24">
+        <div class="alt" id="g24gpt" style="left:760px;top:300px"><img class="mk " src="assets/logos/gpt-mark.png" alt=""></div>
+      </div>
+<div class="g full" id="g25"><div class="pane" id="g25p0" style="left:96px;top:120px"><b></b><b></b><b></b></div><div class="pane" id="g25p1" style="left:784px;top:120px"><b></b><b></b><b></b></div><div class="pane" id="g25p2" style="left:96px;top:372px"><b></b><b></b><b></b></div><div class="pane" id="g25p3" style="left:784px;top:372px"><b></b><b></b><b></b></div><div class="tile brand hub" id="g25hub"><img class="mk " src="assets/logos/claude-tile.png" alt=""></div></div>
+
+      <div class="g full" id="g26">
+        <div class="num" id="g26n" style="top:210px">20<small>€</small></div>
+      </div>
+
+      <div class="g full" id="g27">
+        <svg width="1080" height="600" viewBox="0 0 1080 600"
+             style="position:absolute;left:0;top:0">
+          <!-- Board: left 60, top 36, tiles 293x240, gutters 40. Column
+               centres 206/540/873; the row gutter is y 276-316, so a bus at
+               y=296 with stubs to the tile edges never crosses a tile face. -->
+          <g id="g27wires" stroke="#ff6e9c" fill="none" stroke-width="15"
+             stroke-linecap="round">
+            <path d="M206 296 H873" stroke-dasharray="667" stroke-dashoffset="667"/>
+            <path d="M206 276 V296" stroke-dasharray="20" stroke-dashoffset="20"/>
+            <path d="M540 276 V296" stroke-dasharray="20" stroke-dashoffset="20"/>
+            <path d="M873 276 V296" stroke-dasharray="20" stroke-dashoffset="20"/>
+            <path d="M206 316 V296" stroke-dasharray="20" stroke-dashoffset="20"/>
+            <path d="M540 316 V296" stroke-dasharray="20" stroke-dashoffset="20"/>
+            <path d="M873 316 V296" stroke-dasharray="20" stroke-dashoffset="20"/>
+          </g>
+          <circle id="g27hub" cx="873" cy="296" r="17" fill="#ff6e9c"/>
+        </svg>
+      </div>
+
+      <div class="g full" id="g28">
+        <svg id="g28s" width="260" height="260" viewBox="0 0 100 100"
+             style="position:absolute;left:410px;top:1180px">
+          <path d="M8 50 L92 12 L64 92 L50 60 Z" fill="#ff6e9c"
+                stroke="#fff" stroke-width="5" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="g full" id="gnotion"></div>
+      <video id="matte-wall" class="plate matte" src="assets/mattes/wall.webm"
+             data-start="102.600" data-duration="3.933" data-media-start="0"
+             muted playsinline></video>
+      <div id="scrim"></div>
+      <div class="cap" id="cap0">ЯКЩО</div>
+      <div class="cap" id="cap1">ТИ ЕКСПЕРТКА</div>
+      <div class="cap" id="cap2">І ХОЧЕШ</div>
+      <div class="cap" id="cap3">РЕАЛЬНО</div>
+      <div class="cap" id="cap4">ЗРОСТАТИ,</div>
+      <div class="cap" id="cap5">ТОБІ</div>
+      <div class="cap" id="cap6">ПОТРІБНО</div>
+      <div class="cap" id="cap7">ДУМАТИ</div>
+      <div class="cap" id="cap8">ПРО</div>
+      <div class="cap" id="cap9">СИСТЕМИ</div>
+      <div class="cap" id="cap10">ВЖЕ</div>
+      <div class="cap" id="cap11">ЗАРАЗ,</div>
+      <div class="cap" id="cap12">А</div>
+      <div class="cap" id="cap13">НЕ ЧЕРЕЗ</div>
+      <div class="cap" id="cap14">ПІВРОКУ,</div>
+      <div class="cap" id="cap15">КОЛИ</div>
+      <div class="cap" id="cap16">НАСТАНЕ</div>
+      <div class="cap" id="cap17">МОМЕНТ</div>
+      <div class="cap" id="cap18">МАСШТАБУВАТИСЬ.</div>
+      <div class="cap" id="cap19">ТОМУ</div>
+      <div class="cap" id="cap20">ЩО</div>
+      <div class="cap" id="cap21">ЧЕРЕЗ</div>
+      <div class="cap" id="cap22">ПІВРОКУ</div>
+      <div class="cap" id="cap23">БУДЕ</div>
+      <div class="cap" id="cap24">ПІЗНО:</div>
+      <div class="cap" id="cap25">ТИ ВЖЕ</div>
+      <div class="cap" id="cap26">НЕ</div>
+      <div class="cap" id="cap27">БУДЕШ</div>
+      <div class="cap" id="cap28">ЗНАТИ,</div>
+      <div class="cap" id="cap29">ЗВІДКИ</div>
+      <div class="cap" id="cap30">ПРИЙШЛИ</div>
+      <div class="cap" id="cap31">ТВОЇ</div>
+      <div class="cap" id="cap32">КЛІЄНТИ,</div>
+      <div class="cap" id="cap33">СКІЛЬКИ</div>
+      <div class="cap" id="cap34">В</div>
+      <div class="cap" id="cap35">ТЕБЕ</div>
+      <div class="cap" id="cap36">ГРОШЕЙ,</div>
+      <div class="cap" id="cap37">З КИМ</div>
+      <div class="cap" id="cap38">ТИ</div>
+      <div class="cap" id="cap39">РОЗМОВЛЯЛА</div>
+      <div class="cap" id="cap40">І ПРО</div>
+      <div class="cap" id="cap41">ЩО.</div>
+      <div class="cap" id="cap42">І</div>
+      <div class="cap" id="cap43">ОТ</div>
+      <div class="cap" id="cap44">ЩО Б Я</div>
+      <div class="cap" id="cap45">ЗРОБИЛА</div>
+      <div class="cap" id="cap46">ПРЯМО</div>
+      <div class="cap" id="cap47">ЗАРАЗ,</div>
+      <div class="cap" id="cap48">ЯКЩО</div>
+      <div class="cap" id="cap49">Б</div>
+      <div class="cap" id="cap50">Я ТІЛЬКИ</div>
+      <div class="cap" id="cap51">ПОЧИНАЛА</div>
+      <div class="cap" id="cap52">НАДАВАТИ</div>
+      <div class="cap" id="cap53">ПОСЛУГИ.</div>
+      <div class="cap" id="cap54">ПЕРША</div>
+      <div class="cap" id="cap55">ЦЕ</div>
+      <div class="cap" id="cap56">СИСТЕМА</div>
+      <div class="cap" id="cap57">ЗАПИСУ</div>
+      <div class="cap" id="cap58">НА</div>
+      <div class="cap" id="cap59">КОНСУЛЬТАЦІЇ.</div>
+      <div class="cap" id="cap60">ЩОБ</div>
+      <div class="cap" id="cap61">НЕ</div>
+      <div class="cap" id="cap62">ВИТРАЧАТИ</div>
+      <div class="cap" id="cap63">ЧАС</div>
+      <div class="cap" id="cap64">НА</div>
+      <div class="cap" id="cap65">«А</div>
+      <div class="cap" id="cap66">"КОЛИ</div>
+      <div class="cap" id="cap67">ТОБІ</div>
+      <div class="cap" id="cap68">ЗРУЧНО?»</div>
+      <div class="cap" id="cap69">А У</div>
+      <div class="cap" id="cap70">ВІВТОРОК,</div>
+      <div class="cap" id="cap71">А У</div>
+      <div class="cap" id="cap72">ЧЕТВЕРГ.</div>
+      <div class="cap" id="cap73">А</div>
+      <div class="cap" id="cap74">ПРОСТО</div>
+      <div class="cap" id="cap75">ДАВАТИ</div>
+      <div class="cap" id="cap76">ПОСИЛАННЯ,</div>
+      <div class="cap" id="cap77">І</div>
+      <div class="cap" id="cap78">ЛЮДИНА</div>
+      <div class="cap" id="cap79">САМА</div>
+      <div class="cap" id="cap80">ОБИРАЄ</div>
+      <div class="cap" id="cap81">ЧАС.</div>
+      <div class="cap" id="cap82">Я</div>
+      <div class="cap" id="cap83">ВИКОРИСТОВУЮ</div>
+      <div class="cap" id="cap84">CAL.COM,</div>
+      <div class="cap" id="cap85">ВІН</div>
+      <div class="cap" id="cap86">БЕЗКОШТОВНИЙ</div>
+      <div class="cap" id="cap87">І</div>
+      <div class="cap" id="cap88">САМ</div>
+      <div class="cap" id="cap89">СИНХРОНІЗУЄТЬСЯ</div>
+      <div class="cap" id="cap90">З GOOGLE</div>
+      <div class="cap" id="cap91">КАЛЕНДАРЕМ.</div>
+      <div class="cap" id="cap92">ДРУГЕ</div>
+      <div class="cap" id="cap93">FATHOM,</div>
+      <div class="cap" id="cap94">ЯКИЙ ЗАПИСУЄ</div>
+      <div class="cap" id="cap95">НАШІ</div>
+      <div class="cap" id="cap96">ДЗВІНКИ.</div>
+      <div class="cap" id="cap97">ТЕЖ</div>
+      <div class="cap" id="cap98">БЕЗКОШТОВНИЙ,</div>
+      <div class="cap" id="cap99">У</div>
+      <div class="cap" id="cap100">МЕНЕ</div>
+      <div class="cap" id="cap101">ПРО</div>
+      <div class="cap" id="cap102">НЬОГО</div>
+      <div class="cap" id="cap103">Є</div>
+      <div class="cap" id="cap104">ЦІЛА</div>
+      <div class="cap" id="cap105">ІНСТРУКЦІЯ.</div>
+      <div class="cap" id="cap106">ВІН</div>
+      <div class="cap" id="cap107">ЗБЕРІГАЄ</div>
+      <div class="cap" id="cap108">ЗАПИСИ</div>
+      <div class="cap" id="cap109">КОНСУЛЬТАЦІЙ</div>
+      <div class="cap" id="cap110">ОДРАЗУ</div>
+      <div class="cap" id="cap111">В</div>
+      <div class="cap" id="cap112">ТЕКСТІ,</div>
+      <div class="cap" id="cap113">ЩОБ</div>
+      <div class="cap" id="cap114">НЕ</div>
+      <div class="cap" id="cap115">ПЕРЕСЛУХОВУВАТИ</div>
+      <div class="cap" id="cap116">ВЕСЬ</div>
+      <div class="cap" id="cap117">ДЗВІНОК</div>
+      <div class="cap" id="cap118">ТРЕТЄ</div>
+      <div class="cap" id="cap119">CRM,</div>
+      <div class="cap" id="cap120">– БАЗА</div>
+      <div class="cap" id="cap121">ДАНИХ</div>
+      <div class="cap" id="cap122">КЛІЄНТОК</div>
+      <div class="cap" id="cap123">І</div>
+      <div class="cap" id="cap124">ТИХ,</div>
+      <div class="cap" id="cap125">ХТО</div>
+      <div class="cap" id="cap126">МІГ</div>
+      <div class="cap" id="cap127">БИ</div>
+      <div class="cap" id="cap128">НИМИ</div>
+      <div class="cap" id="cap129">СТАТИ.</div>
+      <div class="cap" id="cap130">НА</div>
+      <div class="cap" id="cap131">СТАРТІ</div>
+      <div class="cap" id="cap132">ДОСТАТНЬО</div>
+      <div class="cap" id="cap133">БАЗОВИХ</div>
+      <div class="cap" id="cap134">ПОЛІВ:</div>
+      <div class="cap" id="cap135">ХТО</div>
+      <div class="cap" id="cap136">ЦЯ</div>
+      <div class="cap" id="cap137">ЛЮДИНА,</div>
+      <div class="cap" id="cap138">ЗВІДКИ</div>
+      <div class="cap" id="cap139">ПРИЙШЛА,</div>
+      <div class="cap" id="cap140">ЧИМ</div>
+      <div class="cap" id="cap141">ЗАЙМАЄТЬСЯ,</div>
+      <div class="cap" id="cap142">ЩО</div>
+      <div class="cap" id="cap143">ХОТІЛА,</div>
+      <div class="cap" id="cap144">ЩО</div>
+      <div class="cap" id="cap145">ВЖЕ</div>
+      <div class="cap" id="cap146">ЗРОБЛЕНО,</div>
+      <div class="cap" id="cap147">І</div>
+      <div class="cap" id="cap148">ЯКИЙ</div>
+      <div class="cap" id="cap149">НАСТУПНИЙ</div>
+      <div class="cap" id="cap150">КРОК.</div>
+      <div class="cap" id="cap151">ПЛЮС</div>
+      <div class="cap" id="cap152">ДРІБНИЦІ</div>
+      <div class="cap" id="cap153">ТИПУ</div>
+      <div class="cap" id="cap154">ДНЯ</div>
+      <div class="cap" id="cap155">НАРОДЖЕННЯ,</div>
+      <div class="cap" id="cap156">ЩОБ ЗАЛИШАТИСЬ</div>
+      <div class="cap" id="cap157">В КОНТАКТІ.</div>
+      <div class="cap" id="cap158">Я</div>
+      <div class="cap" id="cap159">РОБЛЮ</div>
+      <div class="cap" id="cap160">ЦЕ</div>
+      <div class="cap" id="cap161">ПРОСТО</div>
+      <div class="cap" id="cap162">В</div>
+      <div class="cap" id="cap163">NOTION,</div>
+      <div class="cap" id="cap164">ВІН</div>
+      <div class="cap" id="cap165">БЕЗКОШТОВНИЙ.</div>
+      <div class="cap" id="cap166">ЧЕТВЕРТЕ</div>
+      <div class="cap" id="cap167">– СИСТЕМА</div>
+      <div class="cap" id="cap168">ДЛЯ</div>
+      <div class="cap" id="cap169">ЗАДАЧ.</div>
+      <div class="cap" id="cap170">ЗДАЄТЬСЯ,</div>
+      <div class="cap" id="cap171">ЩО</div>
+      <div class="cap" id="cap172">ВСЕ</div>
+      <div class="cap" id="cap173">САМО</div>
+      <div class="cap" id="cap174">ЗАПАМ'ЯТАЄТЬСЯ,</div>
+      <div class="cap" id="cap175">А</div>
+      <div class="cap" id="cap176">ПО</div>
+      <div class="cap" id="cap177">ФАКТУ</div>
+      <div class="cap" id="cap178">ТИ</div>
+      <div class="cap" id="cap179">ДУЖЕ</div>
+      <div class="cap" id="cap180">ШВИДКО</div>
+      <div class="cap" id="cap181">ПОЧНЕШ</div>
+      <div class="cap" id="cap182">ВСЕ</div>
+      <div class="cap" id="cap183">ЗАБУВАТИ.</div>
+      <div class="cap" id="cap184">ТОМУ</div>
+      <div class="cap" id="cap185">КРАЩЕ</div>
+      <div class="cap" id="cap186">ВИБУДУВАТИ</div>
+      <div class="cap" id="cap187">ЦЕ</div>
+      <div class="cap" id="cap188">ЗАРАЗ,</div>
+      <div class="cap" id="cap189">НІЖ</div>
+      <div class="cap" id="cap190">ПОТІМ</div>
+      <div class="cap" id="cap191">У</div>
+      <div class="cap" id="cap192">ПОСПІХУ.</div>
+      <div class="cap" id="cap193">І Я</div>
+      <div class="cap" id="cap194">ТРИМАЮ</div>
+      <div class="cap" id="cap195">ЗАДАЧІ</div>
+      <div class="cap" id="cap196">ТЕЖ</div>
+      <div class="cap" id="cap197">В</div>
+      <div class="cap" id="cap198">NOTION</div>
+      <div class="cap" id="cap199">ЗРУЧНО,</div>
+      <div class="cap" id="cap200">ЩО ВСЕ</div>
+      <div class="cap" id="cap201">В ОДНОМУ</div>
+      <div class="cap" id="cap202">МІСЦІ.</div>
+      <div class="cap" id="cap203">ДАЛІ</div>
+      <div class="cap" id="cap204">–</div>
+      <div class="cap" id="cap205">КОНТЕНТ.</div>
+      <div class="cap" id="cap206">НЕ</div>
+      <div class="cap" id="cap207">ТРЕБА</div>
+      <div class="cap" id="cap208">ЧЕКАТИ</div>
+      <div class="cap" id="cap209">НЕЙМОВІРНИХ</div>
+      <div class="cap" id="cap210">УСПІХІВ,</div>
+      <div class="cap" id="cap211">ТОМУ</div>
+      <div class="cap" id="cap212">ЩО</div>
+      <div class="cap" id="cap213">ПОКАЗАТИ</div>
+      <div class="cap" id="cap214">ПРОЦЕС</div>
+      <div class="cap" id="cap215">ЧАСОМ</div>
+      <div class="cap" id="cap216">ЦІКАВІШЕ,</div>
+      <div class="cap" id="cap217">НІЖ</div>
+      <div class="cap" id="cap218">ГОТОВИЙ</div>
+      <div class="cap" id="cap219">РЕЗУЛЬТАТ.</div>
+      <div class="cap" id="cap220">А ЯКЩО</div>
+      <div class="cap" id="cap221">В ТЕБЕ</div>
+      <div class="cap" id="cap222">БУВ</div>
+      <div class="cap" id="cap223">ХОЧА</div>
+      <div class="cap" id="cap224">Б ОДИН</div>
+      <div class="cap" id="cap225">ДЗВІНОК</div>
+      <div class="cap" id="cap226">З</div>
+      <div class="cap" id="cap227">КЛІЄНТКОЮ</div>
+      <div class="cap" id="cap228">ЦЕ</div>
+      <div class="cap" id="cap229">ВЖЕ</div>
+      <div class="cap" id="cap230">ІДЕЇ</div>
+      <div class="cap" id="cap231">ДЛЯ</div>
+      <div class="cap" id="cap232">КОНТЕНТУ,</div>
+      <div class="cap" id="cap233">НАПИСАНІ</div>
+      <div class="cap" id="cap234">СЛОВАМИ</div>
+      <div class="cap" id="cap235">ТВОЄЇ</div>
+      <div class="cap" id="cap236">ЦІЛЬОВОЇ</div>
+      <div class="cap" id="cap237">АУДИТОРІЇ.</div>
+      <div class="cap" id="cap238">ЦЕ</div>
+      <div class="cap" id="cap239">НА</div>
+      <div class="cap" id="cap240">ВАГУ</div>
+      <div class="cap" id="cap241">ЗОЛОТА:</div>
+      <div class="cap" id="cap242">ТЕ,</div>
+      <div class="cap" id="cap243">ЩО БУЛО</div>
+      <div class="cap" id="cap244">НА</div>
+      <div class="cap" id="cap245">ДЗВІНКАХ,</div>
+      <div class="cap" id="cap246">МИ ПРОСТО</div>
+      <div class="cap" id="cap247">ПЕРЕВИКОРИСТОВУЄМО</div>
+      <div class="cap" id="cap248">ДЛЯ</div>
+      <div class="cap" id="cap249">КОНТЕНТУ.</div>
+      <div class="cap" id="cap250">НАЙКРАЩИЙ</div>
+      <div class="cap" id="cap251">СПОСІБ</div>
+      <div class="cap" id="cap252">ПРАЦЮВАТИ</div>
+      <div class="cap" id="cap253">З</div>
+      <div class="cap" id="cap254">КОНТЕНТОМ,</div>
+      <div class="cap" id="cap255">НА</div>
+      <div class="cap" id="cap256">МОЮ</div>
+      <div class="cap" id="cap257">ДУМКУ,</div>
+      <div class="cap" id="cap258">ЦЕ МІЙ</div>
+      <div class="cap" id="cap259">ДОДАТОК</div>
+      <div class="cap" id="cap260">"RUTA",</div>
+      <div class="cap" id="cap261">ЯКИЙ</div>
+      <div class="cap" id="cap262">НА</div>
+      <div class="cap" id="cap263">ОСНОВІ</div>
+      <div class="cap" id="cap264">ГОЛОСОВИХ</div>
+      <div class="cap" id="cap265">СТВОРЮЄ</div>
+      <div class="cap" id="cap266">РІЛСИ,</div>
+      <div class="cap" id="cap267">СТОРІС</div>
+      <div class="cap" id="cap268">І</div>
+      <div class="cap" id="cap269">ГОТОВІ</div>
+      <div class="cap" id="cap270">КАРУСЕЛІ.</div>
+      <div class="cap" id="cap271">КОШТУЄ</div>
+      <div class="cap" id="cap272">ЛИШЕ</div>
+      <div class="cap" id="cap273">10</div>
+      <div class="cap" id="cap274">ЄВРО</div>
+      <div class="cap" id="cap275">НА</div>
+      <div class="cap" id="cap276">МІСЯЦЬ</div>
+      <div class="cap" id="cap277">І</div>
+      <div class="cap" id="cap278">ЗАМІНЮЄ</div>
+      <div class="cap" id="cap279">ТИСЯЧУ</div>
+      <div class="cap" id="cap280">ПРОМТІВ</div>
+      <div class="cap" id="cap281">І ПІДПИСОК</div>
+      <div class="cap" id="cap282">НА</div>
+      <div class="cap" id="cap283">БУДЬ-ЯКІ</div>
+      <div class="cap" id="cap284">ІНШІ</div>
+      <div class="cap" id="cap285">ШТУЧНІ</div>
+      <div class="cap" id="cap286">ІНТЕЛЕКТИ.</div>
+      <div class="cap" id="cap287">АЛЕ</div>
+      <div class="cap" id="cap288">ЯКЩО</div>
+      <div class="cap" id="cap289">ЦЕ</div>
+      <div class="cap" id="cap290">ЗАБАГАТО</div>
+      <div class="cap" id="cap291">ПРОСТО</div>
+      <div class="cap" id="cap292">ВІЗЬМИ</div>
+      <div class="cap" id="cap293">NOTION</div>
+      <div class="cap" id="cap294">ДЛЯ</div>
+      <div class="cap" id="cap295">ПЛАНУВАННЯ</div>
+      <div class="cap" id="cap296">І</div>
+      <div class="cap" id="cap297">ШТУЧНИЙ</div>
+      <div class="cap" id="cap298">ІНТЕЛЕКТ</div>
+      <div class="cap" id="cap299">ДЛЯ</div>
+      <div class="cap" id="cap300">СТРАТЕГІЇ.</div>
+      <div class="cap" id="cap301">І</div>
+      <div class="cap" id="cap302">НАЙВАЖЛИВІШЕ</div>
+      <div class="cap" id="cap303">НАШ КОМАНДНИЙ</div>
+      <div class="cap" id="cap304">ЦЕНТР,</div>
+      <div class="cap" id="cap305">ПЕРСОНАЛЬНИЙ</div>
+      <div class="cap" id="cap306">АСИСТЕНТ,</div>
+      <div class="cap" id="cap307">–</div>
+      <div class="cap" id="cap308">ЦЕ</div>
+      <div class="cap" id="cap309">КЛОД</div>
+      <div class="cap" id="cap310">АБО</div>
+      <div class="cap" id="cap311">GPT.</div>
+      <div class="cap" id="cap312">Я</div>
+      <div class="cap" id="cap313">ВЗЯЛА</div>
+      <div class="cap" id="cap314">КЛОД,</div>
+      <div class="cap" id="cap315">МЕНІ</div>
+      <div class="cap" id="cap316">ПОДОБАЄТЬСЯ</div>
+      <div class="cap" id="cap317">ЇХНЯ</div>
+      <div class="cap" id="cap318">ЕКОСИСТЕМА</div>
+      <div class="cap" id="cap319">МІЖ</div>
+      <div class="cap" id="cap320">ЧАТОМ,</div>
+      <div class="cap" id="cap321">КОВОРКОМ,</div>
+      <div class="cap" id="cap322">ДИЗАЙНОМ</div>
+      <div class="cap" id="cap323">І</div>
+      <div class="cap" id="cap324">КОДОМ.</div>
+      <div class="cap" id="cap325">ПОЧАТИ</div>
+      <div class="cap" id="cap326">МОЖНА</div>
+      <div class="cap" id="cap327">З</div>
+      <div class="cap" id="cap328">ТАРИФУ</div>
+      <div class="cap" id="cap329">ЗА</div>
+      <div class="cap" id="cap330">20</div>
+      <div class="cap" id="cap331">ЄВРО,</div>
+      <div class="cap" id="cap332">І</div>
+      <div class="cap" id="cap333">З НЬОГО</div>
+      <div class="cap" id="cap334">МОЖНА</div>
+      <div class="cap" id="cap335">ПРЯМ</div>
+      <div class="cap" id="cap336">КЛАСНО</div>
+      <div class="cap" id="cap337">РОЗГУЛЯТИСЯ.</div>
+      <div class="cap" id="cap338">ЦЕ</div>
+      <div class="cap" id="cap339">НАЙБІЛЬША</div>
+      <div class="cap" id="cap340">ВИТРАТА</div>
+      <div class="cap" id="cap341">З</div>
+      <div class="cap" id="cap342">УСІХ</div>
+      <div class="cap" id="cap343">СИСТЕМ,</div>
+      <div class="cap" id="cap344">АЛЕ</div>
+      <div class="cap" id="cap345">ВОНА</div>
+      <div class="cap" id="cap346">ТОГО</div>
+      <div class="cap" id="cap347">ВАРТА:</div>
+      <div class="cap" id="cap348">ДО РЕЧІ,</div>
+      <div class="cap" id="cap349">ВІДПРАВ</div>
+      <div class="cap" id="cap350">ЦЕЙ</div>
+      <div class="cap" id="cap351">РІЛС</div>
+      <div class="cap" id="cap352">ПОДРУЖЦІ,</div>
+      <div class="cap" id="cap353">ЯКІЙ</div>
+      <div class="cap" id="cap354">ЧАС</div>
+      <div class="cap" id="cap355">МАСШТАБУВАТИСЯ!</div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="133.267" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  tl.set("#cap0", {autoAlpha: 1}, 0.000);
+  tl.set("#cap0", {autoAlpha: 0}, 0.255);
+  tl.set("#cap1", {autoAlpha: 1}, 0.340);
+  tl.set("#cap1", {autoAlpha: 0}, 0.795);
+  tl.set("#cap2", {autoAlpha: 1}, 0.880);
+  tl.set("#cap2", {autoAlpha: 0}, 1.275);
+  tl.set("#cap3", {autoAlpha: 1}, 1.360);
+  tl.set("#cap3", {autoAlpha: 0}, 1.695);
+  tl.set("#cap4", {autoAlpha: 1}, 1.780);
+  tl.set("#cap4", {autoAlpha: 0}, 2.335);
+  tl.set("#cap5", {autoAlpha: 1}, 2.420);
+  tl.set("#cap5", {autoAlpha: 0}, 2.520);
+  tl.set("#cap6", {autoAlpha: 1}, 2.600);
+  tl.set("#cap6", {autoAlpha: 0}, 2.915);
+  tl.set("#cap7", {autoAlpha: 1}, 3.000);
+  tl.set("#cap7", {autoAlpha: 0}, 3.295);
+  tl.set("#cap8", {autoAlpha: 1}, 3.380);
+  tl.set("#cap8", {autoAlpha: 0}, 3.495);
+  tl.set("#cap9", {autoAlpha: 1}, 3.580);
+  tl.set("#cap9", {autoAlpha: 0}, 4.075);
+  tl.set("#cap10", {autoAlpha: 1}, 4.160);
+  tl.set("#cap10", {autoAlpha: 0}, 4.335);
+  tl.set("#cap11", {autoAlpha: 1}, 4.420);
+  tl.set("#cap11", {autoAlpha: 0}, 5.035);
+  tl.set("#cap12", {autoAlpha: 1}, 5.120);
+  tl.set("#cap12", {autoAlpha: 0}, 5.220);
+  tl.set("#cap13", {autoAlpha: 1}, 5.280);
+  tl.set("#cap13", {autoAlpha: 0}, 5.535);
+  tl.set("#cap14", {autoAlpha: 1}, 5.620);
+  tl.set("#cap14", {autoAlpha: 0}, 5.995);
+  tl.set("#cap15", {autoAlpha: 1}, 6.080);
+  tl.set("#cap15", {autoAlpha: 0}, 6.215);
+  tl.set("#cap16", {autoAlpha: 1}, 6.300);
+  tl.set("#cap16", {autoAlpha: 0}, 6.675);
+  tl.set("#cap17", {autoAlpha: 1}, 6.760);
+  tl.set("#cap17", {autoAlpha: 0}, 6.895);
+  tl.set("#cap18", {autoAlpha: 1}, 6.980);
+  tl.set("#cap18", {autoAlpha: 0}, 7.675);
+  tl.set("#cap19", {autoAlpha: 1}, 7.760);
+  tl.set("#cap19", {autoAlpha: 0}, 7.860);
+  tl.set("#cap20", {autoAlpha: 1}, 7.900);
+  tl.set("#cap20", {autoAlpha: 0}, 8.000);
+  tl.set("#cap21", {autoAlpha: 1}, 8.060);
+  tl.set("#cap21", {autoAlpha: 0}, 8.175);
+  tl.set("#cap22", {autoAlpha: 1}, 8.260);
+  tl.set("#cap22", {autoAlpha: 0}, 8.675);
+  tl.set("#cap23", {autoAlpha: 1}, 8.760);
+  tl.set("#cap23", {autoAlpha: 0}, 8.955);
+  tl.set("#cap24", {autoAlpha: 1}, 9.040);
+  tl.set("#cap24", {autoAlpha: 0}, 9.655);
+  tl.set("#cap25", {autoAlpha: 1}, 9.740);
+  tl.set("#cap25", {autoAlpha: 0}, 9.915);
+  tl.set("#cap26", {autoAlpha: 1}, 10.000);
+  tl.set("#cap26", {autoAlpha: 0}, 10.175);
+  tl.set("#cap27", {autoAlpha: 1}, 10.260);
+  tl.set("#cap27", {autoAlpha: 0}, 10.415);
+  tl.set("#cap28", {autoAlpha: 1}, 10.500);
+  tl.set("#cap28", {autoAlpha: 0}, 10.895);
+  tl.set("#cap29", {autoAlpha: 1}, 10.980);
+  tl.set("#cap29", {autoAlpha: 0}, 11.215);
+  tl.set("#cap30", {autoAlpha: 1}, 11.300);
+  tl.set("#cap30", {autoAlpha: 0}, 11.495);
+  tl.set("#cap31", {autoAlpha: 1}, 11.580);
+  tl.set("#cap31", {autoAlpha: 0}, 11.735);
+  tl.set("#cap32", {autoAlpha: 1}, 11.820);
+  tl.set("#cap32", {autoAlpha: 0}, 12.415);
+  tl.set("#cap33", {autoAlpha: 1}, 12.500);
+  tl.set("#cap33", {autoAlpha: 0}, 12.675);
+  tl.set("#cap34", {autoAlpha: 1}, 12.760);
+  tl.set("#cap34", {autoAlpha: 0}, 12.860);
+  tl.set("#cap35", {autoAlpha: 1}, 12.880);
+  tl.set("#cap35", {autoAlpha: 0}, 12.995);
+  tl.set("#cap36", {autoAlpha: 1}, 13.080);
+  tl.set("#cap36", {autoAlpha: 0}, 13.575);
+  tl.set("#cap37", {autoAlpha: 1}, 13.660);
+  tl.set("#cap37", {autoAlpha: 0}, 13.760);
+  tl.set("#cap38", {autoAlpha: 1}, 13.840);
+  tl.set("#cap38", {autoAlpha: 0}, 13.940);
+  tl.set("#cap39", {autoAlpha: 1}, 13.960);
+  tl.set("#cap39", {autoAlpha: 0}, 14.375);
+  tl.set("#cap40", {autoAlpha: 1}, 14.460);
+  tl.set("#cap40", {autoAlpha: 0}, 14.715);
+  tl.set("#cap41", {autoAlpha: 1}, 14.800);
+  tl.set("#cap41", {autoAlpha: 0}, 15.335);
+  tl.set("#cap42", {autoAlpha: 1}, 15.420);
+  tl.set("#cap42", {autoAlpha: 0}, 15.520);
+  tl.set("#cap43", {autoAlpha: 1}, 15.600);
+  tl.set("#cap43", {autoAlpha: 0}, 15.775);
+  tl.set("#cap44", {autoAlpha: 1}, 15.860);
+  tl.set("#cap44", {autoAlpha: 0}, 16.015);
+  tl.set("#cap45", {autoAlpha: 1}, 16.100);
+  tl.set("#cap45", {autoAlpha: 0}, 16.415);
+  tl.set("#cap46", {autoAlpha: 1}, 16.500);
+  tl.set("#cap46", {autoAlpha: 0}, 16.815);
+  tl.set("#cap47", {autoAlpha: 1}, 16.900);
+  tl.set("#cap47", {autoAlpha: 0}, 17.455);
+  tl.set("#cap48", {autoAlpha: 1}, 17.540);
+  tl.set("#cap48", {autoAlpha: 0}, 17.640);
+  tl.set("#cap49", {autoAlpha: 1}, 17.720);
+  tl.set("#cap49", {autoAlpha: 0}, 17.820);
+  tl.set("#cap50", {autoAlpha: 1}, 17.820);
+  tl.set("#cap50", {autoAlpha: 0}, 17.920);
+  tl.set("#cap51", {autoAlpha: 1}, 17.980);
+  tl.set("#cap51", {autoAlpha: 0}, 18.355);
+  tl.set("#cap52", {autoAlpha: 1}, 18.440);
+  tl.set("#cap52", {autoAlpha: 0}, 18.815);
+  tl.set("#cap53", {autoAlpha: 1}, 18.900);
+  tl.set("#cap53", {autoAlpha: 0}, 19.185);
+  tl.set("#cap54", {autoAlpha: 1}, 19.270);
+  tl.set("#cap54", {autoAlpha: 0}, 19.449);
+  tl.set("#cap55", {autoAlpha: 1}, 19.534);
+  tl.set("#cap55", {autoAlpha: 0}, 19.634);
+  tl.set("#cap56", {autoAlpha: 1}, 19.640);
+  tl.set("#cap56", {autoAlpha: 0}, 19.895);
+  tl.set("#cap57", {autoAlpha: 1}, 19.980);
+  tl.set("#cap57", {autoAlpha: 0}, 20.455);
+  tl.set("#cap58", {autoAlpha: 1}, 20.540);
+  tl.set("#cap58", {autoAlpha: 0}, 20.640);
+  tl.set("#cap59", {autoAlpha: 1}, 20.660);
+  tl.set("#cap59", {autoAlpha: 0}, 21.235);
+  tl.set("#cap60", {autoAlpha: 1}, 21.320);
+  tl.set("#cap60", {autoAlpha: 0}, 21.420);
+  tl.set("#cap61", {autoAlpha: 1}, 21.440);
+  tl.set("#cap61", {autoAlpha: 0}, 21.540);
+  tl.set("#cap62", {autoAlpha: 1}, 21.600);
+  tl.set("#cap62", {autoAlpha: 0}, 22.015);
+  tl.set("#cap63", {autoAlpha: 1}, 22.100);
+  tl.set("#cap63", {autoAlpha: 0}, 22.295);
+  tl.set("#cap64", {autoAlpha: 1}, 22.380);
+  tl.set("#cap64", {autoAlpha: 0}, 22.480);
+  tl.set("#cap65", {autoAlpha: 1}, 22.540);
+  tl.set("#cap65", {autoAlpha: 0}, 22.640);
+  tl.set("#cap66", {autoAlpha: 1}, 22.680);
+  tl.set("#cap66", {autoAlpha: 0}, 22.780);
+  tl.set("#cap67", {autoAlpha: 1}, 22.860);
+  tl.set("#cap67", {autoAlpha: 0}, 23.015);
+  tl.set("#cap68", {autoAlpha: 1}, 23.100);
+  tl.set("#cap68", {autoAlpha: 0}, 23.415);
+  tl.set("#cap69", {autoAlpha: 1}, 23.620);
+  tl.set("#cap69", {autoAlpha: 0}, 23.720);
+  tl.set("#cap70", {autoAlpha: 1}, 23.780);
+  tl.set("#cap70", {autoAlpha: 0}, 24.215);
+  tl.set("#cap71", {autoAlpha: 1}, 24.300);
+  tl.set("#cap71", {autoAlpha: 0}, 24.435);
+  tl.set("#cap72", {autoAlpha: 1}, 24.520);
+  tl.set("#cap72", {autoAlpha: 0}, 24.795);
+  tl.set("#cap73", {autoAlpha: 1}, 24.880);
+  tl.set("#cap73", {autoAlpha: 0}, 25.015);
+  tl.set("#cap74", {autoAlpha: 1}, 25.100);
+  tl.set("#cap74", {autoAlpha: 0}, 25.200);
+  tl.set("#cap75", {autoAlpha: 1}, 25.260);
+  tl.set("#cap75", {autoAlpha: 0}, 25.495);
+  tl.set("#cap76", {autoAlpha: 1}, 25.580);
+  tl.set("#cap76", {autoAlpha: 0}, 25.995);
+  tl.set("#cap77", {autoAlpha: 1}, 26.080);
+  tl.set("#cap77", {autoAlpha: 0}, 26.180);
+  tl.set("#cap78", {autoAlpha: 1}, 26.220);
+  tl.set("#cap78", {autoAlpha: 0}, 26.515);
+  tl.set("#cap79", {autoAlpha: 1}, 26.600);
+  tl.set("#cap79", {autoAlpha: 0}, 26.835);
+  tl.set("#cap80", {autoAlpha: 1}, 26.920);
+  tl.set("#cap80", {autoAlpha: 0}, 27.175);
+  tl.set("#cap81", {autoAlpha: 1}, 27.260);
+  tl.set("#cap81", {autoAlpha: 0}, 27.415);
+  tl.set("#cap82", {autoAlpha: 1}, 27.500);
+  tl.set("#cap82", {autoAlpha: 0}, 27.855);
+  tl.set("#cap83", {autoAlpha: 1}, 27.940);
+  tl.set("#cap83", {autoAlpha: 0}, 28.495);
+  tl.set("#cap84", {autoAlpha: 1}, 28.580);
+  tl.set("#cap84", {autoAlpha: 0}, 29.115);
+  tl.set("#cap85", {autoAlpha: 1}, 29.200);
+  tl.set("#cap85", {autoAlpha: 0}, 29.300);
+  tl.set("#cap86", {autoAlpha: 1}, 29.360);
+  tl.set("#cap86", {autoAlpha: 0}, 29.955);
+  tl.set("#cap87", {autoAlpha: 1}, 30.040);
+  tl.set("#cap87", {autoAlpha: 0}, 30.235);
+  tl.set("#cap88", {autoAlpha: 1}, 30.320);
+  tl.set("#cap88", {autoAlpha: 0}, 30.420);
+  tl.set("#cap89", {autoAlpha: 1}, 30.500);
+  tl.set("#cap89", {autoAlpha: 0}, 31.175);
+  tl.set("#cap90", {autoAlpha: 1}, 31.260);
+  tl.set("#cap90", {autoAlpha: 0}, 31.535);
+  tl.set("#cap91", {autoAlpha: 1}, 31.620);
+  tl.set("#cap91", {autoAlpha: 0}, 31.835);
+  tl.set("#cap92", {autoAlpha: 1}, 31.920);
+  tl.set("#cap92", {autoAlpha: 0}, 32.215);
+  tl.set("#cap93", {autoAlpha: 1}, 32.300);
+  tl.set("#cap93", {autoAlpha: 0}, 32.875);
+  tl.set("#cap94", {autoAlpha: 1}, 32.960);
+  tl.set("#cap94", {autoAlpha: 0}, 33.495);
+  tl.set("#cap95", {autoAlpha: 1}, 33.580);
+  tl.set("#cap95", {autoAlpha: 0}, 33.755);
+  tl.set("#cap96", {autoAlpha: 1}, 33.840);
+  tl.set("#cap96", {autoAlpha: 0}, 34.335);
+  tl.set("#cap97", {autoAlpha: 1}, 34.420);
+  tl.set("#cap97", {autoAlpha: 0}, 34.520);
+  tl.set("#cap98", {autoAlpha: 1}, 34.580);
+  tl.set("#cap98", {autoAlpha: 0}, 35.335);
+  tl.set("#cap99", {autoAlpha: 1}, 35.420);
+  tl.set("#cap99", {autoAlpha: 0}, 35.520);
+  tl.set("#cap100", {autoAlpha: 1}, 35.540);
+  tl.set("#cap100", {autoAlpha: 0}, 35.655);
+  tl.set("#cap101", {autoAlpha: 1}, 35.740);
+  tl.set("#cap101", {autoAlpha: 0}, 35.840);
+  tl.set("#cap102", {autoAlpha: 1}, 35.900);
+  tl.set("#cap102", {autoAlpha: 0}, 36.000);
+  tl.set("#cap103", {autoAlpha: 1}, 36.040);
+  tl.set("#cap103", {autoAlpha: 0}, 36.175);
+  tl.set("#cap104", {autoAlpha: 1}, 36.260);
+  tl.set("#cap104", {autoAlpha: 0}, 36.475);
+  tl.set("#cap105", {autoAlpha: 1}, 36.560);
+  tl.set("#cap105", {autoAlpha: 0}, 37.435);
+  tl.set("#cap106", {autoAlpha: 1}, 37.520);
+  tl.set("#cap106", {autoAlpha: 0}, 37.635);
+  tl.set("#cap107", {autoAlpha: 1}, 37.720);
+  tl.set("#cap107", {autoAlpha: 0}, 38.095);
+  tl.set("#cap108", {autoAlpha: 1}, 38.180);
+  tl.set("#cap108", {autoAlpha: 0}, 38.435);
+  tl.set("#cap109", {autoAlpha: 1}, 38.520);
+  tl.set("#cap109", {autoAlpha: 0}, 39.055);
+  tl.set("#cap110", {autoAlpha: 1}, 39.140);
+  tl.set("#cap110", {autoAlpha: 0}, 39.435);
+  tl.set("#cap111", {autoAlpha: 1}, 39.520);
+  tl.set("#cap111", {autoAlpha: 0}, 39.655);
+  tl.set("#cap112", {autoAlpha: 1}, 39.740);
+  tl.set("#cap112", {autoAlpha: 0}, 40.135);
+  tl.set("#cap113", {autoAlpha: 1}, 40.220);
+  tl.set("#cap113", {autoAlpha: 0}, 40.320);
+  tl.set("#cap114", {autoAlpha: 1}, 40.320);
+  tl.set("#cap114", {autoAlpha: 0}, 40.455);
+  tl.set("#cap115", {autoAlpha: 1}, 40.540);
+  tl.set("#cap115", {autoAlpha: 0}, 41.015);
+  tl.set("#cap116", {autoAlpha: 1}, 41.100);
+  tl.set("#cap116", {autoAlpha: 0}, 41.200);
+  tl.set("#cap117", {autoAlpha: 1}, 41.260);
+  tl.set("#cap117", {autoAlpha: 0}, 41.995);
+  tl.set("#cap118", {autoAlpha: 1}, 42.080);
+  tl.set("#cap118", {autoAlpha: 0}, 42.435);
+  tl.set("#cap119", {autoAlpha: 1}, 42.520);
+  tl.set("#cap119", {autoAlpha: 0}, 42.975);
+  tl.set("#cap120", {autoAlpha: 1}, 43.060);
+  tl.set("#cap120", {autoAlpha: 0}, 43.375);
+  tl.set("#cap121", {autoAlpha: 1}, 43.460);
+  tl.set("#cap121", {autoAlpha: 0}, 43.775);
+  tl.set("#cap122", {autoAlpha: 1}, 43.860);
+  tl.set("#cap122", {autoAlpha: 0}, 44.155);
+  tl.set("#cap123", {autoAlpha: 1}, 44.240);
+  tl.set("#cap123", {autoAlpha: 0}, 44.355);
+  tl.set("#cap124", {autoAlpha: 1}, 44.440);
+  tl.set("#cap124", {autoAlpha: 0}, 44.675);
+  tl.set("#cap125", {autoAlpha: 1}, 44.760);
+  tl.set("#cap125", {autoAlpha: 0}, 44.860);
+  tl.set("#cap126", {autoAlpha: 1}, 44.900);
+  tl.set("#cap126", {autoAlpha: 0}, 45.255);
+  tl.set("#cap127", {autoAlpha: 1}, 45.340);
+  tl.set("#cap127", {autoAlpha: 0}, 45.440);
+  tl.set("#cap128", {autoAlpha: 1}, 45.480);
+  tl.set("#cap128", {autoAlpha: 0}, 45.595);
+  tl.set("#cap129", {autoAlpha: 1}, 45.680);
+  tl.set("#cap129", {autoAlpha: 0}, 46.235);
+  tl.set("#cap130", {autoAlpha: 1}, 46.320);
+  tl.set("#cap130", {autoAlpha: 0}, 46.435);
+  tl.set("#cap131", {autoAlpha: 1}, 46.520);
+  tl.set("#cap131", {autoAlpha: 0}, 46.735);
+  tl.set("#cap132", {autoAlpha: 1}, 46.820);
+  tl.set("#cap132", {autoAlpha: 0}, 47.215);
+  tl.set("#cap133", {autoAlpha: 1}, 47.300);
+  tl.set("#cap133", {autoAlpha: 0}, 47.695);
+  tl.set("#cap134", {autoAlpha: 1}, 47.780);
+  tl.set("#cap134", {autoAlpha: 0}, 48.215);
+  tl.set("#cap135", {autoAlpha: 1}, 48.300);
+  tl.set("#cap135", {autoAlpha: 0}, 48.415);
+  tl.set("#cap136", {autoAlpha: 1}, 48.500);
+  tl.set("#cap136", {autoAlpha: 0}, 48.600);
+  tl.set("#cap137", {autoAlpha: 1}, 48.640);
+  tl.set("#cap137", {autoAlpha: 0}, 49.095);
+  tl.set("#cap138", {autoAlpha: 1}, 49.180);
+  tl.set("#cap138", {autoAlpha: 0}, 49.435);
+  tl.set("#cap139", {autoAlpha: 1}, 49.520);
+  tl.set("#cap139", {autoAlpha: 0}, 50.015);
+  tl.set("#cap140", {autoAlpha: 1}, 50.100);
+  tl.set("#cap140", {autoAlpha: 0}, 50.215);
+  tl.set("#cap141", {autoAlpha: 1}, 50.300);
+  tl.set("#cap141", {autoAlpha: 0}, 50.835);
+  tl.set("#cap142", {autoAlpha: 1}, 50.920);
+  tl.set("#cap142", {autoAlpha: 0}, 51.035);
+  tl.set("#cap143", {autoAlpha: 1}, 51.120);
+  tl.set("#cap143", {autoAlpha: 0}, 51.555);
+  tl.set("#cap144", {autoAlpha: 1}, 51.640);
+  tl.set("#cap144", {autoAlpha: 0}, 51.740);
+  tl.set("#cap145", {autoAlpha: 1}, 51.800);
+  tl.set("#cap145", {autoAlpha: 0}, 51.915);
+  tl.set("#cap146", {autoAlpha: 1}, 52.000);
+  tl.set("#cap146", {autoAlpha: 0}, 52.435);
+  tl.set("#cap147", {autoAlpha: 1}, 52.520);
+  tl.set("#cap147", {autoAlpha: 0}, 52.620);
+  tl.set("#cap148", {autoAlpha: 1}, 52.660);
+  tl.set("#cap148", {autoAlpha: 0}, 52.760);
+  tl.set("#cap149", {autoAlpha: 1}, 52.780);
+  tl.set("#cap149", {autoAlpha: 0}, 53.155);
+  tl.set("#cap150", {autoAlpha: 1}, 53.240);
+  tl.set("#cap150", {autoAlpha: 0}, 53.655);
+  tl.set("#cap151", {autoAlpha: 1}, 53.740);
+  tl.set("#cap151", {autoAlpha: 0}, 54.055);
+  tl.set("#cap152", {autoAlpha: 1}, 54.140);
+  tl.set("#cap152", {autoAlpha: 0}, 54.675);
+  tl.set("#cap153", {autoAlpha: 1}, 54.760);
+  tl.set("#cap153", {autoAlpha: 0}, 54.955);
+  tl.set("#cap154", {autoAlpha: 1}, 55.040);
+  tl.set("#cap154", {autoAlpha: 0}, 55.140);
+  tl.set("#cap155", {autoAlpha: 1}, 55.140);
+  tl.set("#cap155", {autoAlpha: 0}, 55.575);
+  tl.set("#cap156", {autoAlpha: 1}, 55.660);
+  tl.set("#cap156", {autoAlpha: 0}, 56.135);
+  tl.set("#cap157", {autoAlpha: 1}, 56.220);
+  tl.set("#cap157", {autoAlpha: 0}, 56.955);
+  tl.set("#cap158", {autoAlpha: 1}, 57.040);
+  tl.set("#cap158", {autoAlpha: 0}, 57.140);
+  tl.set("#cap159", {autoAlpha: 1}, 57.160);
+  tl.set("#cap159", {autoAlpha: 0}, 57.375);
+  tl.set("#cap160", {autoAlpha: 1}, 57.460);
+  tl.set("#cap160", {autoAlpha: 0}, 57.560);
+  tl.set("#cap161", {autoAlpha: 1}, 57.580);
+  tl.set("#cap161", {autoAlpha: 0}, 57.735);
+  tl.set("#cap162", {autoAlpha: 1}, 57.820);
+  tl.set("#cap162", {autoAlpha: 0}, 57.920);
+  tl.set("#cap163", {autoAlpha: 1}, 57.980);
+  tl.set("#cap163", {autoAlpha: 0}, 58.475);
+  tl.set("#cap164", {autoAlpha: 1}, 58.560);
+  tl.set("#cap164", {autoAlpha: 0}, 58.660);
+  tl.set("#cap165", {autoAlpha: 1}, 58.740);
+  tl.set("#cap165", {autoAlpha: 0}, 59.495);
+  tl.set("#cap166", {autoAlpha: 1}, 59.580);
+  tl.set("#cap166", {autoAlpha: 0}, 59.955);
+  tl.set("#cap167", {autoAlpha: 1}, 60.040);
+  tl.set("#cap167", {autoAlpha: 0}, 60.375);
+  tl.set("#cap168", {autoAlpha: 1}, 60.460);
+  tl.set("#cap168", {autoAlpha: 0}, 60.575);
+  tl.set("#cap169", {autoAlpha: 1}, 60.660);
+  tl.set("#cap169", {autoAlpha: 0}, 61.155);
+  tl.set("#cap170", {autoAlpha: 1}, 61.240);
+  tl.set("#cap170", {autoAlpha: 0}, 61.735);
+  tl.set("#cap171", {autoAlpha: 1}, 61.820);
+  tl.set("#cap171", {autoAlpha: 0}, 61.920);
+  tl.set("#cap172", {autoAlpha: 1}, 61.960);
+  tl.set("#cap172", {autoAlpha: 0}, 62.135);
+  tl.set("#cap173", {autoAlpha: 1}, 62.220);
+  tl.set("#cap173", {autoAlpha: 0}, 62.375);
+  tl.set("#cap174", {autoAlpha: 1}, 62.460);
+  tl.set("#cap174", {autoAlpha: 0}, 63.135);
+  tl.set("#cap175", {autoAlpha: 1}, 63.220);
+  tl.set("#cap175", {autoAlpha: 0}, 63.320);
+  tl.set("#cap176", {autoAlpha: 1}, 63.340);
+  tl.set("#cap176", {autoAlpha: 0}, 63.455);
+  tl.set("#cap177", {autoAlpha: 1}, 63.540);
+  tl.set("#cap177", {autoAlpha: 0}, 63.695);
+  tl.set("#cap178", {autoAlpha: 1}, 63.780);
+  tl.set("#cap178", {autoAlpha: 0}, 64.075);
+  tl.set("#cap179", {autoAlpha: 1}, 64.160);
+  tl.set("#cap179", {autoAlpha: 0}, 64.375);
+  tl.set("#cap180", {autoAlpha: 1}, 64.460);
+  tl.set("#cap180", {autoAlpha: 0}, 64.775);
+  tl.set("#cap181", {autoAlpha: 1}, 64.860);
+  tl.set("#cap181", {autoAlpha: 0}, 65.075);
+  tl.set("#cap182", {autoAlpha: 1}, 65.160);
+  tl.set("#cap182", {autoAlpha: 0}, 65.260);
+  tl.set("#cap183", {autoAlpha: 1}, 65.340);
+  tl.set("#cap183", {autoAlpha: 0}, 66.135);
+  tl.set("#cap184", {autoAlpha: 1}, 66.220);
+  tl.set("#cap184", {autoAlpha: 0}, 66.320);
+  tl.set("#cap185", {autoAlpha: 1}, 66.340);
+  tl.set("#cap185", {autoAlpha: 0}, 66.615);
+  tl.set("#cap186", {autoAlpha: 1}, 66.700);
+  tl.set("#cap186", {autoAlpha: 0}, 67.135);
+  tl.set("#cap187", {autoAlpha: 1}, 67.220);
+  tl.set("#cap187", {autoAlpha: 0}, 67.555);
+  tl.set("#cap188", {autoAlpha: 1}, 67.640);
+  tl.set("#cap188", {autoAlpha: 0}, 68.055);
+  tl.set("#cap189", {autoAlpha: 1}, 68.140);
+  tl.set("#cap189", {autoAlpha: 0}, 68.275);
+  tl.set("#cap190", {autoAlpha: 1}, 68.360);
+  tl.set("#cap190", {autoAlpha: 0}, 68.535);
+  tl.set("#cap191", {autoAlpha: 1}, 68.620);
+  tl.set("#cap191", {autoAlpha: 0}, 68.720);
+  tl.set("#cap192", {autoAlpha: 1}, 68.800);
+  tl.set("#cap192", {autoAlpha: 0}, 69.475);
+  tl.set("#cap193", {autoAlpha: 1}, 69.560);
+  tl.set("#cap193", {autoAlpha: 0}, 69.695);
+  tl.set("#cap194", {autoAlpha: 1}, 69.780);
+  tl.set("#cap194", {autoAlpha: 0}, 69.955);
+  tl.set("#cap195", {autoAlpha: 1}, 70.040);
+  tl.set("#cap195", {autoAlpha: 0}, 70.335);
+  tl.set("#cap196", {autoAlpha: 1}, 70.420);
+  tl.set("#cap196", {autoAlpha: 0}, 70.535);
+  tl.set("#cap197", {autoAlpha: 1}, 70.620);
+  tl.set("#cap197", {autoAlpha: 0}, 70.720);
+  tl.set("#cap198", {autoAlpha: 1}, 70.760);
+  tl.set("#cap198", {autoAlpha: 0}, 71.175);
+  tl.set("#cap199", {autoAlpha: 1}, 71.260);
+  tl.set("#cap199", {autoAlpha: 0}, 71.595);
+  tl.set("#cap200", {autoAlpha: 1}, 71.680);
+  tl.set("#cap200", {autoAlpha: 0}, 71.855);
+  tl.set("#cap201", {autoAlpha: 1}, 71.940);
+  tl.set("#cap201", {autoAlpha: 0}, 72.255);
+  tl.set("#cap202", {autoAlpha: 1}, 72.340);
+  tl.set("#cap202", {autoAlpha: 0}, 72.835);
+  tl.set("#cap203", {autoAlpha: 1}, 72.920);
+  tl.set("#cap203", {autoAlpha: 0}, 73.155);
+  tl.set("#cap204", {autoAlpha: 1}, 73.240);
+  tl.set("#cap204", {autoAlpha: 0}, 73.355);
+  tl.set("#cap205", {autoAlpha: 1}, 73.440);
+  tl.set("#cap205", {autoAlpha: 0}, 73.835);
+  tl.set("#cap206", {autoAlpha: 1}, 73.920);
+  tl.set("#cap206", {autoAlpha: 0}, 74.020);
+  tl.set("#cap207", {autoAlpha: 1}, 74.080);
+  tl.set("#cap207", {autoAlpha: 0}, 74.275);
+  tl.set("#cap208", {autoAlpha: 1}, 74.360);
+  tl.set("#cap208", {autoAlpha: 0}, 74.615);
+  tl.set("#cap209", {autoAlpha: 1}, 74.700);
+  tl.set("#cap209", {autoAlpha: 0}, 75.195);
+  tl.set("#cap210", {autoAlpha: 1}, 75.280);
+  tl.set("#cap210", {autoAlpha: 0}, 75.695);
+  tl.set("#cap211", {autoAlpha: 1}, 75.780);
+  tl.set("#cap211", {autoAlpha: 0}, 75.880);
+  tl.set("#cap212", {autoAlpha: 1}, 75.960);
+  tl.set("#cap212", {autoAlpha: 0}, 76.060);
+  tl.set("#cap213", {autoAlpha: 1}, 76.120);
+  tl.set("#cap213", {autoAlpha: 0}, 76.535);
+  tl.set("#cap214", {autoAlpha: 1}, 76.620);
+  tl.set("#cap214", {autoAlpha: 0}, 76.915);
+  tl.set("#cap215", {autoAlpha: 1}, 77.000);
+  tl.set("#cap215", {autoAlpha: 0}, 77.415);
+  tl.set("#cap216", {autoAlpha: 1}, 77.500);
+  tl.set("#cap216", {autoAlpha: 0}, 78.075);
+  tl.set("#cap217", {autoAlpha: 1}, 78.160);
+  tl.set("#cap217", {autoAlpha: 0}, 78.260);
+  tl.set("#cap218", {autoAlpha: 1}, 78.280);
+  tl.set("#cap218", {autoAlpha: 0}, 78.515);
+  tl.set("#cap219", {autoAlpha: 1}, 78.600);
+  tl.set("#cap219", {autoAlpha: 0}, 78.895);
+  tl.set("#cap220", {autoAlpha: 1}, 78.980);
+  tl.set("#cap220", {autoAlpha: 0}, 79.415);
+  tl.set("#cap221", {autoAlpha: 1}, 79.500);
+  tl.set("#cap221", {autoAlpha: 0}, 79.655);
+  tl.set("#cap222", {autoAlpha: 1}, 79.740);
+  tl.set("#cap222", {autoAlpha: 0}, 79.840);
+  tl.set("#cap223", {autoAlpha: 1}, 79.900);
+  tl.set("#cap223", {autoAlpha: 0}, 80.315);
+  tl.set("#cap224", {autoAlpha: 1}, 80.400);
+  tl.set("#cap224", {autoAlpha: 0}, 80.695);
+  tl.set("#cap225", {autoAlpha: 1}, 80.780);
+  tl.set("#cap225", {autoAlpha: 0}, 80.955);
+  tl.set("#cap226", {autoAlpha: 1}, 81.040);
+  tl.set("#cap226", {autoAlpha: 0}, 81.155);
+  tl.set("#cap227", {autoAlpha: 1}, 81.240);
+  tl.set("#cap227", {autoAlpha: 0}, 81.655);
+  tl.set("#cap228", {autoAlpha: 1}, 81.740);
+  tl.set("#cap228", {autoAlpha: 0}, 81.840);
+  tl.set("#cap229", {autoAlpha: 1}, 81.880);
+  tl.set("#cap229", {autoAlpha: 0}, 82.195);
+  tl.set("#cap230", {autoAlpha: 1}, 82.280);
+  tl.set("#cap230", {autoAlpha: 0}, 82.555);
+  tl.set("#cap231", {autoAlpha: 1}, 82.640);
+  tl.set("#cap231", {autoAlpha: 0}, 82.740);
+  tl.set("#cap232", {autoAlpha: 1}, 82.780);
+  tl.set("#cap232", {autoAlpha: 0}, 83.375);
+  tl.set("#cap233", {autoAlpha: 1}, 83.460);
+  tl.set("#cap233", {autoAlpha: 0}, 83.915);
+  tl.set("#cap234", {autoAlpha: 1}, 84.000);
+  tl.set("#cap234", {autoAlpha: 0}, 84.855);
+  tl.set("#cap235", {autoAlpha: 1}, 84.940);
+  tl.set("#cap235", {autoAlpha: 0}, 85.255);
+  tl.set("#cap236", {autoAlpha: 1}, 85.340);
+  tl.set("#cap236", {autoAlpha: 0}, 85.595);
+  tl.set("#cap237", {autoAlpha: 1}, 85.680);
+  tl.set("#cap237", {autoAlpha: 0}, 86.555);
+  tl.set("#cap238", {autoAlpha: 1}, 86.640);
+  tl.set("#cap238", {autoAlpha: 0}, 86.815);
+  tl.set("#cap239", {autoAlpha: 1}, 86.900);
+  tl.set("#cap239", {autoAlpha: 0}, 87.015);
+  tl.set("#cap240", {autoAlpha: 1}, 87.100);
+  tl.set("#cap240", {autoAlpha: 0}, 87.435);
+  tl.set("#cap241", {autoAlpha: 1}, 87.520);
+  tl.set("#cap241", {autoAlpha: 0}, 88.275);
+  tl.set("#cap242", {autoAlpha: 1}, 88.360);
+  tl.set("#cap242", {autoAlpha: 0}, 88.535);
+  tl.set("#cap243", {autoAlpha: 1}, 88.620);
+  tl.set("#cap243", {autoAlpha: 0}, 88.795);
+  tl.set("#cap244", {autoAlpha: 1}, 88.880);
+  tl.set("#cap244", {autoAlpha: 0}, 88.980);
+  tl.set("#cap245", {autoAlpha: 1}, 89.040);
+  tl.set("#cap245", {autoAlpha: 0}, 89.755);
+  tl.set("#cap246", {autoAlpha: 1}, 89.840);
+  tl.set("#cap246", {autoAlpha: 0}, 90.315);
+  tl.set("#cap247", {autoAlpha: 1}, 90.400);
+  tl.set("#cap247", {autoAlpha: 0}, 91.135);
+  tl.set("#cap248", {autoAlpha: 1}, 91.220);
+  tl.set("#cap248", {autoAlpha: 0}, 91.335);
+  tl.set("#cap249", {autoAlpha: 1}, 91.420);
+  tl.set("#cap249", {autoAlpha: 0}, 92.155);
+  tl.set("#cap250", {autoAlpha: 1}, 92.240);
+  tl.set("#cap250", {autoAlpha: 0}, 92.715);
+  tl.set("#cap251", {autoAlpha: 1}, 92.800);
+  tl.set("#cap251", {autoAlpha: 0}, 93.015);
+  tl.set("#cap252", {autoAlpha: 1}, 93.100);
+  tl.set("#cap252", {autoAlpha: 0}, 93.455);
+  tl.set("#cap253", {autoAlpha: 1}, 93.540);
+  tl.set("#cap253", {autoAlpha: 0}, 93.640);
+  tl.set("#cap254", {autoAlpha: 1}, 93.700);
+  tl.set("#cap254", {autoAlpha: 0}, 94.175);
+  tl.set("#cap255", {autoAlpha: 1}, 94.260);
+  tl.set("#cap255", {autoAlpha: 0}, 94.375);
+  tl.set("#cap256", {autoAlpha: 1}, 94.460);
+  tl.set("#cap256", {autoAlpha: 0}, 94.560);
+  tl.set("#cap257", {autoAlpha: 1}, 94.640);
+  tl.set("#cap257", {autoAlpha: 0}, 95.075);
+  tl.set("#cap258", {autoAlpha: 1}, 95.160);
+  tl.set("#cap258", {autoAlpha: 0}, 95.295);
+  tl.set("#cap259", {autoAlpha: 1}, 95.380);
+  tl.set("#cap259", {autoAlpha: 0}, 95.804);
+  tl.set("#cap260", {autoAlpha: 1}, 95.889);
+  tl.set("#cap260", {autoAlpha: 0}, 96.275);
+  tl.set("#cap261", {autoAlpha: 1}, 96.360);
+  tl.set("#cap261", {autoAlpha: 0}, 96.460);
+  tl.set("#cap262", {autoAlpha: 1}, 96.480);
+  tl.set("#cap262", {autoAlpha: 0}, 96.580);
+  tl.set("#cap263", {autoAlpha: 1}, 96.640);
+  tl.set("#cap263", {autoAlpha: 0}, 96.855);
+  tl.set("#cap264", {autoAlpha: 1}, 96.940);
+  tl.set("#cap264", {autoAlpha: 0}, 97.355);
+  tl.set("#cap265", {autoAlpha: 1}, 97.440);
+  tl.set("#cap265", {autoAlpha: 0}, 97.735);
+  tl.set("#cap266", {autoAlpha: 1}, 97.820);
+  tl.set("#cap266", {autoAlpha: 0}, 98.235);
+  tl.set("#cap267", {autoAlpha: 1}, 98.320);
+  tl.set("#cap267", {autoAlpha: 0}, 98.535);
+  tl.set("#cap268", {autoAlpha: 1}, 98.620);
+  tl.set("#cap268", {autoAlpha: 0}, 98.720);
+  tl.set("#cap269", {autoAlpha: 1}, 98.780);
+  tl.set("#cap269", {autoAlpha: 0}, 99.055);
+  tl.set("#cap270", {autoAlpha: 1}, 99.140);
+  tl.set("#cap270", {autoAlpha: 0}, 99.935);
+  tl.set("#cap271", {autoAlpha: 1}, 100.020);
+  tl.set("#cap271", {autoAlpha: 0}, 100.335);
+  tl.set("#cap272", {autoAlpha: 1}, 100.420);
+  tl.set("#cap272", {autoAlpha: 0}, 100.915);
+  tl.set("#cap273", {autoAlpha: 1}, 101.000);
+  tl.set("#cap273", {autoAlpha: 0}, 101.275);
+  tl.set("#cap274", {autoAlpha: 1}, 101.360);
+  tl.set("#cap274", {autoAlpha: 0}, 101.515);
+  tl.set("#cap275", {autoAlpha: 1}, 101.600);
+  tl.set("#cap275", {autoAlpha: 0}, 101.715);
+  tl.set("#cap276", {autoAlpha: 1}, 101.800);
+  tl.set("#cap276", {autoAlpha: 0}, 102.055);
+  tl.set("#cap277", {autoAlpha: 1}, 102.140);
+  tl.set("#cap277", {autoAlpha: 0}, 102.240);
+  tl.set("#cap278", {autoAlpha: 1}, 102.260);
+  tl.set("#cap278", {autoAlpha: 0}, 102.675);
+  tl.set("#cap279", {autoAlpha: 1}, 102.760);
+  tl.set("#cap279", {autoAlpha: 0}, 103.175);
+  tl.set("#cap280", {autoAlpha: 1}, 103.260);
+  tl.set("#cap280", {autoAlpha: 0}, 103.715);
+  tl.set("#cap281", {autoAlpha: 1}, 103.800);
+  tl.set("#cap281", {autoAlpha: 0}, 104.335);
+  tl.set("#cap282", {autoAlpha: 1}, 104.420);
+  tl.set("#cap282", {autoAlpha: 0}, 104.615);
+  tl.set("#cap283", {autoAlpha: 1}, 104.700);
+  tl.set("#cap283", {autoAlpha: 0}, 104.953);
+  tl.set("#cap284", {autoAlpha: 1}, 105.038);
+  tl.set("#cap284", {autoAlpha: 0}, 105.146);
+  tl.set("#cap285", {autoAlpha: 1}, 105.231);
+  tl.set("#cap285", {autoAlpha: 0}, 105.435);
+  tl.set("#cap286", {autoAlpha: 1}, 105.520);
+  tl.set("#cap286", {autoAlpha: 0}, 105.955);
+  tl.set("#cap287", {autoAlpha: 1}, 106.040);
+  tl.set("#cap287", {autoAlpha: 0}, 106.615);
+  tl.set("#cap288", {autoAlpha: 1}, 106.700);
+  tl.set("#cap288", {autoAlpha: 0}, 106.855);
+  tl.set("#cap289", {autoAlpha: 1}, 106.940);
+  tl.set("#cap289", {autoAlpha: 0}, 107.040);
+  tl.set("#cap290", {autoAlpha: 1}, 107.040);
+  tl.set("#cap290", {autoAlpha: 0}, 107.555);
+  tl.set("#cap291", {autoAlpha: 1}, 107.640);
+  tl.set("#cap291", {autoAlpha: 0}, 107.740);
+  tl.set("#cap292", {autoAlpha: 1}, 107.800);
+  tl.set("#cap292", {autoAlpha: 0}, 108.035);
+  tl.set("#cap293", {autoAlpha: 1}, 108.120);
+  tl.set("#cap293", {autoAlpha: 0}, 108.335);
+  tl.set("#cap294", {autoAlpha: 1}, 108.420);
+  tl.set("#cap294", {autoAlpha: 0}, 108.535);
+  tl.set("#cap295", {autoAlpha: 1}, 108.620);
+  tl.set("#cap295", {autoAlpha: 0}, 109.095);
+  tl.set("#cap296", {autoAlpha: 1}, 109.180);
+  tl.set("#cap296", {autoAlpha: 0}, 109.280);
+  tl.set("#cap297", {autoAlpha: 1}, 109.360);
+  tl.set("#cap297", {autoAlpha: 0}, 109.675);
+  tl.set("#cap298", {autoAlpha: 1}, 109.760);
+  tl.set("#cap298", {autoAlpha: 0}, 109.860);
+  tl.set("#cap299", {autoAlpha: 1}, 109.940);
+  tl.set("#cap299", {autoAlpha: 0}, 110.055);
+  tl.set("#cap300", {autoAlpha: 1}, 110.140);
+  tl.set("#cap300", {autoAlpha: 0}, 110.795);
+  tl.set("#cap301", {autoAlpha: 1}, 110.880);
+  tl.set("#cap301", {autoAlpha: 0}, 110.980);
+  tl.set("#cap302", {autoAlpha: 1}, 111.020);
+  tl.set("#cap302", {autoAlpha: 0}, 111.915);
+  tl.set("#cap303", {autoAlpha: 1}, 112.000);
+  tl.set("#cap303", {autoAlpha: 0}, 112.515);
+  tl.set("#cap304", {autoAlpha: 1}, 112.600);
+  tl.set("#cap304", {autoAlpha: 0}, 113.395);
+  tl.set("#cap305", {autoAlpha: 1}, 113.480);
+  tl.set("#cap305", {autoAlpha: 0}, 113.995);
+  tl.set("#cap306", {autoAlpha: 1}, 114.080);
+  tl.set("#cap306", {autoAlpha: 0}, 114.595);
+  tl.set("#cap307", {autoAlpha: 1}, 114.680);
+  tl.set("#cap307", {autoAlpha: 0}, 114.780);
+  tl.set("#cap308", {autoAlpha: 1}, 114.820);
+  tl.set("#cap308", {autoAlpha: 0}, 114.920);
+  tl.set("#cap309", {autoAlpha: 1}, 114.940);
+  tl.set("#cap309", {autoAlpha: 0}, 115.095);
+  tl.set("#cap310", {autoAlpha: 1}, 115.180);
+  tl.set("#cap310", {autoAlpha: 0}, 115.475);
+  tl.set("#cap311", {autoAlpha: 1}, 115.560);
+  tl.set("#cap311", {autoAlpha: 0}, 116.435);
+  tl.set("#cap312", {autoAlpha: 1}, 116.520);
+  tl.set("#cap312", {autoAlpha: 0}, 116.620);
+  tl.set("#cap313", {autoAlpha: 1}, 116.640);
+  tl.set("#cap313", {autoAlpha: 0}, 116.795);
+  tl.set("#cap314", {autoAlpha: 1}, 116.880);
+  tl.set("#cap314", {autoAlpha: 0}, 117.195);
+  tl.set("#cap315", {autoAlpha: 1}, 117.280);
+  tl.set("#cap315", {autoAlpha: 0}, 117.380);
+  tl.set("#cap316", {autoAlpha: 1}, 117.460);
+  tl.set("#cap316", {autoAlpha: 0}, 117.855);
+  tl.set("#cap317", {autoAlpha: 1}, 117.940);
+  tl.set("#cap317", {autoAlpha: 0}, 118.141);
+  tl.set("#cap318", {autoAlpha: 1}, 118.226);
+  tl.set("#cap318", {autoAlpha: 0}, 118.855);
+  tl.set("#cap319", {autoAlpha: 1}, 118.940);
+  tl.set("#cap319", {autoAlpha: 0}, 119.095);
+  tl.set("#cap320", {autoAlpha: 1}, 119.180);
+  tl.set("#cap320", {autoAlpha: 0}, 119.515);
+  tl.set("#cap321", {autoAlpha: 1}, 119.600);
+  tl.set("#cap321", {autoAlpha: 0}, 119.955);
+  tl.set("#cap322", {autoAlpha: 1}, 120.040);
+  tl.set("#cap322", {autoAlpha: 0}, 120.335);
+  tl.set("#cap323", {autoAlpha: 1}, 120.420);
+  tl.set("#cap323", {autoAlpha: 0}, 120.520);
+  tl.set("#cap324", {autoAlpha: 1}, 120.540);
+  tl.set("#cap324", {autoAlpha: 0}, 121.175);
+  tl.set("#cap325", {autoAlpha: 1}, 121.260);
+  tl.set("#cap325", {autoAlpha: 0}, 121.535);
+  tl.set("#cap326", {autoAlpha: 1}, 121.620);
+  tl.set("#cap326", {autoAlpha: 0}, 121.775);
+  tl.set("#cap327", {autoAlpha: 1}, 121.860);
+  tl.set("#cap327", {autoAlpha: 0}, 121.960);
+  tl.set("#cap328", {autoAlpha: 1}, 121.980);
+  tl.set("#cap328", {autoAlpha: 0}, 122.235);
+  tl.set("#cap329", {autoAlpha: 1}, 122.320);
+  tl.set("#cap329", {autoAlpha: 0}, 122.420);
+  tl.set("#cap330", {autoAlpha: 1}, 122.420);
+  tl.set("#cap330", {autoAlpha: 0}, 122.675);
+  tl.set("#cap331", {autoAlpha: 1}, 122.760);
+  tl.set("#cap331", {autoAlpha: 0}, 122.975);
+  tl.set("#cap332", {autoAlpha: 1}, 123.060);
+  tl.set("#cap332", {autoAlpha: 0}, 123.160);
+  tl.set("#cap333", {autoAlpha: 1}, 123.220);
+  tl.set("#cap333", {autoAlpha: 0}, 123.375);
+  tl.set("#cap334", {autoAlpha: 1}, 123.460);
+  tl.set("#cap334", {autoAlpha: 0}, 123.695);
+  tl.set("#cap335", {autoAlpha: 1}, 123.780);
+  tl.set("#cap335", {autoAlpha: 0}, 123.895);
+  tl.set("#cap336", {autoAlpha: 1}, 123.980);
+  tl.set("#cap336", {autoAlpha: 0}, 124.355);
+  tl.set("#cap337", {autoAlpha: 1}, 124.440);
+  tl.set("#cap337", {autoAlpha: 0}, 125.555);
+  tl.set("#cap338", {autoAlpha: 1}, 125.640);
+  tl.set("#cap338", {autoAlpha: 0}, 125.835);
+  tl.set("#cap339", {autoAlpha: 1}, 125.920);
+  tl.set("#cap339", {autoAlpha: 0}, 126.595);
+  tl.set("#cap340", {autoAlpha: 1}, 126.680);
+  tl.set("#cap340", {autoAlpha: 0}, 127.075);
+  tl.set("#cap341", {autoAlpha: 1}, 127.160);
+  tl.set("#cap341", {autoAlpha: 0}, 127.260);
+  tl.set("#cap342", {autoAlpha: 1}, 127.280);
+  tl.set("#cap342", {autoAlpha: 0}, 127.415);
+  tl.set("#cap343", {autoAlpha: 1}, 127.500);
+  tl.set("#cap343", {autoAlpha: 0}, 127.915);
+  tl.set("#cap344", {autoAlpha: 1}, 128.000);
+  tl.set("#cap344", {autoAlpha: 0}, 128.475);
+  tl.set("#cap345", {autoAlpha: 1}, 128.560);
+  tl.set("#cap345", {autoAlpha: 0}, 128.895);
+  tl.set("#cap346", {autoAlpha: 1}, 128.980);
+  tl.set("#cap346", {autoAlpha: 0}, 129.275);
+  tl.set("#cap347", {autoAlpha: 1}, 129.360);
+  tl.set("#cap347", {autoAlpha: 0}, 129.875);
+  tl.set("#cap348", {autoAlpha: 1}, 129.960);
+  tl.set("#cap348", {autoAlpha: 0}, 130.215);
+  tl.set("#cap349", {autoAlpha: 1}, 130.300);
+  tl.set("#cap349", {autoAlpha: 0}, 130.535);
+  tl.set("#cap350", {autoAlpha: 1}, 130.620);
+  tl.set("#cap350", {autoAlpha: 0}, 130.734);
+  tl.set("#cap351", {autoAlpha: 1}, 130.819);
+  tl.set("#cap351", {autoAlpha: 0}, 130.999);
+  tl.set("#cap352", {autoAlpha: 1}, 131.084);
+  tl.set("#cap352", {autoAlpha: 0}, 131.530);
+  tl.set("#cap353", {autoAlpha: 1}, 131.615);
+  tl.set("#cap353", {autoAlpha: 0}, 131.795);
+  tl.set("#cap354", {autoAlpha: 1}, 131.880);
+  tl.set("#cap354", {autoAlpha: 0}, 132.115);
+  tl.set("#cap355", {autoAlpha: 1}, 132.200);
+  tl.set("#cap355", {autoAlpha: 0}, 132.960);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 133.060);
+
+  /* b01_board_appears */
+
+  gsap.set("#gboard", {autoAlpha: 0});
+  gsap.set("#boardfill .slotwrap", {autoAlpha: 0});
+  gsap.set(".board .slot", {autoAlpha: 0, scale: 0.72, transformOrigin: "50% 50%"});
+  tl.set("#gboard", {autoAlpha: 1}, 4.88);
+  // six slots, unevenly — even spacing reads as automated (§4)
+  [0,1,2,3,4,5].forEach(function (i) {
+    tl.to("#sl" + i, {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.2)"},
+          4.88 + [0, 0.07, 0.17, 0.26, 0.30, 0.41][i]);
+  });
+  /* b02_half_year */
+
+  gsap.set("#g2", {autoAlpha: 0});
+  tl.set("#g2", {autoAlpha: 1}, 5.58);
+  tl.to("#g2clock", {autoAlpha: 1, duration: 0.20}, 5.58);
+  // «півроку» — half a turn, and it does not come back
+  tl.to("#g2hand", {rotation: 180, transformOrigin: "150px 150px",
+                    duration: 1.30, ease: "power2.inOut"}, 5.62);
+  tl.to("#g2arc", {strokeDashoffset: 0, duration: 1.30, ease: "power2.inOut"}, 5.62);
+  tl.to(".board .slot", {opacity: 0.34, duration: 0.60}, 8.26);
+  tl.to("#g2", {autoAlpha: 0, duration: 0.30, ease: "power2.in"}, 8.90);
+  // out before 11.00 — her pull-out owns the frame from there to 14.75
+  tl.to("#gboard", {autoAlpha: 0, duration: 0.40, ease: "power2.in"}, 10.40);
+  /* b04_slot_one */
+
+  tl.set("#gboard", {autoAlpha: 1}, 17.34);
+  tl.set(".board .slot", {opacity: 1}, 17.34);
+  [0,1,2,3,4,5].forEach(function (i) {
+    tl.to("#sl" + i, {autoAlpha: 1, scale: 1, duration: 0.26, ease: "back.out(2)"},
+          17.34 + i * 0.05);
+  });
+  // «Перша» — the first one is the one we are talking about
+  tl.to("#sl0", {scale: 1.06, duration: 0.22, ease: "back.out(3)"}, 19.27);
+  tl.to("#sl0", {scale: 1, duration: 0.30, ease: "power2.out"}, 19.52);
+  /* b05_calendar_lands */
+
+  tl.to("#tl0", {autoAlpha: 1, duration: 0.24, ease: "power2.out"}, 20.02);
+  gsap.set("#tl0", {scale: 0.8, transformOrigin: "50% 50%"});
+  tl.to("#tl0", {scale: 1, duration: 0.34, ease: "back.out(2.4)"}, 20.02);
+  // stand down for her jump-cut gag, come back when she does
+  tl.to("#gboard", {autoAlpha: 0, duration: 0.22, ease: "power2.in"}, 21.06);
+  /* b06_one_link */
+
+  gsap.set("#g6", {autoAlpha: 0});
+  gsap.set("#g6link", {autoAlpha: 0, scale: 0.7, transformOrigin: "50% 50%"});
+  gsap.set("#g6cal", {autoAlpha: 0, scale: 0.86, transformOrigin: "50% 50%"});
+  gsap.set("#g6cal .grid i.on", {autoAlpha: 0});
+  tl.set("#g6", {autoAlpha: 1}, 24.94);
+  // «посилання» — one chip instead of the volley
+  tl.to("#g6link", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.6)"}, 25.58);
+  tl.to("#g6link", {autoAlpha: 0, scale: 0.82, y: -40, duration: 0.30,
+                    ease: "power2.in"}, 26.62);
+  // «людина сама обирає час» — the slot fills itself
+  tl.to("#g6cal", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.2)"}, 26.72);
+  tl.to("#g6cal .grid i.on", {autoAlpha: 1, duration: 0.18, ease: "power2.out"}, 27.06);
+  tl.to("#g6", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 28.20);
+  /* b07_cal_syncs */
+
+  gsap.set("#g7", {autoAlpha: 0});
+  gsap.set("#g7a, #g7b", {autoAlpha: 0, scale: 0.86, transformOrigin: "50% 50%"});
+  gsap.set("#g7pip", {autoAlpha: 0});
+  tl.set("#g7", {autoAlpha: 1}, 28.50);
+  tl.to("#g7a", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.2)"}, 28.58);
+  tl.to("#g7b", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.2)"}, 31.62);
+  // «синхронізується» — the wire draws, then the booking travels it
+  tl.to("#g7wire", {strokeDashoffset: 0, duration: 0.42, ease: "power2.out"}, 31.70);
+  tl.fromTo("#g7pip", {autoAlpha: 1, x: 432, y: 331},
+            {x: 632, duration: 0.46, ease: "power2.inOut"}, 32.02);
+  tl.to("#g7pip", {autoAlpha: 0, duration: 0.12}, 32.46);
+  // it arrives: the calendar takes the booking
+  tl.to("#g7b", {scale: 1.07, duration: 0.20, ease: "back.out(3)"}, 32.44);
+  tl.to("#g7b", {scale: 1, duration: 0.30, ease: "power2.out"}, 32.64);
+  tl.to("#g7", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 33.10);
+  /* b08_fathom_slot */
+
+  tl.set("#gboard", {autoAlpha: 1}, 33.30);
+  tl.to("#tl1", {autoAlpha: 1, duration: 0.20}, 33.34);
+  gsap.set("#tl1", {scale: 0.8, transformOrigin: "50% 50%"});
+  tl.to("#tl1", {scale: 1, duration: 0.34, ease: "back.out(2.4)"}, 33.34);
+  tl.to("#gboard", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 35.40);
+  /* b09_wave_to_text */
+
+  gsap.set("#g9", {autoAlpha: 0});
+  gsap.set("#g9t, #g9s", {autoAlpha: 0});
+  gsap.set("#g9w i", {scaleY: 0.15, transformOrigin: "50% 50%"});
+  gsap.set("#g9x", {scaleX: 0, transformOrigin: "0% 50%"});
+  tl.set("#g9", {autoAlpha: 1}, 35.56);
+  // the call arrives as sound
+  tl.to("#g9w i", {scaleY: 1, duration: 0.44, ease: "back.out(2)",
+                   stagger: {each: 0.018, from: "center"}}, 35.60);
+  // «одразу в тексті» — the sound resolves into lines
+  tl.to("#g9w", {autoAlpha: 0, scaleY: 0.2, duration: 0.34, ease: "power2.in"}, 39.74);
+  tl.to("#g9t", {autoAlpha: 1, duration: 0.30, ease: "power2.out"}, 39.86);
+  tl.from("#g9t .pr", {scaleX: 0, transformOrigin: "0% 50%", duration: 0.26,
+                       stagger: 0.07, ease: "power2.out"}, 39.90);
+  // «щоб не переслуховувати» — the replay is struck out
+  tl.to("#g9s", {autoAlpha: 1, duration: 0.22}, 40.54);
+  tl.to("#g9x", {scaleX: 1, duration: 0.26, ease: "power3.out"}, 40.92);
+  tl.to("#g9", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 42.00);
+  /* b10_crm_slot */
+
+  tl.set("#gboard", {autoAlpha: 1}, 42.36);
+  tl.to("#tl2", {autoAlpha: 1, duration: 0.20}, 42.52);
+  gsap.set("#tl2", {scale: 0.8, transformOrigin: "50% 50%"});
+  tl.to("#tl2", {scale: 1, duration: 0.34, ease: "back.out(2.4)"}, 42.52);
+  tl.to("#tldb i", {scaleX: 1, duration: 0.22, stagger: 0.07,
+                    ease: "back.out(2)"}, 42.70);
+  tl.to("#gboard", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 45.60);
+  /* b11_fields_fill */
+
+  gsap.set("#g11", {autoAlpha: 0});
+  gsap.set("#g11 .cell", {autoAlpha: 0, scaleX: 0.3, transformOrigin: "0% 50%"});
+  tl.set("#g11", {autoAlpha: 1}, 48.40);
+  [48.64, 49.18, 50.30, 51.12, 52.00, 53.24].forEach(function (t, i) {
+    tl.to("#g11c" + i, {autoAlpha: 1, scaleX: 1, duration: 0.26,
+                        ease: "power3.out"}, t);
+  });
+  // «який наступний крок» is the only one that is a decision, so it is the
+  // only cell that takes the accent
+  tl.to("#g11c5", {backgroundColor: "#b4122f", duration: 0.24}, 53.50);
+  tl.to("#g11", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 54.30);
+  /* b12_birthday */
+
+  gsap.set("#g12", {autoAlpha: 0});
+  gsap.set("#g12c", {autoAlpha: 0, scale: 0.4, y: -40, transformOrigin: "50% 100%"});
+  tl.set("#g12", {autoAlpha: 1}, 55.06);
+  tl.to("#g12c", {autoAlpha: 1, scale: 1, y: 0, duration: 0.40,
+                  ease: "back.out(2.6)"}, 55.14);
+  tl.to("#g12c .flame", {scaleY: 1.25, duration: 0.22, yoyo: true, repeat: 3,
+                         transformOrigin: "50% 100%", ease: "sine.inOut"}, 55.56);
+  tl.to("#g12", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 57.10);
+  /* b13_notion_on_crm */
+
+  tl.set("#gboard", {autoAlpha: 1}, 57.80);
+  tl.to("#tl2 .tile.brand", {autoAlpha: 0, duration: 0.20}, 57.98);
+  tl.to("#tl2notion", {autoAlpha: 1, scale: 1, duration: 0.34,
+                       ease: "back.out(2.4)"}, 57.98);
+  tl.to("#gboard", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 59.90);
+  /* b14_tasks_slot */
+
+  tl.set("#gboard", {autoAlpha: 1}, 60.06);
+  tl.to("#tl3", {autoAlpha: 1, duration: 0.20}, 60.14);
+  gsap.set("#tl3", {scale: 0.8, transformOrigin: "50% 50%"});
+  tl.to("#tl3", {scale: 1, duration: 0.34, ease: "back.out(2.4)"}, 60.14);
+  tl.to("#gboard", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 61.10);
+  /* b15_forget_then_capture */
+
+  gsap.set("#g15", {autoAlpha: 0});
+  gsap.set(".task", {autoAlpha: 0, y: 0, scale: 1});
+  tl.set("#g15", {autoAlpha: 1}, 63.30);
+  // they appear and drift off, unrecorded
+  [63.34, 63.70, 64.06].forEach(function (t, i) {
+    tl.to("#g15t" + i, {autoAlpha: 1, duration: 0.22, ease: "power2.out"}, t);
+    tl.to("#g15t" + i, {autoAlpha: 0, y: -120, scale: 0.9, duration: 0.70,
+                        ease: "power2.in"}, 65.34 + i * 0.10);
+  });
+  // «краще вибудувати це зараз» — the same three, kept this time
+  [66.74, 66.92, 67.08].forEach(function (t, i) {
+    tl.set("#g15t" + i, {y: 0, scale: 1}, t);
+    tl.to("#g15t" + i, {autoAlpha: 1, duration: 0.20, ease: "back.out(2)"}, t);
+  });
+  tl.to("#g15 .task", {autoAlpha: 0, duration: 0.18}, 67.20);
+  /* b16_notion_on_tasks */
+
+  tl.set("#gboard", {autoAlpha: 1}, 68.20);
+  tl.to("#tl3 .tile.brand", {autoAlpha: 0, duration: 0.20}, 70.76);
+  tl.to("#tl3notion", {autoAlpha: 1, scale: 1, duration: 0.34,
+                       ease: "back.out(2.4)"}, 70.76);
+  tl.to("#gboard", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 72.40);
+  /* b17_process_over_result */
+
+  gsap.set("#g17", {autoAlpha: 0});
+  gsap.set("#g17r", {autoAlpha: 0, scale: 0.86, transformOrigin: "50% 50%"});
+  gsap.set("#g17p", {autoAlpha: 0, scale: 0.8, transformOrigin: "50% 50%"});
+  tl.set("#g17", {autoAlpha: 1}, 76.50);
+  tl.to("#g17p", {autoAlpha: 1, scale: 1, duration: 0.34, ease: "back.out(2.2)"}, 76.62);
+  tl.to("#g17r", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2)"}, 78.60);
+  // the finished thing is the smaller one
+  tl.to("#g17r", {scale: 0.72, duration: 0.50, ease: "power2.inOut"}, 79.10);
+  tl.to("#g17p", {scale: 1.14, duration: 0.50, ease: "power2.inOut"}, 79.10);
+  tl.to("#g17", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 80.20);
+  /* b18_call_fans_out */
+
+  gsap.set("#g18", {autoAlpha: 0});
+  gsap.set("#g18call", {autoAlpha: 0, scale: 0.84, transformOrigin: "50% 50%"});
+  gsap.set("#g18 .cc:not(.call)", {autoAlpha: 0, scale: 0.7, x: 0,
+                                   transformOrigin: "50% 50%"});
+  gsap.set("#g18q", {autoAlpha: 0});
+  tl.set("#g18", {autoAlpha: 1}, 80.70);
+  tl.to("#g18call", {autoAlpha: 1, scale: 1, duration: 0.32, ease: "back.out(2.4)"}, 80.78);
+  // «це вже ідеї для контенту» — one call becomes several
+  tl.to("#g18call", {autoAlpha: 0, duration: 0.24}, 82.28);
+  [82.30, 82.46, 82.62, 82.80].forEach(function (t, i) {
+    tl.to("#g18c" + i, {autoAlpha: 1, scale: 1, duration: 0.34,
+                        ease: "back.out(2.2)"}, t);
+  });
+  // «написані словами твоєї цільової аудиторії» — the quote lifts and lands
+  tl.fromTo("#g18q", {autoAlpha: 0, y: 40, scale: 0.8},
+            {autoAlpha: 1, y: 0, scale: 1, duration: 0.36, ease: "back.out(2.6)"}, 85.68);
+  tl.to("#g18q", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 87.10);
+  // «на вагу золота» — the fan has weight
+  tl.to("#g18 .cc:not(.call)", {y: 44, duration: 0.40, ease: "power2.out",
+                                stagger: 0.04}, 87.52);
+  tl.to("#g18", {autoAlpha: 0, duration: 0.30, ease: "power2.in"}, 90.60);
+  /* b19_ruta_slot */
+
+  tl.set("#gboard", {autoAlpha: 1}, 95.70);
+  tl.to("#tl4", {autoAlpha: 1, duration: 0.20}, 95.89);
+  gsap.set("#tl4", {scale: 0.78, transformOrigin: "50% 50%"});
+  tl.to("#tl4", {scale: 1, duration: 0.40, ease: "back.out(2.6)"}, 95.89);
+  tl.to("#gboard", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 96.70);
+  /* b20_voice_to_three */
+
+  gsap.set("#g20", {autoAlpha: 0});
+  gsap.set("#g20w i", {scaleY: 0.2, transformOrigin: "50% 50%"});
+  gsap.set("#g20a, #g20b, #g20c", {autoAlpha: 0, scale: 0.7, y: -60,
+                                   transformOrigin: "50% 50%"});
+  tl.set("#g20", {autoAlpha: 1}, 96.86);
+  tl.to("#g20w i", {scaleY: 1, duration: 0.36, ease: "back.out(2)",
+                    stagger: {each: 0.03, from: "center"}}, 96.94);
+  [["#g20a", 97.82], ["#g20b", 98.32], ["#g20c", 99.14]].forEach(function (p) {
+    tl.to(p[0], {autoAlpha: 1, scale: 1, y: 0, duration: 0.34,
+                 ease: "back.out(2.4)"}, p[1]);
+  });
+  tl.to("#g20", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 100.50);
+  /* b21_ten_euro */
+
+  gsap.set("#g21", {autoAlpha: 0});
+  gsap.set("#g21n", {autoAlpha: 0, scale: 0.6, transformOrigin: "50% 50%"});
+  tl.set("#g21", {autoAlpha: 1}, 100.92);
+  tl.to("#g21n", {autoAlpha: 1, scale: 1, duration: 0.36, ease: "back.out(2.8)"}, 101.00);
+  tl.to("#g21", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 102.30);
+  /* b22_thousand_collapses */
+
+  gsap.set("#g22", {autoAlpha: 0});
+  gsap.set("#g22 .wt", {autoAlpha: 0, scale: 0.5, transformOrigin: "50% 50%"});
+  gsap.set("#g22one, #g22lit", {autoAlpha: 0, scale: 0.6,
+                                transformOrigin: "50% 50%"});
+  tl.set("#g22", {autoAlpha: 1}, 102.66);
+  tl.to("#g22 .wt", {autoAlpha: 1, scale: 1, duration: 0.40, ease: "back.out(1.8)",
+                     stagger: {each: 0.008, from: "random"}}, 102.76);
+  // «і підписок» — and then all of it folds into the one thing
+  tl.to("#g22 .wt", {autoAlpha: 0, scale: 0.2, x: 0, y: 0, duration: 0.52,
+                     ease: "power3.in", stagger: {each: 0.006, from: "edges"}}, 103.90);
+  tl.to("#g22one, #g22lit", {autoAlpha: 1, scale: 1, duration: 0.44,
+                             ease: "back.out(2.2)"}, 104.36);
+  tl.to("#g22", {autoAlpha: 0, duration: 0.30, ease: "power2.in"}, 106.40);
+  /* b23_fallback */
+
+  gsap.set("#g23", {autoAlpha: 0});
+  gsap.set("#g23a, #g23b", {autoAlpha: 0, scale: 0.78, transformOrigin: "50% 50%"});
+  tl.set("#g23", {autoAlpha: 1}, 108.00);
+  tl.to("#g23a", {autoAlpha: 1, scale: 1, duration: 0.34, ease: "back.out(2.4)"}, 108.12);
+  tl.to("#g23b", {autoAlpha: 1, scale: 1, duration: 0.34, ease: "back.out(2.4)"}, 110.14);
+  tl.to("#g23", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 111.30);
+  /* b24_hub_slot */
+
+  tl.set("#gboard", {autoAlpha: 1}, 111.00);
+  gsap.set("#g24", {autoAlpha: 0});
+  gsap.set("#g24gpt", {autoAlpha: 0, scale: 0.7, transformOrigin: "50% 50%"});
+  // «командний центр»
+  tl.to("#tl5", {autoAlpha: 1, duration: 0.20}, 112.60);
+  gsap.set("#tl5", {scale: 0.78, transformOrigin: "50% 50%"});
+  tl.to("#tl5", {scale: 1, duration: 0.40, ease: "back.out(2.6)"}, 112.60);
+  // «або GPT» — the alternative, named and set aside
+  tl.set("#g24", {autoAlpha: 1}, 115.50);
+  tl.to("#g24gpt", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.2)"}, 115.56);
+  tl.to("#g24gpt", {autoAlpha: 0.25, scale: 0.86, duration: 0.40,
+                    ease: "power2.out"}, 116.88);
+  tl.to("#g24", {autoAlpha: 0, duration: 0.26}, 117.80);
+  /* b25_four_panes */
+
+  gsap.set("#g25", {autoAlpha: 0});
+  gsap.set("#g25 .pane", {autoAlpha: 0, scale: 0.72, transformOrigin: "50% 50%"});
+  // the board steps aside: these four panes are what is *inside* the hub
+  tl.to("#gboard", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 118.80);
+  tl.set("#g25", {autoAlpha: 1}, 119.10);
+  gsap.set("#g25hub", {autoAlpha: 0, scale: 0.8, transformOrigin: "50% 50%"});
+  tl.to("#g25hub", {autoAlpha: 1, scale: 1, duration: 0.30,
+                    ease: "back.out(2.4)"}, 119.10);
+  [119.18, 119.60, 120.04, 120.54].forEach(function (t, i) {
+    tl.to("#g25p" + i, {autoAlpha: 1, scale: 1, duration: 0.28,
+                        ease: "back.out(2.6)"}, t);
+  });
+  tl.to("#g25", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 122.00);
+  /* b26_twenty_euro */
+
+  gsap.set("#g26", {autoAlpha: 0});
+  gsap.set("#g26n", {autoAlpha: 0, scale: 0.6, transformOrigin: "50% 50%"});
+  tl.set("#g26", {autoAlpha: 1}, 122.34);
+  // and the board stays down until the payoff at 126.6
+  tl.to("#g26n", {autoAlpha: 1, scale: 1, duration: 0.36, ease: "back.out(2.8)"}, 122.42);
+  tl.to("#g26", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 123.90);
+  /* b27_board_wires_up */
+
+  gsap.set("#g27", {autoAlpha: 0});
+  tl.set("#gboard", {autoAlpha: 1}, 126.60);
+  [0,1,2,3,4,5].forEach(function (i) {
+    tl.to("#tl" + i, {autoAlpha: 1, scale: 1, duration: 0.24,
+                      ease: "back.out(2.2)"}, 126.68 + i * 0.06);
+  });
+  // the two tiles whose faces were swapped for Notion come back as Notion,
+  // not as the database and the checklist they started as
+  tl.to("#tl2notion, #tl3notion", {autoAlpha: 1, scale: 1, duration: 0.24}, 126.70);
+  gsap.set("#g27hub", {autoAlpha: 0, scale: 0, transformOrigin: "873px 296px"});
+  tl.set("#g27", {autoAlpha: 1}, 127.40);
+  tl.to("#g27wires path", {strokeDashoffset: 0, duration: 0.60,
+                           ease: "power2.out", stagger: 0.05}, 127.46);
+  tl.to("#g27hub", {autoAlpha: 1, scale: 1, duration: 0.26,
+                    ease: "back.out(3)"}, 128.10);
+  tl.to("#tl5", {scale: 1.1, duration: 0.34, ease: "back.out(2.6)"}, 128.60);
+  tl.to("#g27, #gboard", {autoAlpha: 0, duration: 0.34, ease: "power2.in"}, 129.70);
+  /* b28_send_it */
+
+  gsap.set("#g28", {autoAlpha: 0});
+  gsap.set("#g28s", {autoAlpha: 0, scale: 0.5, rotation: -18,
+                     transformOrigin: "50% 50%"});
+  tl.set("#g28", {autoAlpha: 1}, 130.20);
+  tl.to("#g28s", {autoAlpha: 1, scale: 1, rotation: 0, duration: 0.36,
+                  ease: "back.out(2.6)"}, 130.30);
+  // «масштабуватися» — and it leaves
+  tl.to("#g28s", {x: 620, y: -180, rotation: 16, autoAlpha: 0, duration: 0.70,
+                  ease: "power2.in"}, 132.20);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>

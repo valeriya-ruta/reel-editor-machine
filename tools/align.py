@@ -41,7 +41,12 @@ FLOOR = 0.10         # a caption never shows for fewer than 6 frames at 60fps
 BRANDS = ["Клод Дизайн", "Клод Код", "Клод", "Клоді", "Клода", "Фігма", "Фігмі",
           "Фігмою", "фігмі", "Mobbin", "Пінтерест", "Claude", "Codex", "Cursor",
           "скіл", "брейншторм", "брейнштормі", "вайбкодинг", "вайбкодити",
-          "Рута", "Руту", "Руті", "Рути"]
+          "Рута", "Руту", "Руті", "Рути",
+          # reel 7 — the systems stack. Whisper has no chance on any of
+          # these: it writes Cal.com as «келком», Fathom as «фатом»,
+          # Notion as «ноушн» and GPT as «джіпіті».
+          "Cal.com", "Cal", "Fathom", "Фатом", "Notion", "Ноушн",
+          "CRM", "RUTA", "GPT", "Google", "Календар", "Календарем"]
 
 # Read by hand off the audio where neither the lexicon nor the phonetic key can
 # call it: whisper produced a non-word and she plainly said the script's line.

@@ -199,11 +199,9 @@ class Kit(object):
         """
         self._mattes.append(
             '      <video id="matte-%s" class="plate matte" '
-            'src="assets/mattes/%s.webm"
-'
+            'src="assets/mattes/%s.webm"\n'
             '             data-start="%.3f" data-duration="%.3f" '
-            'data-media-start="0"
-'
+            'data-media-start="0"\n'
             '             muted playsinline></video>' % (name, name, start, dur))
 
     # -- emoji ---------------------------------------------------------------
@@ -332,7 +330,6 @@ class Kit(object):
 </html>
 ''' % {"title": esc(title), "css": css, "w": self.w, "h": self.h,
        "dur": self.dur, "fps": self.fps, "plate": plate,
-       "gfx": gfx_html, "mattes": "
-".join(self._mattes),
+       "gfx": gfx_html, "mattes": "\n".join(self._mattes),
        "caps": self.caption_html(caps, blackout),
        "capjs": self.caption_js(caps, blackout, scrim_off), "gfxjs": gfx_js}
