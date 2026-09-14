@@ -17,10 +17,35 @@ per reel, per script.
 import io
 import json
 import os
+import shutil
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from squircle import path as sq  # noqa: E402
+
+
+GSAP = "gsap.min.js"
+
+
+def vendor_gsap(assets="assets"):
+    """Copy GSAP next to the composition and return its relative src.
+
+    The composition used to pull GSAP off cdnjs. That is fine on her laptop and
+    fatal anywhere the network is filtered: hyperframes treats a failed timeline
+    script as a correctness warning and *refuses to encode*, so the render dies
+    at 75% having already captured every frame. Vendoring it makes the build
+    self-contained and byte-identical run to run, which is what a render wants
+    anyway.
+    """
+    dst = os.path.join(assets, GSAP)
+    src = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vendor", GSAP)
+    if not os.path.exists(src):
+        raise SystemExit("kit: missing vendored GSAP at %s" % src)
+    if not os.path.exists(dst) or os.path.getsize(dst) != os.path.getsize(src):
+        if not os.path.isdir(assets):
+            os.makedirs(assets)
+        shutil.copyfile(src, dst)
+    return "%s/%s" % (assets, GSAP)
 
 
 def esc(s):
@@ -289,13 +314,14 @@ class Kit(object):
 
     def document(self, title, plate, gfx_html, gfx_js, caps,
                  blackout=(), scrim_off=()):
+        vendor_gsap()
         css = self.base_css() + "\n".join(self._css) + "\n" + "\n".join(self._sq)
         return '''<!DOCTYPE html>
 <html lang="uk">
   <head>
     <meta charset="utf-8">
     <title>%(title)s</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="assets/gsap.min.js"></script>
     <style>%(css)s
     </style>
   </head>
