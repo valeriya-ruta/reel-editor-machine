@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 10 — контент з дзвінків</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+    @font-face {
+      font-family: "ProductSans";
+      src: url("assets/fonts/ProductSans-Black.woff") format("woff");
+      font-weight: 900; font-style: normal; font-display: block;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px;
+            overflow: hidden; background: #000;
+            font-family: "ProductSans", system-ui, sans-serif;
+      --surface:        #fdf6f6;
+      --container:      #f4dde2;
+      --container-high: #ecc8d0;
+      --graphite:       rgba(23,20,28,0.13);
+      --accent:         #b4122f;
+      --accent-deep:    #8d0d24;
+      --pink:           #ff6e9c;
+      --ink:            #17141c;
+
+      --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
+      --lit-blush:  linear-gradient(115deg, #fffdfd 0%, #fdf1f4 100%);
+      --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
+      --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
+      --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
+
+      --rim: inset 0 1.5px 0 rgba(255,255,255,0.92),
+             inset 0 -1.5px 0 rgba(255,255,255,0.14),
+             inset 0 0 0 1px rgba(255,255,255,0.28);
+      --rim-dark: inset 0 1.5px 0 rgba(255,255,255,0.16),
+                  inset 0 0 0 1px rgba(255,255,255,0.08);
+      --rim-glass: inset 0 2px 0 rgba(255,255,255,0.70),
+                   inset 0 -2px 0 rgba(255,255,255,0.10),
+                   inset 0 0 0 1.5px rgba(255,255,255,0.30);
+
+      /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
+         Light coming off the object, not the object sitting on a surface. */
+      --glow: drop-shadow(0 0 10px rgba(255,196,218,0.95))
+              drop-shadow(0 0 26px rgba(255,110,156,0.85))
+              drop-shadow(0 0 64px rgba(255,110,156,0.55))
+              drop-shadow(0 0 120px rgba(255,110,156,0.32));
+      --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
+                   drop-shadow(0 0 60px rgba(255,110,156,0.30));
+
+      --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
+              drop-shadow(0 24px 48px rgba(26,30,39,0.14));
+      --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))
+                 drop-shadow(0 12px 24px rgba(26,30,39,0.12));
+ }
+    .plate { position: absolute; inset: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    #scrim { position: absolute; left: 20px; top: 1247px;
+             width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png");
+             background-size: 100% 100%; background-repeat: no-repeat;
+             opacity: 0; visibility: hidden; pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; top: 1413px;
+           height: 118px; line-height: 118px; text-align: center;
+           color: #fff; font-size: 90px; font-weight: 900;
+           letter-spacing: -0.015em; white-space: nowrap;
+           opacity: 0; visibility: hidden; }
+    .g { position: absolute; left: 0; top: 40px; width: 1080px;
+         height: 600px; opacity: 0; visibility: hidden; }
+    .g.full { top: 0; height: 1920px; }
+
+    /* §5a.9 — glass over her footage is the house look. Panels only; an
+       edge-to-edge frosted ground blurs her out of her own reel. */
+    .glass { background: rgba(255,255,255,0.15);
+             -webkit-backdrop-filter: blur(24px) saturate(1.4);
+             backdrop-filter: blur(24px) saturate(1.4);
+             box-shadow: var(--rim); filter: var(--cast); }
+
+    /* A takeover: a tinted pane laid ON the footage, with a real margin so it
+       reads as an object rather than a blur applied to the video. */
+    /* The inset pane is a *pane*: 44/64 margin so the footage shows past it,
+       and corners, because a full-bleed hard-cornered rectangle is a bug she
+       has reported. base_css() squircles it; this radius is the fallback. */
+    .ground { position: absolute; left: 44px; top: 64px;
+              width: 992px; height: 1792px; border-radius: 68px;
+              background: linear-gradient(158deg, rgba(196,20,52,0.62) 0%,
+                          rgba(141,13,36,0.70) 100%);
+              -webkit-backdrop-filter: blur(30px) saturate(1.5);
+              backdrop-filter: blur(30px) saturate(1.5);
+              box-shadow: var(--rim-glass); filter: var(--cast); }
+
+    .card { position: absolute; background: var(--lit-blush);
+            filter: var(--cast); box-shadow: var(--rim); }
+    .card.ink { background: var(--lit-ink); box-shadow: var(--rim-dark); }
+    .card.accent { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+
+    .tile { position: absolute; display: grid; place-items: center;
+            background: var(--lit-blush); filter: var(--cast);
+            box-shadow: var(--rim); }
+
+    /* §5a.3 — bar rhythm. One thick heading, then ragged body. Uniform bars
+       read as a loading state; ragged ones read as an abstracted screen. */
+    .ph { display: block; height: 66px; border-radius: 18px;
+          background: var(--lit-accent); margin-bottom: 26px;
+          box-shadow: var(--rim-dark); }
+    .pr { display: block; height: 40px; border-radius: 12px;
+          background: var(--graphite); margin-bottom: 18px; }
+    .pr:nth-of-type(2) { width: 94%; }
+    .pr:nth-of-type(3) { width: 71%; }
+    .pr:nth-of-type(4) { width: 43%; }
+
+    .phone { position: absolute; background: var(--lit-blush);
+             overflow: hidden; filter: var(--cast); box-shadow: var(--rim); }
+    .phone video, .phone img { width: 100%; height: 100%; object-fit: cover;
+                               display: block; }
+
+    /* a value in its own card — her reference's "big number" pattern, minus
+       the label, because a graphic here carries no words */
+    .valcard { position: absolute; background: rgba(255,255,255,0.16);
+               -webkit-backdrop-filter: blur(16px) saturate(1.3);
+               backdrop-filter: blur(16px) saturate(1.3);
+               box-shadow: var(--rim-dark);
+               display: grid; place-items: center; }
+    .valcard span { color: #fff; font-weight: 900; letter-spacing: -0.04em; }
+
+    .wire { fill: none; stroke-width: 20; stroke-linecap: round;
+            filter: drop-shadow(0 8px 18px rgba(26,30,39,0.22)); }
+    .node { fill: #fdf6f6; stroke: #b4122f; stroke-width: 16;
+            filter: drop-shadow(0 10px 22px rgba(26,30,39,0.24)); }
+    .node.hub { fill: #b4122f; stroke: #fff; }
+
+    /* §5a.10 — the glow rides a WRAPPER, never the clipped element itself.
+       clip-path is applied *after* filter, so a drop-shadow declared on the
+       same element as the clip is cut away with everything else outside the
+       silhouette and the object ends up with no light at all. Put the clip on
+       the shape and the filter on its parent: the parent filters the already
+       clipped bitmap, so the light traces the squircle and survives. */
+    .lit { position: absolute; inset: 0; pointer-events: none;
+           filter: var(--glow); }
+    .lit.soft { filter: var(--glow-soft); }
+
+    /* Emoji are images, never glyphs. The render runs on someone else's
+       Chrome, so a literal 💩 in the HTML comes out in whatever emoji font
+       that machine has — Noto on the cloud renderer, Segoe on hers, Apple on
+       nobody's. She wants the Apple set, so the artwork ships in assets/emoji
+       and the glyph never appears in a composition. */
+    .emoji { display: block; width: auto; image-rendering: auto; }
+
+    .halo { position: absolute; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(255,110,156,0.5) 0%,
+                        rgba(255,110,156,0) 70%); }
+    .ring { position: absolute; border-radius: 50%; pointer-events: none;
+            border: 18px solid rgba(255,110,156,0.92);
+            filter: drop-shadow(0 0 40px rgba(255,110,156,0.55)); }
+
+    /* ---- the client's sentence, which is the object of the whole reel ---- */
+    .bub { position: absolute; width: 520px; padding: 32px 36px;
+           background: var(--lit-blush); box-shadow: var(--rim);
+           filter: var(--cast); border-radius: 44px; }
+    .bub b { display: block; height: 26px; border-radius: 13px;
+             background: var(--graphite); margin-bottom: 18px; }
+    .bub b:last-child { margin-bottom: 0; width: 64%; }
+    .bub .tail { position: absolute; left: 46px; bottom: -22px; width: 0;
+                 height: 0; border-left: 30px solid transparent;
+                 border-right: 0 solid transparent;
+                 border-top: 30px solid var(--surface); }
+    /* hers — the one that matters, in the accent */
+    .bub.client { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+    .bub.client b { background: rgba(255,255,255,0.90); }
+    .bub.client .tail { border-top-color: #a81030; }
+    /* yours — the reply, quieter */
+    .bub.mine { background: var(--lit); }
+    .bub.mine .tail { left: auto; right: 46px;
+                      border-left: 0 solid transparent;
+                      border-right: 30px solid transparent;
+                      border-top-color: #fafafb; }
+
+    /* ---- a finished piece of content ---- */
+    .cc { position: absolute; width: 210px; height: 300px; padding: 24px;
+          background: var(--lit-blush); box-shadow: var(--rim);
+          filter: var(--cast); }
+    .cc b { display: block; height: 15px; border-radius: 8px;
+            background: var(--graphite); margin-bottom: 13px; }
+    .cc b:first-child { height: 26px; width: 74%; background: var(--lit-accent); }
+    .cc.quoted b:first-child { background: var(--lit-pink); }
+
+    /* ---- product tiles ---- */
+    .tile.brand.prod { position: absolute; width: 260px; height: 260px;
+                       display: grid; place-items: center;
+                       background: var(--lit-blush); }
+    .tile.brand.prod .mk { width: 62%; height: auto; max-height: 64%;
+                           object-fit: contain; display: block; }
+    .tile.brand.prod.wide { width: 360px; height: 220px; }
+
+    /* ---- numbers ---- */
+    .big { position: absolute; left: 0; width: 1080px; text-align: center;
+           font-weight: 900; color: #fff; letter-spacing: -0.05em;
+           line-height: 1; text-shadow: 0 18px 60px rgba(8,6,12,0.55); }
+    .big small { font-size: 0.42em; }
+
+    /* ---- «безкоштовний» — the 0, third reel running ---- */
+    .freewrap { position: absolute; left: 640px; top: 150px; width: 230px;
+                height: 230px; }
+    .free { position: absolute; inset: 0; display: grid; place-items: center;
+            grid-auto-flow: column; gap: 4px; border-radius: 50%;
+            background: var(--lit-accent); box-shadow: var(--rim-dark); }
+    .free span { font-size: 130px; font-weight: 900; color: #fff;
+                 letter-spacing: -0.06em; line-height: 1; }
+    .free small { font-size: 58px; font-weight: 900; color: #fff; }
+
+    /* ---- a calendar of content, every day ---- */
+    .cal { position: absolute; left: 190px; top: 90px; width: 700px;
+           display: grid; gap: 14px; grid-template-columns: repeat(7, 1fr); }
+    .cal i { display: block; height: 86px; border-radius: 22px;
+             background: rgba(255,255,255,0.55); box-shadow: var(--rim); }
+    .cal i.on { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+
+    /* ---- the transcript the recorder leaves behind ---- */
+    .wave { position: absolute; display: flex; align-items: center; gap: 10px; }
+    .wave i { display: block; width: 14px; border-radius: 7px;
+              background: var(--pink); }
+    .lines { position: absolute; }
+    .lines b { display: block; height: 22px; border-radius: 11px;
+               background: rgba(255,255,255,0.90); margin-bottom: 16px;
+               box-shadow: var(--rim); }
+    .lines b:nth-child(2) { width: 88%; }
+    .lines b:nth-child(3) { width: 62%; }
+
+    /* ---- the word she wants typed. It is an instruction the viewer has to
+           follow exactly, so it is the one place the word itself is the
+           content (STYLE.md §4a.2). ---- */
+    .word { position: absolute; left: 190px; top: 210px; width: 700px;
+            height: 150px; display: grid; place-items: center;
+            background: var(--lit-accent); box-shadow: var(--rim-dark);
+            filter: var(--cast); }
+    .word span { font-size: 88px; font-weight: 900; color: #fff;
+                 letter-spacing: -0.03em; }
+
+
+    /* b00 — the two roles, and the moment they turn out to be one person */
+    .role { position: absolute; width: 320px; height: 260px; border-radius: 54px;
+            padding: 34px; background: var(--lit-blush); box-shadow: var(--rim);
+            filter: var(--cast); }
+    .role i { display: block; width: 92px; height: 92px; border-radius: 50%;
+              background: var(--lit-accent); box-shadow: var(--rim-dark);
+              margin-bottom: 26px; }
+    .role b { display: block; height: 22px; border-radius: 11px;
+              background: var(--graphite); width: 78%; }
+    .role.alt { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+    .role.alt i { background: var(--lit-pink); }
+    .role.alt b { background: rgba(255,255,255,0.85); }
+    .burst { position: absolute; left: 420px; top: 220px; width: 240px;
+             height: 240px; border-radius: 50%; background: var(--lit-pink);
+             box-shadow: var(--rim-dark);
+             filter: drop-shadow(0 0 40px rgba(255,110,156,0.9)); }
+
+    /* b03 / b08 — the topic, which is only ever a label */
+    .tag { position: absolute; left: 390px; top: 250px; width: 300px;
+           height: 92px; border-radius: 46px;
+           background: rgba(255,255,255,0.42); box-shadow: var(--rim);
+           filter: var(--cast-sm); }
+
+    /* b04 — what the exchange was worth */
+    .coin { position: absolute; left: 430px; top: 170px; width: 200px;
+            height: 200px; border-radius: 50%; display: grid;
+            place-items: center; background: var(--lit-pink);
+            box-shadow: var(--rim-dark),
+                        inset 0 0 0 13px rgba(255,255,255,0.55);
+            filter: var(--cast); }
+    .coin span { font-size: 108px; font-weight: 900; color: #fff;
+                 line-height: 1; letter-spacing: -0.04em; }
+
+    /* b09 — four angles on one call */
+    .grid4 { position: absolute; left: 150px; top: 100px; width: 780px;
+             display: grid; gap: 22px; grid-template-columns: repeat(2, 1fr); }
+    .grid4 span { display: block; height: 200px; border-radius: 36px;
+                  background: var(--lit-blush); box-shadow: var(--rim);
+                  filter: var(--cast-sm); }
+    .grid4 span:nth-child(2) { background: var(--lit-accent);
+                               box-shadow: var(--rim-dark); }
+    .grid4 span:nth-child(3) { background: var(--lit-pink);
+                               box-shadow: var(--rim-dark); }
+
+    /* b11 — the instruction, and the thing it tells you to press */
+    .guide { position: absolute; left: 240px; top: 120px; width: 600px;
+             padding: 36px; background: var(--lit-blush); box-shadow: var(--rim);
+             filter: var(--cast); border-radius: 48px; }
+    .guide .gh { display: block; height: 48px; width: 58%; border-radius: 16px;
+                 background: var(--lit-accent); margin-bottom: 28px;
+                 box-shadow: var(--rim-dark); }
+    .guide b { display: block; height: 22px; border-radius: 11px;
+               background: var(--graphite); margin-bottom: 20px; }
+    .guide b:nth-of-type(2) { width: 84%; }
+    .guide b:nth-of-type(3) { width: 56%; }
+    .guide .tapdot { position: absolute; right: 54px; bottom: 44px; width: 96px;
+                     height: 96px; border-radius: 50%; background: var(--lit-pink);
+                     box-shadow: var(--rim-dark);
+                     filter: drop-shadow(0 0 30px rgba(255,110,156,0.85)); }
+
+    /* b12 — the message she wants sent */
+    .sendrow { position: absolute; left: 190px; top: 400px; width: 700px;
+               display: flex; align-items: center; gap: 20px; }
+    .sendrow .field { display: block; flex: 1; height: 96px; border-radius: 48px;
+                      background: rgba(255,255,255,0.55); box-shadow: var(--rim); }
+    .sendrow .go { display: block; width: 96px; height: 96px; flex: none;
+                   border-radius: 50%; background: var(--lit-accent);
+                   box-shadow: var(--rim-dark); }
+
+    .ground { clip-path: path('M 883.2 0 c 36.293 0 54.439 0 70.765 8.318 a 68 68 0 0 1 29.717 29.717 c 8.318 16.325 8.318 34.472 8.318 70.765 L 992 1683.2 c 0 36.293 0 54.439 -8.318 70.765 a 68 68 0 0 1 -29.717 29.717 c -16.325 8.318 -34.472 8.318 -70.765 8.318 L 108.8 1792 c -36.293 0 -54.439 0 -70.765 -8.318 a 68 68 0 0 1 -29.717 -29.717 c -8.318 -16.325 -8.318 -34.472 -8.318 -70.765 L 0 108.8 c 0 -36.293 0 -54.439 8.318 -70.765 a 68 68 0 0 1 29.717 -29.717 c 16.325 -8.318 34.472 -8.318 70.765 -8.318 Z'); }
+    .tile.brand.prod { clip-path: path('M 160.8 0 c 33.091 0 49.636 0 64.521 7.584 a 62 62 0 0 1 27.095 27.095 c 7.584 14.885 7.584 31.43 7.584 64.521 L 260 160.8 c 0 33.091 0 49.636 -7.584 64.521 a 62 62 0 0 1 -27.095 27.095 c -14.885 7.584 -31.43 7.584 -64.521 7.584 L 99.2 260 c -33.091 0 -49.636 0 -64.521 -7.584 a 62 62 0 0 1 -27.095 -27.095 c -7.584 -14.885 -7.584 -31.43 -7.584 -64.521 L 0 99.2 c 0 -33.091 0 -49.636 7.584 -64.521 a 62 62 0 0 1 27.095 -27.095 c 14.885 -7.584 31.43 -7.584 64.521 -7.584 Z'); }
+    .tile.brand.prod.wide { clip-path: path('M 273.6 0 c 28.821 0 43.231 0 56.196 6.606 a 54 54 0 0 1 23.599 23.599 c 6.606 12.964 6.606 27.375 6.606 56.196 L 360 133.6 c 0 28.821 0 43.231 -6.606 56.196 a 54 54 0 0 1 -23.599 23.599 c -12.964 6.606 -27.375 6.606 -56.196 6.606 L 86.4 220 c -28.821 0 -43.231 0 -56.196 -6.606 a 54 54 0 0 1 -23.599 -23.599 c -6.606 -12.964 -6.606 -27.375 -6.606 -56.196 L 0 86.4 c 0 -28.821 0 -43.231 6.606 -56.196 a 54 54 0 0 1 23.599 -23.599 c 12.964 -6.606 27.375 -6.606 56.196 -6.606 Z'); }
+    .cc { clip-path: path('M 155.6 0 c 18.146 0 27.22 0 35.382 4.159 a 34 34 0 0 1 14.859 14.859 c 4.159 8.163 4.159 17.236 4.159 35.382 L 210 245.6 c 0 18.146 0 27.22 -4.159 35.382 a 34 34 0 0 1 -14.859 14.859 c -8.163 4.159 -17.236 4.159 -35.382 4.159 L 54.4 300 c -18.146 0 -27.22 0 -35.382 -4.159 a 34 34 0 0 1 -14.859 -14.859 c -4.159 -8.163 -4.159 -17.236 -4.159 -35.382 L 0 54.4 c 0 -18.146 0 -27.22 4.159 -35.382 a 34 34 0 0 1 14.859 -14.859 c 8.163 -4.159 17.236 -4.159 35.382 -4.159 Z'); }
+    .word { clip-path: path('M 625 0 c 26.686 0 40.029 0 52.033 6.116 a 50 50 0 0 1 21.851 21.851 c 6.116 12.004 6.116 25.347 6.116 52.033 L 700 75 c 0 26.686 0 40.029 -6.116 52.033 a 50 50 0 0 1 -21.851 21.851 c -12.004 6.116 -25.347 6.116 -52.033 6.116 L 75 150 c -26.686 0 -40.029 0 -52.033 -6.116 a 50 50 0 0 1 -21.851 -21.851 c -6.116 -12.004 -6.116 -25.347 -6.116 -52.033 L 0 75 c 0 -26.686 0 -40.029 6.116 -52.033 a 50 50 0 0 1 21.851 -21.851 c 12.004 -6.116 25.347 -6.116 52.033 -6.116 Z'); }
+    .guide { clip-path: path('M 523.2 0 c 25.619 0 38.428 0 49.952 5.872 a 48 48 0 0 1 20.977 20.977 c 5.872 11.524 5.872 24.333 5.872 49.952 L 600 223.2 c 0 25.619 0 38.428 -5.872 49.952 a 48 48 0 0 1 -20.977 20.977 c -11.524 5.872 -24.333 5.872 -49.952 5.872 L 76.8 300 c -25.619 0 -38.428 0 -49.952 -5.872 a 48 48 0 0 1 -20.977 -20.977 c -5.872 -11.524 -5.872 -24.333 -5.872 -49.952 L 0 76.8 c 0 -25.619 0 -38.428 5.872 -49.952 a 48 48 0 0 1 20.977 -20.977 c 11.524 -5.872 24.333 -5.872 49.952 -5.872 Z'); }
+    .role { clip-path: path('M 233.6 0 c 28.821 0 43.231 0 56.196 6.606 a 54 54 0 0 1 23.599 23.599 c 6.606 12.964 6.606 27.375 6.606 56.196 L 320 173.6 c 0 28.821 0 43.231 -6.606 56.196 a 54 54 0 0 1 -23.599 23.599 c -12.964 6.606 -27.375 6.606 -56.196 6.606 L 86.4 260 c -28.821 0 -43.231 0 -56.196 -6.606 a 54 54 0 0 1 -23.599 -23.599 c -6.606 -12.964 -6.606 -27.375 -6.606 -56.196 L 0 86.4 c 0 -28.821 0 -43.231 6.606 -56.196 a 54 54 0 0 1 23.599 -23.599 c 12.964 -6.606 27.375 -6.606 56.196 -6.606 Z'); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="81.917" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="81.917" data-media-start="0"
+             muted playsinline></video>
+
+      <div class="g full" id="g0">
+        <div class="burst" id="g0b"></div>
+        <div class="role" id="g0e" style="left:150px;top:200px"><i></i><b></b></div>
+        <div class="role alt" id="g0g" style="left:610px;top:200px"><i></i><b></b></div>
+      </div>
+
+      <div class="g full" id="g1">
+        <div class="cal" id="g1c"><i id="g1d0"></i><i id="g1d1"></i><i id="g1d2"></i><i id="g1d3"></i><i id="g1d4"></i><i id="g1d5"></i><i id="g1d6"></i><i id="g1d7"></i><i id="g1d8"></i><i id="g1d9"></i><i id="g1d10"></i><i id="g1d11"></i><i id="g1d12"></i><i id="g1d13"></i></div>
+      </div>
+
+      <div class="g full" id="g2">
+        <div class="tile brand prod wide" id="g2call" style="left:80px;top:180px">
+          <div class="wave" id="g2w" style="position:relative;height:90px"><i style="height:26px"></i><i style="height:58px"></i><i style="height:90px"></i><i style="height:44px"></i><i style="height:76px"></i><i style="height:34px"></i><i style="height:66px"></i><i style="height:48px"></i><i style="height:84px"></i><i style="height:30px"></i></div>
+        </div>
+        <div class="cc " id="g2c0" style="left:560px;top:150px"><b></b><b></b><b></b></div>
+        <div class="cc " id="g2c1" style="left:800px;top:180px"><b></b><b></b><b></b></div>
+      </div>
+
+      <div class="g full" id="g3">
+        <div class="tag" id="g3t"></div>
+        <div class="bub client" id="g3b" style="left:280px;top:190px"><b></b><b></b><span class="tail"></span></div>
+      </div>
+
+      <div class="g full" id="g4">
+        <div class="bub client" id="g4a" style="left:110px;top:120px"><b></b><b></b><span class="tail"></span></div>
+        <div class="bub mine" id="g4b" style="left:450px;top:300px"><b></b><b></b><span class="tail"></span></div>
+        <div class="coin" id="g4m"><span>€</span></div>
+      </div>
+
+      <div class="g full" id="g5">
+        <div class="bub client" id="g5b" style="left:280px;top:110px"><b></b><b></b><span class="tail"></span></div>
+        <div class="cc quoted" id="g5c" style="left:435px;top:300px"><b></b><b></b><b></b></div>
+      </div>
+
+      <div class="g full" id="g6">
+        <div class="tile brand prod wide" id="g6t" style="left:180px;top:170px"><img class="mk" src="assets/logos/fathom-word.png" alt=""></div>
+        <div class="freewrap" id="g6free"><div class="lit soft"></div>
+          <div class="free"><span>0</span><small>€</small></div></div>
+      </div>
+
+      <div class="g full" id="g7">
+        <div class="tile brand prod " id="g7c" style="left:410px;top:40px"><img class="mk" src="assets/logos/claude-tile.png" alt=""></div>
+        <div class="wave" id="g7w" style="left:230px;top:330px;width:620px;
+             height:120px;justify-content:center"><i style="height:24px"></i><i style="height:56px"></i><i style="height:96px"></i><i style="height:40px"></i><i style="height:78px"></i><i style="height:30px"></i><i style="height:66px"></i><i style="height:44px"></i><i style="height:88px"></i><i style="height:34px"></i><i style="height:72px"></i><i style="height:26px"></i><i style="height:60px"></i><i style="height:48px"></i></div>
+        <div class="lines" id="g7t" style="left:280px;top:330px;width:520px">
+          <b></b><b></b><b></b>
+        </div>
+        <div class="cc " id="g7a" style="left:180px;top:300px"><b></b><b></b><b></b></div><div class="cc " id="g7b" style="left:435px;top:300px"><b></b><b></b><b></b></div><div class="cc " id="g7d" style="left:690px;top:300px"><b></b><b></b><b></b></div>
+        <div class="bub client" id="g7q" style="left:280px;top:285px;width:520px"><b></b><span class="tail"></span></div>
+      </div>
+
+      <div class="g full" id="g8">
+        <div class="tag" id="g8t"></div>
+        <div class="cc " id="g8a" style="left:180px;top:240px"><b></b><b></b><b></b></div><div class="cc quoted" id="g8b" style="left:435px;top:240px"><b></b><b></b><b></b></div><div class="cc " id="g8c" style="left:690px;top:240px"><b></b><b></b><b></b></div>
+      </div>
+
+      <div class="g full" id="g9">
+        <div class="grid4" id="g9g">
+          <span id="g9a"></span><span id="g9b"></span>
+          <span id="g9c"></span><span id="g9d"></span>
+        </div>
+      </div>
+
+      <div class="g full" id="g10">
+        <div class="big" id="g10n" style="top:200px;font-size:220px">1<small> год</small></div>
+      </div>
+
+      <div class="g full" id="g11">
+        <div class="guide" id="g11g">
+          <span class="gh"></span><b></b><b></b><b></b>
+          <span class="tapdot" id="g11d"></span>
+        </div>
+      </div>
+
+      <div class="g full" id="g12">
+        <div class="word" id="g12w"><span>ДЗВІНОК</span></div>
+        <div class="sendrow" id="g12s">
+          <span class="field"></span><span class="go"></span>
+        </div>
+      </div>
+
+      <div id="scrim"></div>
+      <div class="cap" id="cap0">ДІВЧАТА,</div>
+      <div class="cap" id="cap1">Я</div>
+      <div class="cap" id="cap2">ВАМ</div>
+      <div class="cap" id="cap3">ЩАС</div>
+      <div class="cap" id="cap4">ТАКУ</div>
+      <div class="cap" id="cap5">ІМБУ</div>
+      <div class="cap" id="cap6">ПОКАЖУ!</div>
+      <div class="cap" id="cap7">КОРОТШЕ,</div>
+      <div class="cap" id="cap8">ЯКЩО</div>
+      <div class="cap" id="cap9">ТИ</div>
+      <div class="cap" id="cap10">ЕКСПЕРТКА</div>
+      <div class="cap" id="cap11">І БЛОГЕРКА</div>
+      <div class="cap" id="cap12">ОДНОЧАСНО,</div>
+      <div class="cap" id="cap13">ТО В ТЕБЕ</div>
+      <div class="cap" id="cap14">Є</div>
+      <div class="cap" id="cap15">ГЕНІАЛЬНИЙ</div>
+      <div class="cap" id="cap16">СПОСІБ</div>
+      <div class="cap" id="cap17">МАТИ</div>
+      <div class="cap" id="cap18">ЛЕГКИЙ</div>
+      <div class="cap" id="cap19">КОНТЕНТ</div>
+      <div class="cap" id="cap20">ХОЧ</div>
+      <div class="cap" id="cap21">КОЖЕН</div>
+      <div class="cap" id="cap22">ДЕНЬ!</div>
+      <div class="cap" id="cap23">КОЖНА</div>
+      <div class="cap" id="cap24">КОНСУЛЬТАЦІЯ</div>
+      <div class="cap" id="cap25">– ЦЕ</div>
+      <div class="cap" id="cap26">І</div>
+      <div class="cap" id="cap27">Є</div>
+      <div class="cap" id="cap28">ТВОЄ</div>
+      <div class="cap" id="cap29">ДЖЕРЕЛО</div>
+      <div class="cap" id="cap30">КОНТЕНТУ.</div>
+      <div class="cap" id="cap31">ТОМУ</div>
+      <div class="cap" id="cap32">ЩО</div>
+      <div class="cap" id="cap33">ЦЕ</div>
+      <div class="cap" id="cap34">НЕ</div>
+      <div class="cap" id="cap35">ПРОСТО</div>
+      <div class="cap" id="cap36">ТЕМА,</div>
+      <div class="cap" id="cap37">З ЯКОЮ</div>
+      <div class="cap" id="cap38">ДО</div>
+      <div class="cap" id="cap39">ТЕБЕ</div>
+      <div class="cap" id="cap40">ЗВЕРТАЮТЬСЯ</div>
+      <div class="cap" id="cap41">ЛЮДИ,</div>
+      <div class="cap" id="cap42">ЦЕ</div>
+      <div class="cap" id="cap43">ЩЕ</div>
+      <div class="cap" id="cap44">Й</div>
+      <div class="cap" id="cap45">ТЕКСТ</div>
+      <div class="cap" id="cap46">САМЕ</div>
+      <div class="cap" id="cap47">ТАК,</div>
+      <div class="cap" id="cap48">ЯК ГОВОРИТЬ</div>
+      <div class="cap" id="cap49">ТВОЯ</div>
+      <div class="cap" id="cap50">ЦІЛЬОВА</div>
+      <div class="cap" id="cap51">АУДИТОРІЯ.</div>
+      <div class="cap" id="cap52">ТОБІ</div>
+      <div class="cap" id="cap53">НЕ</div>
+      <div class="cap" id="cap54">ТРЕБА</div>
+      <div class="cap" id="cap55">ВИГАДУВАТИ,</div>
+      <div class="cap" id="cap56">ЯК</div>
+      <div class="cap" id="cap57">СКАЗАТИ,</div>
+      <div class="cap" id="cap58">ЩОБ</div>
+      <div class="cap" id="cap59">ЛЮДИНІ</div>
+      <div class="cap" id="cap60">ВІДГУКНУЛОСЬ:</div>
+      <div class="cap" id="cap61">КЛІЄНТКА</div>
+      <div class="cap" id="cap62">ВЖЕ</div>
+      <div class="cap" id="cap63">СКАЗАЛА</div>
+      <div class="cap" id="cap64">ТОБІ</div>
+      <div class="cap" id="cap65">ЩОСЬ,</div>
+      <div class="cap" id="cap66">ТИ</div>
+      <div class="cap" id="cap67">ЯКОСЬ</div>
+      <div class="cap" id="cap68">ВІДПОВІЛА,</div>
+      <div class="cap" id="cap69">І</div>
+      <div class="cap" id="cap70">ВОНА</div>
+      <div class="cap" id="cap71">ЗА ЦЕ</div>
+      <div class="cap" id="cap72">ЗАПЛАТИЛА</div>
+      <div class="cap" id="cap73">ГРОШІ.</div>
+      <div class="cap" id="cap74">ЛИШИЛОСЬ</div>
+      <div class="cap" id="cap75">ТІЛЬКИ</div>
+      <div class="cap" id="cap76">ЗАБРАТИ</div>
+      <div class="cap" id="cap77">ЦЕ</div>
+      <div class="cap" id="cap78">І</div>
+      <div class="cap" id="cap79">ПЕРЕТВОРИТИ</div>
+      <div class="cap" id="cap80">НА</div>
+      <div class="cap" id="cap81">КОНТЕНТ.</div>
+      <div class="cap" id="cap82">ДЛЯ</div>
+      <div class="cap" id="cap83">ЦЬОГО</div>
+      <div class="cap" id="cap84">НАМ</div>
+      <div class="cap" id="cap85">ПОТРІБНА</div>
+      <div class="cap" id="cap86">СИСТЕМА:</div>
+      <div class="cap" id="cap87">ЩОСЬ,</div>
+      <div class="cap" id="cap88">ЩО</div>
+      <div class="cap" id="cap89">ЗАПИСУЄ</div>
+      <div class="cap" id="cap90">ДЗВІНКИ</div>
+      <div class="cap" id="cap91">Я</div>
+      <div class="cap" id="cap92">ДЛЯ</div>
+      <div class="cap" id="cap93">ЦЬОГО</div>
+      <div class="cap" id="cap94">ВИКОРИСТОВУЮ</div>
+      <div class="cap" id="cap95">ФАТОМ,</div>
+      <div class="cap" id="cap96">ВІН БЕЗКОШТОВНИЙ.</div>
+      <div class="cap" id="cap97">І</div>
+      <div class="cap" id="cap98">ШТУЧНИЙ</div>
+      <div class="cap" id="cap99">ІНТЕЛЕКТ,</div>
+      <div class="cap" id="cap100">У МЕНЕ</div>
+      <div class="cap" id="cap101">ЦЕ</div>
+      <div class="cap" id="cap102">КЛОД,</div>
+      <div class="cap" id="cap103">ЯКИЙ</div>
+      <div class="cap" id="cap104">РОЗШИФРОВУЄ</div>
+      <div class="cap" id="cap105">ЦІ</div>
+      <div class="cap" id="cap106">ДЗВІНКИ,</div>
+      <div class="cap" id="cap107">РОЗДІЛЯЄ</div>
+      <div class="cap" id="cap108">ЇХ</div>
+      <div class="cap" id="cap109">НА</div>
+      <div class="cap" id="cap110">ІДЕЇ</div>
+      <div class="cap" id="cap111">ДЛЯ</div>
+      <div class="cap" id="cap112">КОНТЕНТУ</div>
+      <div class="cap" id="cap113">І</div>
+      <div class="cap" id="cap114">ВИТЯГУЄ</div>
+      <div class="cap" id="cap115">ЦИТАТИ</div>
+      <div class="cap" id="cap116">КЛІЄНТОК.</div>
+      <div class="cap" id="cap117">ЯКЩО</div>
+      <div class="cap" id="cap118">ВСЕ</div>
+      <div class="cap" id="cap119">ЦЕ</div>
+      <div class="cap" id="cap120">ПРАВИЛЬНО</div>
+      <div class="cap" id="cap121">ПОВ'ЯЗАТИ,</div>
+      <div class="cap" id="cap122">ТО ПІСЛЯ</div>
+      <div class="cap" id="cap123">КОЖНОГО</div>
+      <div class="cap" id="cap124">ДЗВІНКА</div>
+      <div class="cap" id="cap125">В</div>
+      <div class="cap" id="cap126">ТЕБЕ</div>
+      <div class="cap" id="cap127">НЕ</div>
+      <div class="cap" id="cap128">ПРОСТО</div>
+      <div class="cap" id="cap129">ТЕМА,</div>
+      <div class="cap" id="cap130">А ГОТОВІ</div>
+      <div class="cap" id="cap131">СЦЕНАРІЇ,</div>
+      <div class="cap" id="cap132">ЦИТАТИ,</div>
+      <div class="cap" id="cap133">РІЗНІ</div>
+      <div class="cap" id="cap134">КУТИ,</div>
+      <div class="cap" id="cap135">ЯК</div>
+      <div class="cap" id="cap136">ЦЕ</div>
+      <div class="cap" id="cap137">ПОДАТИ.</div>
+      <div class="cap" id="cap138">З ОДНОГО</div>
+      <div class="cap" id="cap139">ДЗВІНКА</div>
+      <div class="cap" id="cap140">ВИХОДИТЬ</div>
+      <div class="cap" id="cap141">КУПА</div>
+      <div class="cap" id="cap142">КОНТЕНТУ:</div>
+      <div class="cap" id="cap143">З</div>
+      <div class="cap" id="cap144">ЧИМ ПРИЙШЛА</div>
+      <div class="cap" id="cap145">КЛІЄНТКА,</div>
+      <div class="cap" id="cap146">З</div>
+      <div class="cap" id="cap147">ЧИМ</div>
+      <div class="cap" id="cap148">ВОНА</div>
+      <div class="cap" id="cap149">ПІШЛА,</div>
+      <div class="cap" id="cap150">ЯК</div>
+      <div class="cap" id="cap151">ВИ</div>
+      <div class="cap" id="cap152">ВИРІШИЛИ</div>
+      <div class="cap" id="cap153">ПРОБЛЕМУ</div>
+      <div class="cap" id="cap154">І ЧОМУ</div>
+      <div class="cap" id="cap155">САМЕ</div>
+      <div class="cap" id="cap156">ТАК,</div>
+      <div class="cap" id="cap157">А НЕ</div>
+      <div class="cap" id="cap158">ІНАКШЕ.</div>
+      <div class="cap" id="cap159">ПІДКЛЮЧИТИ</div>
+      <div class="cap" id="cap160">ВСЕ</div>
+      <div class="cap" id="cap161">ЦЕ</div>
+      <div class="cap" id="cap162">МОЖНА</div>
+      <div class="cap" id="cap163">БУКВАЛЬНО</div>
+      <div class="cap" id="cap164">ЗА</div>
+      <div class="cap" id="cap165">ГОДИНУ.</div>
+      <div class="cap" id="cap166">А</div>
+      <div class="cap" id="cap167">ЯКЩО</div>
+      <div class="cap" id="cap168">ТОБІ</div>
+      <div class="cap" id="cap169">СТРАШНО</div>
+      <div class="cap" id="cap170">САМІЙ</div>
+      <div class="cap" id="cap171">ВСЕ</div>
+      <div class="cap" id="cap172">ЦЕ</div>
+      <div class="cap" id="cap173">НАЛАШТОВУВАТИ,</div>
+      <div class="cap" id="cap174">ТО В</div>
+      <div class="cap" id="cap175">МЕНЕ</div>
+      <div class="cap" id="cap176">Є</div>
+      <div class="cap" id="cap177">ІНСТРУКЦІЯ</div>
+      <div class="cap" id="cap178">САМЕ</div>
+      <div class="cap" id="cap179">ДЛЯ</div>
+      <div class="cap" id="cap180">НЕТЕХНІЧНИХ</div>
+      <div class="cap" id="cap181">ЕКСПЕРТОК,</div>
+      <div class="cap" id="cap182">ДЕ Я</div>
+      <div class="cap" id="cap183">ПОКАЗУЮ,</div>
+      <div class="cap" id="cap184">КУДИ</div>
+      <div class="cap" id="cap185">НАТИСНУТИ</div>
+      <div class="cap" id="cap186">І</div>
+      <div class="cap" id="cap187">ЧОМУ</div>
+      <div class="cap" id="cap188">МИ</div>
+      <div class="cap" id="cap189">РОБИМО</div>
+      <div class="cap" id="cap190">САМЕ</div>
+      <div class="cap" id="cap191">ТАК.</div>
+      <div class="cap" id="cap192">ТОМУ</div>
+      <div class="cap" id="cap193">ЯКЩО</div>
+      <div class="cap" id="cap194">ТИ</div>
+      <div class="cap" id="cap195">ХОЧЕШ</div>
+      <div class="cap" id="cap196">МАТИ</div>
+      <div class="cap" id="cap197">НЕСКІНЧЕННУ</div>
+      <div class="cap" id="cap198">КІЛЬКІСТЬ</div>
+      <div class="cap" id="cap199">ІДЕЙ</div>
+      <div class="cap" id="cap200">ДЛЯ</div>
+      <div class="cap" id="cap201">КОНТЕНТУ</div>
+      <div class="cap" id="cap202">ТО ПИШИ</div>
+      <div class="cap" id="cap203">СЛОВО</div>
+      <div class="cap" id="cap204">«ДЗВІНОК»,</div>
+      <div class="cap" id="cap205">І Я</div>
+      <div class="cap" id="cap206">СКИНУ</div>
+      <div class="cap" id="cap207">ТОБІ</div>
+      <div class="cap" id="cap208">ДЕТАЛІ</div>
+      <div class="cap" id="cap209">ІНСТРУКЦІЇ.</div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="81.917" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  tl.set("#cap0", {autoAlpha: 1}, 0.000);
+  tl.set("#cap0", {autoAlpha: 0}, 0.695);
+  tl.set("#cap1", {autoAlpha: 1}, 0.780);
+  tl.set("#cap1", {autoAlpha: 0}, 0.880);
+  tl.set("#cap2", {autoAlpha: 1}, 0.900);
+  tl.set("#cap2", {autoAlpha: 0}, 1.015);
+  tl.set("#cap3", {autoAlpha: 1}, 1.100);
+  tl.set("#cap3", {autoAlpha: 0}, 1.415);
+  tl.set("#cap4", {autoAlpha: 1}, 1.500);
+  tl.set("#cap4", {autoAlpha: 0}, 1.935);
+  tl.set("#cap5", {autoAlpha: 1}, 2.020);
+  tl.set("#cap5", {autoAlpha: 0}, 2.255);
+  tl.set("#cap6", {autoAlpha: 1}, 2.340);
+  tl.set("#cap6", {autoAlpha: 0}, 2.955);
+  tl.set("#cap7", {autoAlpha: 1}, 3.040);
+  tl.set("#cap7", {autoAlpha: 0}, 3.335);
+  tl.set("#cap8", {autoAlpha: 1}, 3.420);
+  tl.set("#cap8", {autoAlpha: 0}, 3.520);
+  tl.set("#cap9", {autoAlpha: 1}, 3.580);
+  tl.set("#cap9", {autoAlpha: 0}, 3.680);
+  tl.set("#cap10", {autoAlpha: 1}, 3.740);
+  tl.set("#cap10", {autoAlpha: 0}, 4.095);
+  tl.set("#cap11", {autoAlpha: 1}, 4.180);
+  tl.set("#cap11", {autoAlpha: 0}, 4.515);
+  tl.set("#cap12", {autoAlpha: 1}, 4.600);
+  tl.set("#cap12", {autoAlpha: 0}, 5.115);
+  tl.set("#cap13", {autoAlpha: 1}, 5.200);
+  tl.set("#cap13", {autoAlpha: 0}, 5.395);
+  tl.set("#cap14", {autoAlpha: 1}, 5.480);
+  tl.set("#cap14", {autoAlpha: 0}, 5.675);
+  tl.set("#cap15", {autoAlpha: 1}, 5.760);
+  tl.set("#cap15", {autoAlpha: 0}, 6.295);
+  tl.set("#cap16", {autoAlpha: 1}, 6.380);
+  tl.set("#cap16", {autoAlpha: 0}, 6.875);
+  tl.set("#cap17", {autoAlpha: 1}, 6.960);
+  tl.set("#cap17", {autoAlpha: 0}, 7.275);
+  tl.set("#cap18", {autoAlpha: 1}, 7.360);
+  tl.set("#cap18", {autoAlpha: 0}, 7.615);
+  tl.set("#cap19", {autoAlpha: 1}, 7.700);
+  tl.set("#cap19", {autoAlpha: 0}, 7.975);
+  tl.set("#cap20", {autoAlpha: 1}, 8.060);
+  tl.set("#cap20", {autoAlpha: 0}, 8.395);
+  tl.set("#cap21", {autoAlpha: 1}, 8.480);
+  tl.set("#cap21", {autoAlpha: 0}, 9.015);
+  tl.set("#cap22", {autoAlpha: 1}, 9.100);
+  tl.set("#cap22", {autoAlpha: 0}, 9.555);
+  tl.set("#cap23", {autoAlpha: 1}, 9.640);
+  tl.set("#cap23", {autoAlpha: 0}, 9.835);
+  tl.set("#cap24", {autoAlpha: 1}, 9.920);
+  tl.set("#cap24", {autoAlpha: 0}, 10.535);
+  tl.set("#cap25", {autoAlpha: 1}, 10.620);
+  tl.set("#cap25", {autoAlpha: 0}, 10.895);
+  tl.set("#cap26", {autoAlpha: 1}, 10.980);
+  tl.set("#cap26", {autoAlpha: 0}, 11.135);
+  tl.set("#cap27", {autoAlpha: 1}, 11.220);
+  tl.set("#cap27", {autoAlpha: 0}, 11.415);
+  tl.set("#cap28", {autoAlpha: 1}, 11.500);
+  tl.set("#cap28", {autoAlpha: 0}, 11.695);
+  tl.set("#cap29", {autoAlpha: 1}, 11.780);
+  tl.set("#cap29", {autoAlpha: 0}, 12.055);
+  tl.set("#cap30", {autoAlpha: 1}, 12.140);
+  tl.set("#cap30", {autoAlpha: 0}, 12.595);
+  tl.set("#cap31", {autoAlpha: 1}, 12.680);
+  tl.set("#cap31", {autoAlpha: 0}, 12.780);
+  tl.set("#cap32", {autoAlpha: 1}, 12.860);
+  tl.set("#cap32", {autoAlpha: 0}, 12.960);
+  tl.set("#cap33", {autoAlpha: 1}, 13.020);
+  tl.set("#cap33", {autoAlpha: 0}, 13.120);
+  tl.set("#cap34", {autoAlpha: 1}, 13.160);
+  tl.set("#cap34", {autoAlpha: 0}, 13.315);
+  tl.set("#cap35", {autoAlpha: 1}, 13.400);
+  tl.set("#cap35", {autoAlpha: 0}, 13.755);
+  tl.set("#cap36", {autoAlpha: 1}, 13.840);
+  tl.set("#cap36", {autoAlpha: 0}, 14.195);
+  tl.set("#cap37", {autoAlpha: 1}, 14.280);
+  tl.set("#cap37", {autoAlpha: 0}, 14.395);
+  tl.set("#cap38", {autoAlpha: 1}, 14.480);
+  tl.set("#cap38", {autoAlpha: 0}, 14.580);
+  tl.set("#cap39", {autoAlpha: 1}, 14.620);
+  tl.set("#cap39", {autoAlpha: 0}, 14.720);
+  tl.set("#cap40", {autoAlpha: 1}, 14.760);
+  tl.set("#cap40", {autoAlpha: 0}, 15.255);
+  tl.set("#cap41", {autoAlpha: 1}, 15.340);
+  tl.set("#cap41", {autoAlpha: 0}, 15.795);
+  tl.set("#cap42", {autoAlpha: 1}, 15.880);
+  tl.set("#cap42", {autoAlpha: 0}, 15.995);
+  tl.set("#cap43", {autoAlpha: 1}, 16.080);
+  tl.set("#cap43", {autoAlpha: 0}, 16.180);
+  tl.set("#cap44", {autoAlpha: 1}, 16.240);
+  tl.set("#cap44", {autoAlpha: 0}, 16.340);
+  tl.set("#cap45", {autoAlpha: 1}, 16.400);
+  tl.set("#cap45", {autoAlpha: 0}, 16.975);
+  tl.set("#cap46", {autoAlpha: 1}, 17.060);
+  tl.set("#cap46", {autoAlpha: 0}, 17.415);
+  tl.set("#cap47", {autoAlpha: 1}, 17.500);
+  tl.set("#cap47", {autoAlpha: 0}, 17.895);
+  tl.set("#cap48", {autoAlpha: 1}, 17.980);
+  tl.set("#cap48", {autoAlpha: 0}, 18.235);
+  tl.set("#cap49", {autoAlpha: 1}, 18.320);
+  tl.set("#cap49", {autoAlpha: 0}, 18.535);
+  tl.set("#cap50", {autoAlpha: 1}, 18.620);
+  tl.set("#cap50", {autoAlpha: 0}, 18.875);
+  tl.set("#cap51", {autoAlpha: 1}, 18.960);
+  tl.set("#cap51", {autoAlpha: 0}, 19.575);
+  tl.set("#cap52", {autoAlpha: 1}, 19.660);
+  tl.set("#cap52", {autoAlpha: 0}, 19.760);
+  tl.set("#cap53", {autoAlpha: 1}, 19.840);
+  tl.set("#cap53", {autoAlpha: 0}, 19.955);
+  tl.set("#cap54", {autoAlpha: 1}, 20.040);
+  tl.set("#cap54", {autoAlpha: 0}, 20.140);
+  tl.set("#cap55", {autoAlpha: 1}, 20.200);
+  tl.set("#cap55", {autoAlpha: 0}, 20.955);
+  tl.set("#cap56", {autoAlpha: 1}, 21.040);
+  tl.set("#cap56", {autoAlpha: 0}, 21.140);
+  tl.set("#cap57", {autoAlpha: 1}, 21.180);
+  tl.set("#cap57", {autoAlpha: 0}, 21.655);
+  tl.set("#cap58", {autoAlpha: 1}, 21.740);
+  tl.set("#cap58", {autoAlpha: 0}, 21.840);
+  tl.set("#cap59", {autoAlpha: 1}, 21.900);
+  tl.set("#cap59", {autoAlpha: 0}, 22.135);
+  tl.set("#cap60", {autoAlpha: 1}, 22.220);
+  tl.set("#cap60", {autoAlpha: 0}, 22.935);
+  tl.set("#cap61", {autoAlpha: 1}, 23.020);
+  tl.set("#cap61", {autoAlpha: 0}, 23.295);
+  tl.set("#cap62", {autoAlpha: 1}, 23.380);
+  tl.set("#cap62", {autoAlpha: 0}, 23.615);
+  tl.set("#cap63", {autoAlpha: 1}, 23.700);
+  tl.set("#cap63", {autoAlpha: 0}, 24.075);
+  tl.set("#cap64", {autoAlpha: 1}, 24.160);
+  tl.set("#cap64", {autoAlpha: 0}, 24.315);
+  tl.set("#cap65", {autoAlpha: 1}, 24.400);
+  tl.set("#cap65", {autoAlpha: 0}, 25.055);
+  tl.set("#cap66", {autoAlpha: 1}, 25.140);
+  tl.set("#cap66", {autoAlpha: 0}, 25.255);
+  tl.set("#cap67", {autoAlpha: 1}, 25.340);
+  tl.set("#cap67", {autoAlpha: 0}, 25.575);
+  tl.set("#cap68", {autoAlpha: 1}, 25.660);
+  tl.set("#cap68", {autoAlpha: 0}, 26.295);
+  tl.set("#cap69", {autoAlpha: 1}, 26.380);
+  tl.set("#cap69", {autoAlpha: 0}, 26.480);
+  tl.set("#cap70", {autoAlpha: 1}, 26.560);
+  tl.set("#cap70", {autoAlpha: 0}, 26.795);
+  tl.set("#cap71", {autoAlpha: 1}, 26.880);
+  tl.set("#cap71", {autoAlpha: 0}, 27.035);
+  tl.set("#cap72", {autoAlpha: 1}, 27.120);
+  tl.set("#cap72", {autoAlpha: 0}, 27.555);
+  tl.set("#cap73", {autoAlpha: 1}, 27.640);
+  tl.set("#cap73", {autoAlpha: 0}, 28.315);
+  tl.set("#cap74", {autoAlpha: 1}, 28.400);
+  tl.set("#cap74", {autoAlpha: 0}, 29.035);
+  tl.set("#cap75", {autoAlpha: 1}, 29.120);
+  tl.set("#cap75", {autoAlpha: 0}, 29.415);
+  tl.set("#cap76", {autoAlpha: 1}, 29.500);
+  tl.set("#cap76", {autoAlpha: 0}, 29.975);
+  tl.set("#cap77", {autoAlpha: 1}, 30.060);
+  tl.set("#cap77", {autoAlpha: 0}, 30.275);
+  tl.set("#cap78", {autoAlpha: 1}, 30.360);
+  tl.set("#cap78", {autoAlpha: 0}, 30.635);
+  tl.set("#cap79", {autoAlpha: 1}, 30.720);
+  tl.set("#cap79", {autoAlpha: 0}, 31.095);
+  tl.set("#cap80", {autoAlpha: 1}, 31.180);
+  tl.set("#cap80", {autoAlpha: 0}, 31.280);
+  tl.set("#cap81", {autoAlpha: 1}, 31.360);
+  tl.set("#cap81", {autoAlpha: 0}, 33.095);
+  tl.set("#cap82", {autoAlpha: 1}, 33.180);
+  tl.set("#cap82", {autoAlpha: 0}, 33.280);
+  tl.set("#cap83", {autoAlpha: 1}, 33.300);
+  tl.set("#cap83", {autoAlpha: 0}, 33.455);
+  tl.set("#cap84", {autoAlpha: 1}, 33.540);
+  tl.set("#cap84", {autoAlpha: 0}, 33.640);
+  tl.set("#cap85", {autoAlpha: 1}, 33.680);
+  tl.set("#cap85", {autoAlpha: 0}, 34.015);
+  tl.set("#cap86", {autoAlpha: 1}, 34.100);
+  tl.set("#cap86", {autoAlpha: 0}, 34.775);
+  tl.set("#cap87", {autoAlpha: 1}, 34.860);
+  tl.set("#cap87", {autoAlpha: 0}, 35.115);
+  tl.set("#cap88", {autoAlpha: 1}, 35.200);
+  tl.set("#cap88", {autoAlpha: 0}, 35.435);
+  tl.set("#cap89", {autoAlpha: 1}, 35.520);
+  tl.set("#cap89", {autoAlpha: 0}, 35.875);
+  tl.set("#cap90", {autoAlpha: 1}, 35.960);
+  tl.set("#cap90", {autoAlpha: 0}, 36.355);
+  tl.set("#cap91", {autoAlpha: 1}, 36.440);
+  tl.set("#cap91", {autoAlpha: 0}, 36.540);
+  tl.set("#cap92", {autoAlpha: 1}, 36.560);
+  tl.set("#cap92", {autoAlpha: 0}, 36.660);
+  tl.set("#cap93", {autoAlpha: 1}, 36.700);
+  tl.set("#cap93", {autoAlpha: 0}, 36.800);
+  tl.set("#cap94", {autoAlpha: 1}, 36.840);
+  tl.set("#cap94", {autoAlpha: 0}, 37.255);
+  tl.set("#cap95", {autoAlpha: 1}, 37.340);
+  tl.set("#cap95", {autoAlpha: 0}, 37.835);
+  tl.set("#cap96", {autoAlpha: 1}, 37.920);
+  tl.set("#cap96", {autoAlpha: 0}, 38.975);
+  tl.set("#cap97", {autoAlpha: 1}, 39.060);
+  tl.set("#cap97", {autoAlpha: 0}, 39.175);
+  tl.set("#cap98", {autoAlpha: 1}, 39.260);
+  tl.set("#cap98", {autoAlpha: 0}, 39.555);
+  tl.set("#cap99", {autoAlpha: 1}, 39.640);
+  tl.set("#cap99", {autoAlpha: 0}, 39.911);
+  tl.set("#cap100", {autoAlpha: 1}, 39.996);
+  tl.set("#cap100", {autoAlpha: 0}, 40.175);
+  tl.set("#cap101", {autoAlpha: 1}, 40.260);
+  tl.set("#cap101", {autoAlpha: 0}, 40.360);
+  tl.set("#cap102", {autoAlpha: 1}, 40.440);
+  tl.set("#cap102", {autoAlpha: 0}, 40.715);
+  tl.set("#cap103", {autoAlpha: 1}, 40.800);
+  tl.set("#cap103", {autoAlpha: 0}, 40.915);
+  tl.set("#cap104", {autoAlpha: 1}, 41.000);
+  tl.set("#cap104", {autoAlpha: 0}, 41.855);
+  tl.set("#cap105", {autoAlpha: 1}, 41.940);
+  tl.set("#cap105", {autoAlpha: 0}, 42.055);
+  tl.set("#cap106", {autoAlpha: 1}, 42.140);
+  tl.set("#cap106", {autoAlpha: 0}, 42.655);
+  tl.set("#cap107", {autoAlpha: 1}, 42.740);
+  tl.set("#cap107", {autoAlpha: 0}, 42.975);
+  tl.set("#cap108", {autoAlpha: 1}, 43.060);
+  tl.set("#cap108", {autoAlpha: 0}, 43.160);
+  tl.set("#cap109", {autoAlpha: 1}, 43.200);
+  tl.set("#cap109", {autoAlpha: 0}, 43.300);
+  tl.set("#cap110", {autoAlpha: 1}, 43.360);
+  tl.set("#cap110", {autoAlpha: 0}, 43.495);
+  tl.set("#cap111", {autoAlpha: 1}, 43.580);
+  tl.set("#cap111", {autoAlpha: 0}, 43.680);
+  tl.set("#cap112", {autoAlpha: 1}, 43.740);
+  tl.set("#cap112", {autoAlpha: 0}, 44.095);
+  tl.set("#cap113", {autoAlpha: 1}, 44.180);
+  tl.set("#cap113", {autoAlpha: 0}, 44.280);
+  tl.set("#cap114", {autoAlpha: 1}, 44.340);
+  tl.set("#cap114", {autoAlpha: 0}, 44.915);
+  tl.set("#cap115", {autoAlpha: 1}, 45.000);
+  tl.set("#cap115", {autoAlpha: 0}, 45.415);
+  tl.set("#cap116", {autoAlpha: 1}, 45.500);
+  tl.set("#cap116", {autoAlpha: 0}, 46.175);
+  tl.set("#cap117", {autoAlpha: 1}, 46.260);
+  tl.set("#cap117", {autoAlpha: 0}, 46.595);
+  tl.set("#cap118", {autoAlpha: 1}, 46.680);
+  tl.set("#cap118", {autoAlpha: 0}, 46.895);
+  tl.set("#cap119", {autoAlpha: 1}, 46.980);
+  tl.set("#cap119", {autoAlpha: 0}, 47.255);
+  tl.set("#cap120", {autoAlpha: 1}, 47.340);
+  tl.set("#cap120", {autoAlpha: 0}, 47.615);
+  tl.set("#cap121", {autoAlpha: 1}, 47.700);
+  tl.set("#cap121", {autoAlpha: 0}, 48.395);
+  tl.set("#cap122", {autoAlpha: 1}, 48.480);
+  tl.set("#cap122", {autoAlpha: 0}, 48.855);
+  tl.set("#cap123", {autoAlpha: 1}, 48.940);
+  tl.set("#cap123", {autoAlpha: 0}, 49.295);
+  tl.set("#cap124", {autoAlpha: 1}, 49.380);
+  tl.set("#cap124", {autoAlpha: 0}, 49.675);
+  tl.set("#cap125", {autoAlpha: 1}, 49.760);
+  tl.set("#cap125", {autoAlpha: 0}, 49.860);
+  tl.set("#cap126", {autoAlpha: 1}, 49.900);
+  tl.set("#cap126", {autoAlpha: 0}, 50.000);
+  tl.set("#cap127", {autoAlpha: 1}, 50.040);
+  tl.set("#cap127", {autoAlpha: 0}, 50.155);
+  tl.set("#cap128", {autoAlpha: 1}, 50.240);
+  tl.set("#cap128", {autoAlpha: 0}, 50.555);
+  tl.set("#cap129", {autoAlpha: 1}, 50.640);
+  tl.set("#cap129", {autoAlpha: 0}, 51.275);
+  tl.set("#cap130", {autoAlpha: 1}, 51.360);
+  tl.set("#cap130", {autoAlpha: 0}, 51.809);
+  tl.set("#cap131", {autoAlpha: 1}, 51.894);
+  tl.set("#cap131", {autoAlpha: 0}, 52.515);
+  tl.set("#cap132", {autoAlpha: 1}, 52.600);
+  tl.set("#cap132", {autoAlpha: 0}, 53.135);
+  tl.set("#cap133", {autoAlpha: 1}, 53.220);
+  tl.set("#cap133", {autoAlpha: 0}, 53.515);
+  tl.set("#cap134", {autoAlpha: 1}, 53.600);
+  tl.set("#cap134", {autoAlpha: 0}, 53.795);
+  tl.set("#cap135", {autoAlpha: 1}, 53.880);
+  tl.set("#cap135", {autoAlpha: 0}, 53.980);
+  tl.set("#cap136", {autoAlpha: 1}, 54.020);
+  tl.set("#cap136", {autoAlpha: 0}, 54.120);
+  tl.set("#cap137", {autoAlpha: 1}, 54.200);
+  tl.set("#cap137", {autoAlpha: 0}, 54.875);
+  tl.set("#cap138", {autoAlpha: 1}, 54.960);
+  tl.set("#cap138", {autoAlpha: 0}, 55.115);
+  tl.set("#cap139", {autoAlpha: 1}, 55.200);
+  tl.set("#cap139", {autoAlpha: 0}, 55.495);
+  tl.set("#cap140", {autoAlpha: 1}, 55.580);
+  tl.set("#cap140", {autoAlpha: 0}, 55.935);
+  tl.set("#cap141", {autoAlpha: 1}, 56.020);
+  tl.set("#cap141", {autoAlpha: 0}, 56.295);
+  tl.set("#cap142", {autoAlpha: 1}, 56.380);
+  tl.set("#cap142", {autoAlpha: 0}, 56.835);
+  tl.set("#cap143", {autoAlpha: 1}, 56.920);
+  tl.set("#cap143", {autoAlpha: 0}, 57.115);
+  tl.set("#cap144", {autoAlpha: 1}, 57.200);
+  tl.set("#cap144", {autoAlpha: 0}, 57.598);
+  tl.set("#cap145", {autoAlpha: 1}, 57.683);
+  tl.set("#cap145", {autoAlpha: 0}, 58.155);
+  tl.set("#cap146", {autoAlpha: 1}, 58.240);
+  tl.set("#cap146", {autoAlpha: 0}, 58.340);
+  tl.set("#cap147", {autoAlpha: 1}, 58.400);
+  tl.set("#cap147", {autoAlpha: 0}, 58.500);
+  tl.set("#cap148", {autoAlpha: 1}, 58.520);
+  tl.set("#cap148", {autoAlpha: 0}, 58.620);
+  tl.set("#cap149", {autoAlpha: 1}, 58.680);
+  tl.set("#cap149", {autoAlpha: 0}, 59.255);
+  tl.set("#cap150", {autoAlpha: 1}, 59.340);
+  tl.set("#cap150", {autoAlpha: 0}, 59.440);
+  tl.set("#cap151", {autoAlpha: 1}, 59.480);
+  tl.set("#cap151", {autoAlpha: 0}, 59.580);
+  tl.set("#cap152", {autoAlpha: 1}, 59.620);
+  tl.set("#cap152", {autoAlpha: 0}, 59.915);
+  tl.set("#cap153", {autoAlpha: 1}, 60.000);
+  tl.set("#cap153", {autoAlpha: 0}, 60.595);
+  tl.set("#cap154", {autoAlpha: 1}, 60.680);
+  tl.set("#cap154", {autoAlpha: 0}, 60.855);
+  tl.set("#cap155", {autoAlpha: 1}, 60.940);
+  tl.set("#cap155", {autoAlpha: 0}, 61.115);
+  tl.set("#cap156", {autoAlpha: 1}, 61.200);
+  tl.set("#cap156", {autoAlpha: 0}, 61.315);
+  tl.set("#cap157", {autoAlpha: 1}, 61.400);
+  tl.set("#cap157", {autoAlpha: 0}, 61.500);
+  tl.set("#cap158", {autoAlpha: 1}, 61.560);
+  tl.set("#cap158", {autoAlpha: 0}, 62.035);
+  tl.set("#cap159", {autoAlpha: 1}, 62.120);
+  tl.set("#cap159", {autoAlpha: 0}, 62.555);
+  tl.set("#cap160", {autoAlpha: 1}, 62.640);
+  tl.set("#cap160", {autoAlpha: 0}, 62.795);
+  tl.set("#cap161", {autoAlpha: 1}, 62.880);
+  tl.set("#cap161", {autoAlpha: 0}, 63.055);
+  tl.set("#cap162", {autoAlpha: 1}, 63.140);
+  tl.set("#cap162", {autoAlpha: 0}, 63.495);
+  tl.set("#cap163", {autoAlpha: 1}, 63.580);
+  tl.set("#cap163", {autoAlpha: 0}, 64.235);
+  tl.set("#cap164", {autoAlpha: 1}, 64.320);
+  tl.set("#cap164", {autoAlpha: 0}, 64.435);
+  tl.set("#cap165", {autoAlpha: 1}, 64.520);
+  tl.set("#cap165", {autoAlpha: 0}, 65.295);
+  tl.set("#cap166", {autoAlpha: 1}, 65.380);
+  tl.set("#cap166", {autoAlpha: 0}, 65.480);
+  tl.set("#cap167", {autoAlpha: 1}, 65.500);
+  tl.set("#cap167", {autoAlpha: 0}, 65.675);
+  tl.set("#cap168", {autoAlpha: 1}, 65.760);
+  tl.set("#cap168", {autoAlpha: 0}, 65.875);
+  tl.set("#cap169", {autoAlpha: 1}, 65.960);
+  tl.set("#cap169", {autoAlpha: 0}, 66.315);
+  tl.set("#cap170", {autoAlpha: 1}, 66.400);
+  tl.set("#cap170", {autoAlpha: 0}, 66.575);
+  tl.set("#cap171", {autoAlpha: 1}, 66.660);
+  tl.set("#cap171", {autoAlpha: 0}, 66.760);
+  tl.set("#cap172", {autoAlpha: 1}, 66.800);
+  tl.set("#cap172", {autoAlpha: 0}, 66.900);
+  tl.set("#cap173", {autoAlpha: 1}, 66.960);
+  tl.set("#cap173", {autoAlpha: 0}, 67.635);
+  tl.set("#cap174", {autoAlpha: 1}, 67.720);
+  tl.set("#cap174", {autoAlpha: 0}, 67.820);
+  tl.set("#cap175", {autoAlpha: 1}, 67.860);
+  tl.set("#cap175", {autoAlpha: 0}, 67.975);
+  tl.set("#cap176", {autoAlpha: 1}, 68.060);
+  tl.set("#cap176", {autoAlpha: 0}, 68.160);
+  tl.set("#cap177", {autoAlpha: 1}, 68.200);
+  tl.set("#cap177", {autoAlpha: 0}, 68.655);
+  tl.set("#cap178", {autoAlpha: 1}, 68.740);
+  tl.set("#cap178", {autoAlpha: 0}, 68.955);
+  tl.set("#cap179", {autoAlpha: 1}, 69.040);
+  tl.set("#cap179", {autoAlpha: 0}, 69.315);
+  tl.set("#cap180", {autoAlpha: 1}, 69.400);
+  tl.set("#cap180", {autoAlpha: 0}, 70.338);
+  tl.set("#cap181", {autoAlpha: 1}, 70.423);
+  tl.set("#cap181", {autoAlpha: 0}, 71.295);
+  tl.set("#cap182", {autoAlpha: 1}, 71.380);
+  tl.set("#cap182", {autoAlpha: 0}, 71.515);
+  tl.set("#cap183", {autoAlpha: 1}, 71.600);
+  tl.set("#cap183", {autoAlpha: 0}, 72.015);
+  tl.set("#cap184", {autoAlpha: 1}, 72.100);
+  tl.set("#cap184", {autoAlpha: 0}, 72.200);
+  tl.set("#cap185", {autoAlpha: 1}, 72.240);
+  tl.set("#cap185", {autoAlpha: 0}, 72.695);
+  tl.set("#cap186", {autoAlpha: 1}, 72.780);
+  tl.set("#cap186", {autoAlpha: 0}, 72.880);
+  tl.set("#cap187", {autoAlpha: 1}, 72.940);
+  tl.set("#cap187", {autoAlpha: 0}, 73.095);
+  tl.set("#cap188", {autoAlpha: 1}, 73.180);
+  tl.set("#cap188", {autoAlpha: 0}, 73.280);
+  tl.set("#cap189", {autoAlpha: 1}, 73.320);
+  tl.set("#cap189", {autoAlpha: 0}, 73.555);
+  tl.set("#cap190", {autoAlpha: 1}, 73.640);
+  tl.set("#cap190", {autoAlpha: 0}, 73.935);
+  tl.set("#cap191", {autoAlpha: 1}, 74.020);
+  tl.set("#cap191", {autoAlpha: 0}, 74.395);
+  tl.set("#cap192", {autoAlpha: 1}, 74.480);
+  tl.set("#cap192", {autoAlpha: 0}, 74.580);
+  tl.set("#cap193", {autoAlpha: 1}, 74.640);
+  tl.set("#cap193", {autoAlpha: 0}, 74.875);
+  tl.set("#cap194", {autoAlpha: 1}, 74.960);
+  tl.set("#cap194", {autoAlpha: 0}, 75.060);
+  tl.set("#cap195", {autoAlpha: 1}, 75.080);
+  tl.set("#cap195", {autoAlpha: 0}, 75.315);
+  tl.set("#cap196", {autoAlpha: 1}, 75.400);
+  tl.set("#cap196", {autoAlpha: 0}, 75.675);
+  tl.set("#cap197", {autoAlpha: 1}, 75.760);
+  tl.set("#cap197", {autoAlpha: 0}, 76.635);
+  tl.set("#cap198", {autoAlpha: 1}, 76.720);
+  tl.set("#cap198", {autoAlpha: 0}, 76.975);
+  tl.set("#cap199", {autoAlpha: 1}, 77.060);
+  tl.set("#cap199", {autoAlpha: 0}, 77.175);
+  tl.set("#cap200", {autoAlpha: 1}, 77.260);
+  tl.set("#cap200", {autoAlpha: 0}, 77.360);
+  tl.set("#cap201", {autoAlpha: 1}, 77.440);
+  tl.set("#cap201", {autoAlpha: 0}, 77.915);
+  tl.set("#cap202", {autoAlpha: 1}, 78.000);
+  tl.set("#cap202", {autoAlpha: 0}, 78.295);
+  tl.set("#cap203", {autoAlpha: 1}, 78.380);
+  tl.set("#cap203", {autoAlpha: 0}, 78.495);
+  tl.set("#cap204", {autoAlpha: 1}, 78.580);
+  tl.set("#cap204", {autoAlpha: 0}, 79.035);
+  tl.set("#cap205", {autoAlpha: 1}, 79.120);
+  tl.set("#cap205", {autoAlpha: 0}, 79.335);
+  tl.set("#cap206", {autoAlpha: 1}, 79.420);
+  tl.set("#cap206", {autoAlpha: 0}, 79.595);
+  tl.set("#cap207", {autoAlpha: 1}, 79.680);
+  tl.set("#cap207", {autoAlpha: 0}, 79.895);
+  tl.set("#cap208", {autoAlpha: 1}, 79.980);
+  tl.set("#cap208", {autoAlpha: 0}, 80.275);
+  tl.set("#cap209", {autoAlpha: 1}, 80.360);
+  tl.set("#cap209", {autoAlpha: 0}, 80.960);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 81.060);
+
+  /* b00_expert_and_blogger */
+
+  gsap.set("#g0", {autoAlpha: 0});
+  gsap.set("#g0b", {autoAlpha: 0, scale: 0.2, transformOrigin: "50% 50%"});
+  gsap.set("#g0e, #g0g", {autoAlpha: 0, scale: 0.7,
+                          transformOrigin: "50% 50%"});
+  tl.set("#g0", {autoAlpha: 1}, 1.90);
+  // «таку імбу покажу» — something lands
+  tl.to("#g0b", {autoAlpha: 1, scale: 1, duration: 0.34, ease: "back.out(2.8)"}, 2.02);
+  tl.to("#g0b", {autoAlpha: 0, scale: 1.5, duration: 0.34,
+                 ease: "power2.out"}, 2.60);
+  // «експертка»
+  tl.to("#g0e", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.4)"}, 3.74);
+  // «і блогерка»
+  tl.to("#g0g", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.4)"}, 4.18);
+  // «одночасно» — and they are the same person
+  tl.to("#g0e", {x: 160, duration: 0.44, ease: "power2.inOut"}, 4.60);
+  tl.to("#g0g", {x: -160, duration: 0.44, ease: "power2.inOut"}, 4.60);
+  tl.to("#g0g", {autoAlpha: 0.55, duration: 0.30}, 4.90);
+  tl.to("#g0", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 6.30);
+  /* b01_content_every_day */
+
+  gsap.set("#g1", {autoAlpha: 0});
+  gsap.set("#g1c i", {autoAlpha: 0, scale: 0.6, transformOrigin: "50% 50%"});
+  tl.set("#g1", {autoAlpha: 1}, 7.56);
+  // «легкий контент»
+  tl.to("#g1c i", {autoAlpha: 1, scale: 1, duration: 0.26, ease: "back.out(2)",
+                   stagger: 0.022}, 7.70);
+  // «хоч кожен день» — and every single one of them lights
+  tl.to("#g1c i", {backgroundImage:
+        "linear-gradient(115deg, #c41434 0%, #8d0d24 100%)",
+        duration: 0.20, stagger: 0.018}, 9.10);
+  tl.to("#g1", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 9.62);
+  /* b02_call_is_the_source */
+
+  gsap.set("#g2", {autoAlpha: 0});
+  gsap.set("#g2call", {autoAlpha: 0, scale: 0.8, transformOrigin: "50% 50%"});
+  gsap.set("#g2c0, #g2c1", {autoAlpha: 0, scale: 0.7, x: -180,
+                            transformOrigin: "50% 50%"});
+  tl.set("#g2", {autoAlpha: 1}, 9.80);
+  tl.to("#g2call", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.4)"}, 9.92);
+  // «це і є твоє джерело контенту» — it comes out of the call, not from you
+  tl.to("#g2c0", {autoAlpha: 1, scale: 1, x: 0, duration: 0.34,
+                  ease: "back.out(2.2)"}, 11.78);
+  tl.to("#g2c1", {autoAlpha: 1, scale: 1, x: 0, duration: 0.34,
+                  ease: "back.out(2.2)"}, 11.98);
+  tl.to("#g2", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 13.40);
+  /* b03_not_topic_but_words */
+
+  gsap.set("#g3", {autoAlpha: 0});
+  gsap.set("#g3t", {autoAlpha: 0, scale: 0.7, transformOrigin: "50% 50%"});
+  gsap.set("#g3b", {autoAlpha: 0, scale: 0.84, transformOrigin: "50% 50%"});
+  tl.set("#g3", {autoAlpha: 1}, 13.70);
+  // «не просто тема» — a label, and that is all it is
+  tl.to("#g3t", {autoAlpha: 1, scale: 1, duration: 0.28, ease: "back.out(2.4)"}, 13.84);
+  tl.to("#g3t", {autoAlpha: 0, scale: 0.8, y: -40, duration: 0.28,
+                 ease: "power2.in"}, 16.10);
+  // «це ще й текст саме так, як говорить твоя аудиторія»
+  tl.to("#g3b", {autoAlpha: 1, scale: 1, duration: 0.34, ease: "back.out(2.2)"}, 16.40);
+  // «саме так, як говорить» — it is hers, and it stays hers
+  tl.to("#g3b", {scale: 1.05, duration: 0.26, ease: "back.out(2.6)"}, 18.96);
+  tl.to("#g3b", {scale: 1, duration: 0.30, ease: "power2.out"}, 19.24);
+  tl.to("#g3", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 19.90);
+  /* b04_she_said_you_replied */
+
+  gsap.set("#g4", {autoAlpha: 0});
+  gsap.set("#g4a, #g4b", {autoAlpha: 0, scale: 0.84, transformOrigin: "50% 50%"});
+  gsap.set("#g4m", {autoAlpha: 0, scale: 0.4, transformOrigin: "50% 50%"});
+  tl.set("#g4", {autoAlpha: 1}, 22.90);
+  // «клієнтка вже сказала тобі щось»
+  tl.to("#g4a", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.2)"}, 23.02);
+  // «ти якось відповіла»
+  tl.to("#g4b", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.2)"}, 25.66);
+  // «і вона за це заплатила гроші»
+  tl.to("#g4m", {autoAlpha: 1, scale: 1, duration: 0.34, ease: "back.out(2.8)"}, 27.64);
+  tl.to("#g4b, #g4a", {autoAlpha: 0.25, duration: 0.30}, 27.84);
+  tl.to("#g4", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 29.20);
+  /* b05_lift_it_out */
+
+  gsap.set("#g5", {autoAlpha: 0});
+  gsap.set("#g5b", {autoAlpha: 0, scale: 0.86, transformOrigin: "50% 50%"});
+  gsap.set("#g5c", {autoAlpha: 0, scale: 0.7, transformOrigin: "50% 0%"});
+  tl.set("#g5", {autoAlpha: 1}, 29.38);
+  tl.to("#g5b", {autoAlpha: 1, scale: 1, duration: 0.28, ease: "back.out(2.2)"}, 29.50);
+  // «забрати це» — it comes up out of the call
+  tl.to("#g5b", {y: -70, scale: 0.9, duration: 0.40, ease: "power2.inOut"}, 30.10);
+  // «і перетворити на контент» — and lands as the piece
+  tl.to("#g5c", {autoAlpha: 1, scale: 1, duration: 0.36, ease: "back.out(2.4)"}, 31.36);
+  tl.to("#g5", {autoAlpha: 0, duration: 0.22, ease: "power2.in"}, 31.84);
+  /* b06_fathom */
+
+  gsap.set("#g6", {autoAlpha: 0});
+  gsap.set("#g6t", {autoAlpha: 0, scale: 0.8, transformOrigin: "50% 50%"});
+  gsap.set("#g6free", {autoAlpha: 0, scale: 0.5, transformOrigin: "50% 50%"});
+  tl.set("#g6", {autoAlpha: 1}, 34.74);
+  // «щось, що записує дзвінки»
+  tl.to("#g6t", {autoAlpha: 1, scale: 1, duration: 0.32, ease: "back.out(2.4)"}, 34.86);
+  // «він безкоштовний» — the same badge as reels 7 and 8
+  tl.to("#g6free", {autoAlpha: 1, scale: 1, duration: 0.32,
+                    ease: "back.out(2.8)"}, 37.34);
+  tl.to("#g6", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 39.20);
+  /* b07_claude_does_three_things */
+
+  gsap.set("#g7", {autoAlpha: 0});
+  gsap.set("#g7c", {autoAlpha: 0, scale: 0.78, transformOrigin: "50% 50%"});
+  gsap.set("#g7w, #g7t, #g7q", {autoAlpha: 0});
+  gsap.set("#g7w i", {scaleY: 0.2, transformOrigin: "50% 50%"});
+  gsap.set("#g7a, #g7b, #g7d", {autoAlpha: 0, scale: 0.7,
+                                transformOrigin: "50% 50%"});
+  tl.set("#g7", {autoAlpha: 1}, 39.52);
+  // «у мене це Клод»
+  tl.to("#g7c", {autoAlpha: 1, scale: 1, duration: 0.32, ease: "back.out(2.4)"}, 39.64);
+  // «розшифровує ці дзвінки» — sound in, text out
+  tl.to("#g7w", {autoAlpha: 1, duration: 0.14}, 41.00);
+  tl.to("#g7w i", {scaleY: 1, duration: 0.30, ease: "back.out(2)",
+                   stagger: {each: 0.012, from: "center"}}, 41.02);
+  tl.to("#g7w", {autoAlpha: 0, scaleY: 0.3, duration: 0.24,
+                 ease: "power2.in"}, 42.02);
+  tl.to("#g7t", {autoAlpha: 1, duration: 0.22}, 42.14);
+  tl.from("#g7t b", {scaleX: 0, transformOrigin: "0% 50%", duration: 0.22,
+                     stagger: 0.06, ease: "power2.out"}, 42.16);
+  // «розділяє їх на ідеї для контенту» — the text becomes pieces
+  tl.to("#g7t", {autoAlpha: 0, duration: 0.20}, 42.74);
+  [42.78, 43.00, 43.22].forEach(function (t, i) {
+    tl.to(["#g7a", "#g7b", "#g7d"][i], {autoAlpha: 1, scale: 1, duration: 0.30,
+                                        ease: "back.out(2.2)"}, t);
+  });
+  // «і витягує цитати клієнток» — and her own sentence comes back out
+  tl.to("#g7a, #g7b, #g7d", {autoAlpha: 0.2, duration: 0.26}, 45.00);
+  tl.fromTo("#g7q", {autoAlpha: 0, y: 50, scale: 0.86},
+            {autoAlpha: 1, y: 0, scale: 1, duration: 0.36,
+             ease: "back.out(2.4)"}, 45.00);
+  tl.to("#g7", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 46.90);
+  /* b08_ready_made */
+
+  gsap.set("#g8", {autoAlpha: 0});
+  gsap.set("#g8t", {autoAlpha: 0, scale: 0.7, transformOrigin: "50% 50%"});
+  gsap.set("#g8a, #g8b, #g8c", {autoAlpha: 0, scale: 0.7, y: 40,
+                                transformOrigin: "50% 50%"});
+  tl.set("#g8", {autoAlpha: 1}, 50.52);
+  // «не просто тема»
+  tl.to("#g8t", {autoAlpha: 1, scale: 1, duration: 0.26, ease: "back.out(2.4)"}, 50.64);
+  tl.to("#g8t", {autoAlpha: 0, scale: 0.8, duration: 0.22, ease: "power2.in"}, 51.70);
+  // «готові сценарії» / «цитати» / «різні кути»
+  [51.89, 52.60, 53.60].forEach(function (t, i) {
+    tl.to(["#g8a", "#g8b", "#g8c"][i], {autoAlpha: 1, scale: 1, y: 0,
+                                        duration: 0.32,
+                                        ease: "back.out(2.2)"}, t);
+  });
+  // «як це подати» — they fan to show they are different angles on one thing
+  tl.to("#g8a", {rotation: -5, duration: 0.30, ease: "power2.out",
+                 transformOrigin: "50% 100%"}, 54.20);
+  tl.to("#g8c", {rotation: 5, duration: 0.30, ease: "power2.out",
+                 transformOrigin: "50% 100%"}, 54.20);
+  tl.to("#g8", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 55.60);
+  /* b09_four_angles */
+
+  gsap.set("#g9", {autoAlpha: 0});
+  gsap.set("#g9g span", {autoAlpha: 0, scale: 0.6, transformOrigin: "50% 50%"});
+  tl.set("#g9", {autoAlpha: 1}, 55.90);
+  [57.68, 58.68, 60.00, 61.56].forEach(function (t, i) {
+    tl.to(["#g9a", "#g9b", "#g9c", "#g9d"][i],
+          {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.4)"}, t);
+  });
+  tl.to("#g9", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 62.00);
+  /* b10_one_hour */
+
+  gsap.set("#g10", {autoAlpha: 0});
+  gsap.set("#g10n", {autoAlpha: 0, scale: 0.6, transformOrigin: "50% 50%"});
+  tl.set("#g10", {autoAlpha: 1}, 62.00);
+  tl.to("#g10n", {autoAlpha: 1, scale: 1, duration: 0.34, ease: "back.out(2.8)"}, 62.12);
+  tl.to("#g10", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 64.20);
+  /* b11_the_guide */
+
+  gsap.set("#g11", {autoAlpha: 0});
+  gsap.set("#g11g", {autoAlpha: 0, scale: 0.86, transformOrigin: "50% 50%"});
+  gsap.set("#g11g b", {scaleX: 0, transformOrigin: "0% 50%"});
+  gsap.set("#g11d", {autoAlpha: 0, scale: 0.4, transformOrigin: "50% 50%"});
+  tl.set("#g11", {autoAlpha: 1}, 68.08);
+  // «є інструкція»
+  tl.to("#g11g", {autoAlpha: 1, scale: 1, duration: 0.32, ease: "back.out(2.2)"}, 68.20);
+  tl.to("#g11g b", {scaleX: 1, duration: 0.24, stagger: 0.10,
+                    ease: "power2.out"}, 68.36);
+  // «саме для нетехнічних експерток»
+  tl.to("#g11g", {scale: 1.04, duration: 0.26, ease: "back.out(2.6)"}, 70.42);
+  tl.to("#g11g", {scale: 1, duration: 0.30, ease: "power2.out"}, 70.72);
+  // «де я показую, куди натиснути» — the tap lands where it is told to
+  tl.to("#g11d", {autoAlpha: 1, scale: 1, duration: 0.26,
+                  ease: "back.out(2.8)"}, 72.24);
+  tl.to("#g11d", {scale: 0.82, duration: 0.14, ease: "power2.in"}, 72.60);
+  tl.to("#g11d", {scale: 1, duration: 0.20, ease: "back.out(3)"}, 72.74);
+  tl.to("#g11", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 74.20);
+  /* b12_write_the_word */
+
+  gsap.set("#g12", {autoAlpha: 0});
+  gsap.set("#g12w", {autoAlpha: 0, scale: 0.78, transformOrigin: "50% 50%"});
+  gsap.set("#g12s", {autoAlpha: 0, y: 30});
+  tl.set("#g12", {autoAlpha: 1}, 75.64);
+  // «нескінченну кількість ідей»
+  tl.to("#g12w", {autoAlpha: 1, scale: 1, duration: 0.34, ease: "back.out(2.4)"}, 75.76);
+  // «пиши слово «дзвінок»»
+  tl.to("#g12w", {scale: 1.06, duration: 0.24, ease: "back.out(2.8)"}, 78.58);
+  tl.to("#g12w", {scale: 1, duration: 0.26, ease: "power2.out"}, 78.84);
+  tl.to("#g12s", {autoAlpha: 1, y: 0, duration: 0.28, ease: "back.out(2.2)"}, 79.98);
+  tl.to("#g12s .go", {scale: 1.22, duration: 0.18, ease: "back.out(3)",
+                      transformOrigin: "50% 50%"}, 80.36);
+  tl.to("#g12s .go", {scale: 1, duration: 0.22}, 80.56);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>
