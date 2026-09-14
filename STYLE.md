@@ -163,6 +163,75 @@ it isn't finished.
 
 ---
 
+## 4a. What she flags in review
+
+Her first full pass, on reel 7 (2026-09-14). Every note reduced to one of five
+rules, and all five outrank instinct the same way the rest of this file does.
+
+**1 · A graphic lands ON the word, and she counts the seconds.** The
+Cal.com→Calendar sync finished about half a second into the *next* sentence and
+her note was *"waaaay too late, i would have put it like 3 secs earlier to match
+the text"*. Budget the whole beat — arrival, movement, exit — inside the phrase
+it illustrates, and clear it before the next phrase starts. §4 already says put
+every element on its word; this says the *end* is on the word too.
+
+**2 · When the image is not instantly legible, use the word.**
+
+> *"shitty icon, either do properly or write CRM"*
+> *"the points could have been written out properly"*
+
+A drawn database glyph read as nothing, and six blank pills standing in for CRM
+fields read as nothing. Both became type: `CRM` as a wordmark, and the fields
+written out (ХТО / ЗВІДКИ / ЧИМ ЗАЙМАЄТЬСЯ / ЩО ХОТІЛА / ЩО ЗРОБЛЕНО /
+НАСТУПНИЙ КРОК). This does **not** contradict §4 — a wordmark *is* the logo
+when no icon exists (§5b already ships Fathom and Gamma that way), and field
+names are text inside a depicted interface, which §4 exempts by name. A CRM
+with no field names is not a depicted CRM.
+
+**3 · A graphic must not outstay its sentence — and she can see four seconds.**
+Both directions, in the same review: *"took too long too"* (a waveform held 4 s
+across two sentences it had nothing to do with) and *"literally one second wtf"*
+(a tile that flashed and left). The fix is never to stretch one object across a
+section; it is more, shorter events on the actual phrases.
+
+**4 · Every object has to be nameable.** *"whats that little glowing dot?"* — a
+dot travelling a wire to mean a booking is not an object, it is a dot. It became
+a small event card with a header bar and a body line, which reads as an
+appointment at 90 px. If a viewer would ask *what is that*, it is not finished.
+
+**5 · A blank plaque says nothing.** §5a.9 likes an empty frosted slot before
+the filled state, and that is still true *once the viewer knows what the slot
+is for*. Six empty slots opening a reel got *"this is not really
+understandable, at least add some logos/icons in"*. They now carry greyed-out
+ghosts of the marks that will land in them: the board is readable from the
+first frame and the reveal still happens, grey to lit.
+
+And one literal, which is the kind of note she gives and means exactly: *"tasks
+are always checks and lines like a checklist"* — a checkbox and a rule, never
+three coloured bars.
+
+### Her editing is not filler
+
+> *"when you see some funny editing (extra closeup, extra far away) those are
+> funny bits and dont paint over them"*
+> *"i made it funne with editing there"*
+
+A shot change in her delivered cut is an instruction. Those spans get captions
+and nothing else. Two detectors run before authoring, because the two kinds look
+nothing alike in the file:
+
+| | |
+|---|---|
+| `tools/shots.py` | hard cuts, by scene detection, plus a contact sheet of one frame per shot. Her comedy inserts are the short ones — on reel 7, five gags of 0.6–1.5 s against a 4–44 s baseline |
+| `tools/pullouts.py` | *zooms*, which scene detection cannot see at all. When she pushes the plate back, black appears at the frame edge, so border luminance against the reel's own median finds them |
+
+The second exists because reel 7 had a 3.75 s pull-out at 11.0–14.7 s with a
+beat sitting on top of it. Put every span in the build's `NO_PAINT` list, and
+**delete** the beats that fall inside rather than nudging them — the words those
+beats illustrated are inside the gag too.
+
+---
+
 ## 5. Palette and type
 
 ```
@@ -423,8 +492,18 @@ brighter than the footage. White and pink survive; deep red goes translucent
 ```bash
 npx hyperframes check                 # must pass before rendering
 npx hyperframes snapshot --at <times> --no-end -o study/snap
-npx hyperframes render --low-memory-mode -o ../REEL-0N-final.mp4
+npx hyperframes cloud render          # the wallet; ~4-7 min
 ```
+
+**Render in the cloud, on the API wallet.** The free HeyGen pool is 5 renders a
+calendar month and it ran out on 2026-09-14 (HTTP 402 `insufficient_credit`).
+Her call: *"why are we not using cloud? i put money in API"* — so the wallet is
+the default path now, not a fallback. A render costs **$0.23-0.47** and takes
+4-7 min against ~17 min locally. The CLI prefers an `oauth` block over the
+stored `api_key`, which is why it was billing the free plan; park that block
+under another name in `~/.heygen/credentials` and `auth status` reports
+`Billing: wallet`. Local `render --low-memory-mode` is only for an empty wallet
+or no network.
 
 Always snapshot before rendering — a render is ~17 minutes and a snapshot pass is
 under one. Verify the first frame, each beat's proof pose, and the exact final
