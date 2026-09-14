@@ -45,10 +45,12 @@ def beat(fn):
 
 # ---------------------------------------------------------------- materials
 
-def slot(sid, cls=""):
-    """One empty frosted slot. §5a.9 — an empty plaque is often better than the
-    filled state that follows, so these land first and sit empty for a beat."""
-    return '<div class="slot %s" id="%s"></div>' % (cls, sid)
+def slot(sid, ghost="", cls=""):
+    """One frosted slot, holding a greyed-out ghost of the mark that will land
+    in it. §5a.9 still applies — the plaque arrives before the colour does —
+    but a *blank* plaque turned out to say nothing at all."""
+    return ('<div class="slot %s" id="%s"><span class="ghost">%s</span></div>'
+            % (cls, sid, ghost))
 
 
 def tile(tid, inner, cls="", lit=False, over=""):
@@ -74,6 +76,20 @@ def logo(name, cls=""):
     return '<img class="mk %s" src="assets/logos/%s.png" alt="">' % (cls, name)
 
 
+def checklist(cid=""):
+    """Tasks are checks and lines, her note — not three coloured bars."""
+    rows = "".join('<i><b></b><s></s></i>' for _ in range(3))
+    return '<span class="chk"%s>%s</span>' % (
+        (' id="%s"' % cid) if cid else "", rows)
+
+
+def freebadge(bid):
+    """«безкоштовний» — a number is the one word STYLE.md §4 allows, and 0 is
+    the whole point of both Cal.com and Fathom. Reused for the second one."""
+    return ('<div class="freewrap" id="%s"><div class="lit soft"></div>'
+            '<div class="free"><span>0</span><small>\u20ac</small></div></div>' % bid)
+
+
 def cal(cid, on=6):
     """Calendar glyph — placeholder for Cal.com and Google Calendar both."""
     cells = "".join('<i class="%s"></i>' % ("on" if i == on else "")
@@ -91,12 +107,22 @@ k.css("""
     /* An empty slot has to read as an object over a dark kitchen, so it runs
        warmer and brighter than plain glass: 0.15 alpha disappeared entirely in
        the first snapshot pass. */
-    .slot { position: relative;
+    .slot { position: relative; display: grid; place-items: center;
             background: linear-gradient(158deg, rgba(255,255,255,0.30) 0%,
                         rgba(255,214,225,0.20) 100%);
             -webkit-backdrop-filter: blur(26px) saturate(1.6);
             backdrop-filter: blur(26px) saturate(1.6);
             box-shadow: var(--rim-glass); filter: var(--cast); }
+
+    /* The not-yet-set-up state: the mark is there, drained of colour and sunk
+       into the glass. Never invisible — the whole point is that you can read
+       what the board is before a single tile has landed. */
+    .ghost { display: grid; place-items: center; width: 100%; height: 100%;
+             opacity: 0.42; filter: grayscale(1) contrast(0.75) brightness(1.25); }
+    .ghost .mk { width: 52%; }
+    .ghost .mk.wide { width: 72%; }
+    .ghost .wordmark { font-size: 58px; color: rgba(255,255,255,0.9);
+                       -webkit-text-stroke: 3px rgba(255,255,255,0.9); }
     .slotwrap { position: relative; }
     .slotwrap .tile.brand { position: absolute; inset: 0; display: grid;
                             place-items: center; background: var(--lit-blush); }
@@ -108,6 +134,7 @@ k.css("""
                 letter-spacing: -0.045em; line-height: 1;
                 -webkit-text-stroke: 4px var(--accent); }
     .wordmark.big { font-size: 150px; -webkit-text-stroke: 7px var(--accent); }
+    #tlcrm { font-size: 64px; }
 
     /* ---- a number on its own: the one word §4 allows ---- */
     .num { position: absolute; left: 0; width: 1080px; text-align: center;
@@ -223,20 +250,21 @@ def board_html():
     """The spine. One board, six slots, built once and referred to by every
     system beat — STYLE.md §4 «reuse objects». Slots land empty (§5a.9) and
     each tile drops into its own slot when she names it."""
+    ghosts = [logo("cal-mark"), logo("fathom-word", "wide"),
+              '<span class="wordmark">CRM</span>', checklist(),
+              '<span class="wordmark">RUTA</span>', logo("claude-tile")]
     cells = []
     for i in range(6):
-        cells.append('<div class="slot" id="sl%d"></div>' % i)
+        cells.append(slot("sl%d" % i, ghosts[i]))
     return ('\n      <div class="g full" id="gboard"><div class="board">%s</div>'
             '<div class="board" id="boardfill">%s</div></div>'
             % ("".join(cells), "".join([
                 tile("tl0", logo("cal-mark")),
                 tile("tl1", logo("fathom-word", "wide")),
-                tile("tl2", '<span class="db" id="tldb">'
-                            '<i style="top:12px"></i><i style="top:70px"></i>'
-                            '<i style="top:128px"></i></span>',
+                tile("tl2", '<span class="wordmark" id="tlcrm">CRM</span>',
                      over='<div class="tile brand ontile" id="tl2notion">%s</div>'
                           % logo("notion-mark")),
-                tile("tl3", '<span class="chk"><i></i><i></i><i></i></span>',
+                tile("tl3", checklist("tlchk"),
                      over='<div class="tile brand ontile" id="tl3notion">%s</div>'
                           % logo("notion-mark")),
                 tile("tl4", '<span class="wordmark">RUTA</span>', lit=True),
@@ -279,13 +307,15 @@ def b02_half_year():
       <div class="g full" id="g2">
         <svg id="g2clock" width="300" height="300" viewBox="0 0 300 300"
              style="position:absolute;left:390px;top:146px">
-          <circle cx="150" cy="150" r="118" fill="none" stroke="rgba(255,255,255,0.30)"
-                  stroke-width="16"/>
+          <circle cx="150" cy="150" r="130" fill="rgba(23,20,28,0.42)"/>
+          <circle cx="150" cy="150" r="118" fill="none"
+                  stroke="rgba(255,255,255,0.62)" stroke-width="16"/>
           <path id="g2arc" d="M150 32 A118 118 0 0 1 150 268" fill="none"
-                stroke="#ff6e9c" stroke-width="20" stroke-linecap="round"
+                stroke="#ff6e9c" stroke-width="22" stroke-linecap="round"
                 stroke-dasharray="371" stroke-dashoffset="371"/>
-          <line id="g2hand" x1="150" y1="150" x2="150" y2="52" stroke="#fff"
-                stroke-width="18" stroke-linecap="round"/>
+          <line id="g2hand" x1="150" y1="150" x2="150" y2="48" stroke="#fff"
+                stroke-width="20" stroke-linecap="round"/>
+          <circle cx="150" cy="150" r="16" fill="#fff"/>
         </svg>
       </div>'''
     js = '''
@@ -293,7 +323,7 @@ def b02_half_year():
   tl.set("#g2", {autoAlpha: 1}, 5.58);
   tl.to("#g2clock", {autoAlpha: 1, duration: 0.20}, 5.58);
   // «півроку» — half a turn, and it does not come back
-  tl.to("#g2hand", {rotation: 180, transformOrigin: "150px 150px",
+  tl.to("#g2hand", {rotation: 180, svgOrigin: "150 150",
                     duration: 1.30, ease: "power2.inOut"}, 5.62);
   tl.to("#g2arc", {strokeDashoffset: 0, duration: 1.30, ease: "power2.inOut"}, 5.62);
   tl.to(".board .slot", {opacity: 0.34, duration: 0.60}, 8.26);
@@ -382,10 +412,13 @@ def b06_one_link():
 
 @beat
 def b07_cal_syncs():
-    """«Cal.com… сам синхронізується з Google Календарем»
+    """«Cal.com, він безкоштовний, і сам синхронізується з Google Календарем»
 
-    Two calendars, one wire, and the booked slot copies across. Drawn glyphs
-    until she uploads the two marks; swapping them is one <img> each.
+    Rebuilt after her review. Three things were wrong: the price never appeared
+    though «безкоштовний» is the selling point, the sync landed a beat late and
+    was still finishing over «Друге», and the thing travelling the wire was a
+    glowing dot nobody could read. Now it is an event block, it leaves on
+    «синхронізується» and it is gone before she says «Друге» at 31.92.
     """
     html = '''
       <div class="g full" id="g7">
@@ -397,24 +430,33 @@ def b07_cal_syncs():
                 d="M440 345 C 500 345, 580 345, 640 345"
                 stroke-dasharray="200" stroke-dashoffset="200"/>
         </svg>
-        <span class="pip" id="g7pip"></span>
-      </div>''' % (logo("cal-mark"), logo("gcal-mark"))
+        <div class="event" id="g7ev"><b></b><s></s></div>
+        %s
+      </div>''' % (logo("cal-mark"), logo("gcal-mark"), freebadge("g7free"))
     js = '''
   gsap.set("#g7", {autoAlpha: 0});
   gsap.set("#g7a, #g7b", {autoAlpha: 0, scale: 0.86, transformOrigin: "50% 50%"});
-  gsap.set("#g7pip", {autoAlpha: 0});
+  gsap.set("#g7ev", {autoAlpha: 0, x: 300, y: 318, scale: 0.9});
+  gsap.set("#g7free", {autoAlpha: 0, scale: 0.5, transformOrigin: "50% 50%"});
   tl.set("#g7", {autoAlpha: 1}, 28.50);
-  tl.to("#g7a", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.2)"}, 28.58);
-  tl.to("#g7b", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.2)"}, 31.62);
-  // «синхронізується» — the wire draws, then the booking travels it
-  tl.to("#g7wire", {strokeDashoffset: 0, duration: 0.42, ease: "power2.out"}, 31.70);
-  tl.fromTo("#g7pip", {autoAlpha: 1, x: 432, y: 331},
-            {x: 632, duration: 0.46, ease: "power2.inOut"}, 32.02);
-  tl.to("#g7pip", {autoAlpha: 0, duration: 0.12}, 32.46);
-  // it arrives: the calendar takes the booking
-  tl.to("#g7b", {scale: 1.07, duration: 0.20, ease: "back.out(3)"}, 32.44);
-  tl.to("#g7b", {scale: 1, duration: 0.30, ease: "power2.out"}, 32.64);
-  tl.to("#g7", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 33.10);'''
+  tl.to("#g7a", {autoAlpha: 1, scale: 1, duration: 0.28, ease: "back.out(2.2)"}, 28.58);
+  // «він безкоштовний» — the price, and the only reason it is on the board
+  tl.to("#g7free", {autoAlpha: 1, scale: 1, duration: 0.32,
+                    ease: "back.out(2.8)"}, 29.36);
+  tl.to("#g7free", {autoAlpha: 0, scale: 0.8, duration: 0.24,
+                    ease: "power2.in"}, 30.24);
+  // «сам синхронізується» — the other calendar, then the wire between them
+  tl.to("#g7b", {autoAlpha: 1, scale: 1, duration: 0.28, ease: "back.out(2.2)"}, 30.50);
+  tl.to("#g7wire", {strokeDashoffset: 0, duration: 0.34, ease: "power2.out"}, 30.74);
+  // «з Google Календарем» — the booking itself crosses. An event block, not a
+  // dot: she could not tell what the dot was, which means it was not an object.
+  tl.to("#g7ev", {autoAlpha: 1, duration: 0.14}, 31.10);
+  tl.to("#g7ev", {x: 700, duration: 0.42, ease: "power2.inOut"}, 31.16);
+  tl.to("#g7ev", {autoAlpha: 0, scale: 0.7, duration: 0.16}, 31.58);
+  tl.to("#g7b", {scale: 1.08, duration: 0.18, ease: "back.out(3)"}, 31.56);
+  tl.to("#g7b", {scale: 1, duration: 0.26, ease: "power2.out"}, 31.74);
+  // out before «Друге»
+  tl.to("#g7", {autoAlpha: 0, duration: 0.20, ease: "power2.in"}, 31.86);'''
     return html, js
 
 
@@ -425,20 +467,25 @@ def b07_cal_syncs():
 def b08_fathom_slot():
     """«Друге Fathom, який записує наші дзвінки»"""
     js = '''
-  tl.set("#gboard", {autoAlpha: 1}, 33.30);
-  tl.to("#tl1", {autoAlpha: 1, duration: 0.20}, 33.34);
+  tl.set("#gboard", {autoAlpha: 1}, 32.10);
+  tl.to("#tl1", {autoAlpha: 1, duration: 0.20}, 32.30);
   gsap.set("#tl1", {scale: 0.8, transformOrigin: "50% 50%"});
-  tl.to("#tl1", {scale: 1, duration: 0.34, ease: "back.out(2.4)"}, 33.34);
-  tl.to("#gboard", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 35.40);'''
+  tl.to("#tl1", {scale: 1, duration: 0.34, ease: "back.out(2.4)"}, 32.30);
+  tl.to("#gboard", {autoAlpha: 0, duration: 0.22, ease: "power2.in"}, 33.60);'''
     return "", js
 
 
 @beat
 def b09_wave_to_text():
-    """«зберігає записи одразу в тексті, щоб не переслуховувати весь дзвінок»
+    """«записує наші дзвінки» → «теж безкоштовний» → «ціла інструкція» →
+    «зберігає одразу в тексті» → «щоб не переслуховувати»
 
-    The waveform resolves into lines of text, then a scrub bar tries to replay
-    it and is struck through. Two events, one object — §4 reuse.
+    Rebuilt after her review: the waveform used to land at 35.6 and sit there,
+    unchanged, until 39.7 — through two sentences it had nothing to do with.
+    Her note was just "took too long too", and STYLE.md §4 already says a
+    graphic must not outlive its sentence. It is now five short events on five
+    phrases, and the 0 € badge comes back for «теж безкоштовний» because it is
+    the same claim about a second product (§4, reuse objects).
     """
     bars_html = "".join('<i style="height:%dpx"></i>' % h for h in
                         [34, 72, 128, 96, 168, 62, 140, 104, 188, 76, 132, 54,
@@ -447,6 +494,11 @@ def b09_wave_to_text():
       <div class="g full" id="g9">
         <div class="wave" id="g9w" style="left:180px;top:250px;width:720px;
              height:200px;justify-content:center">%s</div>
+        %s
+        <div class="guide" id="g9g">
+          <span class="gh"></span><b class="pr"></b><b class="pr"></b>
+          <b class="pr"></b>
+        </div>
         <div class="lines" id="g9t" style="left:230px;top:236px;width:620px">
           <b class="ph"></b>%s
         </div>
@@ -454,25 +506,49 @@ def b09_wave_to_text():
           <span class="track"></span><span class="knob"></span>
           <span class="strike" id="g9x"></span>
         </div>
-      </div>''' % (bars_html, bars(3))
+      </div>''' % (bars_html, freebadge("g9free"), bars(3))
     js = '''
   gsap.set("#g9", {autoAlpha: 0});
-  gsap.set("#g9t, #g9s", {autoAlpha: 0});
+  gsap.set("#g9t, #g9s, #g9g", {autoAlpha: 0});
+  gsap.set("#g9free", {autoAlpha: 0, scale: 0.5, transformOrigin: "50% 50%"});
+  gsap.set("#g9w", {autoAlpha: 0});
   gsap.set("#g9w i", {scaleY: 0.15, transformOrigin: "50% 50%"});
   gsap.set("#g9x", {scaleX: 0, transformOrigin: "0% 50%"});
-  tl.set("#g9", {autoAlpha: 1}, 35.56);
-  // the call arrives as sound
-  tl.to("#g9w i", {scaleY: 1, duration: 0.44, ease: "back.out(2)",
-                   stagger: {each: 0.018, from: "center"}}, 35.60);
-  // «одразу в тексті» — the sound resolves into lines
-  tl.to("#g9w", {autoAlpha: 0, scaleY: 0.2, duration: 0.34, ease: "power2.in"}, 39.74);
-  tl.to("#g9t", {autoAlpha: 1, duration: 0.30, ease: "power2.out"}, 39.86);
-  tl.from("#g9t .pr", {scaleX: 0, transformOrigin: "0% 50%", duration: 0.26,
-                       stagger: 0.07, ease: "power2.out"}, 39.90);
+  tl.set("#g9", {autoAlpha: 1}, 33.76);
+
+  // «наші дзвінки» — the call arrives as sound, and leaves again
+  tl.to("#g9w", {autoAlpha: 1, duration: 0.12}, 33.84);
+  tl.to("#g9w i", {scaleY: 1, duration: 0.34, ease: "back.out(2)",
+                   stagger: {each: 0.014, from: "center"}}, 33.86);
+  tl.to("#g9w", {autoAlpha: 0, duration: 0.20, ease: "power2.in"}, 34.36);
+
+  // «теж безкоштовний» — the same badge as Cal.com, which is the joke
+  tl.to("#g9free", {autoAlpha: 1, scale: 1, duration: 0.32,
+                    ease: "back.out(2.8)"}, 34.58);
+  tl.to("#g9free", {autoAlpha: 0, scale: 0.8, duration: 0.22,
+                    ease: "power2.in"}, 35.70);
+
+  // «ціла інструкція» — a guide, not a label
+  tl.to("#g9g", {autoAlpha: 1, duration: 0.24}, 36.26);
+  tl.from("#g9g .pr", {scaleX: 0, transformOrigin: "0% 50%", duration: 0.22,
+                       stagger: 0.06, ease: "power2.out"}, 36.34);
+  tl.to("#g9g", {autoAlpha: 0, duration: 0.22, ease: "power2.in"}, 37.44);
+
+  // «зберігає записи» — sound again, briefly, so the morph has a before
+  tl.to("#g9w", {autoAlpha: 1, duration: 0.14}, 37.72);
+  tl.to("#g9w i", {scaleY: 1, duration: 0.26, ease: "power2.out",
+                   stagger: {each: 0.010, from: "center"}}, 37.74);
+  // «одразу в тексті» — and it resolves into lines
+  tl.to("#g9w", {autoAlpha: 0, scaleY: 0.2, duration: 0.26,
+                 ease: "power2.in"}, 39.60);
+  tl.to("#g9t", {autoAlpha: 1, duration: 0.26, ease: "power2.out"}, 39.74);
+  tl.from("#g9t .pr", {scaleX: 0, transformOrigin: "0% 50%", duration: 0.24,
+                       stagger: 0.06, ease: "power2.out"}, 39.78);
+
   // «щоб не переслуховувати» — the replay is struck out
-  tl.to("#g9s", {autoAlpha: 1, duration: 0.22}, 40.54);
-  tl.to("#g9x", {scaleX: 1, duration: 0.26, ease: "power3.out"}, 40.92);
-  tl.to("#g9", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 42.00);'''
+  tl.to("#g9s", {autoAlpha: 1, duration: 0.20}, 40.54);
+  tl.to("#g9x", {scaleX: 1, duration: 0.24, ease: "power3.out"}, 40.86);
+  tl.to("#g9", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 41.80);'''
     return html, js
 
 
@@ -481,14 +557,17 @@ def b09_wave_to_text():
 
 @beat
 def b10_crm_slot():
-    """«Третє CRM, база даних клієнток»"""
+    """«Третє CRM»
+
+    The tile carries the letters CRM, not a drawn database. Her note: "shitty
+    icon, either do properly or write CRM". No CRM brand is named in the script
+    (STYLE.md §5b), so type is the honest answer — the same call as RUTA.
+    """
     js = '''
   tl.set("#gboard", {autoAlpha: 1}, 42.36);
   tl.to("#tl2", {autoAlpha: 1, duration: 0.20}, 42.52);
   gsap.set("#tl2", {scale: 0.8, transformOrigin: "50% 50%"});
   tl.to("#tl2", {scale: 1, duration: 0.34, ease: "back.out(2.4)"}, 42.52);
-  tl.to("#tldb i", {scaleX: 1, duration: 0.22, stagger: 0.07,
-                    ease: "back.out(2)"}, 42.70);
   tl.to("#gboard", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 45.60);'''
     return "", js
 
@@ -498,28 +577,40 @@ def b11_fields_fill():
     """«хто ця людина, звідки прийшла, чим займається, що хотіла, що вже
     зроблено, який наступний крок»
 
-    Six cells, six words, one cell per word — §4 «put every element on its
-    word», and the spacing is hers, so it is uneven on purpose. Only the last
-    cell takes the accent (§5a.4 — the true accent appears once).
+    Her note: "the points could have been written out properly". They are now
+    real rows in a real table rather than six blank pills — which STYLE.md §4
+    allows explicitly, because this is text *inside a depicted interface*, and
+    a CRM with no field names is not a depicted CRM.
+
+    One row per word, on her timing, so the spacing stays uneven.
     """
-    cells = "".join('<span class="cell" id="g11c%d"></span>' % i for i in range(6))
+    rows = ["ХТО", "ЗВІДКИ", "ЧИМ ЗАЙМАЄТЬСЯ", "ЩО ХОТІЛА",
+            "ЩО ЗРОБЛЕНО", "НАСТУПНИЙ КРОК"]
+    cells = "".join(
+        '<div class="crow" id="g11c%d"><span class="dot"></span>'
+        '<span class="lbl">%s</span></div>' % (i, r)
+        for i, r in enumerate(rows))
     html = '''
       <div class="g full" id="g11">
-        <div class="row" id="g11r" style="left:110px;top:250px;width:860px;
-             grid-template-columns:repeat(3,1fr)">%s</div>
+        <div class="crm" id="g11r">%s</div>
       </div>''' % cells
     js = '''
   gsap.set("#g11", {autoAlpha: 0});
-  gsap.set("#g11 .cell", {autoAlpha: 0, scaleX: 0.3, transformOrigin: "0% 50%"});
+  gsap.set("#g11 .crow", {autoAlpha: 0, x: -40});
   tl.set("#g11", {autoAlpha: 1}, 48.40);
   [48.64, 49.18, 50.30, 51.12, 52.00, 53.24].forEach(function (t, i) {
-    tl.to("#g11c" + i, {autoAlpha: 1, scaleX: 1, duration: 0.26,
+    tl.to("#g11c" + i, {autoAlpha: 1, x: 0, duration: 0.26,
                         ease: "power3.out"}, t);
   });
-  // «який наступний крок» is the only one that is a decision, so it is the
-  // only cell that takes the accent
-  tl.to("#g11c5", {backgroundColor: "#b4122f", duration: 0.24}, 53.50);
-  tl.to("#g11", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 54.30);'''
+  // «який наступний крок» is the only row that is a decision, so it is the
+  // only one that takes the accent (§5a.4 — the accent appears once)
+  tl.set("#g11c5", {backgroundImage:
+        "linear-gradient(158deg, #c41434 0%, #8d0d24 100%)"}, 53.46);
+  tl.set("#g11c5 .lbl", {color: "#ffffff"}, 53.46);
+  tl.set("#g11c5 .dot", {backgroundColor: "#ffffff"}, 53.46);
+  tl.fromTo("#g11c5", {scale: 0.97}, {scale: 1, duration: 0.26,
+            ease: "back.out(3)", transformOrigin: "50% 50%"}, 53.46);
+  tl.to("#g11", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 54.40);'''
     return html, js
 
 
@@ -558,7 +649,8 @@ def b13_notion_on_crm():
   tl.to("#tl2 .tile.brand", {autoAlpha: 0, duration: 0.20}, 57.98);
   tl.to("#tl2notion", {autoAlpha: 1, scale: 1, duration: 0.34,
                        ease: "back.out(2.4)"}, 57.98);
-  tl.to("#gboard", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 59.90);'''
+  // no clear here: b14 brings the tasks tile in at 59.58 and the board simply
+  // keeps accumulating.'''
     return "", js
 
 
@@ -567,16 +659,23 @@ def b13_notion_on_crm():
 
 @beat
 def b14_tasks_slot():
-    """«Четверте система для задач»
+    """«Четверте — система для задач»
 
-    Lands and clears before 61.47 — the pull-way-out shot is hers.
+    Her note: "literally one second wtf". It was, because her pull-out owns
+    61.47–63.17 and the tile had to clear before it. So the tile now lands
+    earlier, on «Четверте», and — more to the point — comes straight back at
+    63.25 and stays for the rest of the section instead of flashing once.
     """
     js = '''
-  tl.set("#gboard", {autoAlpha: 1}, 60.06);
-  tl.to("#tl3", {autoAlpha: 1, duration: 0.20}, 60.14);
+  tl.set("#gboard", {autoAlpha: 1}, 59.50);
+  tl.to("#tl3", {autoAlpha: 1, duration: 0.20}, 59.58);
   gsap.set("#tl3", {scale: 0.8, transformOrigin: "50% 50%"});
-  tl.to("#tl3", {scale: 1, duration: 0.34, ease: "back.out(2.4)"}, 60.14);
-  tl.to("#gboard", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 61.10);'''
+  tl.to("#tl3", {scale: 1, duration: 0.34, ease: "back.out(2.4)"}, 59.58);
+  // «система для задач» — the checklist writes itself in
+  tl.from("#tlchk i", {autoAlpha: 0, x: -18, duration: 0.22, stagger: 0.10,
+                       ease: "power2.out"}, 60.04);
+  // down for her pull-out, and back the moment it ends
+  tl.to("#gboard", {autoAlpha: 0, duration: 0.22, ease: "power2.in"}, 61.16);'''
     return "", js
 
 
@@ -663,12 +762,13 @@ def b17_process_over_result():
 
 @beat
 def b18_call_fans_out():
-    """«один дзвінок з клієнткою — це вже ідеї для контенту, написані словами
-    твоєї цільової аудиторії»
+    """«один дзвінок з клієнткою» → «ідеї для контенту» → «написані словами
+    твоєї цільової аудиторії» → «на вагу золота» → «перевикористовуємо»
 
-    One call card fans into four content cards, and a quote lifts out of the
-    call and sets itself into one of them. The fan tips a balance on «на вагу
-    золота» — same object, third use.
+    Her note on the old version: "too long". It was one object held for ten
+    seconds across five different claims. Now the fan lands, the quote lifts
+    out of it, the weight registers, and then the whole thing loops back — five
+    events instead of one, and the frame clears between them.
     """
     fan = "".join(
         '<div class="cc" id="g18c%d" style="left:%dpx;top:250px">'
@@ -680,29 +780,57 @@ def b18_call_fans_out():
         </div>
         %s
         <span class="quote" id="g18q"></span>
+        <svg id="g18loop" width="1080" height="600" viewBox="0 0 1080 600"
+             style="position:absolute;left:0;top:0">
+          <path id="g18arc" class="wire" stroke="#ff6e9c"
+                d="M300 500 C 300 590, 780 590, 780 500"
+                stroke-dasharray="520" stroke-dashoffset="520"
+                marker-end="url(#g18head)"/>
+          <defs><marker id="g18head" markerWidth="5" markerHeight="5" refX="2.5"
+                        refY="2.5" orient="auto">
+            <path d="M0 0 L5 2.5 L0 5 z" fill="#ff6e9c"/></marker></defs>
+        </svg>
       </div>''' % fan
     js = '''
   gsap.set("#g18", {autoAlpha: 0});
   gsap.set("#g18call", {autoAlpha: 0, scale: 0.84, transformOrigin: "50% 50%"});
-  gsap.set("#g18 .cc:not(.call)", {autoAlpha: 0, scale: 0.7, x: 0,
+  gsap.set("#g18 .cc:not(.call)", {autoAlpha: 0, scale: 0.7, y: 0,
                                    transformOrigin: "50% 50%"});
-  gsap.set("#g18q", {autoAlpha: 0});
+  gsap.set("#g18q, #g18loop", {autoAlpha: 0});
   tl.set("#g18", {autoAlpha: 1}, 80.70);
-  tl.to("#g18call", {autoAlpha: 1, scale: 1, duration: 0.32, ease: "back.out(2.4)"}, 80.78);
-  // «це вже ідеї для контенту» — one call becomes several
-  tl.to("#g18call", {autoAlpha: 0, duration: 0.24}, 82.28);
-  [82.30, 82.46, 82.62, 82.80].forEach(function (t, i) {
-    tl.to("#g18c" + i, {autoAlpha: 1, scale: 1, duration: 0.34,
+
+  // «один дзвінок з клієнткою»
+  tl.to("#g18call", {autoAlpha: 1, scale: 1, duration: 0.30,
+                     ease: "back.out(2.4)"}, 80.78);
+  // «це вже ідеї для контенту» — one call becomes four
+  tl.to("#g18call", {autoAlpha: 0, duration: 0.22}, 82.28);
+  [82.30, 82.44, 82.58, 82.74].forEach(function (t, i) {
+    tl.to("#g18c" + i, {autoAlpha: 1, scale: 1, duration: 0.30,
                         ease: "back.out(2.2)"}, t);
   });
-  // «написані словами твоєї цільової аудиторії» — the quote lifts and lands
-  tl.fromTo("#g18q", {autoAlpha: 0, y: 40, scale: 0.8},
-            {autoAlpha: 1, y: 0, scale: 1, duration: 0.36, ease: "back.out(2.6)"}, 85.68);
-  tl.to("#g18q", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 87.10);
-  // «на вагу золота» — the fan has weight
-  tl.to("#g18 .cc:not(.call)", {y: 44, duration: 0.40, ease: "power2.out",
+  // «написані словами твоєї цільової аудиторії» — her words lift out and land
+  tl.fromTo("#g18q", {autoAlpha: 0, y: 60, scale: 0.8},
+            {autoAlpha: 1, y: 0, scale: 1, duration: 0.32,
+             ease: "back.out(2.6)"}, 83.46);
+  tl.to("#g18q", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 85.30);
+  // «на вагу золота» — the fan has weight, and then it goes
+  tl.to("#g18 .cc:not(.call)", {y: 40, duration: 0.34, ease: "power2.out",
                                 stagger: 0.04}, 87.52);
-  tl.to("#g18", {autoAlpha: 0, duration: 0.30, ease: "power2.in"}, 90.60);'''
+  tl.to("#g18 .cc:not(.call)", {autoAlpha: 0, scale: 0.8, duration: 0.28,
+                                ease: "power2.in", stagger: 0.03}, 88.30);
+
+  // «те, що було на дзвінках, ми просто перевикористовуємо для контенту»
+  // the call comes back and the arrow loops it into the content again
+  tl.set("#g18call", {scale: 0.9, x: -190}, 89.02);
+  tl.to("#g18call", {autoAlpha: 1, scale: 1, duration: 0.28,
+                     ease: "back.out(2.4)"}, 89.04);
+  tl.to("#g18loop", {autoAlpha: 1, duration: 0.16}, 90.32);
+  tl.to("#g18arc", {strokeDashoffset: 0, duration: 0.60,
+                    ease: "power2.inOut"}, 90.40);
+  tl.set("#g18c1", {x: 190, y: 0}, 90.98);
+  tl.to("#g18c1", {autoAlpha: 1, scale: 1, duration: 0.30,
+                   ease: "back.out(2.4)"}, 91.00);
+  tl.to("#g18", {autoAlpha: 0, duration: 0.30, ease: "power2.in"}, 92.10);'''
     return html, js
 
 
@@ -1051,18 +1179,24 @@ k.css("""
                    filter: drop-shadow(0 0 18px rgba(255,196,218,0.95))
                            drop-shadow(0 0 40px rgba(255,110,156,0.7)); }
 
-    /* b10 — the database glyph animates its plates in */
-    .db i { transform: scaleX(0); transform-origin: 50% 50%; }
-
     /* b13 / b16 — the Notion mark, dropped onto a tile that already exists */
     .ontile { position: absolute; inset: 0; opacity: 0; visibility: hidden;
               transform: scale(0.8); }
 
-    /* b15 — the checklist inside the board tile */
-    .chk { display: grid; gap: 14px; }
-    .chk i { display: block; width: 150px; height: 26px; border-radius: 13px;
-             background: var(--graphite); }
-    .chk i:first-child { background: var(--lit-accent); }
+    /* b15 — the checklist inside the board tile. Her note: "tasks are always
+       checks and lines like a checklist", so that is what it is. */
+    .chk { display: grid; gap: 16px; }
+    .chk i { display: flex; align-items: center; gap: 14px; }
+    .chk i b { display: block; width: 30px; height: 30px; border-radius: 9px;
+               flex: none; background: var(--lit-accent);
+               box-shadow: var(--rim-dark); }
+    .chk i s { display: block; height: 16px; border-radius: 8px;
+               background: var(--graphite); }
+    .chk i:nth-child(1) s { width: 132px; }
+    .chk i:nth-child(2) s { width: 104px; }
+    .chk i:nth-child(3) s { width: 120px; }
+    .ghost .chk i b { background: rgba(255,255,255,0.85); box-shadow: none; }
+    .ghost .chk i s { background: rgba(255,255,255,0.55); }
 
     /* b17 — process vs result */
     .mess { position: absolute; width: 320px; height: 340px; }
@@ -1109,6 +1243,51 @@ k.css("""
 
     /* b23 — the cheap pair */
     .tile.brand.pair { width: 290px; height: 290px; }
+
+    /* «безкоштовний» — 0 euro, reused for Cal.com and for Fathom */
+    .freewrap { position: absolute; left: 470px; top: 190px; width: 300px;
+                height: 300px; }
+    .free { position: absolute; inset: 0; display: grid; place-items: center;
+            grid-auto-flow: column; gap: 4px; border-radius: 50%;
+            background: var(--lit-accent); box-shadow: var(--rim-dark); }
+    .free span { font-size: 168px; font-weight: 900; color: #fff;
+                 letter-spacing: -0.06em; line-height: 1; }
+    .free small { font-size: 76px; font-weight: 900; color: #fff;
+                  align-self: center; }
+
+    /* b07 — the booking that crosses the wire. It was a glowing dot and she
+       could not tell what it was; an object with a header and a body reads as
+       an appointment even at 80px. */
+    .event { position: absolute; left: 0; top: 0; width: 92px; height: 74px;
+             border-radius: 18px; background: var(--lit); box-shadow: var(--rim);
+             filter: drop-shadow(0 0 18px rgba(255,110,156,0.85));
+             padding: 12px 12px 0; }
+    .event b { display: block; height: 14px; border-radius: 7px;
+               background: var(--accent); margin-bottom: 9px; }
+    .event s { display: block; height: 9px; border-radius: 5px; width: 74%;
+               background: var(--graphite); }
+
+    /* b09 — «ціла інструкція» */
+    .guide { position: absolute; left: 330px; top: 190px; width: 420px;
+             height: 300px; padding: 34px; background: var(--lit-blush);
+             box-shadow: var(--rim); filter: var(--cast); border-radius: 44px; }
+    .guide .gh { display: block; height: 46px; width: 62%; border-radius: 14px;
+                 background: var(--lit-accent); margin-bottom: 26px;
+                 box-shadow: var(--rim-dark); }
+    .guide .pr { background: rgba(23,20,28,0.16); }
+
+    /* b11 — the CRM, with its fields actually named */
+    .crm { position: absolute; left: 90px; top: 40px; width: 900px;
+           display: grid; gap: 12px; }
+    .crow { display: flex; align-items: center; gap: 22px; height: 74px;
+            padding: 0 28px; border-radius: 24px;
+            background: linear-gradient(158deg, rgba(255,255,255,0.93) 0%,
+                        rgba(253,241,244,0.93) 100%);
+            box-shadow: var(--rim); filter: var(--cast-sm); }
+    .crow .dot { width: 22px; height: 22px; border-radius: 50%; flex: none;
+                 background: var(--accent); }
+    .crow .lbl { font-size: 42px; font-weight: 900; color: var(--ink);
+                 letter-spacing: -0.02em; white-space: nowrap; }
 
     /* b25 — the hub the four panes belong to */
     .tile.brand.hub { position: absolute; left: 440px; top: 218px;
