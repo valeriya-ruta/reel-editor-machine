@@ -14,9 +14,9 @@
     #root { position: relative; width: 1080px; height: 1920px;
             overflow: hidden; background: #000;
             font-family: "ProductSans", system-ui, sans-serif;
-      --surface:        #fdf6f6;
-      --container:      #f4dde2;
-      --container-high: #ecc8d0;
+      --surface:        #fffcfd;
+      --container:      #fbeef2;
+      --container-high: #f4dfe5;
       --graphite:       rgba(23,20,28,0.13);
       --accent:         #b4122f;
       --accent-deep:    #8d0d24;
@@ -24,7 +24,7 @@
       --ink:            #17141c;
 
       --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
-      --lit-blush:  linear-gradient(115deg, #fffdfd 0%, #fdf1f4 100%);
+      --lit-blush:  linear-gradient(115deg, #ffffff 0%, #fff7fa 100%);
       --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
       --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
       --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
@@ -64,6 +64,7 @@
            color: #fff; font-size: 90px; font-weight: 900;
            letter-spacing: -0.015em; white-space: nowrap;
            opacity: 0; visibility: hidden; }
+    .cap.inv { color: var(--ink); }
     .g { position: absolute; left: 0; top: 40px; width: 1080px;
          height: 600px; opacity: 0; visibility: hidden; }
     .g.full { top: 0; height: 1920px; }
@@ -246,6 +247,106 @@
             background: rgba(23,20,28,0.30); }
 
 
+    /* ---------------------------------------------- takeover materials ----
+       STYLE.md 2b: a takeover owns the frame. The plate is gone, so none of
+       the over-footage rules apply — no glow budget, no band discipline, ink
+       type on a light ground. What they must not do is look composed and
+       centred. */
+    .tk { position: absolute; inset: 0; }
+    .tk.paper { background: var(--surface); }
+    .tk.white { background: #ffffff; }
+    .tk.blush { background: linear-gradient(150deg,#ffffff 0%,#fffafc 55%,
+                                            #fdf4f8 100%); }
+    /* graph paper — the texture every reference takeover has and mine had
+       none of. 60px cells at 5.8% ink: visible, never a pattern you read. */
+    .gp { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px),
+            repeating-linear-gradient(90deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px); }
+
+    /* ---- TK1: the prompt, and the mess it makes ---- */
+    .pbar { position: absolute; left: -70px; top: 250px; width: 1220px;
+            height: 170px; background: var(--lit-ink); display: flex;
+            align-items: center; padding: 0 110px; filter: var(--cast);
+            overflow: hidden; }
+    .pbar span { font-weight: 500; font-size: 52px; white-space: nowrap;
+                 color: rgba(255,255,255,0.92); display: inline-block; }
+    .pbar i { display: block; width: 7px; height: 62px; background: var(--pink);
+              margin-left: 16px; flex: none; }
+    .spill { position: absolute; height: 22px; border-radius: 4px;
+             background: rgba(23,20,28,0.34); }
+
+    /* ---- TK2: a wall of skeletons, bleeding off both sides ---- */
+    .tile.brand.prod.xl { width: 300px; height: 300px; }
+    .sk { position: absolute; width: 400px; height: 236px; background: #fff;
+          border: 4px solid rgba(23,20,28,0.16); border-radius: 14px;
+          overflow: hidden; }
+    .sk b { position: absolute; display: block; border-radius: 3px;
+            background: rgba(23,20,28,0.30); transform-origin: 0% 50%; }
+    .sk b.h { background: #17141c; }
+    .mnote { position: absolute; border: 4px dashed rgba(23,20,28,0.38);
+             border-radius: 8px; display: grid; place-items: center;
+             font-weight: 500; color: rgba(23,20,28,0.66); }
+
+    /* ---- TK3: the skeleton with no card under it ---- */
+    .fb { position: absolute; background: #17141c; transform-origin: 0% 50%; }
+    .fbox { position: absolute; border: 8px dashed #17141c;
+            display: grid; place-items: center; font-weight: 500;
+            font-size: 44px; color: #17141c; }
+
+    /* ---- TK4: five bands that fill the frame, then become swatches ----
+       They sit at their *resting* size and scale up to fill, rather than
+       sitting full-height and scaling down: a 26px radius stays 26px that
+       way instead of stretching into a 260px ellipse during the slam. */
+    .band { position: absolute; top: 546px; width: 216px; height: 190px;
+            transform-origin: 50% 0%; }
+    .bbh { position: absolute; left: 100px; top: 400px; font-weight: 500;
+           font-size: 34px; letter-spacing: 0.18em; color: rgba(23,20,28,0.66); }
+    .bbr { position: absolute; left: 100px; width: 880px; height: 2px;
+           background: rgba(23,20,28,0.16); transform-origin: 0% 50%; }
+    .hex { position: absolute; width: 216px; text-align: center;
+           font-weight: 500; font-size: 22px; color: rgba(23,20,28,0.50); }
+    .spec { position: absolute; font-weight: 900; line-height: 0.78;
+            color: #17141c; }
+    .chiprow { position: absolute; display: grid; place-items: center;
+               font-weight: 500; color: #fff; }
+
+    /* ---- TK5: the deck, too big for the frame ---- */
+    .hero { position: absolute; left: -90px; top: 300px; width: 1260px;
+            height: 1080px; border-radius: 52px; overflow: hidden;
+            background: var(--lit); filter: var(--cast); }
+    .hero .ht { position: absolute; left: 130px; top: 96px; font-weight: 900;
+                font-size: 112px; letter-spacing: -0.03em; color: var(--accent); }
+    .hero .hu { position: absolute; left: 130px; top: 254px; width: 180px;
+                height: 16px; border-radius: 999px; background: var(--lit-pink); }
+    .hero b { position: absolute; display: block; height: 18px;
+              border-radius: 5px; background: rgba(23,20,28,0.40); }
+    .hero .pic { position: absolute; left: 130px; top: 500px; width: 560px;
+                 height: 340px; border-radius: 34px; background: var(--lit-pink);
+                 box-shadow: var(--rim-dark); }
+    .hero .tab { position: absolute; right: 0; top: 0; width: 300px;
+                 height: 20px; background: var(--lit-accent); }
+    .fan { position: absolute; border-radius: 52px; background: #fff;
+           filter: var(--cast-sm); }
+
+    /* ---- the finished artefact, in her system: behind-her beats ----
+       One class for both, because they are the same object at different
+       aspect ratios — a deck, a poster, a story, a card. Inner parts are
+       proportional so a 340px story and a 620px banner stay consistent. */
+    .dk { position: absolute; overflow: hidden; border-radius: 28px;
+          background: var(--lit-blush); box-shadow: var(--rim);
+          filter: var(--cast); }
+    .dk i { position: absolute; display: block; }
+    .dk .hb { left: 30px; top: 30px; height: 20px; border-radius: 6px;
+              background: var(--lit-accent); }
+    .dk .rr { left: 30px; height: 9px; border-radius: 4px;
+              background: rgba(23,20,28,0.22); }
+    .dk .pb { border-radius: 16px; background: var(--lit-pink);
+              box-shadow: var(--rim-dark); }
+
+
     /* b02 — the verdict on what the AI produced unaided */
     .junkwrap { position: absolute; inset: 0; }
     .nope { position: absolute; z-index: 3; left: 430px; top: 210px; width: 220px;
@@ -341,6 +442,7 @@
     .slide { clip-path: path('M 556 0 c 21.349 0 32.023 0 41.626 4.893 a 40 40 0 0 1 17.481 17.481 c 4.893 9.603 4.893 20.278 4.893 41.626 L 620 316 c 0 21.349 0 32.023 -4.893 41.626 a 40 40 0 0 1 -17.481 17.481 c -9.603 4.893 -20.278 4.893 -41.626 4.893 L 64 380 c -21.349 0 -32.023 0 -41.626 -4.893 a 40 40 0 0 1 -17.481 -17.481 c -4.893 -9.603 -4.893 -20.278 -4.893 -41.626 L 0 64 c 0 -21.349 0 -32.023 4.893 -41.626 a 40 40 0 0 1 17.481 -17.481 c 9.603 -4.893 20.278 -4.893 41.626 -4.893 Z'); }
     .tile.brand.prod { clip-path: path('M 154 0 c 32.023 0 48.035 0 62.439 7.34 a 60 60 0 0 1 26.221 26.221 c 7.34 14.405 7.34 30.416 7.34 62.439 L 250 154 c 0 32.023 0 48.035 -7.34 62.439 a 60 60 0 0 1 -26.221 26.221 c -14.405 7.34 -30.416 7.34 -62.439 7.34 L 96 250 c -32.023 0 -48.035 0 -62.439 -7.34 a 60 60 0 0 1 -26.221 -26.221 c -7.34 -14.405 -7.34 -30.416 -7.34 -62.439 L 0 96 c 0 -32.023 0 -48.035 7.34 -62.439 a 60 60 0 0 1 26.221 -26.221 c 14.405 -7.34 30.416 -7.34 62.439 -7.34 Z'); }
     .dsys { clip-path: path('M 623.2 0 c 25.619 0 38.428 0 49.952 5.872 a 48 48 0 0 1 20.977 20.977 c 5.872 11.524 5.872 24.333 5.872 49.952 L 700 343.2 c 0 25.619 0 38.428 -5.872 49.952 a 48 48 0 0 1 -20.977 20.977 c -11.524 5.872 -24.333 5.872 -49.952 5.872 L 76.8 420 c -25.619 0 -38.428 0 -49.952 -5.872 a 48 48 0 0 1 -20.977 -20.977 c -5.872 -11.524 -5.872 -24.333 -5.872 -49.952 L 0 76.8 c 0 -25.619 0 -38.428 5.872 -49.952 a 48 48 0 0 1 20.977 -20.977 c 11.524 -5.872 24.333 -5.872 49.952 -5.872 Z'); }
+    .tile.brand.prod.xl { clip-path: path('M 178.4 0 c 40.563 0 60.844 0 79.09 9.297 a 76 76 0 0 1 33.213 33.213 c 9.297 18.246 9.297 38.527 9.297 79.09 L 300 178.4 c 0 40.563 0 60.844 -9.297 79.09 a 76 76 0 0 1 -33.213 33.213 c -18.246 9.297 -38.527 9.297 -79.09 9.297 L 121.6 300 c -40.563 0 -60.844 0 -79.09 -9.297 a 76 76 0 0 1 -33.213 -33.213 c -9.297 -18.246 -9.297 -38.527 -9.297 -79.09 L 0 121.6 c 0 -40.563 0 -60.844 9.297 -79.09 a 76 76 0 0 1 33.213 -33.213 c 18.246 -9.297 38.527 -9.297 79.09 -9.297 Z'); }
     .prompt { clip-path: path('M 565.6 0 c 18.146 0 27.22 0 35.382 4.159 a 34 34 0 0 1 14.859 14.859 c 4.159 8.163 4.159 17.236 4.159 35.382 L 620 95.6 c 0 18.146 0 27.22 -4.159 35.382 a 34 34 0 0 1 -14.859 14.859 c -8.163 4.159 -17.236 4.159 -35.382 4.159 L 54.4 150 c -18.146 0 -27.22 0 -35.382 -4.159 a 34 34 0 0 1 -14.859 -14.859 c -4.159 -8.163 -4.159 -17.236 -4.159 -35.382 L 0 54.4 c 0 -18.146 0 -27.22 4.159 -35.382 a 34 34 0 0 1 14.859 -14.859 c 8.163 -4.159 17.236 -4.159 35.382 -4.159 Z'); }
     .plus { clip-path: path('M 73.6 0 c 23.484 0 35.225 0 45.789 5.382 a 44 44 0 0 1 19.229 19.229 c 5.382 10.563 5.382 22.305 5.382 45.789 L 144 73.6 c 0 23.484 0 35.225 -5.382 45.789 a 44 44 0 0 1 -19.229 19.229 c -10.563 5.382 -22.305 5.382 -45.789 5.382 L 70.4 144 c -23.484 0 -35.225 0 -45.789 -5.382 a 44 44 0 0 1 -19.229 -19.229 c -5.382 -10.563 -5.382 -22.305 -5.382 -45.789 L 0 70.4 c 0 -23.484 0 -35.225 5.382 -45.789 a 44 44 0 0 1 19.229 -19.229 c 10.563 -5.382 22.305 -5.382 45.789 -5.382 Z'); }
     </style>
@@ -363,11 +465,76 @@
       </div>
 
       <div class="g full" id="g2">
-        
-        <div class="slide" id="g2s" style="left:230px;top:110px">
-          <div class="junkwrap" id="g2j"><span class="junk" id="g2j0" style="left:64px;top:52px;width:300px;height:22px;transform:rotate(-7deg)"></span><span class="junk" id="g2j1" style="left:300px;top:96px;width:230px;height:20px;transform:rotate(5deg)"></span><span class="junk" id="g2j2" style="left:48px;top:150px;width:400px;height:24px;transform:rotate(3deg)"></span><span class="junk" id="g2j3" style="left:250px;top:196px;width:180px;height:18px;transform:rotate(-9deg)"></span><span class="junk" id="g2j4" style="left:96px;top:232px;width:330px;height:20px;transform:rotate(6deg)"></span><span class="junk" id="g2j5" style="left:330px;top:262px;width:210px;height:22px;transform:rotate(-4deg)"></span><span class="junk" id="g2j6" style="left:60px;top:292px;width:260px;height:18px;transform:rotate(8deg)"></span></div>
+        <div class="tk paper"><div class="gp"></div></div>
+        <div class="pbar" id="g2p" data-layout-allow-overflow>
+          <span id="g2pt">зроби презентацію на таку тему</span><i id="g2pc"></i>
         </div>
-        <div class="nope" id="g2x"></div>
+        <i class="spill" id="g2s0" style="left:542px;top:1515px;width:953px;transform:rotate(-5.7deg)"></i>
+        <i class="spill" id="g2s1" style="left:251px;top:677px;width:507px;transform:rotate(4.8deg)"></i>
+        <i class="spill" id="g2s2" style="left:849px;top:1329px;width:870px;transform:rotate(3.5deg)"></i>
+        <i class="spill" id="g2s3" style="left:285px;top:1255px;width:384px;transform:rotate(0.9deg)"></i>
+        <i class="spill" id="g2s4" style="left:444px;top:1346px;width:737px;transform:rotate(-7.1deg)"></i>
+        <i class="spill" id="g2s5" style="left:833px;top:684px;width:550px;transform:rotate(2.6deg)"></i>
+        <i class="spill" id="g2s6" style="left:462px;top:1769px;width:262px;transform:rotate(4.8deg)"></i>
+        <i class="spill" id="g2s7" style="left:754px;top:1409px;width:553px;transform:rotate(3.5deg)"></i>
+        <i class="spill" id="g2s8" style="left:361px;top:839px;width:487px;transform:rotate(1.4deg)"></i>
+        <i class="spill" id="g2s9" style="left:615px;top:1157px;width:819px;transform:rotate(0.4deg)"></i>
+        <i class="spill" id="g2s10" style="left:441px;top:604px;width:885px;transform:rotate(7.1deg)"></i>
+        <i class="spill" id="g2s11" style="left:-138px;top:842px;width:935px;transform:rotate(8.4deg)"></i>
+        <i class="spill" id="g2s12" style="left:864px;top:1748px;width:300px;transform:rotate(3.4deg)"></i>
+        <i class="spill" id="g2s13" style="left:49px;top:1762px;width:243px;transform:rotate(-3.8deg)"></i>
+        <i class="spill" id="g2s14" style="left:434px;top:932px;width:402px;transform:rotate(-7.1deg)"></i>
+        <i class="spill" id="g2s15" style="left:583px;top:1004px;width:843px;transform:rotate(-7.1deg)"></i>
+        <i class="spill" id="g2s16" style="left:186px;top:500px;width:793px;transform:rotate(0.1deg)"></i>
+        <i class="spill" id="g2s17" style="left:-80px;top:1370px;width:704px;transform:rotate(-3.8deg)"></i>
+        <i class="spill" id="g2s18" style="left:412px;top:669px;width:484px;transform:rotate(-2.1deg)"></i>
+        <i class="spill" id="g2s19" style="left:509px;top:890px;width:666px;transform:rotate(0.7deg)"></i>
+        <i class="spill" id="g2s20" style="left:869px;top:540px;width:619px;transform:rotate(-7.6deg)"></i>
+        <i class="spill" id="g2s21" style="left:196px;top:1464px;width:765px;transform:rotate(5.5deg)"></i>
+        <i class="spill" id="g2s22" style="left:855px;top:727px;width:408px;transform:rotate(-6.8deg)"></i>
+        <i class="spill" id="g2s23" style="left:741px;top:896px;width:317px;transform:rotate(1.2deg)"></i>
+        <i class="spill" id="g2s24" style="left:587px;top:699px;width:958px;transform:rotate(-8.0deg)"></i>
+        <i class="spill" id="g2s25" style="left:242px;top:1607px;width:827px;transform:rotate(-2.7deg)"></i>
+        <i class="spill" id="g2s26" style="left:661px;top:1129px;width:659px;transform:rotate(-3.6deg)"></i>
+        <i class="spill" id="g2s27" style="left:561px;top:626px;width:528px;transform:rotate(7.9deg)"></i>
+        <i class="spill" id="g2s28" style="left:-28px;top:1543px;width:725px;transform:rotate(-4.5deg)"></i>
+        <i class="spill" id="g2s29" style="left:439px;top:1624px;width:938px;transform:rotate(-7.2deg)"></i>
+        <i class="spill" id="g2s30" style="left:-42px;top:1290px;width:569px;transform:rotate(6.0deg)"></i>
+        <i class="spill" id="g2s31" style="left:-102px;top:1451px;width:949px;transform:rotate(-0.0deg)"></i>
+        <i class="spill" id="g2s32" style="left:664px;top:1006px;width:250px;transform:rotate(-4.6deg)"></i>
+        <i class="spill" id="g2s33" style="left:748px;top:569px;width:295px;transform:rotate(-5.9deg)"></i>
+        <i class="spill" id="g2s34" style="left:140px;top:1250px;width:742px;transform:rotate(0.9deg)"></i>
+        <i class="spill" id="g2s35" style="left:260px;top:480px;width:893px;transform:rotate(1.1deg)"></i>
+        <i class="spill" id="g2s36" style="left:346px;top:1117px;width:457px;transform:rotate(8.5deg)"></i>
+        <i class="spill" id="g2s37" style="left:698px;top:1325px;width:532px;transform:rotate(5.0deg)"></i>
+        <i class="spill" id="g2s38" style="left:373px;top:834px;width:351px;transform:rotate(4.6deg)"></i>
+        <i class="spill" id="g2s39" style="left:628px;top:898px;width:911px;transform:rotate(-8.5deg)"></i>
+        <i class="spill" id="g2s40" style="left:468px;top:1461px;width:292px;transform:rotate(-4.0deg)"></i>
+        <i class="spill" id="g2s41" style="left:670px;top:1260px;width:398px;transform:rotate(2.0deg)"></i>
+        <i class="spill" id="g2s42" style="left:513px;top:551px;width:458px;transform:rotate(2.3deg)"></i>
+        <i class="spill" id="g2s43" style="left:-2px;top:1039px;width:976px;transform:rotate(-4.5deg)"></i>
+        <i class="spill" id="g2s44" style="left:-115px;top:635px;width:866px;transform:rotate(7.9deg)"></i>
+        <i class="spill" id="g2s45" style="left:434px;top:895px;width:291px;transform:rotate(4.0deg)"></i>
+        <i class="spill" id="g2s46" style="left:702px;top:675px;width:969px;transform:rotate(6.2deg)"></i>
+        <i class="spill" id="g2s47" style="left:134px;top:1283px;width:538px;transform:rotate(8.1deg)"></i>
+        <i class="spill" id="g2s48" style="left:-81px;top:1449px;width:440px;transform:rotate(-4.5deg)"></i>
+        <i class="spill" id="g2s49" style="left:-53px;top:1305px;width:424px;transform:rotate(0.5deg)"></i>
+        <i class="spill" id="g2s50" style="left:-20px;top:1275px;width:618px;transform:rotate(-7.0deg)"></i>
+        <i class="spill" id="g2s51" style="left:-112px;top:784px;width:357px;transform:rotate(-5.7deg)"></i>
+        <i class="spill" id="g2s52" style="left:875px;top:1121px;width:869px;transform:rotate(-3.5deg)"></i>
+        <i class="spill" id="g2s53" style="left:-50px;top:670px;width:464px;transform:rotate(1.8deg)"></i>
+      </div>
+
+      <div class="g full" id="g2w">
+        <div class="dk" id="g2w0" data-layout-allow-overflow style="left:-180px;top:120px;width:520px;height:360px"><i class="hb" style="width:270px"></i><i class="rr" style="top:97px;width:364px"></i><i class="rr" style="top:133px;width:260px"></i><i class="pb" style="left:52px;top:187px;width:405px;height:129px"></i></div>
+        <div class="dk" id="g2w1" data-layout-allow-overflow style="left:280px;top:60px;width:560px;height:380px"><i class="hb" style="width:291px"></i><i class="rr" style="top:102px;width:392px"></i><i class="rr" style="top:140px;width:280px"></i><i class="pb" style="left:56px;top:197px;width:436px;height:136px"></i></div>
+        <div class="dk" id="g2w2" data-layout-allow-overflow style="left:700px;top:140px;width:540px;height:370px"><i class="hb" style="width:280px"></i><i class="rr" style="top:99px;width:378px"></i><i class="rr" style="top:136px;width:270px"></i><i class="pb" style="left:54px;top:192px;width:421px;height:133px"></i></div>
+        <div class="dk" id="g2w3" data-layout-allow-overflow style="left:-140px;top:460px;width:540px;height:370px"><i class="hb" style="width:280px"></i><i class="rr" style="top:99px;width:378px"></i><i class="rr" style="top:136px;width:270px"></i><i class="pb" style="left:54px;top:192px;width:421px;height:133px"></i></div>
+        <div class="dk" id="g2w4" data-layout-allow-overflow style="left:330px;top:430px;width:570px;height:390px"><i class="hb" style="width:296px"></i><i class="rr" style="top:105px;width:399px"></i><i class="rr" style="top:144px;width:285px"></i><i class="pb" style="left:57px;top:202px;width:444px;height:140px"></i></div>
+        <div class="dk" id="g2w5" data-layout-allow-overflow style="left:760px;top:500px;width:520px;height:360px"><i class="hb" style="width:270px"></i><i class="rr" style="top:97px;width:364px"></i><i class="rr" style="top:133px;width:260px"></i><i class="pb" style="left:52px;top:187px;width:405px;height:129px"></i></div>
+        <div class="dk" id="g2w6" data-layout-allow-overflow style="left:-190px;top:810px;width:560px;height:380px"><i class="hb" style="width:291px"></i><i class="rr" style="top:102px;width:392px"></i><i class="rr" style="top:140px;width:280px"></i><i class="pb" style="left:56px;top:197px;width:436px;height:136px"></i></div>
+        <div class="dk" id="g2w7" data-layout-allow-overflow style="left:300px;top:830px;width:540px;height:370px"><i class="hb" style="width:280px"></i><i class="rr" style="top:99px;width:378px"></i><i class="rr" style="top:136px;width:270px"></i><i class="pb" style="left:54px;top:192px;width:421px;height:133px"></i></div>
+        <div class="dk" id="g2w8" data-layout-allow-overflow style="left:720px;top:870px;width:560px;height:380px"><i class="hb" style="width:291px"></i><i class="rr" style="top:102px;width:392px"></i><i class="rr" style="top:140px;width:280px"></i><i class="pb" style="left:56px;top:197px;width:436px;height:136px"></i></div>
       </div>
 
       <div class="g full" id="g3">
@@ -404,17 +571,39 @@
       </div>
 
       <div class="g full" id="g6">
-        <div class="step" id="g6n" style="left:475px;top:70px"><span>1</span></div>
-        <div class="tile brand prod " id="g6a" style="left:230px;top:250px"><img class="mk" src="assets/logos/canva-mark.png" alt=""></div>
-        <div class="tile brand prod " id="g6b" style="left:600px;top:250px"><img class="mk" src="assets/logos/gslides-mark.png" alt=""></div>
+        <div class="tk paper" id="g6bg"><div class="gp"></div></div>
+        <div class="tile brand prod xl" id="g6a" style="left:110px;top:130px"><img class="mk" src="assets/logos/canva-mark.png" alt=""></div>
+        <div class="tile brand prod xl" id="g6b" style="left:670px;top:130px"><img class="mk" src="assets/logos/gslides-mark.png" alt=""></div>
       </div>
 
       <div class="g full" id="g7">
-        <div class="slide " id="g7s" style="left:230px;top:130px"><b class="wh"></b><b class="wr"></b><b class="wr"></b><b class="wr"></b><b class="wr"></b><span class="wpic"></span><span class="wchart"><i></i><i></i><i></i><i></i></span></div>
+        <div id="g7w" style="position:absolute;inset:0">
+          <div class="sk" id="g7c0" data-layout-allow-overflow style="left:-100px;top:430px"><b class="h" style="left:28px;top:28px;width:240px;height:11px"></b><b style="left:28px;top:72px;width:318px;height:7px"></b><b style="left:28px;top:98px;width:262px;height:7px"></b><b style="left:28px;top:124px;width:300px;height:7px"></b></div>
+          <div class="sk" id="g7c1" data-layout-allow-overflow style="left:340px;top:430px"><b class="h" style="left:28px;top:28px;width:196px;height:11px"></b><b style="left:28px;top:72px;width:262px;height:7px"></b><b style="left:28px;top:98px;width:300px;height:7px"></b></div>
+          <div class="sk" id="g7c2" data-layout-allow-overflow style="left:780px;top:430px"><b class="h" style="left:28px;top:28px;width:260px;height:11px"></b><b style="left:28px;top:72px;width:300px;height:7px"></b><b style="left:28px;top:98px;width:214px;height:7px"></b><b style="left:28px;top:124px;width:286px;height:7px"></b><b style="left:28px;top:150px;width:318px;height:7px"></b></div>
+          <div class="sk" id="g7c3" data-layout-allow-overflow style="left:-100px;top:706px"><b class="h" style="left:28px;top:28px;width:212px;height:11px"></b><b style="left:28px;top:72px;width:214px;height:7px"></b><b style="left:28px;top:98px;width:286px;height:7px"></b><b style="left:28px;top:124px;width:318px;height:7px"></b></div>
+          <div class="sk" id="g7c4" data-layout-allow-overflow style="left:340px;top:706px"><b class="h" style="left:28px;top:28px;width:178px;height:11px"></b><b style="left:28px;top:72px;width:286px;height:7px"></b><b style="left:28px;top:98px;width:318px;height:7px"></b></div>
+          <div class="sk" id="g7c5" data-layout-allow-overflow style="left:780px;top:706px"><b class="h" style="left:28px;top:28px;width:230px;height:11px"></b><b style="left:28px;top:72px;width:318px;height:7px"></b><b style="left:28px;top:98px;width:262px;height:7px"></b><b style="left:28px;top:124px;width:300px;height:7px"></b></div>
+          <div class="sk" id="g7c6" data-layout-allow-overflow style="left:-100px;top:982px"><b class="h" style="left:28px;top:28px;width:240px;height:11px"></b><b style="left:28px;top:72px;width:262px;height:7px"></b><b style="left:28px;top:98px;width:300px;height:7px"></b><b style="left:28px;top:124px;width:214px;height:7px"></b><b style="left:28px;top:150px;width:286px;height:7px"></b></div>
+          <div class="sk" id="g7c7" data-layout-allow-overflow style="left:340px;top:982px"><b class="h" style="left:28px;top:28px;width:196px;height:11px"></b><b style="left:28px;top:72px;width:300px;height:7px"></b><b style="left:28px;top:98px;width:214px;height:7px"></b></div>
+          <div class="sk" id="g7c8" data-layout-allow-overflow style="left:780px;top:982px"><b class="h" style="left:28px;top:28px;width:260px;height:11px"></b><b style="left:28px;top:72px;width:214px;height:7px"></b><b style="left:28px;top:98px;width:286px;height:7px"></b><b style="left:28px;top:124px;width:318px;height:7px"></b></div>
+          <div class="sk" id="g7c9" data-layout-allow-overflow style="left:-100px;top:1258px"><b class="h" style="left:28px;top:28px;width:212px;height:11px"></b><b style="left:28px;top:72px;width:286px;height:7px"></b><b style="left:28px;top:98px;width:318px;height:7px"></b><b style="left:28px;top:124px;width:262px;height:7px"></b></div>
+          <div class="sk" id="g7c10" data-layout-allow-overflow style="left:340px;top:1258px"><b class="h" style="left:28px;top:28px;width:178px;height:11px"></b><b style="left:28px;top:72px;width:318px;height:7px"></b><b style="left:28px;top:98px;width:262px;height:7px"></b><b style="left:28px;top:124px;width:300px;height:7px"></b><b style="left:28px;top:150px;width:214px;height:7px"></b></div>
+          <div class="sk" id="g7c11" data-layout-allow-overflow style="left:780px;top:1258px"><b class="h" style="left:28px;top:28px;width:230px;height:11px"></b><b style="left:28px;top:72px;width:262px;height:7px"></b><b style="left:28px;top:98px;width:300px;height:7px"></b></div>
+          <div class="mnote" id="g7n1" style="left:368px;top:502px;width:150px;height:110px;font-size:26px">графік</div>
+          <div class="mnote" id="g7n2" style="left:368px;top:778px;width:186px;height:110px;font-size:26px">картинка</div>
+        </div>
       </div>
 
       <div class="g full" id="g8">
-        <div class="slide " id="g8s" style="left:230px;top:130px"><b class="wh"></b><b class="wr"></b><b class="wr"></b><b class="wr"></b><b class="wr"></b><span class="wchart"><i></i><i></i><i></i><i></i></span></div>
+        <div class="tk white"></div>
+        <i class="fb" id="g8h" style="left:80px;top:420px;width:900px;height:58px"></i>
+        <i class="fb" id="g8u" style="left:80px;top:520px;width:520px;height:22px"></i>
+        <div id="g8b"><i class="fb" style="left:80px;top:640px;width:920px;height:20px"></i><i class="fb" style="left:80px;top:714px;width:878px;height:20px"></i><i class="fb" style="left:80px;top:788px;width:940px;height:20px"></i><i class="fb" style="left:80px;top:862px;width:816px;height:20px"></i><i class="fb" style="left:80px;top:936px;width:900px;height:20px"></i><i class="fb" style="left:80px;top:1010px;width:642px;height:20px"></i></div>
+        <div class="fbox" id="g8p" style="left:80px;top:1168px;width:560px;height:372px">картинка</div>
+        <i class="fb" id="g8r1" style="left:684px;top:1200px;width:296px;height:20px"></i>
+        <i class="fb" id="g8r2" style="left:684px;top:1274px;width:252px;height:20px"></i>
+        <i class="fb" id="g8r3" style="left:684px;top:1348px;width:280px;height:20px"></i>
       </div>
 
       <div class="g full" id="g9">
@@ -436,18 +625,33 @@
         </div>
       </div>
 
-      <div class="g full" id="g11">
-        <div class="big" id="g11n" style="top:190px;font-size:230px">5<small> хв</small></div>
+      <div class="g full" id="g12">
+        <div class="tk paper" id="g12bg"><div class="gp"></div></div>
+        <i class="band" id="g12b0" style="left:0px;background:var(--lit-accent)"></i><i class="band" id="g12b1" style="left:216px;background:var(--accent-deep)"></i><i class="band" id="g12b2" style="left:432px;background:var(--lit-pink)"></i><i class="band" id="g12b3" style="left:648px;background:var(--container-high)"></i><i class="band" id="g12b4" style="left:864px;background:var(--lit-ink)"></i>
+        <div class="hex" id="g12x0" style="left:0px;top:750px">B4122F</div><div class="hex" id="g12x1" style="left:216px;top:750px">8D0D24</div><div class="hex" id="g12x2" style="left:432px;top:750px">FF6E9C</div><div class="hex" id="g12x3" style="left:648px;top:750px">F4DFE5</div><div class="hex" id="g12x4" style="left:864px;top:750px">17141C</div>
+        <div class="bbh" id="g12h">ДИЗАЙН-СИСТЕМА</div>
+        <i class="bbr" id="g12r1" style="top:464px"></i>
+        <i class="bbr" id="g12r2" style="top:834px"></i>
+        <i class="bbr" id="g12r3" style="top:1238px"></i>
+        <div class="spec" id="g12s" style="left:96px;top:898px;font-size:280px">Аа</div>
+        <div id="g12l" style="position:absolute;left:520px;top:914px">
+          <div style="font-weight:900;font-size:66px;color:#17141c;line-height:1.18">Заголовок</div>
+          <div style="font-weight:500;font-size:46px;color:#17141c;opacity:.82;line-height:1.24">Підзаголовок</div>
+          <div style="font-weight:500;font-size:32px;color:#17141c;opacity:.60;line-height:1.3">Основний текст</div>
+        </div>
+        <div class="chiprow" id="g12c1" style="left:100px;top:1302px;width:300px;height:96px;border-radius:999px;background:var(--lit-accent);font-size:36px">Кнопка</div>
+        <div class="chiprow" id="g12c2" style="left:426px;top:1302px;width:200px;height:96px;border-radius:999px;background:var(--lit-pink)"></div>
+        <div class="chiprow" id="g12c3" style="left:652px;top:1302px;width:160px;height:96px;border-radius:30px;background:var(--lit);box-shadow:var(--rim)"></div>
       </div>
 
-      <div class="g full" id="g12">
-        <div class="dsys" id="g12d">
-          <div class="swatches" id="g12c"><i></i><i></i><i></i><i></i></div>
-          <div class="typerow" id="g12t">
-            <span class="a">Aa</span><span class="b">Aa</span><span class="c">Aa</span>
-          </div>
-          <div class="elems" id="g12e"><i></i><i></i><i></i></div>
-        </div>
+      <div class="g full" id="g12f">
+        <div class="dk" id="g12f0" data-layout-allow-overflow style="left:180px;top:80px;width:540px;height:330px"><i class="hb" style="width:280px"></i><i class="rr" style="top:89px;width:378px"></i><i class="rr" style="top:122px;width:270px"></i><i class="pb" style="left:54px;top:171px;width:421px;height:118px"></i></div>
+        <div class="dk" id="g12f1" data-layout-allow-overflow style="left:640px;top:30px;width:380px;height:520px"><i class="hb" style="width:197px"></i><i class="rr" style="top:140px;width:266px"></i><i class="rr" style="top:192px;width:190px"></i><i class="pb" style="left:38px;top:270px;width:296px;height:187px"></i></div>
+        <div class="dk" id="g12f2" data-layout-allow-overflow style="left:-200px;top:480px;width:370px;height:370px"><i class="hb" style="width:192px"></i><i class="rr" style="top:99px;width:259px"></i><i class="rr" style="top:136px;width:185px"></i><i class="pb" style="left:37px;top:192px;width:288px;height:133px"></i></div>
+        <div class="dk" id="g12f3" data-layout-allow-overflow style="left:790px;top:600px;width:330px;height:580px"><i class="hb" style="width:171px"></i><i class="rr" style="top:156px;width:230px"></i><i class="rr" style="top:214px;width:165px"></i><i class="pb" style="left:33px;top:301px;width:257px;height:208px"></i></div>
+        <div class="dk" id="g12f4" data-layout-allow-overflow style="left:40px;top:900px;width:600px;height:240px"><i class="hb" style="width:312px"></i><i class="rr" style="top:64px;width:420px"></i><i class="rr" style="top:88px;width:300px"></i><i class="pb" style="left:60px;top:124px;width:468px;height:86px"></i></div>
+        <div class="dk" id="g12f5" data-layout-allow-overflow style="left:660px;top:1140px;width:430px;height:250px"><i class="hb" style="width:223px"></i><i class="rr" style="top:67px;width:301px"></i><i class="rr" style="top:92px;width:215px"></i><i class="pb" style="left:43px;top:130px;width:335px;height:90px"></i></div>
+        <div class="dk" id="g12f6" data-layout-allow-overflow style="left:-150px;top:1080px;width:450px;height:300px"><i class="hb" style="width:234px"></i><i class="rr" style="top:81px;width:315px"></i><i class="rr" style="top:111px;width:225px"></i><i class="pb" style="left:45px;top:156px;width:351px;height:108px"></i></div>
       </div>
 
       <div class="g full" id="g13">
@@ -472,15 +676,29 @@
       </div>
 
       <div class="g full" id="g15">
-        <div class="big" id="g15n" style="top:120px;font-size:150px">5-10<small> хв</small></div>
-        <div class="slide done" id="g15s" style="left:230px;top:140px"><b class="wh"></b><b class="wr"></b><b class="wr"></b><b class="wr"></b><b class="wr"></b><span class="wpic"></span></div>
-        <div class="tweak" id="g15t"></div>
+        <div class="tk blush" id="g15bg"></div>
+        <div class="big" id="g15n" style="top:740px;font-size:300px;color:#b4122f;text-shadow:none">5-10<small> хв</small></div>
+        <div class="fan" id="g15f1" data-layout-allow-overflow style="left:-60px;top:206px;width:1200px;height:1080px"></div>
+        <div class="fan" id="g15f2" data-layout-allow-overflow style="left:-100px;top:250px;width:1280px;height:1080px"></div>
+        <div class="hero" id="g15h" data-layout-allow-overflow>
+          <i class="tab"></i>
+          <div class="ht">Як це працює</div>
+          <div class="hu"></div>
+          <b style="left:130px;top:306px;width:560px"></b><b style="left:130px;top:368px;width:490px"></b><b style="left:130px;top:430px;width:530px"></b>
+          <div class="pic"></div>
+          <b style="left:760px;top:520px;width:300px"></b><b style="left:760px;top:582px;width:250px"></b><b style="left:760px;top:644px;width:284px"></b><b style="left:760px;top:706px;width:190px"></b>
+        </div>
       </div>
 
       <div class="g full" id="g16">
         <div class="plus" id="g16p"><i></i><i></i></div>
       </div>
-
+      <video id="matte-deckwall" class="plate matte" src="assets/mattes/deckwall.webm"
+             data-start="20.533" data-duration="3.800" data-media-start="0"
+             muted playsinline></video>
+      <video id="matte-fanout" class="plate matte" src="assets/mattes/fanout.webm"
+             data-start="78.300" data-duration="3.800" data-media-start="0"
+             muted playsinline></video>
       <div id="scrim"></div>
       <div class="cap" id="cap0">НЕ</div>
       <div class="cap" id="cap1">ЗНАЮ</div>
@@ -519,19 +737,13 @@
       <div class="cap" id="cap34">ВИХОДИТЬ</div>
       <div class="cap" id="cap35">ТРОШКИ</div>
       <div class="cap" id="cap36">ГІМНЯНО:</div>
-      <div class="cap" id="cap37">ПИШЕШ</div>
-      <div class="cap" id="cap38">– "ЗРОБИ</div>
-      <div class="cap" id="cap39">ПРЕЗЕНТАЦІЮ</div>
-      <div class="cap" id="cap40">НА</div>
-      <div class="cap" id="cap41">ТАКУ</div>
-      <div class="cap" id="cap42">ТЕМУ"</div>
-      <div class="cap" id="cap43">І ВІН</div>
-      <div class="cap" id="cap44">ПРОСТО</div>
-      <div class="cap" id="cap45">РОЗКИДУЄ</div>
-      <div class="cap" id="cap46">ЯКУСЬ</div>
-      <div class="cap" id="cap47">ІНФОРМАЦІЮ</div>
-      <div class="cap" id="cap48">ПО</div>
-      <div class="cap" id="cap49">СЛАЙДУ.</div>
+      <div class="cap inv" id="cap43">І ВІН</div>
+      <div class="cap inv" id="cap44">ПРОСТО</div>
+      <div class="cap inv" id="cap45">РОЗКИДУЄ</div>
+      <div class="cap inv" id="cap46">ЯКУСЬ</div>
+      <div class="cap inv" id="cap47">ІНФОРМАЦІЮ</div>
+      <div class="cap inv" id="cap48">ПО</div>
+      <div class="cap inv" id="cap49">СЛАЙДУ.</div>
       <div class="cap" id="cap50">АЛЕ</div>
       <div class="cap" id="cap51">ГАРНІ</div>
       <div class="cap" id="cap52">ПРЕЗЕНТАЦІЇ</div>
@@ -591,55 +803,52 @@
       <div class="cap" id="cap106">ВСЕ</div>
       <div class="cap" id="cap107">ПЕРЕЧИТАТИ</div>
       <div class="cap" id="cap108">І ВИПРАВИТИ.</div>
-      <div class="cap" id="cap109">ОТЖЕ,</div>
-      <div class="cap" id="cap110">ПЕРШИЙ</div>
-      <div class="cap" id="cap111">КРОК</div>
-      <div class="cap" id="cap112">ВІДКРИВАЄШ</div>
-      <div class="cap" id="cap113">КАНВУ</div>
-      <div class="cap" id="cap114">АБО</div>
-      <div class="cap" id="cap115">ГУГЛ</div>
-      <div class="cap" id="cap116">ПРЕЗЕНТАЦІЇ</div>
-      <div class="cap" id="cap117">І</div>
-      <div class="cap" id="cap118">КОРОТКО</div>
-      <div class="cap" id="cap119">НАКИДАЄШ</div>
-      <div class="cap" id="cap120">СКЕЛЕТ:</div>
-      <div class="cap" id="cap121">ЩО</div>
-      <div class="cap" id="cap122">МАЄ</div>
-      <div class="cap" id="cap123">БУТИ</div>
-      <div class="cap" id="cap124">НА</div>
-      <div class="cap" id="cap125">КОЖНОМУ</div>
-      <div class="cap" id="cap126">СЛАЙДІ.</div>
-      <div class="cap" id="cap127">ДЕСЬ</div>
-      <div class="cap" id="cap128">ПИШЕШ</div>
-      <div class="cap" id="cap129">ЗАГАЛЬНІ</div>
-      <div class="cap" id="cap130">СЕНСИ,</div>
-      <div class="cap" id="cap131">ДЕСЬ</div>
-      <div class="cap" id="cap132">РОЗПИСУЄШ</div>
-      <div class="cap" id="cap133">ДЕТАЛЬНІШЕ,</div>
-      <div class="cap" id="cap134">ЯКЩО</div>
-      <div class="cap" id="cap135">ХОЧЕШ</div>
-      <div class="cap" id="cap136">КАРТИНКУ</div>
-      <div class="cap" id="cap137">ЧИ</div>
-      <div class="cap" id="cap138">ГРАФІК,</div>
-      <div class="cap" id="cap139">ТО ПРОСТО</div>
-      <div class="cap" id="cap140">ПРОПИСУЄШ</div>
-      <div class="cap" id="cap141">ЗБОКУ,</div>
-      <div class="cap" id="cap142">ЩО ТУТ</div>
-      <div class="cap" id="cap143">МАЄ</div>
-      <div class="cap" id="cap144">БУТИ.</div>
-      <div class="cap" id="cap145">І В</div>
-      <div class="cap" id="cap146">РЕЗУЛЬТАТІ</div>
-      <div class="cap" id="cap147">МАЄШ</div>
-      <div class="cap" id="cap148">ЧОРНО-БІЛИЙ</div>
-      <div class="cap" id="cap149">СКЕЛЕТ:</div>
-      <div class="cap" id="cap150">ТЕКСТ</div>
-      <div class="cap" id="cap151">НА</div>
-      <div class="cap" id="cap152">БІЛОМУ</div>
-      <div class="cap" id="cap153">ФОНІ,</div>
-      <div class="cap" id="cap154">БЕЗ</div>
-      <div class="cap" id="cap155">ЖОДНОГО</div>
-      <div class="cap" id="cap156">ДИЗАЙНУ.</div>
-      <div class="cap" id="cap157">ПОТІМ</div>
+      <div class="cap inv" id="cap109">ОТЖЕ,</div>
+      <div class="cap inv" id="cap110">ПЕРШИЙ</div>
+      <div class="cap inv" id="cap111">КРОК</div>
+      <div class="cap inv" id="cap112">ВІДКРИВАЄШ</div>
+      <div class="cap inv" id="cap113">КАНВУ</div>
+      <div class="cap inv" id="cap114">АБО</div>
+      <div class="cap inv" id="cap115">ГУГЛ</div>
+      <div class="cap inv" id="cap116">ПРЕЗЕНТАЦІЇ</div>
+      <div class="cap inv" id="cap117">І</div>
+      <div class="cap inv" id="cap118">КОРОТКО</div>
+      <div class="cap inv" id="cap119">НАКИДАЄШ</div>
+      <div class="cap inv" id="cap120">СКЕЛЕТ:</div>
+      <div class="cap inv" id="cap121">ЩО</div>
+      <div class="cap inv" id="cap122">МАЄ</div>
+      <div class="cap inv" id="cap123">БУТИ</div>
+      <div class="cap inv" id="cap124">НА</div>
+      <div class="cap inv" id="cap125">КОЖНОМУ</div>
+      <div class="cap inv" id="cap126">СЛАЙДІ.</div>
+      <div class="cap inv" id="cap127">ДЕСЬ</div>
+      <div class="cap inv" id="cap128">ПИШЕШ</div>
+      <div class="cap inv" id="cap129">ЗАГАЛЬНІ</div>
+      <div class="cap inv" id="cap130">СЕНСИ,</div>
+      <div class="cap inv" id="cap131">ДЕСЬ</div>
+      <div class="cap inv" id="cap132">РОЗПИСУЄШ</div>
+      <div class="cap inv" id="cap133">ДЕТАЛЬНІШЕ,</div>
+      <div class="cap inv" id="cap134">ЯКЩО</div>
+      <div class="cap inv" id="cap135">ХОЧЕШ</div>
+      <div class="cap inv" id="cap139">ТО ПРОСТО</div>
+      <div class="cap inv" id="cap140">ПРОПИСУЄШ</div>
+      <div class="cap inv" id="cap141">ЗБОКУ,</div>
+      <div class="cap inv" id="cap142">ЩО ТУТ</div>
+      <div class="cap inv" id="cap143">МАЄ</div>
+      <div class="cap inv" id="cap144">БУТИ.</div>
+      <div class="cap inv" id="cap145">І В</div>
+      <div class="cap inv" id="cap146">РЕЗУЛЬТАТІ</div>
+      <div class="cap inv" id="cap147">МАЄШ</div>
+      <div class="cap inv" id="cap148">ЧОРНО-БІЛИЙ</div>
+      <div class="cap inv" id="cap149">СКЕЛЕТ:</div>
+      <div class="cap inv" id="cap150">ТЕКСТ</div>
+      <div class="cap inv" id="cap151">НА</div>
+      <div class="cap inv" id="cap152">БІЛОМУ</div>
+      <div class="cap inv" id="cap153">ФОНІ,</div>
+      <div class="cap inv" id="cap154">БЕЗ</div>
+      <div class="cap inv" id="cap155">ЖОДНОГО</div>
+      <div class="cap inv" id="cap156">ДИЗАЙНУ.</div>
+      <div class="cap inv" id="cap157">ПОТІМ</div>
       <div class="cap" id="cap158">БЕРЕШ</div>
       <div class="cap" id="cap159">ЦЕЙ</div>
       <div class="cap" id="cap160">СКЕЛЕТ</div>
@@ -679,18 +888,6 @@
       <div class="cap" id="cap194">І</div>
       <div class="cap" id="cap195">ВІДПРАВЛЯЄШ</div>
       <div class="cap" id="cap196">ТУДИ.</div>
-      <div class="cap" id="cap197">ХВИЛИН</div>
-      <div class="cap" id="cap198">ЧЕРЕЗ</div>
-      <div class="cap" id="cap199">П'ЯТЬ</div>
-      <div class="cap" id="cap200">МАЄШ</div>
-      <div class="cap" id="cap201">ГОТОВУ</div>
-      <div class="cap" id="cap202">ДИЗАЙН-СИСТЕМУ</div>
-      <div class="cap" id="cap203">З</div>
-      <div class="cap" id="cap204">КОЛЬОРАМИ,</div>
-      <div class="cap" id="cap205">ШРИФТАМИ,</div>
-      <div class="cap" id="cap206">ЕЛЕМЕНТАМИ</div>
-      <div class="cap" id="cap207">КОРОТШЕ,</div>
-      <div class="cap" id="cap208">БРЕНДБУК.</div>
       <div class="cap" id="cap209">І ВОНА</div>
       <div class="cap" id="cap210">ПОТІМ</div>
       <div class="cap" id="cap211">ПРАЦЮЄ</div>
@@ -734,17 +931,17 @@
       <div class="cap" id="cap249">ТОМУ</div>
       <div class="cap" id="cap250">ЩО</div>
       <div class="cap" id="cap251">ЧЕРЕЗ</div>
-      <div class="cap" id="cap252">П'ЯТЬ-ДЕСЯТЬ</div>
-      <div class="cap" id="cap253">ХВИЛИН</div>
-      <div class="cap" id="cap254">В ТЕБЕ</div>
-      <div class="cap" id="cap255">БУДЕ</div>
-      <div class="cap" id="cap256">ВЖЕ</div>
-      <div class="cap" id="cap257">ГОТОВА</div>
-      <div class="cap" id="cap258">ГАРНО</div>
-      <div class="cap" id="cap259">ЗАДИЗАЙНЕНА</div>
-      <div class="cap" id="cap260">ПРЕЗЕНТАЦІЯ,</div>
-      <div class="cap" id="cap261">ЯКУ</div>
-      <div class="cap" id="cap262">ТРЕБА.</div>
+      <div class="cap inv" id="cap252">П'ЯТЬ-ДЕСЯТЬ</div>
+      <div class="cap inv" id="cap253">ХВИЛИН</div>
+      <div class="cap inv" id="cap254">В ТЕБЕ</div>
+      <div class="cap inv" id="cap255">БУДЕ</div>
+      <div class="cap inv" id="cap256">ВЖЕ</div>
+      <div class="cap inv" id="cap257">ГОТОВА</div>
+      <div class="cap inv" id="cap258">ГАРНО</div>
+      <div class="cap inv" id="cap259">ЗАДИЗАЙНЕНА</div>
+      <div class="cap inv" id="cap260">ПРЕЗЕНТАЦІЯ,</div>
+      <div class="cap inv" id="cap261">ЯКУ</div>
+      <div class="cap inv" id="cap262">ТРЕБА.</div>
       <div class="cap" id="cap263">НУ,</div>
       <div class="cap" id="cap264">ХІБА</div>
       <div class="cap" id="cap265">ЩО</div>
@@ -838,18 +1035,6 @@
   tl.set("#cap35", {autoAlpha: 0}, 14.033);
   tl.set("#cap36", {autoAlpha: 1}, 14.118);
   tl.set("#cap36", {autoAlpha: 0}, 15.195);
-  tl.set("#cap37", {autoAlpha: 1}, 15.280);
-  tl.set("#cap37", {autoAlpha: 0}, 15.555);
-  tl.set("#cap38", {autoAlpha: 1}, 15.640);
-  tl.set("#cap38", {autoAlpha: 0}, 15.835);
-  tl.set("#cap39", {autoAlpha: 1}, 15.920);
-  tl.set("#cap39", {autoAlpha: 0}, 16.375);
-  tl.set("#cap40", {autoAlpha: 1}, 16.460);
-  tl.set("#cap40", {autoAlpha: 0}, 16.560);
-  tl.set("#cap41", {autoAlpha: 1}, 16.620);
-  tl.set("#cap41", {autoAlpha: 0}, 16.855);
-  tl.set("#cap42", {autoAlpha: 1}, 16.940);
-  tl.set("#cap42", {autoAlpha: 0}, 17.355);
   tl.set("#cap43", {autoAlpha: 1}, 17.440);
   tl.set("#cap43", {autoAlpha: 0}, 17.575);
   tl.set("#cap44", {autoAlpha: 1}, 17.660);
@@ -1036,12 +1221,6 @@
   tl.set("#cap134", {autoAlpha: 0}, 50.715);
   tl.set("#cap135", {autoAlpha: 1}, 50.800);
   tl.set("#cap135", {autoAlpha: 0}, 51.075);
-  tl.set("#cap136", {autoAlpha: 1}, 51.160);
-  tl.set("#cap136", {autoAlpha: 0}, 51.535);
-  tl.set("#cap137", {autoAlpha: 1}, 51.620);
-  tl.set("#cap137", {autoAlpha: 0}, 51.720);
-  tl.set("#cap138", {autoAlpha: 1}, 51.720);
-  tl.set("#cap138", {autoAlpha: 0}, 52.095);
   tl.set("#cap139", {autoAlpha: 1}, 52.180);
   tl.set("#cap139", {autoAlpha: 0}, 52.455);
   tl.set("#cap140", {autoAlpha: 1}, 52.540);
@@ -1158,30 +1337,6 @@
   tl.set("#cap195", {autoAlpha: 0}, 72.295);
   tl.set("#cap196", {autoAlpha: 1}, 72.380);
   tl.set("#cap196", {autoAlpha: 0}, 72.480);
-  tl.set("#cap197", {autoAlpha: 1}, 72.520);
-  tl.set("#cap197", {autoAlpha: 0}, 72.775);
-  tl.set("#cap198", {autoAlpha: 1}, 72.860);
-  tl.set("#cap198", {autoAlpha: 0}, 73.055);
-  tl.set("#cap199", {autoAlpha: 1}, 73.140);
-  tl.set("#cap199", {autoAlpha: 0}, 73.555);
-  tl.set("#cap200", {autoAlpha: 1}, 73.640);
-  tl.set("#cap200", {autoAlpha: 0}, 73.895);
-  tl.set("#cap201", {autoAlpha: 1}, 73.980);
-  tl.set("#cap201", {autoAlpha: 0}, 74.375);
-  tl.set("#cap202", {autoAlpha: 1}, 74.460);
-  tl.set("#cap202", {autoAlpha: 0}, 75.135);
-  tl.set("#cap203", {autoAlpha: 1}, 75.220);
-  tl.set("#cap203", {autoAlpha: 0}, 75.320);
-  tl.set("#cap204", {autoAlpha: 1}, 75.360);
-  tl.set("#cap204", {autoAlpha: 0}, 75.875);
-  tl.set("#cap205", {autoAlpha: 1}, 75.960);
-  tl.set("#cap205", {autoAlpha: 0}, 76.395);
-  tl.set("#cap206", {autoAlpha: 1}, 76.480);
-  tl.set("#cap206", {autoAlpha: 0}, 76.975);
-  tl.set("#cap207", {autoAlpha: 1}, 77.060);
-  tl.set("#cap207", {autoAlpha: 0}, 77.415);
-  tl.set("#cap208", {autoAlpha: 1}, 77.500);
-  tl.set("#cap208", {autoAlpha: 0}, 78.135);
   tl.set("#cap209", {autoAlpha: 1}, 78.220);
   tl.set("#cap209", {autoAlpha: 0}, 78.355);
   tl.set("#cap210", {autoAlpha: 1}, 78.440);
@@ -1312,6 +1467,14 @@
   tl.set("#cap272", {autoAlpha: 0}, 102.700);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 102.800);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 15.080);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 20.450);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 41.020);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 58.700);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 72.320);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 78.200);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 93.750);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 99.000);
 
   /* b01_hate_making_them */
 
@@ -1341,33 +1504,101 @@
   /* b02_ai_makes_junk */
 
   gsap.set("#g2", {autoAlpha: 0});
-  gsap.set("#g2s", {autoAlpha: 0, scale: 0.86, transformOrigin: "50% 50%"});
-  gsap.set("#g2 .junk", {autoAlpha: 0, scale: 0.6, transformOrigin: "50% 50%"});
-  gsap.set("#g2x", {autoAlpha: 0, scale: 0.4, rotation: -20,
-                    transformOrigin: "50% 50%"});
-  tl.set("#g2", {autoAlpha: 1}, 11.44);
-  // «зі штучним інтелектом» — it arrives instantly and already full, because
-  // the speed is the appeal and an empty slide here says nothing
-  tl.to("#g2s", {autoAlpha: 1, scale: 1, duration: 0.28, ease: "back.out(2.4)"}, 11.58);
-  tl.to("#g2 .junk", {autoAlpha: 1, scale: 1, duration: 0.18,
-                      ease: "back.out(2)",
-                      stagger: {each: 0.035, from: "start"}}, 11.74);
-  // «розкидує якусь інформацію по слайду» — and it reshuffles into worse.
-  // The offsets are baked from a seeded PRNG at build time, not rolled by GSAP:
-  // `random()` re-rolls at tween init and every render worker initialises
-  // independently, so the same frame would come out differently twice.
-  tl.to("#g2j0", {rotation: "+=0", x: "+=38", y: "+=5", duration: 0.44, ease: "power2.inOut"}, 18.04);
-  tl.to("#g2j1", {rotation: "+=-6", x: "+=-23", y: "+=-7", duration: 0.44, ease: "power2.inOut"}, 18.06);
-  tl.to("#g2j2", {rotation: "+=13", x: "+=-40", y: "+=3", duration: 0.44, ease: "power2.inOut"}, 18.08);
-  tl.to("#g2j3", {rotation: "+=2", x: "+=19", y: "+=-13", duration: 0.44, ease: "power2.inOut"}, 18.10);
-  tl.to("#g2j4", {rotation: "+=-4", x: "+=30", y: "+=-16", duration: 0.44, ease: "power2.inOut"}, 18.12);
-  tl.to("#g2j5", {rotation: "+=9", x: "+=8", y: "+=-8", duration: 0.44, ease: "power2.inOut"}, 18.14);
-  tl.to("#g2j6", {rotation: "+=8", x: "+=17", y: "+=9", duration: 0.44, ease: "power2.inOut"}, 18.16);
-  // «гімняно» lands earlier than the mess: the verdict first, then the reason
-  tl.to("#g2x", {autoAlpha: 1, scale: 1, rotation: 0, duration: 0.32,
-                 ease: "back.out(2.8)"}, 14.12);
-  tl.to("#g2x", {autoAlpha: 0, scale: 0.8, duration: 0.22}, 17.60);
-  tl.to("#g2", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 20.90);
+  gsap.set("#g2p", {autoAlpha: 0, y: -40});
+  gsap.set("#g2pt", {clipPath: "inset(0 100% 0 0)"});
+  gsap.set("#g2pc", {x: -790});
+  gsap.set("#g2 .spill", {autoAlpha: 0});
+  tl.set("#g2", {autoAlpha: 1}, 15.28);
+  tl.to("#g2p", {autoAlpha: 1, y: 0, duration: 0.26, ease: "power3.out"}, 15.30);
+  // the bar types while she reads it out — 15.64 to 17.36 is her exact phrase.
+  // clipPath, not width: a layout tween snaps to whole pixels and stutters.
+  tl.to("#g2pt", {clipPath: "inset(0 0% 0 0)", duration: 1.62,
+                  ease: "none"}, 15.66);
+  tl.to("#g2pc", {x: 0, duration: 1.62, ease: "none"}, 15.66);
+  // «розкидує» — and it throws the answer at the whole frame
+  tl.fromTo("#g2s0", {x: -72, y: -1085, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.42, ease: "power3.out"}, 18.040);
+  tl.fromTo("#g2s1", {x: 219, y: -247, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.45, ease: "power3.out"}, 18.050);
+  tl.fromTo("#g2s2", {x: -379, y: -899, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.48, ease: "power3.out"}, 18.060);
+  tl.fromTo("#g2s3", {x: 185, y: -825, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.51, ease: "power3.out"}, 18.070);
+  tl.fromTo("#g2s4", {x: 26, y: -916, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "power3.out"}, 18.080);
+  tl.fromTo("#g2s5", {x: -363, y: -254, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.42, ease: "power3.out"}, 18.090);
+  tl.fromTo("#g2s6", {x: 8, y: -1339, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.45, ease: "power3.out"}, 18.100);
+  tl.fromTo("#g2s7", {x: -284, y: -979, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.48, ease: "power3.out"}, 18.110);
+  tl.fromTo("#g2s8", {x: 109, y: -409, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.51, ease: "power3.out"}, 18.120);
+  tl.fromTo("#g2s9", {x: -145, y: -727, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "power3.out"}, 18.130);
+  tl.fromTo("#g2s10", {x: 29, y: -174, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.42, ease: "power3.out"}, 18.140);
+  tl.fromTo("#g2s11", {x: 608, y: -412, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.45, ease: "power3.out"}, 18.150);
+  tl.fromTo("#g2s12", {x: -394, y: -1318, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.48, ease: "power3.out"}, 18.160);
+  tl.fromTo("#g2s13", {x: 421, y: -1332, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.51, ease: "power3.out"}, 18.170);
+  tl.fromTo("#g2s14", {x: 36, y: -502, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "power3.out"}, 18.180);
+  tl.fromTo("#g2s15", {x: -113, y: -574, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.42, ease: "power3.out"}, 18.190);
+  tl.fromTo("#g2s16", {x: 284, y: -70, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.45, ease: "power3.out"}, 18.200);
+  tl.fromTo("#g2s17", {x: 550, y: -940, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.48, ease: "power3.out"}, 18.210);
+  tl.fromTo("#g2s18", {x: 58, y: -239, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.51, ease: "power3.out"}, 18.220);
+  tl.fromTo("#g2s19", {x: -39, y: -460, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "power3.out"}, 18.230);
+  tl.fromTo("#g2s20", {x: -399, y: -110, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.42, ease: "power3.out"}, 18.240);
+  tl.fromTo("#g2s21", {x: 274, y: -1034, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.45, ease: "power3.out"}, 18.250);
+  tl.fromTo("#g2s22", {x: -385, y: -297, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.48, ease: "power3.out"}, 18.260);
+  tl.fromTo("#g2s23", {x: -271, y: -466, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.51, ease: "power3.out"}, 18.270);
+  tl.fromTo("#g2s24", {x: -117, y: -269, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "power3.out"}, 18.280);
+  tl.fromTo("#g2s25", {x: 228, y: -1177, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.42, ease: "power3.out"}, 18.290);
+  tl.fromTo("#g2s26", {x: -191, y: -699, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.45, ease: "power3.out"}, 18.300);
+  tl.fromTo("#g2s27", {x: -91, y: -196, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.48, ease: "power3.out"}, 18.310);
+  tl.fromTo("#g2s28", {x: 498, y: -1113, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.51, ease: "power3.out"}, 18.320);
+  tl.fromTo("#g2s29", {x: 31, y: -1194, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "power3.out"}, 18.330);
+  tl.fromTo("#g2s30", {x: 512, y: -860, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.42, ease: "power3.out"}, 18.340);
+  tl.fromTo("#g2s31", {x: 572, y: -1021, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.45, ease: "power3.out"}, 18.350);
+  tl.fromTo("#g2s32", {x: -194, y: -576, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.48, ease: "power3.out"}, 18.360);
+  tl.fromTo("#g2s33", {x: -278, y: -139, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.51, ease: "power3.out"}, 18.370);
+  tl.fromTo("#g2s34", {x: 330, y: -820, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "power3.out"}, 18.380);
+  tl.fromTo("#g2s35", {x: 210, y: -50, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.42, ease: "power3.out"}, 18.390);
+  tl.fromTo("#g2s36", {x: 124, y: -687, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.45, ease: "power3.out"}, 18.400);
+  tl.fromTo("#g2s37", {x: -228, y: -895, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.48, ease: "power3.out"}, 18.410);
+  tl.fromTo("#g2s38", {x: 97, y: -404, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.51, ease: "power3.out"}, 18.420);
+  tl.fromTo("#g2s39", {x: -158, y: -468, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "power3.out"}, 18.430);
+  tl.fromTo("#g2s40", {x: 2, y: -1031, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.42, ease: "power3.out"}, 18.440);
+  tl.fromTo("#g2s41", {x: -200, y: -830, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.45, ease: "power3.out"}, 18.450);
+  tl.fromTo("#g2s42", {x: -43, y: -121, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.48, ease: "power3.out"}, 18.460);
+  tl.fromTo("#g2s43", {x: 472, y: -609, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.51, ease: "power3.out"}, 18.470);
+  tl.fromTo("#g2s44", {x: 585, y: -205, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "power3.out"}, 18.480);
+  tl.fromTo("#g2s45", {x: 36, y: -465, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.42, ease: "power3.out"}, 18.490);
+  tl.fromTo("#g2s46", {x: -232, y: -245, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.45, ease: "power3.out"}, 18.500);
+  tl.fromTo("#g2s47", {x: 336, y: -853, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.48, ease: "power3.out"}, 18.510);
+  tl.fromTo("#g2s48", {x: 551, y: -1019, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.51, ease: "power3.out"}, 18.520);
+  tl.fromTo("#g2s49", {x: 523, y: -875, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "power3.out"}, 18.530);
+  tl.fromTo("#g2s50", {x: 490, y: -845, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.42, ease: "power3.out"}, 18.540);
+  tl.fromTo("#g2s51", {x: 582, y: -354, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.45, ease: "power3.out"}, 18.550);
+  tl.fromTo("#g2s52", {x: -405, y: -691, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.48, ease: "power3.out"}, 18.560);
+  tl.fromTo("#g2s53", {x: 520, y: -240, scale: 0.05, autoAlpha: 0}, {x: 0, y: 0, scale: 1, autoAlpha: 1, duration: 0.51, ease: "power3.out"}, 18.570);
+  tl.to("#g2p", {y: -230, duration: 0.50, ease: "power2.inOut"}, 18.04);
+  tl.to("#g2", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 20.45);
+  /* b02b_deck_wall */
+
+  gsap.set("#g2w", {autoAlpha: 0});
+  gsap.set("#g2w0", {rotation: -6.0, y: 560, scale: 0.92, autoAlpha: 0, transformOrigin: "50% 50%"});
+  gsap.set("#g2w1", {rotation: 3.0, y: 560, scale: 0.92, autoAlpha: 0, transformOrigin: "50% 50%"});
+  gsap.set("#g2w2", {rotation: -4.0, y: 560, scale: 0.92, autoAlpha: 0, transformOrigin: "50% 50%"});
+  gsap.set("#g2w3", {rotation: 4.0, y: 560, scale: 0.92, autoAlpha: 0, transformOrigin: "50% 50%"});
+  gsap.set("#g2w4", {rotation: -3.0, y: 560, scale: 0.92, autoAlpha: 0, transformOrigin: "50% 50%"});
+  gsap.set("#g2w5", {rotation: 5.0, y: 560, scale: 0.92, autoAlpha: 0, transformOrigin: "50% 50%"});
+  gsap.set("#g2w6", {rotation: -5.0, y: 560, scale: 0.92, autoAlpha: 0, transformOrigin: "50% 50%"});
+  gsap.set("#g2w7", {rotation: 2.0, y: 560, scale: 0.92, autoAlpha: 0, transformOrigin: "50% 50%"});
+  gsap.set("#g2w8", {rotation: -3.0, y: 560, scale: 0.92, autoAlpha: 0, transformOrigin: "50% 50%"});
+  tl.set("#g2w", {autoAlpha: 1}, 20.55);
+  // «Гарні презентації… штучним інтелектом» — one card per beat of the phrase
+  tl.to("#g2w0", {y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "back.out(1.5)"}, 20.680);
+  tl.to("#g2w1", {y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "back.out(1.5)"}, 20.875);
+  tl.to("#g2w2", {y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "back.out(1.5)"}, 21.070);
+  tl.to("#g2w3", {y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "back.out(1.5)"}, 21.265);
+  tl.to("#g2w4", {y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "back.out(1.5)"}, 21.460);
+  tl.to("#g2w5", {y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "back.out(1.5)"}, 21.655);
+  tl.to("#g2w6", {y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "back.out(1.5)"}, 21.850);
+  tl.to("#g2w7", {y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "back.out(1.5)"}, 22.045);
+  tl.to("#g2w8", {y: 0, scale: 1, autoAlpha: 1, duration: 0.54, ease: "back.out(1.5)"}, 22.240);
+  // «реально зробити» — and the whole wall settles as one thing
+  tl.to("#g2w", {scale: 1.03, duration: 0.42, ease: "power2.out",
+                 transformOrigin: "50% 60%"}, 22.64);
+  tl.to("#g2w", {autoAlpha: 0, duration: 0.30, ease: "power2.in"}, 24.00);
   /* b03_three_steps */
 
   gsap.set("#g3", {autoAlpha: 0});
@@ -1413,47 +1644,66 @@
   /* b06_step_one_tools */
 
   gsap.set("#g6", {autoAlpha: 0});
-  gsap.set("#g6n, #g6a, #g6b", {autoAlpha: 0, scale: 0.6,
-                                transformOrigin: "50% 50%"});
-  tl.set("#g6", {autoAlpha: 1}, 41.72);
-  tl.to("#g6n", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.8)"}, 41.86);
-  tl.to("#g6a", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.4)"}, 42.96);
-  tl.to("#g6b", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.4)"}, 43.58);
-  tl.to("#g6", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 45.30);
+  gsap.set("#g6a, #g6b", {autoAlpha: 0, scale: 0.55, y: -70,
+                          transformOrigin: "50% 50%"});
+  tl.set("#g6", {autoAlpha: 1}, 41.22);
+  // «канву»
+  tl.to("#g6a", {autoAlpha: 1, scale: 1, y: 0, duration: 0.36,
+                 ease: "back.out(2.6)"}, 42.90);
+  // «гугл презентації»
+  tl.to("#g6b", {autoAlpha: 1, scale: 1, y: 0, duration: 0.36,
+                 ease: "back.out(2.6)"}, 43.60);
+  // they retreat once the wall starts building under them
+  tl.to("#g6a, #g6b", {scale: 0.58, y: -104, duration: 0.44,
+                       ease: "power2.inOut"}, 45.40);
+  // the marks go — the wall is the subject now, and STYLE.md 4a.3 says a
+  // graphic must not outstay its sentence. But #g6 carries the paper ground
+  // for the whole takeover, so only its children leave: dropping the wrapper
+  // here put her footage back behind the wall for the entire push-in.
+  tl.to("#g6a, #g6b", {autoAlpha: 0, scale: 0.50, y: -160, duration: 0.34,
+                       ease: "power2.in"}, 47.30);
+  tl.to("#g6", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 54.35);
   /* b07_skeleton_built */
 
   gsap.set("#g7", {autoAlpha: 0});
-  gsap.set("#g7s", {autoAlpha: 0, scale: 0.88, transformOrigin: "50% 50%"});
-  gsap.set("#g7s .wh, #g7s .wr", {scaleX: 0, transformOrigin: "0% 50%"});
-  gsap.set("#g7s .wpic, #g7s .wchart", {autoAlpha: 0, scale: 0.7,
-                                        transformOrigin: "50% 50%"});
-  tl.set("#g7", {autoAlpha: 1}, 45.50);
-  // «накидаєш скелет»
-  tl.to("#g7s", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.2)"}, 45.66);
-  tl.to("#g7s .wh", {scaleX: 1, duration: 0.26, ease: "power2.out"}, 45.90);
-  // «що має бути на кожному слайді»
-  tl.to("#g7s .wr", {scaleX: 1, duration: 0.24, stagger: 0.10,
-                     ease: "power2.out"}, 47.34);
-  // «загальні сенси» — the body thickens
-  tl.to("#g7s .wr", {scaleY: 1.25, duration: 0.22, ease: "power2.out"}, 48.72);
-  // «якщо хочеш картинку чи графік — прописуєш збоку»
-  tl.to("#g7s .wpic", {autoAlpha: 1, scale: 1, duration: 0.28,
-                       ease: "back.out(2.4)"}, 51.16);
-  tl.to("#g7s .wpic", {autoAlpha: 0, duration: 0.18}, 51.66);
-  tl.to("#g7s .wchart", {autoAlpha: 1, scale: 1, duration: 0.28,
-                         ease: "back.out(2.4)"}, 51.72);
-  tl.to("#g7", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 54.90);
+  gsap.set("#g7w", {transformOrigin: "50% 50%"});
+  gsap.set("#g7 .sk", {autoAlpha: 0, scale: 0.86, transformOrigin: "50% 50%"});
+  gsap.set("#g7 .sk b", {scaleX: 0});
+  gsap.set("#g7 .mnote", {autoAlpha: 0, scale: 0.6, transformOrigin: "50% 50%"});
+  tl.set("#g7", {autoAlpha: 1}, 44.30);
+  // «накидаєш скелет» — the wall arrives, then writes itself
+  tl.to("#g7 .sk", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2)",
+                    stagger: {each: 0.055, from: "start"}}, 44.40);
+  tl.to("#g7 .sk b", {scaleX: 1, duration: 0.22, ease: "power2.out",
+                      stagger: {each: 0.016, from: "start"}}, 45.10);
+  // «Десь пишеш загальні сенси, десь розписуєш детальніше» — push in
+  tl.to("#g7w", {scale: 1.7, x: 204, y: 544, duration: 1.30,
+                 ease: "power2.inOut"}, 48.20);
+  // «картинку» / «графік» — written into the margin, each on its own word
+  tl.to("#g7n2", {autoAlpha: 1, scale: 1, duration: 0.30,
+                  ease: "back.out(2.4)"}, 51.16);
+  tl.to("#g7n1", {autoAlpha: 1, scale: 1, duration: 0.30,
+                  ease: "back.out(2.4)"}, 51.72);
+  // «збоку, що тут має бути» — ease back out
+  tl.to("#g7w", {scale: 1.3, x: 150, y: 400, duration: 0.90,
+                 ease: "power2.inOut"}, 53.00);
+  tl.to("#g7", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 54.35);
   /* b08_black_and_white */
 
   gsap.set("#g8", {autoAlpha: 0});
-  gsap.set("#g8s", {autoAlpha: 0, scale: 0.9, transformOrigin: "50% 50%"});
-  tl.set("#g8", {autoAlpha: 1}, 55.36);
-  tl.to("#g8s", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.2)"}, 55.50);
-  // «на білому фоні» — it is a white rectangle and nothing else
-  tl.to("#g8s", {boxShadow: "0 0 0 0 rgba(0,0,0,0)", duration: 0.30}, 57.32);
-  // «без жодного дизайну» — a small, deliberate nothing
-  tl.to("#g8s", {scale: 0.96, duration: 0.30, ease: "power2.out"}, 58.10);
-  tl.to("#g8", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 59.60);
+  gsap.set("#g8 .fb", {scaleX: 0});
+  gsap.set("#g8p", {autoAlpha: 0});
+  tl.set("#g8", {autoAlpha: 1}, 54.42);
+  // «чорно-білий скелет» — all of it wipes on, left to right, fast
+  tl.to("#g8h", {scaleX: 1, duration: 0.24, ease: "power3.out"}, 54.50);
+  tl.to("#g8u", {scaleX: 1, duration: 0.20, ease: "power3.out"}, 54.76);
+  tl.to("#g8b .fb", {scaleX: 1, duration: 0.20, ease: "power2.out",
+                     stagger: 0.045}, 55.00);
+  tl.to("#g8r1, #g8r2, #g8r3", {scaleX: 1, duration: 0.20, ease: "power2.out",
+                                stagger: 0.05}, 55.40);
+  tl.to("#g8p", {autoAlpha: 1, duration: 0.18}, 55.62);
+  // «без жодного дизайну» — and then nothing happens at all, on purpose
+  tl.to("#g8", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 58.70);
   /* b09_claude_two_steps */
 
   gsap.set("#g9", {autoAlpha: 0});
@@ -1483,34 +1733,56 @@
   tl.to("#g10s span", {y: -180, autoAlpha: 0, duration: 0.46,
                        ease: "power2.in", stagger: 0.05}, 71.00);
   tl.to("#g10", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 72.10);
-  /* b11_five_minutes */
-
-  gsap.set("#g11", {autoAlpha: 0});
-  gsap.set("#g11n", {autoAlpha: 0, scale: 0.6, transformOrigin: "50% 50%"});
-  tl.set("#g11", {autoAlpha: 1}, 72.40);
-  tl.to("#g11n", {autoAlpha: 1, scale: 1, duration: 0.34, ease: "back.out(2.8)"}, 72.52);
-  tl.to("#g11", {autoAlpha: 0, duration: 0.22, ease: "power2.in"}, 74.00);
   /* b12_system_fills */
 
   gsap.set("#g12", {autoAlpha: 0});
-  gsap.set("#g12d", {autoAlpha: 0, scale: 0.9, transformOrigin: "50% 40%"});
-  gsap.set("#g12c i", {autoAlpha: 0, scale: 0.5, transformOrigin: "50% 50%"});
-  gsap.set("#g12t span", {autoAlpha: 0, y: 24});
-  gsap.set("#g12e i", {autoAlpha: 0, scaleX: 0.4, transformOrigin: "50% 50%"});
-  tl.set("#g12", {autoAlpha: 1}, 74.34);
-  tl.to("#g12d", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.2)"}, 74.46);
+  gsap.set("#g12bg, #g12h, #g12 .bbr, #g12s, #g12l, #g12 .hex", {autoAlpha: 0});
+  gsap.set("#g12c1, #g12c2, #g12c3", {autoAlpha: 0, scaleX: 0.3,
+                                      transformOrigin: "0% 50%"});
+  // resting size is the swatch; the slam is that scaled up to fill the frame,
+  // so the 26px radius stays 26px instead of stretching to a 260px ellipse
+  gsap.set("#g12 .band", {scaleY: 0, y: -546, borderRadius: 0});
+  tl.set("#g12", {autoAlpha: 1}, 72.52);
+  // «Хвилин через п'ять» — the whole frame goes to colour, and stays there
+  tl.to("#g12 .band", {scaleY: 10.11, duration: 0.42, ease: "power3.out",
+                       stagger: 0.055}, 72.60);
+  // «дизайн-систему» — the bands drop into a swatch row, page appears under
+  tl.to("#g12bg", {autoAlpha: 1, duration: 0.24}, 74.46);
+  tl.to("#g12 .band", {scaleY: 1, y: 0, borderRadius: 26, duration: 0.58,
+                       ease: "power2.inOut", stagger: 0.03}, 74.46);
+  tl.to("#g12h, #g12r1", {autoAlpha: 1, duration: 0.26}, 74.84);
   // «кольорами»
-  tl.to("#g12c i", {autoAlpha: 1, scale: 1, duration: 0.24, ease: "back.out(2.4)",
-                    stagger: 0.05}, 75.36);
+  tl.to("#g12 .hex", {autoAlpha: 1, duration: 0.22, stagger: 0.04}, 75.36);
   // «шрифтами»
-  tl.to("#g12t span", {autoAlpha: 1, y: 0, duration: 0.24, ease: "power3.out",
-                       stagger: 0.06}, 75.96);
+  tl.to("#g12r2", {autoAlpha: 1, duration: 0.20}, 75.90);
+  tl.to("#g12s, #g12l", {autoAlpha: 1, duration: 0.26, ease: "power2.out"}, 75.96);
   // «елементами»
-  tl.to("#g12e i", {autoAlpha: 1, scaleX: 1, duration: 0.24, ease: "back.out(2.4)",
-                    stagger: 0.05}, 76.48);
-  // «коротше, брендбук» — the whole thing is one object now
-  tl.to("#g12d", {scale: 0.94, duration: 0.34, ease: "power2.out"}, 77.50);
-  tl.to("#g12", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 80.90);
+  tl.to("#g12r3", {autoAlpha: 1, duration: 0.20}, 76.42);
+  tl.to("#g12c1, #g12c2, #g12c3", {autoAlpha: 1, scaleX: 1, duration: 0.26,
+                                   ease: "back.out(2.2)", stagger: 0.06}, 76.48);
+  tl.to("#g12", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 78.20);
+  /* b12b_fan_out */
+
+  gsap.set("#g12f", {autoAlpha: 0});
+  gsap.set("#g12f0", {x: 90, y: 375, rotation: 0, scale: 0.06, autoAlpha: 0, transformOrigin: "50% 50%"});
+  gsap.set("#g12f1", {x: -290, y: 330, rotation: 0, scale: 0.06, autoAlpha: 0, transformOrigin: "50% 50%"});
+  gsap.set("#g12f2", {x: 555, y: -45, rotation: 0, scale: 0.06, autoAlpha: 0, transformOrigin: "50% 50%"});
+  gsap.set("#g12f3", {x: -415, y: -270, rotation: 0, scale: 0.06, autoAlpha: 0, transformOrigin: "50% 50%"});
+  gsap.set("#g12f4", {x: 200, y: -400, rotation: 0, scale: 0.06, autoAlpha: 0, transformOrigin: "50% 50%"});
+  gsap.set("#g12f5", {x: -335, y: -645, rotation: 0, scale: 0.06, autoAlpha: 0, transformOrigin: "50% 50%"});
+  gsap.set("#g12f6", {x: 465, y: -610, rotation: 0, scale: 0.06, autoAlpha: 0, transformOrigin: "50% 50%"});
+  tl.set("#g12f", {autoAlpha: 1}, 78.30);
+  // «презентацій» — the one it was built for
+  tl.to("#g12f0", {x: 0, y: 0, rotation: -5.0, scale: 1, autoAlpha: 1,
+                duration: 0.62, ease: "power3.out"}, 79.60);
+  // «будь-якого дизайну» — and everything else it also does
+  tl.to("#g12f1", {x: 0, y: 0, rotation: 6.0, scale: 1, autoAlpha: 1, duration: 0.66, ease: "power3.out"}, 80.960);
+  tl.to("#g12f2", {x: 0, y: 0, rotation: 5.0, scale: 1, autoAlpha: 1, duration: 0.66, ease: "power3.out"}, 81.045);
+  tl.to("#g12f3", {x: 0, y: 0, rotation: -7.0, scale: 1, autoAlpha: 1, duration: 0.66, ease: "power3.out"}, 81.130);
+  tl.to("#g12f4", {x: 0, y: 0, rotation: 3.0, scale: 1, autoAlpha: 1, duration: 0.66, ease: "power3.out"}, 81.215);
+  tl.to("#g12f5", {x: 0, y: 0, rotation: -5.0, scale: 1, autoAlpha: 1, duration: 0.66, ease: "power3.out"}, 81.300);
+  tl.to("#g12f6", {x: 0, y: 0, rotation: 7.0, scale: 1, autoAlpha: 1, duration: 0.66, ease: "power3.out"}, 81.385);
+  tl.to("#g12f", {autoAlpha: 0, duration: 0.30, ease: "power2.in"}, 82.05);
   /* b13_upload_and_ask */
 
   gsap.set("#g13", {autoAlpha: 0});
@@ -1544,26 +1816,34 @@
   gsap.set("#g14c", {autoAlpha: 0, scale: 0.7, transformOrigin: "50% 100%"});
   gsap.set("#g14 .steam", {autoAlpha: 0, scaleY: 0.3,
                            transformOrigin: "50% 100%"});
-  tl.set("#g14", {autoAlpha: 1}, 93.04);
-  tl.to("#g14c", {autoAlpha: 1, scale: 1, duration: 0.34, ease: "back.out(2.4)"}, 93.18);
+  tl.set("#g14", {autoAlpha: 1}, 92.55);
+  tl.to("#g14c", {autoAlpha: 1, scale: 1, duration: 0.34, ease: "back.out(2.4)"}, 92.70);
   tl.to("#g14 .steam", {autoAlpha: 1, scaleY: 1, duration: 0.40,
                         ease: "power2.out", stagger: 0.10}, 93.50);
-  tl.to("#g14", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 94.70);
+  tl.to("#g14", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 93.85);
   /* b15_it_is_done */
 
   gsap.set("#g15", {autoAlpha: 0});
-  gsap.set("#g15n", {autoAlpha: 0, scale: 0.6, transformOrigin: "50% 50%"});
-  gsap.set("#g15s", {autoAlpha: 0, scale: 0.86, transformOrigin: "50% 50%"});
-  gsap.set("#g15t", {autoAlpha: 0, scale: 0.4, transformOrigin: "50% 50%"});
-  tl.set("#g15", {autoAlpha: 1}, 94.76);
-  // «п'ять-десять хвилин»
-  tl.to("#g15n", {autoAlpha: 1, scale: 1, duration: 0.32, ease: "back.out(2.8)"}, 94.88);
-  tl.to("#g15n", {autoAlpha: 0, y: -60, duration: 0.30, ease: "power2.in"}, 96.30);
-  // «гарно задизайнена презентація» — the skeleton, finished
-  tl.to("#g15s", {autoAlpha: 1, scale: 1, duration: 0.40, ease: "back.out(2.2)"}, 96.64);
-  // «хіба що трошки підправити» — one small nudge, and that is all
-  tl.to("#g15t", {autoAlpha: 1, scale: 1, duration: 0.26, ease: "back.out(2.8)"}, 100.02);
-  tl.to("#g15", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 101.30);
+  gsap.set("#g15bg", {autoAlpha: 0});
+  gsap.set("#g15n", {autoAlpha: 0, scale: 0.55, transformOrigin: "50% 50%"});
+  gsap.set("#g15h", {autoAlpha: 0, scale: 1.22, transformOrigin: "50% 50%"});
+  gsap.set("#g15f1, #g15f2", {autoAlpha: 0, rotation: 0,
+                              transformOrigin: "50% 100%"});
+  tl.set("#g15", {autoAlpha: 1}, 93.95);
+  tl.to("#g15bg", {autoAlpha: 1, duration: 0.26}, 93.97);
+  // «п'ять-десять хвилин» — a number is the one word §4 allows
+  tl.to("#g15n", {autoAlpha: 1, scale: 1, duration: 0.34,
+                  ease: "back.out(2.8)"}, 94.28);
+  tl.to("#g15n", {autoAlpha: 0, scale: 0.8, duration: 0.26,
+                  ease: "power2.in"}, 96.20);
+  // «гарно задизайнена презентація» — the deck lands, bigger than the frame
+  tl.to("#g15f1", {autoAlpha: 1, rotation: -7.0, duration: 0.46,
+                   ease: "back.out(1.8)"}, 96.52);
+  tl.to("#g15f2", {autoAlpha: 1, rotation: 4.5, duration: 0.46,
+                   ease: "back.out(1.8)"}, 96.58);
+  tl.to("#g15h", {autoAlpha: 1, scale: 1, duration: 0.50,
+                  ease: "back.out(1.9)"}, 96.64);
+  tl.to("#g15", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 99.00);
   /* b16_subscribe */
 
   gsap.set("#g16", {autoAlpha: 0});

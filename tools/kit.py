@@ -30,9 +30,9 @@ def esc(s):
 # --- §5a.4 the tonal ladder, §5a.5 never a flat fill, §5a.6 edge light,
 #     §5a.7 ambient shadow ----------------------------------------------------
 TOKENS = """
-      --surface:        #fdf6f6;
-      --container:      #f4dde2;
-      --container-high: #ecc8d0;
+      --surface:        #fffcfd;
+      --container:      #fbeef2;
+      --container-high: #f4dfe5;
       --graphite:       rgba(23,20,28,0.13);
       --accent:         #b4122f;
       --accent-deep:    #8d0d24;
@@ -40,7 +40,7 @@ TOKENS = """
       --ink:            #17141c;
 
       --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
-      --lit-blush:  linear-gradient(115deg, #fffdfd 0%, #fdf1f4 100%);
+      --lit-blush:  linear-gradient(115deg, #ffffff 0%, #fff7fa 100%);
       --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
       --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
       --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
@@ -220,16 +220,23 @@ class Kit(object):
     def load_captions(path):
         return json.load(io.open(path, encoding="utf-8"))["words"]
 
-    def caption_html(self, caps, blackout=()):
+    def caption_html(self, caps, blackout=(), invert=()):
+        """`invert` spans set the caption in ink instead of white. A light
+        takeover (a white skeleton page, a blushed deck) leaves white type
+        invisible; §2b keeps the captions running wherever the graphic is not
+        already saying the same word, so they have to survive a light ground.
+        A caption belongs to exactly one moment, so the decision is made here
+        at generation time rather than tweened at runtime."""
         out = []
         for i, c in enumerate(caps):
             if any(a <= c["s"] < b for a, b, _ in blackout):
                 continue
-            out.append('<div class="cap" id="cap%d">%s</div>'
-                       % (i, esc(c["w"].upper())))
+            inv = " inv" if any(a <= c["s"] < b for a, b, _ in invert) else ""
+            out.append('<div class="cap%s" id="cap%d">%s</div>'
+                       % (inv, i, esc(c["w"].upper())))
         return "\n      ".join(out)
 
-    def caption_js(self, caps, blackout=(), scrim_off=()):
+    def caption_js(self, caps, blackout=(), scrim_off=(), invert=()):
         """Instant on, instant off — a fade smears two words together at this
         rate. The scrim rides the spoken stretch and stands down for any
         takeover, where it would show through the pane as a halo."""
@@ -243,7 +250,24 @@ class Kit(object):
                      % max(0.0, caps[0]["s"] - 0.3))
         lines.append('  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, %.3f);'
                      % (caps[-1]["e"] + 0.1))
-        for a, b, _ in list(blackout) + list(scrim_off):
+        # An inverted span is over a light takeover, where the dark underlay
+        # reads as a grey smear behind ink type. Same treatment as a blackout.
+        #
+        # These are merged into a union first. One off/on pair per span looks
+        # right and is not: a blackout nested inside an invert span restores
+        # the scrim at its own end, and the underlay comes back for the rest
+        # of the takeover. Reel 9 had exactly that — the 51.10-52.15 blackout
+        # switched the scrim on over a white page until 58.70, which rendered
+        # as a grey cloud behind ink captions.
+        _spans = sorted([a, b] for a, b, _ in
+                        list(blackout) + list(scrim_off) + list(invert))
+        _off = []
+        for a, b in _spans:
+            if _off and a <= _off[-1][1] + 0.001:
+                _off[-1][1] = max(_off[-1][1], b)
+            else:
+                _off.append([a, b])
+        for a, b in _off:
             lines.append('  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, %.3f);'
                          % max(0.0, a - 0.20))
             lines.append('  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, %.3f);' % b)
@@ -273,6 +297,7 @@ class Kit(object):
            color: #fff; font-size: %(capSize)dpx; font-weight: 900;
            letter-spacing: -0.015em; white-space: nowrap;
            opacity: 0; visibility: hidden; }
+    .cap.inv { color: var(--ink); }
     .g { position: absolute; left: 0; top: %(gfxTop)dpx; width: %(w)dpx;
          height: %(gfxH)dpx; opacity: 0; visibility: hidden; }
     .g.full { top: 0; height: %(h)dpx; }
@@ -286,7 +311,7 @@ class Kit(object):
         }
 
     def document(self, title, plate, gfx_html, gfx_js, caps,
-                 blackout=(), scrim_off=()):
+                 blackout=(), scrim_off=(), invert=()):
         css = self.base_css() + "\n".join(self._css) + "\n" + "\n".join(self._sq)
         return '''<!DOCTYPE html>
 <html lang="uk">
@@ -331,5 +356,6 @@ class Kit(object):
 ''' % {"title": esc(title), "css": css, "w": self.w, "h": self.h,
        "dur": self.dur, "fps": self.fps, "plate": plate,
        "gfx": gfx_html, "mattes": "\n".join(self._mattes),
-       "caps": self.caption_html(caps, blackout),
-       "capjs": self.caption_js(caps, blackout, scrim_off), "gfxjs": gfx_js}
+       "caps": self.caption_html(caps, blackout, invert),
+       "capjs": self.caption_js(caps, blackout, scrim_off, invert),
+       "gfxjs": gfx_js}
