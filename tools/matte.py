@@ -8,7 +8,8 @@ Writes reel-04/assets/mattes/mobbin.webm — a transparent VP9 clip of just her
 for those two seconds — and prints the three numbers the beat needs.
 
 Why this exists, and why it is per-beat: background removal runs on the CPU at
-about 3.3 s/frame on her laptop (measured 2026-09-10; her Vega 10 gives ONNX no
+about 1.75 s/frame on her laptop (re-measured 2026-09-15 over 226 frames;
+the earlier 3.3 figure was pessimistic. Her Vega 10 gives ONNX no
 GPU provider). A 2-second beat is ~4 minutes, which is free and invisible. A
 whole reel is closer to two hours, which is not. STYLE.md §1 has the rule: matte
 the beats where something big goes behind her, never the reel.

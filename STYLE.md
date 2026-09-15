@@ -15,7 +15,7 @@ Never re-cut her footage.
 **Matte her per beat, never per reel.** Both halves of the old blanket ban have
 been retested (2026-09-10). The artifacts are gone: `u2net_human_seg` holds the
 flyaway strands at her hairline cleanly with no fringe. The cost has not moved —
-**3.3 s/frame, CPU only**, because her Vega 10 gives ONNX no GPU provider. That
+**~1.75 s/frame, CPU only** (re-measured 2026-09-15; the 3.3 here before was from 2026-09-10 and roughly doubled the real cost), because her Vega 10 gives ONNX no GPU provider. That
 is ~4 minutes for a 2-second beat, and *two hours* for a whole reel, which is
 the opposite of the lightness on her machine this pipeline exists to protect.
 
@@ -86,6 +86,76 @@ Being the caption's owner is the point of variant B: a caption can **move out of
 the way** of a full-screen graphic, or a single word can **lift out of the
 caption into the design** on the frame it is spoken. Default to her style; depart
 from it only where the design earns it.
+
+### 2b.1 When captions drop, and when they invert
+
+Her rule, 2026-09-15, after the first five-reel batch came back as *"technically
+right, but all very typical and homogenous"*:
+
+> *"when there's no text on the animation — the subtitles should still be there,
+> basically the no subtitles only affects animations that have text, so that its
+> not like subtitles say 10 euros and animation also says 10 euros"*
+
+So the test is **redundancy, not takeover**. A full-screen graphic does not earn
+a blackout by being full-screen; it earns one by *saying the word she is saying*.
+
+- **Blackout** the span where a graphic's own text repeats her words. In reel 9
+  that is three spans out of five takeovers: the prompt bar typing «зроби
+  презентацію на таку тему» while she reads it, the margin notes writing
+  «картинка» / «графік» on those two words, and the brandbook page whose header
+  says ДИЗАЙН-СИСТЕМА while she says «дизайн-систему».
+- **Keep them everywhere else**, including over a takeover with no text in it.
+- **Invert to ink** for the whole of any light takeover — `.cap.inv`, via the
+  `invert=` argument. White captions on a white page are invisible, which is
+  how reel 9's flat-white skeleton beat nearly shipped.
+
+Two mechanical traps, both hit:
+
+1. The scrim's off-spans must be **merged into a union** before emitting. One
+   off/on pair per span looks right and is not: a blackout nested inside an
+   invert span restores the underlay at its own end, and the dark scrim sits
+   behind ink captions for the rest of the takeover as a grey cloud.
+2. `blackout` has existed in `kit.py` since the matte commit. Across reels 7–11
+   it was passed **zero times**, so every graphic had to survive being stacked
+   on a permanent caption rail — which is why every graphic was small, low and
+   out of the way. If the reels look samey, check this first.
+
+---
+
+## 2c. Takeovers
+
+Her four reference reels (`Examples/`) all make the same structural argument,
+and it is not about polish: **the graphic owns the frame or it is not there.**
+None of them float a card over footage. They alternate — footage with a short
+phrase on it, then no footage at all.
+
+What a takeover is, mechanically: a `.g.full` whose first child is an opaque
+ground (`.tk.paper` / `.tk.white` / `.tk.blush`), usually with `.gp` graph
+paper over it. The plate is gone, so **none of the over-footage rules apply** —
+no glow budget, no band discipline, ink type on a light ground, and the
+heavy-overlay element ceiling does not bite.
+
+Rules learned building reel 9's five:
+
+- **Bleed off at least two edges.** A takeover composed inside the frame with
+  margins reads as a slide, not a takeover. Mark the elements
+  `data-layout-allow-overflow` so the layout checker stops flagging them.
+- **The ground belongs to the beat that starts first and must outlive every
+  other part of the takeover.** Reel 9's paper lived on the wrapper carrying
+  the Canva/Slides marks; fading that wrapper when the marks had said their
+  piece put her footage back behind the wall for the whole push-in. Fade the
+  *children*, keep the ground.
+- **Transforms only.** `width`, `height` and `margin` are layout properties:
+  the linter rejects them and they snap to integer device pixels mid-tween. A
+  typing reveal is `clipPath: inset(...)`; a band that fills the frame sits at
+  its *resting* size and scales **up**, so a 26px radius stays 26px instead of
+  stretching into a 260px ellipse.
+- **Solve push-ins, don't eyeball them.** To bring point `p` to centre `c` at
+  scale `k`, the wrapper offset is `c - (c + (p - c)k)`.
+- **Use the whole frame when captions are blacked out.** TK4's brandbook first
+  sat in the top half with 800px of dead paper under it, because it had been
+  laid out around a caption band that was not going to be there.
+
 
 ## 3. Frame geometry (measured off reel 2, 1080×1920 @ 60fps)
 
