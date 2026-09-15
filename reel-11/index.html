@@ -14,9 +14,9 @@
     #root { position: relative; width: 1080px; height: 1920px;
             overflow: hidden; background: #000;
             font-family: "ProductSans", system-ui, sans-serif;
-      --surface:        #fdf6f6;
-      --container:      #f4dde2;
-      --container-high: #ecc8d0;
+      --surface:        #fffcfd;
+      --container:      #fbeef2;
+      --container-high: #f4dfe5;
       --graphite:       rgba(23,20,28,0.13);
       --accent:         #b4122f;
       --accent-deep:    #8d0d24;
@@ -24,7 +24,7 @@
       --ink:            #17141c;
 
       --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
-      --lit-blush:  linear-gradient(115deg, #fffdfd 0%, #fdf1f4 100%);
+      --lit-blush:  linear-gradient(115deg, #ffffff 0%, #fff7fa 100%);
       --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
       --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
       --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
@@ -64,6 +64,7 @@
            color: #fff; font-size: 90px; font-weight: 900;
            letter-spacing: -0.015em; white-space: nowrap;
            opacity: 0; visibility: hidden; }
+    .cap.inv { color: var(--ink); }
     .g { position: absolute; left: 0; top: 40px; width: 1080px;
          height: 600px; opacity: 0; visibility: hidden; }
     .g.full { top: 0; height: 1920px; }
@@ -152,6 +153,44 @@
             border: 18px solid rgba(255,110,156,0.92);
             filter: drop-shadow(0 0 40px rgba(255,110,156,0.55)); }
 
+    /* ---- takeovers (STYLE.md 2c) ----
+       The graphic owns the frame: the plate is gone, so none of the
+       over-footage rules apply — no glow budget, no band discipline, ink type
+       on a light ground. Lives here rather than per-reel because every reel
+       from 9 onwards needs it. A takeover that does not bleed off at least
+       two edges reads as a slide, not a takeover. */
+    .tk { position: absolute; inset: 0; }
+    .tk.paper { background: var(--surface); }
+    .tk.white { background: #ffffff; }
+    .tk.blush { background: linear-gradient(150deg,#ffffff 0%,#fffafc 55%,
+                                            #fdf4f8 100%); }
+    /* graph paper — the texture the reference takeovers all have. 60px cells
+       at 5.8% ink: visible, never a pattern you read. */
+    .gp { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px),
+            repeating-linear-gradient(90deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px); }
+    /* horizontal rules only — a transcript or a list is ruled paper, not
+       graph paper, and the difference is what makes it read as an export. */
+    .gl { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.05) 0 1px,
+                                      transparent 1px 175px); }
+
+    /* the finished artefact, in her system — one class at any aspect ratio */
+    .dk { position: absolute; overflow: hidden; border-radius: 28px;
+          background: var(--lit-blush); box-shadow: var(--rim);
+          filter: var(--cast); }
+    .dk i { position: absolute; display: block; }
+    .dk .hb { left: 30px; top: 30px; height: 20px; border-radius: 6px;
+              background: var(--lit-accent); }
+    .dk .rr { left: 30px; height: 9px; border-radius: 4px;
+              background: rgba(23,20,28,0.22); }
+    .dk .pb { border-radius: 16px; background: var(--lit-pink);
+              box-shadow: var(--rim-dark); }
+
     /* ---- somebody else's budget, which is the object of the reel ---- */
     .budget { position: absolute; left: 120px; top: 60px; width: 840px;
               padding: 28px 30px; background: var(--lit-blush);
@@ -236,6 +275,54 @@
                background: var(--lit-pink); }
 
 
+    /* ---- the budget, in all three of its states ----
+       One object, shown padded (2.25), struck through (27.45) and reduced to
+       a single line (41.00). Same rows, same pitch, same positions each time,
+       because the argument is that it is the *same list* all along. */
+    .bl { position: absolute; left: 70px; width: 940px; height: 80px; }
+    .bl b { position: absolute; top: 10px; font-weight: 500; font-size: 40px;
+            color: var(--ink); }
+    .bl b.lb { left: 0; }
+    .bl b.am { right: 0; font-weight: 900; text-align: right; }
+    .bl i { position: absolute; left: -10px; top: 32px; width: 960px;
+            height: 9px; border-radius: 5px; background: var(--accent);
+            transform-origin: 0% 50%; }
+    .blr { position: absolute; left: 70px; width: 940px; height: 2px;
+           background: rgba(23,20,28,0.18); }
+    .tot { position: absolute; left: 70px; width: 940px; height: 110px; }
+    .tot b { position: absolute; font-weight: 900; color: var(--ink); }
+    .tot b.lb { left: 0; top: 30px; font-size: 44px; }
+    .tot b.am { right: 0; top: 4px; font-size: 86px; color: var(--accent);
+                text-align: right; }
+
+    /* ---- TK4: a free tier is a gauge, not a badge ----
+       Her note on reel 7 was that an unnameable shape is worthless. A track
+       with a generous filled band and a small marker well inside it reads as
+       "there is far more room here than you use". */
+    .gauge { position: absolute; height: 76px; border-radius: 999px;
+             background: var(--container); box-shadow: var(--rim);
+             overflow: hidden; }
+    .gauge i.free { position: absolute; left: 0; top: 0; height: 76px;
+                    border-radius: 999px; background: var(--lit-pink);
+                    transform-origin: 0% 50%; }
+    .gauge i.used { position: absolute; top: 0; height: 76px; width: 10px;
+                    background: var(--ink); }
+    .glab { position: absolute; font-weight: 900; font-size: 38px;
+            color: var(--ink); }
+
+    /* ---- TK5: money in, tokens out ---- */
+    .orbox { position: absolute; display: grid; place-items: center;
+             border-radius: 56px; background: var(--lit); box-shadow: var(--rim);
+             filter: var(--cast); }
+    .orbox svg { width: 62%; height: auto; display: block; }
+    .coin { position: absolute; display: grid; place-items: center;
+            width: 128px; height: 128px; border-radius: 50%;
+            background: var(--lit-accent); color: #fff; font-weight: 900;
+            font-size: 52px; box-shadow: var(--rim-dark); }
+    .tok { position: absolute; height: 34px; border-radius: 999px;
+           background: var(--lit-pink); box-shadow: var(--rim-dark); }
+
+
     .apps.small i { width: 96px; height: 96px; border-radius: 26px; }
     .apps.small { gap: 18px; }
 
@@ -262,8 +349,25 @@
              muted playsinline></video>
 
       <div class="g full" id="g1">
-        <div class="big" id="g1a" style="top:150px;font-size:250px">500<small>€</small><span class="sx" id="g1x"></span></div>
-        <div class="big" id="g1b" style="top:180px;font-size:250px">20<small>$</small></div>
+        <div class="tk paper"></div><div class="gp"></div>
+        <div class="bl" id="g1r0" style="top:290px"><b class="lb">Хостинг</b><b class="am">40 &#8364;</b><i id="g1rs0"></i></div>
+        <div class="bl" id="g1r1" style="top:386px"><b class="lb">База даних</b><b class="am">60 &#8364;</b><i id="g1rs1"></i></div>
+        <div class="bl" id="g1r2" style="top:482px"><b class="lb">AI підписка</b><b class="am">100 &#8364;</b><i id="g1rs2"></i></div>
+        <div class="bl" id="g1r3" style="top:578px"><b class="lb">Домен</b><b class="am">15 &#8364;</b><i id="g1rs3"></i></div>
+        <div class="bl" id="g1r4" style="top:674px"><b class="lb">Моніторинг</b><b class="am">45 &#8364;</b><i id="g1rs4"></i></div>
+        <div class="bl" id="g1r5" style="top:770px"><b class="lb">Аналітика</b><b class="am">35 &#8364;</b><i id="g1rs5"></i></div>
+        <div class="bl" id="g1r6" style="top:866px"><b class="lb">CDN</b><b class="am">30 &#8364;</b><i id="g1rs6"></i></div>
+        <div class="bl" id="g1r7" style="top:962px"><b class="lb">Email</b><b class="am">25 &#8364;</b><i id="g1rs7"></i></div>
+        <div class="bl" id="g1r8" style="top:1058px"><b class="lb">Бекапи</b><b class="am">20 &#8364;</b><i id="g1rs8"></i></div>
+        <div class="bl" id="g1r9" style="top:1154px"><b class="lb">Інструменти</b><b class="am">130 &#8364;</b><i id="g1rs9"></i></div>
+        <i class="blr" id="g1sep" style="top:1268px"></i>
+        <div class="tot" id="g1t" style="top:1288px">
+          <b class="lb">на місяць</b><b class="am">500 &#8364;</b>
+        </div>
+      </div>
+
+      <div class="g full" id="g1b">
+        <div class="big" id="g1bn" style="top:330px;font-size:300px;color:#b4122f;text-shadow:none">20<small> $</small></div>
       </div>
 
       <div class="g full" id="g2">
@@ -278,48 +382,58 @@
       </div>
 
       <div class="g full" id="g4">
-        <div class="budget" id="g4b"><div class="brow " id="g4r0"><img class="mk" src="assets/logos/vercel-mark.png" alt=""><span class="bar"></span><span class="cost"></span><span class="strike"></span></div><div class="brow " id="g4r1"><img class="mk" src="assets/logos/supabase-mark.png" alt=""><span class="bar"></span><span class="cost"></span><span class="strike"></span></div><div class="brow " id="g4r2"><span class="ph"></span><span class="bar"></span><span class="cost"></span><span class="strike"></span></div><div class="brow " id="g4r3"><span class="ph"></span><span class="bar"></span><span class="cost"></span><span class="strike"></span></div></div>
-        <div class="freewrap" id="g4f" style="left:445px;top:330px">
-          <div class="lit soft"></div>
-          <div class="free"><span>0</span><small>€</small></div>
+        <div class="tk paper"></div><div class="gp"></div>
+        <div class="bl" id="g4r0" style="top:290px"><b class="lb">Хостинг</b><b class="am">40 &#8364;</b><i id="g4rs0"></i></div>
+        <div class="bl" id="g4r1" style="top:386px"><b class="lb">База даних</b><b class="am">60 &#8364;</b><i id="g4rs1"></i></div>
+        <div class="bl" id="g4r2" style="top:482px"><b class="lb">AI підписка</b><b class="am">100 &#8364;</b><i id="g4rs2"></i></div>
+        <div class="bl" id="g4r3" style="top:578px"><b class="lb">Домен</b><b class="am">15 &#8364;</b><i id="g4rs3"></i></div>
+        <div class="bl" id="g4r4" style="top:674px"><b class="lb">Моніторинг</b><b class="am">45 &#8364;</b><i id="g4rs4"></i></div>
+        <div class="bl" id="g4r5" style="top:770px"><b class="lb">Аналітика</b><b class="am">35 &#8364;</b><i id="g4rs5"></i></div>
+        <div class="bl" id="g4r6" style="top:866px"><b class="lb">CDN</b><b class="am">30 &#8364;</b><i id="g4rs6"></i></div>
+        <div class="bl" id="g4r7" style="top:962px"><b class="lb">Email</b><b class="am">25 &#8364;</b><i id="g4rs7"></i></div>
+        <div class="bl" id="g4r8" style="top:1058px"><b class="lb">Бекапи</b><b class="am">20 &#8364;</b><i id="g4rs8"></i></div>
+        <div class="bl" id="g4r9" style="top:1154px"><b class="lb">Інструменти</b><b class="am">130 &#8364;</b><i id="g4rs9"></i></div>
+        <i class="blr" id="g4sep" style="top:1268px"></i>
+        <div class="tot" id="g4t" style="top:1288px">
+          <b class="lb">на місяць</b><b class="am">500 &#8364;</b>
         </div>
-      </div>
-
-      <div class="g full" id="g5">
-        <div class="big" id="g5n" style="top:190px;font-size:180px">500<small>€</small></div>
       </div>
 
       <div class="g full" id="g6">
-        <div class="budget" id="g6b"><div class="brow " id="g6r0"><span class="ph"></span><span class="bar"></span><span class="cost"></span><span class="strike"></span></div></div>
-      </div>
-
-      <div class="g full" id="g7">
-        <div class="tile brand prod " id="g7a" style="left:180px;top:110px"><img class="mk" src="assets/logos/claude-tile.png" alt=""></div>
-        <div class="tile brand prod " id="g7b" style="left:660px;top:110px"><img class="mk" src="assets/logos/codex-mark.png" alt=""></div>
-        <div class="big" id="g7h" style="top:400px;font-size:140px">100<small>€</small><span class="sx" id="g7x"></span></div>
-        <div class="big" id="g7t" style="top:400px;font-size:150px">20<small>$</small></div>
+        <div class="tk paper"></div><div class="gp"></div>
+        <div class="bl" id="g6row" style="top:760px">
+          <b class="lb">AI підписка</b>
+          <b class="am" id="g6old">100 &#8364;</b>
+          <i id="g6strike"></i>
+        </div>
+        <i class="blr" id="g6sep" style="top:880px"></i>
+        <div class="tile brand prod" id="g6a" style="left:190px;top:1020px"><img class="mk" src="assets/logos/claude-tile.png" alt=""></div>
+        <div class="tile brand prod" id="g6b" style="left:640px;top:1020px"><img class="mk" src="assets/logos/codex-mark.png" alt=""></div>
       </div>
 
       <div class="g full" id="g8">
-        <div class="tile brand prod " id="g8a" style="left:170px;top:110px"><img class="mk" src="assets/logos/vercel-mark.png" alt=""></div>
-        <div class="freewrap" id="g8fa" style="left:470px;top:135px">
-          <div class="lit soft"></div>
-          <div class="free"><span>0</span><small>€</small></div>
+        <div class="tk paper"></div><div class="gp"></div>
+        <div id="g8top" style="position:absolute;inset:0">
+          <div class="tile brand prod" id="g8a" style="left:100px;top:300px"><img class="mk" src="assets/logos/vercel-mark.png" alt=""></div>
+          <div class="gauge" id="g8g1" style="left:100px;top:620px;width:880px">
+            <i class="free" id="g8f1" style="width:880px"></i>
+            <i class="used" id="g8u1" style="left:206px"></i>
+          </div>
+          <div class="glab" id="g8l1" style="left:100px;top:722px">0 &#8364;</div>
         </div>
-        <div class="tile brand prod " id="g8b" style="left:170px;top:110px"><img class="mk" src="assets/logos/supabase-mark.png" alt=""></div>
-        <div class="freewrap" id="g8fb" style="left:470px;top:135px">
-          <div class="lit soft"></div>
-          <div class="free"><span>0</span><small>€</small></div>
+        <div class="tile brand prod" id="g8b" style="left:100px;top:880px"><img class="mk" src="assets/logos/supabase-mark.png" alt=""></div>
+        <div class="gauge" id="g8g2" style="left:100px;top:1200px;width:880px">
+          <i class="free" id="g8f2" style="width:880px"></i>
+          <i class="used" id="g8u2" style="left:158px"></i>
         </div>
+        <div class="glab" id="g8l2" style="left:100px;top:1302px">0 &#8364;</div>
       </div>
 
       <div class="g full" id="g9">
-        <div class="tile brand prod" id="g9r" style="left:420px;top:60px">
-          <span class="wordmark" style="font-size:58px">RUTA</span>
-        </div>
-        <div class="voice" id="g9v" style="left:420px;top:330px;width:240px;
+        <div class="big" id="g9r" style="top:80px;font-size:280px;color:#b4122f;text-shadow:none;letter-spacing:-0.03em">RUTA</div>
+        <div class="voice" id="g9v" style="left:420px;top:430px;width:240px;
              height:90px;justify-content:center"><i style="height:22px"></i><i style="height:52px"></i><i style="height:84px"></i><i style="height:40px"></i><i style="height:70px"></i><i style="height:30px"></i><i style="height:60px"></i><i style="height:44px"></i><i style="height:78px"></i><i style="height:28px"></i></div>
-        <div class="outs" id="g9o"><span></span><span></span><span></span></div>
+        <div class="outs" id="g9o" style="top:580px"><span></span><span></span><span></span></div>
       </div>
 
       <div class="g full" id="g10">
@@ -330,34 +444,33 @@
       <div class="g full" id="g11">
         <div class="plus" id="g11p"><i></i><i></i></div>
       </div>
-
+      <video id="matte-twenty" class="plate matte" src="assets/mattes/twenty.webm"
+             data-start="7.300" data-duration="2.667" data-media-start="0"
+             muted playsinline></video>
+      <video id="matte-ruta" class="plate matte" src="assets/mattes/ruta.webm"
+             data-start="67.900" data-duration="5.033" data-media-start="0"
+             muted playsinline></video>
       <div id="scrim"></div>
       <div class="cap" id="cap0">СКІЛЬКИ</div>
       <div class="cap" id="cap1">КОШТУЄ</div>
       <div class="cap" id="cap2">ПОЧАТИ</div>
       <div class="cap" id="cap3">ВАЙБКОДИТИ?</div>
       <div class="cap" id="cap4">У ТРЕДСІ</div>
-      <div class="cap" id="cap5">ПОСТІЙНО</div>
-      <div class="cap" id="cap6">ПИШУТЬ,</div>
-      <div class="cap" id="cap7">ЩО ДЛЯ</div>
-      <div class="cap" id="cap8">ЦЬОГО</div>
-      <div class="cap" id="cap9">ТРЕБА</div>
-      <div class="cap" id="cap10">МАТИ</div>
-      <div class="cap" id="cap11">500</div>
-      <div class="cap" id="cap12">ЄВРО</div>
-      <div class="cap" id="cap13">НА МІСЯЦЬ,</div>
-      <div class="cap" id="cap14">І ЦЕ</div>
-      <div class="cap" id="cap15">ТІЛЬКИ</div>
-      <div class="cap" id="cap16">ДЛЯ</div>
-      <div class="cap" id="cap17">ТОГО,</div>
-      <div class="cap" id="cap18">ЩОБ ПОЧАТИ.</div>
+      <div class="cap inv" id="cap5">ПОСТІЙНО</div>
+      <div class="cap inv" id="cap6">ПИШУТЬ,</div>
+      <div class="cap inv" id="cap7">ЩО ДЛЯ</div>
+      <div class="cap inv" id="cap8">ЦЬОГО</div>
+      <div class="cap inv" id="cap9">ТРЕБА</div>
+      <div class="cap inv" id="cap10">МАТИ</div>
+      <div class="cap inv" id="cap15">ТІЛЬКИ</div>
+      <div class="cap inv" id="cap16">ДЛЯ</div>
+      <div class="cap inv" id="cap17">ТОГО,</div>
+      <div class="cap inv" id="cap18">ЩОБ ПОЧАТИ.</div>
       <div class="cap" id="cap19">А</div>
       <div class="cap" id="cap20">НАСПРАВДІ</div>
       <div class="cap" id="cap21">МОЖНА</div>
       <div class="cap" id="cap22">ПОЧАТИ</div>
       <div class="cap" id="cap23">З</div>
-      <div class="cap" id="cap24">20</div>
-      <div class="cap" id="cap25">ДОЛАРІВ.</div>
       <div class="cap" id="cap26">Я</div>
       <div class="cap" id="cap27">ВЖЕ</div>
       <div class="cap" id="cap28">РОЗРОБИЛА</div>
@@ -412,26 +525,26 @@
       <div class="cap" id="cap77">І</div>
       <div class="cap" id="cap78">ЩЕ</div>
       <div class="cap" id="cap79">ЩЕ</div>
-      <div class="cap" id="cap80">КУПА</div>
-      <div class="cap" id="cap81">ЯКИХОСЬ</div>
-      <div class="cap" id="cap82">ДОДАТКОВИХ</div>
-      <div class="cap" id="cap83">ШТУК</div>
-      <div class="cap" id="cap84">ЦЕ</div>
-      <div class="cap" id="cap85">ВСЕ</div>
-      <div class="cap" id="cap86">БЕЗКОШТОВНЕ</div>
-      <div class="cap" id="cap87">НА</div>
-      <div class="cap" id="cap88">СТАРТІ.</div>
-      <div class="cap" id="cap89">І ВИХОДИТЬ,</div>
-      <div class="cap" id="cap90">ЩО</div>
-      <div class="cap" id="cap91">ЦИФРА</div>
-      <div class="cap" id="cap92">НІБИ</div>
-      <div class="cap" id="cap93">РОЗДУВАЄТЬСЯ</div>
-      <div class="cap" id="cap94">ШТУЧНО,</div>
-      <div class="cap" id="cap95">ЩОБ ЗДАВАЛОСЬ,</div>
-      <div class="cap" id="cap96">ЩО ЦЕ</div>
-      <div class="cap" id="cap97">ДОРОГА</div>
-      <div class="cap" id="cap98">І</div>
-      <div class="cap" id="cap99">СЕРЙОЗНА</div>
+      <div class="cap inv" id="cap80">КУПА</div>
+      <div class="cap inv" id="cap81">ЯКИХОСЬ</div>
+      <div class="cap inv" id="cap82">ДОДАТКОВИХ</div>
+      <div class="cap inv" id="cap83">ШТУК</div>
+      <div class="cap inv" id="cap84">ЦЕ</div>
+      <div class="cap inv" id="cap85">ВСЕ</div>
+      <div class="cap inv" id="cap86">БЕЗКОШТОВНЕ</div>
+      <div class="cap inv" id="cap87">НА</div>
+      <div class="cap inv" id="cap88">СТАРТІ.</div>
+      <div class="cap inv" id="cap89">І ВИХОДИТЬ,</div>
+      <div class="cap inv" id="cap90">ЩО</div>
+      <div class="cap inv" id="cap91">ЦИФРА</div>
+      <div class="cap inv" id="cap92">НІБИ</div>
+      <div class="cap inv" id="cap93">РОЗДУВАЄТЬСЯ</div>
+      <div class="cap inv" id="cap94">ШТУЧНО,</div>
+      <div class="cap inv" id="cap95">ЩОБ ЗДАВАЛОСЬ,</div>
+      <div class="cap inv" id="cap96">ЩО ЦЕ</div>
+      <div class="cap inv" id="cap97">ДОРОГА</div>
+      <div class="cap inv" id="cap98">І</div>
+      <div class="cap inv" id="cap99">СЕРЙОЗНА</div>
       <div class="cap" id="cap100">ШТУКА,</div>
       <div class="cap" id="cap101">І</div>
       <div class="cap" id="cap102">ЩО</div>
@@ -454,53 +567,50 @@
       <div class="cap" id="cap119">ТОБІ</div>
       <div class="cap" id="cap120">ПОТРІБНО</div>
       <div class="cap" id="cap121">ТІЛЬКИ</div>
-      <div class="cap" id="cap122">ОДНЕ</div>
-      <div class="cap" id="cap123">ПІДПИСКА</div>
-      <div class="cap" id="cap124">НА</div>
-      <div class="cap" id="cap125">САМ</div>
-      <div class="cap" id="cap126">ШТУЧНИЙ</div>
-      <div class="cap" id="cap127">ІНТЕЛЕКТ,</div>
-      <div class="cap" id="cap128">ЯКИЙ</div>
-      <div class="cap" id="cap129">ТОБІ</div>
-      <div class="cap" id="cap130">ЦЕ</div>
-      <div class="cap" id="cap131">ПИШЕ,</div>
-      <div class="cap" id="cap132">ТОБТО</div>
-      <div class="cap" id="cap133">CLAUDE</div>
-      <div class="cap" id="cap134">CODE</div>
-      <div class="cap" id="cap135">АБО</div>
-      <div class="cap" id="cap136">CODEX,</div>
-      <div class="cap" id="cap137">І</div>
-      <div class="cap" id="cap138">ЦЕ</div>
-      <div class="cap" id="cap139">НАВІТЬ</div>
-      <div class="cap" id="cap140">НЕ</div>
-      <div class="cap" id="cap141">100</div>
-      <div class="cap" id="cap142">ЄВРО,</div>
-      <div class="cap" id="cap143">А</div>
+      <div class="cap inv" id="cap122">ОДНЕ</div>
+      <div class="cap inv" id="cap123">ПІДПИСКА</div>
+      <div class="cap inv" id="cap124">НА</div>
+      <div class="cap inv" id="cap125">САМ</div>
+      <div class="cap inv" id="cap126">ШТУЧНИЙ</div>
+      <div class="cap inv" id="cap127">ІНТЕЛЕКТ,</div>
+      <div class="cap inv" id="cap128">ЯКИЙ</div>
+      <div class="cap inv" id="cap129">ТОБІ</div>
+      <div class="cap inv" id="cap130">ЦЕ</div>
+      <div class="cap inv" id="cap131">ПИШЕ,</div>
+      <div class="cap inv" id="cap132">ТОБТО</div>
+      <div class="cap inv" id="cap133">CLAUDE</div>
+      <div class="cap inv" id="cap134">CODE</div>
+      <div class="cap inv" id="cap135">АБО</div>
+      <div class="cap inv" id="cap136">CODEX,</div>
+      <div class="cap inv" id="cap137">І</div>
+      <div class="cap inv" id="cap138">ЦЕ</div>
+      <div class="cap inv" id="cap139">НАВІТЬ</div>
+      <div class="cap inv" id="cap143">А</div>
       <div class="cap" id="cap144">20.</div>
       <div class="cap" id="cap145">ВСЕ.</div>
       <div class="cap" id="cap146">ХОСТИНГ</div>
-      <div class="cap" id="cap147">–</div>
-      <div class="cap" id="cap148">ЦЕ ТОЙ</div>
-      <div class="cap" id="cap149">САМИЙ</div>
-      <div class="cap" id="cap150">VERSAL,</div>
-      <div class="cap" id="cap151">АЛЕ</div>
-      <div class="cap" id="cap152">В НЬОГО</div>
-      <div class="cap" id="cap153">Є</div>
-      <div class="cap" id="cap154">ЩЕДРІ</div>
-      <div class="cap" id="cap155">БЕЗКОШТОВНІ</div>
-      <div class="cap" id="cap156">ЛІМІТИ,</div>
-      <div class="cap" id="cap157">І</div>
-      <div class="cap" id="cap158">ЇХ</div>
-      <div class="cap" id="cap159">ВИСТАЧАЄ.</div>
-      <div class="cap" id="cap160">БАЗА</div>
-      <div class="cap" id="cap161">ДАНИХ</div>
-      <div class="cap" id="cap162">SUPABASE,</div>
-      <div class="cap" id="cap163">ТАМ ТЕЖ</div>
-      <div class="cap" id="cap164">БЕЗКОШТОВНИЙ</div>
-      <div class="cap" id="cap165">ЛІМІТ,</div>
-      <div class="cap" id="cap166">ЯКИЙ</div>
-      <div class="cap" id="cap167">ТОЧНО</div>
-      <div class="cap" id="cap168">ДОСТАТНЬО.</div>
+      <div class="cap inv" id="cap147">–</div>
+      <div class="cap inv" id="cap148">ЦЕ ТОЙ</div>
+      <div class="cap inv" id="cap149">САМИЙ</div>
+      <div class="cap inv" id="cap150">VERSAL,</div>
+      <div class="cap inv" id="cap151">АЛЕ</div>
+      <div class="cap inv" id="cap152">В НЬОГО</div>
+      <div class="cap inv" id="cap153">Є</div>
+      <div class="cap inv" id="cap154">ЩЕДРІ</div>
+      <div class="cap inv" id="cap155">БЕЗКОШТОВНІ</div>
+      <div class="cap inv" id="cap156">ЛІМІТИ,</div>
+      <div class="cap inv" id="cap157">І</div>
+      <div class="cap inv" id="cap158">ЇХ</div>
+      <div class="cap inv" id="cap159">ВИСТАЧАЄ.</div>
+      <div class="cap inv" id="cap160">БАЗА</div>
+      <div class="cap inv" id="cap161">ДАНИХ</div>
+      <div class="cap inv" id="cap162">SUPABASE,</div>
+      <div class="cap inv" id="cap163">ТАМ ТЕЖ</div>
+      <div class="cap inv" id="cap164">БЕЗКОШТОВНИЙ</div>
+      <div class="cap inv" id="cap165">ЛІМІТ,</div>
+      <div class="cap inv" id="cap166">ЯКИЙ</div>
+      <div class="cap inv" id="cap167">ТОЧНО</div>
+      <div class="cap inv" id="cap168">ДОСТАТНЬО.</div>
       <div class="cap" id="cap169">ЄДИНЕ,</div>
       <div class="cap" id="cap170">ЗА ЩО</div>
       <div class="cap" id="cap171">ДОВЕДЕТЬСЯ</div>
@@ -603,14 +713,6 @@
   tl.set("#cap9", {autoAlpha: 0}, 3.915);
   tl.set("#cap10", {autoAlpha: 1}, 4.000);
   tl.set("#cap10", {autoAlpha: 0}, 4.195);
-  tl.set("#cap11", {autoAlpha: 1}, 4.280);
-  tl.set("#cap11", {autoAlpha: 0}, 4.555);
-  tl.set("#cap12", {autoAlpha: 1}, 4.640);
-  tl.set("#cap12", {autoAlpha: 0}, 4.855);
-  tl.set("#cap13", {autoAlpha: 1}, 4.940);
-  tl.set("#cap13", {autoAlpha: 0}, 5.315);
-  tl.set("#cap14", {autoAlpha: 1}, 5.400);
-  tl.set("#cap14", {autoAlpha: 0}, 5.675);
   tl.set("#cap15", {autoAlpha: 1}, 5.760);
   tl.set("#cap15", {autoAlpha: 0}, 5.915);
   tl.set("#cap16", {autoAlpha: 1}, 6.000);
@@ -629,10 +731,6 @@
   tl.set("#cap22", {autoAlpha: 0}, 8.475);
   tl.set("#cap23", {autoAlpha: 1}, 8.560);
   tl.set("#cap23", {autoAlpha: 0}, 8.660);
-  tl.set("#cap24", {autoAlpha: 1}, 8.720);
-  tl.set("#cap24", {autoAlpha: 0}, 9.135);
-  tl.set("#cap25", {autoAlpha: 1}, 9.220);
-  tl.set("#cap25", {autoAlpha: 0}, 9.895);
   tl.set("#cap26", {autoAlpha: 1}, 9.980);
   tl.set("#cap26", {autoAlpha: 0}, 10.080);
   tl.set("#cap27", {autoAlpha: 1}, 10.100);
@@ -861,12 +959,6 @@
   tl.set("#cap138", {autoAlpha: 0}, 50.415);
   tl.set("#cap139", {autoAlpha: 1}, 50.500);
   tl.set("#cap139", {autoAlpha: 0}, 50.795);
-  tl.set("#cap140", {autoAlpha: 1}, 50.880);
-  tl.set("#cap140", {autoAlpha: 0}, 51.015);
-  tl.set("#cap141", {autoAlpha: 1}, 51.100);
-  tl.set("#cap141", {autoAlpha: 0}, 51.200);
-  tl.set("#cap142", {autoAlpha: 1}, 51.260);
-  tl.set("#cap142", {autoAlpha: 0}, 51.635);
   tl.set("#cap143", {autoAlpha: 1}, 51.720);
   tl.set("#cap143", {autoAlpha: 0}, 51.895);
   tl.set("#cap144", {autoAlpha: 1}, 51.980);
@@ -1063,24 +1155,42 @@
   tl.set("#cap239", {autoAlpha: 0}, 87.840);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 87.940);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 2.050);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 7.300);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 8.440);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 9.950);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 27.250);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 36.750);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 44.600);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 51.950);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 53.200);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 63.400);
 
   /* b01_five_hundred */
 
   gsap.set("#g1", {autoAlpha: 0});
-  gsap.set("#g1a", {autoAlpha: 0, scale: 0.6, transformOrigin: "50% 50%"});
-  gsap.set("#g1x", {scaleX: 0, transformOrigin: "0% 50%"});
-  gsap.set("#g1b", {autoAlpha: 0, scale: 0.5, transformOrigin: "50% 50%"});
-  tl.set("#g1", {autoAlpha: 1}, 4.16);
+  gsap.set("#g1 .bl", {autoAlpha: 0, x: -30});
+  gsap.set("#g1 .bl i", {scaleX: 0});
+  gsap.set("#g1sep", {scaleX: 0, transformOrigin: "0% 50%"});
+  gsap.set("#g1t", {autoAlpha: 0, scale: 0.7, transformOrigin: "100% 50%"});
+  tl.set("#g1", {autoAlpha: 1}, 2.25);
+  // «постійно пишуть, що треба мати» — the breakdown lists itself out
+  tl.to("#g1 .bl", {autoAlpha: 1, x: 0, duration: 0.24, ease: "power2.out",
+                    stagger: 0.13}, 2.68);
+  tl.to("#g1sep", {scaleX: 1, duration: 0.30, ease: "power2.out"}, 4.06);
   // «500 євро на місяць»
-  tl.to("#g1a", {autoAlpha: 1, scale: 1, duration: 0.36, ease: "back.out(2.8)"}, 4.28);
-  // it keeps inflating while she describes it, which is the claim
-  tl.to("#g1a", {scale: 1.12, duration: 1.40, ease: "power1.inOut"}, 5.00);
-  // «а насправді можна почати з 20 доларів» — struck, and replaced
-  tl.to("#g1x", {scaleX: 1, duration: 0.30, ease: "power3.out"}, 8.14);
-  tl.to("#g1a", {autoAlpha: 0, scale: 0.7, duration: 0.34,
-                 ease: "power2.in"}, 8.50);
-  tl.to("#g1b", {autoAlpha: 1, scale: 1, duration: 0.38, ease: "back.out(2.8)"}, 8.72);
-  tl.to("#g1", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 10.30);
+  tl.to("#g1t", {autoAlpha: 1, scale: 1, duration: 0.40,
+                 ease: "back.out(2.4)"}, 4.28);
+  tl.to("#g1", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 7.28);
+  /* b01b_twenty_dollars */
+
+  gsap.set("#g1b", {autoAlpha: 0});
+  gsap.set("#g1bn", {autoAlpha: 0, scale: 0.5, transformOrigin: "50% 50%"});
+  tl.set("#g1b", {autoAlpha: 1}, 7.40);
+  // «20 доларів»
+  tl.to("#g1bn", {autoAlpha: 1, scale: 1, duration: 0.44,
+                  ease: "back.out(2.2)"}, 8.64);
+  tl.to("#g1b", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 9.95);
   /* b02_four_apps */
 
   gsap.set("#g2", {autoAlpha: 0});
@@ -1116,84 +1226,93 @@
   /* b04_all_of_it_free */
 
   gsap.set("#g4", {autoAlpha: 0});
-  gsap.set("#g4b", {autoAlpha: 0, scale: 0.94, transformOrigin: "50% 30%"});
-  gsap.set("#g4 .brow", {autoAlpha: 0});
-  gsap.set("#g4 .strike", {scaleX: 0, transformOrigin: "0% 50%"});
-  gsap.set("#g4f", {autoAlpha: 0, scale: 0.5, transformOrigin: "50% 50%"});
-  tl.set("#g4", {autoAlpha: 1}, 27.50);
-  tl.to("#g4b", {autoAlpha: 1, scale: 1, duration: 0.28, ease: "power2.out"}, 27.56);
-  tl.to("#g4 .brow", {autoAlpha: 1, duration: 0.22, stagger: 0.08}, 27.64);
-  // «і ще купа якихось додаткових штук» — the pile grows
-  tl.to("#g4r2, #g4r3", {scale: 1.03, duration: 0.24, ease: "back.out(2.6)",
-                         transformOrigin: "50% 50%"}, 29.61);
-  tl.to("#g4r2, #g4r3", {scale: 1, duration: 0.26}, 29.90);
-  // «хоча по факту це все безкоштовне на старті» — every line struck
-  tl.to("#g4 .strike", {scaleX: 1, duration: 0.26, ease: "power3.out",
-                        stagger: 0.09}, 30.34);
-  tl.to("#g4 .cost", {autoAlpha: 0.28, duration: 0.24}, 30.90);
-  tl.to("#g4f", {autoAlpha: 1, scale: 1, duration: 0.34,
-                 ease: "back.out(2.8)"}, 31.66);
-  tl.to("#g4", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 33.20);
-  /* b05_inflated */
-
-  gsap.set("#g5", {autoAlpha: 0});
-  gsap.set("#g5n", {autoAlpha: 0, scale: 0.7, transformOrigin: "50% 50%"});
-  tl.set("#g5", {autoAlpha: 1}, 33.56);
-  tl.to("#g5n", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.6)"}, 33.68);
-  // «роздувається штучно» — and it keeps going, well past sense
-  tl.to("#g5n", {scale: 1.5, duration: 0.70, ease: "power2.out"}, 34.48);
-  tl.to("#g5n", {scale: 1.72, duration: 0.90, ease: "power1.inOut"}, 35.66);
-  tl.to("#g5", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 36.56);
+  gsap.set("#g4 .bl", {autoAlpha: 0, x: -24});
+  gsap.set("#g4 .bl i", {scaleX: 0});
+  gsap.set("#g4t", {autoAlpha: 0});
+  tl.set("#g4", {autoAlpha: 1}, 27.45);
+  // «ще купа якихось додаткових штук» — the same list, back where it was
+  tl.to("#g4 .bl", {autoAlpha: 1, x: 0, duration: 0.18, ease: "power2.out",
+                    stagger: 0.055}, 27.50);
+  tl.to("#g4t", {autoAlpha: 1, duration: 0.24}, 28.30);
+  // «це все безкоштовне» — nine of ten, struck through in order
+  tl.to("#g4rs0", {scaleX: 1, duration: 0.26, ease: "power2.out"}, 30.340);
+  tl.to("#g4rs1", {scaleX: 1, duration: 0.26, ease: "power2.out"}, 30.445);
+  tl.to("#g4rs3", {scaleX: 1, duration: 0.26, ease: "power2.out"}, 30.550);
+  tl.to("#g4rs4", {scaleX: 1, duration: 0.26, ease: "power2.out"}, 30.655);
+  tl.to("#g4rs5", {scaleX: 1, duration: 0.26, ease: "power2.out"}, 30.760);
+  tl.to("#g4rs6", {scaleX: 1, duration: 0.26, ease: "power2.out"}, 30.865);
+  tl.to("#g4rs7", {scaleX: 1, duration: 0.26, ease: "power2.out"}, 30.970);
+  tl.to("#g4rs8", {scaleX: 1, duration: 0.26, ease: "power2.out"}, 31.075);
+  tl.to("#g4rs9", {scaleX: 1, duration: 0.26, ease: "power2.out"}, 31.180);
+  // «на старті» — and their amounts stop counting
+  tl.to("#g4r0 b.am", {autoAlpha: 0.22, duration: 0.22}, 31.660);
+  tl.to("#g4r1 b.am", {autoAlpha: 0.22, duration: 0.22}, 31.715);
+  tl.to("#g4r3 b.am", {autoAlpha: 0.22, duration: 0.22}, 31.770);
+  tl.to("#g4r4 b.am", {autoAlpha: 0.22, duration: 0.22}, 31.825);
+  tl.to("#g4r5 b.am", {autoAlpha: 0.22, duration: 0.22}, 31.880);
+  tl.to("#g4r6 b.am", {autoAlpha: 0.22, duration: 0.22}, 31.935);
+  tl.to("#g4r7 b.am", {autoAlpha: 0.22, duration: 0.22}, 31.990);
+  tl.to("#g4r8 b.am", {autoAlpha: 0.22, duration: 0.22}, 32.045);
+  tl.to("#g4r9 b.am", {autoAlpha: 0.22, duration: 0.22}, 32.100);
+  // «цифра ніби роздувається ШТУЧНО» — so the total does exactly that
+  tl.to("#g4t", {scale: 1.9, duration: 0.70, ease: "back.out(1.4)",
+                 transformOrigin: "100% 50%"}, 33.68);
+  tl.to("#g4t", {scale: 2.05, duration: 0.30, ease: "power2.out",
+                 transformOrigin: "100% 50%"}, 34.48);
+  tl.to("#g4", {autoAlpha: 0, duration: 0.16, ease: "power2.in"}, 36.70);
   /* b06_only_one_thing */
 
   gsap.set("#g6", {autoAlpha: 0});
-  gsap.set("#g6b", {autoAlpha: 0, scale: 0.9, transformOrigin: "50% 50%"});
-  gsap.set("#g6r0", {autoAlpha: 0, x: -30});
-  tl.set("#g6", {autoAlpha: 1}, 42.94);
-  // «свій перший маленький інструмент» — card and line together; an empty card
-  // says nothing (STYLE.md §4a.5)
-  tl.to("#g6b", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.2)"}, 43.06);
-  tl.to("#g6r0", {autoAlpha: 1, x: 0, duration: 0.26, ease: "power3.out"}, 43.20);
-  // «тільки одне» — and it is still only the one line
-  tl.to("#g6r0", {scale: 1.05, duration: 0.24, ease: "back.out(2.8)",
-                  transformOrigin: "50% 50%"}, 45.06);
-  tl.to("#g6r0", {scale: 1, duration: 0.28, ease: "power2.out"}, 45.36);
-  tl.to("#g6", {autoAlpha: 0, duration: 0.24, ease: "power2.in"}, 46.60);
-  /* b07_claude_or_codex */
-
-  gsap.set("#g7", {autoAlpha: 0});
-  gsap.set("#g7a, #g7b", {autoAlpha: 0, scale: 0.7, transformOrigin: "50% 50%"});
-  gsap.set("#g7h, #g7t", {autoAlpha: 0, scale: 0.6, transformOrigin: "50% 50%"});
-  gsap.set("#g7x", {scaleX: 0, transformOrigin: "0% 50%"});
-  tl.set("#g7", {autoAlpha: 1}, 48.46);
-  tl.to("#g7a", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.4)"}, 48.58);
-  tl.to("#g7b", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.4)"}, 49.52);
-  // «не 100 євро»
-  tl.to("#g7h", {autoAlpha: 1, scale: 1, duration: 0.28, ease: "back.out(2.6)"}, 51.10);
-  tl.to("#g7x", {scaleX: 1, duration: 0.24, ease: "power3.out"}, 51.50);
-  // «а 20»
-  tl.to("#g7h", {autoAlpha: 0, duration: 0.20}, 51.90);
-  tl.to("#g7t", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.8)"}, 51.98);
-  tl.to("#g7", {autoAlpha: 0, duration: 0.18, ease: "power2.in"}, 52.00);
+  gsap.set("#g6row", {autoAlpha: 0, scale: 0.86, transformOrigin: "50% 50%"});
+  gsap.set("#g6sep", {scaleX: 0, transformOrigin: "0% 50%"});
+  gsap.set("#g6strike", {scaleX: 0});
+  gsap.set("#g6a, #g6b", {autoAlpha: 0, scale: 0.6, y: 40,
+                          transformOrigin: "50% 50%"});
+  tl.set("#g6", {autoAlpha: 1}, 44.80);
+  // «тільки одне»
+  tl.to("#g6row", {autoAlpha: 1, scale: 1, duration: 0.40,
+                   ease: "back.out(2.2)"}, 45.06);
+  tl.to("#g6sep", {scaleX: 1, duration: 0.30, ease: "power2.out"}, 45.78);
+  // «Claude Code»
+  tl.to("#g6a", {autoAlpha: 1, scale: 1, y: 0, duration: 0.36,
+                 ease: "back.out(2.4)"}, 48.58);
+  // «або Codex»
+  tl.to("#g6b", {autoAlpha: 1, scale: 1, y: 0, duration: 0.36,
+                 ease: "back.out(2.4)"}, 49.52);
+  // «навіть не 100 євро» — the padded figure crosses itself out and that is
+  // the last thing the page does; «а 20» is hers to say.
+  tl.to("#g6strike", {scaleX: 1, duration: 0.30, ease: "power2.out"}, 50.88);
+  tl.to("#g6old", {autoAlpha: 0.32, duration: 0.26}, 51.06);
+  tl.to("#g6", {autoAlpha: 0, duration: 0.22, ease: "power2.in"}, 51.95);
   /* b08_hosting_and_db */
 
   gsap.set("#g8", {autoAlpha: 0});
-  gsap.set("#g8a, #g8b", {autoAlpha: 0, scale: 0.7, transformOrigin: "50% 50%"});
-  gsap.set("#g8fa, #g8fb", {autoAlpha: 0, scale: 0.5,
-                            transformOrigin: "50% 50%"});
-  tl.set("#g8", {autoAlpha: 1}, 54.72);
-  // «той самий Versal»
-  tl.to("#g8a", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.4)"}, 54.84);
-  // «щедрі безкоштовні ліміти»
-  tl.to("#g8fa", {autoAlpha: 1, scale: 1, duration: 0.32,
-                  ease: "back.out(2.8)"}, 57.10);
-  tl.to("#g8a, #g8fa", {autoAlpha: 0, scale: 0.86, duration: 0.26,
-                        ease: "power2.in"}, 58.90);
-  // «база даних — Supabase, там теж безкоштовний»
-  tl.to("#g8b", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.4)"}, 59.20);
-  tl.to("#g8fb", {autoAlpha: 1, scale: 1, duration: 0.32,
-                  ease: "back.out(2.8)"}, 60.78);
-  tl.to("#g8", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 62.60);
+  gsap.set("#g8top", {y: 300});
+  gsap.set("#g8a, #g8b", {autoAlpha: 0, scale: 0.62, transformOrigin: "50% 50%"});
+  gsap.set("#g8g1, #g8g2", {autoAlpha: 0});
+  gsap.set("#g8f1, #g8f2", {scaleX: 0});
+  gsap.set("#g8u1, #g8u2", {autoAlpha: 0});
+  gsap.set("#g8l1, #g8l2", {autoAlpha: 0, y: 16});
+  tl.set("#g8", {autoAlpha: 1}, 53.40);
+  // «Versal»
+  tl.to("#g8a", {autoAlpha: 1, scale: 1, duration: 0.36,
+                 ease: "back.out(2.4)"}, 54.84);
+  // «щедрі безкоштовні ліміти, і їх вистачає»
+  tl.to("#g8g1", {autoAlpha: 1, duration: 0.20}, 56.50);
+  tl.to("#g8f1", {scaleX: 1, duration: 0.52, ease: "power3.out"}, 56.56);
+  tl.to("#g8u1", {autoAlpha: 1, duration: 0.20}, 57.60);
+  tl.to("#g8l1", {autoAlpha: 1, y: 0, duration: 0.24}, 57.72);
+  // «База даних» — the first product moves up to make room for the second
+  tl.to("#g8top", {y: 0, duration: 0.58, ease: "power2.inOut"}, 58.90);
+  // «Supabase»
+  tl.to("#g8b", {autoAlpha: 1, scale: 1, duration: 0.36,
+                 ease: "back.out(2.4)"}, 59.68);
+  // «там теж безкоштовний ліміт, який точно достатньо»
+  tl.to("#g8g2", {autoAlpha: 1, duration: 0.20}, 60.78);
+  tl.to("#g8f2", {scaleX: 1, duration: 0.52, ease: "power3.out"}, 60.84);
+  tl.to("#g8u2", {autoAlpha: 1, duration: 0.20}, 61.78);
+  tl.to("#g8l2", {autoAlpha: 1, y: 0, duration: 0.24}, 61.90);
+  tl.to("#g8", {autoAlpha: 0, duration: 0.16, ease: "power2.in"}, 63.30);
   /* b09_ruta_does_work */
 
   gsap.set("#g9", {autoAlpha: 0});
