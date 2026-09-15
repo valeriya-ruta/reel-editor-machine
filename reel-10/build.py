@@ -165,6 +165,69 @@ for _sel, _w, _h, _r in [
     k.squircle(_sel, _w, _h, _r)
 
 
+k.css("""
+    /* ---- TK1: the raw transcript, deliberately unloved ----
+       This is reel 10's bare state. It must look like an export and nothing
+       else: no radius, no card, no colour until the one line lights up. */
+    .tr { position: absolute; left: 80px; width: 920px; height: 150px; }
+    .tr b { position: absolute; top: 0; font-weight: 500; font-size: 30px; }
+    .tr b.ts { left: 0; color: rgba(23,20,28,0.38); letter-spacing: 0.02em; }
+    .tr b.sp { left: 150px; color: rgba(23,20,28,0.55); letter-spacing: 0.14em; }
+    .tr i { position: absolute; left: 150px; height: 14px; border-radius: 4px;
+            background: rgba(23,20,28,0.22); transform-origin: 0%% 50%%; }
+    .qhl { position: absolute; border-radius: 10px;
+           background: rgba(255,110,156,0.32); transform-origin: 0%% 50%%; }
+    .qt { position: absolute; font-weight: 900; color: var(--accent);
+          letter-spacing: -0.02em; white-space: nowrap; }
+
+    /* ---- M1: what she said, what you said, what she paid ---- */
+    .bub { position: absolute; overflow: hidden; border-radius: 48px;
+           background: var(--lit); box-shadow: var(--rim); filter: var(--cast); }
+    .bub.cl { background: var(--lit-blush); }
+    .bub i { position: absolute; left: 46px; height: 16px; border-radius: 5px;
+             background: rgba(23,20,28,0.24); transform-origin: 0%% 50%%; }
+    .eur { position: absolute; display: grid; place-items: center;
+           width: 264px; height: 112px; border-radius: 999px;
+           background: var(--lit-accent); color: #fff; font-weight: 900;
+           font-size: 56px; box-shadow: var(--rim-dark); filter: var(--cast); }
+
+    /* ---- TK2: the system, top to bottom ---- */
+    .wv { position: absolute; display: flex; align-items: center; gap: 14px; }
+    .wv i { display: block; flex: 1; border-radius: 7px;
+            background: var(--lit-accent); transform-origin: 50%% 50%%; }
+    .fm { position: absolute; object-fit: contain; }
+    /* Ink on pink, not white: white on --lit-pink measures 2.47:1 and the
+       contrast check wants 3:1. A pink chip with dark type also reads better
+       against the paper than another red pill would. */
+    .zero { position: absolute; display: grid; place-items: center;
+            width: 190px; height: 96px; border-radius: 999px;
+            background: var(--lit-pink); color: var(--ink); font-weight: 900;
+            font-size: 46px; box-shadow: var(--rim-dark); }
+    .txb { position: absolute; background: var(--lit); border-radius: 26px;
+           box-shadow: var(--rim); filter: var(--cast-sm); overflow: hidden; }
+    .txb i { position: absolute; left: 34px; height: 12px; border-radius: 4px;
+             background: rgba(23,20,28,0.22); transform-origin: 0%% 50%%; }
+
+    /* ---- TK3: the same sentence, dressed ---- */
+    .qcard { position: absolute; overflow: hidden; border-radius: 40px;
+             background: var(--lit-blush); box-shadow: var(--rim);
+             filter: var(--cast); }
+    .qcard .big2 { position: absolute; left: 54px; font-weight: 900;
+                   color: var(--accent); letter-spacing: -0.02em; }
+""")
+
+
+QUOTE = 'я не розумію, з чого почати'
+
+ENTRIES = '<div class="tr" id="g3e0" style="top:350px"><b class="ts">00:14</b><b class="sp">КЛІЄНТКА</b><i style="top:64px;width:640px"></i><i style="top:98px;width:520px"></i></div>\n        <div class="tr" id="g3e1" style="top:525px"><b class="ts">01:02</b><b class="sp">ТИ</b><i style="top:64px;width:700px"></i><i style="top:98px;width:430px"></i></div>\n        <div class="tr" id="g3e2" style="top:700px"><b class="ts">02:47</b><b class="sp">КЛІЄНТКА</b><i style="top:64px;width:560px"></i><i style="top:98px;width:610px"></i></div>\n        <div class="tr" id="g3e3" style="top:875px"><b class="ts">03:19</b><b class="sp">КЛІЄНТКА</b><i style="top:64px;width:690px"></i><i style="top:98px;width:500px"></i></div>\n        <div class="tr" id="g3e4" style="top:1050px"><b class="ts">04:05</b><b class="sp">ТИ</b><i style="top:64px;width:600px"></i><i style="top:98px;width:540px"></i></div>\n        <div class="tr" id="g3e5" style="top:1225px"><b class="ts">05:31</b><b class="sp">КЛІЄНТКА</b><i style="top:64px;width:660px"></i><i style="top:98px;width:470px"></i></div>'
+
+WAVE = '<i style="height:38px"></i><i style="height:88px"></i><i style="height:140px"></i><i style="height:66px"></i><i style="height:176px"></i><i style="height:44px"></i><i style="height:120px"></i><i style="height:92px"></i><i style="height:158px"></i><i style="height:58px"></i><i style="height:104px"></i><i style="height:72px"></i>'
+
+TXR = '<i style="top:44px;width:690px"></i><i style="top:84px;width:620px"></i><i style="top:124px;width:660px"></i><i style="top:164px;width:540px"></i>'
+
+ANGLES = [('g9a', -140, 160, 520, 330, -6.0, 57.2), ('g9b', 700, 230, 500, 320, 5.0, 58.4), ('g9c', -120, 640, 480, 310, 4.0, 59.48), ('g9d', 720, 700, 470, 300, -5.0, 60.68)]
+
+
 # ------------------------------------------------------------------ A · hook
 
 
@@ -268,65 +331,98 @@ def b02_call_is_the_source():
 
 @beat
 def b03_not_topic_but_words():
-    """«це не просто тема… це ще й текст саме так, як говорить твоя цільова
+    """«це не просто тема… це ще й ТЕКСТ саме так, як говорить твоя цільова
     аудиторія»
 
-    The topic is a label; the words are the thing. So a plain tag arrives, and
-    is replaced by the client's own sentence — the object the reel is built on.
+    Takeover 1, and reel 10's bare state. A raw call transcript on ruled
+    paper: timestamps, speaker labels, grey rules where the words would be.
+    Deliberately unloved — no card, no radius, no colour — because the whole
+    reel turns on seeing this same sentence dressed at 50s.
+
+    On «текст» the fourth entry stops being rules and becomes the client's
+    actual line. That is the object of the reel arriving, and STYLE.md 4a.2
+    says to write the word when the image alone would not read.
     """
     html = '''
       <div class="g full" id="g3">
-        <div class="tag" id="g3t"></div>
+        <div class="tk paper"></div><div class="gl"></div>
         %s
-      </div>''' % bubble("g3b", "client", rows=2, style="left:280px;top:190px")
+        <div class="qhl" id="g3hl" style="left:222px;top:%dpx;width:768px;height:74px"></div>
+        <div class="qt" id="g3q" style="left:232px;top:%dpx;font-size:46px">%s</div>
+      </div>''' % ("""<div class="tr" id="g3e0" style="top:350px"><b class="ts">00:14</b><b class="sp">КЛІЄНТКА</b><i style="top:64px;width:640px"></i><i style="top:98px;width:520px"></i></div>
+        <div class="tr" id="g3e1" style="top:525px"><b class="ts">01:02</b><b class="sp">ТИ</b><i style="top:64px;width:700px"></i><i style="top:98px;width:430px"></i></div>
+        <div class="tr" id="g3e2" style="top:700px"><b class="ts">02:47</b><b class="sp">КЛІЄНТКА</b><i style="top:64px;width:560px"></i><i style="top:98px;width:610px"></i></div>
+        <div class="tr" id="g3e3" style="top:875px"><b class="ts">03:19</b><b class="sp">КЛІЄНТКА</b><i style="top:64px;width:690px"></i><i style="top:98px;width:500px"></i></div>
+        <div class="tr" id="g3e4" style="top:1050px"><b class="ts">04:05</b><b class="sp">ТИ</b><i style="top:64px;width:600px"></i><i style="top:98px;width:540px"></i></div>
+        <div class="tr" id="g3e5" style="top:1225px"><b class="ts">05:31</b><b class="sp">КЛІЄНТКА</b><i style="top:64px;width:660px"></i><i style="top:98px;width:470px"></i></div>""", 350 + 3 * 175 + 52, 350 + 3 * 175 + 58, QUOTE)
     js = '''
   gsap.set("#g3", {autoAlpha: 0});
-  gsap.set("#g3t", {autoAlpha: 0, scale: 0.7, transformOrigin: "50% 50%"});
-  gsap.set("#g3b", {autoAlpha: 0, scale: 0.84, transformOrigin: "50% 50%"});
+  gsap.set("#g3 .tr b", {autoAlpha: 0});
+  gsap.set("#g3 .tr i", {scaleX: 0});
+  gsap.set("#g3hl", {scaleX: 0});
+  gsap.set("#g3q", {autoAlpha: 0, y: 14});
   tl.set("#g3", {autoAlpha: 1}, 13.70);
-  // «не просто тема» — a label, and that is all it is
-  tl.to("#g3t", {autoAlpha: 1, scale: 1, duration: 0.28, ease: "back.out(2.4)"}, 13.84);
-  tl.to("#g3t", {autoAlpha: 0, scale: 0.8, y: -40, duration: 0.28,
-                 ease: "power2.in"}, 16.10);
-  // «це ще й текст саме так, як говорить твоя аудиторія»
-  tl.to("#g3b", {autoAlpha: 1, scale: 1, duration: 0.34, ease: "back.out(2.2)"}, 16.40);
-  // «саме так, як говорить» — it is hers, and it stays hers
-  tl.to("#g3b", {scale: 1.05, duration: 0.26, ease: "back.out(2.6)"}, 18.96);
-  tl.to("#g3b", {scale: 1, duration: 0.30, ease: "power2.out"}, 19.24);
-  tl.to("#g3", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 19.90);'''
+  // «тема, з якою до тебе звертаються люди» — the export writes itself out
+  tl.to("#g3 .tr b", {autoAlpha: 1, duration: 0.18, stagger: 0.082}, 13.84);
+  tl.to("#g3 .tr i", {scaleX: 1, duration: 0.22, ease: "power2.out",
+                      stagger: 0.041}, 13.96);
+  // «текст» — and the one line that matters stops being a grey rule
+  tl.to("#g3e3 i", {autoAlpha: 0, duration: 0.16}, 16.40);
+  tl.to("#g3hl", {scaleX: 1, duration: 0.30, ease: "power3.out"}, 16.42);
+  tl.to("#g3q", {autoAlpha: 1, y: 0, duration: 0.26, ease: "power2.out"}, 16.54);
+  // «саме так, як говорить твоя цільова аудиторія»
+  tl.to("#g3hl", {scaleY: 1.06, duration: 0.24, ease: "power2.out",
+                  transformOrigin: "50%% 50%%"}, 17.50);
+  tl.to("#g3", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 19.95);'''
     return html, js
 
 
 @beat
 def b04_she_said_you_replied():
-    """«тобі не треба вигадувати… клієнтка вже сказала тобі щось, ти якось
-    відповіла, і вона за це заплатила гроші»
+    """«клієнтка вже сказала тобі щось, ти якось відповіла, і вона за це
+    заплатила гроші»
 
-    Three moves on three phrases: her line, your line, and the money that
-    proves the exchange worked.
+    Matted. Two bubbles arrive from opposite sides *behind* her, and the fee
+    lands on the client's one — the money attaches to what she said, which is
+    the argument of the beat.
     """
     html = '''
       <div class="g full" id="g4">
-        %s
-        %s
-        <div class="coin" id="g4m"><span>€</span></div>
-      </div>''' % (
-        bubble("g4a", "client", rows=2, style="left:110px;top:120px"),
-        bubble("g4b", "mine", rows=2, style="left:450px;top:300px"))
+        <div class="bub cl" id="g4a" style="left:-70px;top:190px;width:640px;height:268px">
+          <i style="top:76px;width:470px"></i><i style="top:124px;width:404px"></i>
+          <i style="top:172px;width:300px"></i>
+        </div>
+        <div class="bub" id="g4b" style="left:500px;top:556px;width:640px;height:250px">
+          <i style="top:70px;width:420px"></i><i style="top:118px;width:362px"></i>
+          <i style="top:166px;width:250px"></i>
+        </div>
+        <div class="eur" id="g4e" style="left:352px;top:392px">250 €</div>
+      </div>'''
     js = '''
   gsap.set("#g4", {autoAlpha: 0});
-  gsap.set("#g4a, #g4b", {autoAlpha: 0, scale: 0.84, transformOrigin: "50% 50%"});
-  gsap.set("#g4m", {autoAlpha: 0, scale: 0.4, transformOrigin: "50% 50%"});
-  tl.set("#g4", {autoAlpha: 1}, 22.90);
+  gsap.set("#g4a", {autoAlpha: 0, x: -440, transformOrigin: "50%% 50%%"});
+  gsap.set("#g4b", {autoAlpha: 0, x: 440, transformOrigin: "50%% 50%%"});
+  gsap.set("#g4 .bub i", {scaleX: 0});
+  gsap.set("#g4e", {autoAlpha: 0, scale: 1.7, rotation: -12,
+                    transformOrigin: "50%% 50%%"});
+  tl.set("#g4", {autoAlpha: 1}, 22.95);
   // «клієнтка вже сказала тобі щось»
-  tl.to("#g4a", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.2)"}, 23.02);
+  tl.to("#g4a", {autoAlpha: 1, x: 0, duration: 0.46, ease: "back.out(1.6)"}, 23.02);
+  tl.to("#g4a i", {scaleX: 1, duration: 0.22, ease: "power2.out",
+                   stagger: 0.07}, 23.40);
   // «ти якось відповіла»
-  tl.to("#g4b", {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.2)"}, 25.66);
-  // «і вона за це заплатила гроші»
-  tl.to("#g4m", {autoAlpha: 1, scale: 1, duration: 0.34, ease: "back.out(2.8)"}, 27.64);
-  tl.to("#g4b, #g4a", {autoAlpha: 0.25, duration: 0.30}, 27.84);
-  tl.to("#g4", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 29.20);'''
+  tl.to("#g4b", {autoAlpha: 1, x: 0, duration: 0.46, ease: "back.out(1.6)"}, 25.14);
+  tl.to("#g4b i", {scaleX: 1, duration: 0.22, ease: "power2.out",
+                   stagger: 0.07}, 25.52);
+  // «заплатила гроші» — it lands on her sentence, not between them
+  tl.to("#g4e", {autoAlpha: 1, scale: 1, rotation: -6, duration: 0.34,
+                 ease: "back.out(2.6)"}, 27.12);
+  tl.to("#g4", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 28.96);'''
     return html, js
+
+
+# Two bubbles and a fee, behind her (STYLE.md 1). 191 frames.
+k.matte("saidpaid", 22.933, 6.400)
 
 
 @beat
@@ -363,154 +459,197 @@ def b05_lift_it_out():
 
 @beat
 def b06_fathom():
-    """«потрібна система: щось, що записує дзвінки — я використовую Фатом, він
-    безкоштовний»
+    """«щось, що записує дзвінки — я для цього використовую Фатом, він
+    безкоштовний» … «і штучний інтелект, у мене це Клод, який розшифровує ці
+    дзвінки, розділяє їх на ідеї для контенту і витягує цитати клієнток»
+
+    Takeover 2: the whole system in one frame, top to bottom, built one piece
+    per word. Merged what used to be two beats (b06 + b07) because it is one
+    diagram and cutting away mid-pipeline lost the thread.
     """
     html = '''
       <div class="g full" id="g6">
-        %s
-        <div class="freewrap" id="g6free"><div class="lit soft"></div>
-          <div class="free"><span>0</span><small>€</small></div></div>
-      </div>''' % marktile("g6t", "fathom-word", "wide",
-                           style="left:180px;top:170px")
+        <div class="tk paper"></div><div class="gp"></div>
+        <div id="g6top" style="position:absolute;inset:0">
+          <div class="wv" id="g6w" style="left:240px;top:170px;width:600px;height:180px">%s</div>
+          <img class="fm" id="g6f" src="assets/logos/fathom-word.png" alt=""
+               style="left:236px;top:392px;width:430px">
+          <div class="zero" id="g6z" style="left:722px;top:390px">0 €</div>
+        </div>
+        <div class="tile brand prod" id="g6c" style="left:410px;top:566px">%s</div>
+        <div class="txb" id="g6t" style="left:140px;top:894px;width:800px;height:214px">%s</div>
+        <div class="dk" id="g6o1" style="left:110px;top:1146px;width:400px;height:250px">
+          <i class="hb" style="width:210px"></i>
+          <i class="rr" style="top:96px;width:300px"></i>
+          <i class="rr" style="top:130px;width:240px"></i>
+          <i class="pb" style="left:30px;top:168px;width:340px;height:52px"></i>
+        </div>
+        <div class="dk" id="g6o2" style="left:566px;top:1146px;width:400px;height:250px">
+          <i class="hb" style="width:180px"></i>
+          <i class="rr" style="top:96px;width:280px"></i>
+          <i class="rr" style="top:130px;width:320px"></i>
+          <i class="pb" style="left:30px;top:168px;width:340px;height:52px"></i>
+        </div>
+      </div>''' % ("""<i style="height:38px"></i><i style="height:88px"></i><i style="height:140px"></i><i style="height:66px"></i><i style="height:176px"></i><i style="height:44px"></i><i style="height:120px"></i><i style="height:92px"></i><i style="height:158px"></i><i style="height:58px"></i><i style="height:104px"></i><i style="height:72px"></i>""", mark("claude-tile"), """<i style="top:44px;width:690px"></i><i style="top:84px;width:620px"></i><i style="top:124px;width:660px"></i><i style="top:164px;width:540px"></i>""")
     js = '''
   gsap.set("#g6", {autoAlpha: 0});
-  gsap.set("#g6t", {autoAlpha: 0, scale: 0.8, transformOrigin: "50% 50%"});
-  gsap.set("#g6free", {autoAlpha: 0, scale: 0.5, transformOrigin: "50% 50%"});
+  gsap.set("#g6top", {y: 430});
+  gsap.set("#g6w i", {scaleY: 0.08, transformOrigin: "50%% 50%%"});
+  gsap.set("#g6f, #g6z, #g6c", {autoAlpha: 0, scale: 0.6,
+                                transformOrigin: "50%% 50%%"});
+  gsap.set("#g6t", {autoAlpha: 0, y: 34});
+  gsap.set("#g6t i", {scaleX: 0});
+  gsap.set("#g6o1, #g6o2", {autoAlpha: 0, scale: 0.68, y: 40,
+                            transformOrigin: "50%% 50%%"});
   tl.set("#g6", {autoAlpha: 1}, 34.74);
   // «щось, що записує дзвінки»
-  tl.to("#g6t", {autoAlpha: 1, scale: 1, duration: 0.32, ease: "back.out(2.4)"}, 34.86);
-  // «він безкоштовний» — the same badge as reels 7 and 8
-  tl.to("#g6free", {autoAlpha: 1, scale: 1, duration: 0.32,
-                    ease: "back.out(2.8)"}, 37.34);
-  tl.to("#g6", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 39.20);'''
-    return html, js
-
-
-@beat
-def b07_claude_does_three_things():
-    """«штучний інтелект — у мене це Клод, який розшифровує ці дзвінки,
-    розділяє їх на ідеї для контенту і витягує цитати клієнток»
-
-    Three verbs, three moves, one per word: the sound becomes text, the text
-    splits into pieces, and her sentence comes back out of it.
-    """
-    html = '''
-      <div class="g full" id="g7">
-        %s
-        <div class="wave" id="g7w" style="left:230px;top:330px;width:620px;
-             height:120px;justify-content:center">%s</div>
-        <div class="lines" id="g7t" style="left:280px;top:330px;width:520px">
-          <b></b><b></b><b></b>
-        </div>
-        %s%s%s
-        %s
-      </div>''' % (
-        marktile("g7c", "claude-tile", style="left:410px;top:40px"),
-        "".join('<i style="height:%dpx"></i>' % h for h in
-                [24, 56, 96, 40, 78, 30, 66, 44, 88, 34, 72, 26, 60, 48]),
-        card("g7a", style="left:180px;top:300px"),
-        card("g7b", style="left:435px;top:300px"),
-        card("g7d", style="left:690px;top:300px"),
-        bubble("g7q", "client", rows=1, style="left:280px;top:285px;width:520px"))
-    js = '''
-  gsap.set("#g7", {autoAlpha: 0});
-  gsap.set("#g7c", {autoAlpha: 0, scale: 0.78, transformOrigin: "50% 50%"});
-  gsap.set("#g7w, #g7t, #g7q", {autoAlpha: 0});
-  gsap.set("#g7w i", {scaleY: 0.2, transformOrigin: "50% 50%"});
-  gsap.set("#g7a, #g7b, #g7d", {autoAlpha: 0, scale: 0.7,
-                                transformOrigin: "50% 50%"});
-  tl.set("#g7", {autoAlpha: 1}, 39.52);
-  // «у мене це Клод»
-  tl.to("#g7c", {autoAlpha: 1, scale: 1, duration: 0.32, ease: "back.out(2.4)"}, 39.64);
-  // «розшифровує ці дзвінки» — sound in, text out
-  tl.to("#g7w", {autoAlpha: 1, duration: 0.14}, 41.00);
-  tl.to("#g7w i", {scaleY: 1, duration: 0.30, ease: "back.out(2)",
-                   stagger: {each: 0.012, from: "center"}}, 41.02);
-  tl.to("#g7w", {autoAlpha: 0, scaleY: 0.3, duration: 0.24,
-                 ease: "power2.in"}, 42.02);
-  tl.to("#g7t", {autoAlpha: 1, duration: 0.22}, 42.14);
-  tl.from("#g7t b", {scaleX: 0, transformOrigin: "0% 50%", duration: 0.22,
-                     stagger: 0.06, ease: "power2.out"}, 42.16);
-  // «розділяє їх на ідеї для контенту» — the text becomes pieces
-  tl.to("#g7t", {autoAlpha: 0, duration: 0.20}, 42.74);
-  [42.78, 43.00, 43.22].forEach(function (t, i) {
-    tl.to(["#g7a", "#g7b", "#g7d"][i], {autoAlpha: 1, scale: 1, duration: 0.30,
-                                        ease: "back.out(2.2)"}, t);
-  });
-  // «і витягує цитати клієнток» — and her own sentence comes back out
-  tl.to("#g7a, #g7b, #g7d", {autoAlpha: 0.2, duration: 0.26}, 45.00);
-  tl.fromTo("#g7q", {autoAlpha: 0, y: 50, scale: 0.86},
-            {autoAlpha: 1, y: 0, scale: 1, duration: 0.36,
-             ease: "back.out(2.4)"}, 45.00);
-  tl.to("#g7", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 46.90);'''
+  tl.to("#g6w i", {scaleY: 1, duration: 0.34, ease: "back.out(2)",
+                   stagger: {each: 0.026, from: "center"}}, 34.86);
+  // «Фатом»
+  tl.to("#g6f", {autoAlpha: 1, scale: 1, duration: 0.34,
+                 ease: "back.out(2.4)"}, 37.34);
+  // «безкоштовний» — a number is the one word §4 allows
+  tl.to("#g6z", {autoAlpha: 1, scale: 1, duration: 0.30,
+                 ease: "back.out(2.8)"}, 37.98);
+  // «і штучний інтелект» — the recorder moves up to make room for what
+  // reads it. Before this the frame was a logo and 1400px of empty paper.
+  tl.to("#g6top", {y: 0, duration: 0.62, ease: "power2.inOut"}, 39.26);
+  // «Клод»
+  tl.to("#g6c", {autoAlpha: 1, scale: 1, duration: 0.34,
+                 ease: "back.out(2.4)"}, 40.44);
+  // «розшифровує ці дзвінки»
+  tl.to("#g6t", {autoAlpha: 1, y: 0, duration: 0.30, ease: "power3.out"}, 41.00);
+  tl.to("#g6t i", {scaleX: 1, duration: 0.20, ease: "power2.out",
+                   stagger: 0.075}, 41.22);
+  // «ідеї для контенту»
+  tl.to("#g6o1", {autoAlpha: 1, scale: 1, y: 0, duration: 0.36,
+                  ease: "back.out(2.2)"}, 43.36);
+  // «витягує цитати клієнток»
+  tl.to("#g6o2", {autoAlpha: 1, scale: 1, y: 0, duration: 0.36,
+                  ease: "back.out(2.2)"}, 45.00);
+  tl.to("#g6", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 47.00);'''
     return html, js
 
 
 @beat
 def b08_ready_made():
-    """«після кожного дзвінка не просто тема, а готові сценарії, цитати, різні
-    кути, як це подати»
+    """«не просто тема, а готові сценарії, цитати, різні кути, як це подати»
+
+    Takeover 3, and the payoff: the sentence from the transcript at 13.7s,
+    now set large on a finished quote card, with three other pieces around it.
+    Same words, same reel, forty seconds apart — that contrast is the whole
+    mechanic, so the transcript at 13.7s must stay as bleak as it is.
     """
     html = '''
       <div class="g full" id="g8">
-        <div class="tag" id="g8t"></div>
-        %s%s%s
-      </div>''' % (
-        card("g8a", style="left:180px;top:240px"),
-        card("g8b", "quoted", style="left:435px;top:240px"),
-        card("g8c", style="left:690px;top:240px"))
+        <div class="tk blush"></div>
+        <div class="dk" id="g8plain" style="left:290px;top:700px;width:500px;height:320px">
+          <i class="rr" style="top:60px;width:380px"></i>
+          <i class="rr" style="top:100px;width:300px"></i>
+        </div>
+        <div class="dk" id="g8p1" data-layout-allow-overflow
+             style="left:-130px;top:180px;width:560px;height:700px">
+          <i class="hb" style="width:300px"></i>
+          <i class="rr" style="top:110px;width:460px"></i>
+          <i class="rr" style="top:148px;width:400px"></i>
+          <i class="rr" style="top:186px;width:440px"></i>
+          <i class="pb" style="left:30px;top:250px;width:500px;height:300px"></i>
+          <i class="rr" style="top:592px;width:420px"></i>
+        </div>
+        <div class="qcard" id="g8p2" data-layout-allow-overflow
+             style="left:470px;top:110px;width:690px;height:486px">
+          <div class="big2" style="top:96px;width:560px;font-size:64px;line-height:1.12">%s</div>
+          <i style="position:absolute;left:54px;top:380px;width:150px;height:14px;border-radius:999px;background:var(--lit-pink)"></i>
+        </div>
+        <div class="dk" id="g8p3" data-layout-allow-overflow
+             style="left:-100px;top:940px;width:600px;height:420px">
+          <i class="hb" style="width:260px"></i>
+          <i class="pb" style="left:30px;top:110px;width:540px;height:220px"></i>
+        </div>
+        <div class="dk" id="g8p4" data-layout-allow-overflow
+             style="left:630px;top:664px;width:490px;height:700px">
+          <i class="hb" style="width:230px"></i>
+          <i class="pb" style="left:30px;top:100px;width:430px;height:360px"></i>
+          <i class="rr" style="top:500px;width:380px"></i>
+          <i class="rr" style="top:538px;width:300px"></i>
+        </div>
+      </div>''' % QUOTE
     js = '''
   gsap.set("#g8", {autoAlpha: 0});
-  gsap.set("#g8t", {autoAlpha: 0, scale: 0.7, transformOrigin: "50% 50%"});
-  gsap.set("#g8a, #g8b, #g8c", {autoAlpha: 0, scale: 0.7, y: 40,
-                                transformOrigin: "50% 50%"});
+  gsap.set("#g8plain", {autoAlpha: 0, scale: 0.8, transformOrigin: "50%% 50%%"});
+  gsap.set("#g8p1", {autoAlpha: 0, x: -260, rotation: -8,
+                     transformOrigin: "50%% 50%%"});
+  gsap.set("#g8p2", {autoAlpha: 0, scale: 1.18, transformOrigin: "50%% 50%%"});
+  gsap.set("#g8p3", {autoAlpha: 0, x: -220, rotation: 6,
+                     transformOrigin: "50%% 50%%"});
+  gsap.set("#g8p4", {autoAlpha: 0, x: 240, rotation: -5,
+                     transformOrigin: "50%% 50%%"});
   tl.set("#g8", {autoAlpha: 1}, 50.52);
-  // «не просто тема»
-  tl.to("#g8t", {autoAlpha: 1, scale: 1, duration: 0.26, ease: "back.out(2.4)"}, 50.64);
-  tl.to("#g8t", {autoAlpha: 0, scale: 0.8, duration: 0.22, ease: "power2.in"}, 51.70);
-  // «готові сценарії» / «цитати» / «різні кути»
-  [51.89, 52.60, 53.60].forEach(function (t, i) {
-    tl.to(["#g8a", "#g8b", "#g8c"][i], {autoAlpha: 1, scale: 1, y: 0,
-                                        duration: 0.32,
-                                        ease: "back.out(2.2)"}, t);
-  });
-  // «як це подати» — they fan to show they are different angles on one thing
-  tl.to("#g8a", {rotation: -5, duration: 0.30, ease: "power2.out",
-                 transformOrigin: "50% 100%"}, 54.20);
-  tl.to("#g8c", {rotation: 5, duration: 0.30, ease: "power2.out",
-                 transformOrigin: "50% 100%"}, 54.20);
-  tl.to("#g8", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 55.60);'''
+  // «не просто тема» — the thin version of the idea, on its own
+  tl.to("#g8plain", {autoAlpha: 1, scale: 1, duration: 0.30,
+                     ease: "back.out(2.2)"}, 50.64);
+  tl.to("#g8plain", {autoAlpha: 0, scale: 0.86, duration: 0.26,
+                     ease: "power2.in"}, 51.30);
+  // «а готові сценарії»
+  tl.to("#g8p1", {autoAlpha: 1, x: 0, rotation: -3.5, duration: 0.48,
+                  ease: "back.out(1.7)"}, 51.36);
+  // «цитати» — the transcript line from 16.4s, dressed
+  tl.to("#g8p2", {autoAlpha: 1, scale: 1, duration: 0.50,
+                  ease: "back.out(1.9)"}, 52.60);
+  // «різні кути»
+  tl.to("#g8p3", {autoAlpha: 1, x: 0, rotation: 3.0, duration: 0.46,
+                  ease: "back.out(1.7)"}, 53.22);
+  tl.to("#g8p4", {autoAlpha: 1, x: 0, rotation: -2.2, duration: 0.46,
+                  ease: "back.out(1.7)"}, 53.52);
+  tl.to("#g8", {autoAlpha: 0, duration: 0.28, ease: "power2.in"}, 55.70);'''
     return html, js
 
 
 @beat
 def b09_four_angles():
-    """«з чим прийшла клієнтка, з чим вона пішла, як ви вирішували проблему і
+    """«з чим прийшла клієнтка, з чим вона пішла, як ви вирішили проблему і
     чому саме так, а не інакше»
 
-    Four pieces out of one call, one per phrase, on her uneven spacing.
+    Matted. Four pieces fly out from behind her, one per clause, and leave the
+    frame on both sides. Four phrases, four objects, each on its own word —
+    STYLE.md 4.
     """
     html = '''
       <div class="g full" id="g9">
-        <div class="grid4" id="g9g">
-          <span id="g9a"></span><span id="g9b"></span>
-          <span id="g9c"></span><span id="g9d"></span>
-        </div>
-      </div>'''
+        %s
+      </div>''' % "\n        ".join(
+        '<div class="dk" id="%s" data-layout-allow-overflow'
+        ' style="left:%dpx;top:%dpx;width:%dpx;height:%dpx">'
+        '<i class="hb" style="width:%dpx"></i>'
+        '<i class="rr" style="top:96px;width:%dpx"></i>'
+        '<i class="pb" style="left:30px;top:140px;width:%dpx;height:%dpx"></i>'
+        '</div>' % (i, x, y, w, h, int(w * 0.44), int(w * 0.66),
+                    int(w * 0.82), int(h * 0.42))
+        for i, x, y, w, h, r, t in ANGLES)
+    sets = "\n".join(
+        '  gsap.set("#%s", {x: %d, y: %d, scale: 0.08, rotation: 0,'
+        ' autoAlpha: 0, transformOrigin: "50%%%% 50%%%%"});'
+        % (i, 540 - (x + w // 2), 700 - (y + h // 2))
+        for i, x, y, w, h, r, t in ANGLES)
+    flies = "\n".join(
+        '  tl.to("#%s", {x: 0, y: 0, scale: 1, rotation: %s, autoAlpha: 1,'
+        ' duration: 0.62, ease: "power3.out"}, %.3f);' % (i, r, t)
+        for i, x, y, w, h, r, t in ANGLES)
     js = '''
   gsap.set("#g9", {autoAlpha: 0});
-  gsap.set("#g9g span", {autoAlpha: 0, scale: 0.6, transformOrigin: "50% 50%"});
+%s
   tl.set("#g9", {autoAlpha: 1}, 55.90);
-  [57.68, 58.68, 60.00, 61.56].forEach(function (t, i) {
-    tl.to(["#g9a", "#g9b", "#g9c", "#g9d"][i],
-          {autoAlpha: 1, scale: 1, duration: 0.30, ease: "back.out(2.4)"}, t);
-  });
-  tl.to("#g9", {autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 62.00);'''
+%s
+  tl.to("#g9", {autoAlpha: 0, duration: 0.30, ease: "power2.in"}, 61.80);''' % (
+        sets, flies)
     return html, js
 
 
 # ------------------------------------------------------------------ C · the ask
+
+
+# Four pieces flying out from behind her head. 188 frames.
+k.matte("fourangles", 55.833, 6.300)
 
 
 @beat
@@ -673,6 +812,17 @@ for _sel, _w, _h, _r in [
     k.squircle(_sel, _w, _h, _r)
 
 
+# Nothing in reel 10's graphics says a word she is saying, so there is no
+# blackout at all here (STYLE.md 2b.1) — the test is redundancy, not takeover.
+BLACKOUT = []
+
+INVERT = [
+    (13.70, 19.95, "TK1 — the raw transcript, ruled paper"),
+    (34.74, 47.00, "TK2 — the system"),
+    (50.52, 55.70, "TK3 — the payoff, blushed"),
+]
+
+
 def main():
     caps = k.load_captions(os.path.join(ROOT, "work", "r10", "captions.json"))
     gh, gj = [], []
@@ -689,6 +839,8 @@ def main():
         gfx_html="\n".join(gh),
         gfx_js="\n".join(gj),
         caps=caps,
+        blackout=BLACKOUT,
+        invert=INVERT,
     )
     out = os.path.join(os.path.dirname(os.path.abspath(__file__)), "index.html")
     io.open(out, "w", encoding="utf-8").write(doc)
