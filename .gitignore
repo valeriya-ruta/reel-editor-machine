@@ -45,3 +45,10 @@ assets/emoji/*.png
 
 # Client carousels used as footage in reels 13/19 — client work, kept out of history
 work/carousels/
+# Her media for upcoming reels (screenshots, recordings, product photos) - not for history
+work/media/
+
+# Covers: Vercel link state and snapshot scratch
+covers/*/.vercel/
+covers/*/out/
+covers/deploy.log
