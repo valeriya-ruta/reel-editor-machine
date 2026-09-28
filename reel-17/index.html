@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 17 — рілси монтує ШІ</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+    @font-face {
+      font-family: "ProductSans";
+      src: url("assets/fonts/ProductSans-Black.woff") format("woff");
+      font-weight: 900; font-style: normal; font-display: block;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px;
+            overflow: hidden; background: #000;
+            font-family: "ProductSans", system-ui, sans-serif;
+      --surface:        #fffcfd;
+      --container:      #fbeef2;
+      --container-high: #f4dfe5;
+      --graphite:       rgba(23,20,28,0.13);
+      --accent:         #b4122f;
+      --accent-deep:    #8d0d24;
+      --pink:           #ff6e9c;
+      --ink:            #17141c;
+
+      --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
+      --lit-blush:  linear-gradient(115deg, #ffffff 0%, #fff7fa 100%);
+      --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
+      --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
+      --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
+
+      --rim: inset 0 1.5px 0 rgba(255,255,255,0.92),
+             inset 0 -1.5px 0 rgba(255,255,255,0.14),
+             inset 0 0 0 1px rgba(255,255,255,0.28);
+      --rim-dark: inset 0 1.5px 0 rgba(255,255,255,0.16),
+                  inset 0 0 0 1px rgba(255,255,255,0.08);
+      --rim-glass: inset 0 2px 0 rgba(255,255,255,0.70),
+                   inset 0 -2px 0 rgba(255,255,255,0.10),
+                   inset 0 0 0 1.5px rgba(255,255,255,0.30);
+
+      /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
+         Light coming off the object, not the object sitting on a surface. */
+      --glow: drop-shadow(0 0 10px rgba(255,196,218,0.95))
+              drop-shadow(0 0 26px rgba(255,110,156,0.85))
+              drop-shadow(0 0 64px rgba(255,110,156,0.55))
+              drop-shadow(0 0 120px rgba(255,110,156,0.32));
+      --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
+                   drop-shadow(0 0 60px rgba(255,110,156,0.30));
+
+      --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
+              drop-shadow(0 24px 48px rgba(26,30,39,0.14));
+      --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))
+                 drop-shadow(0 12px 24px rgba(26,30,39,0.12));
+ }
+    .plate { position: absolute; inset: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    #scrim { position: absolute; left: 20px; top: 1247px;
+             width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png");
+             background-size: 100% 100%; background-repeat: no-repeat;
+             opacity: 0; visibility: hidden; pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; top: 1413px;
+           height: 118px; line-height: 118px; text-align: center;
+           color: #fff; font-size: 90px; font-weight: 900;
+           letter-spacing: -0.015em; white-space: nowrap;
+           opacity: 0; visibility: hidden; }
+    .cap.inv { color: var(--ink); }
+    .g { position: absolute; left: 0; top: 40px; width: 1080px;
+         height: 600px; opacity: 0; visibility: hidden; }
+    .g.full { top: 0; height: 1920px; }
+
+    /* §5a.9 — glass over her footage is the house look. Panels only; an
+       edge-to-edge frosted ground blurs her out of her own reel. */
+    .glass { background: rgba(255,255,255,0.15);
+             -webkit-backdrop-filter: blur(24px) saturate(1.4);
+             backdrop-filter: blur(24px) saturate(1.4);
+             box-shadow: var(--rim); filter: var(--cast); }
+
+    /* A takeover: a tinted pane laid ON the footage, with a real margin so it
+       reads as an object rather than a blur applied to the video. */
+    /* The inset pane is a *pane*: 44/64 margin so the footage shows past it,
+       and corners, because a full-bleed hard-cornered rectangle is a bug she
+       has reported. base_css() squircles it; this radius is the fallback. */
+    .ground { position: absolute; left: 44px; top: 64px;
+              width: 992px; height: 1792px; border-radius: 68px;
+              background: linear-gradient(158deg, rgba(196,20,52,0.62) 0%,
+                          rgba(141,13,36,0.70) 100%);
+              -webkit-backdrop-filter: blur(30px) saturate(1.5);
+              backdrop-filter: blur(30px) saturate(1.5);
+              box-shadow: var(--rim-glass); filter: var(--cast); }
+
+    .card { position: absolute; background: var(--lit-blush);
+            filter: var(--cast); box-shadow: var(--rim); }
+    .card.ink { background: var(--lit-ink); box-shadow: var(--rim-dark); }
+    .card.accent { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+
+    .tile { position: absolute; display: grid; place-items: center;
+            background: var(--lit-blush); filter: var(--cast);
+            box-shadow: var(--rim); }
+
+    /* §5a.3 — bar rhythm. One thick heading, then ragged body. Uniform bars
+       read as a loading state; ragged ones read as an abstracted screen. */
+    .ph { display: block; height: 66px; border-radius: 18px;
+          background: var(--lit-accent); margin-bottom: 26px;
+          box-shadow: var(--rim-dark); }
+    .pr { display: block; height: 40px; border-radius: 12px;
+          background: var(--graphite); margin-bottom: 18px; }
+    .pr:nth-of-type(2) { width: 94%; }
+    .pr:nth-of-type(3) { width: 71%; }
+    .pr:nth-of-type(4) { width: 43%; }
+
+    .phone { position: absolute; background: var(--lit-blush);
+             overflow: hidden; filter: var(--cast); box-shadow: var(--rim); }
+    .phone video, .phone img { width: 100%; height: 100%; object-fit: cover;
+                               display: block; }
+
+    /* a value in its own card — her reference's "big number" pattern, minus
+       the label, because a graphic here carries no words */
+    .valcard { position: absolute; background: rgba(255,255,255,0.16);
+               -webkit-backdrop-filter: blur(16px) saturate(1.3);
+               backdrop-filter: blur(16px) saturate(1.3);
+               box-shadow: var(--rim-dark);
+               display: grid; place-items: center; }
+    .valcard span { color: #fff; font-weight: 900; letter-spacing: -0.04em; }
+
+    .wire { fill: none; stroke-width: 20; stroke-linecap: round;
+            filter: drop-shadow(0 8px 18px rgba(26,30,39,0.22)); }
+    .node { fill: #fdf6f6; stroke: #b4122f; stroke-width: 16;
+            filter: drop-shadow(0 10px 22px rgba(26,30,39,0.24)); }
+    .node.hub { fill: #b4122f; stroke: #fff; }
+
+    /* §5a.10 — the glow rides a WRAPPER, never the clipped element itself.
+       clip-path is applied *after* filter, so a drop-shadow declared on the
+       same element as the clip is cut away with everything else outside the
+       silhouette and the object ends up with no light at all. Put the clip on
+       the shape and the filter on its parent: the parent filters the already
+       clipped bitmap, so the light traces the squircle and survives. */
+    .lit { position: absolute; inset: 0; pointer-events: none;
+           filter: var(--glow); }
+    .lit.soft { filter: var(--glow-soft); }
+
+    /* Emoji are images, never glyphs. The render runs on someone else's
+       Chrome, so a literal 💩 in the HTML comes out in whatever emoji font
+       that machine has — Noto on the cloud renderer, Segoe on hers, Apple on
+       nobody's. She wants the Apple set, so the artwork ships in assets/emoji
+       and the glyph never appears in a composition. */
+    .emoji { display: block; width: auto; image-rendering: auto; }
+
+    .halo { position: absolute; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(255,110,156,0.5) 0%,
+                        rgba(255,110,156,0) 70%); }
+    .ring { position: absolute; border-radius: 50%; pointer-events: none;
+            border: 18px solid rgba(255,110,156,0.92);
+            filter: drop-shadow(0 0 40px rgba(255,110,156,0.55)); }
+
+    /* ---- takeovers (STYLE.md 2c) ----
+       The graphic owns the frame: the plate is gone, so none of the
+       over-footage rules apply — no glow budget, no band discipline, ink type
+       on a light ground. Lives here rather than per-reel because every reel
+       from 9 onwards needs it. A takeover that does not bleed off at least
+       two edges reads as a slide, not a takeover. */
+    .tk { position: absolute; inset: 0; }
+    .tk.paper { background: var(--surface); }
+    .tk.white { background: #ffffff; }
+    .tk.blush { background: linear-gradient(150deg,#ffffff 0%,#fffafc 55%,
+                                            #fdf4f8 100%); }
+    /* graph paper — the texture the reference takeovers all have. 60px cells
+       at 5.8% ink: visible, never a pattern you read. */
+    .gp { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px),
+            repeating-linear-gradient(90deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px); }
+    /* horizontal rules only — a transcript or a list is ruled paper, not
+       graph paper, and the difference is what makes it read as an export. */
+    .gl { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.05) 0 1px,
+                                      transparent 1px 175px); }
+
+    /* the finished artefact, in her system — one class at any aspect ratio */
+    .dk { position: absolute; overflow: hidden; border-radius: 28px;
+          background: var(--lit-blush); box-shadow: var(--rim);
+          filter: var(--cast); }
+    .dk i { position: absolute; display: block; }
+    .dk .hb { left: 30px; top: 30px; height: 20px; border-radius: 6px;
+              background: var(--lit-accent); }
+    .dk .rr { left: 30px; height: 9px; border-radius: 4px;
+              background: rgba(23,20,28,0.22); }
+    .dk .pb { border-radius: 16px; background: var(--lit-pink);
+              box-shadow: var(--rim-dark); }
+
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Regular.ttf"); font-weight: 400; font-display: block; }
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Medium.ttf"); font-weight: 500; font-display: block; }
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Bold.ttf"); font-weight: 700; font-display: block; }
+
+/* ---------- the edge light: what makes a surface read as glass ----------
+   A uniform stroke is 2013. Real glass catches light at two opposite corners
+   and goes almost dark along the sides, so the rim is a gradient ring. */
+.edge::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.6px;
+  background: linear-gradient(140deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.34) 16%,
+              rgba(255,255,255,0.05) 42%, rgba(255,255,255,0.07) 62%,
+              rgba(255,255,255,0.50) 86%, rgba(255,255,255,0.90) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 3; }
+
+/* ---------- the shelf: frosted glass over her footage ----------
+   The house look since reel 3, rebuilt in layers: blur + saturation, a faint
+   top-to-bottom tint, light inside the bottom edge (thickness), huge soft
+   shadow. Add .edge for the rim. */
+.shelf { position: absolute; border-radius: 80px;
+  background: linear-gradient(158deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.07) 50%,
+              rgba(255,255,255,0.13) 100%);
+  -webkit-backdrop-filter: blur(22px) saturate(1.7) brightness(1.05);
+  backdrop-filter: blur(22px) saturate(1.7) brightness(1.05);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.65), inset 0 -24px 44px -22px rgba(255,255,255,0.36),
+              0 44px 90px -34px rgba(24,4,12,0.5); }
+
+/* dark glass — notifications and anything with white text over footage */
+.dglass { position: absolute; border-radius: 64px; color: #fff;
+  background: linear-gradient(160deg, rgba(58,22,32,0.58) 0%, rgba(24,10,15,0.50) 100%);
+  -webkit-backdrop-filter: blur(30px) saturate(1.8); backdrop-filter: blur(30px) saturate(1.8);
+  box-shadow: inset 0 1.5px 1px rgba(255,255,255,0.30), inset 0 -16px 30px -16px rgba(255,255,255,0.14),
+              0 40px 80px -30px rgba(10,0,4,0.6); }
+
+/* ---------- the tile family: every mark lives in one of three ----------
+   Same radius ratio as an iOS icon (22.4%), glyph at 50%. Put the tile in a
+   sized wrapper; the wrapper takes the motion, the tile takes the material. */
+.clear { position: absolute; inset: 0; border-radius: 22.4%;
+  background: linear-gradient(158deg, rgba(255,255,255,0.36) 0%, rgba(255,255,255,0.11) 48%,
+              rgba(255,255,255,0.17) 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.70), inset 0 -18px 30px -14px rgba(255,255,255,0.42),
+              0 34px 60px -22px rgba(24,4,12,0.55), 0 3px 8px rgba(24,4,12,0.10);
+  display: flex; align-items: center; justify-content: center; }
+.pearl { position: absolute; inset: 0; border-radius: 22.4%; overflow: hidden;
+  background: linear-gradient(160deg, #ffffff 0%, #fff5f8 52%, #f5dfe6 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -20px 32px -14px rgba(180,18,47,0.18),
+              0 36px 64px -22px rgba(30,4,12,0.55), 0 3px 8px rgba(30,4,12,0.12);
+  display: flex; align-items: center; justify-content: center; }
+.jelly { position: absolute; inset: 0; border-radius: 22.4%; overflow: hidden;
+  background: linear-gradient(165deg, #e0204b 0%, #ab112e 46%, #6b081c 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.55), inset 0 -26px 40px -14px rgba(255,125,165,0.60),
+              inset 0 0 0 1px rgba(255,255,255,0.10),
+              0 36px 64px -22px rgba(70,4,20,0.62), 0 3px 8px rgba(70,4,20,0.14);
+  display: flex; align-items: center; justify-content: center; }
+/* the lens highlight — subtle, or it turns into 2009 gloss */
+.jelly::after, .pearl::after { content: ""; position: absolute; left: 7%; right: 7%; top: 3.5%; height: 44%;
+  border-radius: 40% 40% 50% 50% / 38% 38% 24% 24%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.26), rgba(255,255,255,0)); }
+.pearl::after { background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0)); opacity: 0.5; }
+.mk { width: 50%; height: 50%; fill: url(#gw); position: relative; z-index: 1; }
+.pearl .mk { fill: #17141c; }
+/* a wordmark stands in where a brand has no icon (RUTA, Windsor's "w.") */
+.wmark { font-weight: 900; color: #17141c; letter-spacing: -0.045em; line-height: 1;
+  position: relative; z-index: 1; }
+.wmark i { font-style: normal; color: #b4122f; }
+.jelly .wmark { color: #fff; } .jelly .wmark i { color: #ffb3c9; }
+
+/* one light sweep across a surface when it lands — once, never looping */
+.sheen { position: absolute; inset: -10%; z-index: 2; pointer-events: none;
+  background: linear-gradient(105deg, rgba(255,255,255,0) 38%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0) 62%);
+  mix-blend-mode: soft-light; }
+/* a ripple the same shape as the tile that sent it */
+.sqring { position: absolute; border-radius: 22.4%; border: 3px solid rgba(255,255,255,0.75);
+  opacity: 0; visibility: hidden; }
+
+/* ---------- the takeover ground: deep burgundy, lit from inside ----------
+   Approved on the test: a dark ground is allowed now (it overrides §5's old
+   "never dark"). Three soft light pools drift slowly; grain stops banding. */
+.tkg { position: absolute; inset: 0;
+  background: linear-gradient(172deg, #4a0a1c 0%, #660c26 36%, #3c0716 70%, #1d030a 100%); }
+.aur { position: absolute; border-radius: 50%; pointer-events: none; }
+.aur.a1 { left: 260px; top: -420px; width: 1200px; height: 1200px;
+  background: radial-gradient(circle, rgba(255,110,156,0.50) 0%, rgba(255,110,156,0) 62%); }
+.aur.a2 { left: -640px; top: 960px; width: 1400px; height: 1400px;
+  background: radial-gradient(circle, rgba(222,32,74,0.55) 0%, rgba(222,32,74,0) 64%); }
+.aur.a3 { left: 330px; top: 760px; width: 900px; height: 900px;
+  background: radial-gradient(circle, rgba(255,198,214,0.20) 0%, rgba(255,198,214,0) 60%); }
+.grain { position: absolute; inset: 0; background: url("assets/grain.png"); opacity: 0.075;
+  mix-blend-mode: overlay; pointer-events: none; }
+
+/* the white report card that sits on a burgundy ground */
+.sheet { position: absolute; border-radius: 68px; overflow: hidden; color: #17141c;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 55%, #fdf0f4 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -30px 60px -30px rgba(180,18,47,0.14),
+              0 70px 130px -40px rgba(8,0,3,0.75), 0 0 0 1px rgba(255,255,255,0.35); }
+.sheet .sheen { mix-blend-mode: normal; opacity: 0.55; }
+/* type ladder inside a sheet */
+.t-micro { font-size: 24px; font-weight: 700; letter-spacing: 0.16em; color: rgba(23,20,28,0.42); }
+.t-title { font-size: 42px; font-weight: 700; letter-spacing: -0.015em; }
+.t-sub   { font-size: 26px; font-weight: 500; color: rgba(23,20,28,0.46); }
+.t-big   { font-size: 176px; font-weight: 900; letter-spacing: -0.045em; line-height: 1;
+  background: linear-gradient(118deg, #7e0b20 0%, #b4122f 42%, #ff6e9c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: 10px; }
+.chip { display: inline-flex; align-items: center; gap: 10px; height: 58px; padding: 0 24px;
+  border-radius: 29px; background: #fbe3ea; color: #b4122f; font-size: 26px; font-weight: 700; }
+.hair { height: 2px; background: rgba(23,20,28,0.07); transform-origin: 0 0; }
+
+/* a cable between two tiles: a glass tube, a bright core, a travelling packet */
+.cab .tube { fill: none; stroke: rgba(255,255,255,0.26); stroke-width: 20; stroke-linecap: round; }
+.cab .core { fill: none; stroke: rgba(255,255,255,0.92); stroke-width: 4.5; stroke-linecap: round; }
+.cab .pkt  { fill: none; stroke: #ffd6e3; stroke-width: 11; stroke-linecap: round; }
+.cab .pkg  { filter: drop-shadow(0 0 10px rgba(255,120,165,1)); }
+.cab .wire { fill: none; stroke: rgba(255,255,255,0.55); stroke-width: 4; stroke-linecap: round; }
+
+
+/* ---- the AI-slop slide (reel-13/slop.py) — off-palette on purpose ---- */
+.slop { position: absolute; }
+.slop .sl-art { position: absolute; left: 0; top: 0; width: 1080px; height: 1440px;
+  transform-origin: 0 0; overflow: visible; border-radius: 40px; color: #fff;
+  font-family: "ProductSans", system-ui, sans-serif;
+  background: linear-gradient(160deg, #ff2bd6 0%, #8a2bff 28%, #2bb8ff 52%, #6dffb0 70%,
+              #fff22b 86%, #ff8a00 100%);
+  box-shadow: inset 0 0 0 16px rgba(255,255,255,0.55), 0 0 60px 16px rgba(255,43,214,0.75),
+              0 0 130px 40px rgba(43,217,255,0.45); }
+.slop .sl-sun { position: absolute; inset: 0; border-radius: 40px;
+  background: repeating-conic-gradient(from 0deg at 50% 30%, rgba(255,255,255,0.26) 0deg 7deg,
+              rgba(255,255,255,0) 7deg 17deg); }
+.slop .sl-dot { position: absolute; border-radius: 50%; }
+.slop .sl-pill { position: absolute; left: 50%; top: 118px; transform: translateX(-50%) rotate(-3deg);
+  white-space: nowrap; padding: 16px 44px; border-radius: 50px; background: #2bf0ff; color: #6a00d6;
+  font-size: 46px; font-weight: 900; letter-spacing: 0.04em;
+  box-shadow: 0 0 0 6px #fff, 0 0 40px 10px rgba(43,240,255,0.9); }
+.slop .sl-t { position: absolute; left: 0; width: 1080px; text-align: center; font-weight: 900;
+  line-height: 1; letter-spacing: -0.02em; color: #fff22b; white-space: nowrap;
+  -webkit-text-stroke: 6px #5b00d6;
+  text-shadow: 6px 6px 0 #ff2bd6, 12px 12px 0 #2bd9ff, 18px 18px 0 #5b00d6,
+               0 0 60px rgba(255,255,255,0.95); transform: skewX(-8deg); }
+.slop .sl-sub { position: absolute; left: 0; width: 1080px; text-align: center; font-size: 56px;
+  font-weight: 700; color: #fff; white-space: nowrap;
+  text-shadow: 0 0 24px #ff2bd6, 0 0 48px #ff2bd6, 3px 3px 0 #5b00d6; }
+.slop .sl-btn { position: absolute; left: 190px; top: 1236px; width: 700px; height: 118px;
+  border-radius: 59px; display: flex; align-items: center; justify-content: center;
+  font-size: 46px; font-weight: 900; color: #fff; letter-spacing: 0.02em; white-space: nowrap;
+  background: linear-gradient(90deg, #ff8a00 0%, #ff2bd6 50%, #7a2bff 100%);
+  box-shadow: 0 0 0 6px #fff22b, 0 0 50px 14px rgba(255,43,214,0.9); }
+.slop .sl-in { position: absolute; left: 0; width: 1080px; height: 1440px; }
+.slop .stk { position: absolute; left: 0; top: 0; }
+.slop .stk svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.slop .stk .sw { fill: none; stroke: #ffffff; stroke-width: 9; stroke-linejoin: round; }
+.slop .stk b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-weight: 900; letter-spacing: -0.03em; white-space: nowrap; }
+.slop .stk.x { opacity: 0; visibility: hidden; }
+
+
+.abs, .cx { position: absolute; }
+.hide { opacity: 0; visibility: hidden; }
+.tw { position: absolute; }
+.sk { fill: none; stroke: url(#gw); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+  width: 50%; height: 50%; position: relative; z-index: 1; overflow: visible; }
+.sk.w { stroke: #fff; width: 100%; height: 100%; }
+.pearl .sk { stroke: #17141c; }
+.circ .jelly, .circ .pearl, .circ .clear, .circ .sheen { border-radius: 50%; }
+.sqring.circ { border-radius: 50%; }
+.roomTint { position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(62,8,24,0.16) 0%, rgba(40,5,15,0.34) 100%); }
+
+
+/* ---- b01-b02 · her reels on a wall behind her, the room soft ---- */
+.wt { position: absolute; width: 230px; height: 409px; object-fit: cover; border-radius: 22px;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.30), 0 34px 56px -22px rgba(12,0,5,0.7); }
+#sweepW { position: absolute; left: 0; top: 0; width: 560px; height: 1500px; pointer-events: none;
+  background: linear-gradient(100deg, rgba(255,226,236,0) 18%, rgba(255,226,236,0.42) 50%, rgba(255,226,236,0) 82%);
+  mix-blend-mode: screen; }
+
+
+/* ---- b03-b06 · the dark shelf: calendar -> insights -> DMs ---- */
+#pan { left: 70px; top: 70px; width: 940px; height: 476px; }
+.wd { position: absolute; top: 102px; width: 112px; text-align: center; font-size: 22px; font-weight: 700;
+  letter-spacing: 0.12em; color: rgba(255,255,255,0.46); }
+.dc { position: absolute; width: 112px; height: 66px; border-radius: 16px;
+  background: rgba(255,255,255,0.07); box-shadow: inset 0 0 0 2px rgba(255,255,255,0.13); }
+.dc b { position: absolute; left: 12px; top: 7px; font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.5); }
+.dimg { position: absolute; width: 112px; height: 66px; border-radius: 16px; object-fit: cover;
+  object-position: 50% 30%; box-shadow: 0 0 0 2px rgba(255,255,255,0.55), 0 12px 22px -10px rgba(10,0,4,0.7); }
+#today { position: absolute; width: 112px; height: 66px; border-radius: 16px; border: 4px solid #ff6e9c;
+  box-shadow: 0 0 18px rgba(255,110,156,0.65), inset 0 0 12px rgba(255,110,156,0.35); }
+
+#insT { position: absolute; left: 106px; top: 106px; width: 227px; height: 404px; border-radius: 24px;
+  object-fit: cover; box-shadow: 0 0 0 2px rgba(255,255,255,0.5), 0 26px 44px -18px rgba(10,0,4,0.75); }
+#insE { position: absolute; left: 382px; top: 148px; width: 70px; height: 70px; }
+#insN { position: absolute; left: 468px; top: 110px; font-size: 136px; font-weight: 900; line-height: 1.1;
+  letter-spacing: -0.045em; color: rgba(255,255,255,0.9); white-space: nowrap; }
+#insF { position: absolute; left: 872px; top: 150px; width: 104px; height: 62px; border-radius: 31px;
+  background: rgba(255,255,255,0.13); box-shadow: inset 0 1.5px 1px rgba(255,255,255,0.3);
+  display: flex; align-items: center; justify-content: center; }
+#insF .sk { width: 40px; height: 40px; stroke: rgba(255,255,255,0.8); }
+.ich { position: absolute; width: 290px; height: 78px; border-radius: 39px;
+  background: rgba(255,255,255,0.10); box-shadow: inset 0 1.5px 1px rgba(255,255,255,0.28), inset 0 0 0 1px rgba(255,255,255,0.08); }
+.ich .sk { position: absolute; left: 24px; top: 19px; width: 40px; height: 40px; stroke: #fff; }
+.ich b { position: absolute; left: 82px; top: 10px; font-size: 46px; font-weight: 900; color: #fff;
+  letter-spacing: -0.03em; line-height: 58px; }
+
+.bub { position: absolute; height: 104px; }
+.bub i { position: absolute; left: 34px; height: 20px; border-radius: 10px; display: block; }
+.bub.in { background: linear-gradient(160deg, #ffffff 0%, #fbf3f6 100%); border-radius: 52px 52px 52px 16px;
+  box-shadow: inset 0 -10px 20px -12px rgba(180,18,47,0.18), 0 22px 40px -18px rgba(10,0,4,0.6); }
+.bub.in i { background: rgba(23,20,28,0.16); }
+.bub.out { background: linear-gradient(165deg, #e0204b 0%, #ab112e 60%, #7a0a21 100%); border-radius: 52px 52px 16px 52px;
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.4), 0 22px 40px -18px rgba(10,0,4,0.6); }
+.bub.out i { background: rgba(255,255,255,0.55); }
+
+
+/* ---- b07 · the Drafts folder behind her ---- */
+.fb { position: absolute;
+  background: linear-gradient(165deg, rgba(255,255,255,0.66) 0%, rgba(255,241,246,0.46) 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.8), 0 40px 80px -30px rgba(20,2,8,0.55); }
+#fTab { left: 300px; top: 112px; width: 196px; height: 64px; border-radius: 26px 26px 0 0; }
+#fBk { left: 300px; top: 150px; width: 480px; height: 380px; border-radius: 0 38px 38px 38px; }
+#fFr { position: absolute; left: 286px; top: 292px; width: 508px; height: 256px; border-radius: 36px;
+  background: linear-gradient(168deg, rgba(255,255,255,0.93) 0%, rgba(253,238,243,0.84) 100%);
+  box-shadow: inset 0 2.5px 1px #fff, inset 0 -24px 40px -22px rgba(180,18,47,0.16),
+              0 -10px 30px -12px rgba(20,2,8,0.25), 0 44px 80px -30px rgba(20,2,8,0.55);
+  display: flex; align-items: center; justify-content: center; }
+#fFr span { font-size: 46px; font-weight: 900; letter-spacing: 0.08em; color: #8d0d24; }
+.pk { position: absolute; width: 130px; height: 231px; border-radius: 16px; object-fit: cover;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.6), 0 16px 30px -12px rgba(20,2,8,0.5); }
+.fly { position: absolute; width: 230px; height: 409px; }
+.fly img { position: absolute; inset: 0; width: 230px; height: 409px; border-radius: 22px; object-fit: cover;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.3), 0 34px 56px -22px rgba(12,0,5,0.7); }
+
+
+/* ---- b09a · three formats, one look ---- */
+#shA { left: 70px; top: 96px; width: 940px; height: 456px; }
+.fmt { position: absolute; }
+.fmt .slop { left: 0; top: 0; }
+.fplay { position: absolute; left: 50%; top: 46%; width: 62px; height: 62px; margin: -31px 0 0 -31px;
+  border-radius: 50%; background: rgba(255,255,255,0.92); box-shadow: 0 0 22px 4px rgba(255,43,214,0.8); }
+.fplay:after { content: ""; position: absolute; left: 24px; top: 18px; border-left: 20px solid #8a2bff;
+  border-top: 13px solid transparent; border-bottom: 13px solid transparent; }
+.fbar { position: absolute; left: 12px; right: 12px; bottom: 14px; height: 7px; border-radius: 4px;
+  background: rgba(255,255,255,0.45); }
+.fbar i { position: absolute; left: 0; top: 0; bottom: 0; width: 38%; border-radius: 4px; background: #fff22b; }
+.fdots { position: absolute; left: 0; right: 0; bottom: 12px; display: flex; justify-content: center; gap: 7px; }
+.fdots i { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.55); display: block; }
+.fdots i:first-child { background: #fff; }
+.fchip { position: absolute; width: 210px; height: 52px; border-radius: 26px; text-align: center;
+  background: linear-gradient(160deg, #ffffff 0%, #fff5f8 52%, #f5dfe6 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 18px 34px -14px rgba(30,4,12,0.6);
+  font-size: 26px; font-weight: 700; letter-spacing: 0.1em; color: #17141c; line-height: 52px; white-space: nowrap; }
+
+
+/* ---- b09-b11 · the takeover: slop -> clean sheet -> 90/10 ---- */
+#tk { position: absolute; inset: 0; clip-path: circle(0px at 830px 386px); }
+#slT { left: -180px; top: 0; transform-origin: 0 0; }
+#clean { left: 140px; top: 150px; width: 800px; height: 1066px; }
+#clean .sx { position: absolute; }
+#csMicro, #nbMicro { color: rgba(23,20,28,0.58); }
+#csMicro { left: 64px; top: 70px; }
+#csBig { left: 52px; top: 118px; font-size: 300px !important; }
+#csTitle { left: 64px; top: 452px; width: 660px; font-size: 66px; font-weight: 700; line-height: 1.08;
+  letter-spacing: -0.025em; color: #17141c; }
+#csSub { left: 64px; top: 626px; width: 640px; font-size: 30px; font-weight: 500; line-height: 1.35;
+  color: rgba(23,20,28,0.5); }
+#csHair { left: 64px; right: 64px; top: 760px; }
+#csDots { left: 64px; top: 946px; display: flex; gap: 12px; }
+#csDots i { width: 14px; height: 14px; border-radius: 50%; background: rgba(23,20,28,0.14); display: block; }
+#csDots i:first-child { background: #b4122f; width: 34px; border-radius: 7px; }
+#csNext { right: 64px; top: 926px; }
+#csNext svg { width: 26px; height: 26px; fill: none; stroke: #b4122f; stroke-width: 3; stroke-linecap: round;
+  stroke-linejoin: round; }
+
+#nbMicro { left: 64px; top: 70px; }
+#nbBig { left: 52px; top: 112px; }
+#nbBar { left: 64px; top: 360px; width: 672px; height: 104px; }
+#nbA { position: absolute; left: 0; top: 0; width: 600px; height: 104px; border-radius: 34px 12px 12px 34px;
+  transform-origin: 0 50%;
+  background: linear-gradient(118deg, #7e0b20 0%, #b4122f 55%, #d8264f 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.45), inset 0 -18px 30px -16px rgba(255,125,165,0.5); }
+#nbB { position: absolute; left: 608px; top: 0; width: 64px; height: 104px; border-radius: 12px 34px 34px 12px;
+  transform-origin: 0 50%;
+  background: linear-gradient(160deg, #ff8ab0 0%, #ff5c8f 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.6); }
+#nbTrk { position: absolute; inset: 0; border-radius: 34px; background: #f6e6eb;
+  box-shadow: inset 0 2px 6px rgba(120,10,30,0.08); }
+.nrow { position: absolute; left: 64px; right: 64px; height: 110px; display: flex; align-items: center; }
+.nrow .ri { width: 76px; height: 76px; border-radius: 22px; display: flex; align-items: center;
+  justify-content: center; margin-right: 26px; flex: none; }
+.nrow .ri.a { background: linear-gradient(118deg, #7e0b20 0%, #b4122f 55%, #d8264f 100%); }
+.nrow .ri.b { background: linear-gradient(160deg, #ff8ab0 0%, #ff5c8f 100%); }
+.nrow .ri svg { width: 42px; height: 42px; fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round;
+  stroke-linejoin: round; }
+.nrow .rl { flex: 1; font-size: 36px; font-weight: 700; letter-spacing: 0.1em; color: #17141c; }
+.nrow .rv { font-size: 52px; font-weight: 900; letter-spacing: -0.03em; color: #17141c; }
+#nrl { position: absolute; left: 166px; right: 64px; top: 718px; height: 2px; background: rgba(23,20,28,0.07); }
+#nbOk .sk { width: 56%; height: 56%; }
+
+
+/* ---- b13 · this reel, one cell of her grid ---- */
+#gridW { position: absolute; inset: 0; transform-origin: 540px 960px; }
+.gc { position: absolute; width: 356px; height: 633px; object-fit: cover; }
+#gRing { position: absolute; left: 362px; top: 643.5px; width: 356px; height: 633px;
+  box-shadow: 0 0 0 5px #fff, 0 0 34px 8px rgba(255,110,156,0.75); }
+
+
+/* ---- b16 · the IG poll sticker ---- */
+#poll { left: 170px; top: 104px; width: 740px; height: 392px; border-radius: 48px; overflow: hidden;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 60%, #fdf1f5 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -24px 44px -26px rgba(180,18,47,0.16),
+              0 50px 100px -36px rgba(20,2,8,0.7), 0 0 0 1px rgba(255,255,255,0.4); }
+#pQ { position: absolute; left: 0; right: 0; top: 50px; text-align: center; font-size: 58px; font-weight: 900;
+  letter-spacing: -0.02em; color: #17141c; }
+.popt { position: absolute; top: 196px; width: 318px; height: 138px; border-radius: 69px; overflow: hidden;
+  background: #f4edf0; box-shadow: inset 0 2px 5px rgba(120,10,30,0.07); }
+.popt b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 56px; font-weight: 900; letter-spacing: -0.01em; color: #17141c; }
+#pNf { position: absolute; inset: 0; transform-origin: 0 50%;
+  background: linear-gradient(118deg, #7e0b20 0%, #b4122f 55%, #e0204b 100%); }
+#pNw { color: #fff !important; }
+#pTap { position: absolute; left: 0; top: 0; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%;
+  background: rgba(255,255,255,0.35); box-shadow: 0 0 0 4px rgba(255,255,255,0.9), 0 10px 30px rgba(20,2,8,0.35); }
+
+    .ground { clip-path: path('M 883.2 0 c 36.293 0 54.439 0 70.765 8.318 a 68 68 0 0 1 29.717 29.717 c 8.318 16.325 8.318 34.472 8.318 70.765 L 992 1683.2 c 0 36.293 0 54.439 -8.318 70.765 a 68 68 0 0 1 -29.717 29.717 c -16.325 8.318 -34.472 8.318 -70.765 8.318 L 108.8 1792 c -36.293 0 -54.439 0 -70.765 -8.318 a 68 68 0 0 1 -29.717 -29.717 c -8.318 -16.325 -8.318 -34.472 -8.318 -70.765 L 0 108.8 c 0 -36.293 0 -54.439 8.318 -70.765 a 68 68 0 0 1 29.717 -29.717 c 16.325 -8.318 34.472 -8.318 70.765 -8.318 Z'); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="64.317" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="64.317" data-media-start="0"
+             muted playsinline></video>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="gw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ffdbe6"/></linearGradient>
+<symbol id="i-claude" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></symbol></defs></svg>
+<svg width="0" height="0" style="position:absolute"><defs><symbol id="slp-burst" viewBox="0 0 100 100"><polygon points="50.0,2.0 56.6,16.7 68.4,5.7 68.9,21.7 83.9,16.1 78.3,31.1 94.3,31.6 83.3,43.4 98.0,50.0 83.3,56.6 94.3,68.4 78.3,68.9 83.9,83.9 68.9,78.3 68.4,94.3 56.6,83.3 50.0,98.0 43.4,83.3 31.6,94.3 31.1,78.3 16.1,83.9 21.7,68.9 5.7,68.4 16.7,56.6 2.0,50.0 16.7,43.4 5.7,31.6 21.7,31.1 16.1,16.1 31.1,21.7 31.6,5.7 43.4,16.7"/></symbol><symbol id="slp-spark" viewBox="0 0 100 100"><path d="M50 2C54 34 66 46 98 50C66 54 54 66 50 98C46 66 34 54 2 50C34 46 46 34 50 2Z"/></symbol><symbol id="slp-star" viewBox="0 0 100 100"><polygon points="50,4 62,36 96,37 69,58 79,92 50,72 21,92 31,58 4,37 38,36"/></symbol><symbol id="slp-heart" viewBox="0 0 100 100"><path d="M50 90S8 64 8 35C8 20 19 10 32 10c8 0 14 4 18 11c4-7 10-11 18-11c13 0 24 10 24 25c0 29-42 55-42 55z"/></symbol><symbol id="slp-bolt" viewBox="0 0 100 100"><polygon points="60,2 16,58 46,58 36,98 86,38 56,38 72,2"/></symbol><symbol id="slp-crown" viewBox="0 0 100 100"><path d="M8 80L14 24L34 52L50 12L66 52L86 24L92 80Z"/></symbol><symbol id="slp-bubble" viewBox="0 0 100 100"><path d="M50 8C75 8 95 22 95 42S75 76 50 76c-5 0-10-.5-14-1.5L14 92l6-20C10 65 5 54 5 42C5 22 25 8 50 8Z"/></symbol><symbol id="slp-flame" viewBox="0 0 100 100"><path d="M50 96C26 96 12 80 12 60C12 40 30 30 34 8c10 10 12 22 10 30c6-4 10-12 10-20c18 14 34 32 34 50c0 18-16 28-38 28Z"/></symbol><symbol id="slp-arrow" viewBox="0 0 100 100"><path d="M8 70C20 34 50 20 74 26L72 12L96 34L68 52L70 38C50 34 30 44 20 76Z"/></symbol><symbol id="slp-rocket" viewBox="0 0 100 100"><path d="M50 4C66 16 72 36 70 60H30C28 36 34 16 50 4Z"/><path d="M30 48L14 70L30 66Z"/><path d="M70 48L86 70L70 66Z"/></symbol><symbol id="slp-tag" viewBox="0 0 100 100"><path d="M8 38L38 8H90V60L60 90Z"/></symbol><symbol id="slp-orb" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44"/></symbol><symbol id="slp-badge" viewBox="0 0 100 100"><polygon points="50.0,2.0 55.5,8.4 62.4,3.6 66.1,11.2 74.0,8.4 75.6,16.7 83.9,16.1 83.3,24.4 91.6,26.0 88.8,33.9 96.4,37.6 91.6,44.5 98.0,50.0 91.6,55.5 96.4,62.4 88.8,66.1 91.6,74.0 83.3,75.6 83.9,83.9 75.6,83.3 74.0,91.6 66.1,88.8 62.4,96.4 55.5,91.6 50.0,98.0 44.5,91.6 37.6,96.4 33.9,88.8 26.0,91.6 24.4,83.3 16.1,83.9 16.7,75.6 8.4,74.0 11.2,66.1 3.6,62.4 8.4,55.5 2.0,50.0 8.4,44.5 3.6,37.6 11.2,33.9 8.4,26.0 16.7,24.4 16.1,16.1 24.4,16.7 26.0,8.4 33.9,11.2 37.6,3.6 44.5,8.4"/></symbol></defs></svg>
+
+      <div class="g full" id="gW">
+        <div id="roomW" class="hide">
+          <video id="softW" class="plate" src="assets/soft/wall.mp4"
+                 data-start="0.000" data-duration="5.633" data-media-start="0" muted playsinline></video>
+          <div class="roomTint"></div>
+        </div>
+        <div id="wallW">
+          <img class="wt hide" id="wa0" src="assets/grid/c0.jpg" style="left:50px;top:70px" alt="">
+          <img class="wt hide" id="wa1" src="assets/grid/c3.jpg" style="left:300px;top:70px" alt="">
+          <img class="wt hide" id="wa2" src="assets/grid/c2.jpg" style="left:550px;top:70px" alt="">
+          <img class="wt hide" id="wa3" src="assets/grid/c1.jpg" style="left:800px;top:70px" alt="">
+          <img class="wt hide" id="wa4" src="assets/grid/c5.jpg" style="left:50px;top:499px" alt="">
+          <img class="wt hide" id="wa5" src="assets/grid/c1.jpg" style="left:300px;top:499px" alt="">
+          <img class="wt hide" id="wa6" src="assets/grid/c6.jpg" style="left:550px;top:499px" alt="">
+          <img class="wt hide" id="wa7" src="assets/grid/c4.jpg" style="left:800px;top:499px" alt="">
+          <img class="wt hide" id="wa8" src="assets/grid/c7.jpg" style="left:50px;top:928px" alt="">
+          <img class="wt hide" id="wa9" src="assets/grid/c2.jpg" style="left:300px;top:928px" alt="">
+          <img class="wt hide" id="wa10" src="assets/grid/c0.jpg" style="left:550px;top:928px" alt="">
+          <img class="wt hide" id="wa11" src="assets/grid/c8.jpg" style="left:800px;top:928px" alt="">
+        </div>
+        <div id="sweepW" class="hide"></div>
+        <div class="sqring" id="clWR" style="left:440px;top:150px;width:200px;height:200px"></div><div class="tw hide " id="clW" style="left:440px;top:150px;width:200px;height:200px"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg><div class="sheen"></div></div></div>
+      </div>
+
+      <div class="g full" id="gD">
+        <div id="roomD" class="hide">
+          <video id="softD" class="plate" src="assets/soft/drafts.mp4"
+                 data-start="15.200" data-duration="4.900" data-media-start="0" muted playsinline></video>
+          <div class="roomTint"></div>
+        </div>
+        <div id="fold" class="abs hide" style="left:0;top:0;width:1080px;height:600px">
+          <div class="fb" id="fTab"></div><div class="fb" id="fBk"></div>
+          <img class="pk" id="pk0" src="assets/grid/c7_g.jpg" style="left:352px;top:214px;transform:rotate(-8deg)" alt="">
+          <img class="pk" id="pk1" src="assets/grid/c6_g.jpg" style="left:598px;top:208px;transform:rotate(7deg)" alt="">
+          <div class="fly hide" id="fl0" style="left:50px;top:70px"><img src="assets/grid/c0_g.jpg" alt=""><img class="flc" src="assets/grid/c0.jpg" alt=""></div>
+          <div class="fly hide" id="fl1" style="left:800px;top:70px"><img src="assets/grid/c1_g.jpg" alt=""><img class="flc" src="assets/grid/c1.jpg" alt=""></div>
+          <div class="fly hide" id="fl2" style="left:50px;top:499px"><img src="assets/grid/c2_g.jpg" alt=""><img class="flc" src="assets/grid/c2.jpg" alt=""></div>
+          <div class="fly hide" id="fl3" style="left:800px;top:499px"><img src="assets/grid/c3_g.jpg" alt=""><img class="flc" src="assets/grid/c3.jpg" alt=""></div>
+          <div class="fly hide" id="fl4" style="left:50px;top:928px"><img src="assets/grid/c4_g.jpg" alt=""><img class="flc" src="assets/grid/c4.jpg" alt=""></div>
+          <div class="fly hide" id="fl5" style="left:800px;top:928px"><img src="assets/grid/c5_g.jpg" alt=""><img class="flc" src="assets/grid/c5.jpg" alt=""></div>
+          <div id="fFr"><span>ЧЕРНЕТКИ</span></div>
+        </div>
+      </div>
+
+      <div class="g full" id="gS">
+        <div id="pan" class="dglass edge hide"></div>
+        <div id="cal" class="abs" style="left:0;top:0;width:1080px;height:600px">
+          <div class="wd" style="left:112px">ПН</div><div class="wd" style="left:236px">ВТ</div><div class="wd" style="left:360px">СР</div><div class="wd" style="left:484px">ЧТ</div><div class="wd" style="left:608px">ПТ</div><div class="wd" style="left:732px">СБ</div><div class="wd" style="left:856px">НД</div>
+          <div class="dc" id="dc1" style="left:112px;top:146px"><b>1</b></div>
+          <div class="dc" id="dc2" style="left:236px;top:146px"><b>2</b></div>
+          <div class="dc" id="dc3" style="left:360px;top:146px"><b>3</b></div>
+          <div class="dc" id="dc4" style="left:484px;top:146px"><b>4</b></div>
+          <div class="dc" id="dc5" style="left:608px;top:146px"><b>5</b></div>
+          <div class="dc" id="dc6" style="left:732px;top:146px"><b>6</b></div>
+          <div class="dc" id="dc7" style="left:856px;top:146px"><b>7</b></div>
+          <div class="dc" id="dc8" style="left:112px;top:222px"><b>8</b></div>
+          <div class="dc" id="dc9" style="left:236px;top:222px"><b>9</b></div>
+          <div class="dc" id="dc10" style="left:360px;top:222px"><b>10</b></div>
+          <div class="dc" id="dc11" style="left:484px;top:222px"><b>11</b></div>
+          <div class="dc" id="dc12" style="left:608px;top:222px"><b>12</b></div>
+          <div class="dc" id="dc13" style="left:732px;top:222px"><b>13</b></div>
+          <div class="dc" id="dc14" style="left:856px;top:222px"><b>14</b></div>
+          <div class="dc" id="dc15" style="left:112px;top:298px"><b>15</b></div>
+          <div class="dc" id="dc16" style="left:236px;top:298px"><b>16</b></div>
+          <div class="dc" id="dc17" style="left:360px;top:298px"><b>17</b></div>
+          <div class="dc" id="dc18" style="left:484px;top:298px"><b>18</b></div>
+          <div class="dc" id="dc19" style="left:608px;top:298px"><b>19</b></div>
+          <div class="dc" id="dc20" style="left:732px;top:298px"><b>20</b></div>
+          <div class="dc" id="dc21" style="left:856px;top:298px"><b>21</b></div>
+          <div class="dc" id="dc22" style="left:112px;top:374px"><b>22</b></div>
+          <div class="dc" id="dc23" style="left:236px;top:374px"><b>23</b></div>
+          <div class="dc" id="dc24" style="left:360px;top:374px"><b>24</b></div>
+          <div class="dc" id="dc25" style="left:484px;top:374px"><b>25</b></div>
+          <div class="dc" id="dc26" style="left:608px;top:374px"><b>26</b></div>
+          <div class="dc" id="dc27" style="left:732px;top:374px"><b>27</b></div>
+          <div class="dc" id="dc28" style="left:856px;top:374px"><b>28</b></div>
+          <div class="dc" id="dc29" style="left:112px;top:450px"><b>29</b></div>
+          <div class="dc" id="dc30" style="left:236px;top:450px"><b>30</b></div>
+          <img class="dimg hide" id="df22" src="assets/grid/c8.jpg" style="left:112px;top:374px" alt=""><img class="dimg hide" id="df23" src="assets/grid/c7.jpg" style="left:236px;top:374px" alt=""><img class="dimg hide" id="df24" src="assets/grid/c6.jpg" style="left:360px;top:374px" alt=""><img class="dimg hide" id="df25" src="assets/grid/c5.jpg" style="left:484px;top:374px" alt=""><img class="dimg hide" id="df26" src="assets/grid/c4.jpg" style="left:608px;top:374px" alt=""><img class="dimg hide" id="df27" src="assets/grid/c3.jpg" style="left:732px;top:374px" alt=""><img class="dimg hide" id="df28" src="assets/grid/c2.jpg" style="left:856px;top:374px" alt=""><img class="dimg hide" id="df29" src="assets/grid/c1.jpg" style="left:112px;top:450px" alt=""><img class="dimg hide" id="df30" src="assets/grid/c0.jpg" style="left:236px;top:450px" alt="">
+          <div id="today" class="hide" style="left:112px;top:146px"></div>
+        </div>
+        <img id="insT" class="hide" src="assets/grid/c3.jpg" alt="">
+        <div id="insE" class="hide"><svg class="sk w" viewBox="0 0 24 24"><path d="M1.8 12s3.8-6.8 10.2-6.8S22.2 12 22.2 12s-3.8 6.8-10.2 6.8S1.8 12 1.8 12z"/><circle cx="12" cy="12" r="3.1"/></svg></div>
+        <div id="insN" class="hide">0</div>
+        <div id="insF" class="hide"><svg class="sk" viewBox="0 0 24 24"><path d="M3.5 12h15.2M14.2 7.6l4.5 4.4-4.5 4.4"/></svg></div>
+        <div class="ich hide" id="ich0" style="left:380px;top:330px"><svg class="sk" viewBox="0 0 24 24"><path d="M12 20.2s-7.9-4.7-7.9-10.4A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.9 2.4c0 5.7-7.9 10.4-7.9 10.4z"/></svg><b id="ichV0">0</b></div><div class="ich hide" id="ich1" style="left:690px;top:330px"><svg class="sk" viewBox="0 0 24 24"><path d="M6.6 3.8h10.8v16.6L12 16.3l-5.4 4.1z"/></svg><b id="ichV1">0</b></div><div class="ich hide" id="ich2" style="left:380px;top:424px"><svg class="sk" viewBox="0 0 24 24"><path d="M21.2 3.3L10.5 13.5"/><path d="M21.2 3.3l-6.6 17.6-4.1-7.4-7.7-3.9z"/></svg><b id="ichV2">0</b></div><div class="ich hide" id="ich3" style="left:690px;top:424px"><svg class="sk" viewBox="0 0 24 24"><circle cx="9.4" cy="8.1" r="3.7"/><path d="M2.9 20.1c.8-3.7 3.3-5.7 6.5-5.7s5.7 2 6.5 5.7"/><path d="M18.7 8.2v6.2M15.6 11.3h6.2"/></svg><b id="ichV3">+0</b></div>
+        <div class="tw hide circ" id="insU" style="left:936px;top:290px;width:74px;height:74px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M12 19.2V5.2M5.8 11.4L12 5.2l6.2 6.2"/></svg><div class="sheen"></div></div></div>
+        <div class="sqring" id="dmTR" style="left:118px;top:150px;width:170px;height:170px"></div><div class="tw hide " id="dmT" style="left:118px;top:150px;width:170px;height:170px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M21.2 3.3L10.5 13.5"/><path d="M21.2 3.3l-6.6 17.6-4.1-7.4-7.7-3.9z"/></svg><div class="sheen"></div></div></div>
+        <div class="bub in hide" id="bu1" style="left:336px;top:104px;width:450px"><i style="top:26px;width:78%"></i><i style="top:58px;width:46%"></i></div><div class="bub out hide" id="bu2" style="left:604px;top:226px;width:370px"><i style="top:26px;width:72%"></i><i style="top:58px;width:40%"></i></div><div class="bub in hide" id="bu3" style="left:336px;top:348px;width:500px"><i style="top:26px;width:84%"></i><i style="top:58px;width:58%"></i></div>
+      </div>
+
+      <div class="g full" id="gA">
+        <div id="shA" class="shelf edge hide"></div>
+        <div class="sqring" id="clAR" style="left:105px;top:243px;width:150px;height:150px"></div><div class="tw hide " id="clA" style="left:105px;top:243px;width:150px;height:150px"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg><div class="sheen"></div></div></div>
+        <div class="fmt hide" id="fmV" style="left:298px;top:172px;width:164px;height:292px"><div class="slop" id="slV" data-layout-ignore style="width:164px;height:292px;"><div class="sl-art" style="height:1923px;transform:scale(0.15185)"><div class="sl-sun"></div><div class="sl-in" style="top:241px"><i class="sl-dot" style="left:70px;top:380px;width:26px;height:26px;background:#fff22b"></i><i class="sl-dot" style="left:1000px;top:360px;width:20px;height:20px;background:#2bf0ff"></i><i class="sl-dot" style="left:320px;top:1120px;width:22px;height:22px;background:#ffffff"></i><i class="sl-dot" style="left:760px;top:1110px;width:30px;height:30px;background:#fff22b"></i><i class="sl-dot" style="left:60px;top:930px;width:18px;height:18px;background:#ff2bd6"></i><i class="sl-dot" style="left:1010px;top:930px;width:24px;height:24px;background:#ffffff"></i><i class="sl-dot" style="left:520px;top:70px;width:18px;height:18px;background:#fff22b"></i><i class="sl-dot" style="left:420px;top:1400px;width:16px;height:16px;background:#2bf0ff"></i><div class="sl-pill">СЕКРЕТНИЙ ЛАЙФХАК</div><div class="sl-t" style="top:250px;font-size:190px">10 ПОРАД</div><div class="sl-t" style="top:470px;font-size:118px">ДЛЯ ІДЕАЛЬНИХ</div><div class="sl-t" style="top:620px;font-size:176px">КАРУСЕЛЕЙ</div><div class="sl-sub" style="top:880px">Твій блоог виросте в 1О разіів!!!</div><div class="sl-sub" style="top:960px;font-size:44px;color:#fff22b">продажі ЗРОСТУУТЬ гарантованно</div><div class="sl-btn">ДІЗНАТИСЯ БІЛЬШЕЕ &#8594;</div><div class="stk" data-x="900" data-y="190" data-r="14" style="left:900px;top:190px;width:250px;height:250px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-burst"/></g><g fill="#fff22b" stroke="#ff2bd6" stroke-width="4" stroke-linejoin="round"><use href="#slp-burst"/></g></svg><b style="font-size:65px;color:#e0007a">NEW!</b></div><div class="stk" data-x="140" data-y="130" data-r="0" style="left:140px;top:130px;width:130px;height:130px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-spark"/></g><g fill="#2bf0ff" stroke="none" stroke-width="0" stroke-linejoin="round"><use href="#slp-spark"/></g></svg></div><div class="stk" data-x="975" data-y="720" data-r="10" style="left:975px;top:720px;width:100px;height:100px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-spark"/></g><g fill="#fff22b" stroke="none" stroke-width="0" stroke-linejoin="round"><use href="#slp-spark"/></g></svg></div><div class="stk" data-x="175" data-y="1190" data-r="-12" style="left:175px;top:1190px;width:230px;height:230px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-badge"/></g><g fill="#ff2bd6" stroke="#fff22b" stroke-width="4" stroke-linejoin="round"><use href="#slp-badge"/></g></svg><b style="font-size:58px;color:#ffffff">100%</b></div><div class="stk" data-x="935" data-y="1160" data-r="16" style="left:935px;top:1160px;width:210px;height:210px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-bolt"/></g><g fill="#fff22b" stroke="#5b00d6" stroke-width="4" stroke-linejoin="round"><use href="#slp-bolt"/></g></svg></div><div class="stk" data-x="110" data-y="700" data-r="-16" style="left:110px;top:700px;width:120px;height:120px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-heart"/></g><g fill="#ff2b8a" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"><use href="#slp-heart"/></g></svg></div><div class="stk" data-x="820" data-y="470" data-r="0" style="left:820px;top:470px;width:70px;height:70px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-spark"/></g><g fill="#ffffff" stroke="none" stroke-width="0" stroke-linejoin="round"><use href="#slp-spark"/></g></svg></div></div></div></div><div class="fplay"></div><div class="fbar"><i></i></div></div>
+        <div class="fchip hide" id="fmVL" style="left:275px;top:442px">МОНТАЖ</div>
+        <div class="fmt hide" id="fmD" style="left:494px;top:200px;width:236px;height:236px"><div class="slop" id="slD" data-layout-ignore style="width:236px;height:236px;"><div class="sl-art" style="height:1080px;transform:scale(0.21852)"><div class="sl-sun"></div><div class="sl-in" style="top:-180px"><i class="sl-dot" style="left:70px;top:380px;width:26px;height:26px;background:#fff22b"></i><i class="sl-dot" style="left:1000px;top:360px;width:20px;height:20px;background:#2bf0ff"></i><i class="sl-dot" style="left:320px;top:1120px;width:22px;height:22px;background:#ffffff"></i><i class="sl-dot" style="left:760px;top:1110px;width:30px;height:30px;background:#fff22b"></i><i class="sl-dot" style="left:60px;top:930px;width:18px;height:18px;background:#ff2bd6"></i><i class="sl-dot" style="left:1010px;top:930px;width:24px;height:24px;background:#ffffff"></i><i class="sl-dot" style="left:520px;top:70px;width:18px;height:18px;background:#fff22b"></i><i class="sl-dot" style="left:420px;top:1400px;width:16px;height:16px;background:#2bf0ff"></i><div class="sl-pill">СЕКРЕТНИЙ ЛАЙФХАК</div><div class="sl-t" style="top:250px;font-size:190px">10 ПОРАД</div><div class="sl-t" style="top:470px;font-size:118px">ДЛЯ ІДЕАЛЬНИХ</div><div class="sl-t" style="top:620px;font-size:176px">КАРУСЕЛЕЙ</div><div class="sl-sub" style="top:880px">Твій блоог виросте в 1О разіів!!!</div><div class="sl-sub" style="top:960px;font-size:44px;color:#fff22b">продажі ЗРОСТУУТЬ гарантованно</div><div class="sl-btn">ДІЗНАТИСЯ БІЛЬШЕЕ &#8594;</div><div class="stk" data-x="900" data-y="190" data-r="14" style="left:900px;top:190px;width:250px;height:250px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-burst"/></g><g fill="#fff22b" stroke="#ff2bd6" stroke-width="4" stroke-linejoin="round"><use href="#slp-burst"/></g></svg><b style="font-size:65px;color:#e0007a">NEW!</b></div><div class="stk" data-x="140" data-y="130" data-r="0" style="left:140px;top:130px;width:130px;height:130px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-spark"/></g><g fill="#2bf0ff" stroke="none" stroke-width="0" stroke-linejoin="round"><use href="#slp-spark"/></g></svg></div><div class="stk" data-x="975" data-y="720" data-r="10" style="left:975px;top:720px;width:100px;height:100px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-spark"/></g><g fill="#fff22b" stroke="none" stroke-width="0" stroke-linejoin="round"><use href="#slp-spark"/></g></svg></div><div class="stk" data-x="175" data-y="1190" data-r="-12" style="left:175px;top:1190px;width:230px;height:230px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-badge"/></g><g fill="#ff2bd6" stroke="#fff22b" stroke-width="4" stroke-linejoin="round"><use href="#slp-badge"/></g></svg><b style="font-size:58px;color:#ffffff">100%</b></div><div class="stk" data-x="935" data-y="1160" data-r="16" style="left:935px;top:1160px;width:210px;height:210px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-bolt"/></g><g fill="#fff22b" stroke="#5b00d6" stroke-width="4" stroke-linejoin="round"><use href="#slp-bolt"/></g></svg></div><div class="stk" data-x="110" data-y="700" data-r="-16" style="left:110px;top:700px;width:120px;height:120px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-heart"/></g><g fill="#ff2b8a" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"><use href="#slp-heart"/></g></svg></div><div class="stk" data-x="820" data-y="470" data-r="0" style="left:820px;top:470px;width:70px;height:70px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-spark"/></g><g fill="#ffffff" stroke="none" stroke-width="0" stroke-linejoin="round"><use href="#slp-spark"/></g></svg></div></div></div></div></div>
+        <div class="fchip hide" id="fmDL" style="left:507px;top:414px">ДИЗАЙН</div>
+        <div class="fmt hide" id="fmC" style="left:759px;top:181px;width:206px;height:275px"><div class="slop" id="slC" data-layout-ignore style="width:206px;height:275px;"><div class="sl-art" style="height:1442px;transform:scale(0.19074)"><div class="sl-sun"></div><div class="sl-in" style="top:1px"><i class="sl-dot" style="left:70px;top:380px;width:26px;height:26px;background:#fff22b"></i><i class="sl-dot" style="left:1000px;top:360px;width:20px;height:20px;background:#2bf0ff"></i><i class="sl-dot" style="left:320px;top:1120px;width:22px;height:22px;background:#ffffff"></i><i class="sl-dot" style="left:760px;top:1110px;width:30px;height:30px;background:#fff22b"></i><i class="sl-dot" style="left:60px;top:930px;width:18px;height:18px;background:#ff2bd6"></i><i class="sl-dot" style="left:1010px;top:930px;width:24px;height:24px;background:#ffffff"></i><i class="sl-dot" style="left:520px;top:70px;width:18px;height:18px;background:#fff22b"></i><i class="sl-dot" style="left:420px;top:1400px;width:16px;height:16px;background:#2bf0ff"></i><div class="sl-pill">СЕКРЕТНИЙ ЛАЙФХАК</div><div class="sl-t" style="top:250px;font-size:190px">10 ПОРАД</div><div class="sl-t" style="top:470px;font-size:118px">ДЛЯ ІДЕАЛЬНИХ</div><div class="sl-t" style="top:620px;font-size:176px">КАРУСЕЛЕЙ</div><div class="sl-sub" style="top:880px">Твій блоог виросте в 1О разіів!!!</div><div class="sl-sub" style="top:960px;font-size:44px;color:#fff22b">продажі ЗРОСТУУТЬ гарантованно</div><div class="sl-btn">ДІЗНАТИСЯ БІЛЬШЕЕ &#8594;</div><div class="stk" data-x="900" data-y="190" data-r="14" style="left:900px;top:190px;width:250px;height:250px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-burst"/></g><g fill="#fff22b" stroke="#ff2bd6" stroke-width="4" stroke-linejoin="round"><use href="#slp-burst"/></g></svg><b style="font-size:65px;color:#e0007a">NEW!</b></div><div class="stk" data-x="140" data-y="130" data-r="0" style="left:140px;top:130px;width:130px;height:130px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-spark"/></g><g fill="#2bf0ff" stroke="none" stroke-width="0" stroke-linejoin="round"><use href="#slp-spark"/></g></svg></div><div class="stk" data-x="975" data-y="720" data-r="10" style="left:975px;top:720px;width:100px;height:100px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-spark"/></g><g fill="#fff22b" stroke="none" stroke-width="0" stroke-linejoin="round"><use href="#slp-spark"/></g></svg></div><div class="stk" data-x="175" data-y="1190" data-r="-12" style="left:175px;top:1190px;width:230px;height:230px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-badge"/></g><g fill="#ff2bd6" stroke="#fff22b" stroke-width="4" stroke-linejoin="round"><use href="#slp-badge"/></g></svg><b style="font-size:58px;color:#ffffff">100%</b></div><div class="stk" data-x="935" data-y="1160" data-r="16" style="left:935px;top:1160px;width:210px;height:210px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-bolt"/></g><g fill="#fff22b" stroke="#5b00d6" stroke-width="4" stroke-linejoin="round"><use href="#slp-bolt"/></g></svg></div><div class="stk" data-x="110" data-y="700" data-r="-16" style="left:110px;top:700px;width:120px;height:120px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-heart"/></g><g fill="#ff2b8a" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"><use href="#slp-heart"/></g></svg></div><div class="stk" data-x="820" data-y="470" data-r="0" style="left:820px;top:470px;width:70px;height:70px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-spark"/></g><g fill="#ffffff" stroke="none" stroke-width="0" stroke-linejoin="round"><use href="#slp-spark"/></g></svg></div></div></div></div><div class="fdots"><i></i><i></i><i></i><i></i><i></i></div></div>
+        <div class="fchip hide" id="fmCL" style="left:757px;top:433px">КАРУСЕЛІ</div>
+      </div>
+
+      <div class="g full" id="gG">
+        <div id="gridW" data-layout-allow-overflow>
+          <img class="gc" id="gc0" src="assets/grid/c0.jpg" style="left:0.0px;top:4.7px" alt="">
+          <img class="gc" id="gc1" src="assets/grid/c1.jpg" style="left:362.0px;top:4.7px" alt="">
+          <img class="gc" id="gc2" src="assets/grid/c2.jpg" style="left:724.0px;top:4.7px" alt="">
+          <img class="gc" id="gc3" src="assets/grid/c3.jpg" style="left:0.0px;top:643.6px" alt="">
+          <img class="gc" id="gc5" src="assets/grid/c4.jpg" style="left:724.0px;top:643.6px" alt="">
+          <img class="gc" id="gc6" src="assets/grid/c5.jpg" style="left:0.0px;top:1282.5px" alt="">
+          <img class="gc" id="gc7" src="assets/grid/c6.jpg" style="left:362.0px;top:1282.5px" alt="">
+          <img class="gc" id="gc8" src="assets/grid/c7.jpg" style="left:724.0px;top:1282.5px" alt="">
+          <div id="gRing" class="hide"></div>
+        </div>
+      </div>
+
+      <div class="g full" id="gP">
+        <div id="poll" class="abs hide">
+          <div id="pQ">Здогадалась би?</div>
+          <div class="popt hide" id="pY" style="left:36px"><b>Так</b></div>
+          <div class="popt hide" id="pN" style="left:386px"><div id="pNf"></div><b id="pNb">Ні</b><b id="pNw" class="hide">Ні</b></div>
+          <div class="sheen"></div>
+        </div>
+        <div id="pTap" class="hide" style="left:715px;top:369px"></div>
+      </div>
+
+      <div id="tk" class="hide">
+        <div class="tkg"></div><div class="aur a1"></div><div class="aur a2"></div><div class="aur a3"></div>
+        <div class="grain"></div>
+        <div class="g full" id="gT">
+          
+          <div class="sheet hide" id="clean">
+            <div id="csA">
+              <div class="sx t-micro" id="csMicro">КАРУСЕЛЬ · 1 / 10</div>
+              <div class="sx t-big" id="csBig">10</div>
+              <div class="sx" id="csTitle">порад для ідеальних каруселей</div>
+              <div class="sx" id="csSub">Структура, шрифт і відступи — без зайвого</div>
+              <div class="sx hair" id="csHair"></div>
+              <div class="sx" id="csDots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="sx chip" id="csNext"><span>Гортай</span><svg viewBox="0 0 26 26"><path d="M4 13h17M15 7l6 6-6 6"/></svg></div>
+            </div>
+            <div id="csB">
+              <div class="sx t-micro hide" id="nbMicro">РОБОТА З ШІ</div>
+              <div class="sx t-big hide" id="nbBig">0%</div>
+              <div class="sx hide" id="nbBar"><div id="nbTrk"></div><div id="nbA"></div><div id="nbB"></div></div>
+              <div class="nrow hide" id="nr1" style="top:548px"><div class="ri a"><svg viewBox="0 0 24 24"><path d="M12 3.2l1.9 5.6 5.7 1.9-5.7 1.9L12 18.2l-1.9-5.6-5.7-1.9 5.7-1.9z"/></svg></div>
+                <div class="rl">НАВЧАННЯ</div><div class="rv" id="nv1">90%</div></div>
+              <div id="nrl" class="hide"></div>
+              <div class="nrow hide" id="nr2" style="top:724px"><div class="ri b"><svg viewBox="0 0 24 24"><path d="M1.8 12s3.8-6.8 10.2-6.8S22.2 12 22.2 12s-3.8 6.8-10.2 6.8S1.8 12 1.8 12z"/><circle cx="12" cy="12" r="3.1"/></svg></div>
+                <div class="rl">ПЕРЕВІРКА</div><div class="rv" id="nv2">10%</div></div>
+              <div class="sqring circ" id="nbOkR" style="left:660px;top:316px;width:88px;height:88px"></div><div class="tw hide circ" id="nbOk" style="left:660px;top:316px;width:88px;height:88px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg><div class="sheen"></div></div></div>
+            </div>
+            <div class="sheen"></div>
+          </div>
+          <div class="slop" id="slT" data-layout-ignore style="width:1440px;height:1920px;"><div class="sl-art" style="height:1440px;transform:scale(1.33333)"><div class="sl-sun"></div><div class="sl-in" style="top:0px"><i class="sl-dot" style="left:70px;top:380px;width:26px;height:26px;background:#fff22b"></i><i class="sl-dot" style="left:1000px;top:360px;width:20px;height:20px;background:#2bf0ff"></i><i class="sl-dot" style="left:320px;top:1120px;width:22px;height:22px;background:#ffffff"></i><i class="sl-dot" style="left:760px;top:1110px;width:30px;height:30px;background:#fff22b"></i><i class="sl-dot" style="left:60px;top:930px;width:18px;height:18px;background:#ff2bd6"></i><i class="sl-dot" style="left:1010px;top:930px;width:24px;height:24px;background:#ffffff"></i><i class="sl-dot" style="left:520px;top:70px;width:18px;height:18px;background:#fff22b"></i><i class="sl-dot" style="left:420px;top:1400px;width:16px;height:16px;background:#2bf0ff"></i><div class="sl-pill">СЕКРЕТНИЙ ЛАЙФХАК</div><div class="sl-t" style="top:250px;font-size:190px">10 ПОРАД</div><div class="sl-t" style="top:470px;font-size:118px">ДЛЯ ІДЕАЛЬНИХ</div><div class="sl-t" style="top:620px;font-size:176px">КАРУСЕЛЕЙ</div><div class="sl-sub" style="top:880px">Твій блоог виросте в 1О разіів!!!</div><div class="sl-sub" style="top:960px;font-size:44px;color:#fff22b">продажі ЗРОСТУУТЬ гарантованно</div><div class="sl-btn">ДІЗНАТИСЯ БІЛЬШЕЕ &#8594;</div><div class="stk" data-x="900" data-y="190" data-r="14" style="left:900px;top:190px;width:250px;height:250px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-burst"/></g><g fill="#fff22b" stroke="#ff2bd6" stroke-width="4" stroke-linejoin="round"><use href="#slp-burst"/></g></svg><b style="font-size:65px;color:#e0007a">NEW!</b></div><div class="stk" data-x="140" data-y="130" data-r="0" style="left:140px;top:130px;width:130px;height:130px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-spark"/></g><g fill="#2bf0ff" stroke="none" stroke-width="0" stroke-linejoin="round"><use href="#slp-spark"/></g></svg></div><div class="stk" data-x="975" data-y="720" data-r="10" style="left:975px;top:720px;width:100px;height:100px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-spark"/></g><g fill="#fff22b" stroke="none" stroke-width="0" stroke-linejoin="round"><use href="#slp-spark"/></g></svg></div><div class="stk" data-x="175" data-y="1190" data-r="-12" style="left:175px;top:1190px;width:230px;height:230px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-badge"/></g><g fill="#ff2bd6" stroke="#fff22b" stroke-width="4" stroke-linejoin="round"><use href="#slp-badge"/></g></svg><b style="font-size:58px;color:#ffffff">100%</b></div><div class="stk" data-x="935" data-y="1160" data-r="16" style="left:935px;top:1160px;width:210px;height:210px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-bolt"/></g><g fill="#fff22b" stroke="#5b00d6" stroke-width="4" stroke-linejoin="round"><use href="#slp-bolt"/></g></svg></div><div class="stk" data-x="110" data-y="700" data-r="-16" style="left:110px;top:700px;width:120px;height:120px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-heart"/></g><g fill="#ff2b8a" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"><use href="#slp-heart"/></g></svg></div><div class="stk" data-x="820" data-y="470" data-r="0" style="left:820px;top:470px;width:70px;height:70px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-spark"/></g><g fill="#ffffff" stroke="none" stroke-width="0" stroke-linejoin="round"><use href="#slp-spark"/></g></svg></div><div class="stk x" data-x="330" data-y="190" data-r="0" style="left:330px;top:190px;width:130px;height:130px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-spark"/></g><g fill="#ffffff" stroke="none" stroke-width="0" stroke-linejoin="round"><use href="#slp-spark"/></g></svg></div><div class="stk x" data-x="790" data-y="900" data-r="0" style="left:790px;top:900px;width:150px;height:150px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-spark"/></g><g fill="#fff22b" stroke="none" stroke-width="0" stroke-linejoin="round"><use href="#slp-spark"/></g></svg></div><div class="stk x" data-x="250" data-y="1010" data-r="0" style="left:250px;top:1010px;width:120px;height:120px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-spark"/></g><g fill="#2bf0ff" stroke="none" stroke-width="0" stroke-linejoin="round"><use href="#slp-spark"/></g></svg></div><div class="stk x" data-x="190" data-y="540" data-r="-18" style="left:190px;top:540px;width:320px;height:320px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-rocket"/></g><g fill="#e6e6ff" stroke="#ff2bd6" stroke-width="4" stroke-linejoin="round"><use href="#slp-rocket"/></g><circle cx="50" cy="34" r="9" fill="#2bd9ff" stroke="#5b00d6" stroke-width="4"/><path d="M40 62L50 92L60 62Z" fill="#ff8a00"/></svg></div><div class="stk x" data-x="830" data-y="420" data-r="10" style="left:830px;top:420px;width:340px;height:340px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-bubble"/></g><g fill="#ffffff" stroke="#2b6bff" stroke-width="4" stroke-linejoin="round"><use href="#slp-bubble"/></g></svg><b style="font-size:85px;color:#2b3bff">WOW!</b></div><div class="stk x" data-x="560" data-y="110" data-r="-6" style="left:560px;top:110px;width:270px;height:270px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-crown"/></g><g fill="#ffd400" stroke="#ff8a00" stroke-width="4" stroke-linejoin="round"><use href="#slp-crown"/></g></svg></div><div class="stk x" data-x="860" data-y="1140" data-r="12" style="left:860px;top:1140px;width:290px;height:290px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-flame"/></g><g fill="#ff7a00" stroke="#ffd400" stroke-width="4" stroke-linejoin="round"><use href="#slp-flame"/></g></svg></div><div class="stk x" data-x="260" data-y="1320" data-r="-14" style="left:260px;top:1320px;width:270px;height:270px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-tag"/></g><g fill="#2bff9c" stroke="#008a55" stroke-width="4" stroke-linejoin="round"><use href="#slp-tag"/></g></svg><b style="font-size:59px;color:#004d30">-50%</b></div><div class="stk x" data-x="900" data-y="720" data-r="16" style="left:900px;top:720px;width:240px;height:240px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-star"/></g><g fill="#2bf0ff" stroke="#7a2bff" stroke-width="4" stroke-linejoin="round"><use href="#slp-star"/></g></svg></div><div class="stk x" data-x="430" data-y="1060" data-r="-10" style="left:430px;top:1060px;width:210px;height:210px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-heart"/></g><g fill="#ff2b8a" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"><use href="#slp-heart"/></g></svg></div><div class="stk x" data-x="700" data-y="1370" data-r="-8" style="left:700px;top:1370px;width:300px;height:300px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-arrow"/></g><g fill="#b6ff2b" stroke="#00a86b" stroke-width="4" stroke-linejoin="round"><use href="#slp-arrow"/></g></svg></div><div class="stk x" data-x="160" data-y="330" data-r="-16" style="left:160px;top:330px;width:250px;height:250px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-burst"/></g><g fill="#fff22b" stroke="#ff2bd6" stroke-width="4" stroke-linejoin="round"><use href="#slp-burst"/></g></svg><b style="font-size:65px;color:#e0007a">NEW!</b></div></div></div></div>
+          <div class="tw hide" id="orbW" style="left:675px;top:215px;width:170px;height:170px">
+            <div class="slop" data-layout-ignore style="width:170px;height:170px"><div class="stk" data-x="0" data-y="0" data-r="0" style="left:0px;top:0px;width:170px;height:170px"><svg viewBox="0 0 100 100"><g class="sw"><use href="#slp-orb"/></g><g fill="#7a2bff" stroke="#2bf0ff" stroke-width="4" stroke-linejoin="round"><use href="#slp-orb"/></g></svg><b style="font-size:51px;color:#ffffff">AI</b></div></div></div>
+        </div>
+      </div>
+      <video id="matte-wall" class="plate matte" src="assets/mattes/wall.webm"
+             data-start="0.000" data-duration="5.633" data-media-start="0"
+             muted playsinline></video>
+      <video id="matte-drafts" class="plate matte" src="assets/mattes/drafts.webm"
+             data-start="15.200" data-duration="4.900" data-media-start="0"
+             muted playsinline></video>
+      <div id="scrim"></div>
+      <div class="cap" id="cap0">ТИ</div>
+      <div class="cap" id="cap1">ДУМАЄШ,</div>
+      <div class="cap" id="cap2">ЩО</div>
+      <div class="cap" id="cap3">ВСІ</div>
+      <div class="cap" id="cap4">ЦІ</div>
+      <div class="cap" id="cap5">РІЛСИ</div>
+      <div class="cap" id="cap6">ХТОСЬ</div>
+      <div class="cap" id="cap7">МОНТУВАВ</div>
+      <div class="cap" id="cap8">РУКАМИ.</div>
+      <div class="cap" id="cap9">А</div>
+      <div class="cap" id="cap10">ЇХ</div>
+      <div class="cap" id="cap11">МОНТУВАВ</div>
+      <div class="cap" id="cap12">ШТУЧНИЙ</div>
+      <div class="cap" id="cap13">ІНТЕЛЕКТ.</div>
+      <div class="cap" id="cap14">Я</div>
+      <div class="cap" id="cap15">ВИПАЛА</div>
+      <div class="cap" id="cap16">З</div>
+      <div class="cap" id="cap17">БЛОГУ</div>
+      <div class="cap" id="cap18">НА</div>
+      <div class="cap" id="cap19">ЦІЛИЙ</div>
+      <div class="cap" id="cap20">МІСЯЦЬ,</div>
+      <div class="cap" id="cap21">А</div>
+      <div class="cap" id="cap22">ПОТІМ</div>
+      <div class="cap" id="cap23">ЗАПОСТИЛА</div>
+      <div class="cap" id="cap24">СЕРІЮ</div>
+      <div class="cap" id="cap25">РІЛСІВ.</div>
+      <div class="cap" id="cap26">І ХОЧ</div>
+      <div class="cap" id="cap27">З САМОГО</div>
+      <div class="cap" id="cap28">ПОЧАТКУ</div>
+      <div class="cap" id="cap29">ПЕРЕГЛЯДИ</div>
+      <div class="cap" id="cap30">БУЛИ</div>
+      <div class="cap" id="cap31">НЕ</div>
+      <div class="cap" id="cap32">СУПЕР,</div>
+      <div class="cap" id="cap33">АЛЕ</div>
+      <div class="cap" id="cap34">АКТИВНІСТЬ</div>
+      <div class="cap" id="cap35">В</div>
+      <div class="cap" id="cap36">АКАУНТІ</div>
+      <div class="cap" id="cap37">ПІДНЯЛАСЬ,</div>
+      <div class="cap" id="cap38">РОЗМОВИ</div>
+      <div class="cap" id="cap39">В ДИРЕКТІ</div>
+      <div class="cap" id="cap40">ПІШЛИ,</div>
+      <div class="cap" id="cap41">І</div>
+      <div class="cap" id="cap42">ГОЛОВНЕ</div>
+      <div class="cap" id="cap43">КОНТЕНТ</div>
+      <div class="cap" id="cap44">РЕАЛЬНО</div>
+      <div class="cap" id="cap45">ВИЙШОВ,</div>
+      <div class="cap" id="cap46">А НЕ</div>
+      <div class="cap" id="cap47">ЗАВИС</div>
+      <div class="cap" id="cap48">В МЕНЕ</div>
+      <div class="cap" id="cap49">В</div>
+      <div class="cap" id="cap51">І</div>
+      <div class="cap" id="cap52">ВМЕР ТАМ,</div>
+      <div class="cap" id="cap53">ЯК</div>
+      <div class="cap" id="cap54">ЗАВЖДИ.</div>
+      <div class="cap" id="cap55">І</div>
+      <div class="cap" id="cap56">ОСЬ</div>
+      <div class="cap" id="cap57">НАЙЦІКАВІШЕ:</div>
+      <div class="cap" id="cap58">НІХТО</div>
+      <div class="cap" id="cap59">НЕ</div>
+      <div class="cap" id="cap60">ЗДОГАДАВСЯ,</div>
+      <div class="cap" id="cap61">ЩО</div>
+      <div class="cap" id="cap62">МОНТАЖ</div>
+      <div class="cap" id="cap63">РОБИВ</div>
+      <div class="cap" id="cap64">ШТУЧНИЙ</div>
+      <div class="cap" id="cap65">ІНТЕЛЕКТ.</div>
+      <div class="cap" id="cap66">БО</div>
+      <div class="cap" id="cap67">МИ</div>
+      <div class="cap" id="cap68">ВСІ</div>
+      <div class="cap" id="cap69">ЗВИКЛИ,</div>
+      <div class="cap" id="cap70">ЩО КОЛИ</div>
+      <div class="cap" id="cap71">ЩОСЬ</div>
+      <div class="cap" id="cap72">РОБИТЬ</div>
+      <div class="cap" id="cap73">ШТУЧНИЙ</div>
+      <div class="cap" id="cap74">ІНТЕЛЕКТ</div>
+      <div class="cap" id="cap80">ВОНО</div>
+      <div class="cap" id="cap81">ВИГЛЯДАЄ</div>
+      <div class="cap" id="cap82">ТИПОВО.</div>
+      <div class="cap" id="cap83">ОСЬ</div>
+      <div class="cap" id="cap84">ЦЕЙ</div>
+      <div class="cap" id="cap85">СТИЛЬ</div>
+      <div class="cap" id="cap86">ШТУЧНОГО</div>
+      <div class="cap" id="cap87">ІНТЕЛЕКТУ,</div>
+      <div class="cap" id="cap88">ДЕ</div>
+      <div class="cap" id="cap89">ВСЕ</div>
+      <div class="cap" id="cap90">ПІДСВІЧЕНЕ,</div>
+      <div class="cap" id="cap91">КУПА</div>
+      <div class="cap" id="cap92">КОЛЬОРІВ,</div>
+      <div class="cap" id="cap93">ВСЕ</div>
+      <div class="cap" id="cap94">НАПІЧКАНЕ</div>
+      <div class="cap" id="cap95">ЕЛЕМЕНТАМИ.</div>
+      <div class="cap" id="cap96">ТАК</div>
+      <div class="cap" id="cap97">ОТ,</div>
+      <div class="cap" id="cap98">НАСПРАВДІ,</div>
+      <div class="cap" id="cap99">ЯКЩО</div>
+      <div class="cap" id="cap100">ЙОГО</div>
+      <div class="cap" id="cap101">ПРАВИЛЬНО</div>
+      <div class="cap" id="cap102">НАВЧИТИ,</div>
+      <div class="cap" id="cap103">ВІН</div>
+      <div class="cap" id="cap104">МОЖЕ</div>
+      <div class="cap" id="cap105">РОБИТИ</div>
+      <div class="cap" id="cap106">НОРМАЛЬНО,</div>
+      <div class="cap" id="cap107">БЕЗ</div>
+      <div class="cap" id="cap108">ЦЬОГО</div>
+      <div class="cap" id="cap109">СТИЛЮ</div>
+      <div class="cap" id="cap110">AI-СЛОП.</div>
+      <div class="cap" id="cap111">ПОГАНА</div>
+      <div class="cap" id="cap112">НОВИНА</div>
+      <div class="cap" id="cap113">ЦЕ</div>
+      <div class="cap" id="cap114">«ПРАВИЛЬНО</div>
+      <div class="cap" id="cap115">НАВЧИТИ»</div>
+      <div class="cap" id="cap116">І</div>
+      <div class="cap" id="cap117">Є</div>
+      <div class="cap" id="cap119">ВСІЄЇ</div>
+      <div class="cap" id="cap120">РОБОТИ.</div>
+      <div class="cap" id="cap121">ОСТАННІ</div>
+      <div class="cap" id="cap123">ЦЕ</div>
+      <div class="cap" id="cap124">ПРОСТО</div>
+      <div class="cap" id="cap125">ПЕРЕВІРИТИ,</div>
+      <div class="cap" id="cap126">ЩО</div>
+      <div class="cap" id="cap127">ВІН</div>
+      <div class="cap" id="cap128">ЗРОБИВ</div>
+      <div class="cap" id="cap129">ЯК ТРЕБА.</div>
+      <div class="cap" id="cap130">АЛЕ</div>
+      <div class="cap" id="cap131">СПОСОБИ</div>
+      <div class="cap" id="cap132">Є,</div>
+      <div class="cap" id="cap133">І</div>
+      <div class="cap" id="cap134">ВОНИ</div>
+      <div class="cap" id="cap135">ТОЧНО</div>
+      <div class="cap" id="cap136">ПРАЦЮЮТЬ,</div>
+      <div class="cap" id="cap137">БО</div>
+      <div class="cap" id="cap138">ОСЬ</div>
+      <div class="cap" id="cap139">РЕЗУЛЬТАТ.</div>
+      <div class="cap" id="cap140">А</div>
+      <div class="cap" id="cap141">ТЕПЕР</div>
+      <div class="cap" id="cap142">НАПИШИ</div>
+      <div class="cap" id="cap143">В КОМЕНТАРЯХ,</div>
+      <div class="cap" id="cap148">ЩО</div>
+      <div class="cap" id="cap149">ЦЕЙ</div>
+      <div class="cap" id="cap150">РІЛС</div>
+      <div class="cap" id="cap151">ТЕЖ</div>
+      <div class="cap" id="cap152">ЗМОНТОВАНИЙ</div>
+      <div class="cap" id="cap153">ШТУЧНИМ</div>
+      <div class="cap" id="cap154">ІНТЕЛЕКТОМ,</div>
+      <div class="cap" id="cap155">ЯКЩО</div>
+      <div class="cap" id="cap156">Я Б</div>
+      <div class="cap" id="cap157">ПРО ЦЕ</div>
+      <div class="cap" id="cap158">НЕ</div>
+      <div class="cap" id="cap159">СКАЗАЛА?</div>
+      <div class="cap" id="cap160">МЕНІ</div>
+      <div class="cap" id="cap161">ДУЖЕ</div>
+      <div class="cap" id="cap162">ЦІКАВО</div>
+      <div class="cap" id="cap163">ПОБАЧИТИ.</div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="64.317" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  tl.set("#cap0", {autoAlpha: 1}, 0.000);
+  tl.set("#cap0", {autoAlpha: 0}, 0.235);
+  tl.set("#cap1", {autoAlpha: 1}, 0.320);
+  tl.set("#cap1", {autoAlpha: 0}, 0.635);
+  tl.set("#cap2", {autoAlpha: 1}, 0.720);
+  tl.set("#cap2", {autoAlpha: 0}, 0.875);
+  tl.set("#cap3", {autoAlpha: 1}, 0.960);
+  tl.set("#cap3", {autoAlpha: 0}, 1.295);
+  tl.set("#cap4", {autoAlpha: 1}, 1.380);
+  tl.set("#cap4", {autoAlpha: 0}, 1.480);
+  tl.set("#cap5", {autoAlpha: 1}, 1.560);
+  tl.set("#cap5", {autoAlpha: 0}, 1.875);
+  tl.set("#cap6", {autoAlpha: 1}, 1.960);
+  tl.set("#cap6", {autoAlpha: 0}, 2.275);
+  tl.set("#cap7", {autoAlpha: 1}, 2.360);
+  tl.set("#cap7", {autoAlpha: 0}, 2.695);
+  tl.set("#cap8", {autoAlpha: 1}, 2.780);
+  tl.set("#cap8", {autoAlpha: 0}, 3.235);
+  tl.set("#cap9", {autoAlpha: 1}, 3.320);
+  tl.set("#cap9", {autoAlpha: 0}, 3.420);
+  tl.set("#cap10", {autoAlpha: 1}, 3.460);
+  tl.set("#cap10", {autoAlpha: 0}, 3.560);
+  tl.set("#cap11", {autoAlpha: 1}, 3.640);
+  tl.set("#cap11", {autoAlpha: 0}, 4.035);
+  tl.set("#cap12", {autoAlpha: 1}, 4.120);
+  tl.set("#cap12", {autoAlpha: 0}, 4.675);
+  tl.set("#cap13", {autoAlpha: 1}, 4.760);
+  tl.set("#cap13", {autoAlpha: 0}, 5.355);
+  tl.set("#cap14", {autoAlpha: 1}, 5.440);
+  tl.set("#cap14", {autoAlpha: 0}, 5.540);
+  tl.set("#cap15", {autoAlpha: 1}, 5.560);
+  tl.set("#cap15", {autoAlpha: 0}, 5.815);
+  tl.set("#cap16", {autoAlpha: 1}, 5.900);
+  tl.set("#cap16", {autoAlpha: 0}, 6.000);
+  tl.set("#cap17", {autoAlpha: 1}, 6.060);
+  tl.set("#cap17", {autoAlpha: 0}, 6.355);
+  tl.set("#cap18", {autoAlpha: 1}, 6.440);
+  tl.set("#cap18", {autoAlpha: 0}, 6.555);
+  tl.set("#cap19", {autoAlpha: 1}, 6.640);
+  tl.set("#cap19", {autoAlpha: 0}, 7.155);
+  tl.set("#cap20", {autoAlpha: 1}, 7.240);
+  tl.set("#cap20", {autoAlpha: 0}, 7.555);
+  tl.set("#cap21", {autoAlpha: 1}, 7.640);
+  tl.set("#cap21", {autoAlpha: 0}, 7.740);
+  tl.set("#cap22", {autoAlpha: 1}, 7.820);
+  tl.set("#cap22", {autoAlpha: 0}, 7.955);
+  tl.set("#cap23", {autoAlpha: 1}, 8.040);
+  tl.set("#cap23", {autoAlpha: 0}, 8.575);
+  tl.set("#cap24", {autoAlpha: 1}, 8.660);
+  tl.set("#cap24", {autoAlpha: 0}, 9.035);
+  tl.set("#cap25", {autoAlpha: 1}, 9.120);
+  tl.set("#cap25", {autoAlpha: 0}, 9.655);
+  tl.set("#cap26", {autoAlpha: 1}, 9.740);
+  tl.set("#cap26", {autoAlpha: 0}, 9.915);
+  tl.set("#cap27", {autoAlpha: 1}, 10.000);
+  tl.set("#cap27", {autoAlpha: 0}, 10.215);
+  tl.set("#cap28", {autoAlpha: 1}, 10.300);
+  tl.set("#cap28", {autoAlpha: 0}, 10.715);
+  tl.set("#cap29", {autoAlpha: 1}, 10.800);
+  tl.set("#cap29", {autoAlpha: 0}, 11.135);
+  tl.set("#cap30", {autoAlpha: 1}, 11.220);
+  tl.set("#cap30", {autoAlpha: 0}, 11.335);
+  tl.set("#cap31", {autoAlpha: 1}, 11.420);
+  tl.set("#cap31", {autoAlpha: 0}, 11.535);
+  tl.set("#cap32", {autoAlpha: 1}, 11.620);
+  tl.set("#cap32", {autoAlpha: 0}, 11.855);
+  tl.set("#cap33", {autoAlpha: 1}, 11.940);
+  tl.set("#cap33", {autoAlpha: 0}, 12.040);
+  tl.set("#cap34", {autoAlpha: 1}, 12.120);
+  tl.set("#cap34", {autoAlpha: 0}, 12.475);
+  tl.set("#cap35", {autoAlpha: 1}, 12.560);
+  tl.set("#cap35", {autoAlpha: 0}, 12.660);
+  tl.set("#cap36", {autoAlpha: 1}, 12.680);
+  tl.set("#cap36", {autoAlpha: 0}, 12.895);
+  tl.set("#cap37", {autoAlpha: 1}, 12.980);
+  tl.set("#cap37", {autoAlpha: 0}, 13.595);
+  tl.set("#cap38", {autoAlpha: 1}, 13.680);
+  tl.set("#cap38", {autoAlpha: 0}, 13.955);
+  tl.set("#cap39", {autoAlpha: 1}, 14.040);
+  tl.set("#cap39", {autoAlpha: 0}, 14.455);
+  tl.set("#cap40", {autoAlpha: 1}, 14.540);
+  tl.set("#cap40", {autoAlpha: 0}, 15.195);
+  tl.set("#cap41", {autoAlpha: 1}, 15.280);
+  tl.set("#cap41", {autoAlpha: 0}, 15.380);
+  tl.set("#cap42", {autoAlpha: 1}, 15.420);
+  tl.set("#cap42", {autoAlpha: 0}, 15.895);
+  tl.set("#cap43", {autoAlpha: 1}, 15.980);
+  tl.set("#cap43", {autoAlpha: 0}, 16.255);
+  tl.set("#cap44", {autoAlpha: 1}, 16.340);
+  tl.set("#cap44", {autoAlpha: 0}, 16.755);
+  tl.set("#cap45", {autoAlpha: 1}, 16.840);
+  tl.set("#cap45", {autoAlpha: 0}, 17.195);
+  tl.set("#cap46", {autoAlpha: 1}, 17.280);
+  tl.set("#cap46", {autoAlpha: 0}, 17.415);
+  tl.set("#cap47", {autoAlpha: 1}, 17.500);
+  tl.set("#cap47", {autoAlpha: 0}, 17.815);
+  tl.set("#cap48", {autoAlpha: 1}, 17.900);
+  tl.set("#cap48", {autoAlpha: 0}, 18.075);
+  tl.set("#cap49", {autoAlpha: 1}, 18.160);
+  tl.set("#cap49", {autoAlpha: 0}, 18.260);
+  tl.set("#cap51", {autoAlpha: 1}, 18.740);
+  tl.set("#cap51", {autoAlpha: 0}, 18.875);
+  tl.set("#cap52", {autoAlpha: 1}, 18.960);
+  tl.set("#cap52", {autoAlpha: 0}, 19.415);
+  tl.set("#cap53", {autoAlpha: 1}, 19.500);
+  tl.set("#cap53", {autoAlpha: 0}, 19.635);
+  tl.set("#cap54", {autoAlpha: 1}, 19.720);
+  tl.set("#cap54", {autoAlpha: 0}, 20.555);
+  tl.set("#cap55", {autoAlpha: 1}, 20.640);
+  tl.set("#cap55", {autoAlpha: 0}, 20.740);
+  tl.set("#cap56", {autoAlpha: 1}, 20.820);
+  tl.set("#cap56", {autoAlpha: 0}, 20.975);
+  tl.set("#cap57", {autoAlpha: 1}, 21.060);
+  tl.set("#cap57", {autoAlpha: 0}, 21.835);
+  tl.set("#cap58", {autoAlpha: 1}, 21.920);
+  tl.set("#cap58", {autoAlpha: 0}, 22.335);
+  tl.set("#cap59", {autoAlpha: 1}, 22.420);
+  tl.set("#cap59", {autoAlpha: 0}, 22.555);
+  tl.set("#cap60", {autoAlpha: 1}, 22.640);
+  tl.set("#cap60", {autoAlpha: 0}, 23.275);
+  tl.set("#cap61", {autoAlpha: 1}, 23.360);
+  tl.set("#cap61", {autoAlpha: 0}, 23.460);
+  tl.set("#cap62", {autoAlpha: 1}, 23.520);
+  tl.set("#cap62", {autoAlpha: 0}, 23.955);
+  tl.set("#cap63", {autoAlpha: 1}, 24.040);
+  tl.set("#cap63", {autoAlpha: 0}, 24.335);
+  tl.set("#cap64", {autoAlpha: 1}, 24.420);
+  tl.set("#cap64", {autoAlpha: 0}, 24.715);
+  tl.set("#cap65", {autoAlpha: 1}, 24.800);
+  tl.set("#cap65", {autoAlpha: 0}, 25.035);
+  tl.set("#cap66", {autoAlpha: 1}, 25.120);
+  tl.set("#cap66", {autoAlpha: 0}, 25.295);
+  tl.set("#cap67", {autoAlpha: 1}, 25.380);
+  tl.set("#cap67", {autoAlpha: 0}, 25.480);
+  tl.set("#cap68", {autoAlpha: 1}, 25.540);
+  tl.set("#cap68", {autoAlpha: 0}, 25.655);
+  tl.set("#cap69", {autoAlpha: 1}, 25.740);
+  tl.set("#cap69", {autoAlpha: 0}, 26.015);
+  tl.set("#cap70", {autoAlpha: 1}, 26.100);
+  tl.set("#cap70", {autoAlpha: 0}, 26.475);
+  tl.set("#cap71", {autoAlpha: 1}, 26.560);
+  tl.set("#cap71", {autoAlpha: 0}, 26.835);
+  tl.set("#cap72", {autoAlpha: 1}, 26.920);
+  tl.set("#cap72", {autoAlpha: 0}, 27.155);
+  tl.set("#cap73", {autoAlpha: 1}, 27.240);
+  tl.set("#cap73", {autoAlpha: 0}, 27.635);
+  tl.set("#cap74", {autoAlpha: 1}, 27.720);
+  tl.set("#cap74", {autoAlpha: 0}, 28.355);
+  tl.set("#cap80", {autoAlpha: 1}, 30.460);
+  tl.set("#cap80", {autoAlpha: 0}, 30.635);
+  tl.set("#cap81", {autoAlpha: 1}, 30.720);
+  tl.set("#cap81", {autoAlpha: 0}, 31.495);
+  tl.set("#cap82", {autoAlpha: 1}, 31.580);
+  tl.set("#cap82", {autoAlpha: 0}, 32.415);
+  tl.set("#cap83", {autoAlpha: 1}, 32.500);
+  tl.set("#cap83", {autoAlpha: 0}, 32.675);
+  tl.set("#cap84", {autoAlpha: 1}, 32.760);
+  tl.set("#cap84", {autoAlpha: 0}, 32.860);
+  tl.set("#cap85", {autoAlpha: 1}, 32.920);
+  tl.set("#cap85", {autoAlpha: 0}, 33.175);
+  tl.set("#cap86", {autoAlpha: 1}, 33.260);
+  tl.set("#cap86", {autoAlpha: 0}, 33.575);
+  tl.set("#cap87", {autoAlpha: 1}, 33.660);
+  tl.set("#cap87", {autoAlpha: 0}, 34.135);
+  tl.set("#cap88", {autoAlpha: 1}, 34.220);
+  tl.set("#cap88", {autoAlpha: 0}, 34.320);
+  tl.set("#cap89", {autoAlpha: 1}, 34.340);
+  tl.set("#cap89", {autoAlpha: 0}, 34.440);
+  tl.set("#cap90", {autoAlpha: 1}, 34.520);
+  tl.set("#cap90", {autoAlpha: 0}, 35.195);
+  tl.set("#cap91", {autoAlpha: 1}, 35.280);
+  tl.set("#cap91", {autoAlpha: 0}, 35.575);
+  tl.set("#cap92", {autoAlpha: 1}, 35.660);
+  tl.set("#cap92", {autoAlpha: 0}, 36.375);
+  tl.set("#cap93", {autoAlpha: 1}, 36.460);
+  tl.set("#cap93", {autoAlpha: 0}, 36.560);
+  tl.set("#cap94", {autoAlpha: 1}, 36.620);
+  tl.set("#cap94", {autoAlpha: 0}, 36.995);
+  tl.set("#cap95", {autoAlpha: 1}, 37.080);
+  tl.set("#cap95", {autoAlpha: 0}, 37.995);
+  tl.set("#cap96", {autoAlpha: 1}, 38.080);
+  tl.set("#cap96", {autoAlpha: 0}, 38.180);
+  tl.set("#cap97", {autoAlpha: 1}, 38.260);
+  tl.set("#cap97", {autoAlpha: 0}, 38.415);
+  tl.set("#cap98", {autoAlpha: 1}, 38.500);
+  tl.set("#cap98", {autoAlpha: 0}, 38.815);
+  tl.set("#cap99", {autoAlpha: 1}, 38.900);
+  tl.set("#cap99", {autoAlpha: 0}, 39.000);
+  tl.set("#cap100", {autoAlpha: 1}, 39.060);
+  tl.set("#cap100", {autoAlpha: 0}, 39.175);
+  tl.set("#cap101", {autoAlpha: 1}, 39.260);
+  tl.set("#cap101", {autoAlpha: 0}, 39.595);
+  tl.set("#cap102", {autoAlpha: 1}, 39.680);
+  tl.set("#cap102", {autoAlpha: 0}, 40.075);
+  tl.set("#cap103", {autoAlpha: 1}, 40.160);
+  tl.set("#cap103", {autoAlpha: 0}, 40.275);
+  tl.set("#cap104", {autoAlpha: 1}, 40.360);
+  tl.set("#cap104", {autoAlpha: 0}, 40.615);
+  tl.set("#cap105", {autoAlpha: 1}, 40.700);
+  tl.set("#cap105", {autoAlpha: 0}, 40.955);
+  tl.set("#cap106", {autoAlpha: 1}, 41.040);
+  tl.set("#cap106", {autoAlpha: 0}, 41.455);
+  tl.set("#cap107", {autoAlpha: 1}, 41.540);
+  tl.set("#cap107", {autoAlpha: 0}, 41.675);
+  tl.set("#cap108", {autoAlpha: 1}, 41.760);
+  tl.set("#cap108", {autoAlpha: 0}, 41.995);
+  tl.set("#cap109", {autoAlpha: 1}, 42.080);
+  tl.set("#cap109", {autoAlpha: 0}, 42.395);
+  tl.set("#cap110", {autoAlpha: 1}, 42.480);
+  tl.set("#cap110", {autoAlpha: 0}, 43.315);
+  tl.set("#cap111", {autoAlpha: 1}, 43.400);
+  tl.set("#cap111", {autoAlpha: 0}, 43.715);
+  tl.set("#cap112", {autoAlpha: 1}, 43.800);
+  tl.set("#cap112", {autoAlpha: 0}, 44.135);
+  tl.set("#cap113", {autoAlpha: 1}, 44.220);
+  tl.set("#cap113", {autoAlpha: 0}, 44.655);
+  tl.set("#cap114", {autoAlpha: 1}, 44.740);
+  tl.set("#cap114", {autoAlpha: 0}, 45.035);
+  tl.set("#cap115", {autoAlpha: 1}, 45.120);
+  tl.set("#cap115", {autoAlpha: 0}, 45.515);
+  tl.set("#cap116", {autoAlpha: 1}, 45.600);
+  tl.set("#cap116", {autoAlpha: 0}, 45.795);
+  tl.set("#cap117", {autoAlpha: 1}, 45.880);
+  tl.set("#cap117", {autoAlpha: 0}, 45.995);
+  tl.set("#cap119", {autoAlpha: 1}, 46.920);
+  tl.set("#cap119", {autoAlpha: 0}, 47.435);
+  tl.set("#cap120", {autoAlpha: 1}, 47.520);
+  tl.set("#cap120", {autoAlpha: 0}, 48.135);
+  tl.set("#cap121", {autoAlpha: 1}, 48.220);
+  tl.set("#cap121", {autoAlpha: 0}, 48.455);
+  tl.set("#cap123", {autoAlpha: 1}, 49.340);
+  tl.set("#cap123", {autoAlpha: 0}, 49.440);
+  tl.set("#cap124", {autoAlpha: 1}, 49.520);
+  tl.set("#cap124", {autoAlpha: 0}, 49.775);
+  tl.set("#cap125", {autoAlpha: 1}, 49.860);
+  tl.set("#cap125", {autoAlpha: 0}, 50.395);
+  tl.set("#cap126", {autoAlpha: 1}, 50.480);
+  tl.set("#cap126", {autoAlpha: 0}, 50.580);
+  tl.set("#cap127", {autoAlpha: 1}, 50.580);
+  tl.set("#cap127", {autoAlpha: 0}, 50.680);
+  tl.set("#cap128", {autoAlpha: 1}, 50.720);
+  tl.set("#cap128", {autoAlpha: 0}, 51.175);
+  tl.set("#cap129", {autoAlpha: 1}, 51.260);
+  tl.set("#cap129", {autoAlpha: 0}, 51.375);
+  tl.set("#cap130", {autoAlpha: 1}, 51.460);
+  tl.set("#cap130", {autoAlpha: 0}, 51.735);
+  tl.set("#cap131", {autoAlpha: 1}, 51.820);
+  tl.set("#cap131", {autoAlpha: 0}, 52.175);
+  tl.set("#cap132", {autoAlpha: 1}, 52.260);
+  tl.set("#cap132", {autoAlpha: 0}, 52.535);
+  tl.set("#cap133", {autoAlpha: 1}, 52.620);
+  tl.set("#cap133", {autoAlpha: 0}, 52.720);
+  tl.set("#cap134", {autoAlpha: 1}, 52.720);
+  tl.set("#cap134", {autoAlpha: 0}, 52.875);
+  tl.set("#cap135", {autoAlpha: 1}, 52.960);
+  tl.set("#cap135", {autoAlpha: 0}, 53.215);
+  tl.set("#cap136", {autoAlpha: 1}, 53.300);
+  tl.set("#cap136", {autoAlpha: 0}, 54.075);
+  tl.set("#cap137", {autoAlpha: 1}, 54.160);
+  tl.set("#cap137", {autoAlpha: 0}, 54.260);
+  tl.set("#cap138", {autoAlpha: 1}, 54.260);
+  tl.set("#cap138", {autoAlpha: 0}, 54.655);
+  tl.set("#cap139", {autoAlpha: 1}, 54.740);
+  tl.set("#cap139", {autoAlpha: 0}, 55.315);
+  tl.set("#cap140", {autoAlpha: 1}, 55.400);
+  tl.set("#cap140", {autoAlpha: 0}, 55.500);
+  tl.set("#cap141", {autoAlpha: 1}, 55.540);
+  tl.set("#cap141", {autoAlpha: 0}, 55.655);
+  tl.set("#cap142", {autoAlpha: 1}, 55.740);
+  tl.set("#cap142", {autoAlpha: 0}, 55.995);
+  tl.set("#cap143", {autoAlpha: 1}, 56.080);
+  tl.set("#cap143", {autoAlpha: 0}, 56.835);
+  tl.set("#cap148", {autoAlpha: 1}, 58.220);
+  tl.set("#cap148", {autoAlpha: 0}, 58.320);
+  tl.set("#cap149", {autoAlpha: 1}, 58.400);
+  tl.set("#cap149", {autoAlpha: 0}, 58.555);
+  tl.set("#cap150", {autoAlpha: 1}, 58.640);
+  tl.set("#cap150", {autoAlpha: 0}, 58.915);
+  tl.set("#cap151", {autoAlpha: 1}, 59.000);
+  tl.set("#cap151", {autoAlpha: 0}, 59.100);
+  tl.set("#cap152", {autoAlpha: 1}, 59.100);
+  tl.set("#cap152", {autoAlpha: 0}, 59.515);
+  tl.set("#cap153", {autoAlpha: 1}, 59.600);
+  tl.set("#cap153", {autoAlpha: 0}, 59.915);
+  tl.set("#cap154", {autoAlpha: 1}, 60.000);
+  tl.set("#cap154", {autoAlpha: 0}, 60.375);
+  tl.set("#cap155", {autoAlpha: 1}, 60.460);
+  tl.set("#cap155", {autoAlpha: 0}, 60.655);
+  tl.set("#cap156", {autoAlpha: 1}, 60.740);
+  tl.set("#cap156", {autoAlpha: 0}, 61.035);
+  tl.set("#cap157", {autoAlpha: 1}, 61.120);
+  tl.set("#cap157", {autoAlpha: 0}, 61.235);
+  tl.set("#cap158", {autoAlpha: 1}, 61.320);
+  tl.set("#cap158", {autoAlpha: 0}, 61.495);
+  tl.set("#cap159", {autoAlpha: 1}, 61.580);
+  tl.set("#cap159", {autoAlpha: 0}, 62.195);
+  tl.set("#cap160", {autoAlpha: 1}, 62.280);
+  tl.set("#cap160", {autoAlpha: 0}, 62.380);
+  tl.set("#cap161", {autoAlpha: 1}, 62.420);
+  tl.set("#cap161", {autoAlpha: 0}, 62.555);
+  tl.set("#cap162", {autoAlpha: 1}, 62.640);
+  tl.set("#cap162", {autoAlpha: 0}, 62.915);
+  tl.set("#cap163", {autoAlpha: 1}, 63.000);
+  tl.set("#cap163", {autoAlpha: 0}, 63.460);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 63.560);
+
+
+function spring(z, w) {
+  var wd = w * Math.sqrt(1 - z * z);
+  function f(t) { return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + (z * w / wd) * Math.sin(wd * t)); }
+  var e = f(1);
+  return function (t) { return t >= 1 ? 1 : f(t) / e; };
+}
+var SP = spring(0.62, 13), POP = spring(0.46, 14), SOFT = spring(0.84, 11), FLIP = spring(0.58, 9);
+
+function helpers(tl) {
+  function blurIn(sel, t, b, d) {
+    tl.fromTo(sel, {autoAlpha: 0, filter: "blur(" + (b || 12) + "px)"},
+                   {autoAlpha: 1, filter: "blur(0px)", duration: d || 0.38, ease: "power2.out"}, t);
+  }
+  function blurOut(sel, t, b, d) {
+    tl.to(sel, {autoAlpha: 0, filter: "blur(" + (b || 10) + "px)", duration: d || 0.32, ease: "power2.in"}, t);
+  }
+  // arrive from depth: blur -> sharp, small -> full, with a spring. o: {s, x, y, ease, d}
+  function arrive(sel, t, o) {
+    o = o || {};
+    blurIn(sel, t, o.blur || 12, 0.36);
+    tl.fromTo(sel, {scale: o.s == null ? 0.5 : o.s, x: o.x || 0, y: o.y == null ? 34 : o.y},
+              {scale: 1, x: 0, y: 0, duration: o.d || 0.85, ease: o.ease || POP}, t);
+  }
+  // the contents land a beat after their container
+  function inner(sel, t) {
+    tl.fromTo(sel, {scale: 0.55, autoAlpha: 0}, {scale: 1, autoAlpha: 1, duration: 0.55, ease: SP}, t + 0.1);
+  }
+  function sheen(sel, t) { gsap.set(sel, {xPercent: -120}); tl.to(sel, {xPercent: 120, duration: 0.8, ease: "power2.inOut"}, t); }
+  function len(id) { return document.getElementById(id).getTotalLength(); }
+  // +3: a dash that ends exactly at the path start leaves a round-cap dot behind
+  function drawPrep(id) { var L = len(id) + 3; gsap.set("#" + id, {strokeDasharray: (L - 3) + " " + (L + 40), strokeDashoffset: L}); return L; }
+  function draw(id, t, d) { var L = drawPrep(id); tl.to("#" + id, {strokeDashoffset: 0, duration: d || 0.55, ease: "power2.inOut"}, t); return L; }
+  function packet(id, t, d) {
+    var L = len(id);
+    tl.fromTo("#" + id, {strokeDasharray: "46 " + (L + 200), strokeDashoffset: 49, autoAlpha: 1},
+              {strokeDashoffset: -L, duration: d || 0.5, ease: "power1.inOut", immediateRender: false}, t);
+    tl.set("#" + id, {autoAlpha: 0}, t + (d || 0.5));
+  }
+  // a tile the same shape grows out and fades — "something arrived here"
+  function ripple(sel, t) {
+    tl.fromTo(sel, {scale: 1, autoAlpha: 0.7}, {scale: 1.75, autoAlpha: 0, duration: 0.8, ease: "power2.out", immediateRender: false}, t);
+  }
+  function bump(sel, t) {
+    tl.to(sel, {scale: 1.07, duration: 0.1, ease: "power2.out"}, t);
+    tl.to(sel, {scale: 1, duration: 0.45, ease: SP}, t + 0.1);
+  }
+  // iris: a takeover opens out of (x, y) and later closes back into another point
+  function irisOpen(sel, t, x, y, d) {
+    tl.set(sel, {autoAlpha: 1}, t);
+    tl.fromTo(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)"},
+              {clipPath: "circle(2300px at " + x + "px " + y + "px)", duration: d || 0.85, ease: "power3.inOut", immediateRender: false}, t);
+  }
+  function irisClose(sel, t, x, y, d) {
+    tl.to(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)", duration: d || 0.6, ease: "power3.inOut"}, t);
+    tl.set(sel, {autoAlpha: 0}, t + (d || 0.6) + 0.02);
+  }
+  function drift(sel, t, dur) {
+    ["a1", "a2", "a3"].forEach(function (c, i) {
+      var v = [[-140, 90], [160, -120], [-90, -60]][i];
+      tl.fromTo(sel + " .aur." + c, {x: 0, y: 0}, {x: v[0], y: v[1], duration: dur, ease: "sine.inOut"}, t);
+    });
+  }
+  function haptic(sel, t) { tl.to(sel, {keyframes: {x: [0, -9, 8, -5, 3, 0]}, duration: 0.34, ease: "none"}, t); }
+  function count(sel, t, to, d, fmt) {
+    var o = {v: 0}, el = document.querySelector(sel);
+    tl.fromTo(o, {v: 0}, {v: to, duration: d || 1.1, ease: "power2.out",
+              onUpdate: function () { el.textContent = fmt ? fmt(o.v) : Math.round(o.v); }}, t);
+  }
+  return {blurIn: blurIn, blurOut: blurOut, arrive: arrive, inner: inner, sheen: sheen,
+          drawPrep: drawPrep, draw: draw, packet: packet, ripple: ripple, bump: bump,
+          irisOpen: irisOpen, irisClose: irisClose, drift: drift, haptic: haptic, count: count};
+}
+
+
+/* ---- slop.py motion: stickers slapped on, and knocked off ---- */
+function slopInit(sid) {
+  document.querySelectorAll("#" + sid + " .stk").forEach(function (el) {
+    gsap.set(el, {xPercent: -50, yPercent: -50, rotation: +el.dataset.r});
+  });
+}
+function slopPop(tl, sid, t, gap, from, to) {
+  var els = Array.prototype.slice.call(document.querySelectorAll("#" + sid + " .stk.x"));
+  els.slice(from || 0, to == null ? els.length : to).forEach(function (el, i) {
+    var r = +el.dataset.r, tt = t + i * (gap == null ? 0.12 : gap);
+    tl.fromTo(el, {autoAlpha: 0}, {autoAlpha: 1, duration: 0.06, immediateRender: false}, tt);
+    tl.fromTo(el, {scale: 2.1, rotation: r - 28}, {scale: 1, rotation: r, duration: 0.5, ease: POP,
+              immediateRender: false}, tt);
+  });
+}
+function slopShed(tl, sid, t) {
+  document.querySelectorAll("#" + sid + " .stk").forEach(function (el, i) {
+    var x = +el.dataset.x - 540, y = +el.dataset.y - 720, d = Math.sqrt(x * x + y * y) || 1;
+    tl.to(el, {x: x / d * 900, y: y / d * 900 + 500, rotation: "+=" + (i % 2 ? 140 : -140),
+               autoAlpha: 0, duration: 0.5, ease: "power2.in"}, t + (i % 5) * 0.025);
+  });
+}
+
+
+  var G = helpers(tl);
+  function bin(sel, t, b, d) { d = d || 0.38; G.blurIn(sel, t, b || 12, d); tl.set(sel, {filter: "none"}, t + d + 0.01); }
+  function bout(sel, t, b, d) { d = d || 0.32; G.blurOut(sel, t, b || 10, d); tl.set(sel, {filter: "none"}, t + d + 0.01); }
+  function arr(sel, t, o) {
+    o = o || {};
+    bin(sel, t, o.blur || 12, 0.36);
+    tl.fromTo(sel, {scale: o.s == null ? 0.5 : o.s, x: o.x || 0, y: o.y == null ? 34 : o.y},
+              {scale: 1, x: 0, y: 0, duration: o.d || 0.85, ease: o.ease || POP}, t);
+  }
+  function shn(sel, t) {
+    gsap.set(sel, {xPercent: -120});
+    tl.fromTo(sel, {xPercent: -120}, {xPercent: 120, duration: 0.8, ease: "power2.inOut", immediateRender: false}, t);
+  }
+  gsap.set(".sheen", {xPercent: -120});
+  ["slV", "slD", "slC", "slT"].forEach(slopInit);
+
+  gsap.set(["#vid", ".matte", "#gW", "#gD"], {transformOrigin: "540px 960px"});
+  tl.fromTo([".matte", "#gW", "#gD"], {scale: 1}, {scale: 1.045, duration: 64.317, ease: "none"}, 0);
+  tl.fromTo("#vid", {scale: 1}, {scale: 1.03705, duration: 52.960, ease: "none"}, 0);
+  tl.to("#vid", {scale: 0.32963, duration: 1.240, ease: "power3.inOut"}, 52.960);
+  tl.to("#vid", {scale: 1.03953, duration: 0.760, ease: "power3.inOut"}, 55.740);
+  tl.to("#vid", {scale: 1.045, duration: 7.817, ease: "none"}, 56.500);
+  /* b01_wall */
+
+  tl.set("#gW", {autoAlpha: 1}, 0.000);
+  tl.fromTo("#roomW", {autoAlpha: 0}, {autoAlpha: 1, duration: 0.55, ease: "power1.inOut"}, 0.000);
+  var WA = [{"d": 375.8, "col": 0}, {"d": 127.4, "col": 1}, {"d": 127.4, "col": 2}, {"d": 375.8, "col": 3}, {"d": 588.5, "col": 0}, {"d": 470.4, "col": 1}, {"d": 470.4, "col": 2}, {"d": 588.5, "col": 3}, {"d": 958.9, "col": 0}, {"d": 891.3, "col": 1}, {"d": 891.3, "col": 2}, {"d": 958.9, "col": 3}];
+  WA.forEach(function (w, n) {
+    var t = 0.06 + w.d * 0.00046;
+    tl.fromTo("#wa" + n, {autoAlpha: 0}, {autoAlpha: 1, duration: 0.3, ease: "power2.out"}, t);
+    tl.fromTo("#wa" + n, {scale: 0.55, y: 40}, {scale: 1, y: 0, duration: 0.75, ease: SP, immediateRender: false}, t);
+  });
+  gsap.set("#wallW", {transformOrigin: "540px 250px"});
+  tl.fromTo("#wallW", {scale: 1.06}, {scale: 1, duration: 1.4, ease: "power2.out"}, 0.050);
+  // «рілси» — they settle
+  G.bump("#wallW", 1.560);
+  /* b02_ai_edited */
+
+  tl.set("#gW", {autoAlpha: 1}, 3.320);
+  arr("#clW", 3.280, {s: 0.5, y: 30});
+  G.inner("#clW .mk", 3.280);
+  // «штучний інтелект» — the light passes over everything it made
+  G.ripple("#clWR", 4.120);
+  G.sheen("#clW .sheen", 4.170);
+  tl.set("#sweepW", {autoAlpha: 1}, 4.120);
+  tl.fromTo("#sweepW", {x: -620}, {x: 1180, duration: 0.95, ease: "power1.inOut", immediateRender: false}, 4.120);
+  tl.set("#sweepW", {autoAlpha: 0}, 5.080);
+  WA.forEach(function (w, n) {
+    var t = 4.120 + 0.05 + w.d * 0.00042;
+    tl.to("#wa" + n, {scale: 1.045, duration: 0.12, ease: "power2.out"}, t);
+    tl.to("#wa" + n, {scale: 1, duration: 0.42, ease: SP}, t + 0.12);
+  });
+  // «я випала з блогу» — the wall falls out of the frame
+  bout("#clW", 5.300, 10, 0.24);
+  WA.forEach(function (w, n) {
+    tl.to("#wa" + n, {y: 260, rotation: (w.col < 2 ? -7 : 7), autoAlpha: 0, duration: 0.22, ease: "power2.in"},
+          5.340 + w.col * 0.012);
+  });
+  tl.to("#roomW", {autoAlpha: 0, duration: 0.28, ease: "power1.inOut"}, 5.300);
+  tl.set("#gW", {autoAlpha: 0}, 5.620);
+  /* b03_month_empty */
+
+  tl.set("#gS", {autoAlpha: 1}, 5.440);
+  bin("#pan", 5.440, 14, 0.42);
+  tl.fromTo("#pan", {scale: 0.9, y: 30}, {scale: 1, y: 0, duration: 0.9, ease: SP}, 5.440);
+  tl.fromTo("#cal .wd", {autoAlpha: 0, y: 10}, {autoAlpha: 1, y: 0, duration: 0.4, ease: SP, stagger: 0.03}, 5.560);
+  tl.fromTo("#cal .dc", {autoAlpha: 0, scale: 0.6}, {autoAlpha: 1, scale: 1, duration: 0.45, ease: SP, stagger: 0.012}, 5.620);
+  // «на цілий місяць» — a whole month goes by, empty
+  tl.fromTo("#today", {autoAlpha: 0, scale: 1.3}, {autoAlpha: 1, scale: 1, duration: 0.25, ease: "power2.out"}, 6.440);
+  tl.set("#today", {x: 124, y: 0}, 6.520);
+  tl.set("#today", {x: 248, y: 0}, 6.572);
+  tl.set("#today", {x: 372, y: 0}, 6.624);
+  tl.set("#today", {x: 496, y: 0}, 6.676);
+  tl.set("#today", {x: 620, y: 0}, 6.728);
+  tl.set("#today", {x: 744, y: 0}, 6.780);
+  tl.set("#today", {x: 0, y: 76}, 6.832);
+  tl.set("#today", {x: 124, y: 76}, 6.884);
+  tl.set("#today", {x: 248, y: 76}, 6.936);
+  tl.set("#today", {x: 372, y: 76}, 6.988);
+  tl.set("#today", {x: 496, y: 76}, 7.040);
+  tl.set("#today", {x: 620, y: 76}, 7.092);
+  tl.set("#today", {x: 744, y: 76}, 7.144);
+  tl.set("#today", {x: 0, y: 152}, 7.196);
+  tl.set("#today", {x: 124, y: 152}, 7.248);
+  tl.set("#today", {x: 248, y: 152}, 7.300);
+  tl.set("#today", {x: 372, y: 152}, 7.352);
+  tl.set("#today", {x: 496, y: 152}, 7.404);
+  tl.set("#today", {x: 620, y: 152}, 7.456);
+  tl.set("#today", {x: 744, y: 152}, 7.508);
+  /* b04_series */
+
+  tl.set("#gS", {autoAlpha: 1}, 7.640);
+  tl.set("#today", {x: 0, y: 228}, 8.040);
+  tl.fromTo("#df22", {autoAlpha: 0, scale: 1.6}, {autoAlpha: 1, scale: 1, duration: 0.42, ease: POP}, 8.040);
+  tl.set("#today", {x: 124, y: 228}, 8.155);
+  tl.fromTo("#df23", {autoAlpha: 0, scale: 1.6}, {autoAlpha: 1, scale: 1, duration: 0.42, ease: POP}, 8.155);
+  tl.set("#today", {x: 248, y: 228}, 8.270);
+  tl.fromTo("#df24", {autoAlpha: 0, scale: 1.6}, {autoAlpha: 1, scale: 1, duration: 0.42, ease: POP}, 8.270);
+  tl.set("#today", {x: 372, y: 228}, 8.385);
+  tl.fromTo("#df25", {autoAlpha: 0, scale: 1.6}, {autoAlpha: 1, scale: 1, duration: 0.42, ease: POP}, 8.385);
+  tl.set("#today", {x: 496, y: 228}, 8.500);
+  tl.fromTo("#df26", {autoAlpha: 0, scale: 1.6}, {autoAlpha: 1, scale: 1, duration: 0.42, ease: POP}, 8.500);
+  tl.set("#today", {x: 620, y: 228}, 8.615);
+  tl.fromTo("#df27", {autoAlpha: 0, scale: 1.6}, {autoAlpha: 1, scale: 1, duration: 0.42, ease: POP}, 8.615);
+  tl.set("#today", {x: 744, y: 228}, 8.730);
+  tl.fromTo("#df28", {autoAlpha: 0, scale: 1.6}, {autoAlpha: 1, scale: 1, duration: 0.42, ease: POP}, 8.730);
+  tl.set("#today", {x: 0, y: 304}, 8.845);
+  tl.fromTo("#df29", {autoAlpha: 0, scale: 1.6}, {autoAlpha: 1, scale: 1, duration: 0.42, ease: POP}, 8.845);
+  tl.set("#today", {x: 124, y: 304}, 8.960);
+  tl.fromTo("#df30", {autoAlpha: 0, scale: 1.6}, {autoAlpha: 1, scale: 1, duration: 0.42, ease: POP}, 8.960);
+  // «рілсів» — the run lands
+  G.bump("#cal", 9.120);
+  tl.to("#today", {autoAlpha: 0, duration: 0.3}, 9.320);
+  /* b05_views */
+
+  tl.set("#gS", {autoAlpha: 1}, 9.740);
+  bout(["#cal .wd", "#cal .dc"], 9.700, 10, 0.3);
+  tl.to("#cal .dimg:not(#df27)", {autoAlpha: 0, scale: 0.7, duration: 0.28, ease: "power2.in"}, 9.700);
+  tl.set("#df27", {autoAlpha: 0}, 9.840);
+  tl.set("#insT", {autoAlpha: 1}, 9.840);
+  tl.fromTo("#insT", {x: 568.5, y: 99.0, scale: 0.3}, {x: 0, y: 0, scale: 1, duration: 0.85, ease: SOFT,
+            immediateRender: false}, 9.840);
+  // «перегляди»
+  arr("#insE", 10.720, {s: 0.5, y: 0});
+  bin("#insN", 10.800, 10, 0.3);
+  G.count("#insN", 10.800, 2799, 1.3, function (v) {
+    v = Math.round(v); return v >= 1000 ? Math.floor(v / 1000) + "\u00a0" + ("00" + (v % 1000)).slice(-3) : "" + v; });
+  // «не супер» — flat
+  arr("#insF", 11.380, {s: 0.5, x: -20, y: 0});
+  /* b06_activity */
+
+  tl.set("#gS", {autoAlpha: 1}, 11.940);
+  tl.to(["#insE", "#insN", "#insF"], {autoAlpha: 0.38, duration: 0.35, ease: "power1.out"}, 11.940);
+  [0, 1, 2, 3].forEach(function (i) {
+    arr("#ich" + i, 12.060 + i * 0.07, {s: 0.6, y: 18});
+  });
+  G.count("#ichV0", 12.170, 43, 0.9);
+  G.count("#ichV1", 12.240, 37, 0.9);
+  G.count("#ichV2", 12.310, 7, 0.8);
+  G.count("#ichV3", 12.380, 6, 0.8, function (v) { return "+" + Math.round(v); });
+  // «піднялась»
+  arr("#insU", 12.940, {s: 0.3, y: 20});
+  G.inner("#insU .sk", 12.940);
+  tl.to(".ich b", {color: "#ffc2d4", duration: 0.3, stagger: 0.05}, 12.980);
+  G.bump([".ich"], 13.080);
+  /* b06b_dms */
+
+  tl.set("#gS", {autoAlpha: 1}, 13.680);
+  bout(["#insE", "#insN", "#insF", ".ich", "#insU"], 13.620, 10, 0.28);
+  tl.to("#insT", {x: -40, scale: 0.8, autoAlpha: 0, duration: 0.3, ease: "power2.in"}, 13.620);
+  arr("#dmT", 13.780, {s: 0.5, y: 20});
+  G.inner("#dmT .sk", 13.780);
+  // «в директі пішли» — in, out, in
+  arr("#bu1", 14.040, {s: 0.6, x: -40, y: 20, d: 0.7});
+  arr("#bu2", 14.340, {s: 0.6, x: 40, y: 20, d: 0.7});
+  arr("#bu3", 14.540, {s: 0.6, x: -40, y: 20, d: 0.7});
+  G.ripple("#dmTR", 14.590);
+  G.haptic("#bu3", 14.990);
+  // «і головне» — out, and the frost spreads into the room
+  bout(["#dmT", "#bu1", "#bu2", "#bu3"], 15.240, 10, 0.24);
+  tl.to("#pan", {scale: 1.3, duration: 0.34, ease: "power2.in"}, 15.260);
+  bout("#pan", 15.280, 16, 0.3);
+  tl.set("#gS", {autoAlpha: 0}, 15.600);
+  /* b07_out_of_drafts */
+
+  tl.set("#gD", {autoAlpha: 1}, 15.280);
+  tl.fromTo("#roomD", {autoAlpha: 0}, {autoAlpha: 1, duration: 0.6, ease: "power1.inOut"}, 15.320);
+  gsap.set("#fold", {transformOrigin: "540px 340px"});
+  bin("#fold", 15.380, 14, 0.4);
+  tl.fromTo("#fold", {scale: 0.7, y: 40}, {scale: 1, y: 0, duration: 0.85, ease: SP}, 15.380);
+  // «контент реально вийшов» — out of Drafts, colour back, onto the wall
+  var FL = [{"x": 375, "y": 55.5}, {"x": -375, "y": 55.5}, {"x": 375, "y": -373.5}, {"x": -375, "y": -373.5}, {"x": 375, "y": -802.5}, {"x": -375, "y": -802.5}];
+  FL.forEach(function (f, i) {
+    var t = 15.980 + i * 0.2, s = "#fl" + i;
+    gsap.set(s + " .flc", {autoAlpha: 0});
+    tl.set(s, {autoAlpha: 1}, t);
+    tl.fromTo(s, {x: f.x, y: f.y + 60, scale: 0.46}, {x: f.x, y: f.y - 150, scale: 0.5, duration: 0.24,
+              ease: "power2.out", immediateRender: false}, t);
+    tl.to(s, {x: 0, y: 0, scale: 1, rotation: 0, duration: 0.62, ease: SP}, t + 0.24);
+    tl.to(s + " .flc", {autoAlpha: 1, duration: 0.4, ease: "power1.inOut"}, t + 0.2);
+  });
+  G.bump("#fFr", 16.000);
+  // «а не завис у мене в чернетках»
+  G.bump(["#fTab", "#fBk", "#fFr", ".pk"], 18.240);
+  // «і вмер там» — the one left inside keels over and sinks
+  tl.to("#pk0", {rotation: -34, x: 26, y: 96, autoAlpha: 0, duration: 0.62, ease: "power2.in"}, 18.960);
+  // «як завжди» — clear before her cut at 20.10
+  tl.to(".fly", {autoAlpha: 0, scale: 0.9, duration: 0.28, ease: "power2.in"}, 19.640);
+  bout("#fold", 19.660, 12, 0.28);
+  tl.to("#roomD", {autoAlpha: 0, duration: 0.36, ease: "power1.inOut"}, 19.660);
+  tl.set("#gD", {autoAlpha: 0}, 20.05);
+  /* b09a_three_formats */
+
+  tl.set("#gA", {autoAlpha: 1}, 26.920);
+  bin("#shA", 26.920, 14, 0.42);
+  tl.fromTo("#shA", {scale: 0.9, y: 30}, {scale: 1, y: 0, duration: 0.9, ease: SP}, 26.920);
+  arr("#clA", 27.160, {s: 0.5, y: 30});
+  G.inner("#clA .mk", 27.160);
+  G.sheen("#clA .sheen", 27.540);
+  tl.set("#fmV", {autoAlpha: 1}, 28.440);
+  tl.fromTo("#fmV", {x: -200, y: 0, scale: 0.2}, {x: 0, y: 0, scale: 1, duration: 0.8, ease: POP, immediateRender: false}, 28.440);
+  G.bump("#clA", 28.400);
+  arr("#fmVL", 28.600, {s: 0.5, y: 10});
+  tl.set("#fmD", {autoAlpha: 1}, 29.160);
+  tl.fromTo("#fmD", {x: -432, y: 0, scale: 0.2}, {x: 0, y: 0, scale: 1, duration: 0.8, ease: POP, immediateRender: false}, 29.160);
+  G.bump("#clA", 29.120);
+  arr("#fmDL", 29.320, {s: 0.5, y: 10});
+  tl.set("#fmC", {autoAlpha: 1}, 29.700);
+  tl.fromTo("#fmC", {x: -682, y: 0, scale: 0.2}, {x: 0, y: 0, scale: 1, duration: 0.8, ease: POP, immediateRender: false}, 29.700);
+  G.bump("#clA", 29.660);
+  arr("#fmCL", 29.860, {s: 0.5, y: 10});
+  // «виглядає» — typical: the same wobble, all three at once
+  tl.to([".fmt"], {keyframes: {rotation: [0, -5, 4, -2, 0]}, duration: 0.42, ease: "none"}, 30.720);
+  tl.to([".fchip"], {keyframes: {rotation: [0, -5, 4, -2, 0]}, duration: 0.42, ease: "none"}, 30.720);
+  // out before the closeup
+  bout(["#shA", "#clA", ".fmt", ".fchip"], 30.88, 10, 0.18);
+  tl.set("#gA", {autoAlpha: 0}, 31.08);
+  /* b09_slop */
+
+  tl.set("#gT", {autoAlpha: 1}, 32.500);
+  G.irisOpen("#tk", 32.500, 830, 386, 0.85);
+  G.drift("#tk", 32.500, 20);
+  // «підсвічене» — it lights up
+  slopPop(tl, "slT", 34.520, 0.12, 0, 3);
+  G.bump(["#slT .sl-pill", "#slT .sl-btn"], 34.620);
+  // «купа кольорів» — every colour at once
+  tl.fromTo("#slT .sl-art", {filter: "hue-rotate(0deg)"}, {filter: "hue-rotate(360deg)", duration: 0.95,
+            ease: "power1.inOut", immediateRender: false}, 35.660);
+  tl.set("#slT .sl-art", {filter: "none"}, 36.630);
+  // «напічкане елементами»
+  slopPop(tl, "slT", 36.620, 0.1, 3, 12);
+  tl.set("#orbW", {autoAlpha: 1}, 37.380);
+  tl.fromTo("#orbW .stk", {scale: 2.1, rotation: -28}, {scale: 1, rotation: 0, duration: 0.5, ease: POP,
+            immediateRender: false}, 37.380);
+  /* b10_cleaned */
+
+  tl.set("#gT", {autoAlpha: 1}, 38.080);
+  // «правильно навчити» — knocked off
+  slopShed(tl, "slT", 39.260);
+  tl.to("#slT", {x: 320.0, y: 150.0, scale: 0.55556, duration: 0.8, ease: SOFT}, 39.680);
+  tl.to("#orbW", {x: 154.0, y: -120.0, scale: 0.72, rotation: 12, duration: 0.8, ease: SOFT}, 39.680);
+  tl.set("#clean", {autoAlpha: 1}, 39.980);
+  // «може робити нормально» — the colour drains out of it
+  tl.to("#slT", {autoAlpha: 0, duration: 0.6, ease: "power1.inOut"}, 40.360);
+  tl.fromTo(["#csMicro", "#csBig", "#csTitle", "#csSub"], {autoAlpha: 0, y: 18},
+            {autoAlpha: 1, y: 0, duration: 0.55, ease: SP, stagger: 0.07, immediateRender: false}, 40.560);
+  tl.fromTo("#csHair", {scaleX: 0}, {scaleX: 1, duration: 0.6, ease: "power3.out", immediateRender: false}, 40.760);
+  tl.fromTo(["#csDots", "#csNext"], {autoAlpha: 0, y: 12}, {autoAlpha: 1, y: 0, duration: 0.5, ease: SP,
+            stagger: 0.06, immediateRender: false}, 40.860);
+  shn("#clean > .sheen", 41.040);
+  // «AI-слоп» — the last sticker goes
+  tl.to("#orbW", {x: 414.0, y: 700.0, rotation: 200, scale: 0.6, duration: 0.7, ease: "power2.in"}, 42.500);
+  tl.to("#orbW", {autoAlpha: 0, duration: 0.2}, 43.030);
+  G.bump("#clean", 42.560);
+  /* b11_ninety_ten */
+
+  tl.set("#gT", {autoAlpha: 1}, 43.400);
+  G.haptic("#clean", 43.400);
+  bout("#csA > *", 43.480, 10, 0.3);
+  bin("#nbMicro", 43.800, 8, 0.3);
+  bin("#nbBar", 43.850, 8, 0.3);
+  gsap.set(["#nbA", "#nbB"], {scaleX: 0});
+  tl.fromTo(["#nr1", "#nrl", "#nr2"], {autoAlpha: 0, y: 22}, {autoAlpha: 1, y: 0, duration: 0.55, ease: SP,
+            stagger: 0.08, immediateRender: false}, 43.980);
+  gsap.set(["#nv1", "#nv2"], {autoAlpha: 0});
+  // «правильно навчити» — that row
+  G.bump("#nr1", 44.840);
+  // «90%»
+  bin("#nbBig", 46.040, 10, 0.3);
+  G.count("#nbBig", 46.040, 90, 0.8, function (v) { return Math.round(v) + "%"; });
+  tl.to("#nbA", {scaleX: 1, duration: 0.8, ease: "power2.out"}, 46.040);
+  tl.fromTo("#nv1", {autoAlpha: 0, x: 16}, {autoAlpha: 1, x: 0, duration: 0.45, ease: SP, immediateRender: false}, 46.380);
+  // «10%»
+  tl.to("#nbB", {scaleX: 1, duration: 0.45, ease: POP}, 48.500);
+  tl.fromTo("#nv2", {autoAlpha: 0, x: 16}, {autoAlpha: 1, x: 0, duration: 0.45, ease: SP, immediateRender: false}, 48.590);
+  G.bump("#nr2", 48.590);
+  // «перевірити, що він зробив як треба» — ticked
+  G.bump("#nbB", 49.860);
+  arr("#nbOk", 50.660, {s: 0.3, y: 0});
+  G.inner("#nbOk .sk", 50.660);
+  G.ripple("#nbOkR", 51.020);
+  G.haptic("#clean", 51.260);
+  // «Але способи є» — the sheet folds into the iris, which closes onto her
+  tl.to("#clean", {scale: 0.55, duration: 0.5, ease: "power3.in"}, 51.460);
+  G.irisClose("#tk", 51.480, 540, 760, 0.6);
+  tl.set("#gT", {autoAlpha: 0}, 52.120);
+  /* b13_result_grid */
+
+  tl.set("#gG", {autoAlpha: 1}, 52.960);
+  // pull back: the plate and the grid move as one camera
+  tl.fromTo("#gridW", {scale: 3.14612}, {scale: 1, duration: 1.240, ease: "power3.inOut", immediateRender: false}, 52.960);
+  // «результат» — this one
+  tl.fromTo("#gRing", {autoAlpha: 0, scale: 1.08}, {autoAlpha: 1, scale: 1, duration: 0.5, ease: SP,
+            immediateRender: false}, 54.680);
+  tl.to(".gc", {opacity: 0.5, duration: 0.45, ease: "power1.out"}, 54.740);
+  // «напиши» — back in
+  tl.to("#gRing", {autoAlpha: 0, duration: 0.2}, 55.700);
+  tl.to(".gc", {opacity: 1, duration: 0.2}, 55.700);
+  tl.to("#gridW", {scale: 3.15363, duration: 0.760, ease: "power3.inOut"}, 55.740);
+  tl.set("#gG", {autoAlpha: 0}, 56.520);
+  /* b16_poll */
+
+  tl.set("#gP", {autoAlpha: 1}, 56.920);
+  gsap.set("#pNf", {scaleX: 0});
+  arr("#poll", 56.900, {s: 0.55, y: -20});
+  G.inner("#pQ", 56.970);
+  // «що цей рілс» — the two answers
+  arr("#pY", 58.220, {s: 0.5, y: 14, d: 0.7});
+  arr("#pN", 58.340, {s: 0.5, y: 14, d: 0.7});
+  // «не сказала» — a tap on «Ні»
+  tl.fromTo("#pTap", {autoAlpha: 0, scale: 1.5}, {autoAlpha: 1, scale: 1, duration: 0.2, ease: "power2.out",
+            immediateRender: false}, 61.240);
+  tl.to("#pTap", {scale: 0.82, duration: 0.1, ease: "power2.in"}, 61.450);
+  tl.to("#pN", {scale: 0.95, duration: 0.1, ease: "power2.in"}, 61.440);
+  tl.to("#pN", {scale: 1, duration: 0.45, ease: POP}, 61.540);
+  tl.to("#pNf", {scaleX: 1, duration: 0.42, ease: "power3.out"}, 61.520);
+  tl.set("#pNw", {autoAlpha: 1}, 61.620);
+  tl.set("#pNb", {autoAlpha: 0}, 61.620);
+  tl.to("#pY", {autoAlpha: 0.45, duration: 0.3}, 61.570);
+  tl.to("#pTap", {scale: 2.2, autoAlpha: 0, duration: 0.5, ease: "power2.out"}, 61.560);
+  G.haptic("#poll", 61.680);
+  // «цікаво»
+  G.bump("#poll", 62.640);
+  shn("#poll .sheen", 62.690);
+  // «побачити» — gone before her closing closeup at 63.43
+  tl.to("#poll", {y: -30, scale: 0.96, duration: 0.3, ease: "power2.in"}, 63.040);
+  bout("#poll", 63.080, 10, 0.28);
+  tl.set("#gP", {autoAlpha: 0}, 63.380);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>
