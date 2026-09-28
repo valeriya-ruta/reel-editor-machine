@@ -62,6 +62,9 @@ cd reel-0N && python build.py && ../hf check
 
 `tools/kit.py` holds the shared surfaces, tokens and squircles — build beats out
 of it rather than hand-rolling CSS, and it keeps STYLE.md §5a satisfied for free.
+**`tools/glass.py` is the look since 2026-09-28 (STYLE.md §0)** — the refined-glass
+materials, the monochrome tile family and the spring motion helpers. Every new
+reel builds its beats from it; `style-test/build.py` is the worked example.
 `tools/matte.py` cuts her out of a span so a **big** graphic can sit behind her
 (§1) — per beat only, ~3.3 s/frame on CPU.
 

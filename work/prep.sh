@@ -16,6 +16,10 @@ sed 's/reel-07/reel-'"$N"'/' reel-07/package.json > "reel-$N/package.json"
 printf '{ "id": "reel-%s", "name": "reel-%s" }' "$N" "$N" > "reel-$N/meta.json"
 cp reel-07/assets/fonts/*.woff "reel-$N/assets/fonts/"
 cp reel-07/assets/underlay.png "reel-$N/assets/"
+# refined glass (STYLE.md §0, tools/glass.py): the lighter Product Sans cuts
+# the cards need, and the grain the burgundy ground needs against banding
+cp assets/fonts/ProductSans-*.ttf "reel-$N/assets/fonts/"
+cp assets/grain.png "reel-$N/assets/"
 
 echo "=== plate  $(date +%H:%M:%S)"
 ffmpeg -nostdin -v error -y -i "$SRC" \
