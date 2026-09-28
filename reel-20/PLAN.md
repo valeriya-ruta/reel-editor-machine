@@ -10,6 +10,29 @@ hype. Late: her content pipeline as a chain of tiles where every step is
 automated except the last one, and the last tile *is* her. The clones leave; she
 stays.
 
+## As built (2026-09-28, her cut: 93.95 s, 8 shots)
+
+Re-timed to her words; `build.py` is the source of truth. Her old Kling twin
+reel is not available, so every "twin" is her own matte (`her0`, shot 0),
+greyed and a few frames out of sync. Two closeups are hers and stay clear:
+24.13–26.43 («дорожче, складніше і довше») and 63.20–65.33 («але себе зі
+зйомок не прибирай») — plan beats 7 and 13 moved around them.
+
+| time | where | beat |
+|---|---|---|
+| 0.30–7.49 | BEHIND | four grey clones step out of her (her0 matte ×4, lagged); «AI» tags; step forward on «замінять»; the room behind everyone becomes beach / mountains / city on «знімати де завгодно» |
+| 7.60–20.86 | NEAR | shelf: Kling tile → a twin reel jumps out → three reels → collapse into the peak of a views chart (1,2M → 3K flat on «затихло»); flame on «нахайпили»; tick on «ти права»; avatars jump onto the spike |
+| 20.50–24.10 | OVER | iris out of the peak: ДВІЙНИК vs ТИ sheet, headers + empty tracks |
+| 26.46–30.92 | OVER | same sheet: twin bars long, hers short; window / teleprompter / REC land on her portrait |
+| 31.12–42.86 | NEAR | her portrait becomes a reel card; she is erased on «прибрати людину»; the twin glitches in; beach / mountains / city behind it; tick; €€€ on «грошей»; checklist on «рівень підготовки» |
+| 42.50–49.02 | OVER | the twin's face full size; magnifier on the mouth with a slice one-two frames out and knocked sideways; then up to the eyes |
+| 48.98–55.84 | NEAR | twin tile + money meter; fills on «постаратись», overflows off the frame on «вбухати туди гроші»; ROI ↓ |
+| 56.12–63.10 | NEAR | four stages with hours; three count down to minutes and go automatic; filming is left |
+| 65.44–74.79 | OVER | pipeline: AI analysis → RUTA (topics → script) → Claude (edit) → the last tile is her, live, and grows into the frame |
+| 75.30–81.52 | NEAR | teleprompter reads along with her (front camera, REC) |
+| 81.30–83.58 | BEHIND | one grey clone flickers in beside her and breaks up on «двійником» (tw2 matte) |
+| 84.16–end | NEAR | IG poll: «Як тобі ШІ-двійники?» — Було зручно / Не пробувала |
+
 ## Beats
 
 | # | line | where | what happens → hands to |
