@@ -3,6 +3,49 @@
 Posts 2026-09-29 · ~145 s (436 words — the longest of the week) · variant B ·
 refined glass (STYLE.md §0)
 
+## As built — 2026-09-28
+
+Her direction after the first full build (the chain below): *"i wanted not too
+many animations in the blogging gear one, keep it +- natural like a vlogging
+reel, i feel like too many animations there would look forced"*. So this reel is
+a vlog: her footage in front, captions carry it, and five small NEAR touches —
+no takeover, no matte, no packing list. DUR 163.250 (4898 frames).
+
+| time | where | what |
+|---|---|---|
+| 37.28–39.03 | above-left of her head | chip «ВАГА · 0,5 кг» on «півкіло» (she swings the tripod, so no leader) |
+| 42.56–44.86 | on the extended tripod | one hairline up the pole, floor → clamp; chip counts to «ВИСОТА · 150 см» on «метр» |
+| 53.08–55.26 | right of her head, holder side | chip: Amazon mark tile + «ЦІНА · 8 €» on «8 євро» |
+| 64.72–72.78 | top right, beside her head | the phone holder (she can't show it — it's the camera mount): her photo, white cut out, on one white glass card; a small rock on «крутиться в різні сторони»; «MagSafe» on «магнітний», «присоска» on «присоска» |
+| 85.00–88.61 | above her head | chip «ЦІНА · 3 000 ₴» on «3000 гривень», turns into «МІКРОФОН · 3 режими» on «три режими» |
+
+**Captions drop** only where the chip says her word: 37.37–38.12 «півкіло»,
+42.97–44.61 «метр п'ятдесят» (plaque drops), 53.17–53.62 «8 євро», 69.83–70.25
+«присоска», 85.09–86.27 «3000 гривень», 86.69–87.34 «три режими».
+
+**Hers, left clear (NO_PAINT):** the pull-out 137.50–138.57; her lean into the
+lens that opens shot 6, 120.23–120.70; the spoken gags «розчаруєтесь…
+мінімалістичний», «інакше мій РДУГ…», «не питайте навіщо…», «здається це був Юск».
+
+**Her wording in the captions** (align report, 71 improvised lines): «і прямо
+зараз» (the holder is filming her right now), «кріплю ось так на вікно», «звичайний,
+який зараз, шумопоглинання, яким я користуюсь більшу частину часу, і ревьорб,
+але не питайте навіщо, я навіть не знаю», «Є пунька», «три типи світла та три
+рівні», «здається це був Юск», «оця частина вона викручується», «ніж один раз
+суперідеально», «для блогінгу», «І підпишись». Whisper's mishearings put back to
+the script: «мастхеви» (heard «басеви»), «інакше мій РДУГ» (heard «і найшим мірі
+дух»), «він важить» (script typo «від»), «продається», «ревьорб», «Остання»,
+«на вікно», «вау професійно» (heard «мало»), «вдячна» (heard «вдячний»).
+
+The first build (packing-list spine, two-rule cards, burgundy holder takeover,
+segmented control, lamp panels, the setup assembling behind her, the grid, the
+comment composer) is what she turned down; the plan it followed is kept below
+for the record.
+
+---
+
+## Original plan (superseded)
+
 ## The chain
 
 This is a product reel, so the language is **an Apple product page**: spec

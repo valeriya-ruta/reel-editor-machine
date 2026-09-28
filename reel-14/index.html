@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 14 — Мій блогерський сетап</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+    @font-face {
+      font-family: "ProductSans";
+      src: url("assets/fonts/ProductSans-Black.woff") format("woff");
+      font-weight: 900; font-style: normal; font-display: block;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px;
+            overflow: hidden; background: #000;
+            font-family: "ProductSans", system-ui, sans-serif;
+      --surface:        #fffcfd;
+      --container:      #fbeef2;
+      --container-high: #f4dfe5;
+      --graphite:       rgba(23,20,28,0.13);
+      --accent:         #b4122f;
+      --accent-deep:    #8d0d24;
+      --pink:           #ff6e9c;
+      --ink:            #17141c;
+
+      --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
+      --lit-blush:  linear-gradient(115deg, #ffffff 0%, #fff7fa 100%);
+      --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
+      --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
+      --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
+
+      --rim: inset 0 1.5px 0 rgba(255,255,255,0.92),
+             inset 0 -1.5px 0 rgba(255,255,255,0.14),
+             inset 0 0 0 1px rgba(255,255,255,0.28);
+      --rim-dark: inset 0 1.5px 0 rgba(255,255,255,0.16),
+                  inset 0 0 0 1px rgba(255,255,255,0.08);
+      --rim-glass: inset 0 2px 0 rgba(255,255,255,0.70),
+                   inset 0 -2px 0 rgba(255,255,255,0.10),
+                   inset 0 0 0 1.5px rgba(255,255,255,0.30);
+
+      /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
+         Light coming off the object, not the object sitting on a surface. */
+      --glow: drop-shadow(0 0 10px rgba(255,196,218,0.95))
+              drop-shadow(0 0 26px rgba(255,110,156,0.85))
+              drop-shadow(0 0 64px rgba(255,110,156,0.55))
+              drop-shadow(0 0 120px rgba(255,110,156,0.32));
+      --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
+                   drop-shadow(0 0 60px rgba(255,110,156,0.30));
+
+      --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
+              drop-shadow(0 24px 48px rgba(26,30,39,0.14));
+      --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))
+                 drop-shadow(0 12px 24px rgba(26,30,39,0.12));
+ }
+    .plate { position: absolute; inset: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    #scrim { position: absolute; left: 20px; top: 1247px;
+             width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png");
+             background-size: 100% 100%; background-repeat: no-repeat;
+             opacity: 0; visibility: hidden; pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; top: 1413px;
+           height: 118px; line-height: 118px; text-align: center;
+           color: #fff; font-size: 90px; font-weight: 900;
+           letter-spacing: -0.015em; white-space: nowrap;
+           opacity: 0; visibility: hidden; }
+    .cap.inv { color: var(--ink); }
+    .g { position: absolute; left: 0; top: 40px; width: 1080px;
+         height: 600px; opacity: 0; visibility: hidden; }
+    .g.full { top: 0; height: 1920px; }
+
+    /* §5a.9 — glass over her footage is the house look. Panels only; an
+       edge-to-edge frosted ground blurs her out of her own reel. */
+    .glass { background: rgba(255,255,255,0.15);
+             -webkit-backdrop-filter: blur(24px) saturate(1.4);
+             backdrop-filter: blur(24px) saturate(1.4);
+             box-shadow: var(--rim); filter: var(--cast); }
+
+    /* A takeover: a tinted pane laid ON the footage, with a real margin so it
+       reads as an object rather than a blur applied to the video. */
+    /* The inset pane is a *pane*: 44/64 margin so the footage shows past it,
+       and corners, because a full-bleed hard-cornered rectangle is a bug she
+       has reported. base_css() squircles it; this radius is the fallback. */
+    .ground { position: absolute; left: 44px; top: 64px;
+              width: 992px; height: 1792px; border-radius: 68px;
+              background: linear-gradient(158deg, rgba(196,20,52,0.62) 0%,
+                          rgba(141,13,36,0.70) 100%);
+              -webkit-backdrop-filter: blur(30px) saturate(1.5);
+              backdrop-filter: blur(30px) saturate(1.5);
+              box-shadow: var(--rim-glass); filter: var(--cast); }
+
+    .card { position: absolute; background: var(--lit-blush);
+            filter: var(--cast); box-shadow: var(--rim); }
+    .card.ink { background: var(--lit-ink); box-shadow: var(--rim-dark); }
+    .card.accent { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+
+    .tile { position: absolute; display: grid; place-items: center;
+            background: var(--lit-blush); filter: var(--cast);
+            box-shadow: var(--rim); }
+
+    /* §5a.3 — bar rhythm. One thick heading, then ragged body. Uniform bars
+       read as a loading state; ragged ones read as an abstracted screen. */
+    .ph { display: block; height: 66px; border-radius: 18px;
+          background: var(--lit-accent); margin-bottom: 26px;
+          box-shadow: var(--rim-dark); }
+    .pr { display: block; height: 40px; border-radius: 12px;
+          background: var(--graphite); margin-bottom: 18px; }
+    .pr:nth-of-type(2) { width: 94%; }
+    .pr:nth-of-type(3) { width: 71%; }
+    .pr:nth-of-type(4) { width: 43%; }
+
+    .phone { position: absolute; background: var(--lit-blush);
+             overflow: hidden; filter: var(--cast); box-shadow: var(--rim); }
+    .phone video, .phone img { width: 100%; height: 100%; object-fit: cover;
+                               display: block; }
+
+    /* a value in its own card — her reference's "big number" pattern, minus
+       the label, because a graphic here carries no words */
+    .valcard { position: absolute; background: rgba(255,255,255,0.16);
+               -webkit-backdrop-filter: blur(16px) saturate(1.3);
+               backdrop-filter: blur(16px) saturate(1.3);
+               box-shadow: var(--rim-dark);
+               display: grid; place-items: center; }
+    .valcard span { color: #fff; font-weight: 900; letter-spacing: -0.04em; }
+
+    .wire { fill: none; stroke-width: 20; stroke-linecap: round;
+            filter: drop-shadow(0 8px 18px rgba(26,30,39,0.22)); }
+    .node { fill: #fdf6f6; stroke: #b4122f; stroke-width: 16;
+            filter: drop-shadow(0 10px 22px rgba(26,30,39,0.24)); }
+    .node.hub { fill: #b4122f; stroke: #fff; }
+
+    /* §5a.10 — the glow rides a WRAPPER, never the clipped element itself.
+       clip-path is applied *after* filter, so a drop-shadow declared on the
+       same element as the clip is cut away with everything else outside the
+       silhouette and the object ends up with no light at all. Put the clip on
+       the shape and the filter on its parent: the parent filters the already
+       clipped bitmap, so the light traces the squircle and survives. */
+    .lit { position: absolute; inset: 0; pointer-events: none;
+           filter: var(--glow); }
+    .lit.soft { filter: var(--glow-soft); }
+
+    /* Emoji are images, never glyphs. The render runs on someone else's
+       Chrome, so a literal 💩 in the HTML comes out in whatever emoji font
+       that machine has — Noto on the cloud renderer, Segoe on hers, Apple on
+       nobody's. She wants the Apple set, so the artwork ships in assets/emoji
+       and the glyph never appears in a composition. */
+    .emoji { display: block; width: auto; image-rendering: auto; }
+
+    .halo { position: absolute; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(255,110,156,0.5) 0%,
+                        rgba(255,110,156,0) 70%); }
+    .ring { position: absolute; border-radius: 50%; pointer-events: none;
+            border: 18px solid rgba(255,110,156,0.92);
+            filter: drop-shadow(0 0 40px rgba(255,110,156,0.55)); }
+
+    /* ---- takeovers (STYLE.md 2c) ----
+       The graphic owns the frame: the plate is gone, so none of the
+       over-footage rules apply — no glow budget, no band discipline, ink type
+       on a light ground. Lives here rather than per-reel because every reel
+       from 9 onwards needs it. A takeover that does not bleed off at least
+       two edges reads as a slide, not a takeover. */
+    .tk { position: absolute; inset: 0; }
+    .tk.paper { background: var(--surface); }
+    .tk.white { background: #ffffff; }
+    .tk.blush { background: linear-gradient(150deg,#ffffff 0%,#fffafc 55%,
+                                            #fdf4f8 100%); }
+    /* graph paper — the texture the reference takeovers all have. 60px cells
+       at 5.8% ink: visible, never a pattern you read. */
+    .gp { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px),
+            repeating-linear-gradient(90deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px); }
+    /* horizontal rules only — a transcript or a list is ruled paper, not
+       graph paper, and the difference is what makes it read as an export. */
+    .gl { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.05) 0 1px,
+                                      transparent 1px 175px); }
+
+    /* the finished artefact, in her system — one class at any aspect ratio */
+    .dk { position: absolute; overflow: hidden; border-radius: 28px;
+          background: var(--lit-blush); box-shadow: var(--rim);
+          filter: var(--cast); }
+    .dk i { position: absolute; display: block; }
+    .dk .hb { left: 30px; top: 30px; height: 20px; border-radius: 6px;
+              background: var(--lit-accent); }
+    .dk .rr { left: 30px; height: 9px; border-radius: 4px;
+              background: rgba(23,20,28,0.22); }
+    .dk .pb { border-radius: 16px; background: var(--lit-pink);
+              box-shadow: var(--rim-dark); }
+
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Regular.ttf"); font-weight: 400; font-display: block; }
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Medium.ttf"); font-weight: 500; font-display: block; }
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Bold.ttf"); font-weight: 700; font-display: block; }
+
+/* ---------- the edge light: what makes a surface read as glass ----------
+   A uniform stroke is 2013. Real glass catches light at two opposite corners
+   and goes almost dark along the sides, so the rim is a gradient ring. */
+.edge::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.6px;
+  background: linear-gradient(140deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.34) 16%,
+              rgba(255,255,255,0.05) 42%, rgba(255,255,255,0.07) 62%,
+              rgba(255,255,255,0.50) 86%, rgba(255,255,255,0.90) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 3; }
+
+/* ---------- the shelf: frosted glass over her footage ----------
+   The house look since reel 3, rebuilt in layers: blur + saturation, a faint
+   top-to-bottom tint, light inside the bottom edge (thickness), huge soft
+   shadow. Add .edge for the rim. */
+.shelf { position: absolute; border-radius: 80px;
+  background: linear-gradient(158deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.07) 50%,
+              rgba(255,255,255,0.13) 100%);
+  -webkit-backdrop-filter: blur(22px) saturate(1.7) brightness(1.05);
+  backdrop-filter: blur(22px) saturate(1.7) brightness(1.05);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.65), inset 0 -24px 44px -22px rgba(255,255,255,0.36),
+              0 44px 90px -34px rgba(24,4,12,0.5); }
+
+/* dark glass — notifications and anything with white text over footage */
+.dglass { position: absolute; border-radius: 64px; color: #fff;
+  background: linear-gradient(160deg, rgba(58,22,32,0.58) 0%, rgba(24,10,15,0.50) 100%);
+  -webkit-backdrop-filter: blur(30px) saturate(1.8); backdrop-filter: blur(30px) saturate(1.8);
+  box-shadow: inset 0 1.5px 1px rgba(255,255,255,0.30), inset 0 -16px 30px -16px rgba(255,255,255,0.14),
+              0 40px 80px -30px rgba(10,0,4,0.6); }
+
+/* ---------- the tile family: every mark lives in one of three ----------
+   Same radius ratio as an iOS icon (22.4%), glyph at 50%. Put the tile in a
+   sized wrapper; the wrapper takes the motion, the tile takes the material. */
+.clear { position: absolute; inset: 0; border-radius: 22.4%;
+  background: linear-gradient(158deg, rgba(255,255,255,0.36) 0%, rgba(255,255,255,0.11) 48%,
+              rgba(255,255,255,0.17) 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.70), inset 0 -18px 30px -14px rgba(255,255,255,0.42),
+              0 34px 60px -22px rgba(24,4,12,0.55), 0 3px 8px rgba(24,4,12,0.10);
+  display: flex; align-items: center; justify-content: center; }
+.pearl { position: absolute; inset: 0; border-radius: 22.4%; overflow: hidden;
+  background: linear-gradient(160deg, #ffffff 0%, #fff5f8 52%, #f5dfe6 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -20px 32px -14px rgba(180,18,47,0.18),
+              0 36px 64px -22px rgba(30,4,12,0.55), 0 3px 8px rgba(30,4,12,0.12);
+  display: flex; align-items: center; justify-content: center; }
+.jelly { position: absolute; inset: 0; border-radius: 22.4%; overflow: hidden;
+  background: linear-gradient(165deg, #e0204b 0%, #ab112e 46%, #6b081c 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.55), inset 0 -26px 40px -14px rgba(255,125,165,0.60),
+              inset 0 0 0 1px rgba(255,255,255,0.10),
+              0 36px 64px -22px rgba(70,4,20,0.62), 0 3px 8px rgba(70,4,20,0.14);
+  display: flex; align-items: center; justify-content: center; }
+/* the lens highlight — subtle, or it turns into 2009 gloss */
+.jelly::after, .pearl::after { content: ""; position: absolute; left: 7%; right: 7%; top: 3.5%; height: 44%;
+  border-radius: 40% 40% 50% 50% / 38% 38% 24% 24%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.26), rgba(255,255,255,0)); }
+.pearl::after { background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0)); opacity: 0.5; }
+.mk { width: 50%; height: 50%; fill: url(#gw); position: relative; z-index: 1; }
+.pearl .mk { fill: #17141c; }
+/* a wordmark stands in where a brand has no icon (RUTA, Windsor's "w.") */
+.wmark { font-weight: 900; color: #17141c; letter-spacing: -0.045em; line-height: 1;
+  position: relative; z-index: 1; }
+.wmark i { font-style: normal; color: #b4122f; }
+.jelly .wmark { color: #fff; } .jelly .wmark i { color: #ffb3c9; }
+
+/* one light sweep across a surface when it lands — once, never looping */
+.sheen { position: absolute; inset: -10%; z-index: 2; pointer-events: none;
+  background: linear-gradient(105deg, rgba(255,255,255,0) 38%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0) 62%);
+  mix-blend-mode: soft-light; }
+/* a ripple the same shape as the tile that sent it */
+.sqring { position: absolute; border-radius: 22.4%; border: 3px solid rgba(255,255,255,0.75);
+  opacity: 0; visibility: hidden; }
+
+/* ---------- the takeover ground: deep burgundy, lit from inside ----------
+   Approved on the test: a dark ground is allowed now (it overrides §5's old
+   "never dark"). Three soft light pools drift slowly; grain stops banding. */
+.tkg { position: absolute; inset: 0;
+  background: linear-gradient(172deg, #4a0a1c 0%, #660c26 36%, #3c0716 70%, #1d030a 100%); }
+.aur { position: absolute; border-radius: 50%; pointer-events: none; }
+.aur.a1 { left: 260px; top: -420px; width: 1200px; height: 1200px;
+  background: radial-gradient(circle, rgba(255,110,156,0.50) 0%, rgba(255,110,156,0) 62%); }
+.aur.a2 { left: -640px; top: 960px; width: 1400px; height: 1400px;
+  background: radial-gradient(circle, rgba(222,32,74,0.55) 0%, rgba(222,32,74,0) 64%); }
+.aur.a3 { left: 330px; top: 760px; width: 900px; height: 900px;
+  background: radial-gradient(circle, rgba(255,198,214,0.20) 0%, rgba(255,198,214,0) 60%); }
+.grain { position: absolute; inset: 0; background: url("assets/grain.png"); opacity: 0.075;
+  mix-blend-mode: overlay; pointer-events: none; }
+
+/* the white report card that sits on a burgundy ground */
+.sheet { position: absolute; border-radius: 68px; overflow: hidden; color: #17141c;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 55%, #fdf0f4 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -30px 60px -30px rgba(180,18,47,0.14),
+              0 70px 130px -40px rgba(8,0,3,0.75), 0 0 0 1px rgba(255,255,255,0.35); }
+.sheet .sheen { mix-blend-mode: normal; opacity: 0.55; }
+/* type ladder inside a sheet */
+.t-micro { font-size: 24px; font-weight: 700; letter-spacing: 0.16em; color: rgba(23,20,28,0.42); }
+.t-title { font-size: 42px; font-weight: 700; letter-spacing: -0.015em; }
+.t-sub   { font-size: 26px; font-weight: 500; color: rgba(23,20,28,0.46); }
+.t-big   { font-size: 176px; font-weight: 900; letter-spacing: -0.045em; line-height: 1;
+  background: linear-gradient(118deg, #7e0b20 0%, #b4122f 42%, #ff6e9c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: 10px; }
+.chip { display: inline-flex; align-items: center; gap: 10px; height: 58px; padding: 0 24px;
+  border-radius: 29px; background: #fbe3ea; color: #b4122f; font-size: 26px; font-weight: 700; }
+.hair { height: 2px; background: rgba(23,20,28,0.07); transform-origin: 0 0; }
+
+/* a cable between two tiles: a glass tube, a bright core, a travelling packet */
+.cab .tube { fill: none; stroke: rgba(255,255,255,0.26); stroke-width: 20; stroke-linecap: round; }
+.cab .core { fill: none; stroke: rgba(255,255,255,0.92); stroke-width: 4.5; stroke-linecap: round; }
+.cab .pkt  { fill: none; stroke: #ffd6e3; stroke-width: 11; stroke-linecap: round; }
+.cab .pkg  { filter: drop-shadow(0 0 10px rgba(255,120,165,1)); }
+.cab .wire { fill: none; stroke: rgba(255,255,255,0.55); stroke-width: 4; stroke-linecap: round; }
+
+
+/* Product Sans has no hryvnia sign: ₴ alone falls through to Inter, per glyph */
+@font-face { font-family: "InterUAH"; src: url("assets/fonts/Inter.ttf"); font-weight: 100 900;
+  unicode-range: U+20B4; font-display: block; }
+#root { font-family: "ProductSans", "InterUAH", system-ui, sans-serif; }
+.abs, .cx { position: absolute; }
+.hide { opacity: 0; visibility: hidden; }
+.gy { fill: none; stroke: currentColor; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---- the small spec chip: dark glass, a tile, a micro label, the value ----
+   Apple's spec line, sized to sit beside her and not compete with her. */
+.sc { position: absolute; height: 96px; border-radius: 34px; overflow: hidden; }
+.sc .sct { position: absolute; left: 14px; top: 14px; width: 68px; height: 68px; }
+.sc .sct .gy { position: relative; z-index: 1; width: 52%; height: 52%; color: #fff; }
+.sc .sct .pearl .gy { color: #17141c; }
+.sc .sct .pearl .mk { width: 56%; height: 56%; }
+.sc .scm { position: absolute; left: 98px; top: 15px; font-size: 18px; font-weight: 700;
+  letter-spacing: 0.16em; color: #ffb3c9; line-height: 20px; white-space: nowrap; }
+.sc .scv { position: absolute; left: 96px; top: 38px; font-size: 46px; font-weight: 900;
+  letter-spacing: -0.035em; line-height: 52px; color: #fff; white-space: nowrap; }
+.sc .scv small { font-size: 30px; font-weight: 700; letter-spacing: -0.01em; margin-left: 6px; }
+.sc .rd { position: absolute; left: 0; top: 0; white-space: nowrap; }
+
+
+#dim { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: visible;
+  filter: drop-shadow(0 0 5px rgba(12,2,6,0.5)); }
+#dim path { fill: none; stroke: #fff; stroke-width: 3.5; stroke-linecap: round; }
+
+
+#hc { left: 600px; top: 70px; width: 440px; height: 470px; border-radius: 46px; overflow: hidden;
+  background: linear-gradient(170deg, rgba(255,255,255,0.94) 0%, rgba(255,249,251,0.90) 55%, rgba(253,238,243,0.88) 100%);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -24px 50px -26px rgba(180,18,47,0.16), 0 44px 90px -34px rgba(20,2,8,0.6); }
+#hcImg { position: absolute; left: 20px; top: 18px; width: 231px; height: 432px;
+  transform-origin: 50% 92%; }
+#hcInk { position: absolute; left: 0; top: 0; width: 440px; height: 470px; overflow: visible; }
+#hcInk line { stroke: rgba(23,20,28,0.5); stroke-width: 2.5; stroke-linecap: round; }
+.hcd { position: absolute; width: 0; height: 0; }
+.hcd b { position: absolute; left: -8px; top: -8px; width: 16px; height: 16px; border-radius: 50%;
+  background: linear-gradient(165deg, #e0204b, #8d0d24); box-shadow: 0 0 0 4px #fff, 0 4px 10px rgba(60,10,25,0.4); }
+.hcl { position: absolute; left: 270px; font-size: 34px; font-weight: 900; letter-spacing: -0.035em;
+  line-height: 40px; padding-right: 6px; white-space: nowrap;
+  background: linear-gradient(118deg, #7e0b20 0%, #b4122f 42%, #ff6e9c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+    .ground { clip-path: path('M 883.2 0 c 36.293 0 54.439 0 70.765 8.318 a 68 68 0 0 1 29.717 29.717 c 8.318 16.325 8.318 34.472 8.318 70.765 L 992 1683.2 c 0 36.293 0 54.439 -8.318 70.765 a 68 68 0 0 1 -29.717 29.717 c -16.325 8.318 -34.472 8.318 -70.765 8.318 L 108.8 1792 c -36.293 0 -54.439 0 -70.765 -8.318 a 68 68 0 0 1 -29.717 -29.717 c -8.318 -16.325 -8.318 -34.472 -8.318 -70.765 L 0 108.8 c 0 -36.293 0 -54.439 8.318 -70.765 a 68 68 0 0 1 29.717 -29.717 c 16.325 -8.318 34.472 -8.318 70.765 -8.318 Z'); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="163.250" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="163.250" data-media-start="0"
+             muted playsinline></video>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="gw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ffdbe6"/></linearGradient>
+<symbol id="i-amazon" viewBox="0 0 24 24"><path d="M.045 18.02c.072-.116.187-.124.348-.022 3.636 2.11 7.594 3.166 11.87 3.166 2.852 0 5.668-.533 8.447-1.595l.315-.14c.138-.06.234-.1.293-.13.226-.088.39-.046.525.13.12.174.09.336-.12.48-.256.19-.6.41-1.006.654-1.244.743-2.64 1.316-4.185 1.726a17.617 17.617 0 01-10.951-.577 17.88 17.88 0 01-5.43-3.35c-.1-.074-.151-.15-.151-.22 0-.047.021-.09.051-.13zm6.565-6.218c0-1.005.247-1.863.743-2.577.495-.71 1.17-1.25 2.04-1.615.796-.335 1.756-.575 2.912-.72.39-.046 1.033-.103 1.92-.174v-.37c0-.93-.105-1.558-.3-1.875-.302-.43-.78-.65-1.44-.65h-.182c-.48.046-.896.196-1.246.46-.35.27-.575.63-.675 1.096-.06.3-.206.465-.435.51l-2.52-.315c-.248-.06-.372-.18-.372-.39 0-.046.007-.09.022-.15.247-1.29.855-2.25 1.82-2.88.976-.616 2.1-.975 3.39-1.05h.54c1.65 0 2.957.434 3.888 1.29.135.15.27.3.405.48.12.165.224.314.283.45.075.134.15.33.195.57.06.254.105.42.135.51.03.104.062.3.076.615.01.313.02.493.02.553v5.28c0 .376.06.72.165 1.036.105.313.21.54.315.674l.51.674c.09.136.136.256.136.36 0 .12-.06.226-.18.314-1.2 1.05-1.86 1.62-1.963 1.71-.165.135-.375.15-.63.045a6.062 6.062 0 01-.526-.496l-.31-.347a9.391 9.391 0 01-.317-.42l-.3-.435c-.81.886-1.603 1.44-2.4 1.665-.494.15-1.093.227-1.83.227-1.11 0-2.04-.343-2.76-1.034-.72-.69-1.08-1.665-1.08-2.94l-.05-.076zm3.753-.438c0 .566.14 1.02.425 1.364.285.34.675.512 1.155.512.045 0 .106-.007.195-.02.09-.016.134-.023.166-.023.614-.16 1.08-.553 1.424-1.178.165-.28.285-.58.36-.91.09-.32.12-.59.135-.8.015-.195.015-.54.015-1.005v-.54c-.84 0-1.484.06-1.92.18-1.275.36-1.92 1.17-1.92 2.43l-.035-.02zm9.162 7.027c.03-.06.075-.11.132-.17.362-.243.714-.41 1.05-.5a8.094 8.094 0 011.612-.24c.14-.012.28 0 .41.03.65.06 1.05.168 1.172.33.063.09.099.228.099.39v.15c0 .51-.149 1.11-.424 1.8-.278.69-.664 1.248-1.156 1.68-.073.06-.14.09-.197.09-.03 0-.06 0-.09-.012-.09-.044-.107-.12-.064-.24.54-1.26.806-2.143.806-2.64 0-.15-.03-.27-.087-.344-.145-.166-.55-.257-1.224-.257-.243 0-.533.016-.87.046-.363.045-.7.09-1 .135-.09 0-.148-.014-.18-.044-.03-.03-.036-.047-.02-.077 0-.017.006-.03.02-.063v-.06z"/></symbol></defs></svg>
+<div class="g full" id="g10"><div class="sc dglass edge hide" id="wC" style="left:100px;top:420px;width:262px"><div class="sct"><div class="clear edge"><svg class="gy" viewBox="0 0 48 48"><path d="M16.5 20.5V15a5 5 0 0 1 5-5h5a5 5 0 0 1 5 5v5.5"/><circle cx="24" cy="31" r="13"/></svg></div></div><div class="scm" id="wC-m">ВАГА</div><div class="scv" id="wC-v">0,5<small>кг</small></div><div class="sheen" id="wC-sh"></div></div></div>
+
+      <div class="g full" id="g10b">
+        <svg id="dim" viewBox="0 0 1080 1920"><path id="dimL" d="M 258.7 1917.8 V 623.7"/><path id="dimT" d="M 238.7 1917.8 H 278.7 M 238.7 623.7 H 278.7"/></svg>
+        <div class="sc dglass edge hide" id="hC" style="left:128px;top:486px;width:262px"><div class="sct"><div class="clear edge"><svg class="gy" viewBox="0 0 48 48"><path d="M24 4v40M16 4h16M16 44h16"/></svg></div></div><div class="scm" id="hC-m">ВИСОТА</div><div class="scv" id="hC-v"><span id="hV">0</span><small>см</small></div><div class="sheen" id="hC-sh"></div></div>
+      </div>
+<div class="g full" id="g12"><div class="sc dglass edge hide" id="eC" style="left:730px;top:650px;width:236px"><div class="sct"><div class="pearl"><svg class="mk"><use href="#i-amazon" width="100%" height="100%"/></svg></div></div><div class="scm" id="eC-m">ЦІНА</div><div class="scv" id="eC-v">8<small>€</small></div><div class="sheen" id="eC-sh"></div></div></div>
+
+      <div class="g full" id="g14">
+        <div class="abs edge hide" id="hc">
+          <img id="hcImg" src="assets/media/holder.png" alt="">
+          <svg id="hcInk" viewBox="0 0 440 470">
+            <line id="hcMsL" x1="168.8" y1="111.0" x2="262" y2="111.0"/>
+            <line id="hcSuL" x1="206.0" y1="427.2" x2="262" y2="427.2"/>
+          </svg>
+          <div class="hcd hide" id="hcMsD" style="left:169px;top:111px"><b></b></div>
+          <div class="hcl hide" id="hcMs" style="top:91px">MagSafe</div>
+          <div class="hcd hide" id="hcSuD" style="left:206px;top:427px"><b></b></div>
+          <div class="hcl hide" id="hcSu" style="top:405px">присоска</div>
+          <div class="sheen" id="hcSh"></div>
+        </div>
+      </div>
+<div class="g full" id="g18"><div class="sc dglass edge hide" id="mC" style="left:390px;top:390px;width:300px"><div class="sct"><div class="pearl"><svg class="gy" viewBox="0 0 48 48"><rect x="17" y="4" width="14" height="23" rx="7"/><path d="M11 21a13 13 0 0 0 26 0M24 34v9M17 43h14"/></svg></div></div><div class="scm" id="mC-m"><span class="rd" id="mM1">ЦІНА</span><span class="rd" id="mM2">МІКРОФОН</span></div><div class="scv" id="mC-v"><span class="rd" id="mV1">3 000<small>₴</small></span><span class="rd" id="mV2">3<small>режими</small></span></div><div class="sheen" id="mC-sh"></div></div></div>
+
+      <div id="scrim"></div>
+      <div class="cap" id="cap0">Я</div>
+      <div class="cap" id="cap1">ВЕДУ</div>
+      <div class="cap" id="cap2">БЛОГ</div>
+      <div class="cap" id="cap3">ВЖЕ</div>
+      <div class="cap" id="cap4">ХРІН</div>
+      <div class="cap" id="cap5">ЗНАЄ</div>
+      <div class="cap" id="cap6">СКІЛЬКИ</div>
+      <div class="cap" id="cap7">РОКІВ</div>
+      <div class="cap" id="cap8">І ПРИ</div>
+      <div class="cap" id="cap9">ЦЬОМУ</div>
+      <div class="cap" id="cap10">ПОСТІЙНО</div>
+      <div class="cap" id="cap11">ПОДОРОЖУЮ,</div>
+      <div class="cap" id="cap12">ТОМУ</div>
+      <div class="cap" id="cap13">СЬОГОДНІ</div>
+      <div class="cap" id="cap14">Я</div>
+      <div class="cap" id="cap15">ПОКАЗУЮ</div>
+      <div class="cap" id="cap16">ВАМ</div>
+      <div class="cap" id="cap17">ВСІ</div>
+      <div class="cap" id="cap18">СВОЇ</div>
+      <div class="cap" id="cap19">БЛОГЕРСЬКІ</div>
+      <div class="cap" id="cap20">ІНСТРУМЕНТИ</div>
+      <div class="cap" id="cap21">НАСПРАВДІ</div>
+      <div class="cap" id="cap22">Я ДУМАЮ</div>
+      <div class="cap" id="cap23">ЩО</div>
+      <div class="cap" id="cap24">ВИ ЗАРАЗ</div>
+      <div class="cap" id="cap25">РОЗЧАРУЄТЕСЬ,</div>
+      <div class="cap" id="cap26">ТОМУ</div>
+      <div class="cap" id="cap27">ЩО</div>
+      <div class="cap" id="cap28">НАСПРАВДІ</div>
+      <div class="cap" id="cap29">МІЙ</div>
+      <div class="cap" id="cap30">СЕТАП</div>
+      <div class="cap" id="cap31">МАКСИМАЛЬНО</div>
+      <div class="cap" id="cap32">МІНІМАЛІСТИЧНИЙ,</div>
+      <div class="cap" id="cap33">ТОМУ</div>
+      <div class="cap" id="cap34">ЩО</div>
+      <div class="cap" id="cap35">В МЕНЕ</div>
+      <div class="cap" id="cap36">Є</div>
+      <div class="cap" id="cap37">ЛИШЕ</div>
+      <div class="cap" id="cap38">ДВА</div>
+      <div class="cap" id="cap39">ПРАВИЛА:</div>
+      <div class="cap" id="cap40">ЦЕ</div>
+      <div class="cap" id="cap41">ВСЕ</div>
+      <div class="cap" id="cap42">МАЄ</div>
+      <div class="cap" id="cap43">БУТИ</div>
+      <div class="cap" id="cap44">ЗРУЧНИМ</div>
+      <div class="cap" id="cap45">ДЛЯ</div>
+      <div class="cap" id="cap46">ПОДОРОЖЕЙ,</div>
+      <div class="cap" id="cap47">ТОБТО</div>
+      <div class="cap" id="cap48">БАГАТО</div>
+      <div class="cap" id="cap49">НЕ</div>
+      <div class="cap" id="cap50">ВАЖИТИ</div>
+      <div class="cap" id="cap51">І</div>
+      <div class="cap" id="cap52">ВМІЩАТИСЯ</div>
+      <div class="cap" id="cap53">В</div>
+      <div class="cap" id="cap54">СУМКУ,</div>
+      <div class="cap" id="cap55">І</div>
+      <div class="cap" id="cap56">ЦЕ Я</div>
+      <div class="cap" id="cap57">НЕ</div>
+      <div class="cap" id="cap58">МАЮ</div>
+      <div class="cap" id="cap59">ВИТРАЧАТИ</div>
+      <div class="cap" id="cap60">15</div>
+      <div class="cap" id="cap61">ГОДИН</div>
+      <div class="cap" id="cap62">НА</div>
+      <div class="cap" id="cap63">ТЕ,</div>
+      <div class="cap" id="cap64">ЩОБ</div>
+      <div class="cap" id="cap65">ПОЧАТИ</div>
+      <div class="cap" id="cap66">ЗНІМАТИ</div>
+      <div class="cap" id="cap67">РІЛСИ,</div>
+      <div class="cap" id="cap68">ІНАКШЕ</div>
+      <div class="cap" id="cap69">МІЙ</div>
+      <div class="cap" id="cap70">РДУГ</div>
+      <div class="cap" id="cap71">ПРОСТО</div>
+      <div class="cap" id="cap72">ЦЬОГО</div>
+      <div class="cap" id="cap73">НЕ</div>
+      <div class="cap" id="cap74">ДОПУСТИТЬ</div>
+      <div class="cap" id="cap75">ТОМУ</div>
+      <div class="cap" id="cap76">ОСЬ</div>
+      <div class="cap" id="cap77">МОЇ</div>
+      <div class="cap" id="cap78">МАСТХЕВИ,</div>
+      <div class="cap" id="cap79">З ЯКИМИ</div>
+      <div class="cap" id="cap80">Я</div>
+      <div class="cap" id="cap81">ПОДОРОЖУЮ</div>
+      <div class="cap" id="cap82">ВЖЕ</div>
+      <div class="cap" id="cap83">ДРУГИЙ</div>
+      <div class="cap" id="cap84">РІК</div>
+      <div class="cap" id="cap85">ПІДРЯД!</div>
+      <div class="cap" id="cap86">ПО ПЕРШЕ</div>
+      <div class="cap" id="cap87">ЦЕ</div>
+      <div class="cap" id="cap88">ШТАТИВИ.</div>
+      <div class="cap" id="cap89">У МЕНЕ</div>
+      <div class="cap" id="cap90">ЇХ</div>
+      <div class="cap" id="cap91">ЗА</div>
+      <div class="cap" id="cap92">ЦЕЙ</div>
+      <div class="cap" id="cap93">ЧАС</div>
+      <div class="cap" id="cap94">БУЛО</div>
+      <div class="cap" id="cap95">ДЕКІЛЬКА,</div>
+      <div class="cap" id="cap96">АЛЕ</div>
+      <div class="cap" id="cap97">Я</div>
+      <div class="cap" id="cap98">ЗМЕНШИЛА</div>
+      <div class="cap" id="cap99">НАБІР</div>
+      <div class="cap" id="cap100">ДО</div>
+      <div class="cap" id="cap101">ДВОХ.</div>
+      <div class="cap" id="cap102">ПЕРШИЙ</div>
+      <div class="cap" id="cap103">ЦЕ</div>
+      <div class="cap" id="cap104">ВЕЛИКИЙ</div>
+      <div class="cap" id="cap105">ВІД</div>
+      <div class="cap" id="cap106">ULANZI,</div>
+      <div class="cap" id="cap107">ВІН</div>
+      <div class="cap" id="cap108">ВАЖИТЬ</div>
+      <div class="cap" id="cap109">ВИСОТОЮ</div>
+      <div class="cap" id="cap110">ВІН</div>
+      <div class="cap" id="cap113">В НЬОГО</div>
+      <div class="cap" id="cap114">Є</div>
+      <div class="cap" id="cap115">СВІЙ</div>
+      <div class="cap" id="cap116">ВБУДОВАНИЙ</div>
+      <div class="cap" id="cap117">ТРИМАЧ,</div>
+      <div class="cap" id="cap118">АЛЕ</div>
+      <div class="cap" id="cap119">Я</div>
+      <div class="cap" id="cap120">НЕНАВИДЖУ</div>
+      <div class="cap" id="cap121">ТІ</div>
+      <div class="cap" id="cap122">ЩО НА</div>
+      <div class="cap" id="cap123">ПРУЖИНАХ,</div>
+      <div class="cap" id="cap124">БО</div>
+      <div class="cap" id="cap125">МЕНІ</div>
+      <div class="cap" id="cap126">СКЛАДНО</div>
+      <div class="cap" id="cap127">ЇХ</div>
+      <div class="cap" id="cap128">ВИКОРИСТОВУВАТИ,</div>
+      <div class="cap" id="cap129">ТОМУ</div>
+      <div class="cap" id="cap130">Я</div>
+      <div class="cap" id="cap131">ДОЗАМОВИЛА</div>
+      <div class="cap" id="cap132">ОСЬ</div>
+      <div class="cap" id="cap133">ТАКИЙ</div>
+      <div class="cap" id="cap134">НА</div>
+      <div class="cap" id="cap135">АМАЗОНІ</div>
+      <div class="cap" id="cap136">ЗА</div>
+      <div class="cap" id="cap137">І</div>
+      <div class="cap" id="cap138">ВІН</div>
+      <div class="cap" id="cap139">ЗАКРУЧУЄТЬСЯ,</div>
+      <div class="cap" id="cap140">ТОМУ</div>
+      <div class="cap" id="cap141">НАБАГАТО</div>
+      <div class="cap" id="cap142">ПРИЄМНІШЕ.</div>
+      <div class="cap" id="cap143">КОРИСТУВАТИСЬ.</div>
+      <div class="cap" id="cap144">ДРУГИМ,</div>
+      <div class="cap" id="cap145">ЯКИМ</div>
+      <div class="cap" id="cap146">Я</div>
+      <div class="cap" id="cap147">КОРИСТУЮСЬ</div>
+      <div class="cap" id="cap148">БІЛЬШУ</div>
+      <div class="cap" id="cap149">ЧАСТИНУ</div>
+      <div class="cap" id="cap150">ЧАСУ</div>
+      <div class="cap" id="cap151">І</div>
+      <div class="cap" id="cap152">ПРЯМО</div>
+      <div class="cap" id="cap153">ЗАРАЗ,</div>
+      <div class="cap" id="cap154">ЦЕ</div>
+      <div class="cap" id="cap155">МАЛЕНЬКИЙ</div>
+      <div class="cap" id="cap156">ШТАТИВ,</div>
+      <div class="cap" id="cap157">ЯКИЙ</div>
+      <div class="cap" id="cap158">ВЗАГАЛІ</div>
+      <div class="cap" id="cap159">ПРОДАЄТЬСЯ</div>
+      <div class="cap" id="cap160">ЯК</div>
+      <div class="cap" id="cap161">ТРИМАЧ</div>
+      <div class="cap" id="cap162">ДЛЯ</div>
+      <div class="cap" id="cap163">МАШИНИ!</div>
+      <div class="cap" id="cap164">ТУТ</div>
+      <div class="cap" id="cap165">ВІН</div>
+      <div class="cap" id="cap166">ТРОШКИ</div>
+      <div class="cap" id="cap167">КРУТИТЬСЯ</div>
+      <div class="cap" id="cap168">В РІЗНІ</div>
+      <div class="cap" id="cap169">СТОРОНИ,</div>
+      <div class="cap" id="cap170">САМ</div>
+      <div class="cap" id="cap171">ТРИМАЧ</div>
+      <div class="cap" id="cap172">МАГНІТНИЙ</div>
+      <div class="cap" id="cap173">А</div>
+      <div class="cap" id="cap174">З</div>
+      <div class="cap" id="cap175">ІНШОЇ</div>
+      <div class="cap" id="cap176">СТОРОНИ</div>
+      <div class="cap" id="cap177">ДЛЯ</div>
+      <div class="cap" id="cap178">БУДЬ-ЯКИХ</div>
+      <div class="cap" id="cap179">ГЛАДКИХ</div>
+      <div class="cap" id="cap180">ПОВЕРХОНЬ.</div>
+      <div class="cap" id="cap181">САМЕ</div>
+      <div class="cap" id="cap182">НИМ Я</div>
+      <div class="cap" id="cap183">КОРИСТУЮСЬ,</div>
+      <div class="cap" id="cap184">КОЛИ</div>
+      <div class="cap" id="cap185">ЗНІМАЮ</div>
+      <div class="cap" id="cap186">РІЛСИ</div>
+      <div class="cap" id="cap187">З</div>
+      <div class="cap" id="cap188">РОБОЧОГО</div>
+      <div class="cap" id="cap189">СТОЛА</div>
+      <div class="cap" id="cap190">АБО</div>
+      <div class="cap" id="cap191">КРІПЛЮ</div>
+      <div class="cap" id="cap192">ОСЬ</div>
+      <div class="cap" id="cap193">ТАК</div>
+      <div class="cap" id="cap194">НА ВІКНО</div>
+      <div class="cap" id="cap195">І</div>
+      <div class="cap" id="cap196">ЗНІМАЮ</div>
+      <div class="cap" id="cap197">НАВПРОТИ</div>
+      <div class="cap" id="cap198">ДАЛІ</div>
+      <div class="cap" id="cap199">МІКРОФОНИ!</div>
+      <div class="cap" id="cap200">В МЕНЕ</div>
+      <div class="cap" id="cap201">ВІН</div>
+      <div class="cap" id="cap202">ОДИН,</div>
+      <div class="cap" id="cap203">ПРОСТЕНЬКИЙ</div>
+      <div class="cap" id="cap204">ЗВИЧАЙНИЙ</div>
+      <div class="cap" id="cap205">КИТАЙСЬКИЙ</div>
+      <div class="cap" id="cap206">МІКРОФОН,</div>
+      <div class="cap" id="cap207">КУПЛЕНИЙ</div>
+      <div class="cap" id="cap208">ЗА</div>
+      <div class="cap" id="cap209">ТУТ</div>
+      <div class="cap" id="cap210">Є</div>
+      <div class="cap" id="cap211">ЗВИЧАЙНИЙ,</div>
+      <div class="cap" id="cap212">ЯКИЙ</div>
+      <div class="cap" id="cap213">ЗАРАЗ,</div>
+      <div class="cap" id="cap214">ШУМОПОГЛИНАННЯ,</div>
+      <div class="cap" id="cap215">ЯКИМ</div>
+      <div class="cap" id="cap216">Я</div>
+      <div class="cap" id="cap217">КОРИСТУЮСЬ</div>
+      <div class="cap" id="cap218">БІЛЬШУ</div>
+      <div class="cap" id="cap219">ЧАСТИНУ</div>
+      <div class="cap" id="cap220">ЧАСУ</div>
+      <div class="cap" id="cap221">І</div>
+      <div class="cap" id="cap222">РЕВЬОРБ,</div>
+      <div class="cap" id="cap223">АЛЕ</div>
+      <div class="cap" id="cap224">НЕ</div>
+      <div class="cap" id="cap225">ПИТАЙТЕ</div>
+      <div class="cap" id="cap226">НАВІЩО</div>
+      <div class="cap" id="cap227">Я</div>
+      <div class="cap" id="cap228">НАВІТЬ</div>
+      <div class="cap" id="cap229">НЕ</div>
+      <div class="cap" id="cap230">ЗНАЮ.</div>
+      <div class="cap" id="cap231">Є</div>
+      <div class="cap" id="cap232">ПУНЬКА,</div>
+      <div class="cap" id="cap233">ЯКА ВСТАВЛЯЄТЬСЯ</div>
+      <div class="cap" id="cap234">В САМ</div>
+      <div class="cap" id="cap235">ТЕЛЕФОН,</div>
+      <div class="cap" id="cap236">І</div>
+      <div class="cap" id="cap237">МІКРОФОН</div>
+      <div class="cap" id="cap238">МАЄ</div>
+      <div class="cap" id="cap239">ВИБІР</div>
+      <div class="cap" id="cap240">КЛІПС</div>
+      <div class="cap" id="cap241">І ГРУЗИНСЬКУ</div>
+      <div class="cap" id="cap242">ШАПОЧКУ,</div>
+      <div class="cap" id="cap243">І</div>
+      <div class="cap" id="cap244">ПРАЦЮЄ</div>
+      <div class="cap" id="cap245">ДУЖЕ</div>
+      <div class="cap" id="cap246">НАВІТЬ</div>
+      <div class="cap" id="cap247">СОЛІДНО</div>
+      <div class="cap" id="cap248">ЗА</div>
+      <div class="cap" id="cap249">СВОЇ</div>
+      <div class="cap" id="cap250">ГРОШІ</div>
+      <div class="cap" id="cap251">ОСТАННЯ</div>
+      <div class="cap" id="cap252">КАТЕГОРІЯ</div>
+      <div class="cap" id="cap253">ЦЕ</div>
+      <div class="cap" id="cap254">СВІТЛО,</div>
+      <div class="cap" id="cap255">І ТУТ</div>
+      <div class="cap" id="cap256">Я</div>
+      <div class="cap" id="cap257">МАЮ</div>
+      <div class="cap" id="cap258">СКАЗАТИ</div>
+      <div class="cap" id="cap259">ЧЕСНО</div>
+      <div class="cap" id="cap260">ЩО</div>
+      <div class="cap" id="cap261">Я</div>
+      <div class="cap" id="cap262">АКТИВНО</div>
+      <div class="cap" id="cap263">ШУКАЮ</div>
+      <div class="cap" id="cap264">ГАРНЕ</div>
+      <div class="cap" id="cap265">МАЛЕНЬКЕ</div>
+      <div class="cap" id="cap266">СВІТЛО,</div>
+      <div class="cap" id="cap267">ЯКЕ</div>
+      <div class="cap" id="cap268">ЗМОЖУ</div>
+      <div class="cap" id="cap269">З СОБОЮ</div>
+      <div class="cap" id="cap270">НОСИТИ</div>
+      <div class="cap" id="cap271">ВСЮДИ,</div>
+      <div class="cap" id="cap272">АЛЕ</div>
+      <div class="cap" id="cap273">ПОКИ</div>
+      <div class="cap" id="cap274">ЩО</div>
+      <div class="cap" id="cap275">МЕНІ</div>
+      <div class="cap" id="cap276">НЕ</div>
+      <div class="cap" id="cap277">ПОЩАСТИЛО,</div>
+      <div class="cap" id="cap278">І</div>
+      <div class="cap" id="cap279">ТОМУ</div>
+      <div class="cap" id="cap280">Я</div>
+      <div class="cap" id="cap281">ВИКОРИСТОВУЮ</div>
+      <div class="cap" id="cap282">ОСЬ</div>
+      <div class="cap" id="cap283">ТАКУ</div>
+      <div class="cap" id="cap284">КРУГЛУ</div>
+      <div class="cap" id="cap285">ЛАМПУ!</div>
+      <div class="cap" id="cap286">ВИКОРИСТОВУЮ</div>
+      <div class="cap" id="cap287">РІДКО,</div>
+      <div class="cap" id="cap288">ТОМУ</div>
+      <div class="cap" id="cap289">ЩО</div>
+      <div class="cap" id="cap290">НАМАГАЮСЯ</div>
+      <div class="cap" id="cap291">ТАКИ</div>
+      <div class="cap" id="cap292">ЗНІМАТИ</div>
+      <div class="cap" id="cap293">НАВПРОТИ</div>
+      <div class="cap" id="cap294">ВІКНА</div>
+      <div class="cap" id="cap295">ПОКИ</div>
+      <div class="cap" id="cap296">Є</div>
+      <div class="cap" id="cap297">СВІТЛО,</div>
+      <div class="cap" id="cap298">АЛЕ</div>
+      <div class="cap" id="cap299">ЯКЩО</div>
+      <div class="cap" id="cap300">ТРЕБА</div>
+      <div class="cap" id="cap301">ТО</div>
+      <div class="cap" id="cap302">ОСЬ</div>
+      <div class="cap" id="cap303">ВОНА.</div>
+      <div class="cap" id="cap304">ВОНА</div>
+      <div class="cap" id="cap305">МАЄ</div>
+      <div class="cap" id="cap306">ТРИ</div>
+      <div class="cap" id="cap307">ТИПИ</div>
+      <div class="cap" id="cap308">СВІТЛА</div>
+      <div class="cap" id="cap309">ТА</div>
+      <div class="cap" id="cap310">ТРИ</div>
+      <div class="cap" id="cap311">РІВНІ</div>
+      <div class="cap" id="cap312">ОСВІТЛЕННЯ.</div>
+      <div class="cap" id="cap313">І</div>
+      <div class="cap" id="cap314">Я НАВІТЬ</div>
+      <div class="cap" id="cap315">НЕ</div>
+      <div class="cap" id="cap316">ПАМ'ЯТАЮ</div>
+      <div class="cap" id="cap317">ЗВІДКИ</div>
+      <div class="cap" id="cap318">ВОНО,</div>
+      <div class="cap" id="cap319">АЛЕ</div>
+      <div class="cap" id="cap320">ЗДАЄТЬСЯ</div>
+      <div class="cap" id="cap321">ЦЕ</div>
+      <div class="cap" id="cap322">БУВ</div>
+      <div class="cap" id="cap323">ЮСК</div>
+      <div class="cap" id="cap324">І</div>
+      <div class="cap" id="cap325">ДО</div>
+      <div class="cap" id="cap326">РЕЧІ,</div>
+      <div class="cap" id="cap327">ТЕ</div>
+      <div class="cap" id="cap328">ЩО</div>
+      <div class="cap" id="cap329">МЕНІ</div>
+      <div class="cap" id="cap330">ПРЯМ</div>
+      <div class="cap" id="cap331">СИЛЬНО</div>
+      <div class="cap" id="cap332">ПОДОБАЄТЬСЯ,</div>
+      <div class="cap" id="cap333">ЦЕ ТЕ</div>
+      <div class="cap" id="cap334">ЩО</div>
+      <div class="cap" id="cap335">ОЦЯ</div>
+      <div class="cap" id="cap336">ЧАСТИНА</div>
+      <div class="cap" id="cap337">ВОНА</div>
+      <div class="cap" id="cap338">ВИКРУЧУЄТЬСЯ</div>
+      <div class="cap" id="cap339">ЗІ</div>
+      <div class="cap" id="cap340">ШТАТИВУ</div>
+      <div class="cap" id="cap341">І Я</div>
+      <div class="cap" id="cap342">МОЖУ</div>
+      <div class="cap" id="cap343">ПРИКРУТИТИ</div>
+      <div class="cap" id="cap344">ЙОГО</div>
+      <div class="cap" id="cap345">НА</div>
+      <div class="cap" id="cap346">ВЕЛИКИЙ</div>
+      <div class="cap" id="cap347">ШТАТИВ,</div>
+      <div class="cap" id="cap348">ТОМУ</div>
+      <div class="cap" id="cap349">МІЙ</div>
+      <div class="cap" id="cap350">СЕТАП</div>
+      <div class="cap" id="cap351">ЩЕ</div>
+      <div class="cap" id="cap352">Й</div>
+      <div class="cap" id="cap353">КАСТОМІЗАБЕЛЬНИЙ!</div>
+      <div class="cap" id="cap354">І</div>
+      <div class="cap" id="cap355">ЦЕ</div>
+      <div class="cap" id="cap356">ВСЕ</div>
+      <div class="cap" id="cap357">КОЛИ</div>
+      <div class="cap" id="cap358">МЕНІ</div>
+      <div class="cap" id="cap359">ТРЕБА</div>
+      <div class="cap" id="cap360">ЗНЯТИ</div>
+      <div class="cap" id="cap361">РІЛС,</div>
+      <div class="cap" id="cap362">ТО</div>
+      <div class="cap" id="cap363">Я КРІПЛЮ</div>
+      <div class="cap" id="cap364">МАЛЕНЬКИЙ</div>
+      <div class="cap" id="cap365">ШТАТИВ</div>
+      <div class="cap" id="cap366">НА</div>
+      <div class="cap" id="cap367">ВІКНО</div>
+      <div class="cap" id="cap368">АБО</div>
+      <div class="cap" id="cap369">СТАВЛЮ</div>
+      <div class="cap" id="cap370">НА</div>
+      <div class="cap" id="cap371">СТІЛ,</div>
+      <div class="cap" id="cap372">МІКРОФОН</div>
+      <div class="cap" id="cap373">ВСТАВЛЯЮ</div>
+      <div class="cap" id="cap374">В</div>
+      <div class="cap" id="cap375">ТЕЛЕФОН,</div>
+      <div class="cap" id="cap376">А</div>
+      <div class="cap" id="cap377">ТЕКСТ</div>
+      <div class="cap" id="cap378">В</div>
+      <div class="cap" id="cap379">СУФЛЕРА.</div>
+      <div class="cap" id="cap380">ТАК</div>
+      <div class="cap" id="cap381">І</div>
+      <div class="cap" id="cap382">ЗНІМАЮ</div>
+      <div class="cap" id="cap383">ПРОСТО,</div>
+      <div class="cap" id="cap384">ДЕШЕВО,</div>
+      <div class="cap" id="cap385">СЕРДИТО.</div>
+      <div class="cap" id="cap386">І</div>
+      <div class="cap" id="cap387">МОЖЕ</div>
+      <div class="cap" id="cap388">ЦЕ</div>
+      <div class="cap" id="cap389">НЕ</div>
+      <div class="cap" id="cap390">ВАУ</div>
+      <div class="cap" id="cap391">ПРОФЕСІЙНО,</div>
+      <div class="cap" id="cap392">АЛЕ</div>
+      <div class="cap" id="cap393">Я</div>
+      <div class="cap" id="cap394">ВВАЖАЮ</div>
+      <div class="cap" id="cap395">ЩО</div>
+      <div class="cap" id="cap396">КРАЩЕ</div>
+      <div class="cap" id="cap397">ЗНЯТИ</div>
+      <div class="cap" id="cap398">БАГАТО</div>
+      <div class="cap" id="cap399">НОРМАЛЬНО,</div>
+      <div class="cap" id="cap400">НІЖ</div>
+      <div class="cap" id="cap401">ОДИН</div>
+      <div class="cap" id="cap402">РАЗ</div>
+      <div class="cap" id="cap403">СУПЕРІДЕАЛЬНО.</div>
+      <div class="cap" id="cap404">ПИШІТЬ</div>
+      <div class="cap" id="cap405">В КОМЕНТАРЯХ,</div>
+      <div class="cap" id="cap406">ЩО</div>
+      <div class="cap" id="cap407">ВИ</div>
+      <div class="cap" id="cap408">ВИКОРИСТОВУЄТЕ</div>
+      <div class="cap" id="cap409">ПОСТІЙНО</div>
+      <div class="cap" id="cap410">ДЛЯ</div>
+      <div class="cap" id="cap411">БЛОГІНГУ,</div>
+      <div class="cap" id="cap412">А ЯКЩО</div>
+      <div class="cap" id="cap413">Є</div>
+      <div class="cap" id="cap414">РЕКОМЕНДАЦІЯ</div>
+      <div class="cap" id="cap415">СВІТЛА,</div>
+      <div class="cap" id="cap416">ТО Я</div>
+      <div class="cap" id="cap417">БУДУ</div>
+      <div class="cap" id="cap418">ВЗАГАЛІ</div>
+      <div class="cap" id="cap419">СУПЕР</div>
+      <div class="cap" id="cap420">ВДЯЧНА.</div>
+      <div class="cap" id="cap421">І ПІДПИШИСЬ.</div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="163.250" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  tl.set("#cap0", {autoAlpha: 1}, 0.000);
+  tl.set("#cap0", {autoAlpha: 0}, 0.355);
+  tl.set("#cap1", {autoAlpha: 1}, 0.440);
+  tl.set("#cap1", {autoAlpha: 0}, 0.655);
+  tl.set("#cap2", {autoAlpha: 1}, 0.740);
+  tl.set("#cap2", {autoAlpha: 0}, 0.855);
+  tl.set("#cap3", {autoAlpha: 1}, 0.940);
+  tl.set("#cap3", {autoAlpha: 0}, 1.095);
+  tl.set("#cap4", {autoAlpha: 1}, 1.180);
+  tl.set("#cap4", {autoAlpha: 0}, 1.292);
+  tl.set("#cap5", {autoAlpha: 1}, 1.377);
+  tl.set("#cap5", {autoAlpha: 0}, 1.490);
+  tl.set("#cap6", {autoAlpha: 1}, 1.575);
+  tl.set("#cap6", {autoAlpha: 0}, 1.835);
+  tl.set("#cap7", {autoAlpha: 1}, 1.920);
+  tl.set("#cap7", {autoAlpha: 0}, 2.155);
+  tl.set("#cap8", {autoAlpha: 1}, 2.240);
+  tl.set("#cap8", {autoAlpha: 0}, 2.355);
+  tl.set("#cap9", {autoAlpha: 1}, 2.440);
+  tl.set("#cap9", {autoAlpha: 0}, 2.595);
+  tl.set("#cap10", {autoAlpha: 1}, 2.680);
+  tl.set("#cap10", {autoAlpha: 0}, 3.055);
+  tl.set("#cap11", {autoAlpha: 1}, 3.140);
+  tl.set("#cap11", {autoAlpha: 0}, 3.795);
+  tl.set("#cap12", {autoAlpha: 1}, 3.880);
+  tl.set("#cap12", {autoAlpha: 0}, 4.015);
+  tl.set("#cap13", {autoAlpha: 1}, 4.100);
+  tl.set("#cap13", {autoAlpha: 0}, 4.355);
+  tl.set("#cap14", {autoAlpha: 1}, 4.440);
+  tl.set("#cap14", {autoAlpha: 0}, 4.555);
+  tl.set("#cap15", {autoAlpha: 1}, 4.640);
+  tl.set("#cap15", {autoAlpha: 0}, 4.855);
+  tl.set("#cap16", {autoAlpha: 1}, 4.940);
+  tl.set("#cap16", {autoAlpha: 0}, 5.095);
+  tl.set("#cap17", {autoAlpha: 1}, 5.180);
+  tl.set("#cap17", {autoAlpha: 0}, 5.295);
+  tl.set("#cap18", {autoAlpha: 1}, 5.380);
+  tl.set("#cap18", {autoAlpha: 0}, 5.535);
+  tl.set("#cap19", {autoAlpha: 1}, 5.620);
+  tl.set("#cap19", {autoAlpha: 0}, 6.155);
+  tl.set("#cap20", {autoAlpha: 1}, 6.240);
+  tl.set("#cap20", {autoAlpha: 0}, 7.275);
+  tl.set("#cap21", {autoAlpha: 1}, 7.360);
+  tl.set("#cap21", {autoAlpha: 0}, 7.635);
+  tl.set("#cap22", {autoAlpha: 1}, 7.720);
+  tl.set("#cap22", {autoAlpha: 0}, 7.875);
+  tl.set("#cap23", {autoAlpha: 1}, 7.960);
+  tl.set("#cap23", {autoAlpha: 0}, 8.095);
+  tl.set("#cap24", {autoAlpha: 1}, 8.100);
+  tl.set("#cap24", {autoAlpha: 0}, 8.375);
+  tl.set("#cap25", {autoAlpha: 1}, 8.460);
+  tl.set("#cap25", {autoAlpha: 0}, 9.035);
+  tl.set("#cap26", {autoAlpha: 1}, 9.120);
+  tl.set("#cap26", {autoAlpha: 0}, 9.275);
+  tl.set("#cap27", {autoAlpha: 1}, 9.280);
+  tl.set("#cap27", {autoAlpha: 0}, 9.435);
+  tl.set("#cap28", {autoAlpha: 1}, 9.440);
+  tl.set("#cap28", {autoAlpha: 0}, 9.875);
+  tl.set("#cap29", {autoAlpha: 1}, 9.960);
+  tl.set("#cap29", {autoAlpha: 0}, 10.115);
+  tl.set("#cap30", {autoAlpha: 1}, 10.120);
+  tl.set("#cap30", {autoAlpha: 0}, 10.415);
+  tl.set("#cap31", {autoAlpha: 1}, 10.500);
+  tl.set("#cap31", {autoAlpha: 0}, 11.255);
+  tl.set("#cap32", {autoAlpha: 1}, 11.340);
+  tl.set("#cap32", {autoAlpha: 0}, 12.295);
+  tl.set("#cap33", {autoAlpha: 1}, 12.380);
+  tl.set("#cap33", {autoAlpha: 0}, 12.535);
+  tl.set("#cap34", {autoAlpha: 1}, 12.540);
+  tl.set("#cap34", {autoAlpha: 0}, 12.675);
+  tl.set("#cap35", {autoAlpha: 1}, 12.680);
+  tl.set("#cap35", {autoAlpha: 0}, 12.875);
+  tl.set("#cap36", {autoAlpha: 1}, 12.960);
+  tl.set("#cap36", {autoAlpha: 0}, 13.075);
+  tl.set("#cap37", {autoAlpha: 1}, 13.080);
+  tl.set("#cap37", {autoAlpha: 0}, 13.355);
+  tl.set("#cap38", {autoAlpha: 1}, 13.440);
+  tl.set("#cap38", {autoAlpha: 0}, 13.815);
+  tl.set("#cap39", {autoAlpha: 1}, 13.900);
+  tl.set("#cap39", {autoAlpha: 0}, 14.595);
+  tl.set("#cap40", {autoAlpha: 1}, 14.680);
+  tl.set("#cap40", {autoAlpha: 0}, 14.835);
+  tl.set("#cap41", {autoAlpha: 1}, 14.840);
+  tl.set("#cap41", {autoAlpha: 0}, 15.015);
+  tl.set("#cap42", {autoAlpha: 1}, 15.100);
+  tl.set("#cap42", {autoAlpha: 0}, 15.235);
+  tl.set("#cap43", {autoAlpha: 1}, 15.320);
+  tl.set("#cap43", {autoAlpha: 0}, 15.455);
+  tl.set("#cap44", {autoAlpha: 1}, 15.540);
+  tl.set("#cap44", {autoAlpha: 0}, 15.895);
+  tl.set("#cap45", {autoAlpha: 1}, 15.980);
+  tl.set("#cap45", {autoAlpha: 0}, 16.075);
+  tl.set("#cap46", {autoAlpha: 1}, 16.160);
+  tl.set("#cap46", {autoAlpha: 0}, 16.575);
+  tl.set("#cap47", {autoAlpha: 1}, 16.660);
+  tl.set("#cap47", {autoAlpha: 0}, 16.835);
+  tl.set("#cap48", {autoAlpha: 1}, 16.920);
+  tl.set("#cap48", {autoAlpha: 0}, 17.235);
+  tl.set("#cap49", {autoAlpha: 1}, 17.320);
+  tl.set("#cap49", {autoAlpha: 0}, 17.455);
+  tl.set("#cap50", {autoAlpha: 1}, 17.540);
+  tl.set("#cap50", {autoAlpha: 0}, 17.795);
+  tl.set("#cap51", {autoAlpha: 1}, 17.880);
+  tl.set("#cap51", {autoAlpha: 0}, 17.975);
+  tl.set("#cap52", {autoAlpha: 1}, 18.060);
+  tl.set("#cap52", {autoAlpha: 0}, 18.475);
+  tl.set("#cap53", {autoAlpha: 1}, 18.560);
+  tl.set("#cap53", {autoAlpha: 0}, 18.675);
+  tl.set("#cap54", {autoAlpha: 1}, 18.680);
+  tl.set("#cap54", {autoAlpha: 0}, 19.135);
+  tl.set("#cap55", {autoAlpha: 1}, 19.220);
+  tl.set("#cap55", {autoAlpha: 0}, 19.335);
+  tl.set("#cap56", {autoAlpha: 1}, 19.420);
+  tl.set("#cap56", {autoAlpha: 0}, 19.575);
+  tl.set("#cap57", {autoAlpha: 1}, 19.660);
+  tl.set("#cap57", {autoAlpha: 0}, 19.835);
+  tl.set("#cap58", {autoAlpha: 1}, 19.920);
+  tl.set("#cap58", {autoAlpha: 0}, 20.175);
+  tl.set("#cap59", {autoAlpha: 1}, 20.260);
+  tl.set("#cap59", {autoAlpha: 0}, 20.755);
+  tl.set("#cap60", {autoAlpha: 1}, 20.840);
+  tl.set("#cap60", {autoAlpha: 0}, 21.135);
+  tl.set("#cap61", {autoAlpha: 1}, 21.220);
+  tl.set("#cap61", {autoAlpha: 0}, 21.515);
+  tl.set("#cap62", {autoAlpha: 1}, 21.600);
+  tl.set("#cap62", {autoAlpha: 0}, 21.695);
+  tl.set("#cap63", {autoAlpha: 1}, 21.780);
+  tl.set("#cap63", {autoAlpha: 0}, 21.915);
+  tl.set("#cap64", {autoAlpha: 1}, 22.000);
+  tl.set("#cap64", {autoAlpha: 0}, 22.135);
+  tl.set("#cap65", {autoAlpha: 1}, 22.140);
+  tl.set("#cap65", {autoAlpha: 0}, 22.435);
+  tl.set("#cap66", {autoAlpha: 1}, 22.520);
+  tl.set("#cap66", {autoAlpha: 0}, 22.775);
+  tl.set("#cap67", {autoAlpha: 1}, 22.860);
+  tl.set("#cap67", {autoAlpha: 0}, 23.275);
+  tl.set("#cap68", {autoAlpha: 1}, 23.360);
+  tl.set("#cap68", {autoAlpha: 0}, 23.660);
+  tl.set("#cap69", {autoAlpha: 1}, 23.760);
+  tl.set("#cap69", {autoAlpha: 0}, 23.965);
+  tl.set("#cap70", {autoAlpha: 1}, 24.000);
+  tl.set("#cap70", {autoAlpha: 0}, 24.255);
+  tl.set("#cap71", {autoAlpha: 1}, 24.340);
+  tl.set("#cap71", {autoAlpha: 0}, 24.695);
+  tl.set("#cap72", {autoAlpha: 1}, 24.780);
+  tl.set("#cap72", {autoAlpha: 0}, 24.975);
+  tl.set("#cap73", {autoAlpha: 1}, 25.060);
+  tl.set("#cap73", {autoAlpha: 0}, 25.275);
+  tl.set("#cap74", {autoAlpha: 1}, 25.360);
+  tl.set("#cap74", {autoAlpha: 0}, 25.695);
+  tl.set("#cap75", {autoAlpha: 1}, 25.780);
+  tl.set("#cap75", {autoAlpha: 0}, 25.995);
+  tl.set("#cap76", {autoAlpha: 1}, 26.080);
+  tl.set("#cap76", {autoAlpha: 0}, 26.355);
+  tl.set("#cap77", {autoAlpha: 1}, 26.440);
+  tl.set("#cap77", {autoAlpha: 0}, 26.595);
+  tl.set("#cap78", {autoAlpha: 1}, 26.600);
+  tl.set("#cap78", {autoAlpha: 0}, 26.995);
+  tl.set("#cap79", {autoAlpha: 1}, 27.080);
+  tl.set("#cap79", {autoAlpha: 0}, 27.235);
+  tl.set("#cap80", {autoAlpha: 1}, 27.320);
+  tl.set("#cap80", {autoAlpha: 0}, 27.475);
+  tl.set("#cap81", {autoAlpha: 1}, 27.560);
+  tl.set("#cap81", {autoAlpha: 0}, 27.915);
+  tl.set("#cap82", {autoAlpha: 1}, 28.000);
+  tl.set("#cap82", {autoAlpha: 0}, 28.175);
+  tl.set("#cap83", {autoAlpha: 1}, 28.260);
+  tl.set("#cap83", {autoAlpha: 0}, 28.695);
+  tl.set("#cap84", {autoAlpha: 1}, 28.780);
+  tl.set("#cap84", {autoAlpha: 0}, 29.035);
+  tl.set("#cap85", {autoAlpha: 1}, 29.120);
+  tl.set("#cap85", {autoAlpha: 0}, 29.675);
+  tl.set("#cap86", {autoAlpha: 1}, 29.760);
+  tl.set("#cap86", {autoAlpha: 0}, 29.975);
+  tl.set("#cap87", {autoAlpha: 1}, 30.060);
+  tl.set("#cap87", {autoAlpha: 0}, 30.175);
+  tl.set("#cap88", {autoAlpha: 1}, 30.180);
+  tl.set("#cap88", {autoAlpha: 0}, 30.535);
+  tl.set("#cap89", {autoAlpha: 1}, 30.620);
+  tl.set("#cap89", {autoAlpha: 0}, 30.875);
+  tl.set("#cap90", {autoAlpha: 1}, 30.960);
+  tl.set("#cap90", {autoAlpha: 0}, 31.115);
+  tl.set("#cap91", {autoAlpha: 1}, 31.120);
+  tl.set("#cap91", {autoAlpha: 0}, 31.215);
+  tl.set("#cap92", {autoAlpha: 1}, 31.300);
+  tl.set("#cap92", {autoAlpha: 0}, 31.415);
+  tl.set("#cap93", {autoAlpha: 1}, 31.420);
+  tl.set("#cap93", {autoAlpha: 0}, 31.555);
+  tl.set("#cap94", {autoAlpha: 1}, 31.640);
+  tl.set("#cap94", {autoAlpha: 0}, 31.815);
+  tl.set("#cap95", {autoAlpha: 1}, 31.900);
+  tl.set("#cap95", {autoAlpha: 0}, 32.255);
+  tl.set("#cap96", {autoAlpha: 1}, 32.340);
+  tl.set("#cap96", {autoAlpha: 0}, 32.455);
+  tl.set("#cap97", {autoAlpha: 1}, 32.540);
+  tl.set("#cap97", {autoAlpha: 0}, 32.655);
+  tl.set("#cap98", {autoAlpha: 1}, 32.660);
+  tl.set("#cap98", {autoAlpha: 0}, 32.935);
+  tl.set("#cap99", {autoAlpha: 1}, 33.020);
+  tl.set("#cap99", {autoAlpha: 0}, 33.235);
+  tl.set("#cap100", {autoAlpha: 1}, 33.320);
+  tl.set("#cap100", {autoAlpha: 0}, 33.575);
+  tl.set("#cap101", {autoAlpha: 1}, 33.660);
+  tl.set("#cap101", {autoAlpha: 0}, 34.055);
+  tl.set("#cap102", {autoAlpha: 1}, 34.140);
+  tl.set("#cap102", {autoAlpha: 0}, 34.515);
+  tl.set("#cap103", {autoAlpha: 1}, 34.600);
+  tl.set("#cap103", {autoAlpha: 0}, 34.775);
+  tl.set("#cap104", {autoAlpha: 1}, 34.860);
+  tl.set("#cap104", {autoAlpha: 0}, 35.295);
+  tl.set("#cap105", {autoAlpha: 1}, 35.380);
+  tl.set("#cap105", {autoAlpha: 0}, 35.535);
+  tl.set("#cap106", {autoAlpha: 1}, 35.620);
+  tl.set("#cap106", {autoAlpha: 0}, 36.239);
+  tl.set("#cap107", {autoAlpha: 1}, 36.324);
+  tl.set("#cap107", {autoAlpha: 0}, 36.590);
+  tl.set("#cap108", {autoAlpha: 1}, 36.675);
+  tl.set("#cap108", {autoAlpha: 0}, 37.294);
+  tl.set("#cap109", {autoAlpha: 1}, 38.200);
+  tl.set("#cap109", {autoAlpha: 0}, 38.755);
+  tl.set("#cap110", {autoAlpha: 1}, 38.840);
+  tl.set("#cap110", {autoAlpha: 0}, 39.590);
+  tl.set("#cap113", {autoAlpha: 1}, 45.020);
+  tl.set("#cap113", {autoAlpha: 0}, 45.195);
+  tl.set("#cap114", {autoAlpha: 1}, 45.280);
+  tl.set("#cap114", {autoAlpha: 0}, 45.395);
+  tl.set("#cap115", {autoAlpha: 1}, 45.480);
+  tl.set("#cap115", {autoAlpha: 0}, 45.735);
+  tl.set("#cap116", {autoAlpha: 1}, 45.820);
+  tl.set("#cap116", {autoAlpha: 0}, 46.395);
+  tl.set("#cap117", {autoAlpha: 1}, 46.480);
+  tl.set("#cap117", {autoAlpha: 0}, 47.155);
+  tl.set("#cap118", {autoAlpha: 1}, 47.240);
+  tl.set("#cap118", {autoAlpha: 0}, 47.395);
+  tl.set("#cap119", {autoAlpha: 1}, 47.400);
+  tl.set("#cap119", {autoAlpha: 0}, 47.535);
+  tl.set("#cap120", {autoAlpha: 1}, 47.620);
+  tl.set("#cap120", {autoAlpha: 0}, 48.175);
+  tl.set("#cap121", {autoAlpha: 1}, 48.260);
+  tl.set("#cap121", {autoAlpha: 0}, 48.475);
+  tl.set("#cap122", {autoAlpha: 1}, 48.560);
+  tl.set("#cap122", {autoAlpha: 0}, 48.715);
+  tl.set("#cap123", {autoAlpha: 1}, 48.800);
+  tl.set("#cap123", {autoAlpha: 0}, 49.175);
+  tl.set("#cap124", {autoAlpha: 1}, 49.260);
+  tl.set("#cap124", {autoAlpha: 0}, 49.395);
+  tl.set("#cap125", {autoAlpha: 1}, 49.400);
+  tl.set("#cap125", {autoAlpha: 0}, 49.495);
+  tl.set("#cap126", {autoAlpha: 1}, 49.580);
+  tl.set("#cap126", {autoAlpha: 0}, 49.839);
+  tl.set("#cap127", {autoAlpha: 1}, 49.924);
+  tl.set("#cap127", {autoAlpha: 0}, 50.079);
+  tl.set("#cap128", {autoAlpha: 1}, 50.164);
+  tl.set("#cap128", {autoAlpha: 0}, 50.655);
+  tl.set("#cap129", {autoAlpha: 1}, 50.760);
+  tl.set("#cap129", {autoAlpha: 0}, 50.975);
+  tl.set("#cap130", {autoAlpha: 1}, 51.060);
+  tl.set("#cap130", {autoAlpha: 0}, 51.215);
+  tl.set("#cap131", {autoAlpha: 1}, 51.300);
+  tl.set("#cap131", {autoAlpha: 0}, 51.775);
+  tl.set("#cap132", {autoAlpha: 1}, 51.860);
+  tl.set("#cap132", {autoAlpha: 0}, 52.115);
+  tl.set("#cap133", {autoAlpha: 1}, 52.200);
+  tl.set("#cap133", {autoAlpha: 0}, 52.375);
+  tl.set("#cap134", {autoAlpha: 1}, 52.460);
+  tl.set("#cap134", {autoAlpha: 0}, 52.595);
+  tl.set("#cap135", {autoAlpha: 1}, 52.600);
+  tl.set("#cap135", {autoAlpha: 0}, 52.935);
+  tl.set("#cap136", {autoAlpha: 1}, 53.020);
+  tl.set("#cap136", {autoAlpha: 0}, 53.175);
+  tl.set("#cap137", {autoAlpha: 1}, 53.700);
+  tl.set("#cap137", {autoAlpha: 0}, 53.855);
+  tl.set("#cap138", {autoAlpha: 1}, 53.860);
+  tl.set("#cap138", {autoAlpha: 0}, 54.015);
+  tl.set("#cap139", {autoAlpha: 1}, 54.100);
+  tl.set("#cap139", {autoAlpha: 0}, 55.115);
+  tl.set("#cap140", {autoAlpha: 1}, 55.200);
+  tl.set("#cap140", {autoAlpha: 0}, 55.415);
+  tl.set("#cap141", {autoAlpha: 1}, 55.500);
+  tl.set("#cap141", {autoAlpha: 0}, 56.055);
+  tl.set("#cap142", {autoAlpha: 1}, 56.140);
+  tl.set("#cap142", {autoAlpha: 0}, 56.435);
+  tl.set("#cap143", {autoAlpha: 1}, 56.520);
+  tl.set("#cap143", {autoAlpha: 0}, 57.395);
+  tl.set("#cap144", {autoAlpha: 1}, 57.480);
+  tl.set("#cap144", {autoAlpha: 0}, 57.735);
+  tl.set("#cap145", {autoAlpha: 1}, 57.820);
+  tl.set("#cap145", {autoAlpha: 0}, 57.955);
+  tl.set("#cap146", {autoAlpha: 1}, 57.960);
+  tl.set("#cap146", {autoAlpha: 0}, 58.115);
+  tl.set("#cap147", {autoAlpha: 1}, 58.120);
+  tl.set("#cap147", {autoAlpha: 0}, 58.415);
+  tl.set("#cap148", {autoAlpha: 1}, 58.500);
+  tl.set("#cap148", {autoAlpha: 0}, 58.715);
+  tl.set("#cap149", {autoAlpha: 1}, 58.800);
+  tl.set("#cap149", {autoAlpha: 0}, 59.115);
+  tl.set("#cap150", {autoAlpha: 1}, 59.200);
+  tl.set("#cap150", {autoAlpha: 0}, 59.555);
+  tl.set("#cap151", {autoAlpha: 1}, 59.640);
+  tl.set("#cap151", {autoAlpha: 0}, 59.815);
+  tl.set("#cap152", {autoAlpha: 1}, 59.900);
+  tl.set("#cap152", {autoAlpha: 0}, 60.015);
+  tl.set("#cap153", {autoAlpha: 1}, 60.100);
+  tl.set("#cap153", {autoAlpha: 0}, 60.415);
+  tl.set("#cap154", {autoAlpha: 1}, 60.500);
+  tl.set("#cap154", {autoAlpha: 0}, 60.595);
+  tl.set("#cap155", {autoAlpha: 1}, 60.680);
+  tl.set("#cap155", {autoAlpha: 0}, 61.055);
+  tl.set("#cap156", {autoAlpha: 1}, 61.140);
+  tl.set("#cap156", {autoAlpha: 0}, 61.735);
+  tl.set("#cap157", {autoAlpha: 1}, 61.820);
+  tl.set("#cap157", {autoAlpha: 0}, 61.975);
+  tl.set("#cap158", {autoAlpha: 1}, 61.980);
+  tl.set("#cap158", {autoAlpha: 0}, 62.415);
+  tl.set("#cap159", {autoAlpha: 1}, 62.500);
+  tl.set("#cap159", {autoAlpha: 0}, 63.015);
+  tl.set("#cap160", {autoAlpha: 1}, 63.100);
+  tl.set("#cap160", {autoAlpha: 0}, 63.235);
+  tl.set("#cap161", {autoAlpha: 1}, 63.320);
+  tl.set("#cap161", {autoAlpha: 0}, 63.695);
+  tl.set("#cap162", {autoAlpha: 1}, 63.780);
+  tl.set("#cap162", {autoAlpha: 0}, 63.915);
+  tl.set("#cap163", {autoAlpha: 1}, 64.000);
+  tl.set("#cap163", {autoAlpha: 0}, 64.735);
+  tl.set("#cap164", {autoAlpha: 1}, 64.820);
+  tl.set("#cap164", {autoAlpha: 0}, 64.975);
+  tl.set("#cap165", {autoAlpha: 1}, 64.980);
+  tl.set("#cap165", {autoAlpha: 0}, 65.075);
+  tl.set("#cap166", {autoAlpha: 1}, 65.160);
+  tl.set("#cap166", {autoAlpha: 0}, 65.575);
+  tl.set("#cap167", {autoAlpha: 1}, 65.660);
+  tl.set("#cap167", {autoAlpha: 0}, 66.015);
+  tl.set("#cap168", {autoAlpha: 1}, 66.100);
+  tl.set("#cap168", {autoAlpha: 0}, 66.355);
+  tl.set("#cap169", {autoAlpha: 1}, 66.440);
+  tl.set("#cap169", {autoAlpha: 0}, 66.795);
+  tl.set("#cap170", {autoAlpha: 1}, 66.880);
+  tl.set("#cap170", {autoAlpha: 0}, 66.995);
+  tl.set("#cap171", {autoAlpha: 1}, 67.080);
+  tl.set("#cap171", {autoAlpha: 0}, 67.415);
+  tl.set("#cap172", {autoAlpha: 1}, 67.500);
+  tl.set("#cap172", {autoAlpha: 0}, 68.335);
+  tl.set("#cap173", {autoAlpha: 1}, 68.420);
+  tl.set("#cap173", {autoAlpha: 0}, 69.035);
+  tl.set("#cap174", {autoAlpha: 1}, 69.120);
+  tl.set("#cap174", {autoAlpha: 0}, 69.255);
+  tl.set("#cap175", {autoAlpha: 1}, 69.260);
+  tl.set("#cap175", {autoAlpha: 0}, 69.435);
+  tl.set("#cap176", {autoAlpha: 1}, 69.520);
+  tl.set("#cap176", {autoAlpha: 0}, 69.755);
+  tl.set("#cap177", {autoAlpha: 1}, 70.320);
+  tl.set("#cap177", {autoAlpha: 0}, 70.455);
+  tl.set("#cap178", {autoAlpha: 1}, 70.540);
+  tl.set("#cap178", {autoAlpha: 0}, 71.055);
+  tl.set("#cap179", {autoAlpha: 1}, 71.140);
+  tl.set("#cap179", {autoAlpha: 0}, 71.580);
+  tl.set("#cap180", {autoAlpha: 1}, 71.665);
+  tl.set("#cap180", {autoAlpha: 0}, 72.535);
+  tl.set("#cap181", {autoAlpha: 1}, 72.620);
+  tl.set("#cap181", {autoAlpha: 0}, 73.015);
+  tl.set("#cap182", {autoAlpha: 1}, 73.100);
+  tl.set("#cap182", {autoAlpha: 0}, 73.235);
+  tl.set("#cap183", {autoAlpha: 1}, 73.320);
+  tl.set("#cap183", {autoAlpha: 0}, 73.775);
+  tl.set("#cap184", {autoAlpha: 1}, 73.860);
+  tl.set("#cap184", {autoAlpha: 0}, 73.995);
+  tl.set("#cap185", {autoAlpha: 1}, 74.000);
+  tl.set("#cap185", {autoAlpha: 0}, 74.335);
+  tl.set("#cap186", {autoAlpha: 1}, 74.420);
+  tl.set("#cap186", {autoAlpha: 0}, 74.755);
+  tl.set("#cap187", {autoAlpha: 1}, 74.840);
+  tl.set("#cap187", {autoAlpha: 0}, 74.955);
+  tl.set("#cap188", {autoAlpha: 1}, 74.960);
+  tl.set("#cap188", {autoAlpha: 0}, 75.335);
+  tl.set("#cap189", {autoAlpha: 1}, 75.420);
+  tl.set("#cap189", {autoAlpha: 0}, 75.635);
+  tl.set("#cap190", {autoAlpha: 1}, 75.720);
+  tl.set("#cap190", {autoAlpha: 0}, 75.955);
+  tl.set("#cap191", {autoAlpha: 1}, 76.040);
+  tl.set("#cap191", {autoAlpha: 0}, 76.375);
+  tl.set("#cap192", {autoAlpha: 1}, 76.460);
+  tl.set("#cap192", {autoAlpha: 0}, 76.595);
+  tl.set("#cap193", {autoAlpha: 1}, 76.680);
+  tl.set("#cap193", {autoAlpha: 0}, 76.815);
+  tl.set("#cap194", {autoAlpha: 1}, 76.900);
+  tl.set("#cap194", {autoAlpha: 0}, 77.275);
+  tl.set("#cap195", {autoAlpha: 1}, 77.360);
+  tl.set("#cap195", {autoAlpha: 0}, 77.455);
+  tl.set("#cap196", {autoAlpha: 1}, 77.540);
+  tl.set("#cap196", {autoAlpha: 0}, 78.055);
+  tl.set("#cap197", {autoAlpha: 1}, 78.140);
+  tl.set("#cap197", {autoAlpha: 0}, 78.835);
+  tl.set("#cap198", {autoAlpha: 1}, 78.920);
+  tl.set("#cap198", {autoAlpha: 0}, 79.535);
+  tl.set("#cap199", {autoAlpha: 1}, 79.620);
+  tl.set("#cap199", {autoAlpha: 0}, 80.820);
+  tl.set("#cap200", {autoAlpha: 1}, 80.940);
+  tl.set("#cap200", {autoAlpha: 0}, 81.135);
+  tl.set("#cap201", {autoAlpha: 1}, 81.220);
+  tl.set("#cap201", {autoAlpha: 0}, 81.435);
+  tl.set("#cap202", {autoAlpha: 1}, 81.520);
+  tl.set("#cap202", {autoAlpha: 0}, 82.095);
+  tl.set("#cap203", {autoAlpha: 1}, 82.180);
+  tl.set("#cap203", {autoAlpha: 0}, 82.735);
+  tl.set("#cap204", {autoAlpha: 1}, 82.820);
+  tl.set("#cap204", {autoAlpha: 0}, 83.315);
+  tl.set("#cap205", {autoAlpha: 1}, 83.400);
+  tl.set("#cap205", {autoAlpha: 0}, 83.775);
+  tl.set("#cap206", {autoAlpha: 1}, 83.860);
+  tl.set("#cap206", {autoAlpha: 0}, 84.375);
+  tl.set("#cap207", {autoAlpha: 1}, 84.460);
+  tl.set("#cap207", {autoAlpha: 0}, 84.735);
+  tl.set("#cap208", {autoAlpha: 1}, 84.820);
+  tl.set("#cap208", {autoAlpha: 0}, 85.015);
+  tl.set("#cap209", {autoAlpha: 1}, 86.340);
+  tl.set("#cap209", {autoAlpha: 0}, 86.455);
+  tl.set("#cap210", {autoAlpha: 1}, 86.540);
+  tl.set("#cap210", {autoAlpha: 0}, 86.695);
+  tl.set("#cap211", {autoAlpha: 1}, 87.420);
+  tl.set("#cap211", {autoAlpha: 0}, 88.135);
+  tl.set("#cap212", {autoAlpha: 1}, 88.220);
+  tl.set("#cap212", {autoAlpha: 0}, 88.355);
+  tl.set("#cap213", {autoAlpha: 1}, 88.360);
+  tl.set("#cap213", {autoAlpha: 0}, 89.175);
+  tl.set("#cap214", {autoAlpha: 1}, 89.260);
+  tl.set("#cap214", {autoAlpha: 0}, 90.055);
+  tl.set("#cap215", {autoAlpha: 1}, 90.140);
+  tl.set("#cap215", {autoAlpha: 0}, 90.255);
+  tl.set("#cap216", {autoAlpha: 1}, 90.260);
+  tl.set("#cap216", {autoAlpha: 0}, 90.355);
+  tl.set("#cap217", {autoAlpha: 1}, 90.440);
+  tl.set("#cap217", {autoAlpha: 0}, 90.855);
+  tl.set("#cap218", {autoAlpha: 1}, 90.940);
+  tl.set("#cap218", {autoAlpha: 0}, 91.115);
+  tl.set("#cap219", {autoAlpha: 1}, 91.200);
+  tl.set("#cap219", {autoAlpha: 0}, 91.495);
+  tl.set("#cap220", {autoAlpha: 1}, 91.580);
+  tl.set("#cap220", {autoAlpha: 0}, 91.855);
+  tl.set("#cap221", {autoAlpha: 1}, 91.940);
+  tl.set("#cap221", {autoAlpha: 0}, 92.095);
+  tl.set("#cap222", {autoAlpha: 1}, 92.100);
+  tl.set("#cap222", {autoAlpha: 0}, 92.615);
+  tl.set("#cap223", {autoAlpha: 1}, 92.700);
+  tl.set("#cap223", {autoAlpha: 0}, 92.855);
+  tl.set("#cap224", {autoAlpha: 1}, 92.940);
+  tl.set("#cap224", {autoAlpha: 0}, 93.075);
+  tl.set("#cap225", {autoAlpha: 1}, 93.160);
+  tl.set("#cap225", {autoAlpha: 0}, 93.395);
+  tl.set("#cap226", {autoAlpha: 1}, 93.480);
+  tl.set("#cap226", {autoAlpha: 0}, 93.895);
+  tl.set("#cap227", {autoAlpha: 1}, 93.980);
+  tl.set("#cap227", {autoAlpha: 0}, 94.115);
+  tl.set("#cap228", {autoAlpha: 1}, 94.120);
+  tl.set("#cap228", {autoAlpha: 0}, 94.295);
+  tl.set("#cap229", {autoAlpha: 1}, 94.380);
+  tl.set("#cap229", {autoAlpha: 0}, 94.535);
+  tl.set("#cap230", {autoAlpha: 1}, 94.620);
+  tl.set("#cap230", {autoAlpha: 0}, 94.995);
+  tl.set("#cap231", {autoAlpha: 1}, 95.080);
+  tl.set("#cap231", {autoAlpha: 0}, 95.195);
+  tl.set("#cap232", {autoAlpha: 1}, 95.280);
+  tl.set("#cap232", {autoAlpha: 0}, 95.615);
+  tl.set("#cap233", {autoAlpha: 1}, 95.700);
+  tl.set("#cap233", {autoAlpha: 0}, 96.175);
+  tl.set("#cap234", {autoAlpha: 1}, 96.260);
+  tl.set("#cap234", {autoAlpha: 0}, 96.435);
+  tl.set("#cap235", {autoAlpha: 1}, 96.520);
+  tl.set("#cap235", {autoAlpha: 0}, 96.875);
+  tl.set("#cap236", {autoAlpha: 1}, 96.960);
+  tl.set("#cap236", {autoAlpha: 0}, 97.135);
+  tl.set("#cap237", {autoAlpha: 1}, 97.220);
+  tl.set("#cap237", {autoAlpha: 0}, 97.615);
+  tl.set("#cap238", {autoAlpha: 1}, 97.700);
+  tl.set("#cap238", {autoAlpha: 0}, 97.815);
+  tl.set("#cap239", {autoAlpha: 1}, 97.900);
+  tl.set("#cap239", {autoAlpha: 0}, 98.095);
+  tl.set("#cap240", {autoAlpha: 1}, 98.180);
+  tl.set("#cap240", {autoAlpha: 0}, 98.535);
+  tl.set("#cap241", {autoAlpha: 1}, 98.620);
+  tl.set("#cap241", {autoAlpha: 0}, 99.075);
+  tl.set("#cap242", {autoAlpha: 1}, 99.160);
+  tl.set("#cap242", {autoAlpha: 0}, 99.515);
+  tl.set("#cap243", {autoAlpha: 1}, 99.600);
+  tl.set("#cap243", {autoAlpha: 0}, 99.755);
+  tl.set("#cap244", {autoAlpha: 1}, 99.840);
+  tl.set("#cap244", {autoAlpha: 0}, 100.415);
+  tl.set("#cap245", {autoAlpha: 1}, 100.500);
+  tl.set("#cap245", {autoAlpha: 0}, 100.795);
+  tl.set("#cap246", {autoAlpha: 1}, 100.880);
+  tl.set("#cap246", {autoAlpha: 0}, 101.115);
+  tl.set("#cap247", {autoAlpha: 1}, 101.200);
+  tl.set("#cap247", {autoAlpha: 0}, 101.535);
+  tl.set("#cap248", {autoAlpha: 1}, 101.620);
+  tl.set("#cap248", {autoAlpha: 0}, 101.795);
+  tl.set("#cap249", {autoAlpha: 1}, 101.880);
+  tl.set("#cap249", {autoAlpha: 0}, 102.075);
+  tl.set("#cap250", {autoAlpha: 1}, 102.160);
+  tl.set("#cap250", {autoAlpha: 0}, 102.555);
+  tl.set("#cap251", {autoAlpha: 1}, 102.640);
+  tl.set("#cap251", {autoAlpha: 0}, 103.135);
+  tl.set("#cap252", {autoAlpha: 1}, 103.220);
+  tl.set("#cap252", {autoAlpha: 0}, 103.555);
+  tl.set("#cap253", {autoAlpha: 1}, 103.640);
+  tl.set("#cap253", {autoAlpha: 0}, 103.795);
+  tl.set("#cap254", {autoAlpha: 1}, 103.880);
+  tl.set("#cap254", {autoAlpha: 0}, 104.155);
+  tl.set("#cap255", {autoAlpha: 1}, 104.240);
+  tl.set("#cap255", {autoAlpha: 0}, 104.395);
+  tl.set("#cap256", {autoAlpha: 1}, 104.480);
+  tl.set("#cap256", {autoAlpha: 0}, 104.595);
+  tl.set("#cap257", {autoAlpha: 1}, 104.680);
+  tl.set("#cap257", {autoAlpha: 0}, 104.815);
+  tl.set("#cap258", {autoAlpha: 1}, 104.820);
+  tl.set("#cap258", {autoAlpha: 0}, 105.055);
+  tl.set("#cap259", {autoAlpha: 1}, 105.140);
+  tl.set("#cap259", {autoAlpha: 0}, 105.455);
+  tl.set("#cap260", {autoAlpha: 1}, 105.540);
+  tl.set("#cap260", {autoAlpha: 0}, 105.635);
+  tl.set("#cap261", {autoAlpha: 1}, 105.720);
+  tl.set("#cap261", {autoAlpha: 0}, 105.915);
+  tl.set("#cap262", {autoAlpha: 1}, 106.000);
+  tl.set("#cap262", {autoAlpha: 0}, 106.355);
+  tl.set("#cap263", {autoAlpha: 1}, 106.440);
+  tl.set("#cap263", {autoAlpha: 0}, 106.915);
+  tl.set("#cap264", {autoAlpha: 1}, 107.000);
+  tl.set("#cap264", {autoAlpha: 0}, 107.435);
+  tl.set("#cap265", {autoAlpha: 1}, 107.520);
+  tl.set("#cap265", {autoAlpha: 0}, 108.155);
+  tl.set("#cap266", {autoAlpha: 1}, 108.240);
+  tl.set("#cap266", {autoAlpha: 0}, 108.775);
+  tl.set("#cap267", {autoAlpha: 1}, 108.860);
+  tl.set("#cap267", {autoAlpha: 0}, 109.015);
+  tl.set("#cap268", {autoAlpha: 1}, 109.020);
+  tl.set("#cap268", {autoAlpha: 0}, 109.175);
+  tl.set("#cap269", {autoAlpha: 1}, 109.260);
+  tl.set("#cap269", {autoAlpha: 0}, 109.495);
+  tl.set("#cap270", {autoAlpha: 1}, 109.580);
+  tl.set("#cap270", {autoAlpha: 0}, 109.915);
+  tl.set("#cap271", {autoAlpha: 1}, 110.000);
+  tl.set("#cap271", {autoAlpha: 0}, 110.355);
+  tl.set("#cap272", {autoAlpha: 1}, 110.440);
+  tl.set("#cap272", {autoAlpha: 0}, 110.575);
+  tl.set("#cap273", {autoAlpha: 1}, 110.660);
+  tl.set("#cap273", {autoAlpha: 0}, 110.915);
+  tl.set("#cap274", {autoAlpha: 1}, 111.000);
+  tl.set("#cap274", {autoAlpha: 0}, 111.115);
+  tl.set("#cap275", {autoAlpha: 1}, 111.120);
+  tl.set("#cap275", {autoAlpha: 0}, 111.295);
+  tl.set("#cap276", {autoAlpha: 1}, 111.380);
+  tl.set("#cap276", {autoAlpha: 0}, 111.495);
+  tl.set("#cap277", {autoAlpha: 1}, 111.580);
+  tl.set("#cap277", {autoAlpha: 0}, 112.375);
+  tl.set("#cap278", {autoAlpha: 1}, 112.460);
+  tl.set("#cap278", {autoAlpha: 0}, 112.575);
+  tl.set("#cap279", {autoAlpha: 1}, 112.580);
+  tl.set("#cap279", {autoAlpha: 0}, 112.715);
+  tl.set("#cap280", {autoAlpha: 1}, 112.720);
+  tl.set("#cap280", {autoAlpha: 0}, 112.815);
+  tl.set("#cap281", {autoAlpha: 1}, 112.900);
+  tl.set("#cap281", {autoAlpha: 0}, 114.255);
+  tl.set("#cap282", {autoAlpha: 1}, 114.340);
+  tl.set("#cap282", {autoAlpha: 0}, 115.090);
+  tl.set("#cap283", {autoAlpha: 1}, 115.240);
+  tl.set("#cap283", {autoAlpha: 0}, 115.395);
+  tl.set("#cap284", {autoAlpha: 1}, 115.480);
+  tl.set("#cap284", {autoAlpha: 0}, 115.835);
+  tl.set("#cap285", {autoAlpha: 1}, 115.920);
+  tl.set("#cap285", {autoAlpha: 0}, 116.315);
+  tl.set("#cap286", {autoAlpha: 1}, 116.400);
+  tl.set("#cap286", {autoAlpha: 0}, 116.795);
+  tl.set("#cap287", {autoAlpha: 1}, 116.880);
+  tl.set("#cap287", {autoAlpha: 0}, 117.215);
+  tl.set("#cap288", {autoAlpha: 1}, 117.300);
+  tl.set("#cap288", {autoAlpha: 0}, 117.415);
+  tl.set("#cap289", {autoAlpha: 1}, 117.420);
+  tl.set("#cap289", {autoAlpha: 0}, 117.555);
+  tl.set("#cap290", {autoAlpha: 1}, 117.560);
+  tl.set("#cap290", {autoAlpha: 0}, 117.915);
+  tl.set("#cap291", {autoAlpha: 1}, 118.000);
+  tl.set("#cap291", {autoAlpha: 0}, 118.095);
+  tl.set("#cap292", {autoAlpha: 1}, 118.180);
+  tl.set("#cap292", {autoAlpha: 0}, 118.475);
+  tl.set("#cap293", {autoAlpha: 1}, 118.560);
+  tl.set("#cap293", {autoAlpha: 0}, 118.895);
+  tl.set("#cap294", {autoAlpha: 1}, 118.980);
+  tl.set("#cap294", {autoAlpha: 0}, 119.435);
+  tl.set("#cap295", {autoAlpha: 1}, 119.520);
+  tl.set("#cap295", {autoAlpha: 0}, 119.635);
+  tl.set("#cap296", {autoAlpha: 1}, 119.720);
+  tl.set("#cap296", {autoAlpha: 0}, 119.855);
+  tl.set("#cap297", {autoAlpha: 1}, 119.940);
+  tl.set("#cap297", {autoAlpha: 0}, 120.475);
+  tl.set("#cap298", {autoAlpha: 1}, 120.560);
+  tl.set("#cap298", {autoAlpha: 0}, 120.695);
+  tl.set("#cap299", {autoAlpha: 1}, 120.780);
+  tl.set("#cap299", {autoAlpha: 0}, 120.975);
+  tl.set("#cap300", {autoAlpha: 1}, 121.060);
+  tl.set("#cap300", {autoAlpha: 0}, 121.555);
+  tl.set("#cap301", {autoAlpha: 1}, 121.640);
+  tl.set("#cap301", {autoAlpha: 0}, 121.755);
+  tl.set("#cap302", {autoAlpha: 1}, 121.760);
+  tl.set("#cap302", {autoAlpha: 0}, 121.955);
+  tl.set("#cap303", {autoAlpha: 1}, 122.040);
+  tl.set("#cap303", {autoAlpha: 0}, 122.195);
+  tl.set("#cap304", {autoAlpha: 1}, 122.280);
+  tl.set("#cap304", {autoAlpha: 0}, 122.395);
+  tl.set("#cap305", {autoAlpha: 1}, 122.480);
+  tl.set("#cap305", {autoAlpha: 0}, 122.695);
+  tl.set("#cap306", {autoAlpha: 1}, 122.780);
+  tl.set("#cap306", {autoAlpha: 0}, 123.215);
+  tl.set("#cap307", {autoAlpha: 1}, 123.300);
+  tl.set("#cap307", {autoAlpha: 0}, 123.655);
+  tl.set("#cap308", {autoAlpha: 1}, 123.740);
+  tl.set("#cap308", {autoAlpha: 0}, 124.055);
+  tl.set("#cap309", {autoAlpha: 1}, 124.140);
+  tl.set("#cap309", {autoAlpha: 0}, 124.275);
+  tl.set("#cap310", {autoAlpha: 1}, 124.360);
+  tl.set("#cap310", {autoAlpha: 0}, 124.595);
+  tl.set("#cap311", {autoAlpha: 1}, 124.680);
+  tl.set("#cap311", {autoAlpha: 0}, 124.935);
+  tl.set("#cap312", {autoAlpha: 1}, 125.020);
+  tl.set("#cap312", {autoAlpha: 0}, 125.795);
+  tl.set("#cap313", {autoAlpha: 1}, 125.880);
+  tl.set("#cap313", {autoAlpha: 0}, 125.995);
+  tl.set("#cap314", {autoAlpha: 1}, 126.000);
+  tl.set("#cap314", {autoAlpha: 0}, 126.235);
+  tl.set("#cap315", {autoAlpha: 1}, 126.320);
+  tl.set("#cap315", {autoAlpha: 0}, 126.435);
+  tl.set("#cap316", {autoAlpha: 1}, 126.440);
+  tl.set("#cap316", {autoAlpha: 0}, 126.695);
+  tl.set("#cap317", {autoAlpha: 1}, 126.780);
+  tl.set("#cap317", {autoAlpha: 0}, 127.075);
+  tl.set("#cap318", {autoAlpha: 1}, 127.160);
+  tl.set("#cap318", {autoAlpha: 0}, 127.355);
+  tl.set("#cap319", {autoAlpha: 1}, 127.440);
+  tl.set("#cap319", {autoAlpha: 0}, 127.575);
+  tl.set("#cap320", {autoAlpha: 1}, 127.660);
+  tl.set("#cap320", {autoAlpha: 0}, 127.975);
+  tl.set("#cap321", {autoAlpha: 1}, 128.060);
+  tl.set("#cap321", {autoAlpha: 0}, 128.195);
+  tl.set("#cap322", {autoAlpha: 1}, 128.280);
+  tl.set("#cap322", {autoAlpha: 0}, 128.435);
+  tl.set("#cap323", {autoAlpha: 1}, 128.520);
+  tl.set("#cap323", {autoAlpha: 0}, 128.775);
+  tl.set("#cap324", {autoAlpha: 1}, 128.860);
+  tl.set("#cap324", {autoAlpha: 0}, 128.975);
+  tl.set("#cap325", {autoAlpha: 1}, 128.980);
+  tl.set("#cap325", {autoAlpha: 0}, 129.135);
+  tl.set("#cap326", {autoAlpha: 1}, 129.140);
+  tl.set("#cap326", {autoAlpha: 0}, 129.275);
+  tl.set("#cap327", {autoAlpha: 1}, 129.360);
+  tl.set("#cap327", {autoAlpha: 0}, 129.475);
+  tl.set("#cap328", {autoAlpha: 1}, 129.480);
+  tl.set("#cap328", {autoAlpha: 0}, 129.575);
+  tl.set("#cap329", {autoAlpha: 1}, 129.580);
+  tl.set("#cap329", {autoAlpha: 0}, 129.715);
+  tl.set("#cap330", {autoAlpha: 1}, 129.800);
+  tl.set("#cap330", {autoAlpha: 0}, 129.955);
+  tl.set("#cap331", {autoAlpha: 1}, 129.960);
+  tl.set("#cap331", {autoAlpha: 0}, 130.075);
+  tl.set("#cap332", {autoAlpha: 1}, 130.160);
+  tl.set("#cap332", {autoAlpha: 0}, 130.775);
+  tl.set("#cap333", {autoAlpha: 1}, 130.860);
+  tl.set("#cap333", {autoAlpha: 0}, 130.995);
+  tl.set("#cap334", {autoAlpha: 1}, 131.000);
+  tl.set("#cap334", {autoAlpha: 0}, 131.115);
+  tl.set("#cap335", {autoAlpha: 1}, 131.200);
+  tl.set("#cap335", {autoAlpha: 0}, 131.415);
+  tl.set("#cap336", {autoAlpha: 1}, 131.500);
+  tl.set("#cap336", {autoAlpha: 0}, 131.855);
+  tl.set("#cap337", {autoAlpha: 1}, 131.940);
+  tl.set("#cap337", {autoAlpha: 0}, 132.175);
+  tl.set("#cap338", {autoAlpha: 1}, 132.260);
+  tl.set("#cap338", {autoAlpha: 0}, 132.955);
+  tl.set("#cap339", {autoAlpha: 1}, 133.040);
+  tl.set("#cap339", {autoAlpha: 0}, 133.155);
+  tl.set("#cap340", {autoAlpha: 1}, 133.240);
+  tl.set("#cap340", {autoAlpha: 0}, 133.635);
+  tl.set("#cap341", {autoAlpha: 1}, 133.720);
+  tl.set("#cap341", {autoAlpha: 0}, 133.875);
+  tl.set("#cap342", {autoAlpha: 1}, 133.960);
+  tl.set("#cap342", {autoAlpha: 0}, 134.155);
+  tl.set("#cap343", {autoAlpha: 1}, 134.240);
+  tl.set("#cap343", {autoAlpha: 0}, 134.655);
+  tl.set("#cap344", {autoAlpha: 1}, 134.740);
+  tl.set("#cap344", {autoAlpha: 0}, 134.875);
+  tl.set("#cap345", {autoAlpha: 1}, 134.960);
+  tl.set("#cap345", {autoAlpha: 0}, 135.295);
+  tl.set("#cap346", {autoAlpha: 1}, 135.380);
+  tl.set("#cap346", {autoAlpha: 0}, 135.715);
+  tl.set("#cap347", {autoAlpha: 1}, 135.800);
+  tl.set("#cap347", {autoAlpha: 0}, 136.415);
+  tl.set("#cap348", {autoAlpha: 1}, 136.500);
+  tl.set("#cap348", {autoAlpha: 0}, 136.655);
+  tl.set("#cap349", {autoAlpha: 1}, 136.740);
+  tl.set("#cap349", {autoAlpha: 0}, 136.895);
+  tl.set("#cap350", {autoAlpha: 1}, 136.980);
+  tl.set("#cap350", {autoAlpha: 0}, 137.235);
+  tl.set("#cap351", {autoAlpha: 1}, 137.320);
+  tl.set("#cap351", {autoAlpha: 0}, 137.455);
+  tl.set("#cap352", {autoAlpha: 1}, 137.540);
+  tl.set("#cap352", {autoAlpha: 0}, 137.755);
+  tl.set("#cap353", {autoAlpha: 1}, 137.840);
+  tl.set("#cap353", {autoAlpha: 0}, 138.795);
+  tl.set("#cap354", {autoAlpha: 1}, 138.880);
+  tl.set("#cap354", {autoAlpha: 0}, 138.995);
+  tl.set("#cap355", {autoAlpha: 1}, 139.000);
+  tl.set("#cap355", {autoAlpha: 0}, 139.155);
+  tl.set("#cap356", {autoAlpha: 1}, 139.160);
+  tl.set("#cap356", {autoAlpha: 0}, 139.535);
+  tl.set("#cap357", {autoAlpha: 1}, 139.620);
+  tl.set("#cap357", {autoAlpha: 0}, 139.815);
+  tl.set("#cap358", {autoAlpha: 1}, 139.900);
+  tl.set("#cap358", {autoAlpha: 0}, 140.055);
+  tl.set("#cap359", {autoAlpha: 1}, 140.060);
+  tl.set("#cap359", {autoAlpha: 0}, 140.175);
+  tl.set("#cap360", {autoAlpha: 1}, 140.260);
+  tl.set("#cap360", {autoAlpha: 0}, 140.455);
+  tl.set("#cap361", {autoAlpha: 1}, 140.540);
+  tl.set("#cap361", {autoAlpha: 0}, 140.668);
+  tl.set("#cap362", {autoAlpha: 1}, 140.753);
+  tl.set("#cap362", {autoAlpha: 0}, 140.875);
+  tl.set("#cap363", {autoAlpha: 1}, 140.960);
+  tl.set("#cap363", {autoAlpha: 0}, 141.275);
+  tl.set("#cap364", {autoAlpha: 1}, 141.360);
+  tl.set("#cap364", {autoAlpha: 0}, 141.615);
+  tl.set("#cap365", {autoAlpha: 1}, 141.700);
+  tl.set("#cap365", {autoAlpha: 0}, 141.975);
+  tl.set("#cap366", {autoAlpha: 1}, 142.060);
+  tl.set("#cap366", {autoAlpha: 0}, 142.195);
+  tl.set("#cap367", {autoAlpha: 1}, 142.280);
+  tl.set("#cap367", {autoAlpha: 0}, 142.675);
+  tl.set("#cap368", {autoAlpha: 1}, 142.760);
+  tl.set("#cap368", {autoAlpha: 0}, 143.015);
+  tl.set("#cap369", {autoAlpha: 1}, 143.100);
+  tl.set("#cap369", {autoAlpha: 0}, 143.275);
+  tl.set("#cap370", {autoAlpha: 1}, 143.360);
+  tl.set("#cap370", {autoAlpha: 0}, 143.455);
+  tl.set("#cap371", {autoAlpha: 1}, 143.540);
+  tl.set("#cap371", {autoAlpha: 0}, 143.895);
+  tl.set("#cap372", {autoAlpha: 1}, 143.980);
+  tl.set("#cap372", {autoAlpha: 0}, 144.355);
+  tl.set("#cap373", {autoAlpha: 1}, 144.440);
+  tl.set("#cap373", {autoAlpha: 0}, 144.755);
+  tl.set("#cap374", {autoAlpha: 1}, 144.840);
+  tl.set("#cap374", {autoAlpha: 0}, 144.955);
+  tl.set("#cap375", {autoAlpha: 1}, 144.960);
+  tl.set("#cap375", {autoAlpha: 0}, 145.455);
+  tl.set("#cap376", {autoAlpha: 1}, 145.540);
+  tl.set("#cap376", {autoAlpha: 0}, 145.695);
+  tl.set("#cap377", {autoAlpha: 1}, 145.700);
+  tl.set("#cap377", {autoAlpha: 0}, 145.855);
+  tl.set("#cap378", {autoAlpha: 1}, 145.940);
+  tl.set("#cap378", {autoAlpha: 0}, 146.035);
+  tl.set("#cap379", {autoAlpha: 1}, 146.120);
+  tl.set("#cap379", {autoAlpha: 0}, 146.815);
+  tl.set("#cap380", {autoAlpha: 1}, 146.900);
+  tl.set("#cap380", {autoAlpha: 0}, 147.055);
+  tl.set("#cap381", {autoAlpha: 1}, 147.060);
+  tl.set("#cap381", {autoAlpha: 0}, 147.195);
+  tl.set("#cap382", {autoAlpha: 1}, 147.200);
+  tl.set("#cap382", {autoAlpha: 0}, 147.755);
+  tl.set("#cap383", {autoAlpha: 1}, 147.840);
+  tl.set("#cap383", {autoAlpha: 0}, 148.075);
+  tl.set("#cap384", {autoAlpha: 1}, 148.160);
+  tl.set("#cap384", {autoAlpha: 0}, 148.615);
+  tl.set("#cap385", {autoAlpha: 1}, 148.700);
+  tl.set("#cap385", {autoAlpha: 0}, 149.095);
+  tl.set("#cap386", {autoAlpha: 1}, 149.180);
+  tl.set("#cap386", {autoAlpha: 0}, 149.635);
+  tl.set("#cap387", {autoAlpha: 1}, 149.720);
+  tl.set("#cap387", {autoAlpha: 0}, 149.875);
+  tl.set("#cap388", {autoAlpha: 1}, 149.960);
+  tl.set("#cap388", {autoAlpha: 0}, 150.115);
+  tl.set("#cap389", {autoAlpha: 1}, 150.120);
+  tl.set("#cap389", {autoAlpha: 0}, 150.255);
+  tl.set("#cap390", {autoAlpha: 1}, 150.260);
+  tl.set("#cap390", {autoAlpha: 0}, 150.355);
+  tl.set("#cap391", {autoAlpha: 1}, 150.440);
+  tl.set("#cap391", {autoAlpha: 0}, 151.095);
+  tl.set("#cap392", {autoAlpha: 1}, 151.180);
+  tl.set("#cap392", {autoAlpha: 0}, 151.315);
+  tl.set("#cap393", {autoAlpha: 1}, 151.320);
+  tl.set("#cap393", {autoAlpha: 0}, 151.455);
+  tl.set("#cap394", {autoAlpha: 1}, 151.460);
+  tl.set("#cap394", {autoAlpha: 0}, 151.735);
+  tl.set("#cap395", {autoAlpha: 1}, 151.820);
+  tl.set("#cap395", {autoAlpha: 0}, 151.915);
+  tl.set("#cap396", {autoAlpha: 1}, 152.000);
+  tl.set("#cap396", {autoAlpha: 0}, 152.255);
+  tl.set("#cap397", {autoAlpha: 1}, 152.340);
+  tl.set("#cap397", {autoAlpha: 0}, 152.695);
+  tl.set("#cap398", {autoAlpha: 1}, 152.780);
+  tl.set("#cap398", {autoAlpha: 0}, 153.235);
+  tl.set("#cap399", {autoAlpha: 1}, 153.320);
+  tl.set("#cap399", {autoAlpha: 0}, 153.895);
+  tl.set("#cap400", {autoAlpha: 1}, 153.980);
+  tl.set("#cap400", {autoAlpha: 0}, 154.435);
+  tl.set("#cap401", {autoAlpha: 1}, 154.520);
+  tl.set("#cap401", {autoAlpha: 0}, 154.675);
+  tl.set("#cap402", {autoAlpha: 1}, 154.760);
+  tl.set("#cap402", {autoAlpha: 0}, 154.915);
+  tl.set("#cap403", {autoAlpha: 1}, 154.920);
+  tl.set("#cap403", {autoAlpha: 0}, 156.115);
+  tl.set("#cap404", {autoAlpha: 1}, 156.200);
+  tl.set("#cap404", {autoAlpha: 0}, 156.335);
+  tl.set("#cap405", {autoAlpha: 1}, 156.340);
+  tl.set("#cap405", {autoAlpha: 0}, 156.675);
+  tl.set("#cap406", {autoAlpha: 1}, 156.760);
+  tl.set("#cap406", {autoAlpha: 0}, 156.875);
+  tl.set("#cap407", {autoAlpha: 1}, 156.880);
+  tl.set("#cap407", {autoAlpha: 0}, 157.035);
+  tl.set("#cap408", {autoAlpha: 1}, 157.040);
+  tl.set("#cap408", {autoAlpha: 0}, 157.495);
+  tl.set("#cap409", {autoAlpha: 1}, 157.580);
+  tl.set("#cap409", {autoAlpha: 0}, 157.895);
+  tl.set("#cap410", {autoAlpha: 1}, 157.980);
+  tl.set("#cap410", {autoAlpha: 0}, 158.075);
+  tl.set("#cap411", {autoAlpha: 1}, 158.160);
+  tl.set("#cap411", {autoAlpha: 0}, 158.655);
+  tl.set("#cap412", {autoAlpha: 1}, 158.740);
+  tl.set("#cap412", {autoAlpha: 0}, 159.015);
+  tl.set("#cap413", {autoAlpha: 1}, 159.100);
+  tl.set("#cap413", {autoAlpha: 0}, 159.215);
+  tl.set("#cap414", {autoAlpha: 1}, 159.300);
+  tl.set("#cap414", {autoAlpha: 0}, 159.855);
+  tl.set("#cap415", {autoAlpha: 1}, 159.940);
+  tl.set("#cap415", {autoAlpha: 0}, 160.415);
+  tl.set("#cap416", {autoAlpha: 1}, 160.500);
+  tl.set("#cap416", {autoAlpha: 0}, 160.615);
+  tl.set("#cap417", {autoAlpha: 1}, 160.700);
+  tl.set("#cap417", {autoAlpha: 0}, 160.815);
+  tl.set("#cap418", {autoAlpha: 1}, 160.900);
+  tl.set("#cap418", {autoAlpha: 0}, 161.295);
+  tl.set("#cap419", {autoAlpha: 1}, 161.380);
+  tl.set("#cap419", {autoAlpha: 0}, 161.575);
+  tl.set("#cap420", {autoAlpha: 1}, 161.660);
+  tl.set("#cap420", {autoAlpha: 0}, 162.455);
+  tl.set("#cap421", {autoAlpha: 1}, 162.540);
+  tl.set("#cap421", {autoAlpha: 0}, 163.080);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 163.180);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 42.770);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 44.610);
+
+
+function spring(z, w) {
+  var wd = w * Math.sqrt(1 - z * z);
+  function f(t) { return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + (z * w / wd) * Math.sin(wd * t)); }
+  var e = f(1);
+  return function (t) { return t >= 1 ? 1 : f(t) / e; };
+}
+var SP = spring(0.62, 13), POP = spring(0.46, 14), SOFT = spring(0.84, 11), FLIP = spring(0.58, 9);
+
+function helpers(tl) {
+  function blurIn(sel, t, b, d) {
+    tl.fromTo(sel, {autoAlpha: 0, filter: "blur(" + (b || 12) + "px)"},
+                   {autoAlpha: 1, filter: "blur(0px)", duration: d || 0.38, ease: "power2.out"}, t);
+  }
+  function blurOut(sel, t, b, d) {
+    tl.to(sel, {autoAlpha: 0, filter: "blur(" + (b || 10) + "px)", duration: d || 0.32, ease: "power2.in"}, t);
+  }
+  // arrive from depth: blur -> sharp, small -> full, with a spring. o: {s, x, y, ease, d}
+  function arrive(sel, t, o) {
+    o = o || {};
+    blurIn(sel, t, o.blur || 12, 0.36);
+    tl.fromTo(sel, {scale: o.s == null ? 0.5 : o.s, x: o.x || 0, y: o.y == null ? 34 : o.y},
+              {scale: 1, x: 0, y: 0, duration: o.d || 0.85, ease: o.ease || POP}, t);
+  }
+  // the contents land a beat after their container
+  function inner(sel, t) {
+    tl.fromTo(sel, {scale: 0.55, autoAlpha: 0}, {scale: 1, autoAlpha: 1, duration: 0.55, ease: SP}, t + 0.1);
+  }
+  function sheen(sel, t) { gsap.set(sel, {xPercent: -120}); tl.to(sel, {xPercent: 120, duration: 0.8, ease: "power2.inOut"}, t); }
+  function len(id) { return document.getElementById(id).getTotalLength(); }
+  // +3: a dash that ends exactly at the path start leaves a round-cap dot behind
+  function drawPrep(id) { var L = len(id) + 3; gsap.set("#" + id, {strokeDasharray: (L - 3) + " " + (L + 40), strokeDashoffset: L}); return L; }
+  function draw(id, t, d) { var L = drawPrep(id); tl.to("#" + id, {strokeDashoffset: 0, duration: d || 0.55, ease: "power2.inOut"}, t); return L; }
+  function packet(id, t, d) {
+    var L = len(id);
+    tl.fromTo("#" + id, {strokeDasharray: "46 " + (L + 200), strokeDashoffset: 49, autoAlpha: 1},
+              {strokeDashoffset: -L, duration: d || 0.5, ease: "power1.inOut", immediateRender: false}, t);
+    tl.set("#" + id, {autoAlpha: 0}, t + (d || 0.5));
+  }
+  // a tile the same shape grows out and fades — "something arrived here"
+  function ripple(sel, t) {
+    tl.fromTo(sel, {scale: 1, autoAlpha: 0.7}, {scale: 1.75, autoAlpha: 0, duration: 0.8, ease: "power2.out", immediateRender: false}, t);
+  }
+  function bump(sel, t) {
+    tl.to(sel, {scale: 1.07, duration: 0.1, ease: "power2.out"}, t);
+    tl.to(sel, {scale: 1, duration: 0.45, ease: SP}, t + 0.1);
+  }
+  // iris: a takeover opens out of (x, y) and later closes back into another point
+  function irisOpen(sel, t, x, y, d) {
+    tl.set(sel, {autoAlpha: 1}, t);
+    tl.fromTo(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)"},
+              {clipPath: "circle(2300px at " + x + "px " + y + "px)", duration: d || 0.85, ease: "power3.inOut", immediateRender: false}, t);
+  }
+  function irisClose(sel, t, x, y, d) {
+    tl.to(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)", duration: d || 0.6, ease: "power3.inOut"}, t);
+    tl.set(sel, {autoAlpha: 0}, t + (d || 0.6) + 0.02);
+  }
+  function drift(sel, t, dur) {
+    ["a1", "a2", "a3"].forEach(function (c, i) {
+      var v = [[-140, 90], [160, -120], [-90, -60]][i];
+      tl.fromTo(sel + " .aur." + c, {x: 0, y: 0}, {x: v[0], y: v[1], duration: dur, ease: "sine.inOut"}, t);
+    });
+  }
+  function haptic(sel, t) { tl.to(sel, {keyframes: {x: [0, -9, 8, -5, 3, 0]}, duration: 0.34, ease: "none"}, t); }
+  function count(sel, t, to, d, fmt) {
+    var o = {v: 0}, el = document.querySelector(sel);
+    tl.fromTo(o, {v: 0}, {v: to, duration: d || 1.1, ease: "power2.out",
+              onUpdate: function () { el.textContent = fmt ? fmt(o.v) : Math.round(o.v); }}, t);
+  }
+  return {blurIn: blurIn, blurOut: blurOut, arrive: arrive, inner: inner, sheen: sheen,
+          drawPrep: drawPrep, draw: draw, packet: packet, ripple: ripple, bump: bump,
+          irisOpen: irisOpen, irisClose: irisClose, drift: drift, haptic: haptic, count: count};
+}
+
+  var G = helpers(tl);
+  gsap.set("#vid", {transformOrigin: "540px 820px"});
+  tl.fromTo("#vid", {scale: 1}, {scale: 1.045, duration: 163.250, ease: "none"}, 0);
+  /* b10_weight */
+
+  tl.set("#g10", {autoAlpha: 1}, 37.279);
+  G.arrive("#wC", 37.279, {s: 0.7, y: 16});
+  G.inner("#wC-v", 37.279);
+  G.sheen("#wC-sh", 37.679);
+  G.blurOut("#wC", 38.765, 10, 0.26);
+  tl.to("#wC", {y: -18, scale: 0.94, duration: 0.26, ease: "power2.in"}, 38.765);
+  tl.to("#g10", {autoAlpha: 0, duration: 0.02}, 39.065);
+  /* b10b_height */
+
+  tl.set("#g10b", {autoAlpha: 1}, 42.560);
+  G.arrive("#hC", 42.560, {s: 0.7, y: 16});
+  G.draw("dimL", 42.580, 0.42);
+  tl.fromTo("#dimT", {autoAlpha: 0}, {autoAlpha: 1, duration: 0.3}, 42.580);
+  G.count("#hV", 42.580, 150, 0.40);
+  // «метр п'ятдесят»
+  G.bump("#hC", 42.980);
+  G.sheen("#hC-sh", 42.980);
+  G.blurOut("#hC", 44.600, 10, 0.26);
+  tl.to("#hC", {y: -18, scale: 0.94, duration: 0.26, ease: "power2.in"}, 44.600);
+  tl.to("#dim", {autoAlpha: 0, duration: 0.25}, 44.600);
+  tl.to("#g10b", {autoAlpha: 0, duration: 0.02}, 44.900);
+  /* b12_price_eur */
+
+  tl.set("#g12", {autoAlpha: 1}, 53.080);
+  G.arrive("#eC", 53.080, {s: 0.7, y: 16});
+  G.inner("#eC-v", 53.080);
+  G.sheen("#eC-sh", 54.100);
+  G.blurOut("#eC", 55.000, 10, 0.26);
+  tl.to("#eC", {y: -18, scale: 0.94, duration: 0.26, ease: "power2.in"}, 55.000);
+  tl.to("#g12", {autoAlpha: 0, duration: 0.02}, 55.300);
+  /* b14_holder_card */
+
+  tl.set("#g14", {autoAlpha: 1}, 64.720);
+  gsap.set("#hcSh", {xPercent: -120});
+  G.drawPrep("hcMsL"); G.drawPrep("hcSuL");
+  // «Тут він» — the card, her photo landing a beat after it
+  G.arrive("#hc", 64.720, {s: 0.72, y: -24});
+  tl.fromTo("#hcImg", {scale: 0.8, autoAlpha: 0, y: 20}, {scale: 1, autoAlpha: 1, y: 0, duration: 0.7, ease: SP, immediateRender: false}, 64.840);
+  G.sheen("#hcSh", 65.170);
+  // «трошки крутиться в різні сторони» — a small honest rock
+  tl.to("#hcImg", {rotation: -3.5, duration: 0.42, ease: "sine.inOut"}, 65.660);
+  tl.to("#hcImg", {rotation: 2.5, duration: 0.45, ease: "sine.inOut"}, 66.080);
+  tl.to("#hcImg", {rotation: 0, duration: 0.7, ease: SP}, 66.560);
+  // «магнітний» — the MagSafe ring
+  tl.fromTo("#hcMsD", {scale: 0, autoAlpha: 0}, {scale: 1, autoAlpha: 1, duration: 0.45, ease: POP, immediateRender: false}, 67.460);
+  G.draw("hcMsL", 67.540, 0.26);
+  G.blurIn("#hcMs", 67.700, 8, 0.28);
+  tl.fromTo("#hcMs", {x: -14}, {x: 0, duration: 0.6, ease: SP, immediateRender: false}, 67.700);
+  // «присоска» — the base
+  tl.fromTo("#hcSuD", {scale: 0, autoAlpha: 0}, {scale: 1, autoAlpha: 1, duration: 0.45, ease: POP, immediateRender: false}, 69.780);
+  G.draw("hcSuL", 69.860, 0.26);
+  G.blurIn("#hcSu", 70.000, 8, 0.28);
+  tl.fromTo("#hcSu", {x: -14}, {x: 0, duration: 0.6, ease: SP, immediateRender: false}, 70.000);
+  G.blurOut("#hc", 72.515, 10, 0.26);
+  tl.to("#hc", {y: -18, scale: 0.94, duration: 0.26, ease: "power2.in"}, 72.515);
+  tl.to("#g14", {autoAlpha: 0, duration: 0.02}, 72.815);
+  /* b18_mic_price_modes */
+
+  tl.set("#g18", {autoAlpha: 1}, 85.000);
+  gsap.set(["#mM2", "#mV2"], {autoAlpha: 0});
+  G.arrive("#mC", 85.000, {s: 0.7, y: 16});
+  G.inner("#mC-v", 85.000);
+  G.sheen("#mC-sh", 85.400);
+  // «три режими» — the same chip, a second reading
+  G.blurOut(["#mM1", "#mV1"], 86.480, 8, 0.2);
+  G.blurIn("#mM2", 86.680, 8, 0.28);
+  tl.fromTo("#mV2", {autoAlpha: 0, scale: 0.6, transformOrigin: "0% 60%"}, {autoAlpha: 1, scale: 1, duration: 0.55, ease: POP, immediateRender: false}, 86.680);
+  G.bump("#mC", 86.680);
+  G.blurOut("#mC", 88.350, 10, 0.26);
+  tl.to("#mC", {y: -18, scale: 0.94, duration: 0.26, ease: "power2.in"}, 88.350);
+  tl.to("#g18", {autoAlpha: 0, duration: 0.02}, 88.650);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>
