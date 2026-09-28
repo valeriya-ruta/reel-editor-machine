@@ -511,19 +511,20 @@ AVATARS = [380, 420, 455, 485, 556]
 REEL4 = (200, 356)
 
 
-def reel_card(rid, media, start, dur, views, extra=""):
-    """A reel: the twin in the AI studio, IG's right rail, a view count."""
+def reel_card(rid, media, start, dur, extra=""):
+    """A reel: the twin in the AI studio, IG's right rail, a play glyph. No
+    view count: any figure here reads as her real numbers."""
     w, h = REEL4
     return (u'<div class="reel" id="%(id)s"><div class="studio"></div>'
             u'<div class="vw gray" style="%(xf)s">%(v)s</div>'
             u'<div class="rui">%(h)s%(c)s%(s)s</div>'
-            u'<div class="rvw">%(p)s<span>%(views)s</span></div>'
+            u'<div class="rvw">%(p)s</div>'
             u'<div class="aic" style="left:12px;top:12px;width:62px;height:36px;font-size:20px">AI</div>%(extra)s'
             u'</div>' % {"id": rid, "xf": frame_xf(150, 470, 620, w),
                          "v": vid("v" + rid, HER0, start, dur, media),
                          "h": stroke("heart", "sk w"), "c": stroke("comment", "sk w"),
                          "s": stroke("send", "sk w"), "p": fill("play", "fk w"),
-                         "views": views, "extra": extra})
+                         "extra": extra})
 
 
 k.css("""
@@ -603,11 +604,11 @@ def b04_kling_reels_chart():
         %(av)s
       </div>''' % {
         "area": AREA4, "line": LINE4, "kl": kling(), "cab": cab,
-        "ra": reel_card("r4ai", 3.0, S("strybnula") - 0.1, 2.3, "1,2M"),
-        "rb": reel_card("r4bi", 0.6, S("znimala") - 0.1, 1.3, "48K"),
+        "ra": reel_card("r4ai", 3.0, S("strybnula") - 0.1, 2.3),
+        "rb": reel_card("r4bi", 0.6, S("znimala") - 0.1, 1.3),
         # durations differ by a frame: hyperframes keys media on src/start/
         # duration, and two identical keys can be discovered as one
-        "rc": reel_card("r4ci", 5.2, S("znimala") - 0.1, 1.3 + 1 / 30.0, "96K"),
+        "rc": reel_card("r4ci", 5.2, S("znimala") - 0.1, 1.3 + 1 / 30.0),
         "flame": FILLS["flame"], "play": fill("play"), "play2": fill("play"),
         "check": stroke("check"), "av": av}
     av_js = []
