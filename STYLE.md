@@ -362,6 +362,12 @@ understandable, at least add some logos/icons in"*. They now carry greyed-out
 ghosts of the marks that will land in them: the board is readable from the
 first frame and the reveal still happens, grey to lit.
 
+**No invented stats.** A view count, follower number or sum shown as *hers* must
+be hers (from her screenshots or her words). Reel 20 shipped «1,2M» views on a
+hype curve and on three reel cards; they were made up and would have read as her
+real numbers, so they came out before delivery. Shape-only charts, or a clearly
+labelled demo card (CRM, report), are fine.
+
 And one literal, which is the kind of note she gives and means exactly: *"tasks
 are always checks and lines like a checklist"* — a checkbox and a rule, never
 three coloured bars.
