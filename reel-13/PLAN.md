@@ -40,8 +40,18 @@ reads doubled on the snapshot).
 
 ## Assets
 
-- **From her (would make the payoff real):** one real carousel from her system,
-  5 slides as PNG. Same ask serves reel 19.
+Her real carousels arrived 2026-09-28, in `work/carousels/` (gitignored — client
+work). She said to mix and match so it looks like many; reuse freely.
+
+| set | slides | size | use here |
+|---|---|---|---|
+| `blond-trend` | 5 | 1080×1350 | **beat 13** — five slides, one template, same salon photo and hands: the template point made literal |
+| `blond-webinar` | 12 | 1080×1440 | **the clean slide** in beats 8–11 (04 «дорогий блонд — це система» or 06 «і головне»), and the fan |
+| `kejs-galyny` | 9 | 1080×1350 | a **draft** — placeholder boxes and «уточнити в Лери» notes on 02, 03, 07, 08; «фото …» labels on 01, 09. Only 04, 05, 06 are clean; 01/09 only small |
+
+Faces (webinar 09–10, the testimonial on 11): keep them small, in a wall or a
+fan, never a hero frame. A fourth set is on its way from her.
+
 - Optional, for laughs: an early ugly AI attempt, if she kept one. Otherwise I
   build the slop slide myself.
 - Have: Canva, Claude marks.

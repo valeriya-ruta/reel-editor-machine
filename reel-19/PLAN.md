@@ -49,7 +49,11 @@ lands on the words.
 - **From her:** the real flow, as screenshots or a short screen recording: her
   Design System in Claude, the two skills, a generated carousel, and the Export
   to Canva button. Real UI beats my mock-up here.
-- **From her:** 5 slides of one real carousel (same ask as reel 13).
+- **Carousels — in**, `work/carousels/` (see reel-13/PLAN.md for which slides
+  are clean). Here: the 12-slide `blond-webinar` is the «Бадабім, бадабум» fan
+  (beat 17) and the Canva pour (18); `kejs-galyny` 04–06 are the carousel that
+  comes out of one voice note in RUTA (19); the hook's slop wall (1) mixes all
+  sets small and shuffled so it reads as dozens. A fourth set is on its way.
 - **From her:** the link to her YouTube video about her speech style (for the
   thumbnail).
 - **From her, nice to have:** fresh RUTA screenshots — one voice note turning
