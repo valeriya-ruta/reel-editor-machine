@@ -1,0 +1,31 @@
+CAPTIONS 111   script 81 | whisper-corrected 24 | her wording 6
+
+WHISPER MISHEARD -> script spelling restored (16)
+     2.08s  1.00  звітності                        <- звідності
+     2.74s  1.00  СММ.                             <- SMM,
+     4.24s  0.83  використовуєте?                  <- використовувати.
+     7.42s  0.75  Рута                             <- Рита,
+    13.20s  0.67  найшвидший                       <- найшучий
+    15.14s  0.77  Windsor,                         <- Вінцор,
+    16.50s  0.80  Claude                           <- Клод
+    17.06s  0.86  ChatGPT                          <- ChargPD.
+    18.08s  0.77  Windsor                          <- Вінцор
+    18.62s  0.89  підключити                       <- підучити
+    20.32s  0.91  таргет,                          <- Тарет,
+    28.66s  0.48  Claude збирає                    <- коли кладе
+    34.54s  1.00  звіт. Тадааам!                   <- звід. Та дам!
+    37.66s  0.89  залишились                       <- залишилось
+    38.64s  0.81  і ти хочеш дізнатися,            <- чи хочете знатися,
+    41.22s  0.62  воркфлоу,                        <- overflow,
+
+SHE IMPROVISED -> her wording kept (7)
+     5.00s  script: втомились робити             said: втомилися
+     5.68s  script: —                            said: робити
+    10.34s  script: —                            said: все
+    13.88s  script: —                            said: –
+    26.34s  script: ШІ.                          said: штучному інтелекті.
+        -  script: тобі                         said: — (cut)
+    37.48s  script: в                            said: у
+
+REVIEW -- could go either way (1)
+    42.08s  script: став                       said: ставь плюс                 (0.67)

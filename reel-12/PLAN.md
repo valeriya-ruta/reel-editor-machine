@@ -37,3 +37,26 @@ Everything else keeps captions, including over the burgundy.
 
 Have everything: Windsor «w.», Claude, ChatGPT, Instagram, Facebook, Meta, TikTok,
 Google Analytics marks. Nothing needed from her.
+
+## As built (2026-09-28, re-timed to her cut, DUR 44.350)
+
+Her cut: 0–11.33 reads the post off a tablet; 11.33–44.39 to camera. No
+inserts, no pull-outs → NO_PAINT empty. Head top y 580–660 all reel.
+
+| t | placement | beat |
+|---|---|---|
+| 0.00–7.34 | behind (matte `post`) | Threads post rises off the tablet, words light as read, marker on «все робити вручну» |
+| 7.05–12.62 | near | name capsule (her face as avatar) → «Звітність СММ» toggle, ON on «автоматизувати» 10.72 |
+| 12.28–18.0 | near | knob → disc on the shelf (ghost w./Claude) → Windsor 15.14 → cable 15.84 → Claude 16.50 → ChatGPT 17.06 |
+| 18.0–24.6 | behind (matte `room`, soft room) | sources 19.06–21.08, wall on «мільйон» 22.14, collapse 23.72 |
+| 24.84–27.68 | near | repeat ring on «повторювану», hub flips to Claude on «штучному» |
+| 27.30–35.50 | over | iris → September, Mondays on «понеділок» → «ПН 09:00» + Claude, sources stream in → criteria tick → report |
+| 35.19–37.62 | near (matte `tada` from 35.50) | notification, haptic on «дам»; her raised arm passes in front |
+| 41.10–end | near | comment composer: «+» typed 42.58, posted 42.92, liked 43.52 |
+
+Dropped from the plan: nothing. Beats 9–11 merged into one takeover container;
+the notification does not turn into the composer (3.5 s of her talking sits
+between them).
+
+The soft room is `work/r12/softroom.sh`: blur(plate×(1−α))/blur(1−α) in float,
+from the `room` matte — her silhouette is filled from the room, no halo.
