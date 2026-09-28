@@ -91,8 +91,11 @@ def main():
     # --quality best: the matte is laid straight over the same pixels of the
     # plate, so any colour drift in the re-encode shows up as *her* being a
     # slightly different person from the frame around her.
-    run([NPX, "hyperframes", "remove-background", span, "-o", webm,
-         "--quality", "best"])
+    # Pinned to the version ./hf uses. Unpinned, npx pulled 0.8.82 on
+    # 2026-09-28, which moved onnxruntime-node to an optional install that
+    # fails on this machine; 0.8.33 bundles it and is already cached.
+    run([NPX, "--yes", "hyperframes@0.8.33", "remove-background", span,
+         "-o", webm, "--quality", "best"])
     os.remove(span)
 
     rel = "assets/mattes/%s.webm" % name
