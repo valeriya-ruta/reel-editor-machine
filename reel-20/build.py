@@ -547,10 +547,6 @@ k.css("""
 #pk4 { left: 506px; top: 160px; width: 28px; height: 28px; border-radius: 50%; background: #fff;
   box-shadow: 0 0 0 6px #b4122f, 0 0 26px 6px rgba(255,110,156,0.8); }
 #pr4 { left: 490px; top: 144px; width: 60px; height: 60px; }
-#vc4 { left: 296px; top: 128px; height: 60px; padding: 0 24px 0 18px; font-size: 30px; }
-#vc4 .fk { width: 26px; height: 26px; fill: #b4122f; }
-#tc4 { left: 868px; top: 356px; height: 56px; padding: 0 22px 0 16px; font-size: 28px; }
-#tc4 .fk { width: 24px; height: 24px; fill: #fff; }
 #fl4 { left: 466px; top: 34px; width: 108px; height: 132px; }
 #fl4 svg { width: 100%; height: 100%; fill: url(#gFlame); overflow: visible; }
 #ok4 { left: 812px; top: 170px; width: 120px; height: 120px; }
@@ -574,8 +570,9 @@ def b04_kling_reels_chart():
     NEAR, one shelf, one object handed along. A Kling tile lands on «цю
     тему»; a twin reel (her greyed, in an AI studio, «AI» tag) jumps out of it
     on «стрибнула»; two more fan out on «знімала рілси», each with its views.
-    «а потім»: the reels collapse into the peak of a views chart — 1,2M at the
-    spike — and the line runs out flat to 3K on «затихло». A flame on the
+    «а потім»: the reels collapse into the peak of a views chart and the line
+    runs out flat on «затихло» — shape only, no numbers: any figure here would
+    read as her real view counts. A flame on the
     spike on «нахайпили»; a tick on «ти права»; the spike ripples on
     «вірусилась»; five avatars jump onto the slope on «ми всі на неї
     стрибнули». The iris of the next beat opens out of the peak."""
@@ -602,8 +599,6 @@ def b04_kling_reels_chart():
         <div class="sqring circ hide" id="pr4"></div>
         <div class="cx hide" id="fl4"><svg viewBox="0 0 24 24">%(flame)s</svg></div>
         <div class="cx hide" id="pk4"></div>
-        <div class="pill w hide" id="vc4">%(play)s<span>1,2M</span></div>
-        <div class="pill d hide" id="tc4">%(play2)s<span>3K</span></div>
         <div class="tw circ hide" id="ok4"><div class="jelly">%(check)s<div class="sheen"></div></div></div>
         %(av)s
       </div>''' % {
@@ -655,18 +650,13 @@ def b04_kling_reels_chart():
   tl.to("#r4a", {x: %(px)d, y: %(py)d, scale: 0.08, duration: 0.42, ease: "power3.in"}, @a+0.04);
   tl.set("#r4a", {autoAlpha: 0}, @a+0.46);
   tl.fromTo("#pk4", {autoAlpha: 0, scale: 0}, {autoAlpha: 1, scale: 1, duration: 0.45, ease: POP, immediateRender: false}, @a+0.40);
-  bin("#vc4", @a+0.46, 8, 0.3);
-  tl.fromTo("#vc4", {x: 40, scale: 0.7}, {x: 0, scale: 1, duration: 0.6, ease: POP}, @a+0.46);
   // the line: up to the spike, then out flat on «затихло»
   tl.fromTo("#ln4", {strokeDashoffset: G.drawPrep("ln4")}, {strokeDashoffset: 0, duration: 1.25, ease: "power1.inOut", immediateRender: false}, @potim);
   tl.fromTo("#ar4", {clipPath: "inset(0px 100%% 0px 0px)"}, {clipPath: "inset(0px 0%% 0px 0px)", duration: 1.25, ease: "power1.inOut"}, @potim);
-  bin("#tc4", @zatykhlo+0.06, 8, 0.3);
-  tl.fromTo("#tc4", {y: 18, scale: 0.7}, {y: 0, scale: 1, duration: 0.6, ease: POP}, @zatykhlo+0.06);
 
   // «нахайпили» — the spike catches fire
   tl.fromTo("#fl4", {autoAlpha: 0, scale: 0.2, y: 40, transformOrigin: "50%% 100%%"},
             {autoAlpha: 1, scale: 1, y: 0, duration: 0.6, ease: POP}, @nakhaipyly);
-  G.bump("#vc4", @nakhaipyly+0.1);
   // «то ти права» — a tick
   arr("#ok4", @ty-0.04, {s: 0.4, y: 20});
   G.inner("#ok4 .sk", @ty-0.04);
@@ -676,7 +666,7 @@ def b04_kling_reels_chart():
   G.bump("#fl4", @klasna+0.1);
   // «вірусилась» — the spike rings
   G.ripple("#pr4", @virusylas);
-  G.bump(["#vc4", "#fl4"], @virusylas+0.04);
+  G.bump(["#pk4", "#fl4"], @virusylas+0.04);
   tl.to("#fl4", {scale: 1.25, duration: 0.5, ease: SP}, @virusylas+0.3);
   bout("#ok4", @virusylas+0.2, 8, 0.3);
 AVJS

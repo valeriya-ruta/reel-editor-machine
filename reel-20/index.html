@@ -373,10 +373,6 @@ svg.scene { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 #pk4 { left: 506px; top: 160px; width: 28px; height: 28px; border-radius: 50%; background: #fff;
   box-shadow: 0 0 0 6px #b4122f, 0 0 26px 6px rgba(255,110,156,0.8); }
 #pr4 { left: 490px; top: 144px; width: 60px; height: 60px; }
-#vc4 { left: 296px; top: 128px; height: 60px; padding: 0 24px 0 18px; font-size: 30px; }
-#vc4 .fk { width: 26px; height: 26px; fill: #b4122f; }
-#tc4 { left: 868px; top: 356px; height: 56px; padding: 0 22px 0 16px; font-size: 28px; }
-#tc4 .fk { width: 24px; height: 24px; fill: #fff; }
 #fl4 { left: 466px; top: 34px; width: 108px; height: 132px; }
 #fl4 svg { width: 100%; height: 100%; fill: url(#gFlame); overflow: visible; }
 #ok4 { left: 812px; top: 170px; width: 120px; height: 120px; }
@@ -664,8 +660,6 @@ svg.scene { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
         <div class="sqring circ hide" id="pr4"></div>
         <div class="cx hide" id="fl4"><svg viewBox="0 0 24 24"><path d="M12.3 22c-4.3 0-7.3-3-7.3-7 0-3.5 2.3-5.8 3.9-7.7.3 1.9 1.1 3.1 2.4 3.8-.2-4 1.6-7.1 4.5-9.3-.3 2.9.8 4.9 2.5 6.9 1.4 1.7 2.4 3.6 2.4 6.3 0 4.1-3.1 7-8.4 7z"/></svg></div>
         <div class="cx hide" id="pk4"></div>
-        <div class="pill w hide" id="vc4"><svg class="fk" viewBox="0 0 24 24"><path d="M8 5.2v13.6l10.6-6.8z"/></svg><span>1,2M</span></div>
-        <div class="pill d hide" id="tc4"><svg class="fk" viewBox="0 0 24 24"><path d="M8 5.2v13.6l10.6-6.8z"/></svg><span>3K</span></div>
         <div class="tw circ hide" id="ok4"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg><div class="sheen"></div></div></div>
         <div class="av4 hide" id="av40" style="left:210px;top:470px"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.6" r="4.3"/><path d="M4.2 21c1.1-4.4 4.3-6.6 7.8-6.6s6.7 2.2 7.8 6.6z"/></svg></div><div class="av4 hide" id="av41" style="left:280px;top:478px"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.6" r="4.3"/><path d="M4.2 21c1.1-4.4 4.3-6.6 7.8-6.6s6.7 2.2 7.8 6.6z"/></svg></div><div class="av4 hide" id="av42" style="left:160px;top:470px"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.6" r="4.3"/><path d="M4.2 21c1.1-4.4 4.3-6.6 7.8-6.6s6.7 2.2 7.8 6.6z"/></svg></div><div class="av4 hide" id="av43" style="left:330px;top:484px"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.6" r="4.3"/><path d="M4.2 21c1.1-4.4 4.3-6.6 7.8-6.6s6.7 2.2 7.8 6.6z"/></svg></div><div class="av4 hide" id="av44" style="left:240px;top:490px"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.6" r="4.3"/><path d="M4.2 21c1.1-4.4 4.3-6.6 7.8-6.6s6.7 2.2 7.8 6.6z"/></svg></div>
       </div>
@@ -1740,18 +1734,13 @@ function helpers(tl) {
   tl.to("#r4a", {x: -50, y: -116, scale: 0.08, duration: 0.42, ease: "power3.in"}, 10.200);
   tl.set("#r4a", {autoAlpha: 0}, 10.620);
   tl.fromTo("#pk4", {autoAlpha: 0, scale: 0}, {autoAlpha: 1, scale: 1, duration: 0.45, ease: POP, immediateRender: false}, 10.560);
-  bin("#vc4", 10.620, 8, 0.3);
-  tl.fromTo("#vc4", {x: 40, scale: 0.7}, {x: 0, scale: 1, duration: 0.6, ease: POP}, 10.620);
   // the line: up to the spike, then out flat on «затихло»
   tl.fromTo("#ln4", {strokeDashoffset: G.drawPrep("ln4")}, {strokeDashoffset: 0, duration: 1.25, ease: "power1.inOut", immediateRender: false}, 10.280);
   tl.fromTo("#ar4", {clipPath: "inset(0px 100% 0px 0px)"}, {clipPath: "inset(0px 0% 0px 0px)", duration: 1.25, ease: "power1.inOut"}, 10.280);
-  bin("#tc4", 11.180, 8, 0.3);
-  tl.fromTo("#tc4", {y: 18, scale: 0.7}, {y: 0, scale: 1, duration: 0.6, ease: POP}, 11.180);
 
   // «нахайпили» — the spike catches fire
   tl.fromTo("#fl4", {autoAlpha: 0, scale: 0.2, y: 40, transformOrigin: "50% 100%"},
             {autoAlpha: 1, scale: 1, y: 0, duration: 0.6, ease: POP}, 13.400);
-  G.bump("#vc4", 13.500);
   // «то ти права» — a tick
   arr("#ok4", 15.160, {s: 0.4, y: 20});
   G.inner("#ok4 .sk", 15.160);
@@ -1761,7 +1750,7 @@ function helpers(tl) {
   G.bump("#fl4", 17.120);
   // «вірусилась» — the spike rings
   G.ripple("#pr4", 18.240);
-  G.bump(["#vc4", "#fl4"], 18.280);
+  G.bump(["#pk4", "#fl4"], 18.280);
   tl.to("#fl4", {scale: 1.25, duration: 0.5, ease: SP}, 18.540);
   bout("#ok4", 18.440, 8, 0.3);
   tl.fromTo("#av40", {autoAlpha: 0, scale: 0.5}, {autoAlpha: 1, scale: 1, duration: 0.2, immediateRender: false}, 18.920);
