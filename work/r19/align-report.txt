@@ -1,0 +1,36 @@
+CAPTIONS 216   script 159 | whisper-corrected 17 | her wording 40
+
+WHISPER MISHEARD -> script spelling restored (11)
+    19.36s  0.73  Claude,                          <- клад і
+    23.60s  1.00  шрифти,                          <- Щривти,
+    33.74s  1.00  скіли.                           <- скили.
+    46.98s  0.80  Claude,                          <- клад,
+    50.64s  1.00  скіл                             <- Skill
+    52.06s  1.00  скіл                             <- Skill
+    62.50s  0.92  руками                           <- ручками,
+    64.90s  0.95  експортуються                    <- X спортуються
+    68.04s  0.84  каруселі у                       <- каруселів з
+    69.56s  0.89  RUTA, бо там                     <- рута, потім
+    71.88s  0.93  сценарії                         <- сценарію
+
+SHE IMPROVISED -> her wording kept (16)
+     2.86s  script: інтелектом,                  said: металектом,
+     5.66s  script: ай-слоп,                     said: і яйцом.
+        -  script: більше                       said: — (cut)
+     8.76s  script: —                            said: більше,
+    11.00s  script: старінкє?                    said: старінці.
+    18.80s  script: Заходжу                      said: Захочу
+    29.70s  script: це                           said: все
+    36.48s  script: в                            said: у
+    46.44s  script: —                            said: я
+    54.08s  script: design,                      said: дизайн,
+    57.48s  script: згенерувати                  said: зонурвати
+    59.82s  script: І                            said: в тебе є карусель.
+    65.92s  script: Canva.                       said: канву. А насправді
+    72.46s  script: рілсів,                      said: рюсів,
+    73.78s  script: Але якби не робила там робил said: і сторітели. Для своїх ліній я корисую с
+        -  script: мені в дірект, і я скину, як said: — (cut)
+
+REVIEW -- could go either way (2)
+    20.58s  script: Design System,             said: дизайн систем.             (0.75)
+    55.10s  script: свою design system         said: свої дизайн систем         (0.75)
