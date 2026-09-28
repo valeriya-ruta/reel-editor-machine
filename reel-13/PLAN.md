@@ -9,8 +9,35 @@ rainbow, stuffed with stickers, the deliberately bleak "before". Late it is the
 same slide rebuilt clean from a template. Reel 19 is the promised follow-up and
 opens on this clean slide, so the two reels hand off to each other.
 
-⚠ This script promises the system «за 15 хвилин»; reel 19 says «за 5 хвилин».
-Asked her which (work/W40.md).
+Settled: this reel says «за 15 хвилин», reel 19 says 5 — both correct per her.
+
+## As built (2026-09-28) — DUR 75.517, one shot, no NO_PAINT
+
+| t | where | what |
+|---|---|---|
+| 0.05 | NEAR | glass shelf; slop stack on «каруселі», AI sparkle tile on «штучний», timer chip «15 хв» on «швиденько» |
+| 4.16 | NEAR | chip rolls 15 хв → 2 год → 8 год → 1 день → **2 дні** (haptic), a sticker lands per roll |
+| 6.26 | NEAR | Canva clear tile; a clean slide (kejs-galyny 04) pops out on «канві» |
+| 7.88 | NEAR | effort meter: ТИ / ШІ rows (the AI tile slides into its row); promise → swap on «навпаки» → ТИ overflows off the frame on «більше» |
+| 12.30 | BEHIND | shelf frost spreads, soft room (matte `wall`), wall of 62 real slides ripples out on «тебе не намахали», Instagram tile on «інстаграмі», pulled in on «чого не знаєш ти» |
+| 18.9–22.4 | — | her line «і слава богу, що є я» left clear |
+| 22.42 | OVER | iris out of a «1»; AI tile on «правильний», splits on «два типи» into picture model (image mark) / builder (</>) |
+| 26.64 | OVER | left sheet: colour noise resolves into the slop (.png) |
+| 28.42 | OVER | right sheet: wireframe snaps together on «збирає», blond-webinar 04 lands on «сайти» (.html) |
+| 31.18 | OVER | left dims, the builder gets the tick on «другий» |
+| 32.82 | NEAR | iris closes onto the slop as it rises over her head; 12 stickers slapped on through «не потрібні» |
+| 36.12 | NEAR | stickers knocked off, flips to the clean slide on «другий»; a sticker bounces off it on «фізично» |
+| 40.72 | OVER | «2»; the clean slide opens TK2 at 2×; style swatches on «навчити», step back on «а того»; layout zones on «розміщувати»; ТЕКСТ, ФОТО, smart guides on «де що стоїть» |
+| 49.56 | OVER | the slide's picture fades, the zones stay: a template, locked on «шаблон»; iris closes onto it |
+| 54.16 | BEHIND | five blond-trend slides dealt from the template into a fan behind her (matte `fan`), riffle on «швидко» |
+| 56.18 | NEAR | fan collapses back; template on the shelf, the AI tile fills it: tексти / картинки / елементи |
+| 61.98 | NEAR | «3», a text editor: headline typed by hand with a typo; AI ring fills on «навчити», body lands on «це робити!» |
+| 68.46 | NEAR | glass notification: reel thumbnail, three slides on «повна система», the chip back at 2 дні → **15 хв** on «15» |
+| 74.32 | NEAR | Стежити → Відстежується on «підпишись» |
+
+Blackouts (plaque stays): 5.06–5.50 (chip «2 дні» on «другий день»), 73.08–74.00 (chip «15 хв»).
+
+The slop slide is `reel-13/slop.py` — reels 17 and 19 import it from there.
 
 ## Beats
 
