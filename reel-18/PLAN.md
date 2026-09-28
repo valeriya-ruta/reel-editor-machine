@@ -64,3 +64,22 @@ fine.
   - Android: turning on *Show taps* in Developer options helps me place the tap
     ripples exactly; optional.
 - Have: Telegram mark.
+
+## As built (2026-09-28)
+
+- DUR 70.583. Her cut is two shots (jump cut at 45.07), no inserts: nothing is NO_PAINT.
+- Her recording is 1080×2082, English UI, 28 s; `screen.py` re-times it onto her
+  words (9 constant-speed segments + a held last frame, 22.00–37.10) and blurs
+  her phone/@username on the Settings header, her existing links and their
+  preset messages, and the new link's address (card + clipboard bar). Her
+  Profile tab and the link list after copying are not used at all.
+- The recording's message is «Привіт! Хочу на Мадейру!», not the spoken «доброго
+  дня, мене цікавить те й те» — so beat 9 keeps its captions (no redundancy),
+  and beats 11–14 carry her real message (the chat opens with it pre-typed, it
+  is sent, it becomes the trigger). Beat 15 types her spoken quote (blackout).
+- Her cutout: matte `her` 22.00–37.10, the whole plate cut out, seated at 45 %
+  bottom-right (head top ~1548). She shrinks only after the recording has
+  irised in behind her, and grows back before it irises out, so there is
+  never a second her.
+- The bot's trip card and the pre-typed chat are graphics (her recording has
+  neither). No prices.
