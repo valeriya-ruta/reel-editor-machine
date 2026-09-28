@@ -1,0 +1,54 @@
+CAPTIONS 290   script 223 | whisper-corrected 33 | her wording 34
+
+WHISPER MISHEARD -> script spelling restored (19)
+     0.68s  0.92  супер нішевий                    <- супернішовий
+     8.06s  0.85  познайомимось,                   <- познайомивайся.
+    14.74s  1.00  бізнесам                         <- бізнесом
+    15.82s  1.00  ШІ                               <- шиї
+    19.46s  0.92  вважайте ще й фрілансерка на пів <- вважаєте, що я фрілансер канапів с
+    31.20s  0.92  просте:                          <- простое.
+    34.56s  0.96  спілкувались,                    <- спілкувалися,
+    49.48s  1.00  афігєнно                         <- офігенно.
+    52.74s  0.85  Claude або ChatGPT               <- клоуда по charge upt
+    59.02s  0.89  сетап                            <- етап
+    67.02s  0.96  спілкуватись                     <- спілкуватися
+    68.92s  1.00  бачити                           <- пачити
+    72.08s  0.94  Sendpulse,                       <- Senpulse,
+    73.90s  1.00  миленька                         <- миленько
+    82.02s  0.94  Sendpulse                        <- Senpulse,
+    83.06s  0.83  навайбкодила                     <- новий вкодила
+    95.24s  0.91  Claude                           <- клоуд
+   104.06s  0.89  залишились                       <- залишилось
+   105.22s  0.92  підібрати СРМ                    <- підібратися CRM
+
+SHE IMPROVISED -> her wording kept (26)
+     4.40s  script: СРМ                          said: CRM,
+     7.34s  script: тут,                         said: дук,
+    17.34s  script: дурні процеси І              said: їх роботу.
+    22.00s  script: СРМ в                        said: CRM
+    24.54s  script: 1-2-3                        said: раз, два, три
+    25.48s  script: всьо                         said: все
+    28.18s  script: СРМ                          said: CRM
+    38.54s  script: грошей                       said: гроші
+    41.60s  script: —                            said: й
+    46.58s  script: і сердите,                   said: іссортити,
+        -  script: нам                          said: — (cut)
+    64.10s  script: —                            said: Але
+    68.36s  script: чатботи                      said: chatbot
+    70.60s  script: —                            said: то
+        -  script: наш                          said: — (cut)
+    73.14s  script: СРМ                          said: CRM
+    75.04s  script: чатботами                    said: chatbot,
+    77.92s  script: імейлів                      said: e mailів через село.
+    79.46s  script: —                            said: я
+    85.56s  script: СРМ                          said: CRM
+    88.18s  script: —                            said: буквально
+    90.14s  script: нею                          said: не
+    98.54s  script: СРМ                          said: CRM або в chatbot
+   101.14s  script: задачі,                      said: здачу,
+   102.88s  script: все                          said: і вс. Тому
+   107.78s  script: —                            said: плюс
+
+REVIEW -- could go either way (2)
+    59.58s  script: витримати ну дууууже       said: витрунути дуже             (0.71)
+    75.82s  script: мільйоном різних           said: мільйонів ігрізних         (0.80)

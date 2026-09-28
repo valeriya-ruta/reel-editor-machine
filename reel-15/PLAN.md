@@ -48,3 +48,33 @@ words at that moment, so captions stay.
   and names to blur, or I blur every figure and name by default. Also: is it OK
   to show its name?
 - I fetch: the SendPulse mark. Have: Notion, Claude, ChatGPT, Instagram.
+
+## As built (2026-09-28)
+
+Her cut: 109.683 s, six shots. NO_PAINT: the closeup on «афігєнно» (49.07–50.33)
+and the pull-out on «дууууже» (60.25–61.25). Shot 1 (13.70–18.10) is a plain
+jump cut on «коротше», so it kept its beat. There was no insert on
+«фрілансерка на півставки» — that stretch is simply left clear.
+
+Changes from the plan, all forced by her real timing:
+
+- **Beat 1** is a feed filter («для агенцій» · «CRM») that tries to scroll away
+  on «далі» and springs back on «А якщо ти тут», becoming her name tag.
+- **Beats 11–13** are split around her closeup: the card folds into a shelf of
+  three €0 tools (Sheets, Airtable, Notion), Notion wins on «Notion», the frame
+  clears for her joke, and the Notion tile comes back afterwards to open the
+  table takeover.
+- **Beat 14** lands after her pull-out: the table's record count, running away
+  on «може витримати», lands in a capsule with «€0 / міс».
+- **Beat 18 — Floor.** Screenshots could not be saved, so its screens are
+  recreated in HTML from `work/media/r15/floor-notes.md` inside a glass phone:
+  Pipeline → P&L → Money (every amount, name and handle blurred; the values
+  under the blur are placeholders, not her data) → Quote, readable, sliders to
+  €400 / 8 h = €50/h, pushed in on «продажами».
+- **SendPulse** mark: the pulse line from sendpulse.com's own pinned-tab icon,
+  set in a pearl tile with the name under it on first appearance.
+
+Captions: CRM is set in Latin throughout (her script writes СРМ; reel 7 and
+STYLE.md §4a set CRM). «їх роботу» (she improvised it for «дурні процеси»),
+«раз, два, три» captioned as «1, 2, 3». Two words after «імейлів» (~78.4 s)
+are not in the script and whisper heard nonsense («через село») — dropped.
