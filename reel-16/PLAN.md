@@ -47,3 +47,27 @@ she says «UTM-мітка» (it shows `utm_`, not the Ukrainian word — probabl
   bot…)? Then I use the right mark.
 - If none: I build all three sheets generically — the reel still works.
 - Have: Instagram, Meta, Telegram marks.
+
+## As built (2026-09-28)
+
+Re-timed to her words (DUR 74.483). Differences from the plan above:
+
+- **0–2.70 is hers** (NO_PAINT): hair flip into the lens, a zoom out to a pose
+  at the back of the room, then she walks in on «клієнти?». Beat 1 folds into
+  beat 2: the «?» card lands as she arrives, on «З якого рілса».
+- Beats 1–3: the card sits above her head; the three sources stand in a soft
+  room (matte `hook`), each is tried in the source slot, they drop out behind
+  her on «втрачаєш», and the card empties on «інформації».
+- Beats 4–5 are one shelf: rocket / «Купити» / ×2 (blackout «вдвічі більше»),
+  then the webinar — host photo and title off the client's own page.
+- Beats 6–8, 10, 13–14 are one takeover visited three times: the real landing
+  page (work/media/r16/site-scroll.mp4, trimmed and sped through) in a glass
+  phone, SendPulse as a wordmark tile, the contact card with UTM_SOURCE /
+  UTM_MEDIUM fields built as graphics. TK2 adds the Reels source and ticks
+  every stage; TK3 runs the link through it and fills the fields.
+- Beat 9 is near (the «?» card above her head, Meta «?», Reels ↑↓), beats
+  11–12 are near (address bar, the tail as a chip on a five-stage rail, hidden
+  back in the link). Captions kept over the `utm_` URL.
+- Beat 15 behind her (matte `segs`, soft room): 24 cards, three columns,
+  12 · 5 · 7, «більше рілсів». Beat 16 folds into it.
+- Beat 17: her profile row, Стежити → Відстежується on «підписатись».
