@@ -1,0 +1,9 @@
+{
+  "title": {"l1": "CRM", "l2": "ДЛЯ АГЕНЦІЙ", "size": 116, "top": 250},
+  "her": {"x": -97, "y": -407, "s": 1.2},
+  "marks": ["notion", "sendpulse", "claude"],
+  "tiles": [["clear", "notion"], ["clear", "sendpulse"], ["jelly", "claude"]],
+  "shelf_top": 1440,
+  "css": ".c0 { left:372px; top:262px; transform:rotate(5deg); }",
+  "front": "<div class='chipx dglass edge c0'>€0</div>"
+}

@@ -1,0 +1,6 @@
+{
+  "title": {"l1": "МІЙ БЛОГЕРСЬКИЙ", "l2": "СЕТАП", "size": 84, "top": 262},
+  "her": {"x": -60, "y": -75, "s": 1.12},
+  "css": ".prod { position:absolute; left:40px; top:1130px; width:330px; height:330px; border-radius:74px; background:linear-gradient(160deg,#ffffff 0%,#fff5f8 55%,#f5dfe6 100%); box-shadow: inset 0 2px 1px #fff, 0 50px 90px -26px rgba(10,0,4,0.7); display:flex; align-items:center; justify-content:center; transform:rotate(-6deg); } .prod img { width:84%; height:84%; object-fit:contain; } .c1 { left:690px; top:1180px; transform:rotate(5deg); } .c2 { left:600px; top:1330px; transform:rotate(-3deg); }",
+  "front": "<div class='prod edge'><img src='assets/holder.png'></div><div class='chipx dglass edge c1'>8 €</div><div class='chipx dglass edge c2'>3000 грн</div>"
+}

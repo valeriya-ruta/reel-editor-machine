@@ -1,0 +1,9 @@
+{
+  "title": {"l1": "КАРУСЕЛІ", "l2": "ЧЕРЕЗ ШІ", "size": 118, "top": 250},
+  "her": {"x": -45, "y": -101, "s": 1.12},
+  "marks": ["claude", "canva"],
+  "tiles": [["jelly", "claude"], ["clear", "canva"]],
+  "shelf_top": 1420,
+  "css": ".sl { position:absolute; width:330px; height:440px; border-radius:26px; overflow:hidden; box-shadow: 0 50px 90px -24px rgba(10,0,4,0.75), 0 0 0 1.5px rgba(255,255,255,0.35); } .sl img { width:100%; height:100%; object-fit:cover; display:block; }",
+  "behind": "<div class='sl' style='left:40px;top:640px;transform:rotate(-11deg)'><img src='assets/s1.png'></div><div class='sl' style='left:720px;top:600px;transform:rotate(9deg)'><img src='assets/s2.png'></div><div class='sl' style='left:650px;top:960px;transform:rotate(16deg)'><img src='assets/s3.png'></div>"
+}
