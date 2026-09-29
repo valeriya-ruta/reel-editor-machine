@@ -18,8 +18,8 @@ The chain, near -> behind -> over, three times over:
     a client card with «?» for a source; Reels, Stories, Meta land in the
     room as she names them and each is tried in the slot -> they fall away
     behind her on «втрачаєш», the card empties -> the card folds into a shelf:
-    launch, «Купити», ×2 -> the shelf becomes the webinar (the real host
-    photo, «Прибутковий блонд») -> iris onto burgundy: her client's real
+    launch, «Купити», ×2 -> the shelf becomes a webinar card (a generic
+    video tile, «Вебінар», her avatar) -> iris onto burgundy: her client's real
     landing page scrolls in a glass phone, the button is pressed -> the phone
     docks, a cable to the SendPulse bot, registration, the contact card fills
     with «?» for UTM -> the iris closes into the «?», which flies up into a
@@ -223,7 +223,8 @@ TAG = ('<path d="M3.6 12.1V4.6a1 1 0 0 1 1-1h7.5l8.3 8.3a1.4 1.4 0 0 1 0 2l-6.3 
 UP = '<path d="M12 19V5.5M5.8 11.4 12 5.2l6.2 6.2"/>'
 DOWN = '<path d="M12 5v13.5M5.8 12.6 12 18.8l6.2-6.2"/>'
 CHECK_D = "M6.2 12.6l3.9 3.9 7.7-8.6"
-PLAY = '<svg viewBox="0 0 24 24"><path d="M8.5 5.8v12.4l10-6.2z"/></svg>'
+PLAY = ('<rect x="2.8" y="4.4" width="18.4" height="15.2" rx="4"/>'
+        '<path class="fl" d="M10 8.9v6.2l5.2-3.1z"/>')
 PERSON = ('<svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="4.3"/>'
           '<path d="M4.2 21c1.1-4.4 4.3-6.6 7.8-6.6s6.7 2.2 7.8 6.6z"/></svg>')
 
@@ -405,12 +406,8 @@ k.css("""
   background: linear-gradient(160deg, #ffffff 0%, #ffd0de 45%, #ff6e9c 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent; }
 #s3xr { left: 686px; top: 70px; width: 180px; height: 160px; border-radius: 40px; }
-#s3th { left: 44px; top: 44px; width: 212px; height: 212px; border-radius: 48px; overflow: hidden;
-  background: #2a1118 url("assets/host.jpg") center / cover no-repeat;
+#s3th { left: 44px; top: 44px; width: 212px; height: 212px;
   box-shadow: 0 0 0 2px rgba(255,255,255,0.35), 0 24px 44px -18px rgba(0,0,0,0.6); }
-#s3pl { left: 14px; top: 14px; width: 58px; height: 58px; border-radius: 50%; background: rgba(255,255,255,0.32);
-  box-shadow: inset 0 2px 1px rgba(255,255,255,0.6), 0 10px 24px rgba(0,0,0,0.35); }
-#s3pl svg { position: absolute; left: 15px; top: 13px; width: 32px; height: 32px; fill: #fff; }
 #s3ti { left: 290px; top: 56px; font-size: 48px; font-weight: 700; letter-spacing: -0.02em; }
 #s3su { left: 290px; top: 120px; font-size: 30px; font-weight: 500; color: rgba(255,255,255,0.74); }
 #s3st { left: 290px; top: 176px; height: 64px; padding: 0 28px 0 22px; border-radius: 32px;
@@ -432,8 +429,10 @@ def b03_launch_webinar():
     The emptied card folds into a glass shelf above her head. A rocket tile
     launches on «запускаєш», a «Купити» button lands and is tapped on
     «продавати», ×2 lands on «вдвічі» (blackout: it says the word). On
-    «Показую» the shelf becomes the webinar she produces — the host's photo
-    off the client's own landing page, «Прибутковий блонд», 8 жовтня;
+    «Показую» the shelf becomes the webinar she produces — a video tile,
+    «Вебінар» (blackout on «вебінару»: it says the word), «онлайн ·
+    безкоштовно». Her change request (2026-09-29): none of the host's name or
+    photo outside the site recording itself;
     «Реєстрація відкрита» lights on «запускаю», and her avatar docks on
     «продюсерка». The iris onto the site opens out of this shelf."""
     html = fill(u'''
@@ -444,15 +443,15 @@ def b03_launch_webinar():
           <div class="cx hide" id="s3tap"></div>
           <div class="sqring hide" id="s3xr"></div>
           <div class="cx hide" id="s3x2">×2</div>
-          <div class="cx hide" id="s3th"><div class="cx" id="s3pl">{{play}}</div></div>
-          <div class="cx hide" id="s3ti">Прибутковий блонд</div>
-          <div class="cx hide" id="s3su">8 жовтня · 19:00 за Києвом</div>
+          <div class="tw hide" id="s3th"><div class="jelly">{{play}}<div class="sheen"></div></div></div>
+          <div class="cx hide" id="s3ti">Вебінар</div>
+          <div class="cx hide" id="s3su">онлайн · безкоштовно</div>
           <div class="cx hide" id="s3st"><i></i>Реєстрація відкрита</div>
           <div class="cx hide" id="s3avr"></div>
           <div class="cx avc me hide" id="s3av"></div>
           <div class="sheen"></div>
         </div>
-      </div>''', rocket=sk(ROCKET), play=PLAY)
+      </div>''', rocket=sk(ROCKET), play=sk(PLAY))
     src = js('''
   tl.set("#g3", {autoAlpha: 1}, @ayakshcho);
   // the card's frame arrives as the shelf
@@ -478,7 +477,7 @@ def b03_launch_webinar():
   // «Показую» — the shelf becomes the webinar
   bout(["#s3rk", "#s3buy", "#s3x2"], @pokazuyu-0.08, 10, 0.28);
   arr("#s3th", @prykladi, {s: 0.55, y: 20});
-  tl.fromTo("#s3pl", {scale: 0.5, autoAlpha: 0}, {scale: 1, autoAlpha: 1, duration: 0.5, ease: SP}, @prykladi+0.14);
+  tl.fromTo("#s3th .sk", {scale: 0.55, autoAlpha: 0}, {scale: 1, autoAlpha: 1, duration: 0.5, ease: SP}, @prykladi+0.14);
   bin("#s3ti", @vebinaru-0.04, 10, 0.3);
   tl.fromTo("#s3ti", {x: -16}, {x: 0, duration: 0.6, ease: SP}, @vebinaru-0.04);
   bin("#s3su", @vebinaru+0.12, 10, 0.3);
@@ -614,7 +613,7 @@ def funnel_html():
             <div class="abs hide" id="uPhM"><div id="uPhA">
               <div id="uPhF" class="edge"></div>
               <div id="uPhS">
-                <img id="siteStill" src="assets/site-hero.jpg" alt="">
+                <img id="siteStill" class="hide" src="assets/site-end.jpg" alt="">
                 <video id="siteV" src="assets/site.mp4" data-start="{{vs}}" data-duration="{{vd}}"
                        data-media-start="0" muted playsinline></video>
                 <div class="sheen"></div>
@@ -624,7 +623,7 @@ def funnel_html():
             </div></div>
             <div class="abs hide" id="uBotW"><div id="uBot" class="sheet">
               <div class="tw" id="uSP"><div class="jelly">{{spw}}<div class="sheen"></div></div></div>
-              <div class="cx" id="uBn">Прибутковий блонд</div>
+              <div class="cx" id="uBn">Вебінар</div>
               <div class="cx" id="uBo"><i></i>онлайн</div>
               <div class="cx hair" id="uBh"></div>
               <div class="bb bot hide" id="bb1" style="top:156px">Привіт! Як тебе звати?</div>
@@ -730,6 +729,7 @@ def b06_funnel_site_bot_card():
   // the iris closes into the «?»
   G.irisClose("#tkU", @lyudyny+0.24, 915, 1061, 0.45);
   tl.set("#siteV", {autoAlpha: 0}, @lyudyny+0.71);
+  tl.set("#siteStill", {autoAlpha: 1}, @lyudyny+0.71);
   tl.to("#gU", {autoAlpha: 0, duration: 0.02}, @lyudyny+0.71);''')
     return funnel_html(), src
 
@@ -1239,10 +1239,11 @@ def b17_follow():
 # Captions drop only on redundancy (STYLE.md §2b.1).
 BLACKOUT = [
     (13.70, 14.85, "b03 — the shelf says ×2 on «вдвічі більше»"),
+    (15.70, 16.30, "b03 — the card says «Вебінар» on «вебінару»"),
 ]
 INVERT = []
 # a two-word blackout mid-sentence: the caption goes, the plaque stays
-KEEP_PLAQUE = [(13.70, 14.85)]
+KEEP_PLAQUE = [(13.70, 14.85), (15.70, 16.30)]
 
 EXTRA_DEFS = (
     '<linearGradient id="gStory" x1="0" y1="0" x2="1" y2="1">'

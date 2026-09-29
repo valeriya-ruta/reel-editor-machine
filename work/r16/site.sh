@@ -18,8 +18,8 @@ ffmpeg -v error -y -i $IN -filter_complex "\
 [c]trim=6.5:7.2,setpts=PTS-STARTPTS[c1];\
 [a1][b1][c1]concat=n=3:v=1:a=0,fps=30,tpad=stop_mode=clone:stop_duration=7,trim=duration=9.8,format=yuv420p[out]" \
   -map "[out]" -an -c:v libx264 -crf 17 -preset veryfast -movflags +faststart $OUT/site.mp4
-ffmpeg -v error -y -ss 0.30 -i $IN -vf "crop=1056:1900:0:0,scale=540:972" -frames:v 1 -q:v 2 $OUT/site-hero.jpg
+
 ffprobe -v error -count_frames -select_streams v:0 -show_entries stream=nb_read_frames,width,height,r_frame_rate \
   -of compact $OUT/site.mp4
-# the host's photo off the landing page, for the webinar card
-ffmpeg -v error -y -ss 17.3 -i $IN -vf "crop=780:780:147:696,scale=424:424" -frames:v 1 -q:v 2 $OUT/host.jpg
+# after the scroll the phone keeps the recording's own last frame (no hero title)
+ffmpeg -v error -y -i $OUT/site.mp4 -vf "select=eq(n\,200)" -frames:v 1 -q:v 2 $OUT/site-end.jpg

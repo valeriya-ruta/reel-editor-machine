@@ -59,7 +59,9 @@ Re-timed to her words (DUR 74.483). Differences from the plan above:
   room (matte `hook`), each is tried in the source slot, they drop out behind
   her on «втрачаєш», and the card empties on «інформації».
 - Beats 4–5 are one shelf: rocket / «Купити» / ×2 (blackout «вдвічі більше»),
-  then the webinar — host photo and title off the client's own page.
+  then a generic webinar card (video tile, «Вебінар», her avatar; blackout
+  «вебінару»). Her change 2026-09-29: the host's name and photo appear only
+  inside the site recording; the bot header reads «Вебінар».
 - Beats 6–8, 10, 13–14 are one takeover visited three times: the real landing
   page (work/media/r16/site-scroll.mp4, trimmed and sped through) in a glass
   phone, SendPulse as a wordmark tile, the contact card with UTM_SOURCE /

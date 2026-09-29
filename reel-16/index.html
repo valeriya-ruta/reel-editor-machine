@@ -385,12 +385,8 @@
   background: linear-gradient(160deg, #ffffff 0%, #ffd0de 45%, #ff6e9c 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent; }
 #s3xr { left: 686px; top: 70px; width: 180px; height: 160px; border-radius: 40px; }
-#s3th { left: 44px; top: 44px; width: 212px; height: 212px; border-radius: 48px; overflow: hidden;
-  background: #2a1118 url("assets/host.jpg") center / cover no-repeat;
+#s3th { left: 44px; top: 44px; width: 212px; height: 212px;
   box-shadow: 0 0 0 2px rgba(255,255,255,0.35), 0 24px 44px -18px rgba(0,0,0,0.6); }
-#s3pl { left: 14px; top: 14px; width: 58px; height: 58px; border-radius: 50%; background: rgba(255,255,255,0.32);
-  box-shadow: inset 0 2px 1px rgba(255,255,255,0.6), 0 10px 24px rgba(0,0,0,0.35); }
-#s3pl svg { position: absolute; left: 15px; top: 13px; width: 32px; height: 32px; fill: #fff; }
 #s3ti { left: 290px; top: 56px; font-size: 48px; font-weight: 700; letter-spacing: -0.02em; }
 #s3su { left: 290px; top: 120px; font-size: 30px; font-weight: 500; color: rgba(255,255,255,0.74); }
 #s3st { left: 290px; top: 176px; height: 64px; padding: 0 28px 0 22px; border-radius: 32px;
@@ -607,9 +603,9 @@
           <div class="cx hide" id="s3tap"></div>
           <div class="sqring hide" id="s3xr"></div>
           <div class="cx hide" id="s3x2">×2</div>
-          <div class="cx hide" id="s3th"><div class="cx" id="s3pl"><svg viewBox="0 0 24 24"><path d="M8.5 5.8v12.4l10-6.2z"/></svg></div></div>
-          <div class="cx hide" id="s3ti">Прибутковий блонд</div>
-          <div class="cx hide" id="s3su">8 жовтня · 19:00 за Києвом</div>
+          <div class="tw hide" id="s3th"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><rect x="2.8" y="4.4" width="18.4" height="15.2" rx="4"/><path class="fl" d="M10 8.9v6.2l5.2-3.1z"/></svg><div class="sheen"></div></div></div>
+          <div class="cx hide" id="s3ti">Вебінар</div>
+          <div class="cx hide" id="s3su">онлайн · безкоштовно</div>
           <div class="cx hide" id="s3st"><i></i>Реєстрація відкрита</div>
           <div class="cx hide" id="s3avr"></div>
           <div class="cx avc me hide" id="s3av"></div>
@@ -629,7 +625,7 @@
             <div class="abs hide" id="uPhM"><div id="uPhA">
               <div id="uPhF" class="edge"></div>
               <div id="uPhS">
-                <img id="siteStill" src="assets/site-hero.jpg" alt="">
+                <img id="siteStill" class="hide" src="assets/site-end.jpg" alt="">
                 <video id="siteV" src="assets/site.mp4" data-start="18.450" data-duration="9.800"
                        data-media-start="0" muted playsinline></video>
                 <div class="sheen"></div>
@@ -639,7 +635,7 @@
             </div></div>
             <div class="abs hide" id="uBotW"><div id="uBot" class="sheet">
               <div class="tw" id="uSP"><div class="jelly"><span class="spw" style="font-size:34px">SendPulse</span><div class="sheen"></div></div></div>
-              <div class="cx" id="uBn">Прибутковий блонд</div>
+              <div class="cx" id="uBn">Вебінар</div>
               <div class="cx" id="uBo"><i></i>онлайн</div>
               <div class="cx hair" id="uBh"></div>
               <div class="bb bot hide" id="bb1" style="top:156px">Привіт! Як тебе звати?</div>
@@ -772,7 +768,6 @@
       <div class="cap" id="cap37">ПОКАЗУЮ</div>
       <div class="cap" id="cap38">НА</div>
       <div class="cap" id="cap39">ПРИКЛАДІ</div>
-      <div class="cap" id="cap40">ВЕБІНАРУ,</div>
       <div class="cap" id="cap41">ЯКИЙ Я</div>
       <div class="cap" id="cap42">ПРЯМО</div>
       <div class="cap" id="cap43">ЗАРАЗ</div>
@@ -1015,8 +1010,6 @@
   tl.set("#cap38", {autoAlpha: 0}, 15.380);
   tl.set("#cap39", {autoAlpha: 1}, 15.440);
   tl.set("#cap39", {autoAlpha: 0}, 15.675);
-  tl.set("#cap40", {autoAlpha: 1}, 15.760);
-  tl.set("#cap40", {autoAlpha: 0}, 16.275);
   tl.set("#cap41", {autoAlpha: 1}, 16.360);
   tl.set("#cap41", {autoAlpha: 0}, 16.595);
   tl.set("#cap42", {autoAlpha: 1}, 16.680);
@@ -1498,7 +1491,7 @@ function helpers(tl) {
   // «Показую» — the shelf becomes the webinar
   bout(["#s3rk", "#s3buy", "#s3x2"], 14.820, 10, 0.28);
   arr("#s3th", 15.440, {s: 0.55, y: 20});
-  tl.fromTo("#s3pl", {scale: 0.5, autoAlpha: 0}, {scale: 1, autoAlpha: 1, duration: 0.5, ease: SP}, 15.580);
+  tl.fromTo("#s3th .sk", {scale: 0.55, autoAlpha: 0}, {scale: 1, autoAlpha: 1, duration: 0.5, ease: SP}, 15.580);
   bin("#s3ti", 15.720, 10, 0.3);
   tl.fromTo("#s3ti", {x: -16}, {x: 0, duration: 0.6, ease: SP}, 15.720);
   bin("#s3su", 15.880, 10, 0.3);
@@ -1559,6 +1552,7 @@ function helpers(tl) {
   // the iris closes into the «?»
   G.irisClose("#tkU", 27.900, 915, 1061, 0.45);
   tl.set("#siteV", {autoAlpha: 0}, 28.370);
+  tl.set("#siteStill", {autoAlpha: 1}, 28.370);
   tl.to("#gU", {autoAlpha: 0, duration: 0.02}, 28.370);
   /* b09_which_one */
 
