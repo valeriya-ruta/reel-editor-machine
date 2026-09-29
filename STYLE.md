@@ -362,6 +362,11 @@ understandable, at least add some logos/icons in"*. They now carry greyed-out
 ghosts of the marks that will land in them: the board is readable from the
 first frame and the reveal still happens, grey to lit.
 
+**Proof is a screenshot.** Her call, 2026-09-29: Instagram stats, DMs, comments,
+reviews go on screen as her real screenshots (cropped, blurred where personal),
+never redesigned as glass cards — *"then people trust it more and dont think
+that we came up with the numbers"*. Animate around the screenshot, don't retype it.
+
 **No invented stats.** A view count, follower number or sum shown as *hers* must
 be hers (from her screenshots or her words). Reel 20 shipped «1,2M» views on a
 hype curve and on three reel cards; they were made up and would have read as her
