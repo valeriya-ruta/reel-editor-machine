@@ -362,6 +362,12 @@ understandable, at least add some logos/icons in"*. They now carry greyed-out
 ghosts of the marks that will land in them: the board is readable from the
 first frame and the reveal still happens, grey to lit.
 
+**Greenscreen cutouts stay big.** Her call, 2026-09-29, on reel 18: when she is
+cut out over a screen recording, keep her at ~60–70 % on the left, face above
+y ≈ 1500 and left of x ≈ 880 — at 45 % in the bottom-right corner she was
+*"eated by the buttons from ig interface"* (the like/comment/share rail and the
+caption block).
+
 **Proof is a screenshot.** Her call, 2026-09-29: Instagram stats, DMs, comments,
 reviews go on screen as her real screenshots (cropped, blurred where personal),
 never redesigned as glass cards — *"then people trust it more and dont think
