@@ -1,0 +1,32 @@
+# Check + snapshot a reel in the cloud so her laptop never runs Chrome for it
+# (2026-10-05: "my laptop is overheating"). The project zip is the one already
+# uploaded to HeyGen for rendering (tools/hfup.py) — its URL is the input.
+name: qa
+run-name: qa ${{ inputs.name }} ${{ inputs.tag }}
+on:
+  workflow_dispatch:
+    inputs:
+      url: {description: "project zip URL", required: true}
+      at: {description: "snapshot times, comma-separated (empty = check only)", required: false, default: ""}
+      name: {description: "reel name", required: true}
+      tag: {description: "unique tag", required: true}
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-noto-color-emoji
+      - run: curl -sSL -o p.zip "${{ inputs.url }}" && mkdir proj && cd proj && unzip -q ../p.zip
+      - run: cd proj && (npx --yes hyperframes@0.8.33 check > ../check.log 2>&1 || true); tail -40 ../check.log
+      - if: ${{ inputs.at != '' }}
+        run: cd proj && (npx --yes hyperframes@0.8.33 snapshot --at "${{ inputs.at }}" --no-end -o ../snap > ../snap.log 2>&1 || true); tail -5 ../snap.log; ls ../snap || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: qa-${{ inputs.tag }}
+          path: |
+            check.log
+            snap.log
+            snap/
+          if-no-files-found: ignore
