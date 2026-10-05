@@ -1,30 +1,36 @@
 # Check + snapshot a reel in the cloud so her laptop never runs Chrome for it
-# (2026-10-05: "my laptop is overheating"). The project zip is the one already
-# uploaded to HeyGen for rendering (tools/hfup.py) — its URL is the input.
+# (2026-10-05: "my laptop is overheating"). tools/cloudqa.py commits
+# qa/<tag>.json = {url, at, name, tag} through the GitHub API; the project zip
+# is the one already uploaded to HeyGen for rendering (tools/hfup.py).
 name: qa
-run-name: qa ${{ inputs.name }} ${{ inputs.tag }}
 on:
-  workflow_dispatch:
-    inputs:
-      url: {description: "project zip URL", required: true}
-      at: {description: "snapshot times, comma-separated (empty = check only)", required: false, default: ""}
-      name: {description: "reel name", required: true}
-      tag: {description: "unique tag", required: true}
+  push:
+    branches: [asr-inbox]
+    paths: ["qa/**"]
 jobs:
   qa:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 2}
+      - id: req
+        run: |
+          f=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- qa/ | head -1)
+          echo "file=$f" >> "$GITHUB_OUTPUT"
+          echo "url=$(jq -r .url "$f")" >> "$GITHUB_OUTPUT"
+          echo "at=$(jq -r .at "$f")" >> "$GITHUB_OUTPUT"
+          echo "tag=$(jq -r .tag "$f")" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-node@v4
         with: {node-version: "22"}
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-noto-color-emoji
-      - run: curl -sSL -o p.zip "${{ inputs.url }}" && mkdir proj && cd proj && unzip -q ../p.zip
+      - run: curl -sSL -o p.zip "${{ steps.req.outputs.url }}" && mkdir proj && cd proj && unzip -q ../p.zip
       - run: cd proj && (npx --yes hyperframes@0.8.33 check > ../check.log 2>&1 || true); tail -40 ../check.log
-      - if: ${{ inputs.at != '' }}
-        run: cd proj && (npx --yes hyperframes@0.8.33 snapshot --at "${{ inputs.at }}" --no-end -o ../snap > ../snap.log 2>&1 || true); tail -5 ../snap.log; ls ../snap || true
+      - if: ${{ steps.req.outputs.at != '' }}
+        run: cd proj && (npx --yes hyperframes@0.8.33 snapshot --at "${{ steps.req.outputs.at }}" --no-end -o ../snap > ../snap.log 2>&1 || true); tail -5 ../snap.log; ls ../snap || true
       - uses: actions/upload-artifact@v4
         with:
-          name: qa-${{ inputs.tag }}
+          name: qa-${{ steps.req.outputs.tag }}
           path: |
             check.log
             snap.log
