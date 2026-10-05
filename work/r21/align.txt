@@ -1,0 +1,25 @@
+CAPTIONS 192   script 174 | whisper-corrected 11 | her wording 7
+
+WHISPER MISHEARD -> script spelling restored (10)
+    11.80s  0.91  таргет                           <- Тарет
+    16.24s  0.96  зареєструвалися                  <- зареєструвались.
+    24.33s  0.88  цікавіша,                        <- цікавіше,
+    25.83s  0.91  рахує,                           <- урахує
+    28.66s  0.89  поведінку:                       <- повідінку.
+    37.59s  0.91  ймовірністю тицьнула             <- мовірністю тиснула
+    42.88s  0.83  в Клоді,                         <- у кладі,
+    45.93s  1.00  поточний                         <- потачний
+    58.38s  1.00  навайбкоджений!                  <- на вайп коджений.
+    62.52s  0.91  налаштувала                      <- налаштовала
+
+SHE IMPROVISED -> her wording kept (8)
+     0.99s  script: —                            said: мені
+        -  script: саме                         said: — (cut)
+     4.46s  script: —                            said: самий
+        -  script: сайту,                       said: — (cut)
+    31.36s  script: клікають,                    said: вони клікують,
+    40.98s  script: —                            said: Тому
+    53.31s  script: й                            said: і
+    64.62s  script: 3                            said: три
+
+REVIEW -- could go either way (0)

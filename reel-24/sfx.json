@@ -1,0 +1,72 @@
+[
+ {
+  "t": 3.01,
+  "name": "pop",
+  "db": -4
+ },
+ {
+  "t": 4.35,
+  "name": "kaching",
+  "db": 0
+ },
+ {
+  "t": 8.285,
+  "name": "pop",
+  "db": -3
+ },
+ {
+  "t": 10.129,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 12.315,
+  "name": "pop",
+  "db": -1
+ },
+ {
+  "t": 13.255,
+  "name": "click-soft",
+  "db": -2
+ },
+ {
+  "t": 14.366,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 16.626,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 18.306,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 19.426,
+  "name": "click",
+  "db": -1
+ },
+ {
+  "t": 20.43,
+  "name": "whoosh-short",
+  "db": -2
+ },
+ {
+  "t": 22.93,
+  "name": "typing",
+  "db": -1
+ },
+ {
+  "t": 23.55,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 24.23,
+  "name": "notification",
+  "db": 0
+ }
+]

@@ -1,0 +1,37 @@
+CAPTIONS 163   script 123 | whisper-corrected 22 | her wording 18
+
+WHISPER MISHEARD -> script spelling restored (16)
+     2.06s  0.50  ChatGPT                          <- Чаджі Підді
+     2.76s  0.67  Claude,                          <- Клодом.
+     7.52s  0.50  ChatGPT                          <- Чаджі Підді
+     9.77s  0.95  агента, який                     <- агент якийсь
+    12.21s  0.80  Claude                           <- Клод
+    15.15s  0.86  І тут                            <- Іду
+    17.98s  0.80  Claude.                          <- Clot.
+    18.82s  0.67  Claude-дизайн,                   <- Clot Design
+    21.30s  0.85  потреб його вистачає з головою,  <- потреблі вовистачає зухоловою. І
+    26.57s  0.80  фігма.                           <- фільма.
+    28.20s  0.63  ChatGPT в мене                   <- ChagePT
+    29.84s  0.86  чат                              <- чайт
+    31.94s  0.93  дрібниця,                        <- дрібниць,
+    33.39s  0.82  вайбкодить                       <- байк кодить,
+    45.28s  0.95  розібратись                      <- розібратися
+    49.62s  0.80  Claude                           <- Клот
+
+SHE IMPROVISED -> her wording kept (14)
+     1.00s  script: будь-ласка реальну           said: будь ласка
+     9.00s  script: AGI,                         said: IGI,
+    11.11s  script: дії                          said: дій
+    24.79s  script: —                            said: для мене,
+    27.48s  script: —                            said: є
+    27.98s  script: —                            said: що
+    30.62s  script: застосунком                  said: застосунками хмару
+        -  script: хмарою,                      said: — (cut)
+    34.05s  script: може                         said: можливо
+    34.49s  script: —                            said: навіть
+    38.69s  script: —                            said: то
+    39.93s  script: перестрибувати               said: переструйовувати
+    42.71s  script: Будь-який ШІ                 said: Будь який штучний телеп
+    55.48s  script: —                            said: тобі
+
+REVIEW -- could go either way (0)

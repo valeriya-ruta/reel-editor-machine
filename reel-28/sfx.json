@@ -1,0 +1,147 @@
+[
+ {
+  "t": 1.87,
+  "name": "notification",
+  "db": 0
+ },
+ {
+  "t": 2.51,
+  "name": "notification",
+  "db": -2
+ },
+ {
+  "t": 3.89,
+  "name": "pop",
+  "db": -5
+ },
+ {
+  "t": 6.081,
+  "name": "click-soft",
+  "db": -2
+ },
+ {
+  "t": 10.387,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 10.717,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 12.137,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 14.947,
+  "name": "click-soft",
+  "db": -1
+ },
+ {
+  "t": 16.573,
+  "name": "whoosh-short",
+  "db": -3
+ },
+ {
+  "t": 18.783,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 19.253,
+  "name": "pop",
+  "db": -1
+ },
+ {
+  "t": 22.04,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 23.08,
+  "name": "click-soft",
+  "db": -3
+ },
+ {
+  "t": 23.83,
+  "name": "click-soft",
+  "db": -3
+ },
+ {
+  "t": 25.067,
+  "name": "pop",
+  "db": -3
+ },
+ {
+  "t": 27.064,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 34.097,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 36.312,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 38.017,
+  "name": "click",
+  "db": -1
+ },
+ {
+  "t": 40.973,
+  "name": "whoosh-short",
+  "db": -2
+ },
+ {
+  "t": 42.409,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 43.949,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 47.279,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 47.729,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 56.496,
+  "name": "click-soft",
+  "db": -2
+ },
+ {
+  "t": 63.086,
+  "name": "whoosh-short",
+  "db": -5
+ },
+ {
+  "t": 74.296,
+  "name": "whoosh-short",
+  "db": -6
+ },
+ {
+  "t": 78.224,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 79.044,
+  "name": "click",
+  "db": 0
+ }
+]

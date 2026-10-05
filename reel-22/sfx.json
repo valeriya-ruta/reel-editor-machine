@@ -1,0 +1,217 @@
+[
+ {
+  "t": 0.06,
+  "name": "pop",
+  "db": -3
+ },
+ {
+  "t": 0.871,
+  "name": "pop",
+  "db": -1
+ },
+ {
+  "t": 3.021,
+  "name": "click-soft",
+  "db": -2
+ },
+ {
+  "t": 5.794,
+  "name": "pop",
+  "db": -1
+ },
+ {
+  "t": 7.004,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 8.964,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 11.201,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 11.721,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 13.575,
+  "name": "click-soft",
+  "db": -2
+ },
+ {
+  "t": 14.892,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 17.301,
+  "name": "click-soft",
+  "db": -2
+ },
+ {
+  "t": 18.481,
+  "name": "pop",
+  "db": -1
+ },
+ {
+  "t": 20.988,
+  "name": "click",
+  "db": -1
+ },
+ {
+  "t": 22.208,
+  "name": "sparkle",
+  "db": -2
+ },
+ {
+  "t": 24.118,
+  "name": "click-soft",
+  "db": -3
+ },
+ {
+  "t": 31.11,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 31.97,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 35.911,
+  "name": "typing",
+  "db": -2
+ },
+ {
+  "t": 36.451,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 37.191,
+  "name": "notification",
+  "db": -2
+ },
+ {
+  "t": 41.31,
+  "name": "typing",
+  "db": -1
+ },
+ {
+  "t": 43.71,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 43.91,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 45.912,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 47.255,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 48.935,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 50.261,
+  "name": "click-soft",
+  "db": -2
+ },
+ {
+  "t": 51.469,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 52.372,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 54.252,
+  "name": "pop",
+  "db": -1
+ },
+ {
+  "t": 54.912,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 57.866,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 59.477,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 62.037,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 63.387,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 65.622,
+  "name": "kaching",
+  "db": 0
+ },
+ {
+  "t": 66.332,
+  "name": "notification",
+  "db": -1
+ },
+ {
+  "t": 70.462,
+  "name": "click-soft",
+  "db": -2
+ },
+ {
+  "t": 74.804,
+  "name": "click-soft",
+  "db": -1
+ },
+ {
+  "t": 79.08,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 79.67,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 82.54,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 84.801,
+  "name": "click",
+  "db": 0
+ }
+]

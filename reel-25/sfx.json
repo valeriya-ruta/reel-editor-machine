@@ -1,0 +1,217 @@
+[
+ {
+  "t": 0.851,
+  "name": "glitch-1",
+  "db": 0
+ },
+ {
+  "t": 2.754,
+  "name": "whoosh-short",
+  "db": -5
+ },
+ {
+  "t": 3.844,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 5.064,
+  "name": "ping",
+  "db": -4
+ },
+ {
+  "t": 6.602,
+  "name": "whoosh-short",
+  "db": -4
+ },
+ {
+  "t": 7.812,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 11.611,
+  "name": "kaching",
+  "db": 0
+ },
+ {
+  "t": 17.68,
+  "name": "pop",
+  "db": -4
+ },
+ {
+  "t": 19.43,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 22.399,
+  "name": "sparkle",
+  "db": -2
+ },
+ {
+  "t": 23.857,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 25.532,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 26.052,
+  "name": "typing",
+  "db": -2
+ },
+ {
+  "t": 27.952,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 28.702,
+  "name": "pop",
+  "db": -4
+ },
+ {
+  "t": 31.372,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 32.321,
+  "name": "notification",
+  "db": -4
+ },
+ {
+  "t": 35.495,
+  "name": "whoosh-short",
+  "db": -4
+ },
+ {
+  "t": 37.41,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 39.75,
+  "name": "pop",
+  "db": -3
+ },
+ {
+  "t": 40.45,
+  "name": "pop",
+  "db": -3
+ },
+ {
+  "t": 40.93,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 44.863,
+  "name": "whoosh-short",
+  "db": -5
+ },
+ {
+  "t": 51.976,
+  "name": "glitch-1",
+  "db": 0
+ },
+ {
+  "t": 52.816,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 54.536,
+  "name": "ping",
+  "db": -4
+ },
+ {
+  "t": 56.613,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 59.801,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 62.255,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 62.945,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 64.615,
+  "name": "pop",
+  "db": -4
+ },
+ {
+  "t": 66.645,
+  "name": "ping",
+  "db": -3
+ },
+ {
+  "t": 68.485,
+  "name": "click-soft",
+  "db": -3
+ },
+ {
+  "t": 69.925,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 70.671,
+  "name": "whoosh-short",
+  "db": -4
+ },
+ {
+  "t": 75.648,
+  "name": "pop",
+  "db": -4
+ },
+ {
+  "t": 77.698,
+  "name": "pop",
+  "db": -3
+ },
+ {
+  "t": 79.987,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 81.007,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 82.327,
+  "name": "glitch-1",
+  "db": 0
+ },
+ {
+  "t": 84.384,
+  "name": "ping",
+  "db": -2
+ },
+ {
+  "t": 85.153,
+  "name": "pop",
+  "db": -3
+ },
+ {
+  "t": 87.083,
+  "name": "click",
+  "db": 0
+ }
+]

@@ -1,0 +1,187 @@
+[
+ {
+  "t": 0.18,
+  "name": "notification",
+  "db": 0
+ },
+ {
+  "t": 3.24,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 4.899,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 5.489,
+  "name": "whoosh-short",
+  "db": -2
+ },
+ {
+  "t": 7.959,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 8.769,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 9.367,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 10.5,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 11.82,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 13.467,
+  "name": "whoosh-short",
+  "db": -2
+ },
+ {
+  "t": 14.977,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 17.816,
+  "name": "kaching",
+  "db": 0
+ },
+ {
+  "t": 18.35,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 19.05,
+  "name": "pop",
+  "db": -3
+ },
+ {
+  "t": 20.737,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 22.457,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 24.383,
+  "name": "ping",
+  "db": -3
+ },
+ {
+  "t": 26.693,
+  "name": "click-soft",
+  "db": -2
+ },
+ {
+  "t": 27.812,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 31.395,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 31.795,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 38.237,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 42.622,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 42.902,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 44.772,
+  "name": "typing",
+  "db": -1
+ },
+ {
+  "t": 50.179,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 50.984,
+  "name": "click-soft",
+  "db": -1
+ },
+ {
+  "t": 52.184,
+  "name": "click-soft",
+  "db": -1
+ },
+ {
+  "t": 53.164,
+  "name": "click-soft",
+  "db": -1
+ },
+ {
+  "t": 53.744,
+  "name": "click-soft",
+  "db": -1
+ },
+ {
+  "t": 54.78,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 55.187,
+  "name": "whoosh-short",
+  "db": -1
+ },
+ {
+  "t": 56.467,
+  "name": "typing",
+  "db": -2
+ },
+ {
+  "t": 60.198,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 63.07,
+  "name": "pop",
+  "db": -3
+ },
+ {
+  "t": 66.836,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 68.456,
+  "name": "click",
+  "db": 0
+ }
+]

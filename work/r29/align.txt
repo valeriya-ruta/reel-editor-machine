@@ -1,0 +1,23 @@
+CAPTIONS 197   script 155 | whisper-corrected 9 | her wording 33
+
+WHISPER MISHEARD -> script spelling restored (6)
+     3.41s  0.83  окремо                           <- окреме
+     5.93s  0.94  сама дизайн-система,             <- саме дизайн система,
+    14.44s  0.83  годину,                          <- години,
+    15.48s  0.90  придумувала                      <- придумала
+    20.19s  1.00  дизайн-система:                  <- дизайн система
+    70.69s  0.86  "система",                       <- системи
+
+SHE IMPROVISED -> her wording kept (10)
+     5.53s  script: й                            said: і
+    10.32s  script: на карусель                  said: я
+    12.38s  script: —                            said: на карусель,
+    32.27s  script: —                            said: в штучному металекті
+    41.93s  script: завдання                     said: промти
+    49.10s  script: —                            said: І таким чином можна робити не тільки кар
+        -  script: собі                         said: — (cut)
+    65.99s  script: дизайн-систему               said: систему
+        -  script: скину                        said: — (cut)
+    71.89s  script: його.                        said: скину.
+
+REVIEW -- could go either way (0)

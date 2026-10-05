@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 28 — суфлер</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+    @font-face {
+      font-family: "ProductSans";
+      src: url("assets/fonts/ProductSans-Black.woff") format("woff");
+      font-weight: 900; font-style: normal; font-display: block;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px;
+            overflow: hidden; background: #000;
+            font-family: "ProductSans", system-ui, sans-serif;
+      --surface:        #fffcfd;
+      --container:      #fbeef2;
+      --container-high: #f4dfe5;
+      --graphite:       rgba(23,20,28,0.13);
+      --accent:         #b4122f;
+      --accent-deep:    #8d0d24;
+      --pink:           #ff6e9c;
+      --ink:            #17141c;
+
+      --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
+      --lit-blush:  linear-gradient(115deg, #ffffff 0%, #fff7fa 100%);
+      --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
+      --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
+      --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
+
+      --rim: inset 0 1.5px 0 rgba(255,255,255,0.92),
+             inset 0 -1.5px 0 rgba(255,255,255,0.14),
+             inset 0 0 0 1px rgba(255,255,255,0.28);
+      --rim-dark: inset 0 1.5px 0 rgba(255,255,255,0.16),
+                  inset 0 0 0 1px rgba(255,255,255,0.08);
+      --rim-glass: inset 0 2px 0 rgba(255,255,255,0.70),
+                   inset 0 -2px 0 rgba(255,255,255,0.10),
+                   inset 0 0 0 1.5px rgba(255,255,255,0.30);
+
+      /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
+         Light coming off the object, not the object sitting on a surface. */
+      --glow: drop-shadow(0 0 10px rgba(255,196,218,0.95))
+              drop-shadow(0 0 26px rgba(255,110,156,0.85))
+              drop-shadow(0 0 64px rgba(255,110,156,0.55))
+              drop-shadow(0 0 120px rgba(255,110,156,0.32));
+      --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
+                   drop-shadow(0 0 60px rgba(255,110,156,0.30));
+
+      --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
+              drop-shadow(0 24px 48px rgba(26,30,39,0.14));
+      --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))
+                 drop-shadow(0 12px 24px rgba(26,30,39,0.12));
+ }
+    .plate { position: absolute; inset: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    #scrim { position: absolute; left: 20px; top: 1247px;
+             width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png");
+             background-size: 100% 100%; background-repeat: no-repeat;
+             opacity: 0; visibility: hidden; pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; top: 1413px;
+           height: 118px; line-height: 118px; text-align: center;
+           color: #fff; font-size: 90px; font-weight: 900;
+           letter-spacing: -0.015em; white-space: nowrap;
+           opacity: 0; visibility: hidden; }
+    .cap.inv { color: var(--ink); }
+    .g { position: absolute; left: 0; top: 40px; width: 1080px;
+         height: 600px; opacity: 0; visibility: hidden; }
+    .g.full { top: 0; height: 1920px; }
+
+    /* §5a.9 — glass over her footage is the house look. Panels only; an
+       edge-to-edge frosted ground blurs her out of her own reel. */
+    .glass { background: rgba(255,255,255,0.15);
+             -webkit-backdrop-filter: blur(24px) saturate(1.4);
+             backdrop-filter: blur(24px) saturate(1.4);
+             box-shadow: var(--rim); filter: var(--cast); }
+
+    /* A takeover: a tinted pane laid ON the footage, with a real margin so it
+       reads as an object rather than a blur applied to the video. */
+    /* The inset pane is a *pane*: 44/64 margin so the footage shows past it,
+       and corners, because a full-bleed hard-cornered rectangle is a bug she
+       has reported. base_css() squircles it; this radius is the fallback. */
+    .ground { position: absolute; left: 44px; top: 64px;
+              width: 992px; height: 1792px; border-radius: 68px;
+              background: linear-gradient(158deg, rgba(196,20,52,0.62) 0%,
+                          rgba(141,13,36,0.70) 100%);
+              -webkit-backdrop-filter: blur(30px) saturate(1.5);
+              backdrop-filter: blur(30px) saturate(1.5);
+              box-shadow: var(--rim-glass); filter: var(--cast); }
+
+    .card { position: absolute; background: var(--lit-blush);
+            filter: var(--cast); box-shadow: var(--rim); }
+    .card.ink { background: var(--lit-ink); box-shadow: var(--rim-dark); }
+    .card.accent { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+
+    .tile { position: absolute; display: grid; place-items: center;
+            background: var(--lit-blush); filter: var(--cast);
+            box-shadow: var(--rim); }
+
+    /* §5a.3 — bar rhythm. One thick heading, then ragged body. Uniform bars
+       read as a loading state; ragged ones read as an abstracted screen. */
+    .ph { display: block; height: 66px; border-radius: 18px;
+          background: var(--lit-accent); margin-bottom: 26px;
+          box-shadow: var(--rim-dark); }
+    .pr { display: block; height: 40px; border-radius: 12px;
+          background: var(--graphite); margin-bottom: 18px; }
+    .pr:nth-of-type(2) { width: 94%; }
+    .pr:nth-of-type(3) { width: 71%; }
+    .pr:nth-of-type(4) { width: 43%; }
+
+    .phone { position: absolute; background: var(--lit-blush);
+             overflow: hidden; filter: var(--cast); box-shadow: var(--rim); }
+    .phone video, .phone img { width: 100%; height: 100%; object-fit: cover;
+                               display: block; }
+
+    /* a value in its own card — her reference's "big number" pattern, minus
+       the label, because a graphic here carries no words */
+    .valcard { position: absolute; background: rgba(255,255,255,0.16);
+               -webkit-backdrop-filter: blur(16px) saturate(1.3);
+               backdrop-filter: blur(16px) saturate(1.3);
+               box-shadow: var(--rim-dark);
+               display: grid; place-items: center; }
+    .valcard span { color: #fff; font-weight: 900; letter-spacing: -0.04em; }
+
+    .wire { fill: none; stroke-width: 20; stroke-linecap: round;
+            filter: drop-shadow(0 8px 18px rgba(26,30,39,0.22)); }
+    .node { fill: #fdf6f6; stroke: #b4122f; stroke-width: 16;
+            filter: drop-shadow(0 10px 22px rgba(26,30,39,0.24)); }
+    .node.hub { fill: #b4122f; stroke: #fff; }
+
+    /* §5a.10 — the glow rides a WRAPPER, never the clipped element itself.
+       clip-path is applied *after* filter, so a drop-shadow declared on the
+       same element as the clip is cut away with everything else outside the
+       silhouette and the object ends up with no light at all. Put the clip on
+       the shape and the filter on its parent: the parent filters the already
+       clipped bitmap, so the light traces the squircle and survives. */
+    .lit { position: absolute; inset: 0; pointer-events: none;
+           filter: var(--glow); }
+    .lit.soft { filter: var(--glow-soft); }
+
+    /* Emoji are images, never glyphs. The render runs on someone else's
+       Chrome, so a literal 💩 in the HTML comes out in whatever emoji font
+       that machine has — Noto on the cloud renderer, Segoe on hers, Apple on
+       nobody's. She wants the Apple set, so the artwork ships in assets/emoji
+       and the glyph never appears in a composition. */
+    .emoji { display: block; width: auto; image-rendering: auto; }
+
+    .halo { position: absolute; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(255,110,156,0.5) 0%,
+                        rgba(255,110,156,0) 70%); }
+    .ring { position: absolute; border-radius: 50%; pointer-events: none;
+            border: 18px solid rgba(255,110,156,0.92);
+            filter: drop-shadow(0 0 40px rgba(255,110,156,0.55)); }
+
+    /* ---- takeovers (STYLE.md 2c) ----
+       The graphic owns the frame: the plate is gone, so none of the
+       over-footage rules apply — no glow budget, no band discipline, ink type
+       on a light ground. Lives here rather than per-reel because every reel
+       from 9 onwards needs it. A takeover that does not bleed off at least
+       two edges reads as a slide, not a takeover. */
+    .tk { position: absolute; inset: 0; }
+    .tk.paper { background: var(--surface); }
+    .tk.white { background: #ffffff; }
+    .tk.blush { background: linear-gradient(150deg,#ffffff 0%,#fffafc 55%,
+                                            #fdf4f8 100%); }
+    /* graph paper — the texture the reference takeovers all have. 60px cells
+       at 5.8% ink: visible, never a pattern you read. */
+    .gp { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px),
+            repeating-linear-gradient(90deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px); }
+    /* horizontal rules only — a transcript or a list is ruled paper, not
+       graph paper, and the difference is what makes it read as an export. */
+    .gl { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.05) 0 1px,
+                                      transparent 1px 175px); }
+
+    /* the finished artefact, in her system — one class at any aspect ratio */
+    .dk { position: absolute; overflow: hidden; border-radius: 28px;
+          background: var(--lit-blush); box-shadow: var(--rim);
+          filter: var(--cast); }
+    .dk i { position: absolute; display: block; }
+    .dk .hb { left: 30px; top: 30px; height: 20px; border-radius: 6px;
+              background: var(--lit-accent); }
+    .dk .rr { left: 30px; height: 9px; border-radius: 4px;
+              background: rgba(23,20,28,0.22); }
+    .dk .pb { border-radius: 16px; background: var(--lit-pink);
+              box-shadow: var(--rim-dark); }
+
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Regular.ttf"); font-weight: 400; font-display: block; }
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Medium.ttf"); font-weight: 500; font-display: block; }
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Bold.ttf"); font-weight: 700; font-display: block; }
+
+/* ---------- the edge light: what makes a surface read as glass ----------
+   A uniform stroke is 2013. Real glass catches light at two opposite corners
+   and goes almost dark along the sides, so the rim is a gradient ring. */
+.edge::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.6px;
+  background: linear-gradient(140deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.34) 16%,
+              rgba(255,255,255,0.05) 42%, rgba(255,255,255,0.07) 62%,
+              rgba(255,255,255,0.50) 86%, rgba(255,255,255,0.90) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 3; }
+
+/* ---------- the shelf: frosted glass over her footage ----------
+   The house look since reel 3, rebuilt in layers: blur + saturation, a faint
+   top-to-bottom tint, light inside the bottom edge (thickness), huge soft
+   shadow. Add .edge for the rim. */
+.shelf { position: absolute; border-radius: 80px;
+  background: linear-gradient(158deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.07) 50%,
+              rgba(255,255,255,0.13) 100%);
+  -webkit-backdrop-filter: blur(22px) saturate(1.7) brightness(1.05);
+  backdrop-filter: blur(22px) saturate(1.7) brightness(1.05);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.65), inset 0 -24px 44px -22px rgba(255,255,255,0.36),
+              0 44px 90px -34px rgba(24,4,12,0.5); }
+
+/* dark glass — notifications and anything with white text over footage */
+.dglass { position: absolute; border-radius: 64px; color: #fff;
+  background: linear-gradient(160deg, rgba(58,22,32,0.58) 0%, rgba(24,10,15,0.50) 100%);
+  -webkit-backdrop-filter: blur(30px) saturate(1.8); backdrop-filter: blur(30px) saturate(1.8);
+  box-shadow: inset 0 1.5px 1px rgba(255,255,255,0.30), inset 0 -16px 30px -16px rgba(255,255,255,0.14),
+              0 40px 80px -30px rgba(10,0,4,0.6); }
+
+/* ---------- the tile family: every mark lives in one of three ----------
+   Same radius ratio as an iOS icon (22.4%), glyph at 50%. Put the tile in a
+   sized wrapper; the wrapper takes the motion, the tile takes the material. */
+.clear { position: absolute; inset: 0; border-radius: 22.4%;
+  background: linear-gradient(158deg, rgba(255,255,255,0.36) 0%, rgba(255,255,255,0.11) 48%,
+              rgba(255,255,255,0.17) 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.70), inset 0 -18px 30px -14px rgba(255,255,255,0.42),
+              0 34px 60px -22px rgba(24,4,12,0.55), 0 3px 8px rgba(24,4,12,0.10);
+  display: flex; align-items: center; justify-content: center; }
+.pearl { position: absolute; inset: 0; border-radius: 22.4%; overflow: hidden;
+  background: linear-gradient(160deg, #ffffff 0%, #fff5f8 52%, #f5dfe6 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -20px 32px -14px rgba(180,18,47,0.18),
+              0 36px 64px -22px rgba(30,4,12,0.55), 0 3px 8px rgba(30,4,12,0.12);
+  display: flex; align-items: center; justify-content: center; }
+.jelly { position: absolute; inset: 0; border-radius: 22.4%; overflow: hidden;
+  background: linear-gradient(165deg, #e0204b 0%, #ab112e 46%, #6b081c 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.55), inset 0 -26px 40px -14px rgba(255,125,165,0.60),
+              inset 0 0 0 1px rgba(255,255,255,0.10),
+              0 36px 64px -22px rgba(70,4,20,0.62), 0 3px 8px rgba(70,4,20,0.14);
+  display: flex; align-items: center; justify-content: center; }
+/* the lens highlight — subtle, or it turns into 2009 gloss */
+.jelly::after, .pearl::after { content: ""; position: absolute; left: 7%; right: 7%; top: 3.5%; height: 44%;
+  border-radius: 40% 40% 50% 50% / 38% 38% 24% 24%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.26), rgba(255,255,255,0)); }
+.pearl::after { background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0)); opacity: 0.5; }
+.mk { width: 50%; height: 50%; fill: url(#gw); position: relative; z-index: 1; }
+.pearl .mk { fill: #17141c; }
+/* a wordmark stands in where a brand has no icon (RUTA, Windsor's "w.") */
+.wmark { font-weight: 900; color: #17141c; letter-spacing: -0.045em; line-height: 1;
+  position: relative; z-index: 1; }
+.wmark i { font-style: normal; color: #b4122f; }
+.jelly .wmark { color: #fff; } .jelly .wmark i { color: #ffb3c9; }
+
+/* one light sweep across a surface when it lands — once, never looping */
+.sheen { position: absolute; inset: -10%; z-index: 2; pointer-events: none;
+  background: linear-gradient(105deg, rgba(255,255,255,0) 38%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0) 62%);
+  mix-blend-mode: soft-light; }
+/* a ripple the same shape as the tile that sent it */
+.sqring { position: absolute; border-radius: 22.4%; border: 3px solid rgba(255,255,255,0.75);
+  opacity: 0; visibility: hidden; }
+
+/* ---------- the takeover ground: deep burgundy, lit from inside ----------
+   Approved on the test: a dark ground is allowed now (it overrides §5's old
+   "never dark"). Three soft light pools drift slowly; grain stops banding. */
+.tkg { position: absolute; inset: 0;
+  background: linear-gradient(172deg, #4a0a1c 0%, #660c26 36%, #3c0716 70%, #1d030a 100%); }
+.aur { position: absolute; border-radius: 50%; pointer-events: none; }
+.aur.a1 { left: 260px; top: -420px; width: 1200px; height: 1200px;
+  background: radial-gradient(circle, rgba(255,110,156,0.50) 0%, rgba(255,110,156,0) 62%); }
+.aur.a2 { left: -640px; top: 960px; width: 1400px; height: 1400px;
+  background: radial-gradient(circle, rgba(222,32,74,0.55) 0%, rgba(222,32,74,0) 64%); }
+.aur.a3 { left: 330px; top: 760px; width: 900px; height: 900px;
+  background: radial-gradient(circle, rgba(255,198,214,0.20) 0%, rgba(255,198,214,0) 60%); }
+.grain { position: absolute; inset: 0; background: url("assets/grain.png"); opacity: 0.075;
+  mix-blend-mode: overlay; pointer-events: none; }
+
+/* the white report card that sits on a burgundy ground */
+.sheet { position: absolute; border-radius: 68px; overflow: hidden; color: #17141c;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 55%, #fdf0f4 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -30px 60px -30px rgba(180,18,47,0.14),
+              0 70px 130px -40px rgba(8,0,3,0.75), 0 0 0 1px rgba(255,255,255,0.35); }
+.sheet .sheen { mix-blend-mode: normal; opacity: 0.55; }
+/* type ladder inside a sheet */
+.t-micro { font-size: 24px; font-weight: 700; letter-spacing: 0.16em; color: rgba(23,20,28,0.42); }
+.t-title { font-size: 42px; font-weight: 700; letter-spacing: -0.015em; }
+.t-sub   { font-size: 26px; font-weight: 500; color: rgba(23,20,28,0.46); }
+.t-big   { font-size: 176px; font-weight: 900; letter-spacing: -0.045em; line-height: 1;
+  background: linear-gradient(118deg, #7e0b20 0%, #b4122f 42%, #ff6e9c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: 10px; }
+.chip { display: inline-flex; align-items: center; gap: 10px; height: 58px; padding: 0 24px;
+  border-radius: 29px; background: #fbe3ea; color: #b4122f; font-size: 26px; font-weight: 700; }
+.hair { height: 2px; background: rgba(23,20,28,0.07); transform-origin: 0 0; }
+
+/* a cable between two tiles: a glass tube, a bright core, a travelling packet */
+.cab .tube { fill: none; stroke: rgba(255,255,255,0.26); stroke-width: 20; stroke-linecap: round; }
+.cab .core { fill: none; stroke: rgba(255,255,255,0.92); stroke-width: 4.5; stroke-linecap: round; }
+.cab .pkt  { fill: none; stroke: #ffd6e3; stroke-width: 11; stroke-linecap: round; }
+.cab .pkg  { filter: drop-shadow(0 0 10px rgba(255,120,165,1)); }
+.cab .wire { fill: none; stroke: rgba(255,255,255,0.55); stroke-width: 4; stroke-linecap: round; }
+
+
+.abs { position: absolute; }
+.hide { opacity: 0; visibility: hidden; }
+.tw { position: absolute; }
+.sk { fill: none; stroke: url(#gw); stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round;
+  width: 50%; height: 50%; position: relative; z-index: 1; overflow: visible; }
+.pearl .sk { stroke: #17141c; }
+.clear { overflow: hidden; }
+.circ .jelly, .circ .pearl, .circ .clear, .circ .sheen, .circ .sqring { border-radius: 50%; }
+.shc { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
+.shc .sheen { mix-blend-mode: normal; opacity: 0.4; }
+
+/* A · her two real DM screenshots */
+.shot { position: absolute; border-radius: 44px; overflow: hidden; background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6), 0 44px 90px -30px rgba(10,0,4,0.62), 0 3px 10px rgba(10,0,4,0.18); }
+.shot img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+.shot .hl { position: absolute; display: block; border-radius: 12px; background: rgba(255,110,156,0.42);
+  mix-blend-mode: multiply; transform-origin: 0 50%; transform: scaleX(0); }
+.shot .sheen { mix-blend-mode: normal; opacity: 0.35; }
+
+/* B · two options */
+.num { font-size: 150px; padding-right: 0; position: relative; z-index: 1; }
+.chp { position: absolute; height: 84px; border-radius: 42px; overflow: hidden;
+  background: linear-gradient(160deg, #ffffff 0%, #fff5f8 52%, #f5dfe6 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 26px 50px -20px rgba(8,0,3,0.6); }
+.chp .cf { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 12px;
+  color: #17141c; font-size: 38px; font-weight: 700; letter-spacing: -0.01em; }
+.chp .cf b { font-weight: 900; color: #b4122f; }
+.chp .sk { width: 46px; height: 46px; stroke: #17141c; stroke-width: 2.1; }
+
+/* C · the Edits teleprompter */
+.tp { position: absolute; left: 40px; top: 128px; width: 820px; height: 196px; border-radius: 30px; overflow: hidden;
+  background: rgba(8,2,5,0.34); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.10); }
+.tpx { position: absolute; left: 30px; top: 22px; width: 640px; font-size: 38px; font-weight: 700; line-height: 1.32;
+  color: #fff; transform-origin: 0 0; letter-spacing: -0.005em; }
+.tpc { position: absolute; left: 30px; top: 28px; width: 4px; height: 44px; background: #ff8ab0; }
+.sl { position: absolute; left: 40px; width: 820px; height: 56px; }
+.sl .lb { position: absolute; left: 0; top: 7px; font-size: 30px; font-weight: 700; color: rgba(255,255,255,0.8); }
+.sl .tr, .sl .fi { position: absolute; left: 230px; top: 23px; width: 560px; height: 10px; border-radius: 5px; }
+.sl .tr { background: rgba(255,255,255,0.22); }
+.sl .fi { background: linear-gradient(90deg, #ff8ab0, #ff6e9c); transform-origin: 0 50%; }
+.sl .kn { position: absolute; left: 210px; top: 8px; width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(165deg, #ffffff, #f5dfe6); box-shadow: 0 6px 14px rgba(10,0,4,0.45); }
+
+/* D · the blur switch */
+.swl { position: absolute; font-size: 32px; font-weight: 700; color: #fff; letter-spacing: -0.01em; white-space: nowrap; }
+.sw { position: absolute; width: 124px; height: 70px; border-radius: 35px; background: rgba(255,255,255,0.22);
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.25); }
+.sw .on { position: absolute; inset: 0; border-radius: 35px;
+  background: linear-gradient(165deg, #ff6e9c 0%, #e0204b 55%, #ab112e 100%);
+  box-shadow: 0 0 30px rgba(255,110,156,0.6); opacity: 0; visibility: hidden; }
+.sw .kb { position: absolute; left: 7px; top: 7px; width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(165deg, #ffffff, #f3e4e9); box-shadow: 0 6px 14px rgba(10,0,4,0.4); }
+.xb .sk { stroke: #b4122f; stroke-width: 3.2; }
+
+/* F · her Notes popup, laid over the camera */
+.np { position: absolute; inset: 0; border-radius: 36px; overflow: hidden; background: #fcfcfc;
+  box-shadow: 0 40px 90px -30px rgba(10,0,4,0.45); }
+.nph { position: absolute; left: 0; top: 0; width: 880px; height: 194px; overflow: hidden; }
+.npb { position: absolute; left: 0; top: 194px; width: 880px; height: 726px; overflow: hidden; }
+.np img { position: absolute; left: 0; top: 0; width: 880px; height: auto; display: block; }
+.npc { position: absolute; left: 0; top: 196px; width: 880px; height: 724px; background: #fcfcfc; }
+.pst { position: absolute; height: 80px; padding: 0 36px; border-radius: 40px; white-space: nowrap;
+  background: linear-gradient(165deg, #2c2730 0%, #17141c 100%); color: #fff; font-size: 33px; font-weight: 700;
+  line-height: 80px; box-shadow: 0 22px 44px -14px rgba(0,0,0,0.6), inset 0 1.5px 0 rgba(255,255,255,0.16); }
+.mw { position: absolute; left: 130px; top: 0; width: 750px; height: 124px; overflow: hidden; }
+.ms { position: absolute; left: 0; top: 0; height: 124px; width: 900px; }
+.ml { position: absolute; top: 0; height: 116px; line-height: 116px; text-align: center; font-size: 31px; font-weight: 700;
+  letter-spacing: 0.05em; color: rgba(255,255,255,0.5); white-space: nowrap; }
+.mdot { position: absolute; left: 369px; top: 96px; width: 12px; height: 12px; border-radius: 50%; background: #ff6e9c;
+  box-shadow: 0 0 12px rgba(255,110,156,0.9); }
+.eyl { fill: none; stroke: #ff8ab0; stroke-width: 8; stroke-linecap: round; stroke-dasharray: 22 18; }
+.eyw { position: absolute; filter: drop-shadow(0 0 8px rgba(255,110,156,0.9)); }
+
+/* H · follow */
+.fl { position: absolute; border-radius: 80px; overflow: hidden;
+  background: linear-gradient(160deg, #ffffff 0%, #fff5f8 52%, #f5dfe6 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 40px 80px -28px rgba(30,4,12,0.65); }
+.fl .t { position: absolute; left: 160px; top: 0; height: 150px; line-height: 150px; font-size: 56px; font-weight: 700;
+  letter-spacing: -0.02em; color: #17141c; }
+.fl .on { position: absolute; inset: 0; background: linear-gradient(165deg, #e0204b 0%, #ab112e 46%, #6b081c 100%);
+  opacity: 0; visibility: hidden; }
+.fl .on .t { color: #fff; left: 150px; }
+.ck { position: absolute; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%;
+  border: 7px solid #ff6e9c; opacity: 0; visibility: hidden; z-index: 5; }
+
+    .ground { clip-path: path('M 883.2 0 c 36.293 0 54.439 0 70.765 8.318 a 68 68 0 0 1 29.717 29.717 c 8.318 16.325 8.318 34.472 8.318 70.765 L 992 1683.2 c 0 36.293 0 54.439 -8.318 70.765 a 68 68 0 0 1 -29.717 29.717 c -16.325 8.318 -34.472 8.318 -70.765 8.318 L 108.8 1792 c -36.293 0 -54.439 0 -70.765 -8.318 a 68 68 0 0 1 -29.717 -29.717 c -8.318 -16.325 -8.318 -34.472 -8.318 -70.765 L 0 108.8 c 0 -36.293 0 -54.439 8.318 -70.765 a 68 68 0 0 1 29.717 -29.717 c 16.325 -8.318 34.472 -8.318 70.765 -8.318 Z'); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="79.883" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="79.883" data-media-start="0"
+             muted playsinline></video>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="gw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ffdbe6"/></linearGradient>
+<symbol id="i-instagram" viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></symbol></defs></svg>
+<div class="g full" id="gA"><div class="shot hide" id="dm1" style="left:88px;top:100px;width:903px;height:225px"><img src="assets/proof-dm1.jpg" alt=""><i class="hl" id="dm1H" style="left:184px;top:111px;width:225px;height:54px"></i><div class="shc"><div class="sheen"></div></div></div><div class="shot hide" id="dm2" style="left:71px;top:345px;width:938px;height:278px"><img src="assets/proof-dm2.jpg" alt=""><i class="hl" id="dm2H" style="left:336px;top:111px;width:167px;height:54px"></i><div class="shc"><div class="sheen"></div></div></div></div>
+<div class="g full" id="gB"><div class="sqring" id="t2R" style="left:610px;top:150px;width:220px;height:220px"></div><div class="tw hide " id="t2" style="left:610px;top:150px;width:220px;height:220px"><div class="pearl"><span class="t-big num">2</span><div class="sheen"></div></div></div><div class="chp hide" id="c1" style="left:250px;top:400px;width:220px"><div class="cf" id="c10"><b>0</b>&nbsp;грн</div><div class="cf hide" id="c11"><svg class="sk" viewBox="0 0 24 24"><rect x="5.2" y="4.6" width="13.6" height="9.4" rx="1.6"/><path d="M12 14v3.2M2.6 17.6h18.8M5 17.6v3M19 17.6v3"/></svg>стіл</div></div><div class="chp hide" id="c2" style="left:610px;top:400px;width:220px"><div class="cf" id="c20"><b>0</b>&nbsp;грн</div><div class="cf hide" id="c21"><svg class="sk" viewBox="0 0 24 24"><rect x="4.4" y="3.4" width="15.2" height="17.2" rx="1.6"/><path d="M12 3.4v17.2M4.4 12h15.2"/></svg>вікно</div></div></div>
+<div class="g full" id="gC"><div class="dglass edge hide" id="ed" style="left:90px;top:110px;width:900px;height:520px;border-radius:56px"><div class="tw hide circ" id="edCam" style="left:776px;top:26px;width:84px;height:84px"><div class="clear"><svg class="sk" viewBox="0 0 24 24"><path d="M3.6 8.6a2 2 0 0 1 2-2h2.3l1.6-2.2h5l1.6 2.2h2.3a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5.6a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.8" r="3.5"/></svg><div class="sheen"></div></div></div><div class="tp hide" id="tp"><div class="tpx" id="tpx">Мені в дірект за один день написали двоє незнайомих між собою людей з одним і тим самим питанням, на який суфлер я записую свої рілси, тож, видно, це дійсно хвилює багатьох.</div><div class="tpc" id="tpc"></div></div><div class="sl hide" id="sl1" style="top:356px"><span class="lb">Розмір</span><i class="tr"></i><i class="fi" id="fi1"></i><i class="kn" id="kn1"></i></div><div class="sl hide" id="sl2" style="top:432px"><span class="lb">Швидкість</span><i class="tr"></i><i class="fi" id="fi2"></i><i class="kn" id="kn2"></i></div><div class="shc"><div class="sheen"></div></div></div></div>
+<div class="g full" id="gD"><div class="dglass edge hide" id="sh" style="left:80px;top:330px;width:920px;height:190px;border-radius:60px"><div class="shc"><div class="sheen"></div></div></div><div class="chp hide" id="lc" style="left:286px;top:383px;width:280px"><div class="cf" id="lc0"><svg class="sk" viewBox="0 0 24 24"><rect x="5.2" y="4.6" width="13.6" height="9.4" rx="1.6"/><path d="M12 14v3.2M2.6 17.6h18.8M5 17.6v3M19 17.6v3"/></svg>стіл</div><div class="cf hide" id="lc1"><svg class="sk" viewBox="0 0 24 24"><rect x="4.4" y="3.4" width="15.2" height="17.2" rx="1.6"/><path d="M12 3.4v17.2M4.4 12h15.2"/></svg>вікно</div></div><span class="swl hide" id="swl" style="left:590px;top:404px">Розмиття фону</span><div class="sw hide" id="sw" style="left:850px;top:390px"><div class="on" id="swOn"></div><div class="kb" id="swK"></div></div><div class="sqring" id="swR" style="left:850px;top:390px;width:124px;height:70px;border-radius:35px"></div></div>
+<div class="g full" id="gT"><div class="sqring" id="eTR" style="left:250px;top:150px;width:220px;height:220px"></div><div class="tw hide" id="eT" style="left:250px;top:150px;width:220px;height:220px"><div class="pearl" id="eT1"><span class="t-big num">1</span><div class="sheen"></div></div><div class="jelly hide" id="eT2"><span class="wmark" style="font-size:68px">Edits</span><div class="sheen"></div></div><div class="tw circ hide" id="eIG" style="left:150px;top:-30px;width:96px;height:96px"><div class="jelly"><svg class="mk"><use href="#i-instagram" width="100%" height="100%"/></svg></div></div><div class="tw circ hide" id="eX" style="left:148px;top:-32px;width:104px;height:104px"><div class="pearl xb"><svg class="sk" viewBox="0 0 24 24"><path d="M7.2 7.2l9.6 9.6M16.8 7.2l-9.6 9.6"/></svg></div></div></div></div>
+<div class="g full" id="gN"><div class="tw hide" id="npW" style="left:100px;top:470px;width:880px;height:920px"><div class="np"><div class="nph"><img src="assets/notes-popup.png" alt=""></div><div class="npb"><img id="npI" src="assets/notes-popup.png" alt="" style="top:-194px"></div><div class="npc" id="npC"></div></div></div><div class="pst hide" id="pst" style="left:540px;top:300px">Вставити</div></div>
+<div class="g full" id="gF"><div class="dglass edge hide" id="md" style="left:90px;top:300px;width:900px;height:124px;border-radius:62px"><div class="tw circ" id="mdF" style="left:18px;top:18px;width:88px;height:88px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><path d="M4.6 10.2A7.6 7.6 0 0 1 18.2 7.4M19.4 13.8A7.6 7.6 0 0 1 5.8 16.6"/><path d="M18.6 3.6v4.2h-4.2M5.4 20.4v-4.2h4.2"/></svg></div></div><div class="mw"><div class="ms" id="ms"><span class="ml" id="ml0" style="left:0px;width:160px">ФОТО</span><span class="ml" id="ml1" style="left:160px;width:170px">ВІДЕО</span><span class="ml" id="ml2" style="left:330px;width:380px">ПОРТРЕТНЕ ВІДЕО</span><span class="ml" id="ml3" style="left:710px;width:120px">ЩЕ</span></div><i class="mdot"></i></div><div class="shc"><div class="sheen"></div></div></div><div class="eyw hide" id="eyW" style="left:0;top:870px;width:1080px;height:60px"><svg class="abs" width="1080" height="60" style="left:0;top:0"><path class="eyl" d="M60 30 L 872 30"/></svg></div><div class="sqring" id="eyCR" style="left:902px;top:852px;width:96px;height:96px"></div><div class="tw hide circ" id="eyC" style="left:902px;top:852px;width:96px;height:96px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M2.4 12s3.6-6.4 9.6-6.4 9.6 6.4 9.6 6.4-3.6 6.4-9.6 6.4S2.4 12 2.4 12z"/><circle cx="12" cy="12" r="3.1"/></svg><div class="sheen"></div></div></div></div>
+<div class="g full" id="gH"><div class="fl hide" id="fl" style="left:190px;top:330px;width:700px;height:150px"><div class="tw circ" style="left:28px;top:27px;width:96px;height:96px"><div class="jelly"><svg class="mk"><use href="#i-instagram" width="100%" height="100%"/></svg></div></div><div class="t" id="flT">Стежити</div><div class="on" id="flOn"><div class="tw circ" style="left:28px;top:27px;width:96px;height:96px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><div class="t">Ви стежите</div></div><div class="ck" id="ck4" style="left:470px;top:75px"></div><div class="shc"><div class="sheen"></div></div></div></div>
+
+      <div id="scrim"></div>
+      <div class="cap" id="cap0">МЕНІ</div>
+      <div class="cap" id="cap1">В ДІРЕКТ</div>
+      <div class="cap" id="cap2">ЗА</div>
+      <div class="cap" id="cap3">ОДИН</div>
+      <div class="cap" id="cap4">ДЕНЬ</div>
+      <div class="cap" id="cap5">НАПИСАЛИ</div>
+      <div class="cap" id="cap6">ДВОЄ</div>
+      <div class="cap" id="cap7">НЕЗНАЙОМИХ</div>
+      <div class="cap" id="cap8">МІЖ</div>
+      <div class="cap" id="cap9">СОБОЮ</div>
+      <div class="cap" id="cap10">ЛЮДЕЙ</div>
+      <div class="cap" id="cap11">З</div>
+      <div class="cap" id="cap12">ОДНИМ</div>
+      <div class="cap" id="cap13">І</div>
+      <div class="cap" id="cap14">ТИМ</div>
+      <div class="cap" id="cap15">ЖЕ</div>
+      <div class="cap" id="cap16">ПИТАННЯМ,</div>
+      <div class="cap" id="cap17">НА</div>
+      <div class="cap" id="cap18">ЯКИЙ</div>
+      <div class="cap" id="cap19">СУФЛЕР</div>
+      <div class="cap" id="cap20">Я</div>
+      <div class="cap" id="cap21">ЗАПИСУЮ</div>
+      <div class="cap" id="cap22">СВОЇ</div>
+      <div class="cap" id="cap23">РІЛСИ,</div>
+      <div class="cap" id="cap24">ТОЖ,</div>
+      <div class="cap" id="cap25">ВИДНО,</div>
+      <div class="cap" id="cap26">ЦЕ</div>
+      <div class="cap" id="cap27">ХВИЛЮЄ</div>
+      <div class="cap" id="cap28">БАГАТЬОХ.</div>
+      <div class="cap" id="cap29">У МЕНЕ</div>
+      <div class="cap" id="cap30">Є</div>
+      <div class="cap" id="cap31">ДВА</div>
+      <div class="cap" id="cap32">ВАРІАНТИ,</div>
+      <div class="cap" id="cap33">ОБИДВА</div>
+      <div class="cap" id="cap34">ПРОСТІ</div>
+      <div class="cap" id="cap35">І БЕЗКОШТОВНІ,</div>
+      <div class="cap" id="cap36">І</div>
+      <div class="cap" id="cap37">ЯКИЙ</div>
+      <div class="cap" id="cap38">З НИХ</div>
+      <div class="cap" id="cap39">ВЗЯТИ</div>
+      <div class="cap" id="cap40">ЗАЛЕЖИТЬ</div>
+      <div class="cap" id="cap41">ВІД</div>
+      <div class="cap" id="cap42">ТОГО,</div>
+      <div class="cap" id="cap43">ДЕ Я</div>
+      <div class="cap" id="cap44">ЗНІМАЮ.</div>
+      <div class="cap" id="cap45">ПЕРШИЙ</div>
+      <div class="cap" id="cap46">ЦЕ</div>
+      <div class="cap" id="cap47">ДОДАТОК</div>
+      <div class="cap" id="cap48">ВІД</div>
+      <div class="cap" id="cap49">ІНСТАГРАМУ,</div>
+      <div class="cap" id="cap51">ТАМ</div>
+      <div class="cap" id="cap52">Є</div>
+      <div class="cap" id="cap53">КАМЕРА</div>
+      <div class="cap" id="cap54">І</div>
+      <div class="cap" id="cap55">СУФЛЕР</div>
+      <div class="cap" id="cap56">ПРЯМО</div>
+      <div class="cap" id="cap57">ВСЕРЕДИНІ:</div>
+      <div class="cap" id="cap58">ВСТАВЛЯЄШ</div>
+      <div class="cap" id="cap59">ТЕКСТ,</div>
+      <div class="cap" id="cap60">НАЛАШТОВУЄШ</div>
+      <div class="cap" id="cap63">І</div>
+      <div class="cap" id="cap64">ЧИТАЄШ.</div>
+      <div class="cap" id="cap65">Я</div>
+      <div class="cap" id="cap66">ЗАПИСУЮ</div>
+      <div class="cap" id="cap67">НА</div>
+      <div class="cap" id="cap68">НЬОГО,</div>
+      <div class="cap" id="cap69">КОЛИ</div>
+      <div class="cap" id="cap70">ЗНІМАЮ</div>
+      <div class="cap" id="cap71">З РОБОЧОГО</div>
+      <div class="cap" id="cap73">БО</div>
+      <div class="cap" id="cap74">ТЕЛЕФОН</div>
+      <div class="cap" id="cap75">СТОЇТЬ</div>
+      <div class="cap" id="cap76">БЛИЗЬКО</div>
+      <div class="cap" id="cap77">ДО</div>
+      <div class="cap" id="cap78">МЕНЕ,</div>
+      <div class="cap" id="cap79">І МЕНІ</div>
+      <div class="cap" id="cap80">НЕ</div>
+      <div class="cap" id="cap81">ТРЕБА</div>
+      <div class="cap" id="cap84">АЛЕ</div>
+      <div class="cap" id="cap85">КОЛИ</div>
+      <div class="cap" id="cap86">Я</div>
+      <div class="cap" id="cap87">ЗНІМАЮ</div>
+      <div class="cap" id="cap88">ТАК,</div>
+      <div class="cap" id="cap89">ЯК</div>
+      <div class="cap" id="cap90">Я</div>
+      <div class="cap" id="cap91">ЗНІМАЮ</div>
+      <div class="cap" id="cap92">ЦЕ</div>
+      <div class="cap" id="cap93">ЗАРАЗ</div>
+      <div class="cap" id="cap94">СТОЮ</div>
+      <div class="cap" id="cap95">НАВПРОТИ</div>
+      <div class="cap" id="cap97">ПРОСТО</div>
+      <div class="cap" id="cap98">В</div>
+      <div class="cap" id="cap99">КІМНАТІ</div>
+      <div class="cap" id="cap100">МЕНІ</div>
+      <div class="cap" id="cap101">ТРЕБА</div>
+      <div class="cap" id="cap102">ЗАБЛЮРИТИ</div>
+      <div class="cap" id="cap103">ЗАДНІЙ</div>
+      <div class="cap" id="cap105">І</div>
+      <div class="cap" id="cap106">ТУТ</div>
+      <div class="cap" id="cap108">ВЖЕ</div>
+      <div class="cap" id="cap109">НЕ</div>
+      <div class="cap" id="cap110">ПІДХОДИТЬ.</div>
+      <div class="cap" id="cap111">ТОДІ</div>
+      <div class="cap" id="cap112">Я</div>
+      <div class="cap" id="cap113">БЕРУ</div>
+      <div class="cap" id="cap114">ЗВИЧАЙНІ</div>
+      <div class="cap" id="cap115">НОТАТКИ</div>
+      <div class="cap" id="cap116">В</div>
+      <div class="cap" id="cap117">ТЕЛЕФОНІ,</div>
+      <div class="cap" id="cap119">ТУДИ</div>
+      <div class="cap" id="cap120">ТЕКСТ</div>
+      <div class="cap" id="cap121">І</div>
+      <div class="cap" id="cap122">НАКЛАДАЮ</div>
+      <div class="cap" id="cap123">ЗВЕРХУ</div>
+      <div class="cap" id="cap124">НА</div>
+      <div class="cap" id="cap125">КАМЕРУ,</div>
+      <div class="cap" id="cap126">А</div>
+      <div class="cap" id="cap127">САМУ</div>
+      <div class="cap" id="cap128">КАМЕРУ</div>
+      <div class="cap" id="cap129">СТАВЛЮ</div>
+      <div class="cap" id="cap130">В</div>
+      <div class="cap" id="cap131">ФРОНТАЛЬНУ,</div>
+      <div class="cap" id="cap134">ЯКИЙ</div>
+      <div class="cap" id="cap135">АВТОМАТИЧНО</div>
+      <div class="cap" id="cap136">РОЗМИВАЄ</div>
+      <div class="cap" id="cap137">ФОН</div>
+      <div class="cap" id="cap138">ПОЗАДУ</div>
+      <div class="cap" id="cap139">МЕНЕ.</div>
+      <div class="cap" id="cap140">ЦЬОМУ</div>
+      <div class="cap" id="cap141">Я</div>
+      <div class="cap" id="cap142">СЕБЕ</div>
+      <div class="cap" id="cap143">НА</div>
+      <div class="cap" id="cap144">ЕКРАНІ</div>
+      <div class="cap" id="cap145">ОСОБЛИВО</div>
+      <div class="cap" id="cap146">НЕ</div>
+      <div class="cap" id="cap147">БАЧУ,</div>
+      <div class="cap" id="cap148">Я</div>
+      <div class="cap" id="cap149">ТІЛЬКИ</div>
+      <div class="cap" id="cap150">ПРИБЛИЗНО</div>
+      <div class="cap" id="cap151">РОЗУМІЮ,</div>
+      <div class="cap" id="cap152">ДЕ Я.</div>
+      <div class="cap" id="cap153">АЛЕ</div>
+      <div class="cap" id="cap154">Я</div>
+      <div class="cap" id="cap155">СТАВЛЮ</div>
+      <div class="cap" id="cap156">НОТАТКИ</div>
+      <div class="cap" id="cap157">НА</div>
+      <div class="cap" id="cap158">РІВНІ</div>
+      <div class="cap" id="cap159">СВОЇХ</div>
+      <div class="cap" id="cap160">ОЧЕЙ,</div>
+      <div class="cap" id="cap161">ТОМУ</div>
+      <div class="cap" id="cap162">КОЛИ</div>
+      <div class="cap" id="cap163">Я</div>
+      <div class="cap" id="cap164">ЧИТАЮ</div>
+      <div class="cap" id="cap165">ТЕКСТ,</div>
+      <div class="cap" id="cap166">Я</div>
+      <div class="cap" id="cap167">Й</div>
+      <div class="cap" id="cap168">ТАК</div>
+      <div class="cap" id="cap169">ДИВЛЮСЯ</div>
+      <div class="cap" id="cap170">ПЛЮС-МІНУС</div>
+      <div class="cap" id="cap171">ТУДИ,</div>
+      <div class="cap" id="cap172">КУДИ</div>
+      <div class="cap" id="cap173">ДИВИЛИСЬ,</div>
+      <div class="cap" id="cap174">ЯКЩО</div>
+      <div class="cap" id="cap175">ЗНІМАЛА</div>
+      <div class="cap" id="cap176">БЕЗ</div>
+      <div class="cap" id="cap177">СУФЛЕРА</div>
+      <div class="cap" id="cap178">ВЗАГАЛІ.</div>
+      <div class="cap" id="cap179">ТОМУ</div>
+      <div class="cap" id="cap180">ЯКЩО</div>
+      <div class="cap" id="cap181">ТОБІ</div>
+      <div class="cap" id="cap182">СУПЕР</div>
+      <div class="cap" id="cap183">ВАЖКО</div>
+      <div class="cap" id="cap184">ЗАПИСУВАТИ</div>
+      <div class="cap" id="cap185">ГОВОРЯЩУ</div>
+      <div class="cap" id="cap186">ГОЛОВУ</div>
+      <div class="cap" id="cap187">ТО ДУЖЕ</div>
+      <div class="cap" id="cap188">РЕКОМЕНДУЮ</div>
+      <div class="cap" id="cap189">ЦЕЙ</div>
+      <div class="cap" id="cap190">МЕТОД,</div>
+      <div class="cap" id="cap191">ТОМУ</div>
+      <div class="cap" id="cap192">ЩО</div>
+      <div class="cap" id="cap193">РІЗНИЦЮ</div>
+      <div class="cap" id="cap194">НІХТО</div>
+      <div class="cap" id="cap195">НЕ</div>
+      <div class="cap" id="cap196">ПОМІТИТЬ,</div>
+      <div class="cap" id="cap197">А</div>
+      <div class="cap" id="cap198">ТОБІ</div>
+      <div class="cap" id="cap199">ЖИТИ</div>
+      <div class="cap" id="cap200">НАБАГАТО</div>
+      <div class="cap" id="cap201">ЛЕГШЕ</div>
+      <div class="cap" id="cap202">НЕ</div>
+      <div class="cap" id="cap203">ТРЕБА</div>
+      <div class="cap" id="cap204">СОБІ</div>
+      <div class="cap" id="cap205">УСКЛАДНЮВАТИ</div>
+      <div class="cap" id="cap206">ЖИТТЯ,</div>
+      <div class="cap" id="cap207">ВОНО</div>
+      <div class="cap" id="cap208">І ТАК</div>
+      <div class="cap" id="cap209">СКЛАДНЕ</div>
+      <div class="cap" id="cap210">ЯКЩО</div>
+      <div class="cap" id="cap211">ВИ</div>
+      <div class="cap" id="cap212">НЕ</div>
+      <div class="cap" id="cap213">ЗНАЛИ,</div>
+      <div class="cap" id="cap214">Я</div>
+      <div class="cap" id="cap215">ЗАРАЗ</div>
+      <div class="cap" id="cap216">ЧИТАЮ</div>
+      <div class="cap" id="cap217">З СУФЛЕРА,</div>
+      <div class="cap" id="cap218">ТО</div>
+      <div class="cap" id="cap219">ОБОВ'ЯЗКОВО</div>
+      <div class="cap" id="cap220">ПІДПИШИСЬ!</div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="79.883" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  tl.set("#cap0", {autoAlpha: 1}, 0.000);
+  tl.set("#cap0", {autoAlpha: 0}, 0.265);
+  tl.set("#cap1", {autoAlpha: 1}, 0.350);
+  tl.set("#cap1", {autoAlpha: 0}, 0.605);
+  tl.set("#cap2", {autoAlpha: 1}, 0.690);
+  tl.set("#cap2", {autoAlpha: 0}, 0.825);
+  tl.set("#cap3", {autoAlpha: 1}, 0.910);
+  tl.set("#cap3", {autoAlpha: 0}, 1.010);
+  tl.set("#cap4", {autoAlpha: 1}, 1.090);
+  tl.set("#cap4", {autoAlpha: 0}, 1.190);
+  tl.set("#cap5", {autoAlpha: 1}, 1.250);
+  tl.set("#cap5", {autoAlpha: 0}, 1.685);
+  tl.set("#cap6", {autoAlpha: 1}, 1.770);
+  tl.set("#cap6", {autoAlpha: 0}, 2.125);
+  tl.set("#cap7", {autoAlpha: 1}, 2.210);
+  tl.set("#cap7", {autoAlpha: 0}, 2.785);
+  tl.set("#cap8", {autoAlpha: 1}, 2.870);
+  tl.set("#cap8", {autoAlpha: 0}, 2.970);
+  tl.set("#cap9", {autoAlpha: 1}, 3.050);
+  tl.set("#cap9", {autoAlpha: 0}, 3.205);
+  tl.set("#cap10", {autoAlpha: 1}, 3.290);
+  tl.set("#cap10", {autoAlpha: 0}, 3.525);
+  tl.set("#cap11", {autoAlpha: 1}, 3.610);
+  tl.set("#cap11", {autoAlpha: 0}, 3.785);
+  tl.set("#cap12", {autoAlpha: 1}, 3.870);
+  tl.set("#cap12", {autoAlpha: 0}, 4.045);
+  tl.set("#cap13", {autoAlpha: 1}, 4.130);
+  tl.set("#cap13", {autoAlpha: 0}, 4.265);
+  tl.set("#cap14", {autoAlpha: 1}, 4.350);
+  tl.set("#cap14", {autoAlpha: 0}, 4.450);
+  tl.set("#cap15", {autoAlpha: 1}, 4.450);
+  tl.set("#cap15", {autoAlpha: 0}, 4.585);
+  tl.set("#cap16", {autoAlpha: 1}, 4.670);
+  tl.set("#cap16", {autoAlpha: 0}, 5.636);
+  tl.set("#cap17", {autoAlpha: 1}, 5.721);
+  tl.set("#cap17", {autoAlpha: 0}, 5.821);
+  tl.set("#cap18", {autoAlpha: 1}, 5.824);
+  tl.set("#cap18", {autoAlpha: 0}, 5.946);
+  tl.set("#cap19", {autoAlpha: 1}, 6.031);
+  tl.set("#cap19", {autoAlpha: 0}, 6.256);
+  tl.set("#cap20", {autoAlpha: 1}, 6.341);
+  tl.set("#cap20", {autoAlpha: 0}, 6.476);
+  tl.set("#cap21", {autoAlpha: 1}, 6.561);
+  tl.set("#cap21", {autoAlpha: 0}, 6.856);
+  tl.set("#cap22", {autoAlpha: 1}, 6.941);
+  tl.set("#cap22", {autoAlpha: 0}, 7.136);
+  tl.set("#cap23", {autoAlpha: 1}, 7.221);
+  tl.set("#cap23", {autoAlpha: 0}, 7.687);
+  tl.set("#cap24", {autoAlpha: 1}, 7.772);
+  tl.set("#cap24", {autoAlpha: 0}, 7.872);
+  tl.set("#cap25", {autoAlpha: 1}, 7.932);
+  tl.set("#cap25", {autoAlpha: 0}, 8.067);
+  tl.set("#cap26", {autoAlpha: 1}, 8.152);
+  tl.set("#cap26", {autoAlpha: 0}, 8.347);
+  tl.set("#cap27", {autoAlpha: 1}, 8.432);
+  tl.set("#cap27", {autoAlpha: 0}, 9.007);
+  tl.set("#cap28", {autoAlpha: 1}, 9.092);
+  tl.set("#cap28", {autoAlpha: 0}, 9.942);
+  tl.set("#cap29", {autoAlpha: 1}, 10.027);
+  tl.set("#cap29", {autoAlpha: 0}, 10.127);
+  tl.set("#cap30", {autoAlpha: 1}, 10.207);
+  tl.set("#cap30", {autoAlpha: 0}, 10.307);
+  tl.set("#cap31", {autoAlpha: 1}, 10.367);
+  tl.set("#cap31", {autoAlpha: 0}, 10.582);
+  tl.set("#cap32", {autoAlpha: 1}, 10.667);
+  tl.set("#cap32", {autoAlpha: 0}, 11.182);
+  tl.set("#cap33", {autoAlpha: 1}, 11.267);
+  tl.set("#cap33", {autoAlpha: 0}, 11.642);
+  tl.set("#cap34", {autoAlpha: 1}, 11.727);
+  tl.set("#cap34", {autoAlpha: 0}, 12.002);
+  tl.set("#cap35", {autoAlpha: 1}, 12.087);
+  tl.set("#cap35", {autoAlpha: 0}, 12.832);
+  tl.set("#cap36", {autoAlpha: 1}, 12.917);
+  tl.set("#cap36", {autoAlpha: 0}, 13.017);
+  tl.set("#cap37", {autoAlpha: 1}, 13.057);
+  tl.set("#cap37", {autoAlpha: 0}, 13.157);
+  tl.set("#cap38", {autoAlpha: 1}, 13.217);
+  tl.set("#cap38", {autoAlpha: 0}, 13.372);
+  tl.set("#cap39", {autoAlpha: 1}, 13.457);
+  tl.set("#cap39", {autoAlpha: 0}, 13.752);
+  tl.set("#cap40", {autoAlpha: 1}, 13.837);
+  tl.set("#cap40", {autoAlpha: 0}, 14.172);
+  tl.set("#cap41", {autoAlpha: 1}, 14.257);
+  tl.set("#cap41", {autoAlpha: 0}, 14.372);
+  tl.set("#cap42", {autoAlpha: 1}, 14.457);
+  tl.set("#cap42", {autoAlpha: 0}, 14.812);
+  tl.set("#cap43", {autoAlpha: 1}, 14.897);
+  tl.set("#cap43", {autoAlpha: 0}, 15.112);
+  tl.set("#cap44", {autoAlpha: 1}, 15.197);
+  tl.set("#cap44", {autoAlpha: 0}, 16.538);
+  tl.set("#cap45", {autoAlpha: 1}, 16.623);
+  tl.set("#cap45", {autoAlpha: 0}, 17.178);
+  tl.set("#cap46", {autoAlpha: 1}, 17.263);
+  tl.set("#cap46", {autoAlpha: 0}, 17.363);
+  tl.set("#cap47", {autoAlpha: 1}, 17.383);
+  tl.set("#cap47", {autoAlpha: 0}, 17.638);
+  tl.set("#cap48", {autoAlpha: 1}, 17.723);
+  tl.set("#cap48", {autoAlpha: 0}, 17.823);
+  tl.set("#cap49", {autoAlpha: 1}, 17.903);
+  tl.set("#cap49", {autoAlpha: 0}, 18.638);
+  tl.set("#cap51", {autoAlpha: 1}, 19.233);
+  tl.set("#cap51", {autoAlpha: 0}, 19.471);
+  tl.set("#cap52", {autoAlpha: 1}, 19.556);
+  tl.set("#cap52", {autoAlpha: 0}, 19.751);
+  tl.set("#cap53", {autoAlpha: 1}, 19.836);
+  tl.set("#cap53", {autoAlpha: 0}, 20.191);
+  tl.set("#cap54", {autoAlpha: 1}, 20.276);
+  tl.set("#cap54", {autoAlpha: 0}, 20.451);
+  tl.set("#cap55", {autoAlpha: 1}, 20.536);
+  tl.set("#cap55", {autoAlpha: 0}, 20.891);
+  tl.set("#cap56", {autoAlpha: 1}, 20.976);
+  tl.set("#cap56", {autoAlpha: 0}, 21.371);
+  tl.set("#cap57", {autoAlpha: 1}, 21.456);
+  tl.set("#cap57", {autoAlpha: 0}, 21.935);
+  tl.set("#cap58", {autoAlpha: 1}, 22.020);
+  tl.set("#cap58", {autoAlpha: 0}, 22.495);
+  tl.set("#cap59", {autoAlpha: 1}, 22.580);
+  tl.set("#cap59", {autoAlpha: 0}, 22.695);
+  tl.set("#cap60", {autoAlpha: 1}, 22.780);
+  tl.set("#cap60", {autoAlpha: 0}, 23.395);
+  tl.set("#cap63", {autoAlpha: 1}, 24.300);
+  tl.set("#cap63", {autoAlpha: 0}, 24.435);
+  tl.set("#cap64", {autoAlpha: 1}, 24.520);
+  tl.set("#cap64", {autoAlpha: 0}, 25.082);
+  tl.set("#cap65", {autoAlpha: 1}, 25.167);
+  tl.set("#cap65", {autoAlpha: 0}, 25.469);
+  tl.set("#cap66", {autoAlpha: 1}, 25.554);
+  tl.set("#cap66", {autoAlpha: 0}, 25.889);
+  tl.set("#cap67", {autoAlpha: 1}, 25.974);
+  tl.set("#cap67", {autoAlpha: 0}, 26.074);
+  tl.set("#cap68", {autoAlpha: 1}, 26.094);
+  tl.set("#cap68", {autoAlpha: 0}, 26.249);
+  tl.set("#cap69", {autoAlpha: 1}, 26.334);
+  tl.set("#cap69", {autoAlpha: 0}, 26.529);
+  tl.set("#cap70", {autoAlpha: 1}, 26.614);
+  tl.set("#cap70", {autoAlpha: 0}, 26.929);
+  tl.set("#cap71", {autoAlpha: 1}, 27.014);
+  tl.set("#cap71", {autoAlpha: 0}, 27.449);
+  tl.set("#cap73", {autoAlpha: 1}, 27.837);
+  tl.set("#cap73", {autoAlpha: 0}, 27.937);
+  tl.set("#cap74", {autoAlpha: 1}, 27.977);
+  tl.set("#cap74", {autoAlpha: 0}, 28.212);
+  tl.set("#cap75", {autoAlpha: 1}, 28.297);
+  tl.set("#cap75", {autoAlpha: 0}, 28.472);
+  tl.set("#cap76", {autoAlpha: 1}, 28.557);
+  tl.set("#cap76", {autoAlpha: 0}, 28.772);
+  tl.set("#cap77", {autoAlpha: 1}, 28.857);
+  tl.set("#cap77", {autoAlpha: 0}, 28.957);
+  tl.set("#cap78", {autoAlpha: 1}, 29.017);
+  tl.set("#cap78", {autoAlpha: 0}, 29.292);
+  tl.set("#cap79", {autoAlpha: 1}, 29.377);
+  tl.set("#cap79", {autoAlpha: 0}, 29.492);
+  tl.set("#cap80", {autoAlpha: 1}, 29.577);
+  tl.set("#cap80", {autoAlpha: 0}, 29.677);
+  tl.set("#cap81", {autoAlpha: 1}, 29.737);
+  tl.set("#cap81", {autoAlpha: 0}, 29.872);
+  tl.set("#cap84", {autoAlpha: 1}, 30.967);
+  tl.set("#cap84", {autoAlpha: 0}, 31.222);
+  tl.set("#cap85", {autoAlpha: 1}, 31.307);
+  tl.set("#cap85", {autoAlpha: 0}, 31.422);
+  tl.set("#cap86", {autoAlpha: 1}, 31.507);
+  tl.set("#cap86", {autoAlpha: 0}, 31.607);
+  tl.set("#cap87", {autoAlpha: 1}, 31.647);
+  tl.set("#cap87", {autoAlpha: 0}, 31.962);
+  tl.set("#cap88", {autoAlpha: 1}, 32.047);
+  tl.set("#cap88", {autoAlpha: 0}, 32.242);
+  tl.set("#cap89", {autoAlpha: 1}, 32.327);
+  tl.set("#cap89", {autoAlpha: 0}, 32.427);
+  tl.set("#cap90", {autoAlpha: 1}, 32.467);
+  tl.set("#cap90", {autoAlpha: 0}, 32.567);
+  tl.set("#cap91", {autoAlpha: 1}, 32.607);
+  tl.set("#cap91", {autoAlpha: 0}, 32.882);
+  tl.set("#cap92", {autoAlpha: 1}, 32.967);
+  tl.set("#cap92", {autoAlpha: 0}, 33.067);
+  tl.set("#cap93", {autoAlpha: 1}, 33.127);
+  tl.set("#cap93", {autoAlpha: 0}, 33.382);
+  tl.set("#cap94", {autoAlpha: 1}, 33.467);
+  tl.set("#cap94", {autoAlpha: 0}, 33.702);
+  tl.set("#cap95", {autoAlpha: 1}, 33.787);
+  tl.set("#cap95", {autoAlpha: 0}, 34.062);
+  tl.set("#cap97", {autoAlpha: 1}, 34.547);
+  tl.set("#cap97", {autoAlpha: 0}, 34.742);
+  tl.set("#cap98", {autoAlpha: 1}, 34.827);
+  tl.set("#cap98", {autoAlpha: 0}, 34.942);
+  tl.set("#cap99", {autoAlpha: 1}, 35.027);
+  tl.set("#cap99", {autoAlpha: 0}, 35.507);
+  tl.set("#cap100", {autoAlpha: 1}, 35.592);
+  tl.set("#cap100", {autoAlpha: 0}, 35.867);
+  tl.set("#cap101", {autoAlpha: 1}, 35.952);
+  tl.set("#cap101", {autoAlpha: 0}, 36.127);
+  tl.set("#cap102", {autoAlpha: 1}, 36.212);
+  tl.set("#cap102", {autoAlpha: 0}, 36.667);
+  tl.set("#cap103", {autoAlpha: 1}, 36.752);
+  tl.set("#cap103", {autoAlpha: 0}, 37.127);
+  tl.set("#cap105", {autoAlpha: 1}, 37.497);
+  tl.set("#cap105", {autoAlpha: 0}, 37.692);
+  tl.set("#cap106", {autoAlpha: 1}, 37.777);
+  tl.set("#cap106", {autoAlpha: 0}, 37.877);
+  tl.set("#cap108", {autoAlpha: 1}, 38.231);
+  tl.set("#cap108", {autoAlpha: 0}, 38.331);
+  tl.set("#cap109", {autoAlpha: 1}, 38.395);
+  tl.set("#cap109", {autoAlpha: 0}, 38.495);
+  tl.set("#cap110", {autoAlpha: 1}, 38.504);
+  tl.set("#cap110", {autoAlpha: 0}, 39.268);
+  tl.set("#cap111", {autoAlpha: 1}, 39.353);
+  tl.set("#cap111", {autoAlpha: 0}, 39.628);
+  tl.set("#cap112", {autoAlpha: 1}, 39.713);
+  tl.set("#cap112", {autoAlpha: 0}, 39.908);
+  tl.set("#cap113", {autoAlpha: 1}, 39.993);
+  tl.set("#cap113", {autoAlpha: 0}, 40.208);
+  tl.set("#cap114", {autoAlpha: 1}, 40.293);
+  tl.set("#cap114", {autoAlpha: 0}, 40.968);
+  tl.set("#cap115", {autoAlpha: 1}, 41.053);
+  tl.set("#cap115", {autoAlpha: 0}, 41.488);
+  tl.set("#cap116", {autoAlpha: 1}, 41.573);
+  tl.set("#cap116", {autoAlpha: 0}, 41.673);
+  tl.set("#cap117", {autoAlpha: 1}, 41.713);
+  tl.set("#cap117", {autoAlpha: 0}, 42.344);
+  tl.set("#cap119", {autoAlpha: 1}, 42.989);
+  tl.set("#cap119", {autoAlpha: 0}, 43.089);
+  tl.set("#cap120", {autoAlpha: 1}, 43.149);
+  tl.set("#cap120", {autoAlpha: 0}, 43.404);
+  tl.set("#cap121", {autoAlpha: 1}, 43.489);
+  tl.set("#cap121", {autoAlpha: 0}, 43.844);
+  tl.set("#cap122", {autoAlpha: 1}, 43.929);
+  tl.set("#cap122", {autoAlpha: 0}, 44.324);
+  tl.set("#cap123", {autoAlpha: 1}, 44.409);
+  tl.set("#cap123", {autoAlpha: 0}, 45.044);
+  tl.set("#cap124", {autoAlpha: 1}, 45.129);
+  tl.set("#cap124", {autoAlpha: 0}, 45.229);
+  tl.set("#cap125", {autoAlpha: 1}, 45.309);
+  tl.set("#cap125", {autoAlpha: 0}, 45.914);
+  tl.set("#cap126", {autoAlpha: 1}, 45.999);
+  tl.set("#cap126", {autoAlpha: 0}, 46.099);
+  tl.set("#cap127", {autoAlpha: 1}, 46.159);
+  tl.set("#cap127", {autoAlpha: 0}, 46.274);
+  tl.set("#cap128", {autoAlpha: 1}, 46.359);
+  tl.set("#cap128", {autoAlpha: 0}, 46.594);
+  tl.set("#cap129", {autoAlpha: 1}, 46.679);
+  tl.set("#cap129", {autoAlpha: 0}, 47.034);
+  tl.set("#cap130", {autoAlpha: 1}, 47.119);
+  tl.set("#cap130", {autoAlpha: 0}, 47.219);
+  tl.set("#cap131", {autoAlpha: 1}, 47.259);
+  tl.set("#cap131", {autoAlpha: 0}, 47.594);
+  tl.set("#cap134", {autoAlpha: 1}, 48.759);
+  tl.set("#cap134", {autoAlpha: 0}, 48.859);
+  tl.set("#cap135", {autoAlpha: 1}, 48.919);
+  tl.set("#cap135", {autoAlpha: 0}, 49.474);
+  tl.set("#cap136", {autoAlpha: 1}, 49.559);
+  tl.set("#cap136", {autoAlpha: 0}, 49.914);
+  tl.set("#cap137", {autoAlpha: 1}, 49.999);
+  tl.set("#cap137", {autoAlpha: 0}, 50.114);
+  tl.set("#cap138", {autoAlpha: 1}, 50.199);
+  tl.set("#cap138", {autoAlpha: 0}, 50.514);
+  tl.set("#cap139", {autoAlpha: 1}, 50.599);
+  tl.set("#cap139", {autoAlpha: 0}, 51.188);
+  tl.set("#cap140", {autoAlpha: 1}, 51.273);
+  tl.set("#cap140", {autoAlpha: 0}, 51.408);
+  tl.set("#cap141", {autoAlpha: 1}, 51.493);
+  tl.set("#cap141", {autoAlpha: 0}, 51.593);
+  tl.set("#cap142", {autoAlpha: 1}, 51.673);
+  tl.set("#cap142", {autoAlpha: 0}, 51.773);
+  tl.set("#cap143", {autoAlpha: 1}, 51.853);
+  tl.set("#cap143", {autoAlpha: 0}, 51.968);
+  tl.set("#cap144", {autoAlpha: 1}, 52.053);
+  tl.set("#cap144", {autoAlpha: 0}, 52.288);
+  tl.set("#cap145", {autoAlpha: 1}, 52.373);
+  tl.set("#cap145", {autoAlpha: 0}, 52.728);
+  tl.set("#cap146", {autoAlpha: 1}, 52.813);
+  tl.set("#cap146", {autoAlpha: 0}, 53.008);
+  tl.set("#cap147", {autoAlpha: 1}, 53.093);
+  tl.set("#cap147", {autoAlpha: 0}, 53.308);
+  tl.set("#cap148", {autoAlpha: 1}, 53.393);
+  tl.set("#cap148", {autoAlpha: 0}, 53.493);
+  tl.set("#cap149", {autoAlpha: 1}, 53.513);
+  tl.set("#cap149", {autoAlpha: 0}, 53.613);
+  tl.set("#cap150", {autoAlpha: 1}, 53.693);
+  tl.set("#cap150", {autoAlpha: 0}, 54.128);
+  tl.set("#cap151", {autoAlpha: 1}, 54.213);
+  tl.set("#cap151", {autoAlpha: 0}, 54.771);
+  tl.set("#cap152", {autoAlpha: 1}, 54.856);
+  tl.set("#cap152", {autoAlpha: 0}, 55.151);
+  tl.set("#cap153", {autoAlpha: 1}, 55.236);
+  tl.set("#cap153", {autoAlpha: 0}, 55.371);
+  tl.set("#cap154", {autoAlpha: 1}, 55.456);
+  tl.set("#cap154", {autoAlpha: 0}, 55.591);
+  tl.set("#cap155", {autoAlpha: 1}, 55.676);
+  tl.set("#cap155", {autoAlpha: 0}, 55.811);
+  tl.set("#cap156", {autoAlpha: 1}, 55.896);
+  tl.set("#cap156", {autoAlpha: 0}, 56.231);
+  tl.set("#cap157", {autoAlpha: 1}, 56.316);
+  tl.set("#cap157", {autoAlpha: 0}, 56.416);
+  tl.set("#cap158", {autoAlpha: 1}, 56.476);
+  tl.set("#cap158", {autoAlpha: 0}, 56.611);
+  tl.set("#cap159", {autoAlpha: 1}, 56.696);
+  tl.set("#cap159", {autoAlpha: 0}, 56.891);
+  tl.set("#cap160", {autoAlpha: 1}, 56.976);
+  tl.set("#cap160", {autoAlpha: 0}, 57.198);
+  tl.set("#cap161", {autoAlpha: 1}, 57.283);
+  tl.set("#cap161", {autoAlpha: 0}, 57.383);
+  tl.set("#cap162", {autoAlpha: 1}, 57.423);
+  tl.set("#cap162", {autoAlpha: 0}, 57.538);
+  tl.set("#cap163", {autoAlpha: 1}, 57.623);
+  tl.set("#cap163", {autoAlpha: 0}, 57.758);
+  tl.set("#cap164", {autoAlpha: 1}, 57.843);
+  tl.set("#cap164", {autoAlpha: 0}, 58.018);
+  tl.set("#cap165", {autoAlpha: 1}, 58.103);
+  tl.set("#cap165", {autoAlpha: 0}, 58.738);
+  tl.set("#cap166", {autoAlpha: 1}, 58.823);
+  tl.set("#cap166", {autoAlpha: 0}, 58.923);
+  tl.set("#cap167", {autoAlpha: 1}, 58.943);
+  tl.set("#cap167", {autoAlpha: 0}, 59.043);
+  tl.set("#cap168", {autoAlpha: 1}, 59.103);
+  tl.set("#cap168", {autoAlpha: 0}, 59.203);
+  tl.set("#cap169", {autoAlpha: 1}, 59.283);
+  tl.set("#cap169", {autoAlpha: 0}, 59.653);
+  tl.set("#cap170", {autoAlpha: 1}, 59.738);
+  tl.set("#cap170", {autoAlpha: 0}, 60.238);
+  tl.set("#cap171", {autoAlpha: 1}, 60.323);
+  tl.set("#cap171", {autoAlpha: 0}, 60.531);
+  tl.set("#cap172", {autoAlpha: 1}, 60.616);
+  tl.set("#cap172", {autoAlpha: 0}, 60.716);
+  tl.set("#cap173", {autoAlpha: 1}, 60.776);
+  tl.set("#cap173", {autoAlpha: 0}, 61.291);
+  tl.set("#cap174", {autoAlpha: 1}, 61.376);
+  tl.set("#cap174", {autoAlpha: 0}, 61.531);
+  tl.set("#cap175", {autoAlpha: 1}, 61.616);
+  tl.set("#cap175", {autoAlpha: 0}, 61.891);
+  tl.set("#cap176", {autoAlpha: 1}, 61.976);
+  tl.set("#cap176", {autoAlpha: 0}, 62.076);
+  tl.set("#cap177", {autoAlpha: 1}, 62.156);
+  tl.set("#cap177", {autoAlpha: 0}, 62.451);
+  tl.set("#cap178", {autoAlpha: 1}, 62.536);
+  tl.set("#cap178", {autoAlpha: 0}, 63.572);
+  tl.set("#cap179", {autoAlpha: 1}, 63.657);
+  tl.set("#cap179", {autoAlpha: 0}, 63.757);
+  tl.set("#cap180", {autoAlpha: 1}, 63.817);
+  tl.set("#cap180", {autoAlpha: 0}, 64.052);
+  tl.set("#cap181", {autoAlpha: 1}, 64.137);
+  tl.set("#cap181", {autoAlpha: 0}, 64.312);
+  tl.set("#cap182", {autoAlpha: 1}, 64.397);
+  tl.set("#cap182", {autoAlpha: 0}, 64.692);
+  tl.set("#cap183", {autoAlpha: 1}, 64.777);
+  tl.set("#cap183", {autoAlpha: 0}, 64.932);
+  tl.set("#cap184", {autoAlpha: 1}, 65.017);
+  tl.set("#cap184", {autoAlpha: 0}, 65.472);
+  tl.set("#cap185", {autoAlpha: 1}, 65.557);
+  tl.set("#cap185", {autoAlpha: 0}, 65.972);
+  tl.set("#cap186", {autoAlpha: 1}, 66.057);
+  tl.set("#cap186", {autoAlpha: 0}, 66.492);
+  tl.set("#cap187", {autoAlpha: 1}, 66.577);
+  tl.set("#cap187", {autoAlpha: 0}, 66.792);
+  tl.set("#cap188", {autoAlpha: 1}, 66.877);
+  tl.set("#cap188", {autoAlpha: 0}, 67.352);
+  tl.set("#cap189", {autoAlpha: 1}, 67.437);
+  tl.set("#cap189", {autoAlpha: 0}, 67.537);
+  tl.set("#cap190", {autoAlpha: 1}, 67.617);
+  tl.set("#cap190", {autoAlpha: 0}, 67.841);
+  tl.set("#cap191", {autoAlpha: 1}, 67.926);
+  tl.set("#cap191", {autoAlpha: 0}, 68.026);
+  tl.set("#cap192", {autoAlpha: 1}, 68.046);
+  tl.set("#cap192", {autoAlpha: 0}, 68.146);
+  tl.set("#cap193", {autoAlpha: 1}, 68.186);
+  tl.set("#cap193", {autoAlpha: 0}, 68.481);
+  tl.set("#cap194", {autoAlpha: 1}, 68.566);
+  tl.set("#cap194", {autoAlpha: 0}, 68.781);
+  tl.set("#cap195", {autoAlpha: 1}, 68.866);
+  tl.set("#cap195", {autoAlpha: 0}, 69.021);
+  tl.set("#cap196", {autoAlpha: 1}, 69.106);
+  tl.set("#cap196", {autoAlpha: 0}, 69.721);
+  tl.set("#cap197", {autoAlpha: 1}, 69.806);
+  tl.set("#cap197", {autoAlpha: 0}, 69.906);
+  tl.set("#cap198", {autoAlpha: 1}, 69.966);
+  tl.set("#cap198", {autoAlpha: 0}, 70.066);
+  tl.set("#cap199", {autoAlpha: 1}, 70.146);
+  tl.set("#cap199", {autoAlpha: 0}, 70.341);
+  tl.set("#cap200", {autoAlpha: 1}, 70.426);
+  tl.set("#cap200", {autoAlpha: 0}, 70.881);
+  tl.set("#cap201", {autoAlpha: 1}, 70.966);
+  tl.set("#cap201", {autoAlpha: 0}, 71.415);
+  tl.set("#cap202", {autoAlpha: 1}, 71.500);
+  tl.set("#cap202", {autoAlpha: 0}, 71.605);
+  tl.set("#cap203", {autoAlpha: 1}, 71.690);
+  tl.set("#cap203", {autoAlpha: 0}, 71.825);
+  tl.set("#cap204", {autoAlpha: 1}, 71.910);
+  tl.set("#cap204", {autoAlpha: 0}, 72.045);
+  tl.set("#cap205", {autoAlpha: 1}, 72.130);
+  tl.set("#cap205", {autoAlpha: 0}, 72.545);
+  tl.set("#cap206", {autoAlpha: 1}, 72.630);
+  tl.set("#cap206", {autoAlpha: 0}, 72.945);
+  tl.set("#cap207", {autoAlpha: 1}, 73.030);
+  tl.set("#cap207", {autoAlpha: 0}, 73.130);
+  tl.set("#cap208", {autoAlpha: 1}, 73.190);
+  tl.set("#cap208", {autoAlpha: 0}, 73.305);
+  tl.set("#cap209", {autoAlpha: 1}, 73.390);
+  tl.set("#cap209", {autoAlpha: 0}, 74.261);
+  tl.set("#cap210", {autoAlpha: 1}, 74.346);
+  tl.set("#cap210", {autoAlpha: 0}, 74.781);
+  tl.set("#cap211", {autoAlpha: 1}, 74.866);
+  tl.set("#cap211", {autoAlpha: 0}, 75.301);
+  tl.set("#cap212", {autoAlpha: 1}, 75.386);
+  tl.set("#cap212", {autoAlpha: 0}, 75.486);
+  tl.set("#cap213", {autoAlpha: 1}, 75.486);
+  tl.set("#cap213", {autoAlpha: 0}, 76.579);
+  tl.set("#cap214", {autoAlpha: 1}, 76.664);
+  tl.set("#cap214", {autoAlpha: 0}, 76.764);
+  tl.set("#cap215", {autoAlpha: 1}, 76.824);
+  tl.set("#cap215", {autoAlpha: 0}, 76.999);
+  tl.set("#cap216", {autoAlpha: 1}, 77.084);
+  tl.set("#cap216", {autoAlpha: 0}, 77.319);
+  tl.set("#cap217", {autoAlpha: 1}, 77.404);
+  tl.set("#cap217", {autoAlpha: 0}, 78.119);
+  tl.set("#cap218", {autoAlpha: 1}, 78.204);
+  tl.set("#cap218", {autoAlpha: 0}, 78.304);
+  tl.set("#cap219", {autoAlpha: 1}, 78.384);
+  tl.set("#cap219", {autoAlpha: 0}, 78.939);
+  tl.set("#cap220", {autoAlpha: 1}, 79.024);
+  tl.set("#cap220", {autoAlpha: 0}, 79.664);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 79.764);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 18.503);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 19.148);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 23.260);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 24.215);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 27.314);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 27.752);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 29.737);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 30.882);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 33.927);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 34.462);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 36.992);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 37.412);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 37.737);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 38.146);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 42.209);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 42.904);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 47.459);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 48.674);
+
+
+function spring(z, w) {
+  var wd = w * Math.sqrt(1 - z * z);
+  function f(t) { return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + (z * w / wd) * Math.sin(wd * t)); }
+  var e = f(1);
+  return function (t) { return t >= 1 ? 1 : f(t) / e; };
+}
+var SP = spring(0.62, 13), POP = spring(0.46, 14), SOFT = spring(0.84, 11), FLIP = spring(0.58, 9);
+
+function helpers(tl) {
+  function blurIn(sel, t, b, d) {
+    tl.fromTo(sel, {autoAlpha: 0, filter: "blur(" + (b || 12) + "px)"},
+                   {autoAlpha: 1, filter: "blur(0px)", duration: d || 0.38, ease: "power2.out"}, t);
+  }
+  function blurOut(sel, t, b, d) {
+    tl.to(sel, {autoAlpha: 0, filter: "blur(" + (b || 10) + "px)", duration: d || 0.32, ease: "power2.in"}, t);
+  }
+  // arrive from depth: blur -> sharp, small -> full, with a spring. o: {s, x, y, ease, d}
+  function arrive(sel, t, o) {
+    o = o || {};
+    blurIn(sel, t, o.blur || 12, 0.36);
+    tl.fromTo(sel, {scale: o.s == null ? 0.5 : o.s, x: o.x || 0, y: o.y == null ? 34 : o.y},
+              {scale: 1, x: 0, y: 0, duration: o.d || 0.85, ease: o.ease || POP}, t);
+  }
+  // the contents land a beat after their container
+  function inner(sel, t) {
+    tl.fromTo(sel, {scale: 0.55, autoAlpha: 0}, {scale: 1, autoAlpha: 1, duration: 0.55, ease: SP}, t + 0.1);
+  }
+  function sheen(sel, t) { gsap.set(sel, {xPercent: -120}); tl.to(sel, {xPercent: 120, duration: 0.8, ease: "power2.inOut"}, t); }
+  function len(id) { return document.getElementById(id).getTotalLength(); }
+  // +3: a dash that ends exactly at the path start leaves a round-cap dot behind
+  function drawPrep(id) { var L = len(id) + 3; gsap.set("#" + id, {strokeDasharray: (L - 3) + " " + (L + 40), strokeDashoffset: L}); return L; }
+  function draw(id, t, d) { var L = drawPrep(id); tl.to("#" + id, {strokeDashoffset: 0, duration: d || 0.55, ease: "power2.inOut"}, t); return L; }
+  function packet(id, t, d) {
+    var L = len(id);
+    tl.fromTo("#" + id, {strokeDasharray: "46 " + (L + 200), strokeDashoffset: 49, autoAlpha: 1},
+              {strokeDashoffset: -L, duration: d || 0.5, ease: "power1.inOut", immediateRender: false}, t);
+    tl.set("#" + id, {autoAlpha: 0}, t + (d || 0.5));
+  }
+  // a tile the same shape grows out and fades — "something arrived here"
+  function ripple(sel, t) {
+    tl.fromTo(sel, {scale: 1, autoAlpha: 0.7}, {scale: 1.75, autoAlpha: 0, duration: 0.8, ease: "power2.out", immediateRender: false}, t);
+  }
+  function bump(sel, t) {
+    tl.to(sel, {scale: 1.07, duration: 0.1, ease: "power2.out"}, t);
+    tl.to(sel, {scale: 1, duration: 0.45, ease: SP}, t + 0.1);
+  }
+  // iris: a takeover opens out of (x, y) and later closes back into another point
+  function irisOpen(sel, t, x, y, d) {
+    tl.set(sel, {autoAlpha: 1}, t);
+    tl.fromTo(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)"},
+              {clipPath: "circle(2300px at " + x + "px " + y + "px)", duration: d || 0.85, ease: "power3.inOut", immediateRender: false}, t);
+  }
+  function irisClose(sel, t, x, y, d) {
+    tl.to(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)", duration: d || 0.6, ease: "power3.inOut"}, t);
+    tl.set(sel, {autoAlpha: 0}, t + (d || 0.6) + 0.02);
+  }
+  function drift(sel, t, dur) {
+    ["a1", "a2", "a3"].forEach(function (c, i) {
+      var v = [[-140, 90], [160, -120], [-90, -60]][i];
+      tl.fromTo(sel + " .aur." + c, {x: 0, y: 0}, {x: v[0], y: v[1], duration: dur, ease: "sine.inOut"}, t);
+    });
+  }
+  function haptic(sel, t) { tl.to(sel, {keyframes: {x: [0, -9, 8, -5, 3, 0]}, duration: 0.34, ease: "none"}, t); }
+  function count(sel, t, to, d, fmt) {
+    var o = {v: 0}, el = document.querySelector(sel);
+    tl.fromTo(o, {v: 0}, {v: to, duration: d || 1.1, ease: "power2.out",
+              onUpdate: function () { el.textContent = fmt ? fmt(o.v) : Math.round(o.v); }}, t);
+  }
+  return {blurIn: blurIn, blurOut: blurOut, arrive: arrive, inner: inner, sheen: sheen,
+          drawPrep: drawPrep, draw: draw, packet: packet, ripple: ripple, bump: bump,
+          irisOpen: irisOpen, irisClose: irisClose, drift: drift, haptic: haptic, count: count};
+}
+
+
+  var G = helpers(tl);
+  function bin(sel, t, b, d) { d = d || 0.38; G.blurIn(sel, t, b || 12, d); tl.set(sel, {filter: "none"}, t + d + 0.01); }
+  function bout(sel, t, b, d) { d = d || 0.32; G.blurOut(sel, t, b || 10, d); tl.set(sel, {filter: "none"}, t + d + 0.01); }
+  function arr(sel, t, o) {
+    o = o || {};
+    bin(sel, t, o.blur || 12, 0.36);
+    tl.fromTo(sel, {scale: o.s == null ? 0.5 : o.s, x: o.x || 0, y: o.y == null ? 34 : o.y},
+              {scale: 1, x: 0, y: 0, duration: o.d || 0.85, ease: o.ease || POP}, t);
+  }
+  function shn(sel, t) {
+    gsap.set(sel, {xPercent: -120});
+    tl.fromTo(sel, {xPercent: -120}, {xPercent: 120, duration: 0.8, ease: "power2.inOut", immediateRender: false}, t);
+  }
+  gsap.set(".sheen", {xPercent: -120});
+
+  gsap.set(["#vid"], {transformOrigin: "540px 900px"});
+  tl.fromTo(["#vid"], {scale: 1}, {scale: 1.045, duration: 79.883, ease: "none"}, 0);
+  /* a_dms */
+
+  tl.set("#gA", {autoAlpha: 1}, 1.570);
+  arr("#dm1", 1.710, {s: 0.82, y: -60, d: 0.8, ease: SOFT});
+  arr("#dm2", 2.360, {s: 0.82, y: -60, d: 0.8, ease: SOFT});
+  /* the same question: both land together again */
+  G.bump("#dm1", 3.870); G.bump("#dm2", 3.870);
+  shn("#dm1 .sheen", 3.920); shn("#dm2 .sheen", 3.920);
+  /* «на який суфлер»: the word gets marked in both */
+  tl.fromTo(["#dm1H", "#dm2H"], {scaleX: 0}, {scaleX: 1, duration: 0.45, ease: "power2.out", stagger: 0.08}, 6.051);
+  bout("#gA", 9.722, 10, 0.26);
+  /* b_options */
+
+  tl.set("#gB", {autoAlpha: 1}, 10.267);
+  arr("#t2", 10.687, {s: 0.4, y: 30});
+  G.ripple("#t2R", 10.967);
+  arr("#c1", 12.047, {s: 0.5, y: 20, d: 0.7});
+  arr("#c2", 12.167, {s: 0.5, y: 20, d: 0.7});
+  [["#c1", 0], ["#c2", 0.1]].forEach(function (p) {
+    var t = 14.897+p[1];
+    tl.to(p[0], {scaleY: 0, duration: 0.13, ease: "power2.in"}, t);
+    tl.set(p[0] + "0", {autoAlpha: 0}, t + 0.13); tl.set(p[0] + "1", {autoAlpha: 1}, t + 0.13);
+    tl.to(p[0], {scaleY: 1, duration: 0.5, ease: FLIP}, t + 0.13);
+  });
+  bout(["#t2", "#c1", "#c2"], 16.523, 10, 0.26);
+  tl.set("#gB", {autoAlpha: 0}, 16.923);
+  /* c_edits */
+
+  tl.set("#gC", {autoAlpha: 1}, 19.183);
+  gsap.set("#ed", {transformOrigin: "84px 70px"});
+  arr("#ed", 19.253, {s: 0.3, y: 0, d: 0.8, ease: SP});
+  shn("#ed .sheen", 19.583);
+  arr("#edCam", 19.796, {s: 0.4, y: 10, d: 0.6});
+  arr("#tp", 20.486, {s: 0.9, y: 16, d: 0.6});
+  gsap.set("#tpx", {clipPath: "inset(0% 0% 100% 0%)"});
+  tl.fromTo("#tpx", {clipPath: "inset(0% 0% 100% 0%)"}, {clipPath: "inset(0% 0% 0% 0%)", duration: 0.4, ease: "power2.out", immediateRender: false}, 22.060);
+  tl.set("#tpc", {autoAlpha: 0}, 22.060);
+  arr(["#sl1", "#sl2"], 22.170, {s: 0.9, y: 14, d: 0.6});
+  gsap.set(["#kn1"], {x: 168}); gsap.set(["#fi1"], {scaleX: 0.3});
+  gsap.set(["#kn2"], {x: 224}); gsap.set(["#fi2"], {scaleX: 0.4});
+  tl.to("#kn1", {x: 392, duration: 0.6, ease: SP}, 23.030);
+  tl.to("#fi1", {scaleX: 0.7, duration: 0.6, ease: SP}, 23.030);
+  tl.to("#tpx", {scale: 1.2, duration: 0.6, ease: SP}, 23.080);
+  tl.to("#kn2", {x: 420, duration: 0.55, ease: SP}, 23.800);
+  tl.to("#fi2", {scaleX: 0.75, duration: 0.55, ease: SP}, 23.800);
+  tl.to("#tpx", {y: -118, duration: 0.55, ease: "power1.inOut"}, 24.480);
+  tl.to("#ed", {scale: 0.55, duration: 0.3, ease: "power2.in"}, 24.847);
+  bout("#ed", 24.847, 12, 0.24);
+  tl.set("#gC", {autoAlpha: 0}, 25.367);
+  /* d_shelf */
+
+  tl.set("#gD", {autoAlpha: 1}, 24.867);
+  arr("#sh", 24.967, {s: 0.85, y: 30, d: 0.75});
+  shn("#sh .sheen", 25.367);
+  arr("#lc", 26.994, {s: 0.5, y: 20, d: 0.7});
+  arr(["#swl", "#sw"], 29.537, {s: 0.7, y: 16, d: 0.65});
+  tl.to("#swK", {keyframes: {x: [0, 10, -3, 0]}, duration: 0.4, ease: "none"}, 30.207);
+  /* by the window: the chip turns over */
+  tl.to("#lc", {scaleY: 0, duration: 0.13, ease: "power2.in"}, 34.067);
+  tl.set("#lc0", {autoAlpha: 0}, 34.197); tl.set("#lc1", {autoAlpha: 1}, 34.197);
+  tl.to("#lc", {scaleY: 1, duration: 0.5, ease: FLIP}, 34.197);
+  /* and the background has to blur: switch on */
+  tl.to("#swK", {x: 54, duration: 0.45, ease: SP}, 36.312);
+  tl.fromTo("#swOn", {autoAlpha: 0}, {autoAlpha: 1, duration: 0.25, ease: "power2.out"}, 36.332);
+  G.ripple("#swR", 36.412);
+  bout(["#sh", "#lc", "#swl", "#sw"], 39.033, 10, 0.26);
+  tl.set("#gD", {autoAlpha: 0}, 39.353);
+  /* t_edits_tile */
+
+  tl.set("#gT", {autoAlpha: 1}, 10.267);
+  gsap.set("#eT", {transformOrigin: "50% 50%"});
+  arr("#eT", 10.327, {s: 0.4, y: 30});
+  G.ripple("#eTR", 10.647);
+  /* «Перший»: tile 1 takes the centre */
+  tl.to("#eT", {x: 180, duration: 0.7, ease: SP}, 16.623);
+  arr("#eIG", 17.883, {s: 0.3, y: 10, d: 0.6});
+  /* «Edits»: it turns over into Edits */
+  tl.to("#eT", {scaleX: 0, duration: 0.13, ease: "power2.in"}, 18.663);
+  tl.set("#eT1", {autoAlpha: 0}, 18.793); tl.set("#eT2", {autoAlpha: 1}, 18.793);
+  tl.to("#eT", {scaleX: 1, duration: 0.4, ease: FLIP}, 18.793);
+  shn("#eT2 .sheen", 19.023);
+  /* it becomes the card's app icon */
+  bout("#eIG", 19.213, 8, 0.2);
+  tl.set("#eT", {transformOrigin: "0px 0px"}, 19.273);
+  tl.to("#eT", {x: -120, y: -12, scale: 0.364, duration: 0.6, ease: SP}, 19.283);
+  /* the card folds back into it; it docks in the shelf */
+  tl.to("#eT", {x: -138, y: 200, scale: 0.682, duration: 0.7, ease: SP}, 25.087);
+  /* «Edits вже не підходить» */
+  arr("#eX", 37.977, {s: 0.3, y: 0, d: 0.6});
+  G.haptic("#eT2", 38.057);
+  tl.to("#eT2", {autoAlpha: 0.45, duration: 0.35, ease: "power2.out"}, 38.504);
+  bout("#eT", 39.033, 10, 0.26);
+  tl.set("#gT", {autoAlpha: 0}, 39.353);
+  /* f_notes */
+
+  tl.set("#gN", {autoAlpha: 1}, 40.753);
+  gsap.set("#npW", {transformOrigin: "50% 0%"});
+  /* on her phone: small, above her head, opaque */
+  tl.fromTo("#npW", {autoAlpha: 0, filter: "blur(12px)"}, {autoAlpha: 1, filter: "blur(0px)", duration: 0.42, ease: "power2.out"}, 40.953);
+  tl.set("#npW", {filter: "none"}, 41.383);
+  tl.fromTo("#npW", {scale: 0.302, y: -333+40}, {scale: 0.420, y: -333, duration: 0.85, ease: SOFT}, 40.953);
+  /* «вставляю туди текст»: Вставити, tap, the text drops in */
+  gsap.set("#pst", {xPercent: -50});
+  arr("#pst", 42.109, {s: 0.5, y: 16, d: 0.55});
+  tl.to("#pst", {scale: 0.92, duration: 0.08, ease: "power2.out"}, 42.409);
+  tl.to("#pst", {scale: 1, duration: 0.3, ease: SP}, 42.489);
+  tl.fromTo("#npC", {clipPath: "inset(0% 0% 0% 0%)"}, {clipPath: "inset(100% 0% 0% 0%)", duration: 0.4, ease: "power2.inOut"}, 42.469);
+  bout("#pst", 42.649, 8, 0.24);
+  /* «накладаю зверху на камеру»: over her face, half transparent */
+  tl.to("#npW", {scale: 1, y: 0, duration: 1.0, ease: SOFT}, 43.929);
+  tl.to("#npW", {autoAlpha: 0.5, duration: 0.85, ease: "power2.inOut"}, 44.029);
+  tl.fromTo("#npI", {y: 0}, {y: -176, duration: 17.757, ease: "none"}, 45.329);
+  tl.to("#npW", {autoAlpha: 0, scale: 0.97, filter: "blur(8px)", duration: 0.34, ease: "power2.in"}, 63.086);
+  tl.set("#npW", {filter: "none"}, 63.436);
+  /* the callback: fainter, while she says she is reading it right now */
+  tl.fromTo("#npW", {autoAlpha: 0, scale: 0.97, filter: "blur(10px)"},
+            {autoAlpha: 0.3, scale: 1, filter: "blur(0px)", duration: 0.55, ease: "power2.out", immediateRender: false}, 74.306);
+  tl.set("#npW", {filter: "none"}, 74.866);
+  tl.fromTo("#npI", {y: -176}, {y: -176-10, duration: 78.119-74.346, ease: "none", immediateRender: false}, 74.346);
+  tl.to("#npW", {autoAlpha: 0, duration: 0.3, ease: "power2.in"}, 77.899);
+  tl.set("#gN", {autoAlpha: 0}, 78.204);
+
+  /* front camera, portrait video */
+  tl.set("#gF", {autoAlpha: 1}, 46.259);
+  arr("#md", 46.339, {s: 0.85, y: 24, d: 0.7});
+  gsap.set("#ms", {x: 130}); gsap.set("#ml1", {color: "#ffffff"});
+  tl.fromTo("#mdF svg", {rotation: 0}, {rotation: 180, duration: 0.6, ease: SP, transformOrigin: "50% 50%"}, 47.279);
+  tl.to("#ms", {x: -145, duration: 0.6, ease: SP}, 47.659);
+  tl.to("#ml1", {color: "rgba(255,255,255,0.5)", duration: 0.25}, 47.679);
+  tl.to("#ml2", {color: "#ffffff", duration: 0.25}, 47.779);
+  shn("#md .sheen", 47.979);
+  bout("#md", 50.499, 10, 0.26);
+  /* eye level */
+  tl.fromTo("#eyW", {autoAlpha: 0, clipPath: "inset(0% 100% 0% 0%)"},
+            {autoAlpha: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 0.6, ease: "power2.inOut"}, 56.456);
+  arr("#eyC", 56.856, {s: 0.4, y: 0, d: 0.65});
+  G.ripple("#eyCR", 57.176);
+  bout(["#eyW", "#eyC"], 60.566, 8, 0.28);
+  tl.set("#gF", {autoAlpha: 0}, 60.916);
+  /* h_follow */
+
+  tl.set("#gH", {autoAlpha: 1}, 78.104);
+  arr("#fl", 78.184, {s: 0.6, y: 40});
+  tl.to("#fl", {scale: 0.95, duration: 0.09, ease: "power2.out"}, 79.024);
+  tl.to("#fl", {scale: 1, duration: 0.45, ease: SP}, 79.114);
+  tl.fromTo("#flOn", {autoAlpha: 0}, {autoAlpha: 1, duration: 0.2}, 79.064);
+  tl.set("#flT", {autoAlpha: 0}, 79.074);
+  tl.fromTo("#ck4", {scale: 0.3, autoAlpha: 0.95}, {scale: 2.4, autoAlpha: 0, duration: 0.7, ease: "power2.out", immediateRender: false}, 79.044);
+  shn("#fl .sheen", 79.174);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>
