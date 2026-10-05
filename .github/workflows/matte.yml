@@ -1,0 +1,37 @@
+# Cut her out of a span of a plate (transparent VP9 webm), in the cloud — the
+# same `hyperframes remove-background --quality best` tools/matte.py runs, which
+# costs ~1.75 s/frame on her laptop. Push matte/<name>.mp4 to this branch; the
+# artifact matte-<name> holds <name>.webm.
+name: matte
+on:
+  push:
+    branches: [asr-inbox]
+    paths: ["matte/**"]
+  workflow_dispatch:
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      names: ${{ steps.m.outputs.names }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: m
+        run: echo "names=$(ls matte/*.mp4 | xargs -n1 basename | sed 's/\.mp4$//' | python3 -c 'import sys,json;print(json.dumps(sys.stdin.read().split()))')" >> "$GITHUB_OUTPUT"
+  matte:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        name: ${{ fromJson(needs.plan.outputs.names) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "20"}
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - run: mkdir -p out && npx --yes hyperframes@0.8.33 remove-background matte/${{ matrix.name }}.mp4 -o out/${{ matrix.name }}.webm --quality best
+      - uses: actions/upload-artifact@v4
+        with:
+          name: matte-${{ matrix.name }}
+          path: out/${{ matrix.name }}.webm
