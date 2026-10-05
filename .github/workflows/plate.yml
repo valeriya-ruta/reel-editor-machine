@@ -1,0 +1,49 @@
+# Cut her raw takes into plates on GitHub runners (tools/cut.py --render), not
+# on her laptop — 2026-10-05, "my laptop is overheating". Raw takes live in the
+# private release raw-2026-10-05. Push plate/<tag>.json = {"reels": ["21", ...]}.
+name: plate
+on:
+  push:
+    branches: [asr-inbox]
+    paths: ["plate/**"]
+permissions:
+  contents: read
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      reels: ${{ steps.r.outputs.reels }}
+      tag: ${{ steps.r.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 2}
+      - id: r
+        run: |
+          f=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- plate/ | head -1)
+          echo "reels=$(jq -c .reels "$f")" >> "$GITHUB_OUTPUT"
+          echo "tag=$(jq -r .tag "$f")" >> "$GITHUB_OUTPUT"
+  cut:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        reel: ${{ fromJson(needs.plan.outputs.reels) }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg && pip install -q numpy
+      - run: |
+          src=$(basename "$(cat work/r${{ matrix.reel }}/SOURCE.txt | tr -d '\r\n')")
+          mkdir -p raw && gh release download raw-2026-10-05 --repo ${{ github.repository }} -p "$src" -D raw
+      - run: CUT_RAW=raw CUT_SCRATCH=/tmp/s python tools/cut.py ${{ matrix.reel }} --render
+      - uses: actions/upload-artifact@v4
+        with:
+          name: plate-${{ matrix.reel }}-${{ needs.plan.outputs.tag }}
+          path: |
+            reel-${{ matrix.reel }}/assets/voice.mp4
+            work/r${{ matrix.reel }}/cut.json
