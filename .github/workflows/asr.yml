@@ -1,0 +1,44 @@
+# Cloud transcription for Ruta's reels (her call, 2026-10-05: heavy work goes to
+# the cloud, not her laptop). Push audio to inbox/<reel>.m4a on this branch; one
+# job per file transcribes it with whisper medium, per utterance, and uploads
+# utt.jsonl + silences.txt as artifact asr-<reel>.
+name: asr
+on:
+  push:
+    branches: [asr-inbox]
+    paths: ["inbox/**"]
+  workflow_dispatch:
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      reels: ${{ steps.m.outputs.reels }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: m
+        run: echo "reels=$(ls inbox/*.m4a | xargs -n1 basename | sed 's/\.m4a$//' | python3 -c 'import sys,json;print(json.dumps(sys.stdin.read().split()))')" >> "$GITHUB_OUTPUT"
+  asr:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        reel: ${{ fromJson(needs.plan.outputs.reels) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/whisper
+            ~/.cache/pip
+          key: whisper-medium-v1
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - run: pip install -q torch --index-url https://download.pytorch.org/whl/cpu && pip install -q openai-whisper
+      - run: python ci/asr_one.py inbox/${{ matrix.reel }}.m4a out/${{ matrix.reel }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: asr-${{ matrix.reel }}
+          path: out/${{ matrix.reel }}
