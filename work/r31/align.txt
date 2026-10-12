@@ -1,0 +1,58 @@
+CAPTIONS 277   script 216 | whisper-corrected 36 | her wording 25
+
+WHISPER MISHEARD -> script spelling restored (22)
+     2.29s  0.91  про ШІ                           <- прошу її
+     7.21s  1.00  налаштовані скіли,               <- наложтовані скілли,
+     8.65s  0.92  style.md                         <- з TILMD
+     9.96s  0.96  рендер у хмарі.                  <- рендеру Хмарів.
+    16.52s  0.90  ускладнила                       <- ускладнула
+    24.65s  1.00  Потрібна                         <- Потрібно
+    25.49s  0.88  підписка                         <- підписки
+    31.93s  1.00  рілз.                            <- рілс.
+    32.90s  1.00  рілзів                           <- рілсів
+    34.34s  1.00  плюс-мінус                       <- плюс мінус
+    36.01s  0.84  Порівняно                        <- Порівняємо
+    37.95s  1.00  рілз                             <- рілс
+    40.09s  0.83  кодити?                          <- кодети?
+    41.25s  0.83  кодити                           <- кодети
+    52.05s  1.00  30-40                            <- 30 40
+    58.42s  0.94  займатись                        <- займатися
+    65.43s  1.00  кольорокорекцію!                 <- колоро корекцію.
+    69.82s  1.00  саме не                          <- за мене
+    77.26s  0.92  копійки,                         <- копіїки,
+    82.73s  1.00  будь-яким                        <- будь яким
+    88.27s  1.00  Клод.                            <- Клот.
+    90.04s  0.82  рендер у                         <- то рендеру в
+
+SHE IMPROVISED -> her wording kept (27)
+     4.25s  script: робиться,                    said: роботя?
+    11.46s  script: style.md                     said: сталим дій
+    14.04s  script: —                            said: я
+    20.37s  script: знаєш,                       said: знаю,
+    26.95s  script: —                            said: ти
+    29.25s  script: бо так                       said: питати
+    33.74s  script: —                            said: мені
+    39.13s  script: —                            said: Чи
+    44.42s  script: до                           said: по
+    54.07s  script: моя                          said: бо я
+    55.01s  script: —                            said: тобто
+    55.91s  script: —                            said: лише
+    61.49s  script: і                            said: та
+    69.34s  script: пишеш,                       said: пишею,
+        -  script: Але є нюанс: якщо рендериш у said: — (cut)
+    73.92s  script: рілз з                       said: рівз
+    75.30s  script: при                          said: про
+    75.90s  script: центах                       said: центів
+    81.99s  script: він                          said: це
+        -  script: задаєш                       said: — (cut)
+    84.15s  script: —                            said: здаєш
+    92.01s  script: —                            said: а
+    92.75s  script: трохи                        said: трошки
+    95.03s  script: —                            said: ще
+   102.76s  script: «design»,                    said: дизайн,
+   103.50s  script: —                            said: я
+   105.53s  script: —                            said: Безкоштовно!
+
+REVIEW -- could go either way (2)
+     4.79s  script: плагін?                    said: якийсь плахін?             (0.71)
+    45.88s  script: рілз.                      said: рілс. Все.                 (0.73)

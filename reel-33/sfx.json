@@ -1,0 +1,107 @@
+[
+ {
+  "t": 0.476,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 3.056,
+  "name": "notification",
+  "db": 0
+ },
+ {
+  "t": 5.393,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 6.561,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 7.651,
+  "name": "click-soft",
+  "db": -3
+ },
+ {
+  "t": 10.581,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 12.108,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 15.048,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 16.463,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 18.643,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 21.197,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 23.886,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 24.986,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 25.997,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 27.387,
+  "name": "ping",
+  "db": -2
+ },
+ {
+  "t": 28.337,
+  "name": "typing",
+  "db": -4
+ },
+ {
+  "t": 33.504,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 35.887,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 36.517,
+  "name": "whoosh-short",
+  "db": -1
+ },
+ {
+  "t": 37.367,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 40.723,
+  "name": "click",
+  "db": 0
+ }
+]

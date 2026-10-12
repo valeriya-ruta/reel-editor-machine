@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 37 — А якщо я перестану з тобою працювати</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+    @font-face {
+      font-family: "ProductSans";
+      src: url("assets/fonts/ProductSans-Black.woff") format("woff");
+      font-weight: 900; font-style: normal; font-display: block;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px;
+            overflow: hidden; background: #000;
+            font-family: "ProductSans", system-ui, sans-serif;
+      --surface:        #fffcfd;
+      --container:      #fbeef2;
+      --container-high: #f4dfe5;
+      --graphite:       rgba(23,20,28,0.13);
+      --accent:         #b4122f;
+      --accent-deep:    #8d0d24;
+      --pink:           #ff6e9c;
+      --ink:            #17141c;
+
+      --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
+      --lit-blush:  linear-gradient(115deg, #ffffff 0%, #fff7fa 100%);
+      --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
+      --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
+      --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
+
+      --rim: inset 0 1.5px 0 rgba(255,255,255,0.92),
+             inset 0 -1.5px 0 rgba(255,255,255,0.14),
+             inset 0 0 0 1px rgba(255,255,255,0.28);
+      --rim-dark: inset 0 1.5px 0 rgba(255,255,255,0.16),
+                  inset 0 0 0 1px rgba(255,255,255,0.08);
+      --rim-glass: inset 0 2px 0 rgba(255,255,255,0.70),
+                   inset 0 -2px 0 rgba(255,255,255,0.10),
+                   inset 0 0 0 1.5px rgba(255,255,255,0.30);
+
+      /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
+         Light coming off the object, not the object sitting on a surface. */
+      --glow: drop-shadow(0 0 10px rgba(255,196,218,0.95))
+              drop-shadow(0 0 26px rgba(255,110,156,0.85))
+              drop-shadow(0 0 64px rgba(255,110,156,0.55))
+              drop-shadow(0 0 120px rgba(255,110,156,0.32));
+      --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
+                   drop-shadow(0 0 60px rgba(255,110,156,0.30));
+
+      --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
+              drop-shadow(0 24px 48px rgba(26,30,39,0.14));
+      --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))
+                 drop-shadow(0 12px 24px rgba(26,30,39,0.12));
+ }
+    .plate { position: absolute; inset: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    #scrim { position: absolute; left: 20px; top: 1247px;
+             width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png");
+             background-size: 100% 100%; background-repeat: no-repeat;
+             opacity: 0; visibility: hidden; pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; top: 1413px;
+           height: 118px; line-height: 118px; text-align: center;
+           color: #fff; font-size: 90px; font-weight: 900;
+           letter-spacing: -0.015em; white-space: nowrap;
+           opacity: 0; visibility: hidden; }
+    .cap.inv { color: var(--ink); }
+    .g { position: absolute; left: 0; top: 40px; width: 1080px;
+         height: 600px; opacity: 0; visibility: hidden; }
+    .g.full { top: 0; height: 1920px; }
+
+    /* §5a.9 — glass over her footage is the house look. Panels only; an
+       edge-to-edge frosted ground blurs her out of her own reel. */
+    .glass { background: rgba(255,255,255,0.15);
+             -webkit-backdrop-filter: blur(24px) saturate(1.4);
+             backdrop-filter: blur(24px) saturate(1.4);
+             box-shadow: var(--rim); filter: var(--cast); }
+
+    /* A takeover: a tinted pane laid ON the footage, with a real margin so it
+       reads as an object rather than a blur applied to the video. */
+    /* The inset pane is a *pane*: 44/64 margin so the footage shows past it,
+       and corners, because a full-bleed hard-cornered rectangle is a bug she
+       has reported. base_css() squircles it; this radius is the fallback. */
+    .ground { position: absolute; left: 44px; top: 64px;
+              width: 992px; height: 1792px; border-radius: 68px;
+              background: linear-gradient(158deg, rgba(196,20,52,0.62) 0%,
+                          rgba(141,13,36,0.70) 100%);
+              -webkit-backdrop-filter: blur(30px) saturate(1.5);
+              backdrop-filter: blur(30px) saturate(1.5);
+              box-shadow: var(--rim-glass); filter: var(--cast); }
+
+    .card { position: absolute; background: var(--lit-blush);
+            filter: var(--cast); box-shadow: var(--rim); }
+    .card.ink { background: var(--lit-ink); box-shadow: var(--rim-dark); }
+    .card.accent { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+
+    .tile { position: absolute; display: grid; place-items: center;
+            background: var(--lit-blush); filter: var(--cast);
+            box-shadow: var(--rim); }
+
+    /* §5a.3 — bar rhythm. One thick heading, then ragged body. Uniform bars
+       read as a loading state; ragged ones read as an abstracted screen. */
+    .ph { display: block; height: 66px; border-radius: 18px;
+          background: var(--lit-accent); margin-bottom: 26px;
+          box-shadow: var(--rim-dark); }
+    .pr { display: block; height: 40px; border-radius: 12px;
+          background: var(--graphite); margin-bottom: 18px; }
+    .pr:nth-of-type(2) { width: 94%; }
+    .pr:nth-of-type(3) { width: 71%; }
+    .pr:nth-of-type(4) { width: 43%; }
+
+    .phone { position: absolute; background: var(--lit-blush);
+             overflow: hidden; filter: var(--cast); box-shadow: var(--rim); }
+    .phone video, .phone img { width: 100%; height: 100%; object-fit: cover;
+                               display: block; }
+
+    /* a value in its own card — her reference's "big number" pattern, minus
+       the label, because a graphic here carries no words */
+    .valcard { position: absolute; background: rgba(255,255,255,0.16);
+               -webkit-backdrop-filter: blur(16px) saturate(1.3);
+               backdrop-filter: blur(16px) saturate(1.3);
+               box-shadow: var(--rim-dark);
+               display: grid; place-items: center; }
+    .valcard span { color: #fff; font-weight: 900; letter-spacing: -0.04em; }
+
+    .wire { fill: none; stroke-width: 20; stroke-linecap: round;
+            filter: drop-shadow(0 8px 18px rgba(26,30,39,0.22)); }
+    .node { fill: #fdf6f6; stroke: #b4122f; stroke-width: 16;
+            filter: drop-shadow(0 10px 22px rgba(26,30,39,0.24)); }
+    .node.hub { fill: #b4122f; stroke: #fff; }
+
+    /* §5a.10 — the glow rides a WRAPPER, never the clipped element itself.
+       clip-path is applied *after* filter, so a drop-shadow declared on the
+       same element as the clip is cut away with everything else outside the
+       silhouette and the object ends up with no light at all. Put the clip on
+       the shape and the filter on its parent: the parent filters the already
+       clipped bitmap, so the light traces the squircle and survives. */
+    .lit { position: absolute; inset: 0; pointer-events: none;
+           filter: var(--glow); }
+    .lit.soft { filter: var(--glow-soft); }
+
+    /* Emoji are images, never glyphs. The render runs on someone else's
+       Chrome, so a literal 💩 in the HTML comes out in whatever emoji font
+       that machine has — Noto on the cloud renderer, Segoe on hers, Apple on
+       nobody's. She wants the Apple set, so the artwork ships in assets/emoji
+       and the glyph never appears in a composition. */
+    .emoji { display: block; width: auto; image-rendering: auto; }
+
+    .halo { position: absolute; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(255,110,156,0.5) 0%,
+                        rgba(255,110,156,0) 70%); }
+    .ring { position: absolute; border-radius: 50%; pointer-events: none;
+            border: 18px solid rgba(255,110,156,0.92);
+            filter: drop-shadow(0 0 40px rgba(255,110,156,0.55)); }
+
+    /* ---- takeovers (STYLE.md 2c) ----
+       The graphic owns the frame: the plate is gone, so none of the
+       over-footage rules apply — no glow budget, no band discipline, ink type
+       on a light ground. Lives here rather than per-reel because every reel
+       from 9 onwards needs it. A takeover that does not bleed off at least
+       two edges reads as a slide, not a takeover. */
+    .tk { position: absolute; inset: 0; }
+    .tk.paper { background: var(--surface); }
+    .tk.white { background: #ffffff; }
+    .tk.blush { background: linear-gradient(150deg,#ffffff 0%,#fffafc 55%,
+                                            #fdf4f8 100%); }
+    /* graph paper — the texture the reference takeovers all have. 60px cells
+       at 5.8% ink: visible, never a pattern you read. */
+    .gp { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px),
+            repeating-linear-gradient(90deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px); }
+    /* horizontal rules only — a transcript or a list is ruled paper, not
+       graph paper, and the difference is what makes it read as an export. */
+    .gl { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.05) 0 1px,
+                                      transparent 1px 175px); }
+
+    /* the finished artefact, in her system — one class at any aspect ratio */
+    .dk { position: absolute; overflow: hidden; border-radius: 28px;
+          background: var(--lit-blush); box-shadow: var(--rim);
+          filter: var(--cast); }
+    .dk i { position: absolute; display: block; }
+    .dk .hb { left: 30px; top: 30px; height: 20px; border-radius: 6px;
+              background: var(--lit-accent); }
+    .dk .rr { left: 30px; height: 9px; border-radius: 4px;
+              background: rgba(23,20,28,0.22); }
+    .dk .pb { border-radius: 16px; background: var(--lit-pink);
+              box-shadow: var(--rim-dark); }
+
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Regular.ttf"); font-weight: 400; font-display: block; }
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Medium.ttf"); font-weight: 500; font-display: block; }
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Bold.ttf"); font-weight: 700; font-display: block; }
+
+/* ---------- the edge light: what makes a surface read as glass ----------
+   A uniform stroke is 2013. Real glass catches light at two opposite corners
+   and goes almost dark along the sides, so the rim is a gradient ring. */
+.edge::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.6px;
+  background: linear-gradient(140deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.34) 16%,
+              rgba(255,255,255,0.05) 42%, rgba(255,255,255,0.07) 62%,
+              rgba(255,255,255,0.50) 86%, rgba(255,255,255,0.90) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 3; }
+
+/* ---------- the shelf: frosted glass over her footage ----------
+   The house look since reel 3, rebuilt in layers: blur + saturation, a faint
+   top-to-bottom tint, light inside the bottom edge (thickness), huge soft
+   shadow. Add .edge for the rim. */
+.shelf { position: absolute; border-radius: 80px;
+  background: linear-gradient(158deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.07) 50%,
+              rgba(255,255,255,0.13) 100%);
+  -webkit-backdrop-filter: blur(22px) saturate(1.7) brightness(1.05);
+  backdrop-filter: blur(22px) saturate(1.7) brightness(1.05);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.65), inset 0 -24px 44px -22px rgba(255,255,255,0.36),
+              0 44px 90px -34px rgba(24,4,12,0.5); }
+
+/* dark glass — notifications and anything with white text over footage */
+.dglass { position: absolute; border-radius: 64px; color: #fff;
+  background: linear-gradient(160deg, rgba(58,22,32,0.58) 0%, rgba(24,10,15,0.50) 100%);
+  -webkit-backdrop-filter: blur(30px) saturate(1.8); backdrop-filter: blur(30px) saturate(1.8);
+  box-shadow: inset 0 1.5px 1px rgba(255,255,255,0.30), inset 0 -16px 30px -16px rgba(255,255,255,0.14),
+              0 40px 80px -30px rgba(10,0,4,0.6); }
+
+/* ---------- the tile family: every mark lives in one of three ----------
+   Same radius ratio as an iOS icon (22.4%), glyph at 50%. Put the tile in a
+   sized wrapper; the wrapper takes the motion, the tile takes the material. */
+.clear { position: absolute; inset: 0; border-radius: 22.4%;
+  background: linear-gradient(158deg, rgba(255,255,255,0.36) 0%, rgba(255,255,255,0.11) 48%,
+              rgba(255,255,255,0.17) 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.70), inset 0 -18px 30px -14px rgba(255,255,255,0.42),
+              0 34px 60px -22px rgba(24,4,12,0.55), 0 3px 8px rgba(24,4,12,0.10);
+  display: flex; align-items: center; justify-content: center; }
+.pearl { position: absolute; inset: 0; border-radius: 22.4%; overflow: hidden;
+  background: linear-gradient(160deg, #ffffff 0%, #fff5f8 52%, #f5dfe6 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -20px 32px -14px rgba(180,18,47,0.18),
+              0 36px 64px -22px rgba(30,4,12,0.55), 0 3px 8px rgba(30,4,12,0.12);
+  display: flex; align-items: center; justify-content: center; }
+.jelly { position: absolute; inset: 0; border-radius: 22.4%; overflow: hidden;
+  background: linear-gradient(165deg, #e0204b 0%, #ab112e 46%, #6b081c 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.55), inset 0 -26px 40px -14px rgba(255,125,165,0.60),
+              inset 0 0 0 1px rgba(255,255,255,0.10),
+              0 36px 64px -22px rgba(70,4,20,0.62), 0 3px 8px rgba(70,4,20,0.14);
+  display: flex; align-items: center; justify-content: center; }
+/* the lens highlight — subtle, or it turns into 2009 gloss */
+.jelly::after, .pearl::after { content: ""; position: absolute; left: 7%; right: 7%; top: 3.5%; height: 44%;
+  border-radius: 40% 40% 50% 50% / 38% 38% 24% 24%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.26), rgba(255,255,255,0)); }
+.pearl::after { background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0)); opacity: 0.5; }
+.mk { width: 50%; height: 50%; fill: url(#gw); position: relative; z-index: 1; }
+.pearl .mk { fill: #17141c; }
+/* a wordmark stands in where a brand has no icon (RUTA, Windsor's "w.") */
+.wmark { font-weight: 900; color: #17141c; letter-spacing: -0.045em; line-height: 1;
+  position: relative; z-index: 1; }
+.wmark i { font-style: normal; color: #b4122f; }
+.jelly .wmark { color: #fff; } .jelly .wmark i { color: #ffb3c9; }
+
+/* one light sweep across a surface when it lands — once, never looping */
+.sheen { position: absolute; inset: -10%; z-index: 2; pointer-events: none;
+  background: linear-gradient(105deg, rgba(255,255,255,0) 38%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0) 62%);
+  mix-blend-mode: soft-light; }
+/* a ripple the same shape as the tile that sent it */
+.sqring { position: absolute; border-radius: 22.4%; border: 3px solid rgba(255,255,255,0.75);
+  opacity: 0; visibility: hidden; }
+
+/* ---------- the takeover ground: deep burgundy, lit from inside ----------
+   Approved on the test: a dark ground is allowed now (it overrides §5's old
+   "never dark"). Three soft light pools drift slowly; grain stops banding. */
+.tkg { position: absolute; inset: 0;
+  background: linear-gradient(172deg, #4a0a1c 0%, #660c26 36%, #3c0716 70%, #1d030a 100%); }
+.aur { position: absolute; border-radius: 50%; pointer-events: none; }
+.aur.a1 { left: 260px; top: -420px; width: 1200px; height: 1200px;
+  background: radial-gradient(circle, rgba(255,110,156,0.50) 0%, rgba(255,110,156,0) 62%); }
+.aur.a2 { left: -640px; top: 960px; width: 1400px; height: 1400px;
+  background: radial-gradient(circle, rgba(222,32,74,0.55) 0%, rgba(222,32,74,0) 64%); }
+.aur.a3 { left: 330px; top: 760px; width: 900px; height: 900px;
+  background: radial-gradient(circle, rgba(255,198,214,0.20) 0%, rgba(255,198,214,0) 60%); }
+.grain { position: absolute; inset: 0; background: url("assets/grain.png"); opacity: 0.075;
+  mix-blend-mode: overlay; pointer-events: none; }
+
+/* the white report card that sits on a burgundy ground */
+.sheet { position: absolute; border-radius: 68px; overflow: hidden; color: #17141c;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 55%, #fdf0f4 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -30px 60px -30px rgba(180,18,47,0.14),
+              0 70px 130px -40px rgba(8,0,3,0.75), 0 0 0 1px rgba(255,255,255,0.35); }
+.sheet .sheen { mix-blend-mode: normal; opacity: 0.55; }
+/* type ladder inside a sheet */
+.t-micro { font-size: 24px; font-weight: 700; letter-spacing: 0.16em; color: rgba(23,20,28,0.42); }
+.t-title { font-size: 42px; font-weight: 700; letter-spacing: -0.015em; }
+.t-sub   { font-size: 26px; font-weight: 500; color: rgba(23,20,28,0.46); }
+.t-big   { font-size: 176px; font-weight: 900; letter-spacing: -0.045em; line-height: 1;
+  background: linear-gradient(118deg, #7e0b20 0%, #b4122f 42%, #ff6e9c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: 10px; }
+.chip { display: inline-flex; align-items: center; gap: 10px; height: 58px; padding: 0 24px;
+  border-radius: 29px; background: #fbe3ea; color: #b4122f; font-size: 26px; font-weight: 700; }
+.hair { height: 2px; background: rgba(23,20,28,0.07); transform-origin: 0 0; }
+
+/* a cable between two tiles: a glass tube, a bright core, a travelling packet */
+.cab .tube { fill: none; stroke: rgba(255,255,255,0.26); stroke-width: 20; stroke-linecap: round; }
+.cab .core { fill: none; stroke: rgba(255,255,255,0.92); stroke-width: 4.5; stroke-linecap: round; }
+.cab .pkt  { fill: none; stroke: #ffd6e3; stroke-width: 11; stroke-linecap: round; }
+.cab .pkg  { filter: drop-shadow(0 0 10px rgba(255,120,165,1)); }
+.cab .wire { fill: none; stroke: rgba(255,255,255,0.55); stroke-width: 4; stroke-linecap: round; }
+
+
+.abs { position: absolute; }
+.hide { opacity: 0; visibility: hidden; }
+.tw { position: absolute; }
+.sk { fill: none; stroke: url(#gw); stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round;
+  width: 50%; height: 50%; position: relative; z-index: 1; overflow: visible; }
+.pearl .sk { stroke: #17141c; }
+.circ .jelly, .circ .pearl, .circ .clear, .circ .sheen { border-radius: 50%; }
+.sqring.rnd { border-radius: 50%; }
+.aurs { position: absolute; left: -700px; top: -700px; width: 2480px; height: 3320px; pointer-events: none;
+  background:
+    radial-gradient(circle 526px at 1560px 880px, rgba(255,110,156,0.50), rgba(255,110,156,0)),
+    radial-gradient(circle 634px at 760px 2360px, rgba(222,32,74,0.55), rgba(222,32,74,0)),
+    radial-gradient(circle 382px at 1480px 1910px, rgba(255,198,214,0.20), rgba(255,198,214,0)); }
+.shc { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
+.shc .sheen { mix-blend-mode: normal; opacity: 0.4; }
+
+/* the audience chips */
+.chips { position: absolute; left: 0; width: 1080px; display: flex; justify-content: center; gap: 22px; }
+.chip2 { position: relative; height: 92px; padding: 0 38px; border-radius: 46px; display: flex; align-items: center;
+  font-size: 42px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
+
+/* cables and lines */
+.pulse { fill: none; stroke: #ffd6e3; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round;
+  filter: drop-shadow(0 0 10px rgba(255,110,156,0.9)); }
+.spin { position: absolute; fill: none; stroke: #ff8ab0; stroke-width: 9; stroke-linecap: round; stroke-dasharray: 70 40;
+  filter: drop-shadow(0 0 10px rgba(255,110,156,0.8)); }
+.ringP { fill: none; stroke: #ff8ab0; stroke-width: 11; stroke-linecap: round;
+  filter: drop-shadow(0 0 12px rgba(255,110,156,0.9)); }
+.strike { fill: none; stroke: #e0204b; stroke-width: 12; stroke-linecap: round; }
+
+/* checklists */
+.cbx { position: absolute; border-radius: 28%; box-shadow: inset 0 0 0 4px rgba(23,20,28,0.22); }
+.cbf { position: absolute; inset: 0; border-radius: 28%;
+  background: linear-gradient(165deg, #e0204b 0%, #8d0d24 100%); opacity: 0; visibility: hidden; }
+.cbf svg { position: absolute; left: 14%; top: 14%; width: 72%; height: 72%; fill: none; stroke: #fff;
+  stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.rr { position: absolute; display: block; border-radius: 12px; background: rgba(23,20,28,0.13); }
+.hb { position: absolute; display: block; border-radius: 12px; background: linear-gradient(115deg, #c41434 0%, #8d0d24 100%); }
+.fillb { position: absolute; display: block; border-radius: 12px; transform-origin: 0 50%;
+  background: linear-gradient(115deg, #ff6e9c 0%, #e0204b 60%, #b4122f 100%); }
+
+/* TK1: the team board */
+.col { position: absolute; width: 220px; height: 440px; }
+.t247 { position: absolute; font-size: 250px; font-weight: 900; letter-spacing: -0.05em; line-height: 1; text-align: center;
+  background: linear-gradient(118deg, #7e0b20 0%, #b4122f 42%, #ff6e9c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: 12px; }
+
+/* TK2: content cards, the curve */
+.cc { position: absolute; border-radius: 26px; overflow: hidden;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 55%, #fdf0f4 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 30px 60px -24px rgba(8,0,3,0.7); }
+.cc i { position: absolute; display: block; }
+.cc .im { left: 10px; top: 10px; right: 10px; border-radius: 18px;
+  background: linear-gradient(150deg, #e0204b 0%, #8d0d24 100%); }
+.cc .rr { height: 12px; border-radius: 6px; }
+.curve { fill: none; stroke: url(#gc); stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
+.gridl { stroke: rgba(23,20,28,0.08); stroke-width: 2; }
+.arcs path { fill: none; stroke: #ffe3ec; stroke-width: 12; stroke-linecap: round; stroke-linejoin: round; }
+.arcs { filter: drop-shadow(0 0 12px rgba(255,110,156,0.9)); }
+
+/* J: the doc card */
+.doc { position: absolute; border-radius: 52px; overflow: hidden;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 55%, #fdf0f4 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 50px 100px -36px rgba(24,4,12,0.62); }
+.hl { position: absolute; left: 0; right: 0; background: rgba(255,110,156,0.20); transform-origin: 0 50%; }
+.caret { position: absolute; width: 5px; border-radius: 3px; background: #e0204b; }
+
+/* TK3: the list and the comment */
+.row { position: absolute; left: 0; right: 0; height: 110px; }
+.row .tx { position: absolute; left: 235px; top: 14px; font-size: 58px; font-weight: 700; letter-spacing: -0.015em;
+  line-height: 80px; color: #17141c; white-space: nowrap; }
+.ttl { position: absolute; font-size: 74px; font-weight: 900; letter-spacing: -0.03em; line-height: 1; color: #17141c;
+  white-space: nowrap; }
+.cmt { position: absolute; border-radius: 75px; background: #f7eef1;
+  box-shadow: inset 0 0 0 2px rgba(23,20,28,0.06); }
+.cmt .ph { position: absolute; left: 150px; top: 0; line-height: 150px; font-size: 42px; font-weight: 500;
+  color: rgba(23,20,28,0.38); white-space: nowrap; }
+.cmt .pl { position: absolute; left: 150px; top: 0; line-height: 150px; font-size: 92px; font-weight: 900; color: #b4122f; }
+
+    .ground { clip-path: path('M 883.2 0 c 36.293 0 54.439 0 70.765 8.318 a 68 68 0 0 1 29.717 29.717 c 8.318 16.325 8.318 34.472 8.318 70.765 L 992 1683.2 c 0 36.293 0 54.439 -8.318 70.765 a 68 68 0 0 1 -29.717 29.717 c -16.325 8.318 -34.472 8.318 -70.765 8.318 L 108.8 1792 c -36.293 0 -54.439 0 -70.765 -8.318 a 68 68 0 0 1 -29.717 -29.717 c -8.318 -16.325 -8.318 -34.472 -8.318 -70.765 L 0 108.8 c 0 -36.293 0 -54.439 8.318 -70.765 a 68 68 0 0 1 29.717 -29.717 c 16.325 -8.318 34.472 -8.318 70.765 -8.318 Z'); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="49.850" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="49.850" data-media-start="0"
+             muted playsinline></video>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="gw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ffdbe6"/></linearGradient>
+<symbol id="i-claude" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></symbol>
+<symbol id="i-notion" viewBox="0 0 24 24"><path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z"/></symbol>
+<symbol id="i-canva" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zM6.962 7.68c.754 0 1.337.549 1.405 1.2.069.583-.171 1.097-.822 1.406-.343.171-.48.172-.549.069-.034-.069 0-.137.069-.206.617-.514.617-.926.548-1.508-.034-.378-.308-.618-.583-.618-1.2 0-2.914 2.674-2.674 4.629.103.754.549 1.646 1.509 1.646.308 0 .65-.103.96-.24.5-.264.799-.47 1.097-.8-.073-.885.704-2.046 1.851-2.046.515 0 .926.205.96.583.068.514-.377.582-.514.582s-.378-.034-.378-.17c-.034-.138.309-.07.275-.378-.035-.206-.24-.274-.446-.274-.72 0-1.131.994-1.029 1.611.035.275.172.549.447.549.205 0 .514-.31.617-.755.068-.308.343-.514.583-.514.102 0 .17.034.205.171v.138c-.034.137-.137.548-.102.651 0 .069.034.171.17.171.092 0 .436-.18.777-.459.117-.59.253-1.298.253-1.357.034-.24.137-.48.617-.48.103 0 .171.034.205.171v.138l-.136.617c.445-.583 1.097-.994 1.508-.994.172 0 .309.102.309.274 0 .103 0 .274-.069.446-.137.377-.309.96-.412 1.474 0 .137.035.274.207.274.171 0 .685-.206 1.096-.754l.007-.004c-.002-.068-.007-.134-.007-.202 0-.411.035-.754.104-.994.068-.274.411-.514.617-.514.103 0 .205.069.205.171 0 .035 0 .103-.034.137-.137.446-.24.857-.24 1.269 0 .24.034.582.102.788 0 .034.035.069.07.069.068 0 .548-.445.89-1.028-.308-.206-.48-.549-.48-.96 0-.72.446-1.097.858-1.097.343 0 .617.24.617.72 0 .308-.103.65-.274.96h.102a.77.77 0 0 0 .584-.24.293.293 0 0 1 .134-.117c.335-.425.83-.74 1.41-.74.48 0 .924.205.959.582.068.515-.378.618-.515.618l-.002-.002c-.138 0-.377-.035-.377-.172 0-.137.309-.068.274-.376-.034-.206-.24-.275-.446-.275-.686 0-1.13.891-1.028 1.611.034.275.171.583.445.583.206 0 .515-.308.652-.754.068-.274.343-.514.583-.514.103 0 .17.034.205.171 0 .069 0 .206-.137.652-.17.308-.171.48-.137.617.034.274.171.48.309.583.034.034.068.102.068.102 0 .069-.034.138-.137.138-.034 0-.068 0-.103-.035-.514-.205-.72-.548-.789-.891-.205.24-.445.377-.72.377-.445 0-.89-.411-.96-.926a1.609 1.609 0 0 1 .075-.649c-.203.13-.422.203-.623.203h-.17c-.447.652-.927 1.098-1.27 1.303a.896.896 0 0 1-.377.104c-.068 0-.171-.035-.205-.104-.095-.152-.156-.392-.193-.667-.481.527-1.145.805-1.453.805-.343 0-.548-.206-.582-.55v-.376c.102-.754.377-1.2.377-1.337a.074.074 0 0 0-.069-.07c-.24 0-1.028.824-1.166 1.373l-.103.445c-.068.309-.377.515-.582.515-.103 0-.172-.035-.206-.172v-.137l.046-.233c-.435.31-.87.508-1.075.508-.308 0-.48-.172-.514-.412-.206.274-.445.412-.754.412-.352 0-.696-.24-.862-.593-.244.275-.523.553-.852.764-.48.309-1.028.549-1.68.549-.582 0-1.097-.309-1.371-.583-.412-.377-.651-.96-.686-1.509-.205-1.68.823-3.84 2.4-4.8.378-.205.755-.343 1.132-.343zm9.77 3.291c-.104 0-.172.172-.172.343 0 .274.137.583.309.755a1.74 1.74 0 0 0 .102-.583c0-.343-.137-.515-.24-.515z"/></symbol></defs></svg>
+<div class="g full" id="gA"><svg class="cab abs" width="1080" height="700" viewBox="0 0 1080 700" style="left:0;top:0"><path class="tube hide" id="aT" d="M338 245 C 470 200 600 200 730 245"/><path class="core hide" id="aC" d="M338 245 C 470 200 600 200 730 245"/><g class="pkg"><path class="pkt" id="aP" style="opacity:0" d="M338 245 C 470 200 600 200 730 245"/></g></svg><div class="tw hide circ" id="aMe" style="left:170px;top:160px;width:170px;height:170px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.8 3.7-5.8 7.2-5.8s6.3 2 7.2 5.8"/></svg><div class="sheen"></div></div></div><div class="sqring" id="aNoR" style="left:235px;top:185px;width:120px;height:120px"></div><div class="tw hide " id="aNo" style="left:235px;top:185px;width:120px;height:120px"><div class="pearl"><svg class="mk"><use href="#i-notion" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="sqring" id="aCaR" style="left:725px;top:185px;width:120px;height:120px"></div><div class="tw hide " id="aCa" style="left:725px;top:185px;width:120px;height:120px"><div class="pearl"><svg class="mk"><use href="#i-canva" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="tw hide circ" id="aKey" style="left:488px;top:356px;width:104px;height:104px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><circle cx="7.6" cy="12" r="4"/><path d="M11.6 12h9.2M17.6 12v3.6M20.6 12v2.6"/></svg><div class="sheen"></div></div></div><div class="sqring" id="aHubR" style="left:730px;top:155px;width:180px;height:180px"></div><div class="tw hide " id="aHub" style="left:730px;top:155px;width:180px;height:180px"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="tw hide circ" id="aQ" style="left:862px;top:100px;width:100px;height:100px"><div class="jelly"><span class="wmark" style="font-size:58px;color:#fff">?</span><div class="sheen"></div></div></div><div class="tw hide circ" id="aQ0" style="left:560px;top:100px;width:96px;height:96px"><div class="pearl"><span class="wmark" style="font-size:53px;color:#b4122f">?</span><div class="sheen"></div></div></div><div class="tw hide circ" id="aQ1" style="left:936px;top:330px;width:92px;height:92px"><div class="pearl"><span class="wmark" style="font-size:51px;color:#b4122f">?</span><div class="sheen"></div></div></div><div class="tw hide circ" id="aQ2" style="left:640px;top:370px;width:84px;height:84px"><div class="pearl"><span class="wmark" style="font-size:47px;color:#b4122f">?</span><div class="sheen"></div></div></div><div class="chips" style="top:476px"><div class="chip2 dglass edge hide" id="ch0">SMM-агенції</div><div class="chip2 dglass edge hide" id="ch1">блогерки</div><div class="chip2 dglass edge hide" id="ch2">підприємниці</div></div></div>
+<div class="g full" id="gT1"><div class="tkg"></div><div class="aurs"></div><div class="grain"></div><div class="sheet hide" id="t1sh" style="left:-50px;top:170px;width:1180px;height:960px" data-layout-allow-overflow><div class="col" id="t1col0" style="left:105px;top:50px"><div class="tw hide circ" id="t1av0" style="left:40px;top:0px;width:140px;height:140px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.8 3.7-5.8 7.2-5.8s6.3 2 7.2 5.8"/></svg><div class="sheen"></div></div></div><div class="cbx" style="left:10px;top:190px;width:48px;height:48px"><div class="cbf" id="t1c00"><svg viewBox="0 0 24 24"><path id="t1p00" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><i class="rr" style="left:74px;top:203px;width:124px;height:22px"></i><div class="cbx" style="left:10px;top:265px;width:48px;height:48px"><div class="cbf" id="t1c01"><svg viewBox="0 0 24 24"><path id="t1p01" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><i class="rr" style="left:74px;top:278px;width:98px;height:22px"></i><div class="cbx" style="left:10px;top:340px;width:48px;height:48px"><div class="cbf" id="t1c02"><svg viewBox="0 0 24 24"><path id="t1p02" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><i class="rr" style="left:74px;top:353px;width:136px;height:22px"></i></div><div class="col" id="t1col1" style="left:345px;top:50px"><div class="tw hide circ" id="t1av1" style="left:40px;top:0px;width:140px;height:140px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.8 3.7-5.8 7.2-5.8s6.3 2 7.2 5.8"/></svg><div class="sheen"></div></div></div><div class="cbx" style="left:10px;top:190px;width:48px;height:48px"><div class="cbf" id="t1c10"><svg viewBox="0 0 24 24"><path id="t1p10" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><i class="rr" style="left:74px;top:203px;width:124px;height:22px"></i><div class="cbx" style="left:10px;top:265px;width:48px;height:48px"><div class="cbf" id="t1c11"><svg viewBox="0 0 24 24"><path id="t1p11" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><i class="rr" style="left:74px;top:278px;width:98px;height:22px"></i><div class="cbx" style="left:10px;top:340px;width:48px;height:48px"><div class="cbf" id="t1c12"><svg viewBox="0 0 24 24"><path id="t1p12" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><i class="rr" style="left:74px;top:353px;width:136px;height:22px"></i></div><div class="col" id="t1col2" style="left:585px;top:50px"><div class="tw hide circ" id="t1av2" style="left:40px;top:0px;width:140px;height:140px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.8 3.7-5.8 7.2-5.8s6.3 2 7.2 5.8"/></svg><div class="sheen"></div></div></div><div class="cbx" style="left:10px;top:190px;width:48px;height:48px"><div class="cbf" id="t1c20"><svg viewBox="0 0 24 24"><path id="t1p20" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><i class="rr" style="left:74px;top:203px;width:124px;height:22px"></i><div class="cbx" style="left:10px;top:265px;width:48px;height:48px"><div class="cbf" id="t1c21"><svg viewBox="0 0 24 24"><path id="t1p21" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><i class="rr" style="left:74px;top:278px;width:98px;height:22px"></i><div class="cbx" style="left:10px;top:340px;width:48px;height:48px"><div class="cbf" id="t1c22"><svg viewBox="0 0 24 24"><path id="t1p22" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><i class="rr" style="left:74px;top:353px;width:136px;height:22px"></i></div><div class="col" id="t1col3" style="left:825px;top:50px"><div class="tw hide circ" id="t1av3" style="left:40px;top:0px;width:140px;height:140px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.8 3.7-5.8 7.2-5.8s6.3 2 7.2 5.8"/></svg><div class="sheen"></div></div></div><div class="cbx" style="left:10px;top:190px;width:48px;height:48px"><div class="cbf" id="t1c30"><svg viewBox="0 0 24 24"><path id="t1p30" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><i class="rr" style="left:74px;top:203px;width:124px;height:22px"></i><div class="cbx" style="left:10px;top:265px;width:48px;height:48px"><div class="cbf" id="t1c31"><svg viewBox="0 0 24 24"><path id="t1p31" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><i class="rr" style="left:74px;top:278px;width:98px;height:22px"></i><div class="cbx" style="left:10px;top:340px;width:48px;height:48px"><div class="cbf" id="t1c32"><svg viewBox="0 0 24 24"><path id="t1p32" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><i class="rr" style="left:74px;top:353px;width:136px;height:22px"></i></div><div class="t247 hide" id="t247" style="left:110px;top:570px;width:640px">24/7</div><div class="sqring rnd" id="t1moR" style="left:800px;top:590px;width:200px;height:200px"></div><div class="tw hide circ" id="t1mo" style="left:800px;top:590px;width:200px;height:200px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg><div class="sheen"></div></div></div><div class="sheen"></div></div><div class="tw hide" id="t1gh" style="left:390px;top:410px;width:300px;height:300px"><div class="clear"></div></div><div class="sqring" id="t1clR" style="left:390px;top:410px;width:300px;height:300px"></div><div class="tw hide " id="t1cl" style="left:390px;top:410px;width:300px;height:300px"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="sqring" id="t1noR" style="left:100px;top:485px;width:150px;height:150px"></div><div class="tw hide " id="t1no" style="left:100px;top:485px;width:150px;height:150px"><div class="pearl"><svg class="mk"><use href="#i-notion" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="sqring" id="t1caR" style="left:830px;top:485px;width:150px;height:150px"></div><div class="tw hide " id="t1ca" style="left:830px;top:485px;width:150px;height:150px"><div class="pearl"><svg class="mk"><use href="#i-canva" width="100%" height="100%"/></svg><div class="sheen"></div></div></div></div>
+<div class="g full" id="gF"><div class="shelf edge hide" id="fSh" style="left:70px;top:110px;width:940px;height:470px"></div><svg class="abs" width="1080" height="700" viewBox="0 0 1080 700" style="left:0;top:0;overflow:visible"><g class="cab"><path class="tube hide" id="fT" d="M400 240 C 500 200 600 200 690 240"/><path class="core hide" id="fC" d="M400 240 C 500 200 600 200 690 240"/></g><path class="pulse hide" id="fPl" d="M130 500 H352 L384 444 L420 556 L452 466 L478 500 H598 L630 444 L666 556 L698 466 L724 500 H950"/><g class="cab"><g class="pkg"><path class="pkt" id="fPk1" style="opacity:0" d="M130 500 H352 L384 444 L420 556 L452 466 L478 500 H598 L630 444 L666 556 L698 466 L724 500 H950"/><path class="pkt" id="fPk2" style="opacity:0" d="M130 500 H352 L384 444 L420 556 L452 466 L478 500 H598 L630 444 L666 556 L698 466 L724 500 H950"/><path class="pkt" id="fPk3" style="opacity:0" d="M130 500 H352 L384 444 L420 556 L452 466 L478 500 H598 L630 444 L666 556 L698 466 L724 500 H950"/></g></g><circle class="ringP hide" id="fRing" cx="540" cy="240" r="124" transform="rotate(-90 540 240)"/><path class="strike hide" id="fSt" d="M772 192 L866 298"/></svg><div class="sqring" id="fNoR" style="left:235px;top:180px;width:120px;height:120px"></div><div class="tw hide " id="fNo" style="left:235px;top:180px;width:120px;height:120px"><div class="pearl"><svg class="mk"><use href="#i-notion" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="sqring" id="fCaR" style="left:725px;top:180px;width:120px;height:120px"></div><div class="tw hide " id="fCa" style="left:725px;top:180px;width:120px;height:120px"><div class="pearl"><svg class="mk"><use href="#i-canva" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="sqring" id="fHubR" style="left:450px;top:150px;width:180px;height:180px"></div><div class="tw hide " id="fHub" style="left:450px;top:150px;width:180px;height:180px"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="tw hide circ" id="fMe" style="left:690px;top:160px;width:160px;height:160px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.8 3.7-5.8 7.2-5.8s6.3 2 7.2 5.8"/></svg><div class="sheen"></div></div></div><svg class="spin hide" id="fSp" viewBox="0 0 220 220" width="220" height="220" style="left:660px;top:130px"><circle cx="110" cy="110" r="100"/></svg><div class="tw hide circ" id="fUp" style="left:820px;top:132px;width:76px;height:76px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M12 4v11M7 10.2l5 5 5-5M5 20h14"/></svg><div class="sheen"></div></div></div><div class="sqring rnd" id="fOkR" style="left:588px;top:118px;width:80px;height:80px"></div><div class="tw hide circ" id="fOk" style="left:588px;top:118px;width:80px;height:80px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg><div class="sheen"></div></div></div><div class="sqring" id="fWrR" style="left:760px;top:180px;width:120px;height:120px"></div><div class="tw hide " id="fWr" style="left:760px;top:180px;width:120px;height:120px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><div class="sheen"></div></div></div></div>
+<div class="g full" id="gT2"><div class="tkg"></div><div class="aurs"></div><div class="grain"></div><svg class="abs" width="1080" height="1000" viewBox="0 0 1080 1000" style="left:0;top:0;overflow:visible"><g class="arcs hide" id="t2arc"><path id="t2a1" d="M365 380 A175 175 0 0 1 704.4 320.1"/><path d="M682 316 L705 321 L713 299"/><path id="t2a2" d="M715 380 A175 175 0 0 1 375.6 439.9"/><path d="M398 444 L375 439 L367 461"/></g></svg><div class="cc hide" id="t2c0" style="left:30px;top:170px;width:124px;height:220px"><i class="im" style="height:156px"></i><i class="rr" style="left:14px;top:176px;width:90px"></i><i class="rr" style="left:14px;top:196px;width:54px"></i></div><div class="cc hide" id="t2c1" style="left:70px;top:470px;width:150px;height:188px"><i class="im" style="height:124px"></i><i class="rr" style="left:14px;top:144px;width:116px"></i><i class="rr" style="left:14px;top:164px;width:69px"></i></div><div class="cc hide" id="t2c2" style="left:920px;top:160px;width:124px;height:220px"><i class="im" style="height:156px"></i><i class="rr" style="left:14px;top:176px;width:90px"></i><i class="rr" style="left:14px;top:196px;width:54px"></i></div><div class="cc hide" id="t2c3" style="left:880px;top:480px;width:150px;height:188px"><i class="im" style="height:124px"></i><i class="rr" style="left:14px;top:144px;width:116px"></i><i class="rr" style="left:14px;top:164px;width:69px"></i></div><div class="sheet hide" id="t2sh" style="left:-40px;top:700px;width:1160px;height:480px" data-layout-allow-overflow><svg class="abs" width="1160" height="500" viewBox="0 0 1160 500" style="left:0;top:0;overflow:visible"><defs><linearGradient id="gc" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#b4122f"/><stop offset="1" stop-color="#ff6e9c"/></linearGradient></defs><line class="gridl" x1="660" y1="140" x2="1080" y2="140"/><line class="gridl" x1="660" y1="260" x2="1080" y2="260"/><line class="gridl" x1="660" y1="380" x2="1080" y2="380"/><line class="gridl" x1="610" y1="60" x2="610" y2="440"/><path class="curve" id="t2cv" d="M670 420 C 760 410 820 380 880 320 S 990 150 1060 110"/></svg><div class="tw circ" id="t2av" style="left:100px;top:70px;width:140px;height:140px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.8 3.7-5.8 7.2-5.8s6.3 2 7.2 5.8"/></svg><div class="sheen"></div></div></div><i class="hb" style="left:270px;top:110px;width:250px;height:34px"></i><i class="rr" style="left:100px;top:270px;width:470px;height:24px"></i><i class="fillb" id="t2f0" style="left:100px;top:270px;width:470px;height:24px"></i><i class="rr" style="left:100px;top:322px;width:400px;height:24px"></i><i class="fillb" id="t2f1" style="left:100px;top:322px;width:400px;height:24px"></i><i class="rr" style="left:100px;top:374px;width:440px;height:24px"></i><i class="fillb" id="t2f2" style="left:100px;top:374px;width:440px;height:24px"></i><i class="rr" style="left:100px;top:426px;width:300px;height:24px"></i><i class="fillb" id="t2f3" style="left:100px;top:426px;width:300px;height:24px"></i><div class="tw circ" id="t2dot" style="left:1040px;top:90px;width:40px;height:40px;opacity:0"><div class="jelly"></div></div><div class="sheen"></div></div><div class="sqring" id="t2clR" style="left:420px;top:260px;width:240px;height:240px"></div><div class="tw " id="t2cl" style="left:420px;top:260px;width:240px;height:240px"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg><div class="sheen"></div></div></div></div>
+<div class="g full" id="gJ"><div class="doc hide" id="jd" style="left:140px;top:132px;width:800px;height:440px"><div class="hl" id="jhl" style="top:196px;height:54px;opacity:0"></div><i class="hb" style="left:56px;top:56px;width:300px;height:36px"></i><i class="rr" id="jr0" style="left:56px;top:140px;width:610px;height:26px;transform-origin:0 50%"></i><i class="rr" id="jr1" style="left:56px;top:210px;width:540px;height:26px;transform-origin:0 50%"></i><i class="rr" id="jr2" style="left:56px;top:280px;width:640px;height:26px;transform-origin:0 50%"></i><i class="rr" id="jr3" style="left:56px;top:350px;width:410px;height:26px;transform-origin:0 50%"></i><i class="fillb" id="jnew" style="left:360px;top:210px;width:250px;height:26px"></i><div class="caret" id="jcar" style="left:616px;top:200px;height:46px;opacity:0"></div><div class="shc"><div class="sheen"></div></div></div><div class="sqring rnd" id="jWaR" style="left:884px;top:96px;width:104px;height:104px"></div><div class="tw hide circ" id="jWa" style="left:884px;top:96px;width:104px;height:104px"><div class="jelly"><span class="wmark" style="font-size:62px;color:#fff">!</span><div class="sheen"></div></div></div><div class="sqring rnd" id="jOkR" style="left:884px;top:96px;width:104px;height:104px"></div><div class="tw hide circ" id="jOk" style="left:884px;top:96px;width:104px;height:104px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg><div class="sheen"></div></div></div></div>
+<div class="g full" id="gT3"><div class="tkg"></div><div class="aurs"></div><div class="grain"></div><div class="sheet hide" id="t3sh" style="left:-40px;top:130px;width:1160px;height:1090px" data-layout-allow-overflow><div class="tw " id="t3key" style="left:110px;top:66px;width:130px;height:130px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><circle cx="7.6" cy="12" r="4"/><path d="M11.6 12h9.2M17.6 12v3.6M20.6 12v2.6"/></svg><div class="sheen"></div></div></div><div class="ttl" id="t3tt" style="left:275px;top:98px">Система під ключ</div><div class="hair" style="position:absolute;left:110px;top:250px;width:1010px"></div><div class="row hide" id="t3r0" style="top:290px"><div class="cbx" style="left:110px;top:16px;width:78px;height:78px"><div class="cbf" id="t3c0"><svg viewBox="0 0 24 24"><path id="t3p0" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><div class="tx">Аналізує контент та таргет</div></div><div class="row hide" id="t3r1" style="top:430px"><div class="cbx" style="left:110px;top:16px;width:78px;height:78px"><div class="cbf" id="t3c1"><svg viewBox="0 0 24 24"><path id="t3p1" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><div class="tx">Пише сценарії</div></div><div class="row hide" id="t3r2" style="top:570px"><div class="cbx" style="left:110px;top:16px;width:78px;height:78px"><div class="cbf" id="t3c2"><svg viewBox="0 0 24 24"><path id="t3p2" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><div class="tx">Дизайнить каруселі</div></div><div class="row hide" id="t3r3" style="top:710px"><div class="cbx" style="left:110px;top:16px;width:78px;height:78px"><div class="cbf" id="t3c3"><svg viewBox="0 0 24 24"><path id="t3p3" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><div class="tx">Монтує рілси</div></div><div class="cmt hide" id="t3cm" style="left:110px;top:880px;width:960px;height:150px"><div class="tw circ" style="left:30px;top:30px;width:90px;height:90px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.8 3.7-5.8 7.2-5.8s6.3 2 7.2 5.8"/></svg></div></div><div class="ph" id="t3ph">Додайте коментар…</div><div class="pl" id="t3pl" style="opacity:0">+</div><div class="sqring rnd" id="t3seR" style="left:830px;top:23px;width:104px;height:104px"></div><div class="tw circ" id="t3se" style="left:830px;top:23px;width:104px;height:104px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M12 19.2V5.4M6.2 11l5.8-5.8 5.8 5.8"/></svg><div class="sheen"></div></div></div></div><div class="sheen"></div></div></div>
+
+      <div id="scrim"></div>
+      <div class="cap" id="cap0">ЯКЩО</div>
+      <div class="cap" id="cap1">Я</div>
+      <div class="cap" id="cap2">ПЕРЕСТАНУ</div>
+      <div class="cap" id="cap3">З ТОБОЮ</div>
+      <div class="cap" id="cap4">ПРАЦЮВАТИ,</div>
+      <div class="cap" id="cap5">У МЕНЕ</div>
+      <div class="cap" id="cap6">ВСЕ</div>
+      <div class="cap" id="cap7">ЗЛАМАЄТЬСЯ?</div>
+      <div class="cap" id="cap8">І</div>
+      <div class="cap" id="cap9">ЦЕ ПИТАННЯ</div>
+      <div class="cap" id="cap10">Я</div>
+      <div class="cap" id="cap11">ЧУЮ ПОСТІЙНО,</div>
+      <div class="cap" id="cap12">ТОМУ</div>
+      <div class="cap" id="cap13">ЩО</div>
+      <div class="cap" id="cap14">Я</div>
+      <div class="cap" id="cap15">НАЛАШТОВУЮ</div>
+      <div class="cap" id="cap16">АІ-ПРОДЮСЕРА</div>
+      <div class="cap" id="cap17">ПІД</div>
+      <div class="cap" id="cap18">КЛЮЧ</div>
+      <div class="cap" id="cap19">ДЛЯ</div>
+      <div class="cap" id="cap20">ВЛАСНИЦЬ</div>
+      <div class="cap" id="cap26">ЩОБ</div>
+      <div class="cap" id="cap27">ВОНИ</div>
+      <div class="cap" id="cap28">МОГЛИ</div>
+      <div class="cap" id="cap29">СТВОРЮВАТИ</div>
+      <div class="cap" id="cap30">КОНТЕНТ</div>
+      <div class="cap" id="cap31">ТАК,</div>
+      <div class="cap" id="cap32">НІБИ</div>
+      <div class="cap" id="cap33">В НИХ</div>
+      <div class="cap" id="cap34">Є</div>
+      <div class="cap" id="cap35">КОМАНДА</div>
+      <div class="cap" id="cap39">ЯКА</div>
+      <div class="cap" id="cap40">НІКОЛИ</div>
+      <div class="cap" id="cap41">НЕ</div>
+      <div class="cap" id="cap42">СПИТЬ.</div>
+      <div class="cap" id="cap43">А</div>
+      <div class="cap" id="cap44">НАСПРАВДІ</div>
+      <div class="cap" id="cap45">ЇМ ДЛЯ</div>
+      <div class="cap" id="cap46">ЦЬОГО</div>
+      <div class="cap" id="cap47">ПОТРІБНА</div>
+      <div class="cap" id="cap48">ЛИШЕ</div>
+      <div class="cap" id="cap49">ПІДПИСКА</div>
+      <div class="cap" id="cap50">НА</div>
+      <div class="cap" id="cap51">CLAUDE</div>
+      <div class="cap" id="cap52">І</div>
+      <div class="cap" id="cap53">КІЛЬКА</div>
+      <div class="cap" id="cap54">ПРОГРАМ.</div>
+      <div class="cap" id="cap55">І ЗВИЧАЙНО,</div>
+      <div class="cap" id="cap56">ДЛЯ НИХ</div>
+      <div class="cap" id="cap57">ДУЖЕ</div>
+      <div class="cap" id="cap58">ВАЖЛИВО,</div>
+      <div class="cap" id="cap59">ЩОБ</div>
+      <div class="cap" id="cap60">ЦЯ</div>
+      <div class="cap" id="cap61">СИСТЕМА</div>
+      <div class="cap" id="cap62">МОЖЕ</div>
+      <div class="cap" id="cap63">ЖИТИ</div>
+      <div class="cap" id="cap64">САМОСТІЙНО,</div>
+      <div class="cap" id="cap65">БЕЗ ТОГО,</div>
+      <div class="cap" id="cap66">ЩОБ ПОСТІЙНО</div>
+      <div class="cap" id="cap67">ЧЕКАТИ,</div>
+      <div class="cap" id="cap68">ПОКИ</div>
+      <div class="cap" id="cap69">Я</div>
+      <div class="cap" id="cap70">ЩОСЬ</div>
+      <div class="cap" id="cap71">ОНОВЛЮ.</div>
+      <div class="cap" id="cap72">ТОМУ</div>
+      <div class="cap" id="cap73">ВІДПОВІДЬ</div>
+      <div class="cap" id="cap74">НІ,</div>
+      <div class="cap" id="cap75">НЕ</div>
+      <div class="cap" id="cap76">ЗЛАМАЄТЬСЯ.</div>
+      <div class="cap" id="cap77">ЯК</div>
+      <div class="cap" id="cap78">ТІЛЬКИ</div>
+      <div class="cap" id="cap79">СИСТЕМА</div>
+      <div class="cap" id="cap80">ПОВНІСТЮ</div>
+      <div class="cap" id="cap81">НАЛАШТОВАНА,</div>
+      <div class="cap" id="cap82">ЇЙ</div>
+      <div class="cap" id="cap83">НЕ</div>
+      <div class="cap" id="cap84">ПОТРІБНА</div>
+      <div class="cap" id="cap85">ПІДТРИМКА,</div>
+      <div class="cap" id="cap86">ВОНА</div>
+      <div class="cap" id="cap87">ЩЕ</div>
+      <div class="cap" id="cap88">Й</div>
+      <div class="cap" id="cap89">САМА</div>
+      <div class="cap" id="cap90">СЕБЕ</div>
+      <div class="cap" id="cap91">ОНОВЛЮЄ:</div>
+      <div class="cap" id="cap92">ЧИМ</div>
+      <div class="cap" id="cap93">БІЛЬШЕ</div>
+      <div class="cap" id="cap94">ТИ</div>
+      <div class="cap" id="cap95">РОБИШ</div>
+      <div class="cap" id="cap96">КОНТЕНТУ,</div>
+      <div class="cap" id="cap97">ТИМ</div>
+      <div class="cap" id="cap98">БІЛЬШЕ</div>
+      <div class="cap" id="cap99">ВОНА</div>
+      <div class="cap" id="cap100">ПРО</div>
+      <div class="cap" id="cap101">ТЕБЕ</div>
+      <div class="cap" id="cap102">ЗНАЄ</div>
+      <div class="cap" id="cap103">І</div>
+      <div class="cap" id="cap104">ТИМ</div>
+      <div class="cap" id="cap105">КРАЩЕ</div>
+      <div class="cap" id="cap106">ПРАЦЮЄ.</div>
+      <div class="cap" id="cap107">ЯКЩО</div>
+      <div class="cap" id="cap108">ТРЕБА</div>
+      <div class="cap" id="cap109">ВНЕСТИ</div>
+      <div class="cap" id="cap110">ЯКУСЬ</div>
+      <div class="cap" id="cap111">МІНІМАЛЬНУ</div>
+      <div class="cap" id="cap112">ПРАВКУ</div>
+      <div class="cap" id="cap113">АБО</div>
+      <div class="cap" id="cap114">ЩОСЬ</div>
+      <div class="cap" id="cap115">ПЕРЕСТАЛО</div>
+      <div class="cap" id="cap116">ПРАЦЮВАТИ</div>
+      <div class="cap" id="cap117">ЦЕ, ЗВИЧАЙНО,</div>
+      <div class="cap" id="cap118">МОЖНА</div>
+      <div class="cap" id="cap119">ЗМІНИТИ,</div>
+      <div class="cap" id="cap120">АЛЕ</div>
+      <div class="cap" id="cap121">ЗАГАЛОМ</div>
+      <div class="cap" id="cap122">БІЛЬШЕ</div>
+      <div class="cap" id="cap123">НІЧОГО</div>
+      <div class="cap" id="cap124">НЕ</div>
+      <div class="cap" id="cap125">ТРЕБА.</div>
+      <div class="cap" id="cap126">ТОМУ</div>
+      <div class="cap" id="cap127">ЯКЩО</div>
+      <div class="cap" id="cap128">ТОБІ</div>
+      <div class="cap" id="cap129">ЦІКАВА</div>
+      <div class="cap" id="cap144">СТАВ</div>
+      <div class="cap" id="cap145">ПЛЮС</div>
+      <div class="cap" id="cap146">В</div>
+      <div class="cap" id="cap147">КОМЕНТАРІ</div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="49.850" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  tl.set("#cap0", {autoAlpha: 1}, 0.000);
+  tl.set("#cap0", {autoAlpha: 0}, 0.285);
+  tl.set("#cap1", {autoAlpha: 1}, 0.370);
+  tl.set("#cap1", {autoAlpha: 0}, 0.470);
+  tl.set("#cap2", {autoAlpha: 1}, 0.510);
+  tl.set("#cap2", {autoAlpha: 0}, 0.805);
+  tl.set("#cap3", {autoAlpha: 1}, 0.890);
+  tl.set("#cap3", {autoAlpha: 0}, 1.085);
+  tl.set("#cap4", {autoAlpha: 1}, 1.170);
+  tl.set("#cap4", {autoAlpha: 0}, 1.805);
+  tl.set("#cap5", {autoAlpha: 1}, 1.890);
+  tl.set("#cap5", {autoAlpha: 0}, 2.045);
+  tl.set("#cap6", {autoAlpha: 1}, 2.130);
+  tl.set("#cap6", {autoAlpha: 0}, 2.230);
+  tl.set("#cap7", {autoAlpha: 1}, 2.230);
+  tl.set("#cap7", {autoAlpha: 0}, 3.173);
+  tl.set("#cap8", {autoAlpha: 1}, 3.258);
+  tl.set("#cap8", {autoAlpha: 0}, 3.358);
+  tl.set("#cap9", {autoAlpha: 1}, 3.438);
+  tl.set("#cap9", {autoAlpha: 0}, 3.833);
+  tl.set("#cap10", {autoAlpha: 1}, 3.918);
+  tl.set("#cap10", {autoAlpha: 0}, 4.018);
+  tl.set("#cap11", {autoAlpha: 1}, 4.078);
+  tl.set("#cap11", {autoAlpha: 0}, 4.573);
+  tl.set("#cap12", {autoAlpha: 1}, 4.658);
+  tl.set("#cap12", {autoAlpha: 0}, 4.758);
+  tl.set("#cap13", {autoAlpha: 1}, 4.798);
+  tl.set("#cap13", {autoAlpha: 0}, 4.898);
+  tl.set("#cap14", {autoAlpha: 1}, 4.938);
+  tl.set("#cap14", {autoAlpha: 0}, 5.038);
+  tl.set("#cap15", {autoAlpha: 1}, 5.098);
+  tl.set("#cap15", {autoAlpha: 0}, 5.600);
+  tl.set("#cap16", {autoAlpha: 1}, 5.685);
+  tl.set("#cap16", {autoAlpha: 0}, 6.246);
+  tl.set("#cap17", {autoAlpha: 1}, 6.331);
+  tl.set("#cap17", {autoAlpha: 0}, 6.431);
+  tl.set("#cap18", {autoAlpha: 1}, 6.507);
+  tl.set("#cap18", {autoAlpha: 0}, 6.657);
+  tl.set("#cap19", {autoAlpha: 1}, 6.742);
+  tl.set("#cap19", {autoAlpha: 0}, 6.853);
+  tl.set("#cap20", {autoAlpha: 1}, 6.938);
+  tl.set("#cap20", {autoAlpha: 0}, 7.293);
+  tl.set("#cap26", {autoAlpha: 1}, 10.043);
+  tl.set("#cap26", {autoAlpha: 0}, 10.143);
+  tl.set("#cap27", {autoAlpha: 1}, 10.143);
+  tl.set("#cap27", {autoAlpha: 0}, 10.243);
+  tl.set("#cap28", {autoAlpha: 1}, 10.283);
+  tl.set("#cap28", {autoAlpha: 0}, 10.418);
+  tl.set("#cap29", {autoAlpha: 1}, 10.503);
+  tl.set("#cap29", {autoAlpha: 0}, 10.958);
+  tl.set("#cap30", {autoAlpha: 1}, 11.043);
+  tl.set("#cap30", {autoAlpha: 0}, 11.258);
+  tl.set("#cap31", {autoAlpha: 1}, 11.343);
+  tl.set("#cap31", {autoAlpha: 0}, 11.508);
+  tl.set("#cap32", {autoAlpha: 1}, 11.593);
+  tl.set("#cap32", {autoAlpha: 0}, 11.693);
+  tl.set("#cap33", {autoAlpha: 1}, 11.753);
+  tl.set("#cap33", {autoAlpha: 0}, 11.888);
+  tl.set("#cap34", {autoAlpha: 1}, 11.973);
+  tl.set("#cap34", {autoAlpha: 0}, 12.088);
+  tl.set("#cap35", {autoAlpha: 1}, 12.173);
+  tl.set("#cap35", {autoAlpha: 0}, 12.508);
+  tl.set("#cap39", {autoAlpha: 1}, 13.433);
+  tl.set("#cap39", {autoAlpha: 0}, 13.533);
+  tl.set("#cap40", {autoAlpha: 1}, 13.553);
+  tl.set("#cap40", {autoAlpha: 0}, 13.848);
+  tl.set("#cap41", {autoAlpha: 1}, 13.933);
+  tl.set("#cap41", {autoAlpha: 0}, 14.048);
+  tl.set("#cap42", {autoAlpha: 1}, 14.133);
+  tl.set("#cap42", {autoAlpha: 0}, 14.515);
+  tl.set("#cap43", {autoAlpha: 1}, 14.600);
+  tl.set("#cap43", {autoAlpha: 0}, 14.715);
+  tl.set("#cap44", {autoAlpha: 1}, 14.800);
+  tl.set("#cap44", {autoAlpha: 0}, 15.155);
+  tl.set("#cap45", {autoAlpha: 1}, 15.240);
+  tl.set("#cap45", {autoAlpha: 0}, 15.340);
+  tl.set("#cap46", {autoAlpha: 1}, 15.420);
+  tl.set("#cap46", {autoAlpha: 0}, 15.520);
+  tl.set("#cap47", {autoAlpha: 1}, 15.600);
+  tl.set("#cap47", {autoAlpha: 0}, 16.015);
+  tl.set("#cap48", {autoAlpha: 1}, 16.100);
+  tl.set("#cap48", {autoAlpha: 0}, 16.415);
+  tl.set("#cap49", {autoAlpha: 1}, 16.500);
+  tl.set("#cap49", {autoAlpha: 0}, 16.835);
+  tl.set("#cap50", {autoAlpha: 1}, 16.920);
+  tl.set("#cap50", {autoAlpha: 0}, 17.020);
+  tl.set("#cap51", {autoAlpha: 1}, 17.060);
+  tl.set("#cap51", {autoAlpha: 0}, 17.160);
+  tl.set("#cap52", {autoAlpha: 1}, 17.200);
+  tl.set("#cap52", {autoAlpha: 0}, 17.315);
+  tl.set("#cap53", {autoAlpha: 1}, 17.400);
+  tl.set("#cap53", {autoAlpha: 0}, 17.675);
+  tl.set("#cap54", {autoAlpha: 1}, 17.760);
+  tl.set("#cap54", {autoAlpha: 0}, 18.310);
+  tl.set("#cap55", {autoAlpha: 1}, 18.395);
+  tl.set("#cap55", {autoAlpha: 0}, 18.850);
+  tl.set("#cap56", {autoAlpha: 1}, 18.935);
+  tl.set("#cap56", {autoAlpha: 0}, 19.150);
+  tl.set("#cap57", {autoAlpha: 1}, 19.235);
+  tl.set("#cap57", {autoAlpha: 0}, 19.490);
+  tl.set("#cap58", {autoAlpha: 1}, 19.575);
+  tl.set("#cap58", {autoAlpha: 0}, 19.910);
+  tl.set("#cap59", {autoAlpha: 1}, 19.995);
+  tl.set("#cap59", {autoAlpha: 0}, 20.095);
+  tl.set("#cap60", {autoAlpha: 1}, 20.115);
+  tl.set("#cap60", {autoAlpha: 0}, 20.215);
+  tl.set("#cap61", {autoAlpha: 1}, 20.295);
+  tl.set("#cap61", {autoAlpha: 0}, 20.530);
+  tl.set("#cap62", {autoAlpha: 1}, 20.615);
+  tl.set("#cap62", {autoAlpha: 0}, 20.750);
+  tl.set("#cap63", {autoAlpha: 1}, 20.835);
+  tl.set("#cap63", {autoAlpha: 0}, 21.070);
+  tl.set("#cap64", {autoAlpha: 1}, 21.155);
+  tl.set("#cap64", {autoAlpha: 0}, 21.790);
+  tl.set("#cap65", {autoAlpha: 1}, 21.875);
+  tl.set("#cap65", {autoAlpha: 0}, 22.082);
+  tl.set("#cap66", {autoAlpha: 1}, 22.167);
+  tl.set("#cap66", {autoAlpha: 0}, 22.559);
+  tl.set("#cap67", {autoAlpha: 1}, 22.644);
+  tl.set("#cap67", {autoAlpha: 0}, 23.099);
+  tl.set("#cap68", {autoAlpha: 1}, 23.184);
+  tl.set("#cap68", {autoAlpha: 0}, 23.284);
+  tl.set("#cap69", {autoAlpha: 1}, 23.344);
+  tl.set("#cap69", {autoAlpha: 0}, 23.444);
+  tl.set("#cap70", {autoAlpha: 1}, 23.484);
+  tl.set("#cap70", {autoAlpha: 0}, 23.619);
+  tl.set("#cap71", {autoAlpha: 1}, 23.704);
+  tl.set("#cap71", {autoAlpha: 0}, 24.299);
+  tl.set("#cap72", {autoAlpha: 1}, 24.384);
+  tl.set("#cap72", {autoAlpha: 0}, 24.519);
+  tl.set("#cap73", {autoAlpha: 1}, 24.604);
+  tl.set("#cap73", {autoAlpha: 0}, 25.179);
+  tl.set("#cap74", {autoAlpha: 1}, 25.264);
+  tl.set("#cap74", {autoAlpha: 0}, 25.679);
+  tl.set("#cap75", {autoAlpha: 1}, 25.764);
+  tl.set("#cap75", {autoAlpha: 0}, 25.879);
+  tl.set("#cap76", {autoAlpha: 1}, 25.964);
+  tl.set("#cap76", {autoAlpha: 0}, 26.773);
+  tl.set("#cap77", {autoAlpha: 1}, 26.858);
+  tl.set("#cap77", {autoAlpha: 0}, 26.958);
+  tl.set("#cap78", {autoAlpha: 1}, 27.038);
+  tl.set("#cap78", {autoAlpha: 0}, 27.193);
+  tl.set("#cap79", {autoAlpha: 1}, 27.278);
+  tl.set("#cap79", {autoAlpha: 0}, 27.573);
+  tl.set("#cap80", {autoAlpha: 1}, 27.658);
+  tl.set("#cap80", {autoAlpha: 0}, 28.033);
+  tl.set("#cap81", {autoAlpha: 1}, 28.118);
+  tl.set("#cap81", {autoAlpha: 0}, 28.613);
+  tl.set("#cap82", {autoAlpha: 1}, 28.698);
+  tl.set("#cap82", {autoAlpha: 0}, 28.798);
+  tl.set("#cap83", {autoAlpha: 1}, 28.878);
+  tl.set("#cap83", {autoAlpha: 0}, 28.978);
+  tl.set("#cap84", {autoAlpha: 1}, 29.018);
+  tl.set("#cap84", {autoAlpha: 0}, 29.193);
+  tl.set("#cap85", {autoAlpha: 1}, 29.278);
+  tl.set("#cap85", {autoAlpha: 0}, 29.765);
+  tl.set("#cap86", {autoAlpha: 1}, 29.850);
+  tl.set("#cap86", {autoAlpha: 0}, 29.950);
+  tl.set("#cap87", {autoAlpha: 1}, 29.990);
+  tl.set("#cap87", {autoAlpha: 0}, 30.125);
+  tl.set("#cap88", {autoAlpha: 1}, 30.210);
+  tl.set("#cap88", {autoAlpha: 0}, 30.310);
+  tl.set("#cap89", {autoAlpha: 1}, 30.390);
+  tl.set("#cap89", {autoAlpha: 0}, 30.645);
+  tl.set("#cap90", {autoAlpha: 1}, 30.730);
+  tl.set("#cap90", {autoAlpha: 0}, 30.845);
+  tl.set("#cap91", {autoAlpha: 1}, 30.930);
+  tl.set("#cap91", {autoAlpha: 0}, 31.345);
+  tl.set("#cap92", {autoAlpha: 1}, 31.430);
+  tl.set("#cap92", {autoAlpha: 0}, 31.530);
+  tl.set("#cap93", {autoAlpha: 1}, 31.570);
+  tl.set("#cap93", {autoAlpha: 0}, 31.725);
+  tl.set("#cap94", {autoAlpha: 1}, 31.810);
+  tl.set("#cap94", {autoAlpha: 0}, 31.910);
+  tl.set("#cap95", {autoAlpha: 1}, 31.990);
+  tl.set("#cap95", {autoAlpha: 0}, 32.125);
+  tl.set("#cap96", {autoAlpha: 1}, 32.210);
+  tl.set("#cap96", {autoAlpha: 0}, 32.605);
+  tl.set("#cap97", {autoAlpha: 1}, 32.690);
+  tl.set("#cap97", {autoAlpha: 0}, 32.790);
+  tl.set("#cap98", {autoAlpha: 1}, 32.850);
+  tl.set("#cap98", {autoAlpha: 0}, 33.005);
+  tl.set("#cap99", {autoAlpha: 1}, 33.090);
+  tl.set("#cap99", {autoAlpha: 0}, 33.205);
+  tl.set("#cap100", {autoAlpha: 1}, 33.290);
+  tl.set("#cap100", {autoAlpha: 0}, 33.390);
+  tl.set("#cap101", {autoAlpha: 1}, 33.470);
+  tl.set("#cap101", {autoAlpha: 0}, 33.570);
+  tl.set("#cap102", {autoAlpha: 1}, 33.610);
+  tl.set("#cap102", {autoAlpha: 0}, 34.140);
+  tl.set("#cap103", {autoAlpha: 1}, 34.225);
+  tl.set("#cap103", {autoAlpha: 0}, 34.325);
+  tl.set("#cap104", {autoAlpha: 1}, 34.325);
+  tl.set("#cap104", {autoAlpha: 0}, 34.425);
+  tl.set("#cap105", {autoAlpha: 1}, 34.465);
+  tl.set("#cap105", {autoAlpha: 0}, 34.680);
+  tl.set("#cap106", {autoAlpha: 1}, 34.765);
+  tl.set("#cap106", {autoAlpha: 0}, 35.315);
+  tl.set("#cap107", {autoAlpha: 1}, 35.400);
+  tl.set("#cap107", {autoAlpha: 0}, 35.705);
+  tl.set("#cap108", {autoAlpha: 1}, 35.790);
+  tl.set("#cap108", {autoAlpha: 0}, 35.945);
+  tl.set("#cap109", {autoAlpha: 1}, 36.030);
+  tl.set("#cap109", {autoAlpha: 0}, 36.265);
+  tl.set("#cap110", {autoAlpha: 1}, 36.350);
+  tl.set("#cap110", {autoAlpha: 0}, 36.505);
+  tl.set("#cap111", {autoAlpha: 1}, 36.590);
+  tl.set("#cap111", {autoAlpha: 0}, 36.985);
+  tl.set("#cap112", {autoAlpha: 1}, 37.070);
+  tl.set("#cap112", {autoAlpha: 0}, 37.325);
+  tl.set("#cap113", {autoAlpha: 1}, 37.410);
+  tl.set("#cap113", {autoAlpha: 0}, 37.545);
+  tl.set("#cap114", {autoAlpha: 1}, 37.630);
+  tl.set("#cap114", {autoAlpha: 0}, 37.785);
+  tl.set("#cap115", {autoAlpha: 1}, 37.870);
+  tl.set("#cap115", {autoAlpha: 0}, 38.125);
+  tl.set("#cap116", {autoAlpha: 1}, 38.210);
+  tl.set("#cap116", {autoAlpha: 0}, 38.955);
+  tl.set("#cap117", {autoAlpha: 1}, 39.040);
+  tl.set("#cap117", {autoAlpha: 0}, 39.455);
+  tl.set("#cap118", {autoAlpha: 1}, 39.540);
+  tl.set("#cap118", {autoAlpha: 0}, 39.715);
+  tl.set("#cap119", {autoAlpha: 1}, 39.800);
+  tl.set("#cap119", {autoAlpha: 0}, 40.535);
+  tl.set("#cap120", {autoAlpha: 1}, 40.620);
+  tl.set("#cap120", {autoAlpha: 0}, 40.720);
+  tl.set("#cap121", {autoAlpha: 1}, 40.760);
+  tl.set("#cap121", {autoAlpha: 0}, 41.095);
+  tl.set("#cap122", {autoAlpha: 1}, 41.180);
+  tl.set("#cap122", {autoAlpha: 0}, 41.375);
+  tl.set("#cap123", {autoAlpha: 1}, 41.460);
+  tl.set("#cap123", {autoAlpha: 0}, 41.615);
+  tl.set("#cap124", {autoAlpha: 1}, 41.700);
+  tl.set("#cap124", {autoAlpha: 0}, 41.800);
+  tl.set("#cap125", {autoAlpha: 1}, 41.880);
+  tl.set("#cap125", {autoAlpha: 0}, 42.380);
+  tl.set("#cap126", {autoAlpha: 1}, 42.465);
+  tl.set("#cap126", {autoAlpha: 0}, 42.580);
+  tl.set("#cap127", {autoAlpha: 1}, 42.665);
+  tl.set("#cap127", {autoAlpha: 0}, 42.900);
+  tl.set("#cap128", {autoAlpha: 1}, 42.985);
+  tl.set("#cap128", {autoAlpha: 0}, 43.085);
+  tl.set("#cap129", {autoAlpha: 1}, 43.165);
+  tl.set("#cap129", {autoAlpha: 0}, 43.480);
+  tl.set("#cap144", {autoAlpha: 1}, 48.733);
+  tl.set("#cap144", {autoAlpha: 0}, 48.833);
+  tl.set("#cap145", {autoAlpha: 1}, 48.833);
+  tl.set("#cap145", {autoAlpha: 0}, 49.008);
+  tl.set("#cap146", {autoAlpha: 1}, 49.093);
+  tl.set("#cap146", {autoAlpha: 0}, 49.193);
+  tl.set("#cap147", {autoAlpha: 1}, 49.253);
+  tl.set("#cap147", {autoAlpha: 0}, 49.713);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 49.813);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 7.158);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 9.958);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 12.373);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 13.353);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 43.345);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 48.693);
+
+
+function spring(z, w) {
+  var wd = w * Math.sqrt(1 - z * z);
+  function f(t) { return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + (z * w / wd) * Math.sin(wd * t)); }
+  var e = f(1);
+  return function (t) { return t >= 1 ? 1 : f(t) / e; };
+}
+var SP = spring(0.62, 13), POP = spring(0.46, 14), SOFT = spring(0.84, 11), FLIP = spring(0.58, 9);
+
+function helpers(tl) {
+  function blurIn(sel, t, b, d) {
+    tl.fromTo(sel, {autoAlpha: 0, filter: "blur(" + (b || 12) + "px)"},
+                   {autoAlpha: 1, filter: "blur(0px)", duration: d || 0.38, ease: "power2.out"}, t);
+  }
+  function blurOut(sel, t, b, d) {
+    tl.to(sel, {autoAlpha: 0, filter: "blur(" + (b || 10) + "px)", duration: d || 0.32, ease: "power2.in"}, t);
+  }
+  // arrive from depth: blur -> sharp, small -> full, with a spring. o: {s, x, y, ease, d}
+  function arrive(sel, t, o) {
+    o = o || {};
+    blurIn(sel, t, o.blur || 12, 0.36);
+    tl.fromTo(sel, {scale: o.s == null ? 0.5 : o.s, x: o.x || 0, y: o.y == null ? 34 : o.y},
+              {scale: 1, x: 0, y: 0, duration: o.d || 0.85, ease: o.ease || POP}, t);
+  }
+  // the contents land a beat after their container
+  function inner(sel, t) {
+    tl.fromTo(sel, {scale: 0.55, autoAlpha: 0}, {scale: 1, autoAlpha: 1, duration: 0.55, ease: SP}, t + 0.1);
+  }
+  function sheen(sel, t) { gsap.set(sel, {xPercent: -120}); tl.to(sel, {xPercent: 120, duration: 0.8, ease: "power2.inOut"}, t); }
+  function len(id) { return document.getElementById(id).getTotalLength(); }
+  // +3: a dash that ends exactly at the path start leaves a round-cap dot behind
+  function drawPrep(id) { var L = len(id) + 3; gsap.set("#" + id, {strokeDasharray: (L - 3) + " " + (L + 40), strokeDashoffset: L}); return L; }
+  function draw(id, t, d) { var L = drawPrep(id); tl.to("#" + id, {strokeDashoffset: 0, duration: d || 0.55, ease: "power2.inOut"}, t); return L; }
+  function packet(id, t, d) {
+    var L = len(id);
+    tl.fromTo("#" + id, {strokeDasharray: "46 " + (L + 200), strokeDashoffset: 49, autoAlpha: 1},
+              {strokeDashoffset: -L, duration: d || 0.5, ease: "power1.inOut", immediateRender: false}, t);
+    tl.set("#" + id, {autoAlpha: 0}, t + (d || 0.5));
+  }
+  // a tile the same shape grows out and fades — "something arrived here"
+  function ripple(sel, t) {
+    tl.fromTo(sel, {scale: 1, autoAlpha: 0.7}, {scale: 1.75, autoAlpha: 0, duration: 0.8, ease: "power2.out", immediateRender: false}, t);
+  }
+  function bump(sel, t) {
+    tl.to(sel, {scale: 1.07, duration: 0.1, ease: "power2.out"}, t);
+    tl.to(sel, {scale: 1, duration: 0.45, ease: SP}, t + 0.1);
+  }
+  // iris: a takeover opens out of (x, y) and later closes back into another point
+  function irisOpen(sel, t, x, y, d) {
+    tl.set(sel, {autoAlpha: 1}, t);
+    tl.fromTo(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)"},
+              {clipPath: "circle(2300px at " + x + "px " + y + "px)", duration: d || 0.85, ease: "power3.inOut", immediateRender: false}, t);
+  }
+  function irisClose(sel, t, x, y, d) {
+    tl.to(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)", duration: d || 0.6, ease: "power3.inOut"}, t);
+    tl.set(sel, {autoAlpha: 0}, t + (d || 0.6) + 0.02);
+  }
+  function drift(sel, t, dur) {
+    ["a1", "a2", "a3"].forEach(function (c, i) {
+      var v = [[-140, 90], [160, -120], [-90, -60]][i];
+      tl.fromTo(sel + " .aur." + c, {x: 0, y: 0}, {x: v[0], y: v[1], duration: dur, ease: "sine.inOut"}, t);
+    });
+  }
+  function haptic(sel, t) { tl.to(sel, {keyframes: {x: [0, -9, 8, -5, 3, 0]}, duration: 0.34, ease: "none"}, t); }
+  function count(sel, t, to, d, fmt) {
+    var o = {v: 0}, el = document.querySelector(sel);
+    tl.fromTo(o, {v: 0}, {v: to, duration: d || 1.1, ease: "power2.out",
+              onUpdate: function () { el.textContent = fmt ? fmt(o.v) : Math.round(o.v); }}, t);
+  }
+  return {blurIn: blurIn, blurOut: blurOut, arrive: arrive, inner: inner, sheen: sheen,
+          drawPrep: drawPrep, draw: draw, packet: packet, ripple: ripple, bump: bump,
+          irisOpen: irisOpen, irisClose: irisClose, drift: drift, haptic: haptic, count: count};
+}
+
+
+  var G = helpers(tl);
+  function bin(sel, t, b, d) { d = d || 0.38; G.blurIn(sel, t, b || 12, d); tl.set(sel, {filter: "none"}, t + d + 0.01); }
+  function bout(sel, t, b, d) { d = d || 0.32; G.blurOut(sel, t, b || 10, d); tl.set(sel, {filter: "none"}, t + d + 0.01); }
+  function arr(sel, t, o) {
+    o = o || {};
+    bin(sel, t, o.blur || 12, 0.36);
+    tl.fromTo(sel, {scale: o.s == null ? 0.5 : o.s, x: o.x || 0, y: o.y == null ? 34 : o.y},
+              {scale: 1, x: 0, y: 0, duration: o.d || 0.85, ease: o.ease || POP}, t);
+  }
+  function draw2(id, t, d) {
+    var L = document.getElementById(id).getTotalLength() + 3;
+    tl.fromTo("#" + id, {strokeDasharray: (L - 3) + " " + (L + 40), strokeDashoffset: L},
+              {strokeDashoffset: 0, duration: d || 0.5, ease: "power2.inOut", immediateRender: false}, t);
+    gsap.set("#" + id, {strokeDasharray: (L - 3) + " " + (L + 40), strokeDashoffset: L});
+  }
+  function undraw(id, t, d) {
+    var L = document.getElementById(id).getTotalLength() + 3;
+    tl.to("#" + id, {strokeDashoffset: L, duration: d || 0.3, ease: "power2.in"}, t);
+  }
+  function tick(box, path, t) {
+    tl.fromTo("#" + box, {autoAlpha: 0, scale: 0.4}, {autoAlpha: 1, scale: 1, duration: 0.4, ease: POP}, t);
+    draw2(path, t + 0.06, 0.3);
+  }
+  function shn(sel, t) {
+    gsap.set(sel, {xPercent: -120});
+    tl.fromTo(sel, {xPercent: -120}, {xPercent: 120, duration: 0.8, ease: "power2.inOut", immediateRender: false}, t);
+  }
+  function drift1(sel, t, d) { tl.fromTo(sel + " .aurs", {x: 0, y: 0}, {x: -110, y: 70, duration: d, ease: "sine.inOut"}, t); }
+  gsap.set(".sheen", {xPercent: -120});
+
+  gsap.set(["#vid"], {transformOrigin: "540px 900px"});
+  tl.fromTo(["#vid"], {scale: 1}, {scale: 1.045, duration: 49.850, ease: "none"}, 0);
+  /* a_hook */
+
+  tl.set("#gA", {autoAlpha: 1}, 0);
+  arr("#aHub", 0.0, {s: 0.55, y: 20});
+  arr("#aMe", 0.12, {s: 0.55, y: 20});
+  tl.set(["#aT", "#aC"], {autoAlpha: 1}, 0.3);
+  draw2("aT", 0.3, 0.4); draw2("aC", 0.3, 0.4);
+  G.packet("aP", 0.510, 0.45);
+  G.bump("#aHub", 0.930);
+  /* the cable is pulled: her tile steps back, the line retracts */
+  tl.to("#aMe", {x: -46, rotation: -6, duration: 0.5, ease: SP}, 1.420);
+  undraw("aT", 1.450, 0.32); undraw("aC", 1.450, 0.32);
+  tl.to("#aMe", {autoAlpha: 0.55, duration: 0.3}, 1.570);
+  /* «все зламається?» — the hub shakes and tilts */
+  G.haptic("#aHub", 2.280);
+  tl.to("#aHub", {rotation: 9, y: 16, duration: 0.5, ease: SP}, 2.430);
+  arr("#aQ", 2.450, {s: 0.3, y: 20, d: 0.6});
+  /* «це питання я чую постійно» — more of them */
+  tl.to("#aHub", {rotation: 0, y: 0, duration: 0.5, ease: SP}, 3.438);
+  bout("#aMe", 3.438, 10, 0.3);
+  [0, 1, 2].forEach(function (i) { arr("#aQ" + i, 4.078+i * 0.14, {s: 0.3, y: 20, d: 0.6}); });
+  /* «налаштовую» — the hub takes the centre, two apps snap on, the key turns */
+  bout(["#aQ", "#aQ0", "#aQ1", "#aQ2"], 4.608, 10, 0.28);
+  tl.to("#aHub", {x: -280, y: -5, duration: 0.7, ease: SP}, 4.708);
+  arr("#aNo", 5.118, {s: 0.4, x: 120, y: 0, d: 0.7});
+  arr("#aCa", 5.238, {s: 0.4, x: -120, y: 0, d: 0.7});
+  G.bump("#aHub", 5.398);
+  arr("#aKey", 6.211, {s: 0.4, y: 50, d: 0.6});
+  tl.fromTo("#aKey .sk", {rotation: 0}, {rotation: 90, transformOrigin: "50% 50%", duration: 0.45, ease: SP}, 6.527);
+  G.ripple("#aHubR", 6.707);
+  tl.set("#aHubR", {x: -280, y: -5}, 0);
+  shn("#aHub .sheen", 6.657);
+  /* «для власниць ...» — who it is for */
+  tl.to("#aHub", {y: -41, duration: 0.5, ease: SP}, 7.078);
+  tl.to(["#aNo", "#aCa", "#aKey"], {y: -36, duration: 0.5, ease: SP}, 7.078);
+  arr("#ch0", 7.338, {s: 0.6, y: 30, d: 0.6});
+  arr("#ch1", 8.483, {s: 0.6, y: 30, d: 0.6});
+  arr("#ch2", 9.063, {s: 0.6, y: 30, d: 0.6});
+  bout(["#ch0", "#ch1", "#ch2", "#aNo", "#aCa", "#aKey"], 9.838, 10, 0.26);
+  tl.set("#gA", {autoAlpha: 0}, 10.743);
+  /* tk1_team */
+
+  G.irisOpen("#gT1", 9.943, 540, 225, 0.6);
+  drift1("#gT1", 10.043, 18.3-10.043);
+  arr("#t1sh", 10.453, {s: 0.82, y: 60, d: 0.85});
+  shn("#t1sh .sheen", 10.903);
+  tl.set(["#t1av0", "#t1av1", "#t1av2", "#t1av3"], {autoAlpha: 0.28}, 10.503);
+  [0, 1, 2, 3].forEach(function (i) {
+    tl.fromTo("#t1av" + i, {autoAlpha: 0.28, scale: 0.8}, {autoAlpha: 1, scale: 1, duration: 0.6, ease: POP, immediateRender: false}, 12.123+i * 0.08);
+  });
+  tick("t1c00", "t1p00", 11.123);
+  tick("t1c10", "t1p10", 11.213);
+  tick("t1c20", "t1p20", 11.303);
+  tick("t1c30", "t1p30", 11.393);
+  tick("t1c01", "t1p01", 12.573);
+  tick("t1c11", "t1p11", 12.663);
+  tick("t1c21", "t1p21", 12.753);
+  tick("t1c31", "t1p31", 12.843);
+  tick("t1c02", "t1p02", 13.633);
+  tick("t1c12", "t1p12", 13.723);
+  tick("t1c22", "t1p22", 13.813);
+  tick("t1c32", "t1p32", 13.903);
+  arr("#t247", 12.553, {s: 0.6, y: 40, d: 0.8});
+  arr("#t1mo", 13.513, {s: 0.4, y: 30, d: 0.7}); G.ripple("#t1moR", 13.853);
+  tl.fromTo("#t1mo .sk", {rotation: -30}, {rotation: 0, transformOrigin: "50% 50%", duration: 0.7, ease: SP, immediateRender: false}, 13.553);
+  /* «а насправді» — the whole team folds into one slot */
+  bout(["#t247", "#t1mo"], 14.680, 10, 0.26);
+  tl.to("#t1col0", {x: 375, y: 130, scale: 0.12, autoAlpha: 0, duration: 0.42, ease: "power3.in"}, 14.720+0.00);
+  tl.to("#t1col1", {x: 135, y: 130, scale: 0.12, autoAlpha: 0, duration: 0.42, ease: "power3.in"}, 14.720+0.04);
+  tl.to("#t1col2", {x: -105, y: 130, scale: 0.12, autoAlpha: 0, duration: 0.42, ease: "power3.in"}, 14.720+0.08);
+  tl.to("#t1col3", {x: -345, y: 130, scale: 0.12, autoAlpha: 0, duration: 0.42, ease: "power3.in"}, 14.720+0.12);
+  tl.to("#t1sh", {scale: 0.25, autoAlpha: 0, duration: 0.38, ease: "power3.in"}, 15.000);
+  arr("#t1gh", 15.220, {s: 0.3, y: 0, d: 0.7});
+  arr("#t1cl", 16.460, {s: 0.86, y: 0, d: 0.6, blur: 8});
+  G.ripple("#t1clR", 16.750);
+  shn("#t1cl .sheen", 17.060);
+  tl.set("#t1gh", {autoAlpha: 0}, 16.900);
+  arr("#t1no", 17.380, {s: 0.4, x: 120, y: 0, d: 0.6});
+  arr("#t1ca", 17.500, {s: 0.4, x: -120, y: 0, d: 0.6});
+  G.irisClose("#gT1", 17.86, 540, 560, 0.37);
+  /* f_shelf */
+
+  tl.set("#gF", {autoAlpha: 1}, 18.31);
+  arr("#fSh", 18.31, {s: 0.9, y: 30, d: 0.8});
+  arr("#fHub", 18.33, {s: 1.4, y: 0, d: 0.7, blur: 8});
+  arr("#fNo", 18.42, {s: 0.5, x: 120, y: 0, d: 0.6});
+  arr("#fCa", 18.48, {s: 0.5, x: -120, y: 0, d: 0.6});
+  G.bump("#fHub", 20.295);
+  /* «жити самостійно» — a pulse under it */
+  tl.set("#fPl", {autoAlpha: 1}, 20.785);
+  draw2("fPl", 20.785, 0.95);
+  G.packet("fPk1", 21.355, 0.7);
+  /* «без того, щоб постійно чекати, поки я щось оновлю» */
+  bout(["#fNo", "#fCa"], 21.825, 10, 0.26);
+  tl.to(["#fHub", "#fHubR"], {x: -230, duration: 0.6, ease: SP}, 21.875);
+  tl.to("#fPl", {opacity: 0.32, duration: 0.4}, 21.975);
+  arr("#fMe", 22.025, {s: 0.5, x: 40, y: 0, d: 0.7});
+  tl.set(["#fT", "#fC"], {autoAlpha: 1}, 22.225);
+  draw2("fT", 22.225, 0.4); draw2("fC", 22.225, 0.4);
+  tl.fromTo("#fSp", {autoAlpha: 0, rotation: 0, transformOrigin: "50% 50%"}, {autoAlpha: 1, duration: 0.3}, 22.594);
+  tl.to("#fSp", {rotation: 520, duration: 24.604-22.644, ease: "power1.inOut"}, 22.594);
+  arr("#fUp", 23.684, {s: 0.3, y: 20, d: 0.6});
+  G.haptic("#fUp", 24.154);
+  /* «ні» — she unplugs; the hub comes back; the pulse keeps going */
+  undraw("fT", 25.244, 0.3); undraw("fC", 25.244, 0.3);
+  tl.to(["#fMe", "#fSp", "#fUp"], {x: 140, autoAlpha: 0, duration: 0.4, ease: "power2.in"}, 25.314);
+  tl.to(["#fHub", "#fHubR"], {x: 0, duration: 0.6, ease: SP}, 25.564);
+  tl.to("#fPl", {opacity: 1, duration: 0.3}, 25.764);
+  G.packet("fPk2", 25.864, 0.7);
+  arr("#fOk", 26.064, {s: 0.3, y: 10, d: 0.6}); G.ripple("#fOkR", 26.314);
+  /* «повністю налаштована» — the ring closes; «не потрібна підтримка» */
+  tl.set("#fRing", {autoAlpha: 1}, 27.608);
+  draw2("fRing", 27.608, 0.9);
+  shn("#fHub .sheen", 28.408);
+  G.packet("fPk3", 27.958, 0.7);
+  arr("#fWr", 29.028, {s: 0.4, y: 20, d: 0.6});
+  tl.set("#fSt", {autoAlpha: 1}, 29.528);
+  draw2("fSt", 29.528, 0.22);
+  tl.to("#fWr", {autoAlpha: 0.45, duration: 0.25}, 29.728);
+  tl.set("#gF", {autoAlpha: 0}, 30.500);
+  /* tk2_learn */
+
+  G.irisOpen("#gT2", 29.750, 540, 240, 0.6);
+  drift1("#gT2", 29.850, 5.4);
+  tl.fromTo("#t2cl", {x: 0, y: -140, scale: 0.75}, {x: 0, y: 0, scale: 1, duration: 0.8, ease: SP}, 29.800);
+  /* «сама себе оновлює» — two arrows turn round it */
+  tl.set("#t2arc", {autoAlpha: 1}, 30.290);
+  draw2("t2a1", 30.290, 0.45); draw2("t2a2", 30.290, 0.45);
+  tl.fromTo("#t2arc", {rotation: 0, svgOrigin: "540 380"}, {rotation: 360, svgOrigin: "540 380", duration: 1.6, ease: "power2.inOut"}, 30.490);
+  G.ripple("#t2clR", 30.890);
+  bout("#t2arc", 31.380, 8, 0.3);
+  /* «чим більше ти робиш контенту» — the content goes into it */
+  arr("#t2c0", 31.940+0.00, {s: 0.6, y: 30, d: 0.5});
+  tl.to("#t2c0", {x: 448, y: 100, scale: 0.18, rotation: -8, autoAlpha: 0, duration: 0.42, ease: "power2.in"}, 31.940+0.00+0.42);
+  G.bump("#t2cl", 31.940+0.00+0.82);
+  arr("#t2c1", 31.940+0.13, {s: 0.6, y: 30, d: 0.5});
+  tl.to("#t2c1", {x: 395, y: -184, scale: 0.18, rotation: -8, autoAlpha: 0, duration: 0.42, ease: "power2.in"}, 31.940+0.13+0.42);
+  G.bump("#t2cl", 31.940+0.13+0.82);
+  arr("#t2c2", 31.940+0.26, {s: 0.6, y: 30, d: 0.5});
+  tl.to("#t2c2", {x: -442, y: 110, scale: 0.18, rotation: 8, autoAlpha: 0, duration: 0.42, ease: "power2.in"}, 31.940+0.26+0.42);
+  G.bump("#t2cl", 31.940+0.26+0.82);
+  arr("#t2c3", 31.940+0.39, {s: 0.6, y: 30, d: 0.5});
+  tl.to("#t2c3", {x: -415, y: -194, scale: 0.18, rotation: 8, autoAlpha: 0, duration: 0.42, ease: "power2.in"}, 31.940+0.39+0.42);
+  G.bump("#t2cl", 31.940+0.39+0.82);
+  /* «тим більше вона про тебе знає» — a profile fills */
+  arr("#t2sh", 32.890, {s: 0.85, y: 60, d: 0.8});
+  shn("#t2sh .sheen", 33.390);
+  tl.fromTo(".fillb", {scaleX: 0}, {scaleX: 1, duration: 0.5, ease: SP, stagger: 0.12}, 33.590);
+  /* «і тим краще працює» — a curve rises */
+  draw2("t2cv", 34.325, 0.75);
+  tl.fromTo("#t2dot", {opacity: 0, scale: 0.2}, {opacity: 1, scale: 1, duration: 0.4, ease: POP}, 35.025);
+  G.irisClose("#gT2", 34.98, 540, 330, 0.38);
+  /* j_edit */
+
+  tl.set("#gJ", {autoAlpha: 1}, 35.350);
+  arr("#jd", 35.380, {s: 0.75, y: 40, d: 0.8});
+  shn("#jd .sheen", 35.750);
+  /* «мінімальну правку» — one line, partly rewritten */
+  tl.fromTo("#jhl", {opacity: 0, scaleX: 0.2}, {opacity: 1, scaleX: 1, duration: 0.35, ease: "power2.out"}, 36.540);
+  tl.to("#jr1", {scaleX: 290 / 540, duration: 0.35, ease: "power2.inOut"}, 36.920);
+  tl.fromTo("#jnew", {scaleX: 0}, {scaleX: 1, duration: 0.45, ease: SP}, 37.220);
+  tl.fromTo("#jcar", {opacity: 0, x: -256}, {opacity: 1, x: 0, duration: 0.45, ease: "power2.out", immediateRender: false}, 37.220);
+  tl.to("#jcar", {opacity: 0, duration: 0.15}, 37.770);
+  tl.to("#jhl", {opacity: 0, duration: 0.3}, 37.870);
+  /* «або щось перестало працювати» -> «можна змінити» */
+  arr("#jWa", 37.850, {s: 0.3, y: 20, d: 0.6});
+  G.haptic("#jd", 37.970);
+  bout("#jWa", 39.750, 8, 0.22);
+  arr("#jOk", 39.850, {s: 0.4, y: 0, d: 0.6}); G.ripple("#jOkR", 40.100);
+  G.bump("#jOk", 41.460);
+  bout("#gJ", 41.780, 10, 0.3);
+  /* tk3_cta */
+
+  G.irisOpen("#gT3", 42.365, 540, 330, 0.65);
+  drift1("#gT3", 42.465, 49.850-42.465);
+  arr("#t3sh", 42.615, {s: 0.82, y: 70, d: 0.9});
+  shn("#t3sh .sheen", 43.365);
+  tl.fromTo("#t3tt", {clipPath: "inset(0 100% 0 0)"}, {clipPath: "inset(0 0% 0 0)", duration: 0.6, ease: "power2.out"}, 43.515);
+  tl.fromTo("#t3key .sk", {rotation: 0}, {rotation: 90, transformOrigin: "50% 50%", duration: 0.45, ease: SP}, 44.152);
+  G.bump("#t3key", 44.182);
+  arr("#t3r0", 44.487, {s: 0.92, x: -40, y: 0, d: 0.6, blur: 8});
+  tick("t3c0", "t3p0", 45.675);
+  arr("#t3r1", 46.053, {s: 0.92, x: -40, y: 0, d: 0.6, blur: 8});
+  tick("t3c1", "t3p1", 46.446);
+  arr("#t3r2", 46.693, {s: 0.92, x: -40, y: 0, d: 0.6, blur: 8});
+  tick("t3c2", "t3p2", 47.333);
+  arr("#t3r3", 47.653, {s: 0.92, x: -40, y: 0, d: 0.6, blur: 8});
+  tick("t3c3", "t3p3", 48.163);
+
+  arr("#t3cm", 48.483, {s: 0.9, y: 30, d: 0.6});
+  tl.set("#t3ph", {opacity: 0}, 48.833);
+  tl.fromTo("#t3pl", {opacity: 0, scale: 0.4}, {opacity: 1, scale: 1, duration: 0.4, ease: POP, transformOrigin: "30% 50%"}, 48.833);
+  G.bump("#t3se", 49.303); G.ripple("#t3seR", 49.353);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>

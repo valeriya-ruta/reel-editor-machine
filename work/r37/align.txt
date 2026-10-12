@@ -1,0 +1,24 @@
+CAPTIONS 149   script 121 | whisper-corrected 18 | her wording 10
+
+WHISPER MISHEARD -> script spelling restored (8)
+     5.10s  0.88  налаштовую АІ-продюсера під ключ <- налаштовує, і я і продюсер Петлючд
+     7.38s  0.94  SMM-агенцій,                     <- SMM агенції,
+    17.06s  0.80  Claude                           <- клад
+    37.87s  0.82  перестало                        <- пересело
+    40.76s  0.86  загалом                          <- заходом
+    43.95s  0.94  під ключ, яка аналізує           <- підлючака, аналізую
+    46.13s  0.86  пише сценарії, дизайнить         <- пишу сценарі, дизайну
+    47.81s  0.91  монтує                           <- монтую
+
+SHE IMPROVISED -> her wording kept (9)
+        -  script: Клієнтка спитала: а          said: — (cut)
+    10.04s  script: щоб                          said: що
+    20.61s  script: могла жити                   said: може лежити
+    23.34s  script: я                            said: є
+    23.70s  script: оновлю.                      said: оновлювання.
+    25.96s  script: зламається.                  said: зламай це.
+    36.35s  script: якусь                        said: якось
+    42.47s  script: —                            said: Тому
+    48.83s  script: —                            said: плюс
+
+REVIEW -- could go either way (0)

@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 31 — Відповіді про ШІ монтаж</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+    @font-face {
+      font-family: "ProductSans";
+      src: url("assets/fonts/ProductSans-Black.woff") format("woff");
+      font-weight: 900; font-style: normal; font-display: block;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px;
+            overflow: hidden; background: #000;
+            font-family: "ProductSans", system-ui, sans-serif;
+      --surface:        #fffcfd;
+      --container:      #fbeef2;
+      --container-high: #f4dfe5;
+      --graphite:       rgba(23,20,28,0.13);
+      --accent:         #b4122f;
+      --accent-deep:    #8d0d24;
+      --pink:           #ff6e9c;
+      --ink:            #17141c;
+
+      --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
+      --lit-blush:  linear-gradient(115deg, #ffffff 0%, #fff7fa 100%);
+      --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
+      --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
+      --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
+
+      --rim: inset 0 1.5px 0 rgba(255,255,255,0.92),
+             inset 0 -1.5px 0 rgba(255,255,255,0.14),
+             inset 0 0 0 1px rgba(255,255,255,0.28);
+      --rim-dark: inset 0 1.5px 0 rgba(255,255,255,0.16),
+                  inset 0 0 0 1px rgba(255,255,255,0.08);
+      --rim-glass: inset 0 2px 0 rgba(255,255,255,0.70),
+                   inset 0 -2px 0 rgba(255,255,255,0.10),
+                   inset 0 0 0 1.5px rgba(255,255,255,0.30);
+
+      /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
+         Light coming off the object, not the object sitting on a surface. */
+      --glow: drop-shadow(0 0 10px rgba(255,196,218,0.95))
+              drop-shadow(0 0 26px rgba(255,110,156,0.85))
+              drop-shadow(0 0 64px rgba(255,110,156,0.55))
+              drop-shadow(0 0 120px rgba(255,110,156,0.32));
+      --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
+                   drop-shadow(0 0 60px rgba(255,110,156,0.30));
+
+      --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
+              drop-shadow(0 24px 48px rgba(26,30,39,0.14));
+      --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))
+                 drop-shadow(0 12px 24px rgba(26,30,39,0.12));
+ }
+    .plate { position: absolute; inset: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    #scrim { position: absolute; left: 20px; top: 1247px;
+             width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png");
+             background-size: 100% 100%; background-repeat: no-repeat;
+             opacity: 0; visibility: hidden; pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; top: 1413px;
+           height: 118px; line-height: 118px; text-align: center;
+           color: #fff; font-size: 90px; font-weight: 900;
+           letter-spacing: -0.015em; white-space: nowrap;
+           opacity: 0; visibility: hidden; }
+    .cap.inv { color: var(--ink); }
+    .g { position: absolute; left: 0; top: 40px; width: 1080px;
+         height: 600px; opacity: 0; visibility: hidden; }
+    .g.full { top: 0; height: 1920px; }
+
+    /* §5a.9 — glass over her footage is the house look. Panels only; an
+       edge-to-edge frosted ground blurs her out of her own reel. */
+    .glass { background: rgba(255,255,255,0.15);
+             -webkit-backdrop-filter: blur(24px) saturate(1.4);
+             backdrop-filter: blur(24px) saturate(1.4);
+             box-shadow: var(--rim); filter: var(--cast); }
+
+    /* A takeover: a tinted pane laid ON the footage, with a real margin so it
+       reads as an object rather than a blur applied to the video. */
+    /* The inset pane is a *pane*: 44/64 margin so the footage shows past it,
+       and corners, because a full-bleed hard-cornered rectangle is a bug she
+       has reported. base_css() squircles it; this radius is the fallback. */
+    .ground { position: absolute; left: 44px; top: 64px;
+              width: 992px; height: 1792px; border-radius: 68px;
+              background: linear-gradient(158deg, rgba(196,20,52,0.62) 0%,
+                          rgba(141,13,36,0.70) 100%);
+              -webkit-backdrop-filter: blur(30px) saturate(1.5);
+              backdrop-filter: blur(30px) saturate(1.5);
+              box-shadow: var(--rim-glass); filter: var(--cast); }
+
+    .card { position: absolute; background: var(--lit-blush);
+            filter: var(--cast); box-shadow: var(--rim); }
+    .card.ink { background: var(--lit-ink); box-shadow: var(--rim-dark); }
+    .card.accent { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+
+    .tile { position: absolute; display: grid; place-items: center;
+            background: var(--lit-blush); filter: var(--cast);
+            box-shadow: var(--rim); }
+
+    /* §5a.3 — bar rhythm. One thick heading, then ragged body. Uniform bars
+       read as a loading state; ragged ones read as an abstracted screen. */
+    .ph { display: block; height: 66px; border-radius: 18px;
+          background: var(--lit-accent); margin-bottom: 26px;
+          box-shadow: var(--rim-dark); }
+    .pr { display: block; height: 40px; border-radius: 12px;
+          background: var(--graphite); margin-bottom: 18px; }
+    .pr:nth-of-type(2) { width: 94%; }
+    .pr:nth-of-type(3) { width: 71%; }
+    .pr:nth-of-type(4) { width: 43%; }
+
+    .phone { position: absolute; background: var(--lit-blush);
+             overflow: hidden; filter: var(--cast); box-shadow: var(--rim); }
+    .phone video, .phone img { width: 100%; height: 100%; object-fit: cover;
+                               display: block; }
+
+    /* a value in its own card — her reference's "big number" pattern, minus
+       the label, because a graphic here carries no words */
+    .valcard { position: absolute; background: rgba(255,255,255,0.16);
+               -webkit-backdrop-filter: blur(16px) saturate(1.3);
+               backdrop-filter: blur(16px) saturate(1.3);
+               box-shadow: var(--rim-dark);
+               display: grid; place-items: center; }
+    .valcard span { color: #fff; font-weight: 900; letter-spacing: -0.04em; }
+
+    .wire { fill: none; stroke-width: 20; stroke-linecap: round;
+            filter: drop-shadow(0 8px 18px rgba(26,30,39,0.22)); }
+    .node { fill: #fdf6f6; stroke: #b4122f; stroke-width: 16;
+            filter: drop-shadow(0 10px 22px rgba(26,30,39,0.24)); }
+    .node.hub { fill: #b4122f; stroke: #fff; }
+
+    /* §5a.10 — the glow rides a WRAPPER, never the clipped element itself.
+       clip-path is applied *after* filter, so a drop-shadow declared on the
+       same element as the clip is cut away with everything else outside the
+       silhouette and the object ends up with no light at all. Put the clip on
+       the shape and the filter on its parent: the parent filters the already
+       clipped bitmap, so the light traces the squircle and survives. */
+    .lit { position: absolute; inset: 0; pointer-events: none;
+           filter: var(--glow); }
+    .lit.soft { filter: var(--glow-soft); }
+
+    /* Emoji are images, never glyphs. The render runs on someone else's
+       Chrome, so a literal 💩 in the HTML comes out in whatever emoji font
+       that machine has — Noto on the cloud renderer, Segoe on hers, Apple on
+       nobody's. She wants the Apple set, so the artwork ships in assets/emoji
+       and the glyph never appears in a composition. */
+    .emoji { display: block; width: auto; image-rendering: auto; }
+
+    .halo { position: absolute; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(255,110,156,0.5) 0%,
+                        rgba(255,110,156,0) 70%); }
+    .ring { position: absolute; border-radius: 50%; pointer-events: none;
+            border: 18px solid rgba(255,110,156,0.92);
+            filter: drop-shadow(0 0 40px rgba(255,110,156,0.55)); }
+
+    /* ---- takeovers (STYLE.md 2c) ----
+       The graphic owns the frame: the plate is gone, so none of the
+       over-footage rules apply — no glow budget, no band discipline, ink type
+       on a light ground. Lives here rather than per-reel because every reel
+       from 9 onwards needs it. A takeover that does not bleed off at least
+       two edges reads as a slide, not a takeover. */
+    .tk { position: absolute; inset: 0; }
+    .tk.paper { background: var(--surface); }
+    .tk.white { background: #ffffff; }
+    .tk.blush { background: linear-gradient(150deg,#ffffff 0%,#fffafc 55%,
+                                            #fdf4f8 100%); }
+    /* graph paper — the texture the reference takeovers all have. 60px cells
+       at 5.8% ink: visible, never a pattern you read. */
+    .gp { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px),
+            repeating-linear-gradient(90deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px); }
+    /* horizontal rules only — a transcript or a list is ruled paper, not
+       graph paper, and the difference is what makes it read as an export. */
+    .gl { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.05) 0 1px,
+                                      transparent 1px 175px); }
+
+    /* the finished artefact, in her system — one class at any aspect ratio */
+    .dk { position: absolute; overflow: hidden; border-radius: 28px;
+          background: var(--lit-blush); box-shadow: var(--rim);
+          filter: var(--cast); }
+    .dk i { position: absolute; display: block; }
+    .dk .hb { left: 30px; top: 30px; height: 20px; border-radius: 6px;
+              background: var(--lit-accent); }
+    .dk .rr { left: 30px; height: 9px; border-radius: 4px;
+              background: rgba(23,20,28,0.22); }
+    .dk .pb { border-radius: 16px; background: var(--lit-pink);
+              box-shadow: var(--rim-dark); }
+
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Regular.ttf"); font-weight: 400; font-display: block; }
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Medium.ttf"); font-weight: 500; font-display: block; }
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Bold.ttf"); font-weight: 700; font-display: block; }
+
+/* ---------- the edge light: what makes a surface read as glass ----------
+   A uniform stroke is 2013. Real glass catches light at two opposite corners
+   and goes almost dark along the sides, so the rim is a gradient ring. */
+.edge::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.6px;
+  background: linear-gradient(140deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.34) 16%,
+              rgba(255,255,255,0.05) 42%, rgba(255,255,255,0.07) 62%,
+              rgba(255,255,255,0.50) 86%, rgba(255,255,255,0.90) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 3; }
+
+/* ---------- the shelf: frosted glass over her footage ----------
+   The house look since reel 3, rebuilt in layers: blur + saturation, a faint
+   top-to-bottom tint, light inside the bottom edge (thickness), huge soft
+   shadow. Add .edge for the rim. */
+.shelf { position: absolute; border-radius: 80px;
+  background: linear-gradient(158deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.07) 50%,
+              rgba(255,255,255,0.13) 100%);
+  -webkit-backdrop-filter: blur(22px) saturate(1.7) brightness(1.05);
+  backdrop-filter: blur(22px) saturate(1.7) brightness(1.05);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.65), inset 0 -24px 44px -22px rgba(255,255,255,0.36),
+              0 44px 90px -34px rgba(24,4,12,0.5); }
+
+/* dark glass — notifications and anything with white text over footage */
+.dglass { position: absolute; border-radius: 64px; color: #fff;
+  background: linear-gradient(160deg, rgba(58,22,32,0.58) 0%, rgba(24,10,15,0.50) 100%);
+  -webkit-backdrop-filter: blur(30px) saturate(1.8); backdrop-filter: blur(30px) saturate(1.8);
+  box-shadow: inset 0 1.5px 1px rgba(255,255,255,0.30), inset 0 -16px 30px -16px rgba(255,255,255,0.14),
+              0 40px 80px -30px rgba(10,0,4,0.6); }
+
+/* ---------- the tile family: every mark lives in one of three ----------
+   Same radius ratio as an iOS icon (22.4%), glyph at 50%. Put the tile in a
+   sized wrapper; the wrapper takes the motion, the tile takes the material. */
+.clear { position: absolute; inset: 0; border-radius: 22.4%;
+  background: linear-gradient(158deg, rgba(255,255,255,0.36) 0%, rgba(255,255,255,0.11) 48%,
+              rgba(255,255,255,0.17) 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.70), inset 0 -18px 30px -14px rgba(255,255,255,0.42),
+              0 34px 60px -22px rgba(24,4,12,0.55), 0 3px 8px rgba(24,4,12,0.10);
+  display: flex; align-items: center; justify-content: center; }
+.pearl { position: absolute; inset: 0; border-radius: 22.4%; overflow: hidden;
+  background: linear-gradient(160deg, #ffffff 0%, #fff5f8 52%, #f5dfe6 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -20px 32px -14px rgba(180,18,47,0.18),
+              0 36px 64px -22px rgba(30,4,12,0.55), 0 3px 8px rgba(30,4,12,0.12);
+  display: flex; align-items: center; justify-content: center; }
+.jelly { position: absolute; inset: 0; border-radius: 22.4%; overflow: hidden;
+  background: linear-gradient(165deg, #e0204b 0%, #ab112e 46%, #6b081c 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.55), inset 0 -26px 40px -14px rgba(255,125,165,0.60),
+              inset 0 0 0 1px rgba(255,255,255,0.10),
+              0 36px 64px -22px rgba(70,4,20,0.62), 0 3px 8px rgba(70,4,20,0.14);
+  display: flex; align-items: center; justify-content: center; }
+/* the lens highlight — subtle, or it turns into 2009 gloss */
+.jelly::after, .pearl::after { content: ""; position: absolute; left: 7%; right: 7%; top: 3.5%; height: 44%;
+  border-radius: 40% 40% 50% 50% / 38% 38% 24% 24%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.26), rgba(255,255,255,0)); }
+.pearl::after { background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0)); opacity: 0.5; }
+.mk { width: 50%; height: 50%; fill: url(#gw); position: relative; z-index: 1; }
+.pearl .mk { fill: #17141c; }
+/* a wordmark stands in where a brand has no icon (RUTA, Windsor's "w.") */
+.wmark { font-weight: 900; color: #17141c; letter-spacing: -0.045em; line-height: 1;
+  position: relative; z-index: 1; }
+.wmark i { font-style: normal; color: #b4122f; }
+.jelly .wmark { color: #fff; } .jelly .wmark i { color: #ffb3c9; }
+
+/* one light sweep across a surface when it lands — once, never looping */
+.sheen { position: absolute; inset: -10%; z-index: 2; pointer-events: none;
+  background: linear-gradient(105deg, rgba(255,255,255,0) 38%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0) 62%);
+  mix-blend-mode: soft-light; }
+/* a ripple the same shape as the tile that sent it */
+.sqring { position: absolute; border-radius: 22.4%; border: 3px solid rgba(255,255,255,0.75);
+  opacity: 0; visibility: hidden; }
+
+/* ---------- the takeover ground: deep burgundy, lit from inside ----------
+   Approved on the test: a dark ground is allowed now (it overrides §5's old
+   "never dark"). Three soft light pools drift slowly; grain stops banding. */
+.tkg { position: absolute; inset: 0;
+  background: linear-gradient(172deg, #4a0a1c 0%, #660c26 36%, #3c0716 70%, #1d030a 100%); }
+.aur { position: absolute; border-radius: 50%; pointer-events: none; }
+.aur.a1 { left: 260px; top: -420px; width: 1200px; height: 1200px;
+  background: radial-gradient(circle, rgba(255,110,156,0.50) 0%, rgba(255,110,156,0) 62%); }
+.aur.a2 { left: -640px; top: 960px; width: 1400px; height: 1400px;
+  background: radial-gradient(circle, rgba(222,32,74,0.55) 0%, rgba(222,32,74,0) 64%); }
+.aur.a3 { left: 330px; top: 760px; width: 900px; height: 900px;
+  background: radial-gradient(circle, rgba(255,198,214,0.20) 0%, rgba(255,198,214,0) 60%); }
+.grain { position: absolute; inset: 0; background: url("assets/grain.png"); opacity: 0.075;
+  mix-blend-mode: overlay; pointer-events: none; }
+
+/* the white report card that sits on a burgundy ground */
+.sheet { position: absolute; border-radius: 68px; overflow: hidden; color: #17141c;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 55%, #fdf0f4 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -30px 60px -30px rgba(180,18,47,0.14),
+              0 70px 130px -40px rgba(8,0,3,0.75), 0 0 0 1px rgba(255,255,255,0.35); }
+.sheet .sheen { mix-blend-mode: normal; opacity: 0.55; }
+/* type ladder inside a sheet */
+.t-micro { font-size: 24px; font-weight: 700; letter-spacing: 0.16em; color: rgba(23,20,28,0.42); }
+.t-title { font-size: 42px; font-weight: 700; letter-spacing: -0.015em; }
+.t-sub   { font-size: 26px; font-weight: 500; color: rgba(23,20,28,0.46); }
+.t-big   { font-size: 176px; font-weight: 900; letter-spacing: -0.045em; line-height: 1;
+  background: linear-gradient(118deg, #7e0b20 0%, #b4122f 42%, #ff6e9c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: 10px; }
+.chip { display: inline-flex; align-items: center; gap: 10px; height: 58px; padding: 0 24px;
+  border-radius: 29px; background: #fbe3ea; color: #b4122f; font-size: 26px; font-weight: 700; }
+.hair { height: 2px; background: rgba(23,20,28,0.07); transform-origin: 0 0; }
+
+/* a cable between two tiles: a glass tube, a bright core, a travelling packet */
+.cab .tube { fill: none; stroke: rgba(255,255,255,0.26); stroke-width: 20; stroke-linecap: round; }
+.cab .core { fill: none; stroke: rgba(255,255,255,0.92); stroke-width: 4.5; stroke-linecap: round; }
+.cab .pkt  { fill: none; stroke: #ffd6e3; stroke-width: 11; stroke-linecap: round; }
+.cab .pkg  { filter: drop-shadow(0 0 10px rgba(255,120,165,1)); }
+.cab .wire { fill: none; stroke: rgba(255,255,255,0.55); stroke-width: 4; stroke-linecap: round; }
+
+
+.abs { position: absolute; }
+.hide { opacity: 0; visibility: hidden; }
+.tw { position: absolute; }
+.sk { fill: none; stroke: url(#gw); stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round;
+  width: 50%; height: 50%; position: relative; z-index: 1; overflow: visible; }
+.pearl .sk { stroke: #17141c; }
+.circ .jelly, .circ .pearl, .circ .clear, .circ .sheen { border-radius: 50%; }
+.clear { overflow: hidden; }
+.aurs { position: absolute; left: -700px; top: -700px; width: 2480px; height: 3320px; pointer-events: none;
+  background:
+    radial-gradient(circle 526px at 1560px 880px, rgba(255,110,156,0.50), rgba(255,110,156,0)),
+    radial-gradient(circle 634px at 760px 2360px, rgba(222,32,74,0.55), rgba(222,32,74,0)),
+    radial-gradient(circle 382px at 1480px 1910px, rgba(255,198,214,0.20), rgba(255,198,214,0)); }
+.shc { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
+.shc .sheen { mix-blend-mode: normal; opacity: 0.4; }
+
+/* ---------- a Threads post (light; .tdk = Threads dark) ---------- */
+.tp { position: absolute; border-radius: 46px; padding: 30px 44px 28px 142px; color: #000;
+  background: linear-gradient(170deg, #ffffff 0%, #fafafa 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 0 0 1px rgba(0,0,0,0.05), 0 44px 90px -34px rgba(16,4,10,0.62); }
+.tp .av { position: absolute; left: 40px; top: 34px; width: 84px; height: 84px; border-radius: 50%; overflow: hidden; }
+.tp .av img { width: 84px; height: 84px; display: block; }
+.tp .hd { display: flex; align-items: center; height: 50px; margin-left: -12px; }
+.tp .hn { height: 48px; width: auto; display: block; }
+.tp .tm { font-size: 30px; font-weight: 400; color: #999; margin-left: 4px; }
+.tp .more { position: absolute; right: 40px; top: 40px; width: 42px; height: 42px; fill: #000; }
+.tp .tx { font-size: 43px; line-height: 1.25; font-weight: 400; letter-spacing: -0.005em; margin-top: 4px; }
+.tp .ic { display: flex; align-items: center; gap: 46px; margin-top: 24px; height: 46px; }
+.tp .ic span { display: flex; align-items: center; gap: 10px; position: relative; }
+.tp .ic svg { width: 44px; height: 44px; fill: none; stroke: #000; stroke-width: 1.7; stroke-linecap: round;
+  stroke-linejoin: round; }
+.tp .ic b { font-size: 28px; font-weight: 400; color: #999; }
+.tp .ic svg.hfl { position: absolute; left: 0; top: 1px; fill: #ff3040; stroke: #ff3040; }
+.tp.tdk { color: #f3f5f7; background: linear-gradient(170deg, #1b1b1b 0%, #0f0f0f 100%);
+  box-shadow: inset 0 1.5px 0 rgba(255,255,255,0.12), 0 0 0 1px rgba(255,255,255,0.08), 0 44px 90px -30px rgba(0,0,0,0.78); }
+.tp.tdk .ic svg { stroke: #f3f5f7; } .tp.tdk .more { fill: #f3f5f7; }
+.tp.tdk .tm, .tp.tdk .ic b { color: #7a7a7a; }
+.tp.tdk .ic svg.hfl { fill: #ff3040; stroke: #ff3040; }
+.tp.fd { border-radius: 0; box-shadow: none; background: #fff; border-bottom: 1.5px solid #ececec; }
+.gbar { display: block; height: 26px; border-radius: 13px; background: rgba(0,0,0,0.11); margin: 14px 0 0; }
+.thread-tile { position: absolute; }
+
+/* a reply under a thread */
+.rep { position: absolute; height: 92px; border-radius: 30px; background: linear-gradient(170deg, #ffffff 0%, #f7f7f7 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 30px 60px -26px rgba(16,4,10,0.6); }
+.rep .ra { position: absolute; left: 18px; top: 16px; width: 60px; height: 60px; border-radius: 50%; overflow: hidden; }
+.rep .ra img { width: 60px; height: 60px; display: block; }
+.rep .rh { position: absolute; left: 82px; top: 6px; height: 40px; }
+.rep i { position: absolute; display: block; left: 96px; top: 56px; height: 16px; border-radius: 8px; background: rgba(0,0,0,0.12); }
+.thl { position: absolute; width: 6px; border-radius: 3px; background: rgba(255,255,255,0.75); transform-origin: 50% 0%; }
+
+/* labels on footage */
+.lbl { position: absolute; width: 300px; text-align: center; color: #fff; font-size: 36px; font-weight: 700;
+  letter-spacing: -0.01em; text-shadow: 0 2px 18px rgba(20,4,10,0.45); }
+.pls { position: absolute; width: 60px; text-align: center; color: #fff; font-size: 72px; font-weight: 400; line-height: 1; }
+
+/* drafts that did not work */
+.drf { position: absolute; width: 150px; height: 190px; border-radius: 26px;
+  background: linear-gradient(170deg, #ffffff 0%, #fbf3f6 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 30px 60px -24px rgba(24,4,12,0.6); }
+.drf i { position: absolute; display: block; left: 22px; height: 12px; border-radius: 6px; background: rgba(23,20,28,0.13); }
+.drf i.h { height: 18px; background: linear-gradient(115deg, #c41434 0%, #8d0d24 100%); }
+.xx { position: absolute; left: 0; top: 0; overflow: visible; }
+.xx path { fill: none; stroke: #e0204b; stroke-width: 10; stroke-linecap: round; }
+.tang { fill: none; stroke: rgba(255,255,255,0.9); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+.strt { fill: none; stroke: #ff8ab0; stroke-width: 14; stroke-linecap: round; }
+
+/* stopwatch */
+.sw { position: absolute; border-radius: 50%;
+  background: linear-gradient(160deg, #ffffff 0%, #fff5f8 52%, #f5dfe6 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -20px 32px -14px rgba(180,18,47,0.18), 0 40px 80px -28px rgba(30,4,12,0.65); }
+.sw .crown { position: absolute; left: 50%; top: -34px; width: 60px; height: 34px; margin-left: -30px; border-radius: 12px 12px 4px 4px;
+  background: linear-gradient(165deg, #e0204b 0%, #8d0d24 100%); }
+.sw svg { position: absolute; left: 0; top: 0; }
+.sw .trk { fill: none; stroke: rgba(23,20,28,0.08); stroke-width: 22; }
+.sw .prg { fill: none; stroke: #c41434; stroke-width: 22; stroke-linecap: round; }
+.sw .num { position: absolute; left: 0; right: 0; top: 96px; text-align: center; }
+.sw .u { position: absolute; left: 0; right: 0; top: 262px; text-align: center; font-size: 40px; font-weight: 700; color: rgba(23,20,28,0.45); }
+.big { font-weight: 900; letter-spacing: -0.045em; line-height: 1;
+  background: linear-gradient(118deg, #7e0b20 0%, #b4122f 42%, #ff6e9c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: 8px; }
+
+/* Claude subscription card */
+.memb { position: absolute; border-radius: 52px; overflow: hidden; color: #fff;
+  background: linear-gradient(150deg, #e0204b 0%, #ab112e 46%, #6b081c 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.55), inset 0 -40px 60px -30px rgba(255,125,165,0.55),
+              0 50px 100px -36px rgba(70,4,20,0.75); }
+.memb .mk { position: absolute; left: 44px; top: 44px; width: 96px; height: 96px; }
+.memb .nm { position: absolute; left: 160px; top: 58px; font-size: 62px; font-weight: 700; letter-spacing: -0.02em; }
+.memb .chp { position: absolute; left: 44px; bottom: 44px; height: 72px; padding: 0 30px 0 22px; border-radius: 36px;
+  display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.94); color: #b4122f;
+  font-size: 34px; font-weight: 700; }
+.memb .chp svg { width: 40px; height: 40px; fill: none; stroke: #b4122f; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.memb .emv { position: absolute; right: 50px; top: 52px; width: 96px; height: 72px; border-radius: 16px;
+  background: linear-gradient(140deg, rgba(255,255,255,0.55), rgba(255,210,224,0.25));
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.45); }
+.coin .wmark { color: #fff; }
+
+/* the 40-reel grid */
+.rl { position: absolute; width: 112px; height: 199px; border-radius: 22px;
+  background: linear-gradient(165deg, rgba(255,255,255,0.96) 0%, rgba(255,232,240,0.86) 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 18px 30px -14px rgba(8,0,3,0.6); }
+.rl::before { content: ""; position: absolute; left: 46px; top: 80px; width: 0; height: 0;
+  border-left: 26px solid #b4122f; border-top: 16px solid transparent; border-bottom: 16px solid transparent; }
+.rl::after { content: ""; position: absolute; left: 18px; right: 18px; bottom: 22px; height: 10px; border-radius: 5px;
+  background: rgba(23,20,28,0.15); }
+.sheet .cm { position: absolute; left: 0; right: 0; text-align: center; }
+.bar { position: absolute; bottom: 60px; left: 130px; width: 200px; border-radius: 30px; transform-origin: 50% 100%; }
+.bar.lo { background: linear-gradient(170deg, #ffd0de 0%, #ff8ab0 100%); box-shadow: inset 0 2px 1px rgba(255,255,255,0.7); }
+.bar.hi { background: linear-gradient(165deg, #ff6e9c 0%, #e0204b 45%, #8d0d24 100%); box-shadow: inset 0 2px 1px rgba(255,255,255,0.5); }
+.who { display: inline-flex; align-items: center; gap: 10px; }
+.who svg { width: 36px; height: 36px; fill: none; stroke: rgba(23,20,28,0.5); stroke-width: 2.4; stroke-linecap: round; }
+
+/* code tile */
+.inkt { position: absolute; inset: 0; border-radius: 22.4%; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(160deg, #2e2430 0%, #17141c 100%); color: #fff; font-size: 82px; font-weight: 700;
+  letter-spacing: -0.02em; box-shadow: inset 0 1.5px 0 rgba(255,255,255,0.18), 0 40px 80px -30px rgba(10,0,4,0.75); }
+.strike { fill: none; stroke: #ff6e9c; stroke-width: 18; stroke-linecap: round; }
+
+/* chat */
+.bub { position: absolute; border-radius: 48px 48px 14px 48px; overflow: hidden;
+  background: linear-gradient(165deg, #e0204b 0%, #ab112e 46%, #6b081c 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.5), 0 34px 70px -26px rgba(70,4,20,0.7); }
+.bub i { position: absolute; display: block; height: 22px; border-radius: 11px; background: rgba(255,255,255,0.85); }
+.fth { position: absolute; width: 100px; height: 150px; border-radius: 20px;
+  background: linear-gradient(160deg, #3a2a34 0%, #17141c 100%); box-shadow: inset 0 1.5px 0 rgba(255,255,255,0.2); }
+.fth::before { content: ""; position: absolute; left: 40px; top: 56px; width: 0; height: 0;
+  border-left: 26px solid #fff; border-top: 16px solid transparent; border-bottom: 16px solid transparent; }
+.rcard { position: absolute; border-radius: 40px; overflow: hidden;
+  background: linear-gradient(170deg, #ffffff 0%, #fff6f9 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 44px 90px -30px rgba(24,4,12,0.65); }
+.rcard .th { position: absolute; left: 14px; top: 14px; right: 14px; bottom: 96px; border-radius: 28px;
+  background: linear-gradient(160deg, #ff8ab0 0%, #c41434 55%, #6b081c 100%); }
+.rcard .th.v2 { background: linear-gradient(200deg, #ffd6e3 0%, #ff6e9c 50%, #8d0d24 100%); }
+.rcard .th::before { content: ""; position: absolute; left: 50%; top: 50%; margin: -24px 0 0 -14px; width: 0; height: 0;
+  border-left: 40px solid rgba(255,255,255,0.95); border-top: 24px solid transparent; border-bottom: 24px solid transparent; }
+.rcard i { position: absolute; display: block; left: 30px; height: 18px; border-radius: 9px; background: rgba(23,20,28,0.14); }
+
+/* time track */
+.trk2 { position: absolute; height: 34px; border-radius: 17px; }
+.trk2.bg { background: rgba(255,255,255,0.18); box-shadow: inset 0 1.5px 2px rgba(0,0,0,0.25); }
+.trk2.fl { background: linear-gradient(90deg, #ff8ab0 0%, #e0204b 100%); transform-origin: 0 50%; }
+.trk2.cl { background: linear-gradient(90deg, rgba(255,255,255,0.92) 0%, rgba(255,226,236,0.86) 100%); transform-origin: 0 50%; }
+.trk2.sl { background: #ff3d7a; box-shadow: 0 0 22px rgba(255,110,156,0.9); }
+.pill { position: absolute; height: 68px; border-radius: 34px; padding: 0 28px; display: flex; align-items: center;
+  background: linear-gradient(160deg, #ffffff 0%, #fff3f7 100%); color: #b4122f; font-size: 38px; font-weight: 700;
+  white-space: nowrap; box-shadow: inset 0 2px 1px #fff, 0 22px 44px -18px rgba(24,4,12,0.6); }
+.pill.hot { background: linear-gradient(165deg, #e0204b 0%, #8d0d24 100%); color: #fff;
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.5), 0 22px 44px -18px rgba(70,4,20,0.7); }
+
+/* checklist */
+.lst { position: absolute; border-radius: 52px; overflow: hidden;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 55%, #fdf0f4 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 50px 100px -36px rgba(24,4,12,0.62); }
+.lst i { position: absolute; display: block; height: 24px; border-radius: 12px; background: rgba(23,20,28,0.13); }
+.cbx { position: absolute; width: 56px; height: 56px; border-radius: 17px; box-shadow: inset 0 0 0 4px rgba(23,20,28,0.22); }
+.cbf { position: absolute; inset: 0; border-radius: 17px;
+  background: linear-gradient(165deg, #e0204b 0%, #8d0d24 100%); opacity: 0; visibility: hidden; }
+.cbf svg { position: absolute; left: 8px; top: 8px; width: 40px; height: 40px; fill: none; stroke: #fff;
+  stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* the Threads feed window */
+.feed { position: absolute; border-radius: 46px; overflow: hidden; background: #fff;
+  box-shadow: inset 0 2px 1px #fff, 0 44px 90px -34px rgba(16,4,10,0.62); }
+.fcol { position: absolute; left: 0; top: 0; width: 940px; }
+
+/* the edit timeline */
+.tln { position: absolute; }
+.trh { position: absolute; left: 34px; width: 80px; height: 80px; border-radius: 22px; display: flex; align-items: center;
+  justify-content: center; background: linear-gradient(160deg, #ffffff 0%, #fff5f8 52%, #f5dfe6 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 14px 28px -12px rgba(10,0,4,0.6); color: #17141c; font-size: 36px; font-weight: 700; }
+.trh svg { width: 46px; height: 46px; fill: none; stroke: #17141c; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.cpl { position: absolute; height: 36px; border-radius: 12px; background: rgba(255,255,255,0.92); }
+.wv { position: absolute; width: 10px; border-radius: 5px; background: rgba(255,255,255,0.88); }
+.gap { position: absolute; border-radius: 14px; background: rgba(255,61,122,0.55); box-shadow: inset 0 0 0 2px #ff6e9c;
+  transform-origin: 0 50%; }
+.mus { fill: none; stroke: #ffd6e3; stroke-width: 7; stroke-linecap: round; }
+.grd0 { position: absolute; height: 56px; border-radius: 18px; background: linear-gradient(90deg, #8a8a8a 0%, #c9c9c9 50%, #9a9a9a 100%); }
+.grd1 { position: absolute; height: 56px; border-radius: 18px; background: linear-gradient(90deg, #6b081c 0%, #e0204b 40%, #ff8ab0 75%, #ffd6e3 100%); }
+
+/* coins */
+.coin { position: absolute; }
+.coin .jelly { border-radius: 50%; }
+
+/* style skins on the reel card */
+.skin { position: absolute; inset: 0; border-radius: 40px; overflow: hidden; }
+.skin i { position: absolute; display: block; border-radius: 10px; }
+.sk0 { background: linear-gradient(165deg, #e0204b 0%, #8d0d24 100%); }
+.sk0 i { background: rgba(255,255,255,0.85); }
+.sk1 { background: linear-gradient(170deg, #ffffff 0%, #f6f6f6 100%); }
+.sk1 i { background: rgba(23,20,28,0.8); }
+.sk2 { background: linear-gradient(170deg, #2a2230 0%, #121016 100%); }
+.sk2 i { background: #ff6e9c; }
+.sk3 { background: linear-gradient(170deg, #fff4f7 0%, #ffd6e3 100%); }
+.sk3 i { background: linear-gradient(115deg, #c41434 0%, #8d0d24 100%); }
+.dlab { position: absolute; width: 260px; text-align: center; color: #fff; font-size: 34px; font-weight: 700; }
+
+/* API wallet */
+.wal { position: absolute; border-radius: 52px; overflow: hidden;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 55%, #fdf0f4 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 50px 100px -36px rgba(8,0,3,0.75); }
+.wal .t { position: absolute; left: 44px; top: 36px; font-size: 72px; font-weight: 900; letter-spacing: -0.03em; color: #17141c; }
+.wal .bb { position: absolute; left: 44px; right: 44px; top: 150px; height: 34px; border-radius: 17px; background: rgba(23,20,28,0.08); }
+.wal .bf { position: absolute; left: 44px; top: 150px; width: 382px; height: 34px; border-radius: 17px; transform-origin: 0 50%;
+  background: linear-gradient(90deg, #ff8ab0 0%, #e0204b 100%); }
+.spin { position: absolute; fill: none; stroke: #ff8ab0; stroke-width: 9; stroke-linecap: round; stroke-dasharray: 70 300; }
+
+/* the comment bar */
+.cbar { position: absolute; }
+.cbar .ph { position: absolute; left: 150px; top: 0; height: 130px; line-height: 130px; font-size: 40px; font-weight: 500;
+  color: rgba(255,255,255,0.6); }
+.cbar .ty { position: absolute; left: 150px; top: 0; height: 130px; line-height: 130px; font-size: 50px; font-weight: 700;
+  color: #fff; letter-spacing: -0.01em; }
+.step { position: absolute; width: 170px; border-radius: 30px;
+  background: linear-gradient(158deg, rgba(255,255,255,0.36) 0%, rgba(255,255,255,0.12) 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.7), 0 30px 60px -24px rgba(24,4,12,0.55); }
+.step .on { position: absolute; inset: 0; border-radius: 30px; opacity: 0; visibility: hidden;
+  background: linear-gradient(165deg, #ff6e9c 0%, #e0204b 50%, #8d0d24 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.5), 0 0 40px rgba(255,110,156,0.7); }
+.free { position: absolute; height: 120px; border-radius: 60px; padding: 0 56px; display: flex; align-items: center;
+  background: linear-gradient(165deg, #ff6e9c 0%, #e0204b 46%, #8d0d24 100%); color: #fff; font-size: 66px; font-weight: 900;
+  letter-spacing: -0.02em; box-shadow: inset 0 2px 1px rgba(255,255,255,0.5), 0 40px 80px -26px rgba(70,4,20,0.75); }
+
+    .ground { clip-path: path('M 883.2 0 c 36.293 0 54.439 0 70.765 8.318 a 68 68 0 0 1 29.717 29.717 c 8.318 16.325 8.318 34.472 8.318 70.765 L 992 1683.2 c 0 36.293 0 54.439 -8.318 70.765 a 68 68 0 0 1 -29.717 29.717 c -16.325 8.318 -34.472 8.318 -70.765 8.318 L 108.8 1792 c -36.293 0 -54.439 0 -70.765 -8.318 a 68 68 0 0 1 -29.717 -29.717 c -8.318 -16.325 -8.318 -34.472 -8.318 -70.765 L 0 108.8 c 0 -36.293 0 -54.439 8.318 -70.765 a 68 68 0 0 1 29.717 -29.717 c 16.325 -8.318 34.472 -8.318 70.765 -8.318 Z'); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="106.317" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="106.317" data-media-start="0"
+             muted playsinline></video>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="gw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ffdbe6"/></linearGradient>
+<symbol id="i-claude" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></symbol>
+<symbol id="i-threads" viewBox="0 0 24 24"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></symbol>
+<symbol id="i-instagram" viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></symbol></defs></svg>
+<div class="g full" id="gA"><div class="tkg"></div><div class="aurs"></div><div class="grain"></div><div class="tw hide " id="aTh" style="left:465px;top:46px;width:150px;height:150px"><div class="jelly"><svg class="mk"><use href="#i-threads" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="tp hide" id="pA8" style="left:70px;top:0px;width:940px;"><div class="av"><img src="assets/threads/av7.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h7.png" alt=""><span class="tm">1 год</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx">Що треба, щоб почати?</div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b>63</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>25</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div><div class="tp hide" id="pA7" style="left:70px;top:0px;width:940px;"><div class="av"><img src="assets/threads/av6.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h6.png" alt=""><span class="tm">6 год</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx">Чи можна задати йому власний стиль?</div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b>38</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>14</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div><div class="tp tdk hide" id="pA6" style="left:70px;top:0px;width:940px;"><div class="av"><img src="assets/threads/av5.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h5d.png" alt=""><span class="tm">2 год</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx">Чи можу я вносити правки?</div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b>24</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>11</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div><div class="tp hide" id="pA5" style="left:70px;top:0px;width:940px;"><div class="av"><img src="assets/threads/av4.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h4.png" alt=""><span class="tm">40 хв</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx">Чи може він додати субтитри та вирізати паузи?</div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b>19</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>6</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div><div class="tp hide" id="pA4" style="left:70px;top:0px;width:940px;"><div class="av"><img src="assets/threads/av3.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h3.png" alt=""><span class="tm">3 год</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx">Скільки часу це займає від запису до готового відео?</div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b>57</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>21</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div><div class="tp hide" id="pA3" style="left:70px;top:0px;width:940px;"><div class="av"><img src="assets/threads/av2.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h2.png" alt=""><span class="tm">1 год</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx">Чи треба вміти кодити?</div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b>26</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>9</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div><div class="tp tdk hide" id="pA2" style="left:70px;top:0px;width:940px;"><div class="av"><img src="assets/threads/av1.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h1d.png" alt=""><span class="tm">5 год</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx">Скільки це коштує?</div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b>31</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>12</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div></div>
+<div class="g full" id="gQ1"><div class="tp hide" id="pQ1" style="left:70px;top:120px;width:940px;"><div class="av"><img src="assets/threads/av0.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h0.png" alt=""><span class="tm">2 год</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx">Як це взагалі робиться? Це якийсь плагін?</div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b>48</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>17</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div></div>
+<div class="g full" id="gB"><div class="shelf edge hide" id="shB" style="left:70px;top:150px;width:940px;height:430px"></div><div class="drf hide" id="dr0" style="left:465px;top:210px"><i class="h" style="top:26px;width:80px"></i><i style="top:60px;width:106px"></i><i style="top:84px;width:92px"></i><i style="top:108px;width:66px"></i><svg class="xx" width="150" height="190"><path id="drx0" d="M28 40 L122 150 M122 40 L28 150"/></svg></div><div class="drf hide" id="dr1" style="left:465px;top:210px"><i class="h" style="top:26px;width:80px"></i><i style="top:60px;width:106px"></i><i style="top:84px;width:92px"></i><i style="top:108px;width:66px"></i><svg class="xx" width="150" height="190"><path id="drx1" d="M28 40 L122 150 M122 40 L28 150"/></svg></div><div class="drf hide" id="dr2" style="left:465px;top:210px"><i class="h" style="top:26px;width:80px"></i><i style="top:60px;width:106px"></i><i style="top:84px;width:92px"></i><i style="top:108px;width:66px"></i><svg class="xx" width="150" height="190"><path id="drx2" d="M28 40 L122 150 M122 40 L28 150"/></svg></div><div class="drf hide" id="dr3" style="left:465px;top:210px"><i class="h" style="top:26px;width:80px"></i><i style="top:60px;width:106px"></i><i style="top:84px;width:92px"></i><i style="top:108px;width:66px"></i><svg class="xx" width="150" height="190"><path id="drx3" d="M28 40 L122 150 M122 40 L28 150"/></svg></div><div class="sqring" id="bSkR" style="left:130px;top:190px;width:200px;height:200px"></div><div class="tw hide " id="bSk" style="left:130px;top:190px;width:200px;height:200px"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="sqring" id="bStR" style="left:440px;top:190px;width:200px;height:200px"></div><div class="tw hide " id="bSt" style="left:440px;top:190px;width:200px;height:200px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><path d="M6.5 2.8h7.6l4.6 4.6v13.8H6.5z"/><path d="M14 2.8v4.8h4.7"/><path d="M9.3 12.6h6.6M9.3 16.2h4.6"/></svg><div class="sheen"></div></div></div><div class="sqring" id="bClR" style="left:750px;top:190px;width:200px;height:200px"></div><div class="tw hide " id="bCl" style="left:750px;top:190px;width:200px;height:200px"><div class="clear"><svg class="sk" viewBox="0 0 24 24"><path d="M7.2 18.6h10.4a4 4 0 0 0 .5-7.96A6 6 0 0 0 6.7 9.8a4.4 4.4 0 0 0 .5 8.8z"/></svg><div class="sheen"></div></div></div><div class="lbl hide" id="lb0" style="left:80px;top:414px">скіли</div><div class="lbl hide" id="lb1" style="left:390px;top:414px">style.md</div><div class="lbl hide" id="lb2" style="left:700px;top:414px">рендер у хмарі</div><div class="pls hide" id="pl0" style="left:355px;top:254px">+</div><div class="pls hide" id="pl1" style="left:665px;top:254px">+</div><div class="sqring" id="bQR" style="left:612px;top:150px;width:112px;height:112px;border-radius:50%"></div><div class="tw hide circ" id="bQ" style="left:612px;top:150px;width:112px;height:112px"><div class="jelly"><span class="wmark" style="font-size:70px;color:#fff">?</span><div class="sheen"></div></div></div><svg class="abs" width="1080" height="700" style="left:0;top:0;overflow:visible"><path class="tang hide" id="tng" d="M195 360 C 300 150, 430 560, 380 330 S 250 190, 470 250 S 650 560, 560 430 S 450 210, 690 230 S 830 540, 760 420 S 700 250, 885 360"/><path class="strt hide" id="str" d="M195 360 L885 360"/></svg><div class="tw hide circ" id="bA" style="left:130px;top:295px;width:130px;height:130px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.8 3.7-5.8 7.2-5.8s6.3 2 7.2 5.8"/></svg><div class="sheen"></div></div></div><div class="sqring" id="bBR" style="left:820px;top:295px;width:130px;height:130px;border-radius:50%"></div><div class="tw hide circ" id="bB" style="left:820px;top:295px;width:130px;height:130px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg><div class="sheen"></div></div></div></div>
+<div class="g full" id="gC"><div class="sw hide" id="sw" style="left:350px;top:170px;width:380px;height:380px"><div class="crown"></div><svg width="380" height="380" viewBox="0 0 380 380"><circle class="trk" cx="190" cy="190" r="160"/><path class="prg" id="swp" d="M190 30 A160 160 0 0 1 190 350"/></svg><div class="num"><span class="big" id="swn" style="font-size:150px">0</span></div><div class="u">хв</div></div></div>
+<div class="g full" id="gD"><div class="tp tdk hide" id="pQ2" style="left:70px;top:120px;width:940px;"><div class="av"><img src="assets/threads/av1.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h1d.png" alt=""><span class="tm">5 год</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx">Скільки це коштує?</div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b>31</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>12</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div></div>
+<div class="g full" id="gE"><svg class="cab abs" width="1080" height="700" style="left:0;top:0"><path class="tube hide" id="eT" d="M632 330 C 680 330 712 312 760 312"/><path class="core hide" id="eC" d="M632 330 C 680 330 712 312 760 312"/><g class="pkg"><path class="pkt" id="eP" style="opacity:0" d="M632 330 C 680 330 712 312 760 312"/></g></svg><div class="memb hide" id="eM" style="left:110px;top:170px;width:520px;height:320px"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg><div class="nm">Claude</div><div class="emv"></div><div class="chp" id="eMC"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg>підписка</div><div class="shc"><div class="sheen"></div></div></div><div class="sqring" id="eClR" style="left:760px;top:200px;width:220px;height:220px"></div><div class="tw hide " id="eCl" style="left:760px;top:200px;width:220px;height:220px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><path d="M7.2 18.6h10.4a4 4 0 0 0 .5-7.96A6 6 0 0 0 6.7 9.8a4.4 4.4 0 0 0 .5 8.8z"/></svg><div class="sheen"></div></div></div><div class="sqring" id="eBtR" style="left:924px;top:160px;width:96px;height:96px;border-radius:50%"></div><div class="tw hide circ" id="eBt" style="left:924px;top:160px;width:96px;height:96px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M13.2 2.6L5.4 13.4h5.9l-1 8 7.9-10.9h-6z"/></svg><div class="sheen"></div></div></div><div class="sqring" id="eCoR" style="left:640px;top:425px;width:170px;height:170px;border-radius:50%"></div><div class="tw hide circ coin" id="eCo" style="left:640px;top:425px;width:170px;height:170px"><div class="jelly"><span class="wmark" style="font-size:66px;color:#fff">20¢</span><div class="sheen"></div></div></div></div>
+<div class="g full" id="gF"><div class="tkg"></div><div class="aurs"></div><div class="grain"></div><div class="rl hide" id="rl0" style="left:29px;top:120px"></div><div class="rl hide" id="rl1" style="left:159px;top:120px"></div><div class="rl hide" id="rl2" style="left:289px;top:120px"></div><div class="rl hide" id="rl3" style="left:419px;top:120px"></div><div class="rl hide" id="rl4" style="left:549px;top:120px"></div><div class="rl hide" id="rl5" style="left:679px;top:120px"></div><div class="rl hide" id="rl6" style="left:809px;top:120px"></div><div class="rl hide" id="rl7" style="left:939px;top:120px"></div><div class="rl hide" id="rl8" style="left:29px;top:337px"></div><div class="rl hide" id="rl9" style="left:159px;top:337px"></div><div class="rl hide" id="rl10" style="left:289px;top:337px"></div><div class="rl hide" id="rl11" style="left:419px;top:337px"></div><div class="rl hide" id="rl12" style="left:549px;top:337px"></div><div class="rl hide" id="rl13" style="left:679px;top:337px"></div><div class="rl hide" id="rl14" style="left:809px;top:337px"></div><div class="rl hide" id="rl15" style="left:939px;top:337px"></div><div class="rl hide" id="rl16" style="left:29px;top:554px"></div><div class="rl hide" id="rl17" style="left:159px;top:554px"></div><div class="rl hide" id="rl18" style="left:289px;top:554px"></div><div class="rl hide" id="rl19" style="left:419px;top:554px"></div><div class="rl hide" id="rl20" style="left:549px;top:554px"></div><div class="rl hide" id="rl21" style="left:679px;top:554px"></div><div class="rl hide" id="rl22" style="left:809px;top:554px"></div><div class="rl hide" id="rl23" style="left:939px;top:554px"></div><div class="rl hide" id="rl24" style="left:29px;top:771px"></div><div class="rl hide" id="rl25" style="left:159px;top:771px"></div><div class="rl hide" id="rl26" style="left:289px;top:771px"></div><div class="rl hide" id="rl27" style="left:419px;top:771px"></div><div class="rl hide" id="rl28" style="left:549px;top:771px"></div><div class="rl hide" id="rl29" style="left:679px;top:771px"></div><div class="rl hide" id="rl30" style="left:809px;top:771px"></div><div class="rl hide" id="rl31" style="left:939px;top:771px"></div><div class="rl hide" id="rl32" style="left:29px;top:988px"></div><div class="rl hide" id="rl33" style="left:159px;top:988px"></div><div class="rl hide" id="rl34" style="left:289px;top:988px"></div><div class="rl hide" id="rl35" style="left:419px;top:988px"></div><div class="rl hide" id="rl36" style="left:549px;top:988px"></div><div class="rl hide" id="rl37" style="left:679px;top:988px"></div><div class="rl hide" id="rl38" style="left:809px;top:988px"></div><div class="rl hide" id="rl39" style="left:939px;top:988px"></div><div class="sheet hide" id="hSL" style="left:310px;top:200px;width:460px;height:1000px"><div class="cm t-micro" style="top:64px">40 РІЛЗІВ · МІСЯЦЬ</div><div class="cm" style="top:128px"><span class="t-big">8 €</span></div><div class="cm t-sub" style="top:330px">на місяць</div><div class="bar lo" id="hBL" style="height:150px"></div><div class="shc"><div class="sheen"></div></div></div><div class="sheet hide" id="hSR" style="left:560px;top:200px;width:460px;height:1000px"><div class="cm t-micro" style="top:64px">1 РІЛЗ</div><div class="cm" style="top:128px"><span class="t-big">30 €</span></div><div class="cm t-sub" style="top:330px"><span class="who" id="hWho"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.8 3.7-5.8 7.2-5.8s6.3 2 7.2 5.8"/></svg>монтажеру</span></div><div class="bar hi" id="hBR" style="height:560px"></div><div class="shc"><div class="sheen"></div></div></div></div>
+<div class="g full" id="gG"><div class="tp hide" id="pQ3" style="left:70px;top:120px;width:940px;"><div class="av"><img src="assets/threads/av2.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h2.png" alt=""><span class="tm">1 год</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx">Чи треба вміти кодити?</div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b>26</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>9</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div></div>
+<div class="g full" id="gH"><div class="tw hide" id="hCd" style="left:430px;top:180px;width:220px;height:220px"><div class="inkt">&lt;/&gt;</div></div><svg class="abs" width="1080" height="700" style="left:0;top:0;overflow:visible"><path class="strike hide" id="hSt" d="M400 420 L680 160"/></svg><div class="bub hide" id="hB1" style="left:610px;top:120px;width:400px;height:190px"><div class="fth" style="left:30px;top:20px"></div><div class="fth" style="left:150px;top:20px"></div><div class="fth" style="left:270px;top:20px"></div></div><div class="bub hide" id="hB2" style="left:560px;top:330px;width:450px;height:150px"><i style="left:36px;top:36px;width:360px"></i><i style="left:36px;top:72px;width:300px"></i><i style="left:36px;top:108px;width:190px"></i></div><div class="rcard hide" id="hRc" style="left:100px;top:140px;width:240px;height:426px"><div class="th"></div><i style="bottom:56px;width:150px"></i><i style="bottom:28px;width:100px;height:14px"></i><div class="shc"><div class="sheen"></div></div></div><div class="sqring" id="hOkR" style="left:290px;top:104px;width:104px;height:104px;border-radius:50%"></div><div class="tw hide circ" id="hOk" style="left:290px;top:104px;width:104px;height:104px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg><div class="sheen"></div></div></div></div>
+<div class="g full" id="gI"><div class="thl hide" id="iTl" style="left:146px;top:378px;height:160px"></div><div class="tp hide" id="pQ4" style="left:70px;top:90px;width:940px;"><div class="av"><img src="assets/threads/av3.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h3.png" alt=""><span class="tm">3 год</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx">Скільки часу це займає від запису до готового відео?</div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b>57</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>21</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div><div class="rep hide" id="iR1" style="left:190px;top:396px;width:820px"><div class="ra"><img src="assets/threads/av8.png" alt=""></div><img class="rh" src="assets/threads/h8.png" alt=""><i style="width:520px"></i></div><div class="rep hide" id="iR2" style="left:190px;top:498px;width:820px"><div class="ra"><img src="assets/threads/av9.png" alt=""></div><img class="rh" src="assets/threads/h9.png" alt=""><i style="width:380px"></i></div></div>
+<div class="g full" id="gJ"><div class="dglass edge hide" id="jS" style="left:70px;top:170px;width:940px;height:300px"><div class="trk2 bg" style="left:170px;top:190px;width:600px"></div><div class="trk2 fl" id="jF" style="left:170px;top:190px;width:600px"></div><div class="trk2 cl hide" id="jC" style="left:170px;top:190px;width:600px"></div><div class="trk2 sl hide" id="jSl" style="left:170px;top:190px;width:46px"></div></div><div class="tw hide circ" id="jRec" style="left:120px;top:315px;width:110px;height:110px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2"/></svg><div class="sheen"></div></div></div><div class="sqring" id="jOkR" style="left:850px;top:315px;width:110px;height:110px;border-radius:50%"></div><div class="tw hide circ" id="jOk" style="left:850px;top:315px;width:110px;height:110px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg><div class="sheen"></div></div></div><div class="tw hide " id="jCd" style="left:502px;top:339px;width:76px;height:76px"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="pill hide" id="jP" style="left:440px;top:200px">30–40 хв</div><div class="pill hot hide" id="jP1" style="left:200px;top:200px">1 хв</div><div class="tw hide circ" id="jUp" style="left:208px;top:420px;width:64px;height:64px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M12 19.2V5.4M6.2 11l5.8-5.8 5.8 5.8"/></svg><div class="sheen"></div></div></div><div class="lst hide" id="jL" style="left:190px;top:160px;width:700px;height:370px"><div class="cbx" style="left:50px;top:70px"><div class="cbf" id="jcb0"><svg viewBox="0 0 24 24"><path id="jcp0" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><i style="left:136px;top:86px;width:420px"></i><div class="cbx" style="left:50px;top:166px"><div class="cbf" id="jcb1"><svg viewBox="0 0 24 24"><path id="jcp1" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><i style="left:136px;top:182px;width:350px"></i><div class="cbx" style="left:50px;top:262px"><div class="cbf" id="jcb2"><svg viewBox="0 0 24 24"><path id="jcp2" d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><i style="left:136px;top:278px;width:470px"></i><div class="shc"><div class="sheen"></div></div></div></div>
+<div class="g full" id="gK"><div class="feed hide" id="kW" style="left:70px;top:100px;width:940px;height:330px"><div class="fcol" id="kCol"><div class="tp fd hide" id="kG1" style="left:0px;top:0px;width:940px;"><div class="av"><img src="assets/threads/av3.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h3.png" alt=""><span class="tm">2 год</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx"><i class="gbar" style="width:620px"></i><i class="gbar" style="width:430px"></i></div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b>12</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>4</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div><div class="tp fd hide" id="kG2" style="left:0px;top:262px;width:940px;"><div class="av"><img src="assets/threads/av6.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h6.png" alt=""><span class="tm">2 год</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx"><i class="gbar" style="width:700px"></i><i class="gbar" style="width:520px"></i></div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b>12</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>4</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div><div class="tp fd hide" id="pQ5" style="left:0px;top:524px;width:940px;"><div class="av"><img src="assets/threads/av4.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h4.png" alt=""><span class="tm">40 хв</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx">Чи може він додати субтитри та вирізати паузи?</div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b>19</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>6</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div></div></div></div>
+<div class="g full" id="gL"><div class="dglass edge hide" id="lC" style="left:70px;top:110px;width:940px;height:470px"><div class="tln" style="left:0;top:28px;width:940px;height:80px"><div class="trh">Aa</div><div id="lCp"><div class="cpl" style="left:140px;top:22px;width:120px"></div><div class="cpl" style="left:276px;top:22px;width:160px"></div><div class="cpl" style="left:452px;top:22px;width:96px"></div><div class="cpl" style="left:564px;top:22px;width:180px"></div><div class="cpl" style="left:760px;top:22px;width:110px"></div></div></div><div class="tln" style="left:0;top:136px;width:940px;height:80px"><div class="trh"><svg viewBox="0 0 24 24"><path d="M3 12h1.6M6.4 8v8M9.6 5v14M12.8 9v6M16 6.5v11M19.2 10v4M21 12h0"/></svg></div><div class="gap" id="lGp0" style="left:310px;top:2px;width:70px;height:76px"></div><div class="gap" id="lGp1" style="left:578px;top:2px;width:70px;height:76px"></div><div class="abs" id="lW0" style="left:140px;top:0px"><div class="wv" style="left:0px;top:19px;height:42px"></div><div class="wv" style="left:22px;top:8px;height:64px"></div><div class="wv" style="left:44px;top:25px;height:30px"></div><div class="wv" style="left:66px;top:4px;height:72px"></div><div class="wv" style="left:88px;top:15px;height:50px"></div><div class="wv" style="left:110px;top:0px;height:80px"></div><div class="wv" style="left:132px;top:21px;height:38px"></div><div class="wv" style="left:154px;top:11px;height:58px"></div></div><div class="abs" id="lW1" style="left:386px;top:0px"><div class="wv" style="left:0px;top:27px;height:26px"></div><div class="wv" style="left:22px;top:5px;height:70px"></div><div class="wv" style="left:44px;top:17px;height:46px"></div><div class="wv" style="left:66px;top:9px;height:62px"></div><div class="wv" style="left:88px;top:23px;height:34px"></div><div class="wv" style="left:110px;top:2px;height:76px"></div><div class="wv" style="left:132px;top:13px;height:54px"></div><div class="wv" style="left:154px;top:20px;height:40px"></div><div class="wv" style="left:176px;top:7px;height:66px"></div></div><div class="abs" id="lW2" style="left:654px;top:0px"><div class="wv" style="left:0px;top:25px;height:30px"></div><div class="wv" style="left:22px;top:11px;height:58px"></div><div class="wv" style="left:44px;top:16px;height:48px"></div><div class="wv" style="left:66px;top:4px;height:72px"></div><div class="wv" style="left:88px;top:22px;height:36px"></div><div class="wv" style="left:110px;top:10px;height:60px"></div><div class="wv" style="left:132px;top:18px;height:44px"></div><div class="wv" style="left:154px;top:26px;height:28px"></div></div></div><div class="tln" style="left:0;top:244px;width:940px;height:80px"><div class="trh"><svg viewBox="0 0 24 24"><path d="M9 18.2V5.6l10.4-2v12.2"/><circle cx="6.6" cy="18.2" r="2.4"/><circle cx="17" cy="15.8" r="2.4"/></svg></div><svg class="abs" width="800" height="80" style="left:140px;top:0;overflow:visible"><path class="mus" id="lMu" d="M0 40 C 40 0, 80 0, 120 40 S 200 80, 240 40 S 320 0, 360 40 S 440 80, 480 40 S 560 0, 600 40 S 680 80, 720 40"/></svg></div><div class="tln" style="left:0;top:352px;width:940px;height:80px"><div class="trh"><svg viewBox="0 0 24 24"><path d="M12 3.2s6.2 6.6 6.2 11a6.2 6.2 0 0 1-12.4 0c0-4.4 6.2-11 6.2-11z"/></svg></div><div class="grd0" style="left:140px;top:12px;width:760px"></div><div class="grd1" id="lG1" style="left:140px;top:12px;width:760px"></div></div></div></div>
+<div class="g full" id="gM"><div class="tp tdk hide" id="pQ6" style="left:70px;top:120px;width:940px;"><div class="av"><img src="assets/threads/av5.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h5d.png" alt=""><span class="tm">2 год</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx">Чи можу я вносити правки?</div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><svg class="hfl hide" id="pQ6H" viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b id="pQ6L0">24</b><b class="hide" id="pQ6L1" style="position:absolute;left:54px">25</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>11</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div></div>
+<div class="g full" id="gN"><div class="bub hide" id="nB" style="left:520px;top:150px;width:490px;height:150px"><div id="nBi" style="position:absolute;inset:0"><i style="left:36px;top:40px;width:400px"></i><i style="left:36px;top:84px;width:280px"></i></div></div><div class="rcard hide" id="nRc" style="left:150px;top:140px;width:240px;height:426px"><div class="th"></div><div class="th v2 hide" id="nTh2"></div><i style="bottom:56px;width:150px"></i><i style="bottom:28px;width:100px;height:14px"></i><div class="shc"><div class="sheen"></div></div></div><div class="tw hide circ" id="nRd" style="left:340px;top:110px;width:100px;height:100px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.6 3.6v4.2h-4.2"/></svg><div class="sheen"></div></div></div><div class="trk2 bg hide" id="nTb" style="left:450px;top:250px;width:520px"></div><div class="trk2 fl hide" id="nTf" style="left:450px;top:250px;width:520px"></div><div class="tw hide circ coin" id="nC0" style="left:450px;top:330px;width:110px;height:110px"><div class="jelly"><span class="wmark" style="font-size:52px;color:#fff">¢</span><div class="sheen"></div></div></div><div class="tw hide circ coin" id="nC1" style="left:590px;top:330px;width:110px;height:110px"><div class="jelly"><span class="wmark" style="font-size:52px;color:#fff">¢</span><div class="sheen"></div></div></div><div class="sqring" id="nTagR" style="left:560px;top:230px;width:200px;height:200px;border-radius:50%"></div><div class="tw hide circ coin" id="nTag" style="left:560px;top:230px;width:200px;height:200px"><div class="jelly"><span class="wmark" style="font-size:76px;color:#fff">15¢</span><div class="sheen"></div></div></div></div>
+<div class="g full" id="gO"><div class="tp hide" id="pQ7" style="left:70px;top:120px;width:940px;"><div class="av"><img src="assets/threads/av6.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h6.png" alt=""><span class="tm">6 год</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx">Чи можна задати йому власний стиль?</div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b>38</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>14</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div></div>
+<div class="g full" id="gP"><svg class="cab abs" width="1080" height="700" style="left:0;top:0"><path class="tube hide" id="pT" d="M330 330 C 380 330 420 335 470 335"/><path class="core hide" id="pC" d="M330 330 C 380 330 420 335 470 335"/><g class="pkg"><path class="pkt" id="pP" style="opacity:0" d="M330 330 C 380 330 420 335 470 335"/></g></svg><div class="rcard hide" id="pRc" style="left:470px;top:100px;width:270px;height:470px"><div class="skin sk1" id="pSk1"><i style="left:30px;top:40px;width:120px;height:24px"></i><i style="left:30px;top:86px;width:180px;height:44px"></i><i style="left:30px;top:144px;width:150px;height:44px"></i><i style="left:30px;top:240px;width:200px;height:16px;opacity:.6"></i><i style="left:30px;top:268px;width:160px;height:16px;opacity:.6"></i><i style="left:30px;top:296px;width:180px;height:16px;opacity:.6"></i><i style="left:30px;top:370px;width:130px;height:52px;border-radius:26px"></i></div><div class="skin sk2 hide" id="pSk2"><i style="left:30px;top:40px;width:120px;height:24px"></i><i style="left:30px;top:86px;width:180px;height:44px"></i><i style="left:30px;top:144px;width:150px;height:44px"></i><i style="left:30px;top:240px;width:200px;height:16px;opacity:.6"></i><i style="left:30px;top:268px;width:160px;height:16px;opacity:.6"></i><i style="left:30px;top:296px;width:180px;height:16px;opacity:.6"></i><i style="left:30px;top:370px;width:130px;height:52px;border-radius:26px"></i></div><div class="skin sk0 hide" id="pSk0"><i style="left:30px;top:40px;width:120px;height:24px"></i><i style="left:30px;top:86px;width:180px;height:44px"></i><i style="left:30px;top:144px;width:150px;height:44px"></i><i style="left:30px;top:240px;width:200px;height:16px;opacity:.6"></i><i style="left:30px;top:268px;width:160px;height:16px;opacity:.6"></i><i style="left:30px;top:296px;width:180px;height:16px;opacity:.6"></i><i style="left:30px;top:370px;width:130px;height:52px;border-radius:26px"></i></div><div class="skin sk3 hide" id="pSk3"><i style="left:30px;top:40px;width:120px;height:24px"></i><i style="left:30px;top:86px;width:180px;height:44px"></i><i style="left:30px;top:144px;width:150px;height:44px"></i><i style="left:30px;top:240px;width:200px;height:16px;opacity:.6"></i><i style="left:30px;top:268px;width:160px;height:16px;opacity:.6"></i><i style="left:30px;top:296px;width:180px;height:16px;opacity:.6"></i><i style="left:30px;top:370px;width:130px;height:52px;border-radius:26px"></i></div><div class="shc"><div class="sheen"></div></div></div><div class="sqring" id="pDocR" style="left:130px;top:235px;width:190px;height:190px"></div><div class="tw hide " id="pDoc" style="left:130px;top:235px;width:190px;height:190px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><path d="M6.5 2.8h7.6l4.6 4.6v13.8H6.5z"/><path d="M14 2.8v4.8h4.7"/><path d="M9.3 12.6h6.6M9.3 16.2h4.6"/></svg><div class="sheen"></div></div></div><div class="dlab hide" id="pDl" style="left:95px;top:440px">style.md</div></div>
+<div class="g full" id="gQ"><div class="tkg"></div><div class="aurs"></div><div class="grain"></div><div class="tp hide" id="pQ8" style="left:40px;top:520px;width:1000px;"><div class="av"><img src="assets/threads/av7.png" alt=""></div><div class="hd"><img class="hn" src="assets/threads/h7.png" alt=""><span class="tm">1 год</span></div><svg class="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><div class="tx">Що треба, щоб почати?</div><div class="ic"><span><svg viewBox="0 0 24 24"><path d="M12 20.2c-.4 0-8.4-4.9-8.4-10.5A4.7 4.7 0 0 1 12 6.8a4.7 4.7 0 0 1 8.4 2.9c0 5.6-8 10.5-8.4 10.5z"/></svg><b>63</b></span><span><svg viewBox="0 0 24 24"><path d="M20.6 11.6a8.6 8.6 0 0 1-12.6 7.6l-4.5 1.3 1.3-4.3A8.6 8.6 0 1 1 20.6 11.6z"/></svg><b>25</b></span><span><svg viewBox="0 0 24 24"><path d="M16.6 3.4l3 3-3 3"/><path d="M19.6 6.4H9a4.6 4.6 0 0 0-4.6 4.6v.8"/><path d="M7.4 20.6l-3-3 3-3"/><path d="M4.4 17.6H15a4.6 4.6 0 0 0 4.6-4.6v-.8"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M21 3.2L3.4 9.9l7.3 3.4 3.4 7.5z"/><path d="M10.7 13.3l4.7-4.7"/></svg></span></div><div class="shc"><div class="sheen"></div></div></div><div class="memb hide" id="uM" style="left:280px;top:340px;width:520px;height:320px"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg><div class="nm">Claude</div><div class="emv"></div><div class="chp" id="uMC"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg>підписка</div><div class="shc"><div class="sheen"></div></div></div><div class="sqring" id="uL1R" style="left:90px;top:730px;width:220px;height:220px"></div><div class="tw hide " id="uL1" style="left:90px;top:730px;width:220px;height:220px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><rect x="4.2" y="5.2" width="15.6" height="10.6" rx="1.6"/><path d="M2.2 19h19.6"/></svg><div class="sheen"></div></div></div><div class="sqring" id="uBoR" style="left:250px;top:690px;width:96px;height:96px;border-radius:50%"></div><div class="tw hide circ" id="uBo" style="left:250px;top:690px;width:96px;height:96px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M13.2 2.6L5.4 13.4h5.9l-1 8 7.9-10.9h-6z"/></svg><div class="sheen"></div></div></div><div class="tw hide " id="uC1" style="left:330px;top:730px;width:220px;height:220px"><div class="clear"><svg class="sk" viewBox="0 0 24 24"><path d="M7.2 18.6h10.4a4 4 0 0 0 .5-7.96A6 6 0 0 0 6.7 9.8a4.4 4.4 0 0 0 .5 8.8z"/></svg><div class="sheen"></div></div></div><div class="tw hide " id="uL2" style="left:560px;top:730px;width:220px;height:220px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><rect x="4.2" y="5.2" width="15.6" height="10.6" rx="1.6"/><path d="M2.2 19h19.6"/></svg><div class="sheen"></div></div></div><svg class="spin hide" id="uSp" viewBox="0 0 160 160" width="160" height="160" style="left:590px;top:750px"><circle cx="80" cy="80" r="66"/></svg><div class="sqring" id="uC2R" style="left:830px;top:740px;width:200px;height:200px"></div><div class="tw hide " id="uC2" style="left:830px;top:740px;width:200px;height:200px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><path d="M7.2 18.6h10.4a4 4 0 0 0 .5-7.96A6 6 0 0 0 6.7 9.8a4.4 4.4 0 0 0 .5 8.8z"/></svg><div class="sheen"></div></div></div><div class="wal hide" id="uW" style="left:560px;top:1000px;width:470px;height:220px"><div class="t">API</div><div class="bb"></div><div class="bf" id="uWf"></div><div class="shc"><div class="sheen"></div></div></div><div class="tw hide circ coin" id="uE0" style="left:700px;top:900px;width:96px;height:96px"><div class="jelly"><span class="wmark" style="font-size:52px;color:#fff">€</span><div class="sheen"></div></div></div><div class="tw hide circ coin" id="uE1" style="left:810px;top:900px;width:96px;height:96px"><div class="jelly"><span class="wmark" style="font-size:52px;color:#fff">€</span><div class="sheen"></div></div></div><div class="tw hide circ coin" id="uE2" style="left:920px;top:900px;width:96px;height:96px"><div class="jelly"><span class="wmark" style="font-size:52px;color:#fff">€</span><div class="sheen"></div></div></div><svg class="abs" width="1080" height="1920" style="left:0;top:0;overflow:visible"><path class="strike hide" id="uX" d="M350 760 L530 930 M530 760 L350 930"/></svg></div>
+<div class="g full" id="gR"><div class="memb hide" id="vM" style="left:110px;top:170px;width:520px;height:320px"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg><div class="nm">Claude</div><div class="emv"></div><div class="chp" id="vMC"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg>підписка</div><div class="shc"><div class="sheen"></div></div></div><div class="pls hide" id="vPl" style="left:650px;top:290px">+</div><div class="sqring" id="vDR" style="left:750px;top:230px;width:200px;height:200px;border-radius:50%"></div><div class="tw hide circ coin" id="vD" style="left:750px;top:230px;width:200px;height:200px"><div class="jelly"><span class="wmark" style="font-size:84px;color:#fff">$1</span><div class="sheen"></div></div></div></div>
+<div class="g full" id="gS"><div class="step hide" id="wS0" style="left:285px;top:270px;height:80px;border-radius:26px 0 0 0"><div class="on" id="wO0" style="border-radius:inherit"></div></div><div class="step hide" id="wS1" style="left:455px;top:190px;height:160px;border-radius:0"><div class="on" id="wO1" style="border-radius:inherit"></div></div><div class="step hide" id="wS2" style="left:625px;top:110px;height:240px;border-radius:0 26px 0 0"><div class="on" id="wO2" style="border-radius:inherit"></div></div><div class="tw hide circ" id="wMe" style="left:332px;top:192px;width:76px;height:76px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.8 3.7-5.8 7.2-5.8s6.3 2 7.2 5.8"/></svg><div class="sheen"></div></div></div><div class="dglass edge cbar hide" id="wB" style="left:70px;top:400px;width:940px;height:130px;border-radius:65px"><div class="tw" style="left:22px;top:21px;width:88px;height:88px"><div class="clear"><svg class="mk"><use href="#i-instagram" width="100%" height="100%"/></svg></div></div><div class="ph" id="wPh">Додайте коментар…</div><div class="ty hide" id="wTy">design</div><div class="tw circ" id="wSn" style="left:826px;top:19px;width:92px;height:92px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M12 19.2V5.4M6.2 11l5.8-5.8 5.8 5.8"/></svg></div></div></div><div class="abs hide" id="wF" style="left:0;top:180px;width:1080px;display:flex;justify-content:center"><div class="free" style="position:relative">безкоштовно<div class="shc"><div class="sheen"></div></div></div></div></div>
+
+      <div id="scrim"></div>
+      <div class="cap" id="cap0">ВІДПОВІДАЮ</div>
+      <div class="cap" id="cap1">НА</div>
+      <div class="cap" id="cap2">ВСІ</div>
+      <div class="cap" id="cap3">ВАШІ</div>
+      <div class="cap" id="cap4">ПИТАННЯ</div>
+      <div class="cap" id="cap5">ПРО</div>
+      <div class="cap" id="cap6">ШІ</div>
+      <div class="cap" id="cap7">МОНТАЖ!</div>
+      <div class="cap" id="cap15">НІ.</div>
+      <div class="cap" id="cap16">ЦЕ</div>
+      <div class="cap" id="cap17">НАБІР:</div>
+      <div class="cap" id="cap18">ПРАВИЛЬНО</div>
+      <div class="cap" id="cap19">НАЛАШТОВАНІ</div>
+      <div class="cap" id="cap21">ПРОПИСАНИЙ</div>
+      <div class="cap" id="cap23">І</div>
+      <div class="cap" id="cap24">ПІДКЛЮЧЕНИЙ</div>
+      <div class="cap" id="cap27">ДО</div>
+      <div class="cap" id="cap28">ЦЬОГО</div>
+      <div class="cap" id="cap29">STYLE.MD</div>
+      <div class="cap" id="cap30">Я</div>
+      <div class="cap" id="cap31">ДІЙШЛА</div>
+      <div class="cap" id="cap32">ЧЕРЕЗ</div>
+      <div class="cap" id="cap33">ДУЖЕ</div>
+      <div class="cap" id="cap34">ДОВГІ</div>
+      <div class="cap" id="cap35">СПРОБИ,</div>
+      <div class="cap" id="cap36">БО КОЛИ</div>
+      <div class="cap" id="cap37">Я</div>
+      <div class="cap" id="cap38">РОБИЛА</div>
+      <div class="cap" id="cap39">ЦЕ</div>
+      <div class="cap" id="cap40">ВПЕРШЕ,</div>
+      <div class="cap" id="cap41">МЕНІ НІХТО</div>
+      <div class="cap" id="cap42">НЕ</div>
+      <div class="cap" id="cap43">ПОЯСНЮВАВ</div>
+      <div class="cap" id="cap44">ЯК, І Я</div>
+      <div class="cap" id="cap45">УСКЛАДНИЛА</div>
+      <div class="cap" id="cap46">СОБІ</div>
+      <div class="cap" id="cap47">ЖИТТЯ</div>
+      <div class="cap" id="cap48">ТАМ,</div>
+      <div class="cap" id="cap49">ДЕ</div>
+      <div class="cap" id="cap50">МОЖНА</div>
+      <div class="cap" id="cap51">БУЛО</div>
+      <div class="cap" id="cap52">ЗРОБИТИ</div>
+      <div class="cap" id="cap53">ПРОСТІШЕ.</div>
+      <div class="cap" id="cap54">АЛЕ КОЛИ</div>
+      <div class="cap" id="cap55">ВЖЕ</div>
+      <div class="cap" id="cap56">ЗНАЮ,</div>
+      <div class="cap" id="cap57">ЩО РОБИТИ</div>
+      <div class="cap" id="cap58">ЦЕ</div>
+      <div class="cap" id="cap59">ЗАЙМАЄ</div>
+      <div class="cap" id="cap61">ХВИЛИН,</div>
+      <div class="cap" id="cap62">НЕ</div>
+      <div class="cap" id="cap63">БІЛЬШЕ.</div>
+      <div class="cap" id="cap67">ПОТРІБНА</div>
+      <div class="cap" id="cap68">ЛИШЕ</div>
+      <div class="cap" id="cap70">НА</div>
+      <div class="cap" id="cap71">КЛОД.</div>
+      <div class="cap" id="cap72">ЯКЩО</div>
+      <div class="cap" id="cap73">ТИ РЕНДЕРИШ</div>
+      <div class="cap" id="cap74">У ХМАРІ,</div>
+      <div class="cap" id="cap75">ЯК Я,</div>
+      <div class="cap" id="cap76">А</div>
+      <div class="cap" id="cap77">Я</div>
+      <div class="cap" id="cap78">ДУЖЕ</div>
+      <div class="cap" id="cap79">РЕКОМЕНДУЮ,</div>
+      <div class="cap" id="cap80">БО ТАК</div>
+      <div class="cap" id="cap81">ШВИДШЕ,</div>
+      <div class="cap" id="cap82">ЦЕ</div>
+      <div class="cap" id="cap83">ПРИБЛИЗНО</div>
+      <div class="cap" id="cap86">ЗА</div>
+      <div class="cap" id="cap87">РІЛЗ.</div>
+      <div class="cap" id="cap88">ТОБТО</div>
+      <div class="cap" id="cap89">40</div>
+      <div class="cap" id="cap90">РІЛЗІВ</div>
+      <div class="cap" id="cap91">НА</div>
+      <div class="cap" id="cap92">МІСЯЦЬ</div>
+      <div class="cap" id="cap93">МЕНІ</div>
+      <div class="cap" id="cap94">ВИХОДЯТЬ</div>
+      <div class="cap" id="cap95">ПЛЮС-МІНУС</div>
+      <div class="cap" id="cap98">ПОРІВНЯНО</div>
+      <div class="cap" id="cap99">З</div>
+      <div class="cap" id="cap102">ЗА</div>
+      <div class="cap" id="cap103">ОДИН</div>
+      <div class="cap" id="cap104">РІЛЗ</div>
+      <div class="cap" id="cap105">МОНТАЖЕРУ...</div>
+      <div class="cap" id="cap110">НІ,</div>
+      <div class="cap" id="cap111">КОДИТИ</div>
+      <div class="cap" id="cap112">НЕ</div>
+      <div class="cap" id="cap113">ПОТРІБНО:</div>
+      <div class="cap" id="cap114">ПРОСТО</div>
+      <div class="cap" id="cap115">ВІДПРАВЛЯЄШ</div>
+      <div class="cap" id="cap116">ВІДЕОФАЙЛИ</div>
+      <div class="cap" id="cap117">І</div>
+      <div class="cap" id="cap118">СВОЇ</div>
+      <div class="cap" id="cap119">ПОБАЖАННЯ</div>
+      <div class="cap" id="cap120">ПО</div>
+      <div class="cap" id="cap121">МОНТАЖУ</div>
+      <div class="cap" id="cap122">І</div>
+      <div class="cap" id="cap123">ОТРИМУЄШ</div>
+      <div class="cap" id="cap124">ГОТОВИЙ</div>
+      <div class="cap" id="cap125">РІЛЗ.</div>
+      <div class="cap" id="cap126">ВСЕ.</div>
+      <div class="cap" id="cap135">САМ</div>
+      <div class="cap" id="cap136">МОНТАЖ</div>
+      <div class="cap" id="cap137">ТРИВАЄ</div>
+      <div class="cap" id="cap140">АЛЕ</div>
+      <div class="cap" id="cap141">ЦЕ</div>
+      <div class="cap" id="cap142">НЕ</div>
+      <div class="cap" id="cap143">МОЯ</div>
+      <div class="cap" id="cap144">АКТИВНА</div>
+      <div class="cap" id="cap145">РОБОТА:</div>
+      <div class="cap" id="cap146">ТОБТО</div>
+      <div class="cap" id="cap147">Я</div>
+      <div class="cap" id="cap148">ВИТРАЧАЮ</div>
+      <div class="cap" id="cap149">ЛИШЕ</div>
+      <div class="cap" id="cap151">ЩОБ</div>
+      <div class="cap" id="cap152">ЗАВАНТАЖИТИ</div>
+      <div class="cap" id="cap153">ВІДЕО</div>
+      <div class="cap" id="cap154">В ЧАТ,</div>
+      <div class="cap" id="cap155">І</div>
+      <div class="cap" id="cap156">ЙДУ</div>
+      <div class="cap" id="cap157">ЗАЙМАТИСЬ</div>
+      <div class="cap" id="cap158">СВОЇМИ</div>
+      <div class="cap" id="cap159">СПРАВАМИ.</div>
+      <div class="cap" id="cap168">АБСОЛЮТНО,</div>
+      <div class="cap" id="cap169">ВІН</div>
+      <div class="cap" id="cap170">МОЖЕ</div>
+      <div class="cap" id="cap171">НАВІТЬ</div>
+      <div class="cap" id="cap172">ДОДАТИ</div>
+      <div class="cap" id="cap173">МУЗИКУ</div>
+      <div class="cap" id="cap174">І</div>
+      <div class="cap" id="cap175">ЗРОБИТИ</div>
+      <div class="cap" id="cap176">КОЛЬОРОКОРЕКЦІЮ!</div>
+      <div class="cap" id="cap181">ТАК,</div>
+      <div class="cap" id="cap182">ЗВИЧАЙНО:</div>
+      <div class="cap" id="cap183">ПРОСТО</div>
+      <div class="cap" id="cap184">ПИШЕШ,</div>
+      <div class="cap" id="cap185">ЩО САМЕ</div>
+      <div class="cap" id="cap186">НЕ ПІДХОДИТЬ,</div>
+      <div class="cap" id="cap187">І ВІН</div>
+      <div class="cap" id="cap188">ПЕРЕРОБЛЯЄ.</div>
+      <div class="cap" id="cap189">КОЖНА</div>
+      <div class="cap" id="cap190">ПЕРЕРОБКА</div>
+      <div class="cap" id="cap191">ОПЛАЧУЄТЬСЯ</div>
+      <div class="cap" id="cap192">ЯК</div>
+      <div class="cap" id="cap193">ПОВНИЙ</div>
+      <div class="cap" id="cap194">РІЛЗ З</div>
+      <div class="cap" id="cap195">НУЛЯ.</div>
+      <div class="cap" id="cap196">АЛЕ</div>
+      <div class="cap" id="cap197">ПРИ</div>
+      <div class="cap" id="cap200">ЗА</div>
+      <div class="cap" id="cap201">РЕНДЕР</div>
+      <div class="cap" id="cap202">ЦЕ</div>
+      <div class="cap" id="cap203">КОПІЙКИ,</div>
+      <div class="cap" id="cap204">НА ЯКІ Я</div>
+      <div class="cap" id="cap205">ВЖЕ</div>
+      <div class="cap" id="cap206">НЕ</div>
+      <div class="cap" id="cap207">ЗВЕРТАЮ</div>
+      <div class="cap" id="cap208">УВАГИ.</div>
+      <div class="cap" id="cap215">ТАК,</div>
+      <div class="cap" id="cap216">ЦЕ</div>
+      <div class="cap" id="cap217">ПРАЦЮЄ</div>
+      <div class="cap" id="cap218">З</div>
+      <div class="cap" id="cap219">БУДЬ-ЯКИМ</div>
+      <div class="cap" id="cap220">СТИЛЕМ,</div>
+      <div class="cap" id="cap221">БО</div>
+      <div class="cap" id="cap222">СТИЛЬ</div>
+      <div class="cap" id="cap223">ТИ</div>
+      <div class="cap" id="cap224">ЗАДАЄШ</div>
+      <div class="cap" id="cap225">САМА.</div>
+      <div class="cap" id="cap230">ЗВИЧАЙНА</div>
+      <div class="cap" id="cap232">НА</div>
+      <div class="cap" id="cap233">КЛОД.</div>
+      <div class="cap" id="cap234">ЯКЩО</div>
+      <div class="cap" id="cap235">КОМП'ЮТЕР</div>
+      <div class="cap" id="cap236">ПОТУЖНИЙ</div>
+      <div class="cap" id="cap237">РЕНДЕР</div>
+      <div class="cap" id="cap238">У ХМАРІ</div>
+      <div class="cap" id="cap239">НАВІТЬ</div>
+      <div class="cap" id="cap240">НЕ</div>
+      <div class="cap" id="cap241">ЗНАДОБИТЬСЯ.</div>
+      <div class="cap" id="cap242">А ЯКЩО</div>
+      <div class="cap" id="cap243">КОМП'ЮТЕР</div>
+      <div class="cap" id="cap244">ТРОШКИ</div>
+      <div class="cap" id="cap245">СТАРЕНЬКИЙ,</div>
+      <div class="cap" id="cap246">ЯК У</div>
+      <div class="cap" id="cap247">МЕНЕ,</div>
+      <div class="cap" id="cap248">ДОВЕДЕТЬСЯ</div>
+      <div class="cap" id="cap249">ПОКЛАСТИ</div>
+      <div class="cap" id="cap250">ЩЕ</div>
+      <div class="cap" id="cap251">КІЛЬКА</div>
+      <div class="cap" id="cap252">ЄВРО</div>
+      <div class="cap" id="cap253">НА РАХУНОК</div>
+      <div class="cap" id="cap255">АЛЕ</div>
+      <div class="cap" id="cap256">ПОЧАТИ</div>
+      <div class="cap" id="cap257">МОЖНА</div>
+      <div class="cap" id="cap258">ПРОСТО</div>
+      <div class="cap" id="cap259">З</div>
+      <div class="cap" id="cap260">ПІДПИСКИ</div>
+      <div class="cap" id="cap261">І</div>
+      <div class="cap" id="cap264">ЩОБ СПРОБУВАТИ.</div>
+      <div class="cap" id="cap265">НАПИШИ</div>
+      <div class="cap" id="cap266">В</div>
+      <div class="cap" id="cap267">КОМЕНТАРЯХ</div>
+      <div class="cap" id="cap269">І</div>
+      <div class="cap" id="cap270">Я</div>
+      <div class="cap" id="cap271">ПОКАЖУ,</div>
+      <div class="cap" id="cap272">ЯК</div>
+      <div class="cap" id="cap273">ЗРОБИТИ</div>
+      <div class="cap" id="cap274">ПЕРШИЙ</div>
+      <div class="cap" id="cap275">КРОК!</div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="106.317" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  tl.set("#cap0", {autoAlpha: 1}, 0.000);
+  tl.set("#cap0", {autoAlpha: 0}, 0.925);
+  tl.set("#cap1", {autoAlpha: 1}, 1.010);
+  tl.set("#cap1", {autoAlpha: 0}, 1.110);
+  tl.set("#cap2", {autoAlpha: 1}, 1.190);
+  tl.set("#cap2", {autoAlpha: 0}, 1.405);
+  tl.set("#cap3", {autoAlpha: 1}, 1.490);
+  tl.set("#cap3", {autoAlpha: 0}, 1.605);
+  tl.set("#cap4", {autoAlpha: 1}, 1.690);
+  tl.set("#cap4", {autoAlpha: 0}, 2.205);
+  tl.set("#cap5", {autoAlpha: 1}, 2.290);
+  tl.set("#cap5", {autoAlpha: 0}, 2.433);
+  tl.set("#cap6", {autoAlpha: 1}, 2.518);
+  tl.set("#cap6", {autoAlpha: 0}, 2.618);
+  tl.set("#cap7", {autoAlpha: 1}, 2.670);
+  tl.set("#cap7", {autoAlpha: 0}, 3.468);
+  tl.set("#cap15", {autoAlpha: 1}, 5.795);
+  tl.set("#cap15", {autoAlpha: 0}, 6.170);
+  tl.set("#cap16", {autoAlpha: 1}, 6.255);
+  tl.set("#cap16", {autoAlpha: 0}, 6.355);
+  tl.set("#cap17", {autoAlpha: 1}, 6.375);
+  tl.set("#cap17", {autoAlpha: 0}, 6.670);
+  tl.set("#cap18", {autoAlpha: 1}, 6.755);
+  tl.set("#cap18", {autoAlpha: 0}, 7.130);
+  tl.set("#cap19", {autoAlpha: 1}, 7.215);
+  tl.set("#cap19", {autoAlpha: 0}, 7.749);
+  tl.set("#cap21", {autoAlpha: 1}, 8.235);
+  tl.set("#cap21", {autoAlpha: 0}, 8.570);
+  tl.set("#cap23", {autoAlpha: 1}, 9.235);
+  tl.set("#cap23", {autoAlpha: 0}, 9.335);
+  tl.set("#cap24", {autoAlpha: 1}, 9.395);
+  tl.set("#cap24", {autoAlpha: 0}, 9.870);
+  tl.set("#cap27", {autoAlpha: 1}, 10.833);
+  tl.set("#cap27", {autoAlpha: 0}, 11.058);
+  tl.set("#cap28", {autoAlpha: 1}, 11.143);
+  tl.set("#cap28", {autoAlpha: 0}, 11.378);
+  tl.set("#cap29", {autoAlpha: 1}, 11.463);
+  tl.set("#cap29", {autoAlpha: 0}, 11.758);
+  tl.set("#cap30", {autoAlpha: 1}, 11.843);
+  tl.set("#cap30", {autoAlpha: 0}, 11.978);
+  tl.set("#cap31", {autoAlpha: 1}, 12.063);
+  tl.set("#cap31", {autoAlpha: 0}, 12.258);
+  tl.set("#cap32", {autoAlpha: 1}, 12.343);
+  tl.set("#cap32", {autoAlpha: 0}, 12.698);
+  tl.set("#cap33", {autoAlpha: 1}, 12.783);
+  tl.set("#cap33", {autoAlpha: 0}, 13.078);
+  tl.set("#cap34", {autoAlpha: 1}, 13.163);
+  tl.set("#cap34", {autoAlpha: 0}, 13.358);
+  tl.set("#cap35", {autoAlpha: 1}, 13.443);
+  tl.set("#cap35", {autoAlpha: 0}, 13.718);
+  tl.set("#cap36", {autoAlpha: 1}, 13.803);
+  tl.set("#cap36", {autoAlpha: 0}, 13.958);
+  tl.set("#cap37", {autoAlpha: 1}, 14.043);
+  tl.set("#cap37", {autoAlpha: 0}, 14.143);
+  tl.set("#cap38", {autoAlpha: 1}, 14.203);
+  tl.set("#cap38", {autoAlpha: 0}, 14.378);
+  tl.set("#cap39", {autoAlpha: 1}, 14.463);
+  tl.set("#cap39", {autoAlpha: 0}, 14.563);
+  tl.set("#cap40", {autoAlpha: 1}, 14.583);
+  tl.set("#cap40", {autoAlpha: 0}, 15.018);
+  tl.set("#cap41", {autoAlpha: 1}, 15.103);
+  tl.set("#cap41", {autoAlpha: 0}, 15.358);
+  tl.set("#cap42", {autoAlpha: 1}, 15.443);
+  tl.set("#cap42", {autoAlpha: 0}, 15.543);
+  tl.set("#cap43", {autoAlpha: 1}, 15.623);
+  tl.set("#cap43", {autoAlpha: 0}, 16.182);
+  tl.set("#cap44", {autoAlpha: 1}, 16.267);
+  tl.set("#cap44", {autoAlpha: 0}, 16.438);
+  tl.set("#cap45", {autoAlpha: 1}, 16.523);
+  tl.set("#cap45", {autoAlpha: 0}, 17.058);
+  tl.set("#cap46", {autoAlpha: 1}, 17.143);
+  tl.set("#cap46", {autoAlpha: 0}, 17.243);
+  tl.set("#cap47", {autoAlpha: 1}, 17.323);
+  tl.set("#cap47", {autoAlpha: 0}, 17.538);
+  tl.set("#cap48", {autoAlpha: 1}, 17.623);
+  tl.set("#cap48", {autoAlpha: 0}, 17.738);
+  tl.set("#cap49", {autoAlpha: 1}, 17.823);
+  tl.set("#cap49", {autoAlpha: 0}, 17.923);
+  tl.set("#cap50", {autoAlpha: 1}, 17.983);
+  tl.set("#cap50", {autoAlpha: 0}, 18.158);
+  tl.set("#cap51", {autoAlpha: 1}, 18.243);
+  tl.set("#cap51", {autoAlpha: 0}, 18.343);
+  tl.set("#cap52", {autoAlpha: 1}, 18.403);
+  tl.set("#cap52", {autoAlpha: 0}, 18.738);
+  tl.set("#cap53", {autoAlpha: 1}, 18.823);
+  tl.set("#cap53", {autoAlpha: 0}, 19.741);
+  tl.set("#cap54", {autoAlpha: 1}, 19.826);
+  tl.set("#cap54", {autoAlpha: 0}, 20.061);
+  tl.set("#cap55", {autoAlpha: 1}, 20.146);
+  tl.set("#cap55", {autoAlpha: 0}, 20.281);
+  tl.set("#cap56", {autoAlpha: 1}, 20.366);
+  tl.set("#cap56", {autoAlpha: 0}, 20.521);
+  tl.set("#cap57", {autoAlpha: 1}, 20.606);
+  tl.set("#cap57", {autoAlpha: 0}, 20.981);
+  tl.set("#cap58", {autoAlpha: 1}, 21.066);
+  tl.set("#cap58", {autoAlpha: 0}, 21.166);
+  tl.set("#cap59", {autoAlpha: 1}, 21.226);
+  tl.set("#cap59", {autoAlpha: 0}, 21.701);
+  tl.set("#cap61", {autoAlpha: 1}, 22.106);
+  tl.set("#cap61", {autoAlpha: 0}, 22.301);
+  tl.set("#cap62", {autoAlpha: 1}, 22.386);
+  tl.set("#cap62", {autoAlpha: 0}, 22.486);
+  tl.set("#cap63", {autoAlpha: 1}, 22.566);
+  tl.set("#cap63", {autoAlpha: 0}, 23.110);
+  tl.set("#cap67", {autoAlpha: 1}, 24.647);
+  tl.set("#cap67", {autoAlpha: 0}, 24.922);
+  tl.set("#cap68", {autoAlpha: 1}, 25.007);
+  tl.set("#cap68", {autoAlpha: 0}, 25.402);
+  tl.set("#cap70", {autoAlpha: 1}, 26.087);
+  tl.set("#cap70", {autoAlpha: 0}, 26.242);
+  tl.set("#cap71", {autoAlpha: 1}, 26.327);
+  tl.set("#cap71", {autoAlpha: 0}, 26.483);
+  tl.set("#cap72", {autoAlpha: 1}, 26.568);
+  tl.set("#cap72", {autoAlpha: 0}, 26.863);
+  tl.set("#cap73", {autoAlpha: 1}, 26.948);
+  tl.set("#cap73", {autoAlpha: 0}, 27.403);
+  tl.set("#cap74", {autoAlpha: 1}, 27.488);
+  tl.set("#cap74", {autoAlpha: 0}, 27.903);
+  tl.set("#cap75", {autoAlpha: 1}, 27.988);
+  tl.set("#cap75", {autoAlpha: 0}, 28.165);
+  tl.set("#cap76", {autoAlpha: 1}, 28.250);
+  tl.set("#cap76", {autoAlpha: 0}, 28.350);
+  tl.set("#cap77", {autoAlpha: 1}, 28.370);
+  tl.set("#cap77", {autoAlpha: 0}, 28.470);
+  tl.set("#cap78", {autoAlpha: 1}, 28.510);
+  tl.set("#cap78", {autoAlpha: 0}, 28.685);
+  tl.set("#cap79", {autoAlpha: 1}, 28.770);
+  tl.set("#cap79", {autoAlpha: 0}, 29.165);
+  tl.set("#cap80", {autoAlpha: 1}, 29.250);
+  tl.set("#cap80", {autoAlpha: 0}, 29.445);
+  tl.set("#cap81", {autoAlpha: 1}, 29.530);
+  tl.set("#cap81", {autoAlpha: 0}, 30.165);
+  tl.set("#cap82", {autoAlpha: 1}, 30.250);
+  tl.set("#cap82", {autoAlpha: 0}, 30.350);
+  tl.set("#cap83", {autoAlpha: 1}, 30.390);
+  tl.set("#cap83", {autoAlpha: 0}, 30.845);
+  tl.set("#cap86", {autoAlpha: 1}, 31.770);
+  tl.set("#cap86", {autoAlpha: 0}, 31.870);
+  tl.set("#cap87", {autoAlpha: 1}, 31.930);
+  tl.set("#cap87", {autoAlpha: 0}, 32.275);
+  tl.set("#cap88", {autoAlpha: 1}, 32.360);
+  tl.set("#cap88", {autoAlpha: 0}, 32.555);
+  tl.set("#cap89", {autoAlpha: 1}, 32.640);
+  tl.set("#cap89", {autoAlpha: 0}, 32.815);
+  tl.set("#cap90", {autoAlpha: 1}, 32.900);
+  tl.set("#cap90", {autoAlpha: 0}, 33.215);
+  tl.set("#cap91", {autoAlpha: 1}, 33.300);
+  tl.set("#cap91", {autoAlpha: 0}, 33.400);
+  tl.set("#cap92", {autoAlpha: 1}, 33.460);
+  tl.set("#cap92", {autoAlpha: 0}, 33.655);
+  tl.set("#cap93", {autoAlpha: 1}, 33.740);
+  tl.set("#cap93", {autoAlpha: 0}, 33.875);
+  tl.set("#cap94", {autoAlpha: 1}, 33.960);
+  tl.set("#cap94", {autoAlpha: 0}, 34.255);
+  tl.set("#cap95", {autoAlpha: 1}, 34.340);
+  tl.set("#cap95", {autoAlpha: 0}, 34.855);
+  tl.set("#cap98", {autoAlpha: 1}, 36.007);
+  tl.set("#cap98", {autoAlpha: 0}, 36.402);
+  tl.set("#cap99", {autoAlpha: 1}, 36.487);
+  tl.set("#cap99", {autoAlpha: 0}, 36.587);
+  tl.set("#cap102", {autoAlpha: 1}, 37.487);
+  tl.set("#cap102", {autoAlpha: 0}, 37.587);
+  tl.set("#cap103", {autoAlpha: 1}, 37.667);
+  tl.set("#cap103", {autoAlpha: 0}, 37.862);
+  tl.set("#cap104", {autoAlpha: 1}, 37.947);
+  tl.set("#cap104", {autoAlpha: 0}, 38.222);
+  tl.set("#cap105", {autoAlpha: 1}, 38.307);
+  tl.set("#cap105", {autoAlpha: 0}, 39.048);
+  tl.set("#cap110", {autoAlpha: 1}, 40.950);
+  tl.set("#cap110", {autoAlpha: 0}, 41.165);
+  tl.set("#cap111", {autoAlpha: 1}, 41.250);
+  tl.set("#cap111", {autoAlpha: 0}, 41.605);
+  tl.set("#cap112", {autoAlpha: 1}, 41.690);
+  tl.set("#cap112", {autoAlpha: 0}, 41.790);
+  tl.set("#cap113", {autoAlpha: 1}, 41.870);
+  tl.set("#cap113", {autoAlpha: 0}, 42.199);
+  tl.set("#cap114", {autoAlpha: 1}, 42.284);
+  tl.set("#cap114", {autoAlpha: 0}, 42.479);
+  tl.set("#cap115", {autoAlpha: 1}, 42.564);
+  tl.set("#cap115", {autoAlpha: 0}, 43.039);
+  tl.set("#cap116", {autoAlpha: 1}, 43.124);
+  tl.set("#cap116", {autoAlpha: 0}, 43.599);
+  tl.set("#cap117", {autoAlpha: 1}, 43.684);
+  tl.set("#cap117", {autoAlpha: 0}, 43.784);
+  tl.set("#cap118", {autoAlpha: 1}, 43.804);
+  tl.set("#cap118", {autoAlpha: 0}, 43.904);
+  tl.set("#cap119", {autoAlpha: 1}, 43.964);
+  tl.set("#cap119", {autoAlpha: 0}, 44.339);
+  tl.set("#cap120", {autoAlpha: 1}, 44.424);
+  tl.set("#cap120", {autoAlpha: 0}, 44.524);
+  tl.set("#cap121", {autoAlpha: 1}, 44.604);
+  tl.set("#cap121", {autoAlpha: 0}, 44.899);
+  tl.set("#cap122", {autoAlpha: 1}, 44.984);
+  tl.set("#cap122", {autoAlpha: 0}, 45.119);
+  tl.set("#cap123", {autoAlpha: 1}, 45.204);
+  tl.set("#cap123", {autoAlpha: 0}, 45.479);
+  tl.set("#cap124", {autoAlpha: 1}, 45.564);
+  tl.set("#cap124", {autoAlpha: 0}, 45.799);
+  tl.set("#cap125", {autoAlpha: 1}, 45.884);
+  tl.set("#cap125", {autoAlpha: 0}, 46.319);
+  tl.set("#cap126", {autoAlpha: 1}, 46.404);
+  tl.set("#cap126", {autoAlpha: 0}, 46.882);
+  tl.set("#cap135", {autoAlpha: 1}, 50.989);
+  tl.set("#cap135", {autoAlpha: 0}, 51.089);
+  tl.set("#cap136", {autoAlpha: 1}, 51.109);
+  tl.set("#cap136", {autoAlpha: 0}, 51.484);
+  tl.set("#cap137", {autoAlpha: 1}, 51.569);
+  tl.set("#cap137", {autoAlpha: 0}, 51.964);
+  tl.set("#cap140", {autoAlpha: 1}, 53.626);
+  tl.set("#cap140", {autoAlpha: 0}, 53.726);
+  tl.set("#cap141", {autoAlpha: 1}, 53.806);
+  tl.set("#cap141", {autoAlpha: 0}, 53.906);
+  tl.set("#cap142", {autoAlpha: 1}, 53.986);
+  tl.set("#cap142", {autoAlpha: 0}, 54.086);
+  tl.set("#cap143", {autoAlpha: 1}, 54.146);
+  tl.set("#cap143", {autoAlpha: 0}, 54.246);
+  tl.set("#cap144", {autoAlpha: 1}, 54.326);
+  tl.set("#cap144", {autoAlpha: 0}, 54.541);
+  tl.set("#cap145", {autoAlpha: 1}, 54.626);
+  tl.set("#cap145", {autoAlpha: 0}, 54.921);
+  tl.set("#cap146", {autoAlpha: 1}, 55.006);
+  tl.set("#cap146", {autoAlpha: 0}, 55.121);
+  tl.set("#cap147", {autoAlpha: 1}, 55.206);
+  tl.set("#cap147", {autoAlpha: 0}, 55.306);
+  tl.set("#cap148", {autoAlpha: 1}, 55.386);
+  tl.set("#cap148", {autoAlpha: 0}, 55.821);
+  tl.set("#cap149", {autoAlpha: 1}, 55.906);
+  tl.set("#cap149", {autoAlpha: 0}, 56.101);
+  tl.set("#cap151", {autoAlpha: 1}, 56.667);
+  tl.set("#cap151", {autoAlpha: 0}, 56.767);
+  tl.set("#cap152", {autoAlpha: 1}, 56.823);
+  tl.set("#cap152", {autoAlpha: 0}, 57.378);
+  tl.set("#cap153", {autoAlpha: 1}, 57.463);
+  tl.set("#cap153", {autoAlpha: 0}, 57.758);
+  tl.set("#cap154", {autoAlpha: 1}, 57.843);
+  tl.set("#cap154", {autoAlpha: 0}, 57.943);
+  tl.set("#cap155", {autoAlpha: 1}, 58.003);
+  tl.set("#cap155", {autoAlpha: 0}, 58.103);
+  tl.set("#cap156", {autoAlpha: 1}, 58.183);
+  tl.set("#cap156", {autoAlpha: 0}, 58.338);
+  tl.set("#cap157", {autoAlpha: 1}, 58.423);
+  tl.set("#cap157", {autoAlpha: 0}, 58.818);
+  tl.set("#cap158", {autoAlpha: 1}, 58.903);
+  tl.set("#cap158", {autoAlpha: 0}, 59.118);
+  tl.set("#cap159", {autoAlpha: 1}, 59.203);
+  tl.set("#cap159", {autoAlpha: 0}, 59.906);
+  tl.set("#cap168", {autoAlpha: 1}, 62.826);
+  tl.set("#cap168", {autoAlpha: 0}, 63.421);
+  tl.set("#cap169", {autoAlpha: 1}, 63.506);
+  tl.set("#cap169", {autoAlpha: 0}, 63.606);
+  tl.set("#cap170", {autoAlpha: 1}, 63.626);
+  tl.set("#cap170", {autoAlpha: 0}, 63.841);
+  tl.set("#cap171", {autoAlpha: 1}, 63.926);
+  tl.set("#cap171", {autoAlpha: 0}, 64.026);
+  tl.set("#cap172", {autoAlpha: 1}, 64.106);
+  tl.set("#cap172", {autoAlpha: 0}, 64.401);
+  tl.set("#cap173", {autoAlpha: 1}, 64.486);
+  tl.set("#cap173", {autoAlpha: 0}, 64.821);
+  tl.set("#cap174", {autoAlpha: 1}, 64.906);
+  tl.set("#cap174", {autoAlpha: 0}, 65.006);
+  tl.set("#cap175", {autoAlpha: 1}, 65.066);
+  tl.set("#cap175", {autoAlpha: 0}, 65.341);
+  tl.set("#cap176", {autoAlpha: 1}, 65.426);
+  tl.set("#cap176", {autoAlpha: 0}, 66.448);
+  tl.set("#cap181", {autoAlpha: 1}, 68.058);
+  tl.set("#cap181", {autoAlpha: 0}, 68.453);
+  tl.set("#cap182", {autoAlpha: 1}, 68.538);
+  tl.set("#cap182", {autoAlpha: 0}, 69.093);
+  tl.set("#cap183", {autoAlpha: 1}, 69.178);
+  tl.set("#cap183", {autoAlpha: 0}, 69.278);
+  tl.set("#cap184", {autoAlpha: 1}, 69.338);
+  tl.set("#cap184", {autoAlpha: 0}, 69.633);
+  tl.set("#cap185", {autoAlpha: 1}, 69.718);
+  tl.set("#cap185", {autoAlpha: 0}, 69.933);
+  tl.set("#cap186", {autoAlpha: 1}, 70.018);
+  tl.set("#cap186", {autoAlpha: 0}, 70.613);
+  tl.set("#cap187", {autoAlpha: 1}, 70.698);
+  tl.set("#cap187", {autoAlpha: 0}, 70.833);
+  tl.set("#cap188", {autoAlpha: 1}, 70.918);
+  tl.set("#cap188", {autoAlpha: 0}, 71.548);
+  tl.set("#cap189", {autoAlpha: 1}, 71.633);
+  tl.set("#cap189", {autoAlpha: 0}, 71.978);
+  tl.set("#cap190", {autoAlpha: 1}, 72.063);
+  tl.set("#cap190", {autoAlpha: 0}, 72.538);
+  tl.set("#cap191", {autoAlpha: 1}, 72.623);
+  tl.set("#cap191", {autoAlpha: 0}, 73.158);
+  tl.set("#cap192", {autoAlpha: 1}, 73.243);
+  tl.set("#cap192", {autoAlpha: 0}, 73.438);
+  tl.set("#cap193", {autoAlpha: 1}, 73.523);
+  tl.set("#cap193", {autoAlpha: 0}, 73.838);
+  tl.set("#cap194", {autoAlpha: 1}, 73.923);
+  tl.set("#cap194", {autoAlpha: 0}, 74.238);
+  tl.set("#cap195", {autoAlpha: 1}, 74.323);
+  tl.set("#cap195", {autoAlpha: 0}, 74.848);
+  tl.set("#cap196", {autoAlpha: 1}, 74.933);
+  tl.set("#cap196", {autoAlpha: 0}, 75.218);
+  tl.set("#cap197", {autoAlpha: 1}, 75.303);
+  tl.set("#cap197", {autoAlpha: 0}, 75.403);
+  tl.set("#cap200", {autoAlpha: 1}, 76.343);
+  tl.set("#cap200", {autoAlpha: 0}, 76.458);
+  tl.set("#cap201", {autoAlpha: 1}, 76.543);
+  tl.set("#cap201", {autoAlpha: 0}, 76.998);
+  tl.set("#cap202", {autoAlpha: 1}, 77.083);
+  tl.set("#cap202", {autoAlpha: 0}, 77.183);
+  tl.set("#cap203", {autoAlpha: 1}, 77.263);
+  tl.set("#cap203", {autoAlpha: 0}, 77.898);
+  tl.set("#cap204", {autoAlpha: 1}, 77.983);
+  tl.set("#cap204", {autoAlpha: 0}, 78.178);
+  tl.set("#cap205", {autoAlpha: 1}, 78.263);
+  tl.set("#cap205", {autoAlpha: 0}, 78.363);
+  tl.set("#cap206", {autoAlpha: 1}, 78.383);
+  tl.set("#cap206", {autoAlpha: 0}, 78.483);
+  tl.set("#cap207", {autoAlpha: 1}, 78.563);
+  tl.set("#cap207", {autoAlpha: 0}, 78.898);
+  tl.set("#cap208", {autoAlpha: 1}, 78.983);
+  tl.set("#cap208", {autoAlpha: 0}, 79.657);
+  tl.set("#cap215", {autoAlpha: 1}, 81.647);
+  tl.set("#cap215", {autoAlpha: 0}, 81.902);
+  tl.set("#cap216", {autoAlpha: 1}, 81.987);
+  tl.set("#cap216", {autoAlpha: 0}, 82.087);
+  tl.set("#cap217", {autoAlpha: 1}, 82.147);
+  tl.set("#cap217", {autoAlpha: 0}, 82.482);
+  tl.set("#cap218", {autoAlpha: 1}, 82.567);
+  tl.set("#cap218", {autoAlpha: 0}, 82.667);
+  tl.set("#cap219", {autoAlpha: 1}, 82.727);
+  tl.set("#cap219", {autoAlpha: 0}, 83.042);
+  tl.set("#cap220", {autoAlpha: 1}, 83.127);
+  tl.set("#cap220", {autoAlpha: 0}, 83.462);
+  tl.set("#cap221", {autoAlpha: 1}, 83.547);
+  tl.set("#cap221", {autoAlpha: 0}, 83.647);
+  tl.set("#cap222", {autoAlpha: 1}, 83.687);
+  tl.set("#cap222", {autoAlpha: 0}, 83.802);
+  tl.set("#cap223", {autoAlpha: 1}, 83.887);
+  tl.set("#cap223", {autoAlpha: 0}, 84.062);
+  tl.set("#cap224", {autoAlpha: 1}, 84.147);
+  tl.set("#cap224", {autoAlpha: 0}, 84.562);
+  tl.set("#cap225", {autoAlpha: 1}, 84.647);
+  tl.set("#cap225", {autoAlpha: 0}, 85.264);
+  tl.set("#cap230", {autoAlpha: 1}, 86.933);
+  tl.set("#cap230", {autoAlpha: 0}, 87.308);
+  tl.set("#cap232", {autoAlpha: 1}, 88.053);
+  tl.set("#cap232", {autoAlpha: 0}, 88.188);
+  tl.set("#cap233", {autoAlpha: 1}, 88.273);
+  tl.set("#cap233", {autoAlpha: 0}, 88.535);
+  tl.set("#cap234", {autoAlpha: 1}, 88.620);
+  tl.set("#cap234", {autoAlpha: 0}, 88.975);
+  tl.set("#cap235", {autoAlpha: 1}, 89.060);
+  tl.set("#cap235", {autoAlpha: 0}, 89.355);
+  tl.set("#cap236", {autoAlpha: 1}, 89.440);
+  tl.set("#cap236", {autoAlpha: 0}, 89.955);
+  tl.set("#cap237", {autoAlpha: 1}, 90.040);
+  tl.set("#cap237", {autoAlpha: 0}, 90.298);
+  tl.set("#cap238", {autoAlpha: 1}, 90.383);
+  tl.set("#cap238", {autoAlpha: 0}, 90.695);
+  tl.set("#cap239", {autoAlpha: 1}, 90.780);
+  tl.set("#cap239", {autoAlpha: 0}, 90.880);
+  tl.set("#cap240", {autoAlpha: 1}, 90.960);
+  tl.set("#cap240", {autoAlpha: 0}, 91.060);
+  tl.set("#cap241", {autoAlpha: 1}, 91.120);
+  tl.set("#cap241", {autoAlpha: 0}, 91.926);
+  tl.set("#cap242", {autoAlpha: 1}, 92.011);
+  tl.set("#cap242", {autoAlpha: 0}, 92.246);
+  tl.set("#cap243", {autoAlpha: 1}, 92.331);
+  tl.set("#cap243", {autoAlpha: 0}, 92.666);
+  tl.set("#cap244", {autoAlpha: 1}, 92.751);
+  tl.set("#cap244", {autoAlpha: 0}, 93.026);
+  tl.set("#cap245", {autoAlpha: 1}, 93.111);
+  tl.set("#cap245", {autoAlpha: 0}, 93.626);
+  tl.set("#cap246", {autoAlpha: 1}, 93.711);
+  tl.set("#cap246", {autoAlpha: 0}, 93.811);
+  tl.set("#cap247", {autoAlpha: 1}, 93.851);
+  tl.set("#cap247", {autoAlpha: 0}, 94.066);
+  tl.set("#cap248", {autoAlpha: 1}, 94.151);
+  tl.set("#cap248", {autoAlpha: 0}, 94.526);
+  tl.set("#cap249", {autoAlpha: 1}, 94.611);
+  tl.set("#cap249", {autoAlpha: 0}, 94.946);
+  tl.set("#cap250", {autoAlpha: 1}, 95.031);
+  tl.set("#cap250", {autoAlpha: 0}, 95.186);
+  tl.set("#cap251", {autoAlpha: 1}, 95.271);
+  tl.set("#cap251", {autoAlpha: 0}, 95.446);
+  tl.set("#cap252", {autoAlpha: 1}, 95.531);
+  tl.set("#cap252", {autoAlpha: 0}, 95.806);
+  tl.set("#cap253", {autoAlpha: 1}, 95.891);
+  tl.set("#cap253", {autoAlpha: 0}, 96.286);
+  tl.set("#cap255", {autoAlpha: 1}, 97.083);
+  tl.set("#cap255", {autoAlpha: 0}, 97.238);
+  tl.set("#cap256", {autoAlpha: 1}, 97.323);
+  tl.set("#cap256", {autoAlpha: 0}, 97.638);
+  tl.set("#cap257", {autoAlpha: 1}, 97.723);
+  tl.set("#cap257", {autoAlpha: 0}, 98.072);
+  tl.set("#cap258", {autoAlpha: 1}, 98.157);
+  tl.set("#cap258", {autoAlpha: 0}, 98.512);
+  tl.set("#cap259", {autoAlpha: 1}, 98.597);
+  tl.set("#cap259", {autoAlpha: 0}, 98.697);
+  tl.set("#cap260", {autoAlpha: 1}, 98.757);
+  tl.set("#cap260", {autoAlpha: 0}, 99.252);
+  tl.set("#cap261", {autoAlpha: 1}, 99.337);
+  tl.set("#cap261", {autoAlpha: 0}, 99.572);
+  tl.set("#cap264", {autoAlpha: 1}, 100.397);
+  tl.set("#cap264", {autoAlpha: 0}, 101.215);
+  tl.set("#cap265", {autoAlpha: 1}, 101.300);
+  tl.set("#cap265", {autoAlpha: 0}, 101.882);
+  tl.set("#cap266", {autoAlpha: 1}, 101.967);
+  tl.set("#cap266", {autoAlpha: 0}, 102.233);
+  tl.set("#cap267", {autoAlpha: 1}, 102.318);
+  tl.set("#cap267", {autoAlpha: 0}, 102.673);
+  tl.set("#cap269", {autoAlpha: 1}, 103.338);
+  tl.set("#cap269", {autoAlpha: 0}, 103.438);
+  tl.set("#cap270", {autoAlpha: 1}, 103.498);
+  tl.set("#cap270", {autoAlpha: 0}, 103.598);
+  tl.set("#cap271", {autoAlpha: 1}, 103.638);
+  tl.set("#cap271", {autoAlpha: 0}, 104.093);
+  tl.set("#cap272", {autoAlpha: 1}, 104.178);
+  tl.set("#cap272", {autoAlpha: 0}, 104.278);
+  tl.set("#cap273", {autoAlpha: 1}, 104.278);
+  tl.set("#cap273", {autoAlpha: 0}, 104.573);
+  tl.set("#cap274", {autoAlpha: 1}, 104.658);
+  tl.set("#cap274", {autoAlpha: 0}, 104.893);
+  tl.set("#cap275", {autoAlpha: 1}, 104.978);
+  tl.set("#cap275", {autoAlpha: 0}, 105.448);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 106.433);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 3.333);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 5.710);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 7.614);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 8.150);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 8.435);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 9.150);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 9.735);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 10.748);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 21.566);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 22.021);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 22.975);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 24.562);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 25.267);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 26.002);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 30.710);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 31.685);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 34.720);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 35.922);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 36.387);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 37.402);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 38.913);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 40.865);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 46.747);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 50.904);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 51.829);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 53.541);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 55.966);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 56.582);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 59.771);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 62.741);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 66.313);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 67.973);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 75.223);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 76.258);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 79.522);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 81.562);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 85.129);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 86.848);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 87.173);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 87.968);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 96.151);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 96.998);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 99.437);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 100.312);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 102.538);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 103.253);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 105.313);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 106.817);
+
+
+function spring(z, w) {
+  var wd = w * Math.sqrt(1 - z * z);
+  function f(t) { return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + (z * w / wd) * Math.sin(wd * t)); }
+  var e = f(1);
+  return function (t) { return t >= 1 ? 1 : f(t) / e; };
+}
+var SP = spring(0.62, 13), POP = spring(0.46, 14), SOFT = spring(0.84, 11), FLIP = spring(0.58, 9);
+
+function helpers(tl) {
+  function blurIn(sel, t, b, d) {
+    tl.fromTo(sel, {autoAlpha: 0, filter: "blur(" + (b || 12) + "px)"},
+                   {autoAlpha: 1, filter: "blur(0px)", duration: d || 0.38, ease: "power2.out"}, t);
+  }
+  function blurOut(sel, t, b, d) {
+    tl.to(sel, {autoAlpha: 0, filter: "blur(" + (b || 10) + "px)", duration: d || 0.32, ease: "power2.in"}, t);
+  }
+  // arrive from depth: blur -> sharp, small -> full, with a spring. o: {s, x, y, ease, d}
+  function arrive(sel, t, o) {
+    o = o || {};
+    blurIn(sel, t, o.blur || 12, 0.36);
+    tl.fromTo(sel, {scale: o.s == null ? 0.5 : o.s, x: o.x || 0, y: o.y == null ? 34 : o.y},
+              {scale: 1, x: 0, y: 0, duration: o.d || 0.85, ease: o.ease || POP}, t);
+  }
+  // the contents land a beat after their container
+  function inner(sel, t) {
+    tl.fromTo(sel, {scale: 0.55, autoAlpha: 0}, {scale: 1, autoAlpha: 1, duration: 0.55, ease: SP}, t + 0.1);
+  }
+  function sheen(sel, t) { gsap.set(sel, {xPercent: -120}); tl.to(sel, {xPercent: 120, duration: 0.8, ease: "power2.inOut"}, t); }
+  function len(id) { return document.getElementById(id).getTotalLength(); }
+  // +3: a dash that ends exactly at the path start leaves a round-cap dot behind
+  function drawPrep(id) { var L = len(id) + 3; gsap.set("#" + id, {strokeDasharray: (L - 3) + " " + (L + 40), strokeDashoffset: L}); return L; }
+  function draw(id, t, d) { var L = drawPrep(id); tl.to("#" + id, {strokeDashoffset: 0, duration: d || 0.55, ease: "power2.inOut"}, t); return L; }
+  function packet(id, t, d) {
+    var L = len(id);
+    tl.fromTo("#" + id, {strokeDasharray: "46 " + (L + 200), strokeDashoffset: 49, autoAlpha: 1},
+              {strokeDashoffset: -L, duration: d || 0.5, ease: "power1.inOut", immediateRender: false}, t);
+    tl.set("#" + id, {autoAlpha: 0}, t + (d || 0.5));
+  }
+  // a tile the same shape grows out and fades — "something arrived here"
+  function ripple(sel, t) {
+    tl.fromTo(sel, {scale: 1, autoAlpha: 0.7}, {scale: 1.75, autoAlpha: 0, duration: 0.8, ease: "power2.out", immediateRender: false}, t);
+  }
+  function bump(sel, t) {
+    tl.to(sel, {scale: 1.07, duration: 0.1, ease: "power2.out"}, t);
+    tl.to(sel, {scale: 1, duration: 0.45, ease: SP}, t + 0.1);
+  }
+  // iris: a takeover opens out of (x, y) and later closes back into another point
+  function irisOpen(sel, t, x, y, d) {
+    tl.set(sel, {autoAlpha: 1}, t);
+    tl.fromTo(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)"},
+              {clipPath: "circle(2300px at " + x + "px " + y + "px)", duration: d || 0.85, ease: "power3.inOut", immediateRender: false}, t);
+  }
+  function irisClose(sel, t, x, y, d) {
+    tl.to(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)", duration: d || 0.6, ease: "power3.inOut"}, t);
+    tl.set(sel, {autoAlpha: 0}, t + (d || 0.6) + 0.02);
+  }
+  function drift(sel, t, dur) {
+    ["a1", "a2", "a3"].forEach(function (c, i) {
+      var v = [[-140, 90], [160, -120], [-90, -60]][i];
+      tl.fromTo(sel + " .aur." + c, {x: 0, y: 0}, {x: v[0], y: v[1], duration: dur, ease: "sine.inOut"}, t);
+    });
+  }
+  function haptic(sel, t) { tl.to(sel, {keyframes: {x: [0, -9, 8, -5, 3, 0]}, duration: 0.34, ease: "none"}, t); }
+  function count(sel, t, to, d, fmt) {
+    var o = {v: 0}, el = document.querySelector(sel);
+    tl.fromTo(o, {v: 0}, {v: to, duration: d || 1.1, ease: "power2.out",
+              onUpdate: function () { el.textContent = fmt ? fmt(o.v) : Math.round(o.v); }}, t);
+  }
+  return {blurIn: blurIn, blurOut: blurOut, arrive: arrive, inner: inner, sheen: sheen,
+          drawPrep: drawPrep, draw: draw, packet: packet, ripple: ripple, bump: bump,
+          irisOpen: irisOpen, irisClose: irisClose, drift: drift, haptic: haptic, count: count};
+}
+
+
+  var G = helpers(tl);
+  function bin(sel, t, b, d) { d = d || 0.38; G.blurIn(sel, t, b || 12, d); tl.set(sel, {filter: "none"}, t + d + 0.01); }
+  function bout(sel, t, b, d) { d = d || 0.32; G.blurOut(sel, t, b || 10, d); tl.set(sel, {filter: "none"}, t + d + 0.01); }
+  function arr(sel, t, o) {
+    o = o || {};
+    bin(sel, t, o.blur || 12, 0.36);
+    tl.fromTo(sel, {scale: o.s == null ? 0.5 : o.s, x: o.x || 0, y: o.y == null ? 34 : o.y},
+              {scale: 1, x: 0, y: 0, duration: o.d || 0.85, ease: o.ease || POP}, t);
+  }
+  function draw2(id, t, d) {
+    var L = document.getElementById(id).getTotalLength() + 3;
+    tl.fromTo("#" + id, {strokeDasharray: (L - 3) + " " + (L + 40), strokeDashoffset: L},
+              {strokeDashoffset: 0, duration: d || 0.5, ease: "power2.inOut", immediateRender: false}, t);
+    gsap.set("#" + id, {strokeDasharray: (L - 3) + " " + (L + 40), strokeDashoffset: L});
+  }
+  function shn(sel, t) {
+    gsap.set(sel, {xPercent: -120});
+    tl.fromTo(sel, {xPercent: -120}, {xPercent: 120, duration: 0.8, ease: "power2.inOut", immediateRender: false}, t);
+  }
+  function drift1(sel, t, d) { tl.fromTo(sel + " .aurs", {x: 0, y: 0}, {x: -110, y: 70, duration: d, ease: "sine.inOut"}, t); }
+  gsap.set(".sheen", {xPercent: -120});
+
+  gsap.set(["#vid"], {transformOrigin: "540px 900px"});
+  tl.fromTo(["#vid"], {scale: 1}, {scale: 1.045, duration: 106.317, ease: "none"}, 0);
+  /* a_pile */
+
+  G.irisOpen("#gA", 1.490, 540, 330, 0.6);
+  arr("#aTh", 1.590, {s: 0.4, y: 40});
+  tl.fromTo("#pA8", {autoAlpha: 0, x: -96, y: -300, rotation: -7.2, scale: 1.12}, {autoAlpha: 1, x: -60, y: 220, rotation: -2.4, scale: 1.12, duration: 0.6, ease: SOFT}, 1.770);
+  tl.fromTo("#pA7", {autoAlpha: 0, x: 144, y: -210, rotation: 6.6, scale: 1.12}, {autoAlpha: 1, x: 90, y: 310, rotation: 2.2, scale: 1.12, duration: 0.6, ease: SOFT}, 1.920);
+  tl.fromTo("#pA6", {autoAlpha: 0, x: -144, y: -120, rotation: 4.8, scale: 1.12}, {autoAlpha: 1, x: -90, y: 400, rotation: 1.6, scale: 1.12, duration: 0.6, ease: SOFT}, 2.070);
+  tl.fromTo("#pA5", {autoAlpha: 0, x: 112, y: -30, rotation: -6.0, scale: 1.12}, {autoAlpha: 1, x: 70, y: 490, rotation: -2.0, scale: 1.12, duration: 0.6, ease: SOFT}, 2.220);
+  tl.fromTo("#pA4", {autoAlpha: 0, x: -64, y: 60, rotation: 7.2, scale: 1.12}, {autoAlpha: 1, x: -40, y: 580, rotation: 2.4, scale: 1.12, duration: 0.6, ease: SOFT}, 2.370);
+  tl.fromTo("#pA3", {autoAlpha: 0, x: 176, y: 150, rotation: -4.2, scale: 1.12}, {autoAlpha: 1, x: 110, y: 670, rotation: -1.4, scale: 1.12, duration: 0.6, ease: SOFT}, 2.520);
+  tl.fromTo("#pA2", {autoAlpha: 0, x: -128, y: 240, rotation: 5.4, scale: 1.12}, {autoAlpha: 1, x: -80, y: 760, rotation: 1.8, scale: 1.12, duration: 0.6, ease: SOFT}, 2.670);
+  tl.set("#gQ1", {autoAlpha: 1}, 2.870);
+  tl.fromTo("#pQ1", {autoAlpha: 0, x: 0, y: 240, rotation: -4, scale: 1.12},
+            {autoAlpha: 1, y: 740, rotation: -0.8, scale: 1.12, duration: 0.55, ease: SOFT}, 2.870);
+  tl.to("#pQ1", {y: 0, rotation: 0, scale: 1, duration: 0.75, ease: SP}, 3.22);
+  G.irisClose("#gA", 3.2, 540, 262, 0.5);
+  shn("#pQ1 .sheen", 3.553);
+  tl.to("#pQ1", {y: -60, scale: 0.9, autoAlpha: 0, duration: 0.3, ease: "power3.in"}, 5.695);
+  tl.set("#gQ1", {autoAlpha: 0}, 6.045);
+  /* b_set */
+
+  tl.set("#gB", {autoAlpha: 1}, 6.225);
+  arr("#shB", 6.275, {s: 0.85, y: 30});
+  arr("#bSk", 7.774, {s: 0.4, y: 30}); G.ripple("#bSkR", 8.084);
+  bin("#lb0", 7.934, 8, 0.3);
+  bin("#pl0", 8.405, 8, 0.25);
+  arr("#bSt", 8.595, {s: 0.4, y: 30}); G.ripple("#bStR", 8.905);
+  bin("#lb1", 8.755, 8, 0.3);
+  bin("#pl1", 9.705, 8, 0.25);
+  arr("#bCl", 9.895, {s: 0.4, y: 30}); G.ripple("#bClR", 10.205);
+  bin("#lb2", 10.055, 8, 0.3);
+  /* style.md stays: the others step away */
+  bout(["#bSk", "#bCl", "#lb0", "#lb2", "#pl0", "#pl1"], 10.733, 10, 0.3);
+  tl.to("#lb1", {y: 40, duration: 0.5, ease: SP}, 10.833);
+  tl.to("#bSt", {scale: 1.18, y: 10, duration: 0.6, ease: SP}, 10.833);
+  shn("#bSt .sheen", 11.033);
+  /* the long tries: drafts fan out behind it, each crossed out */
+  [[-370, -9], [-200, -4], [200, 4], [370, 9]].forEach(function (p, i) {
+    tl.fromTo("#dr" + i, {autoAlpha: 0, x: 0, rotation: 0, scale: 0.6},
+              {autoAlpha: 1, x: p[0], rotation: p[1], scale: 1, duration: 0.7, ease: SP}, 12.243 + i * 0.09);
+  });
+  [0, 1, 2, 3].forEach(function (i) { draw2("drx" + i, 13.593 + i * 0.28, 0.28); });
+  tl.to(["#dr0", "#dr1", "#dr2", "#dr3"], {autoAlpha: 0.45, duration: 0.4}, 14.583);
+  arr("#bQ", 15.573, {s: 0.3, y: 30, d: 0.7}); G.ripple("#bQR", 15.823);
+  G.haptic("#bQ", 16.073);
+  /* the hard way vs the simple way */
+  bout(["#dr0", "#dr1", "#dr2", "#dr3", "#bSt", "#lb1", "#bQ"], 16.117, 10, 0.3);
+  arr("#bA", 16.217, {s: 0.4, y: 20, d: 0.7});
+  arr("#bB", 16.367, {s: 0.4, y: 20, d: 0.7});
+  tl.set("#tng", {autoAlpha: 1}, 16.523);
+  draw2("tng", 16.523, 1.35);
+  tl.to("#tng", {autoAlpha: 0.18, duration: 0.35}, 18.773);
+  tl.set("#str", {autoAlpha: 1}, 18.773);
+  draw2("str", 18.773, 0.4);
+  G.bump("#bB", 19.173); G.ripple("#bBR", 19.173);
+  bout("#gB", 19.776, 10, 0.3);
+  /* c_watch */
+
+  tl.set("#gC", {autoAlpha: 1}, 19.876);
+  arr("#sw", 19.926, {s: 0.5, y: 30});
+  draw2("swp", 21.326, 0.75);
+  G.count("#swn", 21.326, 30, 0.75);
+  G.bump("#sw", 22.616);
+  bout("#gC", 22.895, 10, 0.25);
+  /* d_q2 */
+
+  tl.set("#gD", {autoAlpha: 1}, 22.895);
+  tl.fromTo("#pQ2", {autoAlpha: 0, y: -430, scale: 0.94}, {autoAlpha: 1, y: 0, scale: 1, duration: 0.85, ease: SOFT}, 22.945);
+  G.haptic("#pQ2", 23.495);
+  tl.to("#pQ2", {scale: 0.6, y: -110, autoAlpha: 0, duration: 0.3, ease: "power3.in"}, 24.567);
+  tl.set("#gD", {autoAlpha: 0}, 24.947);
+  /* e_cost */
+
+  tl.set("#gE", {autoAlpha: 1}, 24.547);
+  arr("#eM", 24.597, {s: 0.55, y: 40});
+  tl.fromTo("#eMC", {autoAlpha: 0, scale: 0.5}, {autoAlpha: 1, scale: 1, duration: 0.5, ease: POP}, 25.487);
+  shn("#eM .sheen", 25.587);
+  arr("#eCl", 27.388, {s: 0.4, y: 30}); G.ripple("#eClR", 27.688);
+  tl.set(["#eT", "#eC"], {autoAlpha: 1}, 27.538);
+  draw2("eT", 27.538, 0.35); draw2("eC", 27.538, 0.35);
+  G.packet("eP", 27.938, 0.45);
+  G.bump("#eCl", 28.770);
+  arr("#eBt", 29.480, {s: 0.3, y: 20, d: 0.6}); G.ripple("#eBtR", 29.730);
+  arr("#eCo", 30.880, {s: 0.3, y: 30, d: 0.7}); G.ripple("#eCoR", 31.180);
+  shn("#eCo .sheen", 31.130);
+  tl.set("#gE", {autoAlpha: 0}, 32.960);
+  /* f_compare */
+
+  G.irisOpen("#gF", 32.280, 725, 510, 0.6);
+  drift1("#gF", 32.360, 39.107-32.360);
+  tl.fromTo(".rl", {autoAlpha: 0, scale: 0.3}, {autoAlpha: 1, scale: 1, duration: 0.5, ease: POP,
+            stagger: {each: 0.018, grid: [5, 8], from: "center"}}, 32.590);
+  tl.to(".rl", {x: function (i) { return 540 - (29 + (i % 8) * 130 + 56); },
+                y: function (i) { return 700 - (120 + Math.floor(i / 8) * 217 + 100); },
+                scale: 0.15, autoAlpha: 0, duration: 0.45, ease: "power3.in", stagger: {each: 0.006, from: "random"}},
+        34.220);
+  arr("#hSL", 34.490, {s: 0.7, y: 40});
+  tl.fromTo("#hBL", {scaleY: 0}, {scaleY: 1, duration: 0.7, ease: SP}, 34.940);
+  shn("#hSL .sheen", 35.040);
+  tl.to("#hSL", {x: -250, duration: 0.6, ease: SP}, 35.957);
+  arr("#hSR", 36.027, {s: 0.7, x: 60, y: 40});
+  tl.fromTo("#hBR", {scaleY: 0}, {scaleY: 1, duration: 0.9, ease: SP}, 36.607);
+  tl.fromTo("#hWho", {autoAlpha: 0, y: 14}, {autoAlpha: 1, y: 0, duration: 0.4, ease: SP}, 38.257);
+  G.irisClose("#gF", 38.857, 540, 262, 0.5);
+  /* g_q3 */
+
+  tl.set("#gG", {autoAlpha: 1}, 38.907);
+  gsap.set("#pQ3", {transformPerspective: 1500, transformOrigin: "50% 0%"});
+  tl.fromTo("#pQ3", {autoAlpha: 0, rotationX: -100}, {autoAlpha: 1, rotationX: 0, duration: 0.9, ease: FLIP}, 38.927);
+  tl.set("#pQ3", {autoAlpha: 1}, 39.057);
+  bout("#pQ3", 40.870, 10, 0.25);
+  tl.set("#gG", {autoAlpha: 0}, 41.200);
+  /* h_chat */
+
+  tl.set("#gH", {autoAlpha: 1}, 40.850);
+  arr("#hCd", 40.900, {s: 0.4, y: 30, d: 0.7});
+  tl.set("#hSt", {autoAlpha: 1}, 41.690);
+  draw2("hSt", 41.690, 0.25);
+  G.haptic("#hCd", 41.940);
+  bout(["#hCd", "#hSt"], 42.184, 10, 0.25);
+  arr("#hB1", 43.044, {s: 0.6, x: 60, y: 30});
+  tl.fromTo("#hB1 .fth", {autoAlpha: 0, scale: 0.4}, {autoAlpha: 1, scale: 1, duration: 0.45, ease: POP, stagger: 0.08}, 43.174);
+  arr("#hB2", 43.884, {s: 0.6, x: 60, y: 30});
+  tl.fromTo("#hB2 i", {scaleX: 0, transformOrigin: "0% 50%"}, {scaleX: 1, duration: 0.4, ease: "power2.out", stagger: 0.1}, 44.064);
+  tl.to(["#hB1", "#hB2"], {y: -20, autoAlpha: 0.55, duration: 0.4, ease: SP}, 45.204);
+  arr("#hRc", 45.464, {s: 0.5, x: -60, y: 30});
+  shn("#hRc .sheen", 45.764);
+  arr("#hOk", 46.374, {s: 0.3, y: 10, d: 0.6}); G.ripple("#hOkR", 46.604);
+  bout("#gH", 46.847, 10, 0.25);
+  /* i_q4 */
+
+  tl.set("#gI", {autoAlpha: 1}, 46.817);
+  arr("#pQ4", 46.847, {s: 0.8, y: 40, ease: SOFT});
+  shn("#pQ4 .sheen", 47.367);
+  tl.fromTo("#iTl", {autoAlpha: 0, scaleY: 0}, {autoAlpha: 1, scaleY: 1, duration: 0.5, ease: "power2.out"}, 48.153);
+  arr("#iR1", 48.253, {s: 0.6, y: 30, d: 0.7});
+  arr("#iR2", 49.273, {s: 0.6, y: 30, d: 0.7});
+  bout("#gI", 50.889, 10, 0.28);
+  /* j_time */
+
+  tl.set("#gJ", {autoAlpha: 1}, 50.909);
+  arr("#jS", 50.939, {s: 0.85, y: 30});
+  arr("#jRec", 51.039, {s: 0.4, y: 20, d: 0.6});
+  arr("#jOk", 51.189, {s: 0.4, y: 20, d: 0.6});
+  tl.fromTo("#jF", {scaleX: 0}, {scaleX: 1, duration: 1.3, ease: "power2.inOut"}, 51.469);
+  G.ripple("#jOkR", 52.769);
+  arr("#jP", 51.999, {s: 0.5, y: 20, d: 0.6});
+  /* not her work: the bar turns into Claude's time, her sliver is one minute */
+  tl.fromTo("#jC", {autoAlpha: 0}, {autoAlpha: 1, duration: 0.35}, 54.126);
+  arr("#jCd", 54.226, {s: 0.3, y: 10, d: 0.6});
+  tl.fromTo("#jSl", {autoAlpha: 0, scaleX: 0.2, transformOrigin: "0% 50%"}, {autoAlpha: 1, scaleX: 1, duration: 0.5, ease: SP}, 55.586);
+  bout("#jP", 55.986, 8, 0.2);
+  arr("#jP1", 56.156, {s: 0.4, y: 20, d: 0.6});
+  arr("#jUp", 56.773, {s: 0.3, y: -10, d: 0.6});
+  G.bump("#jUp", 57.423);
+  bout(["#jS", "#jRec", "#jOk", "#jCd", "#jP1", "#jUp"], 57.853, 10, 0.28);
+  arr("#jL", 57.983, {s: 0.7, y: 40});
+  [["#jcb0", 58.623], ["#jcb1", 59.103], ["#jcb2", 59.403]].forEach(function (p, i) {
+    tl.fromTo(p[0], {autoAlpha: 0, scale: 0.4}, {autoAlpha: 1, scale: 1, duration: 0.4, ease: POP}, p[1]);
+    draw2("jcp" + i, p[1] + 0.06, 0.3);
+  });
+  bout("#gJ", 59.791, 10, 0.25);
+  /* k_q5 */
+
+  tl.set("#gK", {autoAlpha: 1}, 59.691);
+  tl.set(["#kG1", "#kG2", "#pQ5"], {autoAlpha: 1}, 0);
+  arr("#kW", 59.711, {s: 0.85, y: 30, d: 0.7});
+  tl.fromTo("#kCol", {y: 120}, {y: -502, duration: 0.95, ease: SOFT}, 59.791);
+  bout("#gK", 62.726, 10, 0.28);
+  /* l_edit */
+
+  tl.set("#gL", {autoAlpha: 1}, 62.726);
+  arr("#lC", 62.746, {s: 0.85, y: 30});
+  tl.fromTo("#lCp .cpl", {autoAlpha: 0, scaleX: 0.3, transformOrigin: "0% 50%"},
+            {autoAlpha: 1, scaleX: 1, duration: 0.35, ease: SP, stagger: 0.09}, 62.976);
+  tl.to(["#lGp0", "#lGp1"], {scaleX: 0, autoAlpha: 0, duration: 0.35, ease: "power2.in"}, 63.226);
+  tl.to("#lW1", {x: -70, duration: 0.4, ease: SP}, 63.276);
+  tl.to("#lW2", {x: -140, duration: 0.4, ease: SP}, 63.276);
+  tl.set("#lMu", {autoAlpha: 1}, 0);
+  draw2("lMu", 64.436, 0.7);
+  tl.fromTo("#lG1", {clipPath: "inset(0px 100% 0px 0px round 18px)"}, {clipPath: "inset(0px 0% 0px 0px round 18px)",
+            duration: 0.8, ease: "power2.inOut"}, 65.426);
+  bout("#gL", 66.413, 10, 0.25);
+  /* m_q6 */
+
+  tl.set("#gM", {autoAlpha: 1}, 66.413);
+  arr("#pQ6", 66.433, {s: 0.3, y: 0, blur: 18, d: 0.95, ease: SOFT});
+  tl.fromTo("#pQ6H", {autoAlpha: 0, scale: 0.2, transformOrigin: "50% 60%"}, {autoAlpha: 1, scale: 1, duration: 0.5, ease: POP}, 68.088);
+  tl.set("#pQ6L0", {autoAlpha: 0}, 68.108); tl.set("#pQ6L1", {autoAlpha: 1}, 68.108);
+  G.bump("#pQ6", 68.108);
+  bout("#gM", 68.828, 10, 0.25);
+  /* n_redo */
+
+  tl.set("#gN", {autoAlpha: 1}, 68.878);
+  arr("#nB", 68.928, {s: 0.6, x: 60, y: 30});
+  tl.fromTo("#nBi", {clipPath: "inset(0px 100% 0px 0px)"}, {clipPath: "inset(0px 0% 0px 0px)", duration: 1.3, ease: "none"}, 69.278);
+  arr("#nRc", 70.318, {s: 0.5, x: -60, y: 30});
+  arr("#nRd", 70.868, {s: 0.3, y: 10, d: 0.6});
+  tl.to("#nRd", {rotation: 360, duration: 0.9, ease: "power2.inOut"}, 71.018);
+  tl.to("#nRc", {scaleX: 0, duration: 0.14, ease: "power2.in"}, 71.168);
+  tl.set("#nTh2", {autoAlpha: 1}, 71.308);
+  tl.to("#nRc", {scaleX: 1, duration: 0.4, ease: SP}, 71.308);
+  /* every redo is a whole render: the bar fills, a coin; from zero again, another coin */
+  bout("#nB", 71.533, 10, 0.25);
+  tl.set("#nTf", {autoAlpha: 1}, 71.633);
+  bin("#nTb", 71.633, 8, 0.3);
+  tl.fromTo("#nTf", {scaleX: 0}, {scaleX: 1, duration: 0.8, ease: "power1.inOut"}, 71.863);
+  arr("#nC0", 72.643, {s: 0.3, y: -60, d: 0.6});
+  tl.to("#nRd", {rotation: 720, duration: 0.7, ease: "power2.inOut"}, 74.023);
+  tl.set("#nTf", {scaleX: 0}, 74.343);
+  tl.to("#nTf", {scaleX: 1, duration: 0.55, ease: "power1.inOut"}, 74.363);
+  arr("#nC1", 74.623, {s: 0.3, y: -60, d: 0.6});
+  /* 15¢ a render: the coins become one small tag, and it shrinks to nothing much */
+  bout(["#nTb", "#nTf"], 75.143, 8, 0.25);
+  tl.to(["#nC0", "#nC1"], {x: function (i) { return 155 - i * 140; }, y: -55, scale: 0.4, autoAlpha: 0, duration: 0.35, ease: "power3.in"}, 75.143);
+  arr("#nTag", 75.403, {s: 0.4, y: 0, d: 0.7}); G.ripple("#nTagR", 75.643);
+  tl.to("#nTag", {scale: 0.34, y: 70, duration: 0.6, ease: SP}, 77.263);
+  tl.to(["#nRc", "#nRd"], {autoAlpha: 0.0, duration: 0.3}, 78.363);
+  bout("#nTag", 78.663, 10, 0.3);
+  tl.set("#gN", {autoAlpha: 0}, 79.542);
+  /* o_q7 */
+
+  tl.set("#gO", {autoAlpha: 1}, 79.542);
+  tl.fromTo("#pQ7", {autoAlpha: 0, x: -1150, rotation: -5}, {autoAlpha: 1, x: 0, rotation: 0, duration: 0.85, ease: SOFT}, 79.562);
+  shn("#pQ7 .sheen", 80.242);
+  tl.to("#pQ7", {x: 260, autoAlpha: 0, duration: 0.3, ease: "power3.in"}, 81.527);
+  tl.set("#gO", {autoAlpha: 0}, 81.847);
+  /* p_style */
+
+  tl.set("#gP", {autoAlpha: 1}, 81.547);
+  arr("#pRc", 81.597, {s: 0.55, y: 30});
+  function flip(a, b, t) {
+    tl.to("#pRc", {scaleX: 0, duration: 0.12, ease: "power2.in"}, t);
+    tl.set(a, {autoAlpha: 0}, t + 0.12); tl.set(b, {autoAlpha: 1}, t + 0.12);
+    tl.to("#pRc", {scaleX: 1, duration: 0.32, ease: SP}, t + 0.12);
+  }
+  flip("#pSk1", "#pSk2", 82.727);
+  flip("#pSk2", "#pSk0", 83.127);
+  arr("#pDoc", 83.497, {s: 0.4, y: 30}); G.ripple("#pDocR", 83.787);
+  bin("#pDl", 83.647, 8, 0.3);
+  tl.set(["#pT", "#pC"], {autoAlpha: 1}, 83.897);
+  draw2("pT", 83.897, 0.3); draw2("pC", 83.897, 0.3);
+  G.packet("pP", 84.247, 0.4);
+  flip("#pSk0", "#pSk3", 84.597);
+  shn("#pRc .sheen", 84.897);
+  tl.set("#gP", {autoAlpha: 0}, 85.749);
+  /* q_start */
+
+  G.irisOpen("#gQ", 84.967, 225, 330, 0.6);
+  drift1("#gQ", 84.947, 97.171-84.647);
+  gsap.set("#pQ8", {transformOrigin: "50% 50%"});
+  tl.fromTo("#pQ8", {autoAlpha: 0, scale: 0.6, y: 140}, {autoAlpha: 1, scale: 1.16, y: 0, duration: 0.85, ease: POP}, 85.269);
+  shn("#pQ8 .sheen", 85.749);
+  tl.to("#pQ8", {scale: 0.66, y: -415, duration: 0.7, ease: SP}, 86.833);
+  arr("#uM", 86.983, {s: 0.55, y: 60});
+  shn("#uM .sheen", 87.393);
+  /* a strong computer: no cloud needed */
+  arr("#uL1", 88.620, {s: 0.5, y: 40});
+  arr("#uBo", 89.390, {s: 0.3, y: 20, d: 0.6}); G.ripple("#uBoR", 89.640);
+  arr("#uC1", 89.990, {s: 0.5, y: 40});
+  tl.set("#uX", {autoAlpha: 1}, 90.970);
+  draw2("uX", 90.970, 0.35);
+  tl.to("#uC1", {autoAlpha: 0.35, duration: 0.3}, 91.320);
+  /* an old one, like hers: the cloud does it, a few euros into the API wallet */
+  arr("#uL2", 92.011, {s: 0.5, y: 40});
+  tl.fromTo("#uSp", {autoAlpha: 0, rotation: 0, transformOrigin: "50% 50%"}, {autoAlpha: 1, duration: 0.3}, 92.811);
+  tl.to("#uSp", {rotation: 260, duration: 1.6, ease: "none"}, 92.811);
+  bout("#uSp", 93.951, 8, 0.25);
+  arr("#uC2", 94.101, {s: 0.5, y: 40}); G.ripple("#uC2R", 94.451);
+  arr("#uW", 94.451, {s: 0.7, y: 40});
+  tl.set("#uWf", {scaleX: 0}, 0);
+  [0, 1, 2].forEach(function (i) {
+    var t = 95.221 + i * 0.14;
+    tl.fromTo("#uE" + i, {autoAlpha: 0, y: -160, scale: 0.6}, {autoAlpha: 1, y: 0, scale: 1, duration: 0.4, ease: "power2.in"}, t);
+    tl.to("#uE" + i, {y: 150, scale: 0.4, autoAlpha: 0, duration: 0.3, ease: "power2.in"}, t + 0.42);
+    tl.to("#uWf", {scaleX: 0.25 + i * 0.25, duration: 0.35, ease: SP}, t + 0.6);
+  });
+  shn("#uW .sheen", 96.371);
+  G.irisClose("#gQ", 96.821, 540, 500, 0.5);
+  /* r_dollar */
+
+  tl.set("#gR", {autoAlpha: 1}, 96.971);
+  tl.fromTo("#vM", {autoAlpha: 0, scale: 1.35, x: 170, y: 170}, {autoAlpha: 1, scale: 1, x: 0, y: 0, duration: 0.8, ease: SP}, 96.991);
+  bin("#vPl", 99.407, 8, 0.25);
+  arr("#vD", 99.607, {s: 0.3, y: 30, d: 0.7}); G.ripple("#vDR", 99.907);
+  shn("#vD .sheen", 99.857);
+  G.bump("#vM", 100.497); G.bump("#vD", 100.597);
+  shn("#vM .sheen", 100.547);
+  bout("#gR", 101.217, 10, 0.25);
+  /* s_cta */
+
+  tl.set("#gS", {autoAlpha: 1}, 101.918);
+  arr("#wB", 101.968, {s: 0.8, y: 40});
+  tl.set("#wPh", {autoAlpha: 0}, 102.738);
+  tl.set("#wTy", {autoAlpha: 1}, 102.738);
+  tl.fromTo("#wTy", {clipPath: "inset(0px 100% 0px 0px)"}, {clipPath: "inset(0px 0% 0px 0px)", duration: 0.42, ease: "steps(6)"}, 102.738);
+  G.bump("#wSn", 103.358);
+  [0, 1, 2].forEach(function (i) { arr("#wS" + i, 103.588 + i * 0.1, {s: 0.5, y: 40, d: 0.7}); });
+  tl.fromTo("#wO0", {autoAlpha: 0}, {autoAlpha: 1, duration: 0.3}, 104.658);
+  G.bump("#wS0", 104.658);
+  tl.fromTo("#wMe", {autoAlpha: 0, y: -90, scale: 0.6}, {autoAlpha: 1, y: 0, scale: 1, duration: 0.55, ease: POP}, 104.508);
+  bout(["#wS0", "#wS1", "#wS2", "#wMe"], 105.333, 10, 0.22);
+  gsap.set("#wF", {transformOrigin: "50% 50%"});
+  arr("#wF", 105.493, {s: 0.4, y: 30, d: 0.7});
+  shn("#wF .sheen", 105.833);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>

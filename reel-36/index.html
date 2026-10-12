@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 36 — Pinterest → дизайн-система</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+    @font-face {
+      font-family: "ProductSans";
+      src: url("assets/fonts/ProductSans-Black.woff") format("woff");
+      font-weight: 900; font-style: normal; font-display: block;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px;
+            overflow: hidden; background: #000;
+            font-family: "ProductSans", system-ui, sans-serif;
+      --surface:        #fffcfd;
+      --container:      #fbeef2;
+      --container-high: #f4dfe5;
+      --graphite:       rgba(23,20,28,0.13);
+      --accent:         #b4122f;
+      --accent-deep:    #8d0d24;
+      --pink:           #ff6e9c;
+      --ink:            #17141c;
+
+      --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
+      --lit-blush:  linear-gradient(115deg, #ffffff 0%, #fff7fa 100%);
+      --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
+      --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
+      --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
+
+      --rim: inset 0 1.5px 0 rgba(255,255,255,0.92),
+             inset 0 -1.5px 0 rgba(255,255,255,0.14),
+             inset 0 0 0 1px rgba(255,255,255,0.28);
+      --rim-dark: inset 0 1.5px 0 rgba(255,255,255,0.16),
+                  inset 0 0 0 1px rgba(255,255,255,0.08);
+      --rim-glass: inset 0 2px 0 rgba(255,255,255,0.70),
+                   inset 0 -2px 0 rgba(255,255,255,0.10),
+                   inset 0 0 0 1.5px rgba(255,255,255,0.30);
+
+      /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
+         Light coming off the object, not the object sitting on a surface. */
+      --glow: drop-shadow(0 0 10px rgba(255,196,218,0.95))
+              drop-shadow(0 0 26px rgba(255,110,156,0.85))
+              drop-shadow(0 0 64px rgba(255,110,156,0.55))
+              drop-shadow(0 0 120px rgba(255,110,156,0.32));
+      --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
+                   drop-shadow(0 0 60px rgba(255,110,156,0.30));
+
+      --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
+              drop-shadow(0 24px 48px rgba(26,30,39,0.14));
+      --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))
+                 drop-shadow(0 12px 24px rgba(26,30,39,0.12));
+ }
+    .plate { position: absolute; inset: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    #scrim { position: absolute; left: 20px; top: 1247px;
+             width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png");
+             background-size: 100% 100%; background-repeat: no-repeat;
+             opacity: 0; visibility: hidden; pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; top: 1413px;
+           height: 118px; line-height: 118px; text-align: center;
+           color: #fff; font-size: 90px; font-weight: 900;
+           letter-spacing: -0.015em; white-space: nowrap;
+           opacity: 0; visibility: hidden; }
+    .cap.inv { color: var(--ink); }
+    .g { position: absolute; left: 0; top: 40px; width: 1080px;
+         height: 600px; opacity: 0; visibility: hidden; }
+    .g.full { top: 0; height: 1920px; }
+
+    /* §5a.9 — glass over her footage is the house look. Panels only; an
+       edge-to-edge frosted ground blurs her out of her own reel. */
+    .glass { background: rgba(255,255,255,0.15);
+             -webkit-backdrop-filter: blur(24px) saturate(1.4);
+             backdrop-filter: blur(24px) saturate(1.4);
+             box-shadow: var(--rim); filter: var(--cast); }
+
+    /* A takeover: a tinted pane laid ON the footage, with a real margin so it
+       reads as an object rather than a blur applied to the video. */
+    /* The inset pane is a *pane*: 44/64 margin so the footage shows past it,
+       and corners, because a full-bleed hard-cornered rectangle is a bug she
+       has reported. base_css() squircles it; this radius is the fallback. */
+    .ground { position: absolute; left: 44px; top: 64px;
+              width: 992px; height: 1792px; border-radius: 68px;
+              background: linear-gradient(158deg, rgba(196,20,52,0.62) 0%,
+                          rgba(141,13,36,0.70) 100%);
+              -webkit-backdrop-filter: blur(30px) saturate(1.5);
+              backdrop-filter: blur(30px) saturate(1.5);
+              box-shadow: var(--rim-glass); filter: var(--cast); }
+
+    .card { position: absolute; background: var(--lit-blush);
+            filter: var(--cast); box-shadow: var(--rim); }
+    .card.ink { background: var(--lit-ink); box-shadow: var(--rim-dark); }
+    .card.accent { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+
+    .tile { position: absolute; display: grid; place-items: center;
+            background: var(--lit-blush); filter: var(--cast);
+            box-shadow: var(--rim); }
+
+    /* §5a.3 — bar rhythm. One thick heading, then ragged body. Uniform bars
+       read as a loading state; ragged ones read as an abstracted screen. */
+    .ph { display: block; height: 66px; border-radius: 18px;
+          background: var(--lit-accent); margin-bottom: 26px;
+          box-shadow: var(--rim-dark); }
+    .pr { display: block; height: 40px; border-radius: 12px;
+          background: var(--graphite); margin-bottom: 18px; }
+    .pr:nth-of-type(2) { width: 94%; }
+    .pr:nth-of-type(3) { width: 71%; }
+    .pr:nth-of-type(4) { width: 43%; }
+
+    .phone { position: absolute; background: var(--lit-blush);
+             overflow: hidden; filter: var(--cast); box-shadow: var(--rim); }
+    .phone video, .phone img { width: 100%; height: 100%; object-fit: cover;
+                               display: block; }
+
+    /* a value in its own card — her reference's "big number" pattern, minus
+       the label, because a graphic here carries no words */
+    .valcard { position: absolute; background: rgba(255,255,255,0.16);
+               -webkit-backdrop-filter: blur(16px) saturate(1.3);
+               backdrop-filter: blur(16px) saturate(1.3);
+               box-shadow: var(--rim-dark);
+               display: grid; place-items: center; }
+    .valcard span { color: #fff; font-weight: 900; letter-spacing: -0.04em; }
+
+    .wire { fill: none; stroke-width: 20; stroke-linecap: round;
+            filter: drop-shadow(0 8px 18px rgba(26,30,39,0.22)); }
+    .node { fill: #fdf6f6; stroke: #b4122f; stroke-width: 16;
+            filter: drop-shadow(0 10px 22px rgba(26,30,39,0.24)); }
+    .node.hub { fill: #b4122f; stroke: #fff; }
+
+    /* §5a.10 — the glow rides a WRAPPER, never the clipped element itself.
+       clip-path is applied *after* filter, so a drop-shadow declared on the
+       same element as the clip is cut away with everything else outside the
+       silhouette and the object ends up with no light at all. Put the clip on
+       the shape and the filter on its parent: the parent filters the already
+       clipped bitmap, so the light traces the squircle and survives. */
+    .lit { position: absolute; inset: 0; pointer-events: none;
+           filter: var(--glow); }
+    .lit.soft { filter: var(--glow-soft); }
+
+    /* Emoji are images, never glyphs. The render runs on someone else's
+       Chrome, so a literal 💩 in the HTML comes out in whatever emoji font
+       that machine has — Noto on the cloud renderer, Segoe on hers, Apple on
+       nobody's. She wants the Apple set, so the artwork ships in assets/emoji
+       and the glyph never appears in a composition. */
+    .emoji { display: block; width: auto; image-rendering: auto; }
+
+    .halo { position: absolute; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(255,110,156,0.5) 0%,
+                        rgba(255,110,156,0) 70%); }
+    .ring { position: absolute; border-radius: 50%; pointer-events: none;
+            border: 18px solid rgba(255,110,156,0.92);
+            filter: drop-shadow(0 0 40px rgba(255,110,156,0.55)); }
+
+    /* ---- takeovers (STYLE.md 2c) ----
+       The graphic owns the frame: the plate is gone, so none of the
+       over-footage rules apply — no glow budget, no band discipline, ink type
+       on a light ground. Lives here rather than per-reel because every reel
+       from 9 onwards needs it. A takeover that does not bleed off at least
+       two edges reads as a slide, not a takeover. */
+    .tk { position: absolute; inset: 0; }
+    .tk.paper { background: var(--surface); }
+    .tk.white { background: #ffffff; }
+    .tk.blush { background: linear-gradient(150deg,#ffffff 0%,#fffafc 55%,
+                                            #fdf4f8 100%); }
+    /* graph paper — the texture the reference takeovers all have. 60px cells
+       at 5.8% ink: visible, never a pattern you read. */
+    .gp { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px),
+            repeating-linear-gradient(90deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px); }
+    /* horizontal rules only — a transcript or a list is ruled paper, not
+       graph paper, and the difference is what makes it read as an export. */
+    .gl { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.05) 0 1px,
+                                      transparent 1px 175px); }
+
+    /* the finished artefact, in her system — one class at any aspect ratio */
+    .dk { position: absolute; overflow: hidden; border-radius: 28px;
+          background: var(--lit-blush); box-shadow: var(--rim);
+          filter: var(--cast); }
+    .dk i { position: absolute; display: block; }
+    .dk .hb { left: 30px; top: 30px; height: 20px; border-radius: 6px;
+              background: var(--lit-accent); }
+    .dk .rr { left: 30px; height: 9px; border-radius: 4px;
+              background: rgba(23,20,28,0.22); }
+    .dk .pb { border-radius: 16px; background: var(--lit-pink);
+              box-shadow: var(--rim-dark); }
+
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Regular.ttf"); font-weight: 400; font-display: block; }
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Medium.ttf"); font-weight: 500; font-display: block; }
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Bold.ttf"); font-weight: 700; font-display: block; }
+
+/* ---------- the edge light: what makes a surface read as glass ----------
+   A uniform stroke is 2013. Real glass catches light at two opposite corners
+   and goes almost dark along the sides, so the rim is a gradient ring. */
+.edge::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.6px;
+  background: linear-gradient(140deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.34) 16%,
+              rgba(255,255,255,0.05) 42%, rgba(255,255,255,0.07) 62%,
+              rgba(255,255,255,0.50) 86%, rgba(255,255,255,0.90) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 3; }
+
+/* ---------- the shelf: frosted glass over her footage ----------
+   The house look since reel 3, rebuilt in layers: blur + saturation, a faint
+   top-to-bottom tint, light inside the bottom edge (thickness), huge soft
+   shadow. Add .edge for the rim. */
+.shelf { position: absolute; border-radius: 80px;
+  background: linear-gradient(158deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.07) 50%,
+              rgba(255,255,255,0.13) 100%);
+  -webkit-backdrop-filter: blur(22px) saturate(1.7) brightness(1.05);
+  backdrop-filter: blur(22px) saturate(1.7) brightness(1.05);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.65), inset 0 -24px 44px -22px rgba(255,255,255,0.36),
+              0 44px 90px -34px rgba(24,4,12,0.5); }
+
+/* dark glass — notifications and anything with white text over footage */
+.dglass { position: absolute; border-radius: 64px; color: #fff;
+  background: linear-gradient(160deg, rgba(58,22,32,0.58) 0%, rgba(24,10,15,0.50) 100%);
+  -webkit-backdrop-filter: blur(30px) saturate(1.8); backdrop-filter: blur(30px) saturate(1.8);
+  box-shadow: inset 0 1.5px 1px rgba(255,255,255,0.30), inset 0 -16px 30px -16px rgba(255,255,255,0.14),
+              0 40px 80px -30px rgba(10,0,4,0.6); }
+
+/* ---------- the tile family: every mark lives in one of three ----------
+   Same radius ratio as an iOS icon (22.4%), glyph at 50%. Put the tile in a
+   sized wrapper; the wrapper takes the motion, the tile takes the material. */
+.clear { position: absolute; inset: 0; border-radius: 22.4%;
+  background: linear-gradient(158deg, rgba(255,255,255,0.36) 0%, rgba(255,255,255,0.11) 48%,
+              rgba(255,255,255,0.17) 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.70), inset 0 -18px 30px -14px rgba(255,255,255,0.42),
+              0 34px 60px -22px rgba(24,4,12,0.55), 0 3px 8px rgba(24,4,12,0.10);
+  display: flex; align-items: center; justify-content: center; }
+.pearl { position: absolute; inset: 0; border-radius: 22.4%; overflow: hidden;
+  background: linear-gradient(160deg, #ffffff 0%, #fff5f8 52%, #f5dfe6 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -20px 32px -14px rgba(180,18,47,0.18),
+              0 36px 64px -22px rgba(30,4,12,0.55), 0 3px 8px rgba(30,4,12,0.12);
+  display: flex; align-items: center; justify-content: center; }
+.jelly { position: absolute; inset: 0; border-radius: 22.4%; overflow: hidden;
+  background: linear-gradient(165deg, #e0204b 0%, #ab112e 46%, #6b081c 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.55), inset 0 -26px 40px -14px rgba(255,125,165,0.60),
+              inset 0 0 0 1px rgba(255,255,255,0.10),
+              0 36px 64px -22px rgba(70,4,20,0.62), 0 3px 8px rgba(70,4,20,0.14);
+  display: flex; align-items: center; justify-content: center; }
+/* the lens highlight — subtle, or it turns into 2009 gloss */
+.jelly::after, .pearl::after { content: ""; position: absolute; left: 7%; right: 7%; top: 3.5%; height: 44%;
+  border-radius: 40% 40% 50% 50% / 38% 38% 24% 24%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.26), rgba(255,255,255,0)); }
+.pearl::after { background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0)); opacity: 0.5; }
+.mk { width: 50%; height: 50%; fill: url(#gw); position: relative; z-index: 1; }
+.pearl .mk { fill: #17141c; }
+/* a wordmark stands in where a brand has no icon (RUTA, Windsor's "w.") */
+.wmark { font-weight: 900; color: #17141c; letter-spacing: -0.045em; line-height: 1;
+  position: relative; z-index: 1; }
+.wmark i { font-style: normal; color: #b4122f; }
+.jelly .wmark { color: #fff; } .jelly .wmark i { color: #ffb3c9; }
+
+/* one light sweep across a surface when it lands — once, never looping */
+.sheen { position: absolute; inset: -10%; z-index: 2; pointer-events: none;
+  background: linear-gradient(105deg, rgba(255,255,255,0) 38%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0) 62%);
+  mix-blend-mode: soft-light; }
+/* a ripple the same shape as the tile that sent it */
+.sqring { position: absolute; border-radius: 22.4%; border: 3px solid rgba(255,255,255,0.75);
+  opacity: 0; visibility: hidden; }
+
+/* ---------- the takeover ground: deep burgundy, lit from inside ----------
+   Approved on the test: a dark ground is allowed now (it overrides §5's old
+   "never dark"). Three soft light pools drift slowly; grain stops banding. */
+.tkg { position: absolute; inset: 0;
+  background: linear-gradient(172deg, #4a0a1c 0%, #660c26 36%, #3c0716 70%, #1d030a 100%); }
+.aur { position: absolute; border-radius: 50%; pointer-events: none; }
+.aur.a1 { left: 260px; top: -420px; width: 1200px; height: 1200px;
+  background: radial-gradient(circle, rgba(255,110,156,0.50) 0%, rgba(255,110,156,0) 62%); }
+.aur.a2 { left: -640px; top: 960px; width: 1400px; height: 1400px;
+  background: radial-gradient(circle, rgba(222,32,74,0.55) 0%, rgba(222,32,74,0) 64%); }
+.aur.a3 { left: 330px; top: 760px; width: 900px; height: 900px;
+  background: radial-gradient(circle, rgba(255,198,214,0.20) 0%, rgba(255,198,214,0) 60%); }
+.grain { position: absolute; inset: 0; background: url("assets/grain.png"); opacity: 0.075;
+  mix-blend-mode: overlay; pointer-events: none; }
+
+/* the white report card that sits on a burgundy ground */
+.sheet { position: absolute; border-radius: 68px; overflow: hidden; color: #17141c;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 55%, #fdf0f4 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -30px 60px -30px rgba(180,18,47,0.14),
+              0 70px 130px -40px rgba(8,0,3,0.75), 0 0 0 1px rgba(255,255,255,0.35); }
+.sheet .sheen { mix-blend-mode: normal; opacity: 0.55; }
+/* type ladder inside a sheet */
+.t-micro { font-size: 24px; font-weight: 700; letter-spacing: 0.16em; color: rgba(23,20,28,0.42); }
+.t-title { font-size: 42px; font-weight: 700; letter-spacing: -0.015em; }
+.t-sub   { font-size: 26px; font-weight: 500; color: rgba(23,20,28,0.46); }
+.t-big   { font-size: 176px; font-weight: 900; letter-spacing: -0.045em; line-height: 1;
+  background: linear-gradient(118deg, #7e0b20 0%, #b4122f 42%, #ff6e9c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: 10px; }
+.chip { display: inline-flex; align-items: center; gap: 10px; height: 58px; padding: 0 24px;
+  border-radius: 29px; background: #fbe3ea; color: #b4122f; font-size: 26px; font-weight: 700; }
+.hair { height: 2px; background: rgba(23,20,28,0.07); transform-origin: 0 0; }
+
+/* a cable between two tiles: a glass tube, a bright core, a travelling packet */
+.cab .tube { fill: none; stroke: rgba(255,255,255,0.26); stroke-width: 20; stroke-linecap: round; }
+.cab .core { fill: none; stroke: rgba(255,255,255,0.92); stroke-width: 4.5; stroke-linecap: round; }
+.cab .pkt  { fill: none; stroke: #ffd6e3; stroke-width: 11; stroke-linecap: round; }
+.cab .pkg  { filter: drop-shadow(0 0 10px rgba(255,120,165,1)); }
+.cab .wire { fill: none; stroke: rgba(255,255,255,0.55); stroke-width: 4; stroke-linecap: round; }
+
+
+.abs { position: absolute; }
+.hide { opacity: 0; visibility: hidden; }
+.tw { position: absolute; }
+.sk { fill: none; stroke: url(#gw); stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round;
+  width: 50%; height: 50%; position: relative; z-index: 1; overflow: visible; }
+.pearl .sk { stroke: #17141c; }
+.clear { overflow: hidden; }
+.circ .jelly, .circ .pearl, .circ .clear, .circ .sheen { border-radius: 50%; }
+.aurs { position: absolute; left: -700px; top: -700px; width: 2480px; height: 3320px; pointer-events: none;
+  background:
+    radial-gradient(circle 526px at 1560px 880px, rgba(255,110,156,0.50), rgba(255,110,156,0)),
+    radial-gradient(circle 634px at 760px 2360px, rgba(222,32,74,0.55), rgba(222,32,74,0)),
+    radial-gradient(circle 382px at 1480px 1910px, rgba(255,198,214,0.20), rgba(255,198,214,0)); }
+.shc { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
+.shc .sheen { mix-blend-mode: normal; opacity: 0.4; }
+.ink { stroke: #17141c !important; }
+
+/* ---- A · the Threads post ---- */
+.thr { position: absolute; border-radius: 48px; overflow: hidden; color: #101010;
+  background: linear-gradient(172deg, #ffffff 0%, #fdfcfd 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 44px 90px -34px rgba(24,4,12,0.62), 0 0 0 1px rgba(0,0,0,0.04); }
+.thr .av { position: absolute; left: 38px; top: 38px; width: 88px; height: 88px; border-radius: 50%;
+  background: radial-gradient(circle at 50% 38%, #f1c9b4 0 22%, rgba(0,0,0,0) 23%),
+              radial-gradient(ellipse 46% 34% at 50% 98%, #6b3b2e 0 98%, rgba(0,0,0,0) 100%),
+              linear-gradient(160deg, #c9a08c 0%, #7a4a3c 100%);
+  filter: blur(6px); }
+.thr .hd { position: absolute; left: 150px; top: 44px; display: flex; align-items: baseline; gap: 16px; }
+.thr .hn { font-size: 33px; font-weight: 700; letter-spacing: -0.01em; filter: blur(6px); }
+.thr .tm { font-size: 30px; font-weight: 400; color: #808080; }
+.thr .more { position: absolute; right: 42px; top: 58px; display: flex; gap: 7px; }
+.thr .more b { width: 8px; height: 8px; border-radius: 50%; background: #101010; display: block; }
+.thr .tx { position: absolute; left: 150px; top: 104px; width: 720px; font-size: 46px; font-weight: 500;
+  line-height: 1.3; letter-spacing: -0.012em; }
+.thr .ln { position: relative; display: inline-block; white-space: nowrap; }
+.thr .ln span { position: relative; z-index: 1; }
+.thr .hlb { position: absolute; left: -6px; right: -6px; bottom: 4px; height: 26px; border-radius: 8px;
+  background: rgba(255,110,156,0.38); transform-origin: 0 50%; z-index: 0; }
+.thr .act { position: absolute; left: 140px; top: 290px; display: flex; align-items: center; gap: 34px; }
+.thr .act div { display: flex; align-items: center; gap: 10px; font-size: 27px; color: #8a8a8a; font-weight: 500; }
+.thr .act svg { width: 46px; height: 46px; fill: none; stroke: #101010; stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---- R · the five-station rail ---- */
+.rtrk { position: absolute; left: 180px; top: 129px; width: 720px; height: 6px; border-radius: 3px;
+  background: rgba(255,255,255,0.26); }
+.rfil { position: absolute; left: 180px; top: 129px; width: 720px; height: 6px; border-radius: 3px;
+  background: linear-gradient(90deg, #ff8ab0, #ffd6e3); transform-origin: 0 50%;
+  box-shadow: 0 0 14px rgba(255,110,156,0.9); }
+.nd { position: absolute; width: 78px; height: 78px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 34px; font-weight: 700; color: rgba(255,255,255,0.86);
+  background: rgba(255,255,255,0.16); box-shadow: inset 0 1.5px 1px rgba(255,255,255,0.55), 0 10px 24px -10px rgba(10,0,4,0.5); }
+.ndf, .ndk { position: absolute; inset: 0; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; opacity: 0; visibility: hidden; }
+.ndf { background: linear-gradient(165deg, #e0204b 0%, #ab112e 46%, #6b081c 100%); color: #fff;
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.55), 0 0 30px rgba(255,110,156,0.75); }
+.ndk { background: linear-gradient(160deg, #ffffff 0%, #fff5f8 52%, #f5dfe6 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 10px 24px -10px rgba(10,0,4,0.5); }
+.ndk svg { width: 44px; height: 44px; fill: none; stroke: #b4122f; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.clp { position: absolute; top: 104px; height: 56px; border-radius: 16px; opacity: 0; visibility: hidden;
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.45), 0 10px 20px -10px rgba(10,0,4,0.5); }
+.clp.j { background: linear-gradient(165deg, #e0204b 0%, #8d0d24 100%); }
+.clp.p { background: linear-gradient(160deg, #ffffff 0%, #f5dfe6 100%); }
+.clp.k { background: linear-gradient(165deg, #ff8ab0 0%, #ff5c8f 100%); }
+.phd { position: absolute; left: 0; top: 84px; width: 6px; height: 96px; border-radius: 3px; background: #fff;
+  box-shadow: 0 0 16px rgba(255,255,255,0.9); opacity: 0; visibility: hidden; }
+
+/* ---- B · skills -> laptop ---- */
+.chp { position: absolute; width: 410px; height: 100px; border-radius: 50px; display: flex; align-items: center;
+  gap: 18px; padding-left: 22px; color: #17141c; font-size: 38px; font-weight: 700; letter-spacing: -0.015em;
+  background: linear-gradient(160deg, #ffffff 0%, #fff5f8 52%, #f5dfe6 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 30px 60px -22px rgba(30,4,12,0.6); }
+.chp .tw { position: relative; width: 60px; height: 60px; flex: none; }
+.lap { position: absolute; border-radius: 30px; overflow: hidden;
+  background: linear-gradient(160deg, #2a1f2a 0%, #17141c 100%);
+  box-shadow: inset 0 0 0 7px #e9dde2, inset 0 0 0 8px rgba(255,255,255,0.5), 0 44px 90px -30px rgba(10,0,4,0.7); }
+.lapb { position: absolute; border-radius: 4px 4px 30px 30px;
+  background: linear-gradient(180deg, #ffffff 0%, #ecdde3 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 30px 50px -20px rgba(10,0,4,0.6); }
+.lapb i { position: absolute; left: 50%; top: 0; width: 130px; height: 12px; margin-left: -65px;
+  border-radius: 0 0 10px 10px; background: rgba(23,20,28,0.12); }
+.lrow { position: absolute; left: 44px; height: 46px; display: flex; align-items: center; gap: 16px;
+  color: rgba(255,255,255,0.9); font-size: 30px; font-weight: 500; opacity: 0; visibility: hidden; }
+.lrow b { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(165deg, #e0204b 0%, #8d0d24 100%); }
+.lrow b svg { width: 28px; height: 28px; fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.lhd { position: absolute; left: 44px; top: 30px; display: flex; align-items: center; gap: 14px;
+  color: rgba(255,255,255,0.55); font-size: 26px; font-weight: 700; letter-spacing: 0.12em; }
+.lhd .tw { position: relative; width: 48px; height: 48px; }
+
+/* ---- TK1 · style.md ---- */
+.fcard { position: absolute; border-radius: 52px; }
+.fcard .ttl { position: absolute; left: 186px; top: 52px; font-size: 76px; font-weight: 700; letter-spacing: -0.03em; }
+.slot { position: absolute; width: 64px; height: 114px; border-radius: 14px;
+  box-shadow: inset 0 0 0 3px rgba(23,20,28,0.13); }
+.rl { position: absolute; width: 340px; height: 604px; border-radius: 40px; overflow: hidden;
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.4), 0 60px 110px -40px rgba(8,0,3,0.8); }
+.rl .ph { position: absolute; inset: 0; }
+.rl .fig { position: absolute; left: 70px; top: 190px; width: 200px; height: 420px; border-radius: 100px 100px 0 0;
+  background: rgba(255,255,255,0.22); }
+.rl .fig::before { content: ""; position: absolute; left: 50px; top: -110px; width: 100px; height: 100px; border-radius: 50%;
+  background: rgba(255,255,255,0.3); }
+.rl .ply { position: absolute; left: 130px; top: 262px; width: 80px; height: 80px; fill: rgba(255,255,255,0.92);
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.3)); }
+.rl .ig { position: absolute; right: 26px; top: 26px; width: 46px; height: 46px; fill: #fff; }
+.rl .bt { position: absolute; left: 28px; bottom: 34px; right: 28px; height: 90px; }
+.rl .bt i { position: absolute; display: block; border-radius: 8px; background: rgba(255,255,255,0.8); }
+.hrt { position: absolute; width: 96px; height: 96px; }
+.hrt svg { position: absolute; left: 24px; top: 26px; width: 48px; height: 48px; fill: #fff; stroke: none; }
+.pbw { position: absolute; border-radius: 56px; overflow: hidden;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 55%, #fdf0f4 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 50px 100px -36px rgba(8,0,3,0.8); }
+.pbw .tw { position: absolute; }
+.ptx { position: absolute; left: 150px; top: 0; height: 170px; line-height: 170px; font-size: 42px; font-weight: 500;
+  color: #17141c; white-space: nowrap; letter-spacing: -0.01em; }
+.ptx::after { content: ""; display: inline-block; width: 3px; height: 44px; margin-left: 4px; vertical-align: -8px;
+  background: #b4122f; }
+.sc { position: absolute; width: 200px; height: 356px; border-radius: 28px; overflow: hidden;
+  background: linear-gradient(170deg, #ffffff 0%, #fff5f8 60%, #f8e6ec 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 40px 80px -30px rgba(8,0,3,0.8); }
+.sc i { position: absolute; display: block; }
+.sc .num { position: absolute; left: 14px; top: 14px; width: 50px; height: 50px; border-radius: 50%;
+  background: linear-gradient(165deg, #e0204b 0%, #8d0d24 100%); color: #fff; font-size: 28px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 2; }
+.sc .ok { position: absolute; right: 14px; top: 14px; width: 50px; height: 50px; border-radius: 50%;
+  background: linear-gradient(160deg, #ffffff 0%, #f5dfe6 100%); box-shadow: 0 6px 14px -6px rgba(10,0,4,0.5);
+  opacity: 0; visibility: hidden; z-index: 2; }
+.sc .ok svg { position: absolute; left: 8px; top: 8px; width: 34px; height: 34px; fill: none; stroke: #b4122f;
+  stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.hb { border-radius: 10px; background: linear-gradient(115deg, #c41434 0%, #8d0d24 100%); }
+.rr { border-radius: 7px; background: rgba(23,20,28,0.13); }
+.im { border-radius: 18px; background: linear-gradient(150deg, #f4dfe5 0%, #ecc8d0 100%); }
+.lens { position: absolute; width: 150px; height: 150px; z-index: 5; }
+.lens svg { width: 150px; height: 150px; fill: rgba(255,255,255,0.18); stroke: #fff; stroke-width: 1.6;
+  stroke-linecap: round; filter: drop-shadow(0 0 12px rgba(255,110,156,0.9)); overflow: visible; }
+
+/* ---- C · design system ---- */
+.sw { position: absolute; width: 86px; height: 86px; border-radius: 50%;
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.45), 0 14px 26px -12px rgba(30,4,12,0.55); }
+.aa { position: absolute; font-size: 168px; font-weight: 900; letter-spacing: -0.05em; line-height: 1;
+  background: linear-gradient(118deg, #7e0b20 0%, #b4122f 42%, #ff6e9c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: 8px; }
+.btnp { position: absolute; border-radius: 999px; display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 700; letter-spacing: -0.01em;
+  background: linear-gradient(165deg, #e0204b 0%, #ab112e 46%, #6b081c 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.5), 0 18px 36px -14px rgba(70,4,20,0.6); }
+.ty { position: absolute; color: #17141c; line-height: 1; }
+
+/* ---- D · test renders ---- */
+.rc { position: absolute; width: 164px; height: 290px; border-radius: 30px; overflow: hidden; }
+.rc .pp { position: absolute; left: 47px; top: 70px; width: 70px; height: 70px; border-radius: 50%;
+  background: rgba(255,255,255,0.75); }
+.rc .pb2 { position: absolute; left: 30px; top: 150px; width: 104px; height: 120px; border-radius: 52px 52px 0 0;
+  background: rgba(255,255,255,0.5); }
+.rc .cb { position: absolute; left: 26px; top: 200px; width: 112px; height: 22px; border-radius: 8px;
+  background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.25); }
+.pgt { position: absolute; width: 164px; height: 14px; border-radius: 7px; background: rgba(255,255,255,0.28); overflow: hidden; }
+.pgf { position: absolute; inset: 0; border-radius: 7px; background: linear-gradient(90deg, #ff8ab0, #ffffff);
+  transform-origin: 0 50%; }
+
+/* ---- TK2 · the cloud ---- */
+.cloud { position: absolute; left: 0; top: 0; overflow: visible;
+  filter: drop-shadow(0 50px 70px rgba(8,0,3,0.55)); }
+.rq { position: absolute; width: 130px; height: 230px; border-radius: 24px; overflow: hidden;
+  background: linear-gradient(165deg, #e0204b 0%, #ab112e 46%, #6b081c 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.5), 0 24px 40px -18px rgba(70,4,20,0.7); }
+.rq .pp { position: absolute; left: 37px; top: 52px; width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.7); }
+.rq .pb2 { position: absolute; left: 22px; top: 118px; width: 86px; height: 112px; border-radius: 43px 43px 0 0; background: rgba(255,255,255,0.4); }
+.rq .pgt { left: 16px; bottom: 16px; width: 98px; height: 12px; background: rgba(255,255,255,0.3); }
+.cab .tube { fill: none; stroke: rgba(255,255,255,0.26); stroke-width: 20; stroke-linecap: round; }
+.cab .core { fill: none; stroke: rgba(255,255,255,0.92); stroke-width: 4.5; stroke-linecap: round; }
+.cab .pkt  { fill: none; stroke: #ffd6e3; stroke-width: 11; stroke-linecap: round; }
+.cab .pkg  { filter: drop-shadow(0 0 10px rgba(255,120,165,1)); }
+
+/* ---- E · 2 days -> 1 hour ---- */
+.calw { position: absolute; }
+.calc { position: absolute; inset: 0; border-radius: 54px; overflow: hidden; backface-visibility: hidden;
+  background: linear-gradient(170deg, #ffffff 0%, #fff6f9 60%, #f8e6ec 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 44px 80px -30px rgba(24,4,12,0.6); }
+.calc .hd { position: absolute; left: 0; top: 0; right: 0; height: 92px;
+  background: linear-gradient(165deg, #e0204b 0%, #8d0d24 100%); }
+.calc .hole { position: absolute; top: 34px; width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.85); }
+.calc .hd svg { position: absolute; left: 50%; top: 16px; width: 60px; height: 60px; margin-left: -30px; fill: none;
+  stroke: #fff; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.calc .big { position: absolute; left: 0; right: 0; top: 104px; text-align: center; font-size: 190px; font-weight: 900;
+  letter-spacing: -0.05em; line-height: 1;
+  background: linear-gradient(118deg, #7e0b20 0%, #b4122f 42%, #ff6e9c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; }
+.calc .lb { position: absolute; left: 0; right: 0; top: 300px; text-align: center; font-size: 46px; font-weight: 700;
+  color: rgba(23,20,28,0.5); }
+.gdoc { position: absolute; border-radius: 40px; overflow: hidden;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 55%, #fdf0f4 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 40px 80px -30px rgba(24,4,12,0.62); }
+.gdoc i { position: absolute; display: block; }
+.gdoc .ck { position: absolute; left: 26px; width: 34px; height: 34px; border-radius: 10px;
+  background: linear-gradient(165deg, #e0204b 0%, #8d0d24 100%); }
+.gdoc .ck svg { position: absolute; left: 5px; top: 5px; width: 24px; height: 24px; fill: none; stroke: #fff;
+  stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---- F · CTA ---- */
+.cmt { position: absolute; border-radius: 60px; overflow: hidden;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 55%, #fdf0f4 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 40px 80px -30px rgba(24,4,12,0.62); }
+.cmt .avp { position: absolute; left: 22px; top: 20px; width: 80px; height: 80px; border-radius: 50%;
+  background: linear-gradient(160deg, #f4dfe5 0%, #ecc8d0 100%); display: flex; align-items: center; justify-content: center; }
+.cmt .avp svg { width: 44px; height: 44px; fill: none; stroke: #8d0d24; stroke-width: 2.2; stroke-linecap: round; }
+.cmt .phd2 { position: absolute; left: 128px; top: 0; height: 120px; line-height: 120px; font-size: 40px; font-weight: 500;
+  color: rgba(23,20,28,0.38); }
+#cmT { position: absolute; left: 128px; top: 0; height: 120px; line-height: 120px; font-size: 46px; font-weight: 700;
+  color: #17141c; white-space: nowrap; }
+#cmT::after { content: ""; display: inline-block; width: 3px; height: 46px; margin-left: 4px; vertical-align: -8px;
+  background: #b4122f; }
+#dm .app { position: absolute; left: 166px; top: 40px; font-size: 30px; font-weight: 700; color: rgba(255,255,255,0.72); }
+#dm .tm  { position: absolute; right: 46px; top: 42px; font-size: 26px; font-weight: 500; color: rgba(255,255,255,0.5); }
+.mini { position: absolute; border-radius: 34px; overflow: hidden;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 55%, #fdf0f4 100%);
+  box-shadow: inset 0 2px 1px #fff, 0 24px 44px -20px rgba(10,0,4,0.6); }
+.free { position: absolute; height: 84px; border-radius: 42px; padding: 0 34px; display: flex; align-items: center;
+  background: linear-gradient(165deg, #e0204b 0%, #ab112e 46%, #6b081c 100%); color: #fff; font-size: 40px;
+  font-weight: 700; letter-spacing: -0.01em; white-space: nowrap;
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.5), 0 24px 44px -16px rgba(70,4,20,0.75); }
+
+    .ground { clip-path: path('M 883.2 0 c 36.293 0 54.439 0 70.765 8.318 a 68 68 0 0 1 29.717 29.717 c 8.318 16.325 8.318 34.472 8.318 70.765 L 992 1683.2 c 0 36.293 0 54.439 -8.318 70.765 a 68 68 0 0 1 -29.717 29.717 c -16.325 8.318 -34.472 8.318 -70.765 8.318 L 108.8 1792 c -36.293 0 -54.439 0 -70.765 -8.318 a 68 68 0 0 1 -29.717 -29.717 c -8.318 -16.325 -8.318 -34.472 -8.318 -70.765 L 0 108.8 c 0 -36.293 0 -54.439 8.318 -70.765 a 68 68 0 0 1 29.717 -29.717 c 16.325 -8.318 34.472 -8.318 70.765 -8.318 Z'); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="45.483" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="45.483" data-media-start="0"
+             muted playsinline></video>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="gw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ffdbe6"/></linearGradient>
+<symbol id="i-threads" viewBox="0 0 24 24"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></symbol>
+<symbol id="i-claude" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></symbol>
+<symbol id="i-instagram" viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></symbol></defs></svg>
+<div class="g full" id="gA"><div class="thr hide" id="thr" style="left:90px;top:130px;width:900px;height:390px"><div class="av"></div><div class="hd"><span class="hn">olena.kovalchuk_</span><span class="tm">2 год</span></div><div class="tx"><div class="ln"><i class="hlb" id="hl1"></i><span>А як ти це робиш —</span></div><br><div class="ln"><i class="hlb" id="hl2"></i><span>цей ваш ШІ-монтаж?</span></div></div><div class="act"><div><svg  viewBox="0 0 24 24"><path d="M12 20.2s-7.7-4.6-7.7-10.2A4.3 4.3 0 0 1 12 7.5a4.3 4.3 0 0 1 7.7 2.5c0 5.6-7.7 10.2-7.7 10.2z"/></svg>48</div><div><svg  viewBox="0 0 24 24"><path d="M20.2 11.7a8.2 8.2 0 0 1-12 7.2L3.8 20.2l1.3-4.3a8.2 8.2 0 1 1 15.1-4.2z"/></svg>12</div><div><svg  viewBox="0 0 24 24"><path d="M6.5 10.5V9a2.5 2.5 0 0 1 2.5-2.5h9.5M15.8 3.8l2.7 2.7-2.7 2.7M17.5 13.5V15a2.5 2.5 0 0 1-2.5 2.5H5.5M8.2 20.2l-2.7-2.7 2.7-2.7"/></svg></div><div><svg  viewBox="0 0 24 24"><path d="M20.6 3.6L10.3 13.7M20.6 3.6l-6.6 17-3.7-6.9-6.9-3.7z"/></svg></div></div><div class="shc"><div class="sheen"></div></div></div><div class="sqring" id="aThR" style="left:480px;top:230px;width:120px;height:120px"></div><div class="tw hide " id="aTh" style="left:480px;top:230px;width:120px;height:120px"><div class="pearl"><svg class="mk"><use href="#i-threads" width="100%" height="100%"/></svg><div class="sheen"></div></div></div></div>
+<div class="g full" id="gR"><div class="shelf edge hide" id="rSh" style="left:90px;top:66px;width:900px;height:132px"></div><div class="abs" id="rNodes" style="left:0;top:0"><div class="rtrk"></div><div class="rfil" id="rFil"></div><div class="nd" id="n0" style="left:141px;top:93px"><span id="n0n">1</span><div class="ndf" id="n0f">1</div><div class="ndk" id="n0k"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><div class="nd" id="n1" style="left:321px;top:93px"><span id="n1n">2</span><div class="ndf" id="n1f">2</div><div class="ndk" id="n1k"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><div class="nd" id="n2" style="left:501px;top:93px"><span id="n2n">3</span><div class="ndf" id="n2f">3</div><div class="ndk" id="n2k"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><div class="nd" id="n3" style="left:681px;top:93px"><span id="n3n">4</span><div class="ndf" id="n3f">4</div><div class="ndk" id="n3k"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><div class="nd" id="n4" style="left:861px;top:93px"><span id="n4n">5</span><div class="ndf" id="n4f">5</div><div class="ndk" id="n4k"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div></div><div class="abs" id="rTl" style="left:0;top:0"><div class="clp j" id="cl0" style="left:126px;width:150px"></div><div class="clp p" id="cl1" style="left:284px;width:210px"></div><div class="clp k" id="cl2" style="left:502px;width:120px"></div><div class="clp j" id="cl3" style="left:630px;width:170px"></div><div class="clp p" id="cl4" style="left:808px;width:146px"></div><div class="phd" id="phd" style="left:126px"></div></div></div>
+<div class="g full" id="gB"><div class="abs hide" id="lap" style="left:0;top:0"><div class="lap" style="left:260px;top:232px;width:560px;height:316px"><div class="lhd" id="lhd"><div class="tw"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg></div></div>SKILLS</div><div class="lrow" id="lr0" style="top:96px"><b><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></b>hyperframes</div><div class="lrow" id="lr1" style="top:148px"><b><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></b>remotion</div><div class="lrow" id="lr2" style="top:200px"><b><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></b>video-use</div><div class="lrow" id="lr3" style="top:252px"><b><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></b>media-use</div></div><div class="lapb" style="left:190px;top:548px;width:700px;height:30px"><i></i></div></div><div class="chp hide" id="ch0" style="left:110px;top:236px"><div class="tw"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg></div></div>hyperframes</div><div class="chp hide" id="ch1" style="left:560px;top:236px"><div class="tw"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg></div></div>remotion</div><div class="chp hide" id="ch2" style="left:110px;top:360px"><div class="tw"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg></div></div>video-use</div><div class="chp hide" id="ch3" style="left:560px;top:360px"><div class="tw"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg></div></div>media-use</div><div class="sqring" id="bPlR" style="left:830px;top:290px;width:128px;height:128px"></div><div class="tw hide " id="bPl" style="left:830px;top:290px;width:128px;height:128px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M9 3.2v5M15 3.2v5M6.4 8.2h11.2v3.4a5.6 5.6 0 0 1-11.2 0V8.2zM12 17.2v3.8"/></svg><div class="sheen"></div></div></div></div>
+<div class="g full" id="gT1"><div class="tkg"></div><div class="aurs"></div><div class="grain"></div><div class="sheet fcard hide" id="fc" style="left:70px;top:110px;width:940px;height:210px"><div class="tw" style="left:44px;top:46px;width:118px;height:118px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M6.8 3h7.4l4.6 4.6V20a1 1 0 0 1-1 1H6.8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h4.8"/></svg></div></div><div class="ttl">style.md</div><div class="slot" style="left:600px;top:48px"></div><div class="slot" style="left:680px;top:48px"></div><div class="slot" style="left:760px;top:48px"></div><div class="slot" style="left:840px;top:48px"></div><div class="sheen"></div></div><div class="abs hide" id="rl0" style="left:-40px;top:380px;width:340px;height:604px"><div class="rl" style="left:0;top:0;transform:rotate(-6deg)"><div class="ph" style="background:linear-gradient(165deg,#ff8ab0 0%,#b4122f 70%,#5a0718 100%)"></div><div class="fig"></div><svg class="ply" viewBox="0 0 24 24"><path d="M8.5 5.6v12.8l10.2-6.4z"/></svg><svg class="ig" viewBox="0 0 24 24"><use href="#i-instagram"/></svg><div class="bt"><i style="left:0;top:0;width:56px;height:56px;border-radius:50%"></i><i style="left:72px;top:8px;width:150px;height:18px"></i><i style="left:72px;top:38px;width:96px;height:14px;opacity:0.6"></i></div></div><div class="tw hide circ hrt" id="ht0" style="left:228px;top:490px;width:96px;height:96px"><div class="jelly"><svg class="hs" viewBox="0 0 24 24"><path d="M12 20.2s-7.7-4.6-7.7-10.2A4.3 4.3 0 0 1 12 7.5a4.3 4.3 0 0 1 7.7 2.5c0 5.6-7.7 10.2-7.7 10.2z"/></svg><div class="sheen"></div></div></div></div><div class="abs hide" id="rl1" style="left:370px;top:360px;width:340px;height:604px"><div class="rl" style="left:0;top:0;transform:rotate(0deg)"><div class="ph" style="background:linear-gradient(160deg,#f4dfe5 0%,#c98a9a 50%,#6b081c 100%)"></div><div class="fig"></div><svg class="ply" viewBox="0 0 24 24"><path d="M8.5 5.6v12.8l10.2-6.4z"/></svg><svg class="ig" viewBox="0 0 24 24"><use href="#i-instagram"/></svg><div class="bt"><i style="left:0;top:0;width:56px;height:56px;border-radius:50%"></i><i style="left:72px;top:8px;width:150px;height:18px"></i><i style="left:72px;top:38px;width:96px;height:14px;opacity:0.6"></i></div></div><div class="tw hide circ hrt" id="ht1" style="left:228px;top:490px;width:96px;height:96px"><div class="jelly"><svg class="hs" viewBox="0 0 24 24"><path d="M12 20.2s-7.7-4.6-7.7-10.2A4.3 4.3 0 0 1 12 7.5a4.3 4.3 0 0 1 7.7 2.5c0 5.6-7.7 10.2-7.7 10.2z"/></svg><div class="sheen"></div></div></div></div><div class="abs hide" id="rl2" style="left:780px;top:380px;width:340px;height:604px"><div class="rl" style="left:0;top:0;transform:rotate(6deg)"><div class="ph" style="background:linear-gradient(170deg,#e0204b 0%,#8d0d24 60%,#2a0510 100%)"></div><div class="fig"></div><svg class="ply" viewBox="0 0 24 24"><path d="M8.5 5.6v12.8l10.2-6.4z"/></svg><svg class="ig" viewBox="0 0 24 24"><use href="#i-instagram"/></svg><div class="bt"><i style="left:0;top:0;width:56px;height:56px;border-radius:50%"></i><i style="left:72px;top:8px;width:150px;height:18px"></i><i style="left:72px;top:38px;width:96px;height:14px;opacity:0.6"></i></div></div><div class="tw hide circ hrt" id="ht2" style="left:228px;top:490px;width:96px;height:96px"><div class="jelly"><svg class="hs" viewBox="0 0 24 24"><path d="M12 20.2s-7.7-4.6-7.7-10.2A4.3 4.3 0 0 1 12 7.5a4.3 4.3 0 0 1 7.7 2.5c0 5.6-7.7 10.2-7.7 10.2z"/></svg><div class="sheen"></div></div></div></div><div class="sc hide" id="sc0" style="left:95px;top:452px"><i class="hb" style="left:24px;top:96px;width:150px;height:30px"></i><i class="hb" style="left:24px;top:136px;width:104px;height:30px"></i><i class="rr" style="left:24px;top:190px;width:150px;height:14px"></i><i class="rr" style="left:24px;top:214px;width:118px;height:14px"></i><i class="im" style="left:24px;top:248px;width:152px;height:84px"></i><div class="num" id="sn0">1</div><div class="ok" id="so0"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><div class="sc hide" id="sc1" style="left:325px;top:452px"><i class="im" style="left:0;top:0;width:200px;height:356px;border-radius:0"></i><i style="left:62px;top:100px;width:76px;height:76px;border-radius:50%;background:#fff"></i><i style="left:36px;top:190px;width:128px;height:170px;border-radius:64px 64px 0 0;background:rgba(255,255,255,0.8)"></i><i style="left:30px;top:270px;width:140px;height:24px;border-radius:8px;background:#17141c"></i><div class="num" id="sn1">2</div><div class="ok" id="so1"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><div class="sc hide" id="sc2" style="left:555px;top:452px"><i class="hb" style="left:24px;top:84px;width:70px;height:70px;border-radius:18px"></i><i class="im" style="left:106px;top:84px;width:70px;height:70px"></i><i class="im" style="left:24px;top:166px;width:70px;height:70px"></i><i class="hb" style="left:106px;top:166px;width:70px;height:70px;border-radius:18px;opacity:0.55"></i><i class="rr" style="left:24px;top:262px;width:152px;height:14px"></i><i class="rr" style="left:24px;top:286px;width:100px;height:14px"></i><div class="num" id="sn2">3</div><div class="ok" id="so2"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><div class="sc hide" id="sc3" style="left:785px;top:452px"><i class="im" style="left:24px;top:220px;width:30px;height:100px;border-radius:9px"></i><i class="im" style="left:64px;top:180px;width:30px;height:140px;border-radius:9px"></i><i class="im" style="left:104px;top:140px;width:30px;height:180px;border-radius:9px"></i><i class="hb" style="left:144px;top:90px;width:30px;height:230px;border-radius:9px"></i><i class="rr" style="left:24px;top:96px;width:100px;height:14px"></i><div class="num" id="sn3">4</div><div class="ok" id="so3"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div></div><div class="abs" id="lensW" style="left:0;top:0"><div class="lens hide" id="lens"><svg viewBox="0 0 24 24"><circle cx="10.4" cy="10.4" r="6.4"/><path d="M15.2 15.2l5 5"/></svg></div></div><div class="pbw hide" id="pbw" style="left:70px;top:1030px;width:940px;height:170px"><div class="tw" style="left:30px;top:35px;width:100px;height:100px"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg></div></div><div class="ptx" id="pT"></div><div class="tw circ" id="pS" style="left:830px;top:40px;width:90px;height:90px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M12 19.2V5.4M6.2 11l5.8-5.8 5.8 5.8"/></svg></div></div></div></div>
+<div class="g full" id="gC"><div class="sheet hide" id="ds" style="left:100px;top:222px;width:880px;height:376px"><div class="t-micro abs" id="dsH" style="left:52px;top:42px">ДИЗАЙН-СИСТЕМА</div><div class="aa" id="dsA" style="left:44px;top:96px">Aa</div><div class="sw" id="sw0" style="left:330px;top:96px;background:#6b081c"></div><div class="sw" id="sw1" style="left:432px;top:96px;background:#b4122f"></div><div class="sw" id="sw2" style="left:534px;top:96px;background:#ff6e9c"></div><div class="sw" id="sw3" style="left:636px;top:96px;background:#fdf1f4;box-shadow:inset 0 0 0 2px rgba(23,20,28,0.12), 0 14px 26px -12px rgba(30,4,12,0.45)"></div><div class="sw" id="sw4" style="left:738px;top:96px;background:#17141c"></div><div class="btnp" id="dsB" style="left:330px;top:232px;width:260px;height:86px;font-size:34px">Кнопка</div><div class="ty" id="dsT" style="left:640px;top:226px"><div style="font-size:44px;font-weight:900">H1</div><div style="font-size:32px;font-weight:700;margin-top:10px;color:rgba(23,20,28,0.7)">H2</div><div style="font-size:24px;font-weight:500;margin-top:10px;color:rgba(23,20,28,0.46)">Текст</div></div><div class="sheen"></div></div></div>
+<div class="g full" id="gD"><div class="abs hide" id="rc0" style="left:250px;top:232px;width:164px;height:330px"><div class="dglass edge rc" style="left:0;top:0;border-radius:30px"><div class="pp"></div><div class="pb2"></div><div class="cb"></div></div><div class="pgt" style="left:0;top:308px"><div class="pgf" id="rf0"></div></div></div><div class="tw hide circ" id="rk0" style="left:368px;top:206px;width:70px;height:70px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg><div class="sheen"></div></div></div><div class="abs hide" id="rc1" style="left:458px;top:232px;width:164px;height:330px"><div class="dglass edge rc" style="left:0;top:0;border-radius:30px"><div class="pp"></div><div class="pb2"></div><div class="cb"></div></div><div class="pgt" style="left:0;top:308px"><div class="pgf" id="rf1"></div></div></div><div class="tw hide circ" id="rk1" style="left:576px;top:206px;width:70px;height:70px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg><div class="sheen"></div></div></div><div class="abs hide" id="rc2" style="left:666px;top:232px;width:164px;height:330px"><div class="dglass edge rc" style="left:0;top:0;border-radius:30px"><div class="pp"></div><div class="pb2"></div><div class="cb"></div></div><div class="pgt" style="left:0;top:308px"><div class="pgf" id="rf2"></div></div></div><div class="tw hide circ" id="rk2" style="left:784px;top:206px;width:70px;height:70px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg><div class="sheen"></div></div></div></div>
+<div class="g full" id="gT2"><div class="tkg"></div><div class="aurs"></div><div class="grain"></div><svg class="cab abs" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0;top:0"><path class="tube hide" id="cT" d="M540 852 L540 600"/><path class="core hide" id="cC" d="M540 852 L540 600"/><g class="pkg"><path class="pkt" id="cP" style="opacity:0" d="M540 852 L540 600"/></g></svg><svg class="cloud hide" id="cld" width="1080" height="720" viewBox="0 0 1080 720"><defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="720" gradientUnits="userSpaceOnUse"><stop offset="0.25" stop-color="#ffffff"/><stop offset="1" stop-color="#f6dbe3"/></linearGradient></defs><g fill="url(#cg)"><circle cx="70" cy="300" r="260"/><circle cx="330" cy="190" r="300"/><circle cx="660" cy="170" r="310"/><circle cx="950" cy="290" r="270"/><circle cx="520" cy="360" r="300"/><circle cx="220" cy="420" r="210"/><circle cx="840" cy="430" r="210"/><rect x="-40" y="-40" width="1160" height="400"/></g></svg><div class="rq hide" id="rq0" style="left:320px;top:250px"><div class="pp"></div><div class="pb2"></div><div class="pgt"><div class="pgf" id="qf0"></div></div></div><div class="rq hide" id="rq1" style="left:475px;top:250px"><div class="pp"></div><div class="pb2"></div><div class="pgt"><div class="pgf" id="qf1"></div></div></div><div class="rq hide" id="rq2" style="left:630px;top:250px"><div class="pp"></div><div class="pb2"></div><div class="pgt"><div class="pgf" id="qf2"></div></div></div><div class="abs hide" id="lp2" style="left:0;top:0"><div class="lap" style="left:290px;top:860px;width:500px;height:300px"><div class="rq" id="lrq" style="left:185px;top:36px;transform:scale(0.98)"><div class="pp"></div><div class="pb2"></div><div class="pgt"><div class="pgf" id="lqf" style="transform:scaleX(0.18)"></div></div></div></div><div class="lapb" style="left:220px;top:1160px;width:640px;height:34px"><i></i></div></div><div class="tw hide circ" id="xk" style="left:730px;top:826px;width:96px;height:96px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M6.8 6.8l10.4 10.4M17.2 6.8L6.8 17.2"/></svg><div class="sheen"></div></div></div></div>
+<div class="g full" id="gE"><div class="calw hide" id="cal" style="left:330px;top:196px;width:420px;height:390px"><div class="calc" id="cF"><div class="hd"><div class="hole" style="left:120px"></div><div class="hole" style="left:276px"></div></div><div class="big" id="cN">2</div><div class="lb" id="cL">дні</div><div class="shc"><div class="sheen"></div></div></div><div class="calc" id="cB"><div class="hd"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="M12 7.4V12l3.1 2.1"/></svg></div><div class="big">1</div><div class="lb">година</div></div></div><div class="gdoc hide" id="gdoc" style="left:480px;top:250px;width:220px;height:280px"><div class="ck" style="top:34px"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div><i class="rr" style="left:76px;top:43px;width:112px;height:16px;border-radius:8px"></i><div class="ck" style="top:80px"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div><i class="rr" style="left:76px;top:89px;width:96px;height:16px;border-radius:8px"></i><div class="ck" style="top:126px"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div><i class="rr" style="left:76px;top:135px;width:124px;height:16px;border-radius:8px"></i><div class="ck" style="top:172px"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div><i class="rr" style="left:76px;top:181px;width:84px;height:16px;border-radius:8px"></i><div class="ck" style="top:218px"><svg viewBox="0 0 24 24"><path d="M5.4 12.6l4.3 4.3 8.9-9.5"/></svg></div><i class="rr" style="left:76px;top:227px;width:104px;height:16px;border-radius:8px"></i></div><div class="sqring" id="youR" style="left:770px;top:300px;width:170px;height:170px"></div><div class="tw hide circ" id="you" style="left:770px;top:300px;width:170px;height:170px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.8 3.7-5.8 7.2-5.8s6.3 2 7.2 5.8"/></svg><div class="sheen"></div></div></div><div class="tw hide circ" id="dn" style="left:690px;top:168px;width:92px;height:92px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M12 4.8v13.8M6.2 13l5.8 5.8 5.8-5.8"/></svg><div class="sheen"></div></div></div></div>
+<div class="g full" id="gF"><div class="dglass edge hide" id="dm" style="left:70px;top:110px;width:940px;height:300px"><div class="tw" style="left:36px;top:36px;width:104px;height:104px"><div class="jelly"><svg class="mk"><use href="#i-instagram" width="100%" height="100%"/></svg></div></div><div class="app">Instagram</div><div class="tm">зараз</div><div class="mini" id="mini" style="left:166px;top:112px;width:620px;height:150px"><div class="aa" style="left:34px;top:22px;font-size:104px">Aa</div><div class="sw" style="left:220px;top:42px;width:64px;height:64px;background:#6b081c"></div><div class="sw" style="left:294px;top:42px;width:64px;height:64px;background:#b4122f"></div><div class="sw" style="left:368px;top:42px;width:64px;height:64px;background:#ff6e9c"></div><div class="sw" style="left:442px;top:42px;width:64px;height:64px;background:#fdf1f4"></div><div class="sw" style="left:516px;top:42px;width:64px;height:64px;background:#17141c"></div></div><div class="shc"><div class="sheen"></div></div></div><div class="cmt hide" id="cmt" style="left:70px;top:478px;width:940px;height:120px"><div class="avp"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.8 3.7-5.8 7.2-5.8s6.3 2 7.2 5.8"/></svg></div><div class="phd2" id="cmPh">Додати коментар…</div><div id="cmT"></div><div class="tw circ" id="cmS" style="left:836px;top:16px;width:88px;height:88px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M12 19.2V5.4M6.2 11l5.8-5.8 5.8 5.8"/></svg></div></div></div><div class="free hide" id="free" style="left:640px;top:350px">безкоштовно</div></div>
+
+      <div id="scrim"></div>
+      <div class="cap" id="cap0">МЕНЕ</div>
+      <div class="cap" id="cap1">СПИТАЛИ</div>
+      <div class="cap" id="cap2">В THREADS:</div>
+      <div class="cap" id="cap12">ПФФФ,</div>
+      <div class="cap" id="cap13">ВАБЩЄ</div>
+      <div class="cap" id="cap14">ДУЖЕ</div>
+      <div class="cap" id="cap15">ПРОСТО))</div>
+      <div class="cap" id="cap16">СПОЧАТКУ</div>
+      <div class="cap" id="cap17">ЗНАХОДИШ</div>
+      <div class="cap" id="cap18">ПРАВИЛЬНИЙ</div>
+      <div class="cap" id="cap19">НАБІР</div>
+      <div class="cap" id="cap20">СКІЛІВ</div>
+      <div class="cap" id="cap21">І</div>
+      <div class="cap" id="cap22">СТАВИШ</div>
+      <div class="cap" id="cap23">СОБІ</div>
+      <div class="cap" id="cap24">ЛОКАЛЬНО</div>
+      <div class="cap" id="cap25">ВСІ</div>
+      <div class="cap" id="cap26">СКІЛИ</div>
+      <div class="cap" id="cap27">ТА</div>
+      <div class="cap" id="cap28">ПЛАГІНИ.</div>
+      <div class="cap" id="cap29">ПОТІМ</div>
+      <div class="cap" id="cap30">ФОРМУЄШ</div>
+      <div class="cap" id="cap32">БЕРЕШ</div>
+      <div class="cap" id="cap33">ПРИКЛАДИ</div>
+      <div class="cap" id="cap34">РІЛСІВ,</div>
+      <div class="cap" id="cap35">ЯКІ</div>
+      <div class="cap" id="cap36">ТОБІ</div>
+      <div class="cap" id="cap37">ПОДОБАЮТЬСЯ,</div>
+      <div class="cap" id="cap38">І СПЕЦІАЛЬНИМ</div>
+      <div class="cap" id="cap39">ПРОМТОМ</div>
+      <div class="cap" id="cap45">ДАЛІ</div>
+      <div class="cap" id="cap46">ІНШИЙ</div>
+      <div class="cap" id="cap47">ПРОМТ</div>
+      <div class="cap" id="cap51">І ЗБЕРІГАЄ</div>
+      <div class="cap" id="cap52">ЇЇ</div>
+      <div class="cap" id="cap53">ЯК</div>
+      <div class="cap" id="cap54">ПРИКЛАД.</div>
+      <div class="cap" id="cap55">І</div>
+      <div class="cap" id="cap56">ОКРЕМО</div>
+      <div class="cap" id="cap57">ГОТУЄШ</div>
+      <div class="cap" id="cap58">ВЛАСНУ</div>
+      <div class="cap" id="cap60">ПІСЛЯ</div>
+      <div class="cap" id="cap61">ЦЬОГО</div>
+      <div class="cap" id="cap62">КІЛЬКА</div>
+      <div class="cap" id="cap63">ТЕСТОВИХ</div>
+      <div class="cap" id="cap64">РЕНДЕРІВ,</div>
+      <div class="cap" id="cap65">ЩОБ ПЕРЕВІРИТИ,</div>
+      <div class="cap" id="cap66">ЩО ВОНО</div>
+      <div class="cap" id="cap67">ВЗАГАЛІ</div>
+      <div class="cap" id="cap68">ПРАЦЮЄ,</div>
+      <div class="cap" id="cap69">І ПІДКЛЮЧАЄШ</div>
+      <div class="cap" id="cap70">РЕНДЕР</div>
+      <div class="cap" id="cap71">НА</div>
+      <div class="cap" id="cap72">ХМАРУ,</div>
+      <div class="cap" id="cap73">ЩОБ ВСЕ</div>
+      <div class="cap" id="cap74">СТВОРЮВАЛОСЬ</div>
+      <div class="cap" id="cap75">ТАМ,</div>
+      <div class="cap" id="cap76">А</div>
+      <div class="cap" id="cap77">НЕ НА</div>
+      <div class="cap" id="cap78">ТВОЄМУ</div>
+      <div class="cap" id="cap79">КОМПʼЮТЕРІ.</div>
+      <div class="cap" id="cap80">І</div>
+      <div class="cap" id="cap81">ТІЛЬКИ</div>
+      <div class="cap" id="cap82">ТОДІ</div>
+      <div class="cap" id="cap83">МОЖНА</div>
+      <div class="cap" id="cap84">МОНТУВАТИ.</div>
+      <div class="cap" id="cap85">КОЛИ</div>
+      <div class="cap" id="cap86">Я</div>
+      <div class="cap" id="cap87">ЦЕ</div>
+      <div class="cap" id="cap88">РОБИЛА,</div>
+      <div class="cap" id="cap89">ТО</div>
+      <div class="cap" id="cap90">ЦЕ</div>
+      <div class="cap" id="cap91">ЗАЙНЯЛО</div>
+      <div class="cap" id="cap92">В МЕНЕ</div>
+      <div class="cap" id="cap95">АЛЕ</div>
+      <div class="cap" id="cap96">ТЕПЕР</div>
+      <div class="cap" id="cap97">Я</div>
+      <div class="cap" id="cap98">ЗНАЮ,</div>
+      <div class="cap" id="cap99">ЯК ВСЕ</div>
+      <div class="cap" id="cap100">ПЕРЕДАТИ</div>
+      <div class="cap" id="cap101">ТОБІ,</div>
+      <div class="cap" id="cap102">ЩОБ ТИ</div>
+      <div class="cap" id="cap103">МОГЛА</div>
+      <div class="cap" id="cap104">ЦЕ</div>
+      <div class="cap" id="cap105">ЗРОБИТИ</div>
+      <div class="cap" id="cap106">БУКВАЛЬНО</div>
+      <div class="cap" id="cap109">АБО</div>
+      <div class="cap" id="cap110">Й</div>
+      <div class="cap" id="cap111">МЕНШЕ.</div>
+      <div class="cap" id="cap112">НАПИШИ</div>
+      <div class="cap" id="cap113">СЛОВО</div>
+      <div class="cap" id="cap115">І</div>
+      <div class="cap" id="cap116">Я</div>
+      <div class="cap" id="cap117">НАДІШЛЮ,</div>
+      <div class="cap" id="cap118">ЯК</div>
+      <div class="cap" id="cap119">ЗРОБИТИ</div>
+      <div class="cap" id="cap120">СВОЮ</div>
+      <div class="cap" id="cap121">ДИЗАЙН-СИСТЕМУ</div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="45.483" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  tl.set("#cap0", {autoAlpha: 1}, 0.000);
+  tl.set("#cap0", {autoAlpha: 0}, 0.482);
+  tl.set("#cap1", {autoAlpha: 1}, 0.567);
+  tl.set("#cap1", {autoAlpha: 0}, 0.862);
+  tl.set("#cap2", {autoAlpha: 1}, 0.947);
+  tl.set("#cap2", {autoAlpha: 0}, 1.282);
+  tl.set("#cap12", {autoAlpha: 1}, 3.784);
+  tl.set("#cap12", {autoAlpha: 0}, 4.139);
+  tl.set("#cap13", {autoAlpha: 1}, 4.224);
+  tl.set("#cap13", {autoAlpha: 0}, 4.459);
+  tl.set("#cap14", {autoAlpha: 1}, 4.544);
+  tl.set("#cap14", {autoAlpha: 0}, 4.839);
+  tl.set("#cap15", {autoAlpha: 1}, 4.924);
+  tl.set("#cap15", {autoAlpha: 0}, 5.868);
+  tl.set("#cap16", {autoAlpha: 1}, 5.953);
+  tl.set("#cap16", {autoAlpha: 0}, 6.288);
+  tl.set("#cap17", {autoAlpha: 1}, 6.373);
+  tl.set("#cap17", {autoAlpha: 0}, 6.688);
+  tl.set("#cap18", {autoAlpha: 1}, 6.773);
+  tl.set("#cap18", {autoAlpha: 0}, 7.128);
+  tl.set("#cap19", {autoAlpha: 1}, 7.213);
+  tl.set("#cap19", {autoAlpha: 0}, 7.408);
+  tl.set("#cap20", {autoAlpha: 1}, 7.493);
+  tl.set("#cap20", {autoAlpha: 0}, 7.728);
+  tl.set("#cap21", {autoAlpha: 1}, 7.813);
+  tl.set("#cap21", {autoAlpha: 0}, 7.928);
+  tl.set("#cap22", {autoAlpha: 1}, 8.013);
+  tl.set("#cap22", {autoAlpha: 0}, 8.128);
+  tl.set("#cap23", {autoAlpha: 1}, 8.213);
+  tl.set("#cap23", {autoAlpha: 0}, 8.348);
+  tl.set("#cap24", {autoAlpha: 1}, 8.433);
+  tl.set("#cap24", {autoAlpha: 0}, 8.768);
+  tl.set("#cap25", {autoAlpha: 1}, 8.853);
+  tl.set("#cap25", {autoAlpha: 0}, 8.968);
+  tl.set("#cap26", {autoAlpha: 1}, 9.053);
+  tl.set("#cap26", {autoAlpha: 0}, 9.228);
+  tl.set("#cap27", {autoAlpha: 1}, 9.313);
+  tl.set("#cap27", {autoAlpha: 0}, 9.413);
+  tl.set("#cap28", {autoAlpha: 1}, 9.473);
+  tl.set("#cap28", {autoAlpha: 0}, 9.848);
+  tl.set("#cap29", {autoAlpha: 1}, 9.933);
+  tl.set("#cap29", {autoAlpha: 0}, 10.108);
+  tl.set("#cap30", {autoAlpha: 1}, 10.193);
+  tl.set("#cap30", {autoAlpha: 0}, 10.568);
+  tl.set("#cap32", {autoAlpha: 1}, 11.304);
+  tl.set("#cap32", {autoAlpha: 0}, 11.499);
+  tl.set("#cap33", {autoAlpha: 1}, 11.584);
+  tl.set("#cap33", {autoAlpha: 0}, 11.939);
+  tl.set("#cap34", {autoAlpha: 1}, 12.024);
+  tl.set("#cap34", {autoAlpha: 0}, 12.159);
+  tl.set("#cap35", {autoAlpha: 1}, 12.244);
+  tl.set("#cap35", {autoAlpha: 0}, 12.344);
+  tl.set("#cap36", {autoAlpha: 1}, 12.424);
+  tl.set("#cap36", {autoAlpha: 0}, 12.579);
+  tl.set("#cap37", {autoAlpha: 1}, 12.664);
+  tl.set("#cap37", {autoAlpha: 0}, 13.239);
+  tl.set("#cap38", {autoAlpha: 1}, 13.324);
+  tl.set("#cap38", {autoAlpha: 0}, 13.832);
+  tl.set("#cap39", {autoAlpha: 1}, 13.917);
+  tl.set("#cap39", {autoAlpha: 0}, 14.159);
+  tl.set("#cap45", {autoAlpha: 1}, 16.233);
+  tl.set("#cap45", {autoAlpha: 0}, 16.738);
+  tl.set("#cap46", {autoAlpha: 1}, 16.823);
+  tl.set("#cap46", {autoAlpha: 0}, 17.078);
+  tl.set("#cap47", {autoAlpha: 1}, 17.163);
+  tl.set("#cap47", {autoAlpha: 0}, 17.338);
+  tl.set("#cap51", {autoAlpha: 1}, 18.563);
+  tl.set("#cap51", {autoAlpha: 0}, 18.918);
+  tl.set("#cap52", {autoAlpha: 1}, 19.003);
+  tl.set("#cap52", {autoAlpha: 0}, 19.103);
+  tl.set("#cap53", {autoAlpha: 1}, 19.123);
+  tl.set("#cap53", {autoAlpha: 0}, 19.223);
+  tl.set("#cap54", {autoAlpha: 1}, 19.263);
+  tl.set("#cap54", {autoAlpha: 0}, 19.612);
+  tl.set("#cap55", {autoAlpha: 1}, 19.697);
+  tl.set("#cap55", {autoAlpha: 0}, 19.797);
+  tl.set("#cap56", {autoAlpha: 1}, 19.817);
+  tl.set("#cap56", {autoAlpha: 0}, 19.972);
+  tl.set("#cap57", {autoAlpha: 1}, 20.057);
+  tl.set("#cap57", {autoAlpha: 0}, 20.432);
+  tl.set("#cap58", {autoAlpha: 1}, 20.517);
+  tl.set("#cap58", {autoAlpha: 0}, 20.752);
+  tl.set("#cap60", {autoAlpha: 1}, 22.157);
+  tl.set("#cap60", {autoAlpha: 0}, 22.312);
+  tl.set("#cap61", {autoAlpha: 1}, 22.397);
+  tl.set("#cap61", {autoAlpha: 0}, 22.552);
+  tl.set("#cap62", {autoAlpha: 1}, 22.637);
+  tl.set("#cap62", {autoAlpha: 0}, 22.872);
+  tl.set("#cap63", {autoAlpha: 1}, 22.957);
+  tl.set("#cap63", {autoAlpha: 0}, 23.352);
+  tl.set("#cap64", {autoAlpha: 1}, 23.437);
+  tl.set("#cap64", {autoAlpha: 0}, 23.815);
+  tl.set("#cap65", {autoAlpha: 1}, 23.900);
+  tl.set("#cap65", {autoAlpha: 0}, 24.332);
+  tl.set("#cap66", {autoAlpha: 1}, 24.417);
+  tl.set("#cap66", {autoAlpha: 0}, 24.612);
+  tl.set("#cap67", {autoAlpha: 1}, 24.697);
+  tl.set("#cap67", {autoAlpha: 0}, 24.932);
+  tl.set("#cap68", {autoAlpha: 1}, 25.017);
+  tl.set("#cap68", {autoAlpha: 0}, 25.492);
+  tl.set("#cap69", {autoAlpha: 1}, 25.577);
+  tl.set("#cap69", {autoAlpha: 0}, 26.092);
+  tl.set("#cap70", {autoAlpha: 1}, 26.177);
+  tl.set("#cap70", {autoAlpha: 0}, 26.412);
+  tl.set("#cap71", {autoAlpha: 1}, 26.497);
+  tl.set("#cap71", {autoAlpha: 0}, 26.752);
+  tl.set("#cap72", {autoAlpha: 1}, 26.837);
+  tl.set("#cap72", {autoAlpha: 0}, 27.425);
+  tl.set("#cap73", {autoAlpha: 1}, 27.510);
+  tl.set("#cap73", {autoAlpha: 0}, 27.665);
+  tl.set("#cap74", {autoAlpha: 1}, 27.750);
+  tl.set("#cap74", {autoAlpha: 0}, 28.165);
+  tl.set("#cap75", {autoAlpha: 1}, 28.250);
+  tl.set("#cap75", {autoAlpha: 0}, 28.505);
+  tl.set("#cap76", {autoAlpha: 1}, 28.590);
+  tl.set("#cap76", {autoAlpha: 0}, 28.690);
+  tl.set("#cap77", {autoAlpha: 1}, 28.750);
+  tl.set("#cap77", {autoAlpha: 0}, 28.885);
+  tl.set("#cap78", {autoAlpha: 1}, 28.970);
+  tl.set("#cap78", {autoAlpha: 0}, 29.165);
+  tl.set("#cap79", {autoAlpha: 1}, 29.250);
+  tl.set("#cap79", {autoAlpha: 0}, 30.024);
+  tl.set("#cap80", {autoAlpha: 1}, 30.109);
+  tl.set("#cap80", {autoAlpha: 0}, 30.224);
+  tl.set("#cap81", {autoAlpha: 1}, 30.309);
+  tl.set("#cap81", {autoAlpha: 0}, 30.504);
+  tl.set("#cap82", {autoAlpha: 1}, 30.589);
+  tl.set("#cap82", {autoAlpha: 0}, 30.884);
+  tl.set("#cap83", {autoAlpha: 1}, 30.969);
+  tl.set("#cap83", {autoAlpha: 0}, 31.284);
+  tl.set("#cap84", {autoAlpha: 1}, 31.369);
+  tl.set("#cap84", {autoAlpha: 0}, 32.139);
+  tl.set("#cap85", {autoAlpha: 1}, 32.224);
+  tl.set("#cap85", {autoAlpha: 0}, 32.419);
+  tl.set("#cap86", {autoAlpha: 1}, 32.504);
+  tl.set("#cap86", {autoAlpha: 0}, 32.604);
+  tl.set("#cap87", {autoAlpha: 1}, 32.664);
+  tl.set("#cap87", {autoAlpha: 0}, 32.764);
+  tl.set("#cap88", {autoAlpha: 1}, 32.784);
+  tl.set("#cap88", {autoAlpha: 0}, 33.399);
+  tl.set("#cap89", {autoAlpha: 1}, 33.484);
+  tl.set("#cap89", {autoAlpha: 0}, 33.584);
+  tl.set("#cap90", {autoAlpha: 1}, 33.584);
+  tl.set("#cap90", {autoAlpha: 0}, 33.684);
+  tl.set("#cap91", {autoAlpha: 1}, 33.764);
+  tl.set("#cap91", {autoAlpha: 0}, 34.019);
+  tl.set("#cap92", {autoAlpha: 1}, 34.104);
+  tl.set("#cap92", {autoAlpha: 0}, 34.379);
+  tl.set("#cap95", {autoAlpha: 1}, 35.346);
+  tl.set("#cap95", {autoAlpha: 0}, 35.741);
+  tl.set("#cap96", {autoAlpha: 1}, 35.826);
+  tl.set("#cap96", {autoAlpha: 0}, 35.961);
+  tl.set("#cap97", {autoAlpha: 1}, 36.046);
+  tl.set("#cap97", {autoAlpha: 0}, 36.146);
+  tl.set("#cap98", {autoAlpha: 1}, 36.206);
+  tl.set("#cap98", {autoAlpha: 0}, 36.348);
+  tl.set("#cap99", {autoAlpha: 1}, 36.433);
+  tl.set("#cap99", {autoAlpha: 0}, 36.587);
+  tl.set("#cap100", {autoAlpha: 1}, 36.672);
+  tl.set("#cap100", {autoAlpha: 0}, 36.967);
+  tl.set("#cap101", {autoAlpha: 1}, 37.052);
+  tl.set("#cap101", {autoAlpha: 0}, 37.387);
+  tl.set("#cap102", {autoAlpha: 1}, 37.472);
+  tl.set("#cap102", {autoAlpha: 0}, 37.607);
+  tl.set("#cap103", {autoAlpha: 1}, 37.692);
+  tl.set("#cap103", {autoAlpha: 0}, 37.887);
+  tl.set("#cap104", {autoAlpha: 1}, 37.972);
+  tl.set("#cap104", {autoAlpha: 0}, 38.072);
+  tl.set("#cap105", {autoAlpha: 1}, 38.152);
+  tl.set("#cap105", {autoAlpha: 0}, 38.507);
+  tl.set("#cap106", {autoAlpha: 1}, 38.592);
+  tl.set("#cap106", {autoAlpha: 0}, 38.947);
+  tl.set("#cap109", {autoAlpha: 1}, 39.632);
+  tl.set("#cap109", {autoAlpha: 0}, 39.807);
+  tl.set("#cap110", {autoAlpha: 1}, 39.892);
+  tl.set("#cap110", {autoAlpha: 0}, 39.992);
+  tl.set("#cap111", {autoAlpha: 1}, 40.012);
+  tl.set("#cap111", {autoAlpha: 0}, 40.612);
+  tl.set("#cap112", {autoAlpha: 1}, 40.697);
+  tl.set("#cap112", {autoAlpha: 0}, 41.032);
+  tl.set("#cap113", {autoAlpha: 1}, 41.117);
+  tl.set("#cap113", {autoAlpha: 0}, 41.252);
+  tl.set("#cap115", {autoAlpha: 1}, 41.967);
+  tl.set("#cap115", {autoAlpha: 0}, 42.083);
+  tl.set("#cap116", {autoAlpha: 1}, 42.168);
+  tl.set("#cap116", {autoAlpha: 0}, 42.303);
+  tl.set("#cap117", {autoAlpha: 1}, 42.388);
+  tl.set("#cap117", {autoAlpha: 0}, 42.823);
+  tl.set("#cap118", {autoAlpha: 1}, 42.908);
+  tl.set("#cap118", {autoAlpha: 0}, 43.008);
+  tl.set("#cap119", {autoAlpha: 1}, 43.028);
+  tl.set("#cap119", {autoAlpha: 0}, 43.343);
+  tl.set("#cap120", {autoAlpha: 1}, 43.428);
+  tl.set("#cap120", {autoAlpha: 0}, 43.583);
+  tl.set("#cap121", {autoAlpha: 1}, 43.668);
+  tl.set("#cap121", {autoAlpha: 0}, 44.443);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 45.468);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 1.147);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 3.719);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 10.433);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 11.239);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 14.024);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 16.168);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 17.203);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 18.498);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 20.617);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 22.092);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 34.244);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 35.281);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 38.812);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 39.567);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 41.117);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 41.902);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 44.308);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 45.503);
+
+
+function spring(z, w) {
+  var wd = w * Math.sqrt(1 - z * z);
+  function f(t) { return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + (z * w / wd) * Math.sin(wd * t)); }
+  var e = f(1);
+  return function (t) { return t >= 1 ? 1 : f(t) / e; };
+}
+var SP = spring(0.62, 13), POP = spring(0.46, 14), SOFT = spring(0.84, 11), FLIP = spring(0.58, 9);
+
+function helpers(tl) {
+  function blurIn(sel, t, b, d) {
+    tl.fromTo(sel, {autoAlpha: 0, filter: "blur(" + (b || 12) + "px)"},
+                   {autoAlpha: 1, filter: "blur(0px)", duration: d || 0.38, ease: "power2.out"}, t);
+  }
+  function blurOut(sel, t, b, d) {
+    tl.to(sel, {autoAlpha: 0, filter: "blur(" + (b || 10) + "px)", duration: d || 0.32, ease: "power2.in"}, t);
+  }
+  // arrive from depth: blur -> sharp, small -> full, with a spring. o: {s, x, y, ease, d}
+  function arrive(sel, t, o) {
+    o = o || {};
+    blurIn(sel, t, o.blur || 12, 0.36);
+    tl.fromTo(sel, {scale: o.s == null ? 0.5 : o.s, x: o.x || 0, y: o.y == null ? 34 : o.y},
+              {scale: 1, x: 0, y: 0, duration: o.d || 0.85, ease: o.ease || POP}, t);
+  }
+  // the contents land a beat after their container
+  function inner(sel, t) {
+    tl.fromTo(sel, {scale: 0.55, autoAlpha: 0}, {scale: 1, autoAlpha: 1, duration: 0.55, ease: SP}, t + 0.1);
+  }
+  function sheen(sel, t) { gsap.set(sel, {xPercent: -120}); tl.to(sel, {xPercent: 120, duration: 0.8, ease: "power2.inOut"}, t); }
+  function len(id) { return document.getElementById(id).getTotalLength(); }
+  // +3: a dash that ends exactly at the path start leaves a round-cap dot behind
+  function drawPrep(id) { var L = len(id) + 3; gsap.set("#" + id, {strokeDasharray: (L - 3) + " " + (L + 40), strokeDashoffset: L}); return L; }
+  function draw(id, t, d) { var L = drawPrep(id); tl.to("#" + id, {strokeDashoffset: 0, duration: d || 0.55, ease: "power2.inOut"}, t); return L; }
+  function packet(id, t, d) {
+    var L = len(id);
+    tl.fromTo("#" + id, {strokeDasharray: "46 " + (L + 200), strokeDashoffset: 49, autoAlpha: 1},
+              {strokeDashoffset: -L, duration: d || 0.5, ease: "power1.inOut", immediateRender: false}, t);
+    tl.set("#" + id, {autoAlpha: 0}, t + (d || 0.5));
+  }
+  // a tile the same shape grows out and fades — "something arrived here"
+  function ripple(sel, t) {
+    tl.fromTo(sel, {scale: 1, autoAlpha: 0.7}, {scale: 1.75, autoAlpha: 0, duration: 0.8, ease: "power2.out", immediateRender: false}, t);
+  }
+  function bump(sel, t) {
+    tl.to(sel, {scale: 1.07, duration: 0.1, ease: "power2.out"}, t);
+    tl.to(sel, {scale: 1, duration: 0.45, ease: SP}, t + 0.1);
+  }
+  // iris: a takeover opens out of (x, y) and later closes back into another point
+  function irisOpen(sel, t, x, y, d) {
+    tl.set(sel, {autoAlpha: 1}, t);
+    tl.fromTo(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)"},
+              {clipPath: "circle(2300px at " + x + "px " + y + "px)", duration: d || 0.85, ease: "power3.inOut", immediateRender: false}, t);
+  }
+  function irisClose(sel, t, x, y, d) {
+    tl.to(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)", duration: d || 0.6, ease: "power3.inOut"}, t);
+    tl.set(sel, {autoAlpha: 0}, t + (d || 0.6) + 0.02);
+  }
+  function drift(sel, t, dur) {
+    ["a1", "a2", "a3"].forEach(function (c, i) {
+      var v = [[-140, 90], [160, -120], [-90, -60]][i];
+      tl.fromTo(sel + " .aur." + c, {x: 0, y: 0}, {x: v[0], y: v[1], duration: dur, ease: "sine.inOut"}, t);
+    });
+  }
+  function haptic(sel, t) { tl.to(sel, {keyframes: {x: [0, -9, 8, -5, 3, 0]}, duration: 0.34, ease: "none"}, t); }
+  function count(sel, t, to, d, fmt) {
+    var o = {v: 0}, el = document.querySelector(sel);
+    tl.fromTo(o, {v: 0}, {v: to, duration: d || 1.1, ease: "power2.out",
+              onUpdate: function () { el.textContent = fmt ? fmt(o.v) : Math.round(o.v); }}, t);
+  }
+  return {blurIn: blurIn, blurOut: blurOut, arrive: arrive, inner: inner, sheen: sheen,
+          drawPrep: drawPrep, draw: draw, packet: packet, ripple: ripple, bump: bump,
+          irisOpen: irisOpen, irisClose: irisClose, drift: drift, haptic: haptic, count: count};
+}
+
+
+  var G = helpers(tl);
+  function bin(sel, t, b, d) { d = d || 0.38; G.blurIn(sel, t, b || 12, d); tl.set(sel, {filter: "none"}, t + d + 0.01); }
+  function bout(sel, t, b, d) { d = d || 0.32; G.blurOut(sel, t, b || 10, d); tl.set(sel, {filter: "none"}, t + d + 0.01); }
+  function arr(sel, t, o) {
+    o = o || {};
+    bin(sel, t, o.blur || 12, 0.36);
+    tl.fromTo(sel, {scale: o.s == null ? 0.5 : o.s, x: o.x || 0, y: o.y == null ? 34 : o.y},
+              {scale: 1, x: 0, y: 0, duration: o.d || 0.85, ease: o.ease || POP}, t);
+  }
+  function draw2(id, t, d) {
+    var L = document.getElementById(id).getTotalLength() + 3;
+    tl.fromTo("#" + id, {strokeDasharray: (L - 3) + " " + (L + 40), strokeDashoffset: L},
+              {strokeDashoffset: 0, duration: d || 0.5, ease: "power2.inOut", immediateRender: false}, t);
+    gsap.set("#" + id, {strokeDasharray: (L - 3) + " " + (L + 40), strokeDashoffset: L});
+  }
+  function shn(sel, t) {
+    gsap.set(sel, {xPercent: -120});
+    tl.fromTo(sel, {xPercent: -120}, {xPercent: 120, duration: 0.8, ease: "power2.inOut", immediateRender: false}, t);
+  }
+  function drift1(sel, t, d) { tl.fromTo(sel + " .aurs", {x: 0, y: 0}, {x: -110, y: 70, duration: d, ease: "sine.inOut"}, t); }
+  gsap.set(".sheen", {xPercent: -120});
+
+
+  var CLK = {t: 0}, TYP = [{"el": "pT", "tx": "Розбий цей рілс на сцени", "t0": 13.917, "t1": 14.974, "tc": 16.233}, {"el": "pT", "tx": "Проаналізуй кожну сцену", "t0": 16.823, "t1": 17.573, "tc": 999.0}, {"el": "cmT", "tx": "design", "t0": 41.337, "t1": 41.782, "tc": 999.0}], TEL = {}, TCUR = {};
+  TYP.forEach(function (it) { TEL[it.el] = document.getElementById(it.el); });
+  function paintAll() {
+    var t = CLK.t, want = {};
+    TYP.forEach(function (it) {
+      if (t < it.t0 || t >= it.tc) { if (!(it.el in want)) want[it.el] = ""; return; }
+      var n = t >= it.t1 ? it.tx.length : Math.round(it.tx.length * (t - it.t0) / (it.t1 - it.t0));
+      want[it.el] = it.tx.slice(0, n);
+    });
+    for (var e in want) { if (TCUR[e] !== want[e]) { TCUR[e] = want[e]; TEL[e].textContent = want[e]; } }
+  }
+  tl.fromTo(CLK, {t: 0}, {t: 45.483, duration: 45.483, ease: "none", onUpdate: paintAll}, 0);
+  gsap.set(["#vid"], {transformOrigin: "540px 900px"});
+  tl.fromTo(["#vid"], {scale: 1}, {scale: 1.045, duration: 45.483, ease: "none"}, 0);
+  /* a_threads */
+
+  tl.set("#gA", {autoAlpha: 1}, 0);
+  arr("#aTh", 0.517, {s: 0.3, y: 30, d: 0.7});
+  G.ripple("#aThR", 0.817);
+  /* the tile becomes the post's badge, the post opens out of it */
+  tl.to("#aTh", {x: 395, y: -126, scale: 0.7, duration: 0.6, ease: SP}, 0.897);
+  gsap.set("#thr", {transformOrigin: "450px 160px"});
+  arr("#thr", 0.947, {s: 0.35, y: 20, d: 0.8});
+  shn("#thr .sheen", 1.297);
+  gsap.set(["#hl1", "#hl2"], {scaleX: 0});
+  tl.to("#hl1", {scaleX: 1, duration: 0.8, ease: "power1.inOut"}, 1.367);
+  tl.to("#hl2", {scaleX: 1, duration: 1.25, ease: "power1.inOut"}, 2.324);
+  bout(["#thr", "#aTh"], 3.399, 10, 0.26);
+  tl.set("#gA", {autoAlpha: 0}, 3.699);
+  /* r_rail */
+
+  tl.set("#gR", {autoAlpha: 1}, 5.853);
+  gsap.set("#rFil", {scaleX: 0});
+  arr("#rSh", 5.873, {s: 0.9, y: -40, d: 0.7});
+  [0, 1, 2, 3, 4].forEach(function (i) { arr("#n" + i, 5.973 + i * 0.07, {s: 0.3, y: -10, d: 0.6, blur: 6}); });
+  function lite(i, t) { tl.fromTo("#n" + i + "f", {autoAlpha: 0, scale: 0.4}, {autoAlpha: 1, scale: 1, duration: 0.45, ease: POP}, t);
+    tl.set("#n" + i + "n", {autoAlpha: 0}, t + 0.02); }
+  function done(i, t) {
+    tl.fromTo("#n" + i + "k", {autoAlpha: 0, scale: 0.4}, {autoAlpha: 1, scale: 1, duration: 0.45, ease: POP}, t);
+    tl.to("#rFil", {scaleX: Math.min(1, (i + 1) / 4), duration: 0.5, ease: SP}, t + 0.05);
+    tl.set("#n" + i + "f", {autoAlpha: 0}, t + 0.3);
+  }
+  /* the rail steps out while a takeover owns the frame */
+  tl.set("#gR", {autoAlpha: 0}, 11.253); tl.set("#gR", {autoAlpha: 1}, 19.197);
+  tl.set("#gR", {autoAlpha: 0}, 26.577); tl.set("#gR", {autoAlpha: 1}, 29.730);
+  lite(0, 6.253);
+  done(0, 9.933); lite(1, 10.233);
+  done(1, 19.567); lite(2, 19.717);
+  done(2, 22.157); lite(3, 22.407);
+  done(3, 25.497); lite(4, 25.677);
+  done(4, 30.309);
+  G.bump("#rSh", 30.409);
+  /* the chain becomes the edit: nodes out, clips in, the playhead runs */
+  bout("#rNodes", 30.919, 8, 0.28);
+  [0, 1, 2, 3, 4].forEach(function (i) {
+    tl.fromTo("#cl" + i, {autoAlpha: 0, scaleX: 0.2, transformOrigin: "0% 50%"},
+              {autoAlpha: 1, scaleX: 1, duration: 0.45, ease: SP}, 31.169 + i * 0.06);
+  });
+  tl.set("#phd", {autoAlpha: 1}, 31.319);
+  tl.fromTo("#phd", {x: 0}, {x: 820, duration: 0.85, ease: "none"}, 31.319);
+  bout("#gR", 32.089, 10, 0.26);
+  /* b_skills */
+
+  tl.set("#gB", {autoAlpha: 1}, 7.013);
+  [0, 1, 2, 3].forEach(function (i) { arr("#ch" + i, 7.093 + i * 0.1, {s: 0.4, y: 40, d: 0.7}); });
+  arr("#lap", 7.913, {s: 0.85, y: 120, d: 0.8});
+  tl.to("#ch0", {x: 145, y: 65, scale: 0.3, autoAlpha: 0, duration: 0.32, ease: "power3.in"}, 8.233+0.00);
+  tl.to("#ch1", {x: -305, y: 117, scale: 0.3, autoAlpha: 0, duration: 0.32, ease: "power3.in"}, 8.233+0.04);
+  tl.to("#ch2", {x: 145, y: 45, scale: 0.3, autoAlpha: 0, duration: 0.32, ease: "power3.in"}, 8.233+0.08);
+  tl.to("#ch3", {x: -305, y: 97, scale: 0.3, autoAlpha: 0, duration: 0.32, ease: "power3.in"}, 8.233+0.12);
+  [0, 1, 2, 3].forEach(function (i) {
+    tl.fromTo("#lr" + i, {autoAlpha: 0, x: -20}, {autoAlpha: 1, x: 0, duration: 0.35, ease: SP}, 8.733 + i * 0.1);
+  });
+  tl.fromTo("#lhd", {autoAlpha: 0}, {autoAlpha: 1, duration: 0.25}, 8.683);
+  arr("#bPl", 9.353, {s: 0.4, x: 160, y: 0, d: 0.6});
+  G.haptic("#lap", 9.773); G.ripple("#bPlR", 9.723);
+  bout("#gB", 9.983, 10, 0.28);
+  /* t_style */
+
+  G.irisOpen("#gT1", 10.453, 360, 132, 0.7);
+  drift1("#gT1", 10.453, 19.263-11.853);
+  arr("#fc", 10.633, {s: 0.5, y: -20, d: 0.8});
+  shn("#fc .sheen", 11.003);
+  [0, 1, 2].forEach(function (i) { arr("#rl" + i, 11.254 + [0.1, 0, 0.18][i], {s: 0.55, y: 160, d: 0.85}); });
+  [0, 1, 2].forEach(function (i) { arr("#ht" + i, 12.614 + i * 0.1, {s: 0.2, y: 20, d: 0.55, blur: 6}); });
+  arr("#pbw", 13.224, {s: 0.85, y: 60, d: 0.7});
+  G.bump("#pS", 15.024);
+  bout(["#rl0", "#rl2"], 14.894, 10, 0.3);
+  tl.to("#rl1", {scale: 0.6, autoAlpha: 0, duration: 0.3, ease: "power2.in"}, 15.144);
+  tl.fromTo("#sc0", {autoAlpha: 0, x: 345, y: 32, scale: 0.6}, {autoAlpha: 1, x: 0, y: 0, scale: 1, duration: 0.7, ease: SP}, 15.224);
+  tl.fromTo("#sn0", {autoAlpha: 0, scale: 0.3}, {autoAlpha: 1, scale: 1, duration: 0.4, ease: POP}, 15.664+0.00);
+  tl.fromTo("#sc1", {autoAlpha: 0, x: 115, y: 32, scale: 0.6}, {autoAlpha: 1, x: 0, y: 0, scale: 1, duration: 0.7, ease: SP}, 15.284);
+  tl.fromTo("#sn1", {autoAlpha: 0, scale: 0.3}, {autoAlpha: 1, scale: 1, duration: 0.4, ease: POP}, 15.664+0.08);
+  tl.fromTo("#sc2", {autoAlpha: 0, x: -115, y: 32, scale: 0.6}, {autoAlpha: 1, x: 0, y: 0, scale: 1, duration: 0.7, ease: SP}, 15.344);
+  tl.fromTo("#sn2", {autoAlpha: 0, scale: 0.3}, {autoAlpha: 1, scale: 1, duration: 0.4, ease: POP}, 15.664+0.16);
+  tl.fromTo("#sc3", {autoAlpha: 0, x: -345, y: 32, scale: 0.6}, {autoAlpha: 1, x: 0, y: 0, scale: 1, duration: 0.7, ease: SP}, 15.404);
+  tl.fromTo("#sn3", {autoAlpha: 0, scale: 0.3}, {autoAlpha: 1, scale: 1, duration: 0.4, ease: POP}, 15.664+0.24);
+  G.bump("#pS", 17.623);
+  tl.set("#lensW", {x: 120, y: 542}, 0); arr("#lens", 17.573, {s: 0.4, y: 0, d: 0.5, blur: 6});
+  tl.fromTo("#so0", {autoAlpha: 0, scale: 0.3}, {autoAlpha: 1, scale: 1, duration: 0.35, ease: POP}, 17.803);
+  tl.to("#lensW", {x: 350, y: 542, duration: 0.22, ease: "power2.inOut"}, 17.783);
+  tl.fromTo("#so1", {autoAlpha: 0, scale: 0.3}, {autoAlpha: 1, scale: 1, duration: 0.35, ease: POP}, 18.063);
+  tl.to("#lensW", {x: 580, y: 542, duration: 0.22, ease: "power2.inOut"}, 18.043);
+  tl.fromTo("#so2", {autoAlpha: 0, scale: 0.3}, {autoAlpha: 1, scale: 1, duration: 0.35, ease: POP}, 18.323);
+  tl.to("#lensW", {x: 810, y: 542, duration: 0.22, ease: "power2.inOut"}, 18.303);
+  tl.fromTo("#so3", {autoAlpha: 0, scale: 0.3}, {autoAlpha: 1, scale: 1, duration: 0.35, ease: POP}, 18.583);
+  bout("#lens", 18.663, 6, 0.22);
+  bout("#pbw", 18.513, 10, 0.3);
+  tl.to("#sc0", {x: 575, y: -294, scale: 0.32, transformOrigin: "0px 0px", duration: 0.55, ease: "power3.inOut"}, 18.563);
+  tl.to("#sc1", {x: 425, y: -294, scale: 0.32, transformOrigin: "0px 0px", duration: 0.55, ease: "power3.inOut"}, 18.643);
+  tl.to("#sc2", {x: 275, y: -294, scale: 0.32, transformOrigin: "0px 0px", duration: 0.55, ease: "power3.inOut"}, 18.723);
+  tl.to("#sc3", {x: 125, y: -294, scale: 0.32, transformOrigin: "0px 0px", duration: 0.55, ease: "power3.inOut"}, 18.803);
+  G.bump("#fc", 19.163);
+  G.irisClose("#gT1", 19.217, 540, 132, 0.5);
+  /* c_design */
+
+  tl.set("#gC", {autoAlpha: 1}, 19.717);
+  arr("#ds", 19.797, {s: 0.6, y: 40, d: 0.8});
+  [0, 1, 2, 3, 4].forEach(function (i) { tl.fromTo("#sw" + i, {autoAlpha: 0, scale: 0.2}, {autoAlpha: 1, scale: 1, duration: 0.45, ease: POP}, 20.007 + i * 0.08); });
+  tl.fromTo("#dsA", {autoAlpha: 0, y: 30}, {autoAlpha: 1, y: 0, duration: 0.5, ease: SP}, 20.467);
+  tl.fromTo("#dsH", {autoAlpha: 0}, {autoAlpha: 1, duration: 0.25}, 20.807);
+  tl.fromTo("#dsB", {autoAlpha: 0, scale: 0.5}, {autoAlpha: 1, scale: 1, duration: 0.5, ease: POP}, 20.987);
+  tl.fromTo("#dsT", {autoAlpha: 0, x: 30}, {autoAlpha: 1, x: 0, duration: 0.45, ease: SP}, 21.187);
+  shn("#ds .sheen", 21.437);
+  bout("#gC", 22.037, 10, 0.26);
+  /* d_tests */
+
+  tl.set("#gD", {autoAlpha: 1}, 22.487);
+  [0, 1, 2].forEach(function (i) { arr("#rc" + i, 22.537 + i * 0.1, {s: 0.5, y: 40, d: 0.75}); });
+  gsap.set(["#rf0", "#rf1", "#rf2"], {scaleX: 0});
+  [0, 1, 2].forEach(function (i) { tl.to("#rf" + i, {scaleX: 1, duration: 0.75 + i * 0.12, ease: "power1.inOut"}, 22.957 + i * 0.18); });
+    arr("#rk0", 24.050, {s: 0.2, y: 0, d: 0.5, blur: 6});
+  arr("#rk1", 24.747, {s: 0.2, y: 0, d: 0.5, blur: 6});
+  arr("#rk2", 25.037, {s: 0.2, y: 0, d: 0.5, blur: 6});
+  bout("#gD", 25.527, 10, 0.26);
+  /* t_cloud */
+
+  G.irisOpen("#gT2", 25.777, 900, 132, 0.7);
+  drift1("#gT2", 25.777, 4.6);
+  tl.fromTo("#cld", {autoAlpha: 0, y: -160, scale: 1.08, transformOrigin: "540px 0px"},
+            {autoAlpha: 1, y: 0, scale: 1, duration: 0.9, ease: SOFT}, 25.927);
+  arr("#lp2", 26.027, {s: 0.8, y: 120, d: 0.8});
+  tl.set(["#cT", "#cC"], {autoAlpha: 1}, 25.927);
+  draw2("cT", 25.927, 0.35); draw2("cC", 25.927, 0.35);
+  G.packet("cP", 26.277, 0.55);
+  tl.to("#cld", {scale: 1.03, duration: 0.12, ease: "power2.out"}, 26.837);
+  tl.to("#cld", {scale: 1, duration: 0.5, ease: SP}, 26.957);
+  [0, 1, 2].forEach(function (i) { arr("#rq" + i, 27.650 + i * 0.1, {s: 0.4, y: 30, d: 0.6}); });
+  gsap.set(["#qf0", "#qf1", "#qf2"], {scaleX: 0});
+  [0, 1, 2].forEach(function (i) { tl.to("#qf" + i, {scaleX: 1, duration: 0.8, ease: "power1.inOut"}, 27.950 + i * 0.12); });
+  arr("#xk", 28.720, {s: 0.2, y: 0, d: 0.5, blur: 6});
+  tl.to("#lrq", {autoAlpha: 0.35, duration: 0.3}, 28.800);
+  G.haptic("#lp2", 29.300);
+  G.irisClose("#gT2", 29.750, 900, 132, 0.45);
+  /* e_time */
+
+  tl.set("#gE", {autoAlpha: 1}, 33.664);
+  gsap.set(["#cF", "#cB"], {transformPerspective: 1400});
+  gsap.set("#cB", {rotationY: -90, autoAlpha: 0});
+  arr("#cal", 33.744, {s: 0.5, y: 40, d: 0.8});
+  tl.fromTo("#cN", {autoAlpha: 0, scale: 1.6}, {autoAlpha: 1, scale: 1, duration: 0.5, ease: POP}, 34.414);
+  tl.fromTo("#cL", {autoAlpha: 0, y: 20}, {autoAlpha: 1, y: 0, duration: 0.35, ease: SP}, 34.874);
+  gsap.set(["#cN", "#cL"], {autoAlpha: 0});
+  shn("#cF .sheen", 35.124);
+  /* the calendar steps aside, the five ticked steps go to you */
+  tl.to("#cal", {x: -230, scale: 0.78, duration: 0.6, ease: SP}, 35.296);
+  arr("#gdoc", 35.726, {s: 0.4, y: 30, d: 0.7});
+  arr("#you", 36.086, {s: 0.4, y: 20, d: 0.7});
+  tl.to("#gdoc", {x: 265, y: -5, scale: 0.3, autoAlpha: 0, duration: 0.55, ease: "power3.in"}, 36.672);
+  G.bump("#you", 37.102); G.ripple("#youR", 37.102);
+  bout("#you", 37.572, 10, 0.3);
+  tl.to("#cal", {x: 0, scale: 1, duration: 0.7, ease: SP}, 37.622);
+  /* 2 days flip to 1 hour */
+  tl.to("#cF", {rotationY: 90, duration: 0.2, ease: "power2.in"}, 39.032);
+  tl.set("#cF", {autoAlpha: 0}, 39.232);
+  tl.set("#cB", {autoAlpha: 1}, 39.232);
+  tl.to("#cB", {rotationY: 0, duration: 0.7, ease: FLIP}, 39.232);
+  arr("#dn", 39.612, {s: 0.2, y: -20, d: 0.55, blur: 6});
+  tl.to("#dn", {y: 18, duration: 0.5, ease: SP}, 40.012);
+  bout("#gE", 40.562, 10, 0.26);
+  /* f_cta */
+
+  tl.set("#gF", {autoAlpha: 1}, 40.547);
+  arr("#cmt", 40.617, {s: 0.7, y: 40, d: 0.75});
+  tl.set("#cmPh", {autoAlpha: 0}, 41.337);
+  G.bump("#cmS", 41.932);
+  tl.fromTo("#dm", {autoAlpha: 0, y: -260, scale: 0.92}, {autoAlpha: 1, y: 0, scale: 1, duration: 0.9, ease: SOFT}, 42.288);
+  G.haptic("#dm", 42.838);
+  tl.fromTo("#mini", {autoAlpha: 0, scale: 0.6}, {autoAlpha: 1, scale: 1, duration: 0.6, ease: POP}, 43.618);
+  shn("#dm .sheen", 43.968);
+  arr("#free", 44.488, {s: 0.3, y: 20, d: 0.7});
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>

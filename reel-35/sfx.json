@@ -1,0 +1,107 @@
+[
+ {
+  "t": 2.2,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 3.492,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 6.735,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 9.235,
+  "name": "impact-bass-1",
+  "db": -2
+ },
+ {
+  "t": 10.6,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 11.99,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 14.32,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 15.625,
+  "name": "impact-bass-1",
+  "db": -4
+ },
+ {
+  "t": 16.79,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 20.44,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 22.72,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 23.421,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 25.441,
+  "name": "notification",
+  "db": -3
+ },
+ {
+  "t": 29.313,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 31.113,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 32.473,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 34.133,
+  "name": "ping",
+  "db": -3
+ },
+ {
+  "t": 37.166,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 42.376,
+  "name": "notification",
+  "db": -2
+ },
+ {
+  "t": 43.354,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 44.274,
+  "name": "click",
+  "db": 0
+ }
+]

@@ -1,0 +1,25 @@
+CAPTIONS 124   script 99 | whisper-corrected 13 | her wording 12
+
+WHISPER MISHEARD -> script spelling restored (10)
+     0.95s  0.86  в Threads:                       <- втретсь,
+     8.43s  0.86  локально                         <- локальні
+     9.47s  1.00  плагіни.                         <- плагини.
+    13.40s  0.85  спеціальним промтом              <- спеціально правдом
+    17.16s  1.00  промт                            <- промд
+    20.84s  0.92  дизайн-систему                   <- дизайм систему.
+    25.68s  0.84  підключаєш                       <- підлічаєш
+    32.78s  0.92  робила,                          <- зробила,
+    33.76s  0.92  зайняло                          <- заняло
+    43.67s  1.00  дизайн-систему                   <- дизайн систему
+
+SHE IMPROVISED -> her wording kept (8)
+     2.78s  script: ШІ-монтаж? Пффф, вабщє       said: шуїй монтаж? Тхе, вопші
+    10.65s  script: style.md:                    said: стелем дій.
+    14.94s  script: кожен                        said: кожний
+    19.70s  script: —                            said: І
+    26.84s  script: хмару,                       said: хмеру,
+    27.59s  script: усе                          said: все
+    37.97s  script: —                            said: це
+    41.12s  script: "design"                     said: слово «дизайн»
+
+REVIEW -- could go either way (0)

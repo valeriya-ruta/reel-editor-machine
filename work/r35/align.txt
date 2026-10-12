@@ -1,0 +1,24 @@
+CAPTIONS 120   script 77 | whisper-corrected 14 | her wording 29
+
+WHISPER MISHEARD -> script spelling restored (11)
+     2.93s  0.92  постити                          <- посити
+     5.39s  0.86  Клод                             <- Кло
+     6.71s  0.92  Windsor,                         <- Winzor,
+     7.46s  0.91  постить                          <- посить
+    13.43s  0.83  людину                           <- людини
+    14.05s  0.92  клацають                         <- клацують
+    21.30s  0.86  постити,                         <- постати
+    32.42s  0.89  один-єдиний                      <- один єдин
+    37.12s  1.00  акаунта,                         <- аккаунта,
+    39.98s  1.00  за раз                           <- зараз,
+    41.25s  1.00  акаунт                           <- аккаунт
+
+SHE IMPROVISED -> her wording kept (6)
+     3.49s  script: ШІ? Йдеться                  said: штучний інтелект. Ідеться
+     9.94s  script: це                           said: цей
+    19.38s  script: Windsor,                     said: Wincer,
+    23.52s  script: У                            said: Те саме працює і для звичайних чатботів 
+    36.82s  script: —                            said: і
+    43.33s  script: Підписуйся                   said: Якщо було корисно, то підпишись.
+
+REVIEW -- could go either way (0)

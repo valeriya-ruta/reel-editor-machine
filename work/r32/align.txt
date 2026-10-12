@@ -1,0 +1,28 @@
+CAPTIONS 163   script 123 | whisper-corrected 15 | her wording 25
+
+WHISPER MISHEARD -> script spelling restored (6)
+     3.97s  0.79  я переписую за Claude половину   <- що вона переписе заклад половини
+     7.72s  0.84  виявилось,                       <- то виявилася,
+    11.15s  1.00  сторіз,                          <- сторіс,
+    21.34s  0.78  окремого скіл                    <- окремий скилл
+    42.39s  0.95  перевіряєш,                      <- перевіряш,
+    48.83s  0.80  скілів: окремо на розмову        <- схілів. Окремі розмови
+
+SHE IMPROVISED -> her wording kept (14)
+        -  script: Клієнтка                     said: — (cut)
+     0.59s  script: —                            said: я проводила консультацію поштовічному ін
+    10.53s  script: YouTube,                     said: ютуб,
+    17.77s  script: —                            said: взагалі
+    18.59s  script: твій,                        said: рибані,
+    19.07s  script: його.                        said: м'ясо.
+    25.29s  script: —                            said: це
+    25.89s  script: й                            said: і
+    39.77s  script: —                            said: І
+    50.79s  script: окремо на                    said: окреме
+    52.17s  script: окремо на                    said: окремі
+    53.39s  script: —                            said: І
+        -  script: йому                         said: — (cut)
+    58.53s  script: навмання. Підписуйся, тут пр said: нав мене. Якщо було корисно, то обов'язк
+
+REVIEW -- could go either way (1)
+    27.13s  script: який у                     said: які в                      (0.67)

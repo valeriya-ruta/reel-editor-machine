@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 34 — Все в одному Claude</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+    @font-face {
+      font-family: "ProductSans";
+      src: url("assets/fonts/ProductSans-Black.woff") format("woff");
+      font-weight: 900; font-style: normal; font-display: block;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px;
+            overflow: hidden; background: #000;
+            font-family: "ProductSans", system-ui, sans-serif;
+      --surface:        #fffcfd;
+      --container:      #fbeef2;
+      --container-high: #f4dfe5;
+      --graphite:       rgba(23,20,28,0.13);
+      --accent:         #b4122f;
+      --accent-deep:    #8d0d24;
+      --pink:           #ff6e9c;
+      --ink:            #17141c;
+
+      --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
+      --lit-blush:  linear-gradient(115deg, #ffffff 0%, #fff7fa 100%);
+      --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
+      --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
+      --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
+
+      --rim: inset 0 1.5px 0 rgba(255,255,255,0.92),
+             inset 0 -1.5px 0 rgba(255,255,255,0.14),
+             inset 0 0 0 1px rgba(255,255,255,0.28);
+      --rim-dark: inset 0 1.5px 0 rgba(255,255,255,0.16),
+                  inset 0 0 0 1px rgba(255,255,255,0.08);
+      --rim-glass: inset 0 2px 0 rgba(255,255,255,0.70),
+                   inset 0 -2px 0 rgba(255,255,255,0.10),
+                   inset 0 0 0 1.5px rgba(255,255,255,0.30);
+
+      /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
+         Light coming off the object, not the object sitting on a surface. */
+      --glow: drop-shadow(0 0 10px rgba(255,196,218,0.95))
+              drop-shadow(0 0 26px rgba(255,110,156,0.85))
+              drop-shadow(0 0 64px rgba(255,110,156,0.55))
+              drop-shadow(0 0 120px rgba(255,110,156,0.32));
+      --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
+                   drop-shadow(0 0 60px rgba(255,110,156,0.30));
+
+      --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
+              drop-shadow(0 24px 48px rgba(26,30,39,0.14));
+      --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))
+                 drop-shadow(0 12px 24px rgba(26,30,39,0.12));
+ }
+    .plate { position: absolute; inset: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    #scrim { position: absolute; left: 20px; top: 1247px;
+             width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png");
+             background-size: 100% 100%; background-repeat: no-repeat;
+             opacity: 0; visibility: hidden; pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; top: 1413px;
+           height: 118px; line-height: 118px; text-align: center;
+           color: #fff; font-size: 90px; font-weight: 900;
+           letter-spacing: -0.015em; white-space: nowrap;
+           opacity: 0; visibility: hidden; }
+    .cap.inv { color: var(--ink); }
+    .g { position: absolute; left: 0; top: 40px; width: 1080px;
+         height: 600px; opacity: 0; visibility: hidden; }
+    .g.full { top: 0; height: 1920px; }
+
+    /* §5a.9 — glass over her footage is the house look. Panels only; an
+       edge-to-edge frosted ground blurs her out of her own reel. */
+    .glass { background: rgba(255,255,255,0.15);
+             -webkit-backdrop-filter: blur(24px) saturate(1.4);
+             backdrop-filter: blur(24px) saturate(1.4);
+             box-shadow: var(--rim); filter: var(--cast); }
+
+    /* A takeover: a tinted pane laid ON the footage, with a real margin so it
+       reads as an object rather than a blur applied to the video. */
+    /* The inset pane is a *pane*: 44/64 margin so the footage shows past it,
+       and corners, because a full-bleed hard-cornered rectangle is a bug she
+       has reported. base_css() squircles it; this radius is the fallback. */
+    .ground { position: absolute; left: 44px; top: 64px;
+              width: 992px; height: 1792px; border-radius: 68px;
+              background: linear-gradient(158deg, rgba(196,20,52,0.62) 0%,
+                          rgba(141,13,36,0.70) 100%);
+              -webkit-backdrop-filter: blur(30px) saturate(1.5);
+              backdrop-filter: blur(30px) saturate(1.5);
+              box-shadow: var(--rim-glass); filter: var(--cast); }
+
+    .card { position: absolute; background: var(--lit-blush);
+            filter: var(--cast); box-shadow: var(--rim); }
+    .card.ink { background: var(--lit-ink); box-shadow: var(--rim-dark); }
+    .card.accent { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+
+    .tile { position: absolute; display: grid; place-items: center;
+            background: var(--lit-blush); filter: var(--cast);
+            box-shadow: var(--rim); }
+
+    /* §5a.3 — bar rhythm. One thick heading, then ragged body. Uniform bars
+       read as a loading state; ragged ones read as an abstracted screen. */
+    .ph { display: block; height: 66px; border-radius: 18px;
+          background: var(--lit-accent); margin-bottom: 26px;
+          box-shadow: var(--rim-dark); }
+    .pr { display: block; height: 40px; border-radius: 12px;
+          background: var(--graphite); margin-bottom: 18px; }
+    .pr:nth-of-type(2) { width: 94%; }
+    .pr:nth-of-type(3) { width: 71%; }
+    .pr:nth-of-type(4) { width: 43%; }
+
+    .phone { position: absolute; background: var(--lit-blush);
+             overflow: hidden; filter: var(--cast); box-shadow: var(--rim); }
+    .phone video, .phone img { width: 100%; height: 100%; object-fit: cover;
+                               display: block; }
+
+    /* a value in its own card — her reference's "big number" pattern, minus
+       the label, because a graphic here carries no words */
+    .valcard { position: absolute; background: rgba(255,255,255,0.16);
+               -webkit-backdrop-filter: blur(16px) saturate(1.3);
+               backdrop-filter: blur(16px) saturate(1.3);
+               box-shadow: var(--rim-dark);
+               display: grid; place-items: center; }
+    .valcard span { color: #fff; font-weight: 900; letter-spacing: -0.04em; }
+
+    .wire { fill: none; stroke-width: 20; stroke-linecap: round;
+            filter: drop-shadow(0 8px 18px rgba(26,30,39,0.22)); }
+    .node { fill: #fdf6f6; stroke: #b4122f; stroke-width: 16;
+            filter: drop-shadow(0 10px 22px rgba(26,30,39,0.24)); }
+    .node.hub { fill: #b4122f; stroke: #fff; }
+
+    /* §5a.10 — the glow rides a WRAPPER, never the clipped element itself.
+       clip-path is applied *after* filter, so a drop-shadow declared on the
+       same element as the clip is cut away with everything else outside the
+       silhouette and the object ends up with no light at all. Put the clip on
+       the shape and the filter on its parent: the parent filters the already
+       clipped bitmap, so the light traces the squircle and survives. */
+    .lit { position: absolute; inset: 0; pointer-events: none;
+           filter: var(--glow); }
+    .lit.soft { filter: var(--glow-soft); }
+
+    /* Emoji are images, never glyphs. The render runs on someone else's
+       Chrome, so a literal 💩 in the HTML comes out in whatever emoji font
+       that machine has — Noto on the cloud renderer, Segoe on hers, Apple on
+       nobody's. She wants the Apple set, so the artwork ships in assets/emoji
+       and the glyph never appears in a composition. */
+    .emoji { display: block; width: auto; image-rendering: auto; }
+
+    .halo { position: absolute; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(255,110,156,0.5) 0%,
+                        rgba(255,110,156,0) 70%); }
+    .ring { position: absolute; border-radius: 50%; pointer-events: none;
+            border: 18px solid rgba(255,110,156,0.92);
+            filter: drop-shadow(0 0 40px rgba(255,110,156,0.55)); }
+
+    /* ---- takeovers (STYLE.md 2c) ----
+       The graphic owns the frame: the plate is gone, so none of the
+       over-footage rules apply — no glow budget, no band discipline, ink type
+       on a light ground. Lives here rather than per-reel because every reel
+       from 9 onwards needs it. A takeover that does not bleed off at least
+       two edges reads as a slide, not a takeover. */
+    .tk { position: absolute; inset: 0; }
+    .tk.paper { background: var(--surface); }
+    .tk.white { background: #ffffff; }
+    .tk.blush { background: linear-gradient(150deg,#ffffff 0%,#fffafc 55%,
+                                            #fdf4f8 100%); }
+    /* graph paper — the texture the reference takeovers all have. 60px cells
+       at 5.8% ink: visible, never a pattern you read. */
+    .gp { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px),
+            repeating-linear-gradient(90deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px); }
+    /* horizontal rules only — a transcript or a list is ruled paper, not
+       graph paper, and the difference is what makes it read as an export. */
+    .gl { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.05) 0 1px,
+                                      transparent 1px 175px); }
+
+    /* the finished artefact, in her system — one class at any aspect ratio */
+    .dk { position: absolute; overflow: hidden; border-radius: 28px;
+          background: var(--lit-blush); box-shadow: var(--rim);
+          filter: var(--cast); }
+    .dk i { position: absolute; display: block; }
+    .dk .hb { left: 30px; top: 30px; height: 20px; border-radius: 6px;
+              background: var(--lit-accent); }
+    .dk .rr { left: 30px; height: 9px; border-radius: 4px;
+              background: rgba(23,20,28,0.22); }
+    .dk .pb { border-radius: 16px; background: var(--lit-pink);
+              box-shadow: var(--rim-dark); }
+
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Regular.ttf"); font-weight: 400; font-display: block; }
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Medium.ttf"); font-weight: 500; font-display: block; }
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Bold.ttf"); font-weight: 700; font-display: block; }
+
+/* ---------- the edge light: what makes a surface read as glass ----------
+   A uniform stroke is 2013. Real glass catches light at two opposite corners
+   and goes almost dark along the sides, so the rim is a gradient ring. */
+.edge::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.6px;
+  background: linear-gradient(140deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.34) 16%,
+              rgba(255,255,255,0.05) 42%, rgba(255,255,255,0.07) 62%,
+              rgba(255,255,255,0.50) 86%, rgba(255,255,255,0.90) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 3; }
+
+/* ---------- the shelf: frosted glass over her footage ----------
+   The house look since reel 3, rebuilt in layers: blur + saturation, a faint
+   top-to-bottom tint, light inside the bottom edge (thickness), huge soft
+   shadow. Add .edge for the rim. */
+.shelf { position: absolute; border-radius: 80px;
+  background: linear-gradient(158deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.07) 50%,
+              rgba(255,255,255,0.13) 100%);
+  -webkit-backdrop-filter: blur(22px) saturate(1.7) brightness(1.05);
+  backdrop-filter: blur(22px) saturate(1.7) brightness(1.05);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.65), inset 0 -24px 44px -22px rgba(255,255,255,0.36),
+              0 44px 90px -34px rgba(24,4,12,0.5); }
+
+/* dark glass — notifications and anything with white text over footage */
+.dglass { position: absolute; border-radius: 64px; color: #fff;
+  background: linear-gradient(160deg, rgba(58,22,32,0.58) 0%, rgba(24,10,15,0.50) 100%);
+  -webkit-backdrop-filter: blur(30px) saturate(1.8); backdrop-filter: blur(30px) saturate(1.8);
+  box-shadow: inset 0 1.5px 1px rgba(255,255,255,0.30), inset 0 -16px 30px -16px rgba(255,255,255,0.14),
+              0 40px 80px -30px rgba(10,0,4,0.6); }
+
+/* ---------- the tile family: every mark lives in one of three ----------
+   Same radius ratio as an iOS icon (22.4%), glyph at 50%. Put the tile in a
+   sized wrapper; the wrapper takes the motion, the tile takes the material. */
+.clear { position: absolute; inset: 0; border-radius: 22.4%;
+  background: linear-gradient(158deg, rgba(255,255,255,0.36) 0%, rgba(255,255,255,0.11) 48%,
+              rgba(255,255,255,0.17) 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.70), inset 0 -18px 30px -14px rgba(255,255,255,0.42),
+              0 34px 60px -22px rgba(24,4,12,0.55), 0 3px 8px rgba(24,4,12,0.10);
+  display: flex; align-items: center; justify-content: center; }
+.pearl { position: absolute; inset: 0; border-radius: 22.4%; overflow: hidden;
+  background: linear-gradient(160deg, #ffffff 0%, #fff5f8 52%, #f5dfe6 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -20px 32px -14px rgba(180,18,47,0.18),
+              0 36px 64px -22px rgba(30,4,12,0.55), 0 3px 8px rgba(30,4,12,0.12);
+  display: flex; align-items: center; justify-content: center; }
+.jelly { position: absolute; inset: 0; border-radius: 22.4%; overflow: hidden;
+  background: linear-gradient(165deg, #e0204b 0%, #ab112e 46%, #6b081c 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.55), inset 0 -26px 40px -14px rgba(255,125,165,0.60),
+              inset 0 0 0 1px rgba(255,255,255,0.10),
+              0 36px 64px -22px rgba(70,4,20,0.62), 0 3px 8px rgba(70,4,20,0.14);
+  display: flex; align-items: center; justify-content: center; }
+/* the lens highlight — subtle, or it turns into 2009 gloss */
+.jelly::after, .pearl::after { content: ""; position: absolute; left: 7%; right: 7%; top: 3.5%; height: 44%;
+  border-radius: 40% 40% 50% 50% / 38% 38% 24% 24%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.26), rgba(255,255,255,0)); }
+.pearl::after { background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0)); opacity: 0.5; }
+.mk { width: 50%; height: 50%; fill: url(#gw); position: relative; z-index: 1; }
+.pearl .mk { fill: #17141c; }
+/* a wordmark stands in where a brand has no icon (RUTA, Windsor's "w.") */
+.wmark { font-weight: 900; color: #17141c; letter-spacing: -0.045em; line-height: 1;
+  position: relative; z-index: 1; }
+.wmark i { font-style: normal; color: #b4122f; }
+.jelly .wmark { color: #fff; } .jelly .wmark i { color: #ffb3c9; }
+
+/* one light sweep across a surface when it lands — once, never looping */
+.sheen { position: absolute; inset: -10%; z-index: 2; pointer-events: none;
+  background: linear-gradient(105deg, rgba(255,255,255,0) 38%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0) 62%);
+  mix-blend-mode: soft-light; }
+/* a ripple the same shape as the tile that sent it */
+.sqring { position: absolute; border-radius: 22.4%; border: 3px solid rgba(255,255,255,0.75);
+  opacity: 0; visibility: hidden; }
+
+/* ---------- the takeover ground: deep burgundy, lit from inside ----------
+   Approved on the test: a dark ground is allowed now (it overrides §5's old
+   "never dark"). Three soft light pools drift slowly; grain stops banding. */
+.tkg { position: absolute; inset: 0;
+  background: linear-gradient(172deg, #4a0a1c 0%, #660c26 36%, #3c0716 70%, #1d030a 100%); }
+.aur { position: absolute; border-radius: 50%; pointer-events: none; }
+.aur.a1 { left: 260px; top: -420px; width: 1200px; height: 1200px;
+  background: radial-gradient(circle, rgba(255,110,156,0.50) 0%, rgba(255,110,156,0) 62%); }
+.aur.a2 { left: -640px; top: 960px; width: 1400px; height: 1400px;
+  background: radial-gradient(circle, rgba(222,32,74,0.55) 0%, rgba(222,32,74,0) 64%); }
+.aur.a3 { left: 330px; top: 760px; width: 900px; height: 900px;
+  background: radial-gradient(circle, rgba(255,198,214,0.20) 0%, rgba(255,198,214,0) 60%); }
+.grain { position: absolute; inset: 0; background: url("assets/grain.png"); opacity: 0.075;
+  mix-blend-mode: overlay; pointer-events: none; }
+
+/* the white report card that sits on a burgundy ground */
+.sheet { position: absolute; border-radius: 68px; overflow: hidden; color: #17141c;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 55%, #fdf0f4 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -30px 60px -30px rgba(180,18,47,0.14),
+              0 70px 130px -40px rgba(8,0,3,0.75), 0 0 0 1px rgba(255,255,255,0.35); }
+.sheet .sheen { mix-blend-mode: normal; opacity: 0.55; }
+/* type ladder inside a sheet */
+.t-micro { font-size: 24px; font-weight: 700; letter-spacing: 0.16em; color: rgba(23,20,28,0.42); }
+.t-title { font-size: 42px; font-weight: 700; letter-spacing: -0.015em; }
+.t-sub   { font-size: 26px; font-weight: 500; color: rgba(23,20,28,0.46); }
+.t-big   { font-size: 176px; font-weight: 900; letter-spacing: -0.045em; line-height: 1;
+  background: linear-gradient(118deg, #7e0b20 0%, #b4122f 42%, #ff6e9c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: 10px; }
+.chip { display: inline-flex; align-items: center; gap: 10px; height: 58px; padding: 0 24px;
+  border-radius: 29px; background: #fbe3ea; color: #b4122f; font-size: 26px; font-weight: 700; }
+.hair { height: 2px; background: rgba(23,20,28,0.07); transform-origin: 0 0; }
+
+/* a cable between two tiles: a glass tube, a bright core, a travelling packet */
+.cab .tube { fill: none; stroke: rgba(255,255,255,0.26); stroke-width: 20; stroke-linecap: round; }
+.cab .core { fill: none; stroke: rgba(255,255,255,0.92); stroke-width: 4.5; stroke-linecap: round; }
+.cab .pkt  { fill: none; stroke: #ffd6e3; stroke-width: 11; stroke-linecap: round; }
+.cab .pkg  { filter: drop-shadow(0 0 10px rgba(255,120,165,1)); }
+.cab .wire { fill: none; stroke: rgba(255,255,255,0.55); stroke-width: 4; stroke-linecap: round; }
+
+
+.abs { position: absolute; }
+.hide { opacity: 0; visibility: hidden; }
+.tw { position: absolute; }
+.sk { fill: none; stroke: url(#gw); stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round;
+  width: 50%; height: 50%; position: relative; z-index: 1; overflow: visible; }
+.pearl .sk { stroke: #17141c; }
+.circ .jelly, .circ .pearl, .circ .clear, .circ .sheen { border-radius: 50%; }
+.aurs { position: absolute; left: -700px; top: -700px; width: 2480px; height: 3320px; pointer-events: none;
+  background:
+    radial-gradient(circle 526px at 1560px 880px, rgba(255,110,156,0.50), rgba(255,110,156,0)),
+    radial-gradient(circle 634px at 760px 2360px, rgba(222,32,74,0.55), rgba(222,32,74,0)),
+    radial-gradient(circle 382px at 1480px 1910px, rgba(255,198,214,0.20), rgba(255,198,214,0)); }
+
+/* the dock */
+.slot { position: absolute; border-radius: 22.4%; border: 3px dashed rgba(255,255,255,0.42);
+  background: rgba(255,255,255,0.06); }
+
+/* swap cards */
+.wc { border-radius: 56px; }
+.rc { position: absolute; border-radius: 56px; overflow: hidden; color: #17141c;
+  background: linear-gradient(172deg, #ffffff 0%, #fff9fb 55%, #fdf0f4 100%);
+  box-shadow: inset 0 2px 1px #fff, inset 0 -26px 50px -30px rgba(180,18,47,0.16),
+              0 50px 100px -36px rgba(24,4,12,0.62), 0 0 0 1px rgba(255,255,255,0.4); }
+.nm { position: absolute; left: 0; right: 0; top: 166px; text-align: center; font-size: 46px; font-weight: 700;
+  letter-spacing: -0.02em; line-height: 56px; white-space: nowrap; }
+.wc .nm { color: #fff; }
+.stk { position: absolute; left: 0; top: 0; overflow: visible; z-index: 4; }
+.sline { fill: none; stroke: #ff4d7f; stroke-width: 13; stroke-linecap: round;
+  filter: drop-shadow(0 0 8px rgba(255,110,156,0.9)); }
+.shc { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
+.shc .sheen { mix-blend-mode: normal; opacity: 0.45; }
+
+/* takeover */
+.lbl { position: absolute; width: 330px; text-align: center; font-size: 40px; font-weight: 700; color: #fff;
+  letter-spacing: -0.015em; white-space: nowrap; }
+.row { position: absolute; left: 180px; width: 900px; height: 104px; }
+.row .rn { position: absolute; left: 124px; top: 0; line-height: 104px; font-size: 46px; font-weight: 700;
+  letter-spacing: -0.02em; color: #17141c; white-space: nowrap; }
+.row .hr { position: absolute; left: 0; right: 40px; bottom: -11px; height: 2px; background: rgba(23,20,28,0.07); }
+.tg { position: absolute; left: 720px; top: 16px; width: 130px; height: 72px; border-radius: 36px;
+  background: rgba(23,20,28,0.13); box-shadow: inset 0 2px 4px rgba(23,20,28,0.10); }
+.tg .on { position: absolute; inset: 0; border-radius: 36px; opacity: 0; visibility: hidden;
+  background: linear-gradient(165deg, #e0204b 0%, #ab112e 46%, #6b081c 100%);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.45); }
+.tg .kn { position: absolute; left: 7px; top: 7px; width: 58px; height: 58px; border-radius: 50%; background: #fff;
+  box-shadow: 0 4px 10px rgba(23,20,28,0.25); }
+
+/* the comment field */
+#cm .ph, #cm .pl { position: absolute; left: 150px; top: 0; line-height: 150px; white-space: nowrap; }
+#cm .ph { font-size: 38px; font-weight: 500; color: rgba(255,255,255,0.55); }
+#cm .pl { font-size: 76px; font-weight: 900; color: #fff; }
+.ck { position: absolute; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%;
+  border: 7px solid #ff6e9c; opacity: 0; visibility: hidden; z-index: 5; }
+
+    .ground { clip-path: path('M 883.2 0 c 36.293 0 54.439 0 70.765 8.318 a 68 68 0 0 1 29.717 29.717 c 8.318 16.325 8.318 34.472 8.318 70.765 L 992 1683.2 c 0 36.293 0 54.439 -8.318 70.765 a 68 68 0 0 1 -29.717 29.717 c -16.325 8.318 -34.472 8.318 -70.765 8.318 L 108.8 1792 c -36.293 0 -54.439 0 -70.765 -8.318 a 68 68 0 0 1 -29.717 -29.717 c -8.318 -16.325 -8.318 -34.472 -8.318 -70.765 L 0 108.8 c 0 -36.293 0 -54.439 8.318 -70.765 a 68 68 0 0 1 29.717 -29.717 c 16.325 -8.318 34.472 -8.318 70.765 -8.318 Z'); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="28.183" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="28.183" data-media-start="0"
+             muted playsinline></video>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="gw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ffdbe6"/></linearGradient>
+<symbol id="i-claude" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></symbol>
+<symbol id="i-googlegemini" viewBox="0 0 24 24"><path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81"/></symbol>
+<symbol id="i-openai" viewBox="0 0 24 24"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/></symbol>
+<symbol id="i-canva" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zM6.962 7.68c.754 0 1.337.549 1.405 1.2.069.583-.171 1.097-.822 1.406-.343.171-.48.172-.549.069-.034-.069 0-.137.069-.206.617-.514.617-.926.548-1.508-.034-.378-.308-.618-.583-.618-1.2 0-2.914 2.674-2.674 4.629.103.754.549 1.646 1.509 1.646.308 0 .65-.103.96-.24.5-.264.799-.47 1.097-.8-.073-.885.704-2.046 1.851-2.046.515 0 .926.205.96.583.068.514-.377.582-.514.582s-.378-.034-.378-.17c-.034-.138.309-.07.275-.378-.035-.206-.24-.274-.446-.274-.72 0-1.131.994-1.029 1.611.035.275.172.549.447.549.205 0 .514-.31.617-.755.068-.308.343-.514.583-.514.102 0 .17.034.205.171v.138c-.034.137-.137.548-.102.651 0 .069.034.171.17.171.092 0 .436-.18.777-.459.117-.59.253-1.298.253-1.357.034-.24.137-.48.617-.48.103 0 .171.034.205.171v.138l-.136.617c.445-.583 1.097-.994 1.508-.994.172 0 .309.102.309.274 0 .103 0 .274-.069.446-.137.377-.309.96-.412 1.474 0 .137.035.274.207.274.171 0 .685-.206 1.096-.754l.007-.004c-.002-.068-.007-.134-.007-.202 0-.411.035-.754.104-.994.068-.274.411-.514.617-.514.103 0 .205.069.205.171 0 .035 0 .103-.034.137-.137.446-.24.857-.24 1.269 0 .24.034.582.102.788 0 .034.035.069.07.069.068 0 .548-.445.89-1.028-.308-.206-.48-.549-.48-.96 0-.72.446-1.097.858-1.097.343 0 .617.24.617.72 0 .308-.103.65-.274.96h.102a.77.77 0 0 0 .584-.24.293.293 0 0 1 .134-.117c.335-.425.83-.74 1.41-.74.48 0 .924.205.959.582.068.515-.378.618-.515.618l-.002-.002c-.138 0-.377-.035-.377-.172 0-.137.309-.068.274-.376-.034-.206-.24-.275-.446-.275-.686 0-1.13.891-1.028 1.611.034.275.171.583.445.583.206 0 .515-.308.652-.754.068-.274.343-.514.583-.514.103 0 .17.034.205.171 0 .069 0 .206-.137.652-.17.308-.171.48-.137.617.034.274.171.48.309.583.034.034.068.102.068.102 0 .069-.034.138-.137.138-.034 0-.068 0-.103-.035-.514-.205-.72-.548-.789-.891-.205.24-.445.377-.72.377-.445 0-.89-.411-.96-.926a1.609 1.609 0 0 1 .075-.649c-.203.13-.422.203-.623.203h-.17c-.447.652-.927 1.098-1.27 1.303a.896.896 0 0 1-.377.104c-.068 0-.171-.035-.205-.104-.095-.152-.156-.392-.193-.667-.481.527-1.145.805-1.453.805-.343 0-.548-.206-.582-.55v-.376c.102-.754.377-1.2.377-1.337a.074.074 0 0 0-.069-.07c-.24 0-1.028.824-1.166 1.373l-.103.445c-.068.309-.377.515-.582.515-.103 0-.172-.035-.206-.172v-.137l.046-.233c-.435.31-.87.508-1.075.508-.308 0-.48-.172-.514-.412-.206.274-.445.412-.754.412-.352 0-.696-.24-.862-.593-.244.275-.523.553-.852.764-.48.309-1.028.549-1.68.549-.582 0-1.097-.309-1.371-.583-.412-.377-.651-.96-.686-1.509-.205-1.68.823-3.84 2.4-4.8.378-.205.755-.343 1.132-.343zm9.77 3.291c-.104 0-.172.172-.172.343 0 .274.137.583.309.755a1.74 1.74 0 0 0 .102-.583c0-.343-.137-.515-.24-.515z"/></symbol>
+<symbol id="i-openrouter" viewBox="0 0 24 24"><path d="M16.778 1.844v1.919q-.569-.026-1.138-.032-.708-.008-1.415.037c-1.93.126-4.023.728-6.149 2.237-2.911 2.066-2.731 1.95-4.14 2.75-.396.223-1.342.574-2.185.798-.841.225-1.753.333-1.751.333v4.229s.768.108 1.61.333c.842.224 1.789.575 2.185.799 1.41.798 1.228.683 4.14 2.75 2.126 1.509 4.22 2.11 6.148 2.236.88.058 1.716.041 2.555.005v1.918l7.222-4.168-7.222-4.17v2.176c-.86.038-1.611.065-2.278.021-1.364-.09-2.417-.357-3.979-1.465-2.244-1.593-2.866-2.027-3.68-2.508.889-.518 1.449-.906 3.822-2.59 1.56-1.109 2.614-1.377 3.978-1.466.667-.044 1.418-.017 2.278.02v2.176L24 6.014Z"/></symbol>
+<symbol id="i-fathom" viewBox="0 0 24 24"><path d="M14.185 0c-1.702.008-3.693.467-6.068 1.331C.115 4.244-1.581 7.881 1.33 15.883c2.912 8.002 6.55 9.698 14.552 6.786 8.002-2.913 9.699-6.55 6.786-14.552C20.62 2.491 18.214-.018 14.185 0zm2.77 6.57h1.253a.25.25 0 01.199.098.25.25 0 01.043.217L15.672 17.22a.25.25 0 01-.241.186h-1.254a.25.25 0 01-.242-.315l.169-.628.123-.457 2.486-9.252a.25.25 0 01.241-.185zm-9.184.808h.504a.25.25 0 01.25.25v.844a.25.25 0 01-.25.25h-.428a1.7 1.7 0 00-.258.012.221.221 0 00-.12.048.197.197 0 00-.049.078.886.886 0 00-.043.315v.641h.898a.25.25 0 01.25.25v.844a.25.25 0 01-.25.25h-.898v5.094a.25.25 0 01-.25.25h-.985a.25.25 0 01-.25-.25v-7.23a1.723 1.723 0 01.169-.78 1.395 1.395 0 01.453-.523c.37-.257.826-.341 1.257-.343zm3.85 2.344c.767 0 1.419.218 1.883.622.465.404.725.994.723 1.668v1.683l-.755 2.809h-.48a.25.25 0 01-.25-.25v-.187a1.84 1.84 0 01-.223.167c-.335.213-.79.352-1.39.352a2.936 2.936 0 01-1.337-.29 1.898 1.898 0 01-.883-.907 2.193 2.193 0 01-.187-.916 1.907 1.907 0 01.245-.99 1.724 1.724 0 01.646-.618c.52-.293 1.16-.396 1.788-.48H11.4c.342-.046.616-.075.827-.103a1.968 1.968 0 00.431-.088.147.147 0 00.065-.04l.01-.021a.319.319 0 00.009-.086v-.035a.809.809 0 00-.274-.638c-.178-.155-.458-.26-.847-.261-.385 0-.686.106-.89.262a.821.821 0 00-.338.588.25.25 0 01-.249.228H9.101a.25.25 0 01-.25-.261 2.139 2.139 0 01.825-1.593c.491-.391 1.165-.615 1.945-.615zm1.121 3.783c-.09.024-.187.047-.296.068-.303.06-.67.113-1.025.163a2.855 2.855 0 00-.692.171c-.196.082-.333.186-.407.308a.569.569 0 00-.08.307v.007a.604.604 0 00.062.275.554.554 0 00.176.198c.16.115.428.194.79.194.56-.002.915-.164 1.14-.39.223-.228.33-.542.332-.896v-.404z"/></symbol></defs></svg>
+<div class="g full" id="gN"><div class="shelf edge hide" id="dock" style="left:40px;top:75px;width:1000px;height:160px"><div class="slot" id="sl0" style="left:283px;top:28px;width:104px;height:104px"></div><div class="slot" id="sl1" style="left:613px;top:28px;width:104px;height:104px"></div><div class="slot" id="sl2" style="left:153px;top:28px;width:104px;height:104px"></div><div class="slot" id="sl3" style="left:743px;top:28px;width:104px;height:104px"></div><div class="slot" id="sl4" style="left:23px;top:28px;width:104px;height:104px"></div><div class="slot" id="sl5" style="left:873px;top:28px;width:104px;height:104px"></div></div><div class="dglass edge wc hide" id="wc0" style="left:60px;top:300px;width:440px;height:250px"><div class="tw " id="wt0" style="left:160px;top:28px;width:120px;height:120px"><div class="pearl"><svg class="mk"><use href="#i-googlegemini" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="nm">Nano Banana</div><svg class="stk" width="440" height="250"><path class="sline" id="ws0" d="M44 204 L396 188"/></svg></div><div class="rc hide" id="rc0" style="left:580px;top:300px;width:440px;height:250px"><div class="tw " id="rt0" style="left:160px;top:28px;width:120px;height:120px"><div class="jelly"><svg class="mk"><use href="#i-openrouter" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="nm">OpenRouter</div><div class="shc"><div class="sheen"></div></div></div><div class="dglass edge wc hide" id="wc1" style="left:60px;top:300px;width:440px;height:250px"><div class="tw " id="wt1" style="left:160px;top:28px;width:120px;height:120px"><div class="pearl"><svg class="mk"><use href="#i-openai" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="nm">Whisper</div><svg class="stk" width="440" height="250"><path class="sline" id="ws1" d="M44 204 L396 188"/></svg></div><div class="rc hide" id="rc1" style="left:580px;top:300px;width:440px;height:250px"><div class="tw " id="rt1" style="left:160px;top:28px;width:120px;height:120px"><div class="jelly"><svg class="mk"><use href="#i-fathom" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="nm">Fathom</div><div class="shc"><div class="sheen"></div></div></div><div class="dglass edge wc hide" id="wc2" style="left:60px;top:300px;width:440px;height:250px"><div class="tw " id="wt2" style="left:160px;top:28px;width:120px;height:120px"><div class="pearl"><svg class="mk"><use href="#i-canva" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="nm">Canva</div><svg class="stk" width="440" height="250"><path class="sline" id="ws2" d="M44 204 L396 188"/></svg></div><div class="rc hide" id="rc2" style="left:580px;top:300px;width:440px;height:250px"><div class="tw " id="rt2" style="left:160px;top:28px;width:120px;height:120px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M12 3.6a8.4 8.4 0 1 0 0 16.8c1.3 0 1.9-.9 1.6-2-.3-1.2.4-2.3 1.7-2.3h1.8a3.4 3.4 0 0 0 3.4-3.4C20.5 7.3 16.7 3.6 12 3.6z"/><circle cx="7.8" cy="11.2" r="1.15"/><circle cx="10.6" cy="7.7" r="1.15"/><circle cx="14.9" cy="7.9" r="1.15"/></svg><div class="sheen"></div></div></div><div class="nm">дизайн-система</div><div class="shc"><div class="sheen"></div></div></div><div class="dglass edge wc hide" id="wc3" style="left:60px;top:300px;width:440px;height:250px"><div class="tw " id="wt3" style="left:160px;top:28px;width:120px;height:120px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2.6"/><path d="M3.5 9.6h17M3.5 14.5h17M9.6 4.5v15"/></svg><div class="sheen"></div></div></div><div class="nm">Excel</div><svg class="stk" width="440" height="250"><path class="sline" id="ws3" d="M44 204 L396 188"/></svg></div><div class="rc hide" id="rc3" style="left:580px;top:300px;width:440px;height:250px"><div class="tw " id="rt3" style="left:160px;top:28px;width:120px;height:120px"><div class="jelly"><span class="wmark" style="font-size:67px">w<i>.</i></span><div class="sheen"></div></div></div><div class="nm">Windsor</div><div class="shc"><div class="sheen"></div></div></div><div class="dglass edge wc hide" id="wc4" style="left:60px;top:300px;width:440px;height:250px"><div class="tw " id="wt4" style="left:160px;top:28px;width:120px;height:120px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><circle cx="6.6" cy="17.2" r="2.7"/><circle cx="17.4" cy="17.2" r="2.7"/><path d="M8.5 15.3L18 4.6M15.5 15.3L6 4.6"/></svg><div class="sheen"></div></div></div><div class="nm">CapCut</div><svg class="stk" width="440" height="250"><path class="sline" id="ws4" d="M44 204 L396 188"/></svg></div><div class="rc hide" id="rc4" style="left:580px;top:300px;width:440px;height:250px"><div class="tw " id="rt4" style="left:160px;top:28px;width:120px;height:120px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M4 10h16v8.4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M4 10l-.6-3.4 15.2-2.7.6 3.4z"/><path d="M8.4 5.8l2.3 3.3M13.4 4.9l2.3 3.3"/></svg><div class="sheen"></div></div></div><div class="nm">скіл монтажу</div><div class="shc"><div class="sheen"></div></div></div><div class="dglass edge wc hide" id="wc5" style="left:60px;top:300px;width:440px;height:250px"><div class="tw " id="wt5" style="left:160px;top:28px;width:120px;height:120px"><div class="pearl"><svg class="mk"><use href="#i-openai" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="nm">ChatGPT</div><svg class="stk" width="440" height="250"><path class="sline" id="ws5" d="M44 204 L396 188"/></svg></div><div class="rc hide" id="rc5" style="left:580px;top:300px;width:440px;height:250px"><div class="tw " id="rt5" style="left:160px;top:28px;width:120px;height:120px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M7 3.6h7.2l4.4 4.4v10.4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5.6a2 2 0 0 1 2-2z"/><path d="M14 3.6v4.6h4.6M8.6 12.6h6.8M8.6 16.2h4.6"/></svg><div class="sheen"></div></div></div><div class="nm">скіли</div><div class="shc"><div class="sheen"></div></div></div><div class="tw hide " id="dk0" style="left:323px;top:103px;width:104px;height:104px"><div class="jelly"><svg class="mk"><use href="#i-openrouter" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="tw hide " id="dk1" style="left:653px;top:103px;width:104px;height:104px"><div class="jelly"><svg class="mk"><use href="#i-fathom" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="tw hide " id="dk2" style="left:193px;top:103px;width:104px;height:104px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M12 3.6a8.4 8.4 0 1 0 0 16.8c1.3 0 1.9-.9 1.6-2-.3-1.2.4-2.3 1.7-2.3h1.8a3.4 3.4 0 0 0 3.4-3.4C20.5 7.3 16.7 3.6 12 3.6z"/><circle cx="7.8" cy="11.2" r="1.15"/><circle cx="10.6" cy="7.7" r="1.15"/><circle cx="14.9" cy="7.9" r="1.15"/></svg><div class="sheen"></div></div></div><div class="tw hide " id="dk3" style="left:783px;top:103px;width:104px;height:104px"><div class="jelly"><span class="wmark" style="font-size:58px">w<i>.</i></span><div class="sheen"></div></div></div><div class="tw hide " id="dk4" style="left:63px;top:103px;width:104px;height:104px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M4 10h16v8.4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M4 10l-.6-3.4 15.2-2.7.6 3.4z"/><path d="M8.4 5.8l2.3 3.3M13.4 4.9l2.3 3.3"/></svg><div class="sheen"></div></div></div><div class="tw hide " id="dk5" style="left:913px;top:103px;width:104px;height:104px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M7 3.6h7.2l4.4 4.4v10.4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5.6a2 2 0 0 1 2-2z"/><path d="M14 3.6v4.6h4.6M8.6 12.6h6.8M8.6 16.2h4.6"/></svg><div class="sheen"></div></div></div><div class="sqring" id="hubR" style="left:455px;top:70px;width:170px;height:170px"></div><div class="tw hide " id="hub" style="left:455px;top:70px;width:170px;height:170px"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg><div class="sheen"></div></div></div></div>
+<div class="g full" id="gT"><div class="tkg"></div><div class="aurs"></div><div class="grain"></div><div class="sqring" id="pa0R" style="left:40px;top:300px;width:250px;height:250px"></div><div class="tw hide " id="pa0" style="left:40px;top:300px;width:250px;height:250px"><div class="pearl"><svg class="mk"><use href="#i-googlegemini" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="lbl hide" id="pl0" style="left:0px;top:568px">Nano Banana</div><div class="sqring" id="pa1R" style="left:415px;top:220px;width:250px;height:250px"></div><div class="tw hide " id="pa1" style="left:415px;top:220px;width:250px;height:250px"><div class="pearl"><svg class="mk"><use href="#i-openai" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="lbl hide" id="pl1" style="left:375px;top:488px">Whisper</div><div class="sqring" id="pa2R" style="left:790px;top:330px;width:250px;height:250px"></div><div class="tw hide " id="pa2" style="left:790px;top:330px;width:250px;height:250px"><div class="pearl"><svg class="mk"><use href="#i-canva" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="lbl hide" id="pl2" style="left:750px;top:598px">Canva</div><div class="sqring" id="pa3R" style="left:60px;top:760px;width:250px;height:250px"></div><div class="tw hide " id="pa3" style="left:60px;top:760px;width:250px;height:250px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2.6"/><path d="M3.5 9.6h17M3.5 14.5h17M9.6 4.5v15"/></svg><div class="sheen"></div></div></div><div class="lbl hide" id="pl3" style="left:20px;top:1028px">Excel</div><div class="sqring" id="pa4R" style="left:430px;top:680px;width:250px;height:250px"></div><div class="tw hide " id="pa4" style="left:430px;top:680px;width:250px;height:250px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><circle cx="6.6" cy="17.2" r="2.7"/><circle cx="17.4" cy="17.2" r="2.7"/><path d="M8.5 15.3L18 4.6M15.5 15.3L6 4.6"/></svg><div class="sheen"></div></div></div><div class="lbl hide" id="pl4" style="left:390px;top:948px">CapCut</div><div class="sqring" id="pa5R" style="left:780px;top:800px;width:250px;height:250px"></div><div class="tw hide " id="pa5" style="left:780px;top:800px;width:250px;height:250px"><div class="pearl"><svg class="mk"><use href="#i-openai" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="lbl hide" id="pl5" style="left:740px;top:1068px">ChatGPT</div><div class="tw hide circ" id="ce0" style="left:236px;top:274px;width:84px;height:84px"><div class="jelly"><span class="wmark" style="font-size:50px;color:#fff">€</span><div class="sheen"></div></div></div><div class="tw hide circ" id="ce1" style="left:611px;top:194px;width:84px;height:84px"><div class="jelly"><span class="wmark" style="font-size:50px;color:#fff">€</span><div class="sheen"></div></div></div><div class="tw hide circ" id="ce2" style="left:986px;top:304px;width:84px;height:84px"><div class="jelly"><span class="wmark" style="font-size:50px;color:#fff">€</span><div class="sheen"></div></div></div><div class="tw hide circ" id="ce3" style="left:256px;top:734px;width:84px;height:84px"><div class="jelly"><span class="wmark" style="font-size:50px;color:#fff">€</span><div class="sheen"></div></div></div><div class="tw hide circ" id="ce4" style="left:626px;top:654px;width:84px;height:84px"><div class="jelly"><span class="wmark" style="font-size:50px;color:#fff">€</span><div class="sheen"></div></div></div><div class="tw hide circ" id="ce5" style="left:976px;top:774px;width:84px;height:84px"><div class="jelly"><span class="wmark" style="font-size:50px;color:#fff">€</span><div class="sheen"></div></div></div><div class="tw hide circ" id="pk" style="left:110px;top:238px;width:110px;height:110px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.8 3.7-5.8 7.2-5.8s6.3 2 7.2 5.8"/></svg><div class="sheen"></div></div></div><div class="sheet hide" id="sh" style="left:-70px;top:240px;width:1220px;height:940px" data-layout-allow-overflow><div class="row" id="rw0" style="top:130px"><div class="tw " id="rwT0" style="left:0px;top:4px;width:96px;height:96px"><div class="jelly"><svg class="mk"><use href="#i-openrouter" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="rn">OpenRouter</div><div class="tg"><div class="on" id="tgO0"></div><div class="kn" id="tgK0"></div></div><div class="hr"></div></div><div class="row" id="rw1" style="top:255px"><div class="tw " id="rwT1" style="left:0px;top:4px;width:96px;height:96px"><div class="jelly"><svg class="mk"><use href="#i-fathom" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="rn">Fathom</div><div class="tg"><div class="on" id="tgO1"></div><div class="kn" id="tgK1"></div></div><div class="hr"></div></div><div class="row" id="rw2" style="top:380px"><div class="tw " id="rwT2" style="left:0px;top:4px;width:96px;height:96px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M12 3.6a8.4 8.4 0 1 0 0 16.8c1.3 0 1.9-.9 1.6-2-.3-1.2.4-2.3 1.7-2.3h1.8a3.4 3.4 0 0 0 3.4-3.4C20.5 7.3 16.7 3.6 12 3.6z"/><circle cx="7.8" cy="11.2" r="1.15"/><circle cx="10.6" cy="7.7" r="1.15"/><circle cx="14.9" cy="7.9" r="1.15"/></svg><div class="sheen"></div></div></div><div class="rn">дизайн-система</div><div class="tg"><div class="on" id="tgO2"></div><div class="kn" id="tgK2"></div></div><div class="hr"></div></div><div class="row" id="rw3" style="top:505px"><div class="tw " id="rwT3" style="left:0px;top:4px;width:96px;height:96px"><div class="jelly"><span class="wmark" style="font-size:53px">w<i>.</i></span><div class="sheen"></div></div></div><div class="rn">Windsor</div><div class="tg"><div class="on" id="tgO3"></div><div class="kn" id="tgK3"></div></div><div class="hr"></div></div><div class="row" id="rw4" style="top:630px"><div class="tw " id="rwT4" style="left:0px;top:4px;width:96px;height:96px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M4 10h16v8.4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M4 10l-.6-3.4 15.2-2.7.6 3.4z"/><path d="M8.4 5.8l2.3 3.3M13.4 4.9l2.3 3.3"/></svg><div class="sheen"></div></div></div><div class="rn">скіл монтажу</div><div class="tg"><div class="on" id="tgO4"></div><div class="kn" id="tgK4"></div></div><div class="hr"></div></div><div class="row" id="rw5" style="top:755px"><div class="tw " id="rwT5" style="left:0px;top:4px;width:96px;height:96px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M7 3.6h7.2l4.4 4.4v10.4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5.6a2 2 0 0 1 2-2z"/><path d="M14 3.6v4.6h4.6M8.6 12.6h6.8M8.6 16.2h4.6"/></svg><div class="sheen"></div></div></div><div class="rn">скіли</div><div class="tg"><div class="on" id="tgO5"></div><div class="kn" id="tgK5"></div></div></div><div class="sheen"></div></div><div class="sqring" id="tkCR" style="left:350px;top:430px;width:380px;height:380px"></div><div class="tw hide " id="tkC" style="left:350px;top:430px;width:380px;height:380px"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="sqring" id="tkPR" style="left:590px;top:222px;width:100px;height:100px"></div><div class="tw hide circ" id="tkP" style="left:590px;top:222px;width:100px;height:100px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.8 3.7-5.8 7.2-5.8s6.3 2 7.2 5.8"/></svg><div class="sheen"></div></div></div></div>
+<div class="g full" id="gR"><div class="shelf edge hide" id="dock2" style="left:40px;top:75px;width:1000px;height:160px"></div><div class="tw hide " id="dr0" style="left:323px;top:103px;width:104px;height:104px"><div class="jelly"><svg class="mk"><use href="#i-openrouter" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="tw hide " id="dr1" style="left:653px;top:103px;width:104px;height:104px"><div class="jelly"><svg class="mk"><use href="#i-fathom" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="tw hide " id="dr2" style="left:193px;top:103px;width:104px;height:104px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M12 3.6a8.4 8.4 0 1 0 0 16.8c1.3 0 1.9-.9 1.6-2-.3-1.2.4-2.3 1.7-2.3h1.8a3.4 3.4 0 0 0 3.4-3.4C20.5 7.3 16.7 3.6 12 3.6z"/><circle cx="7.8" cy="11.2" r="1.15"/><circle cx="10.6" cy="7.7" r="1.15"/><circle cx="14.9" cy="7.9" r="1.15"/></svg><div class="sheen"></div></div></div><div class="tw hide " id="dr3" style="left:783px;top:103px;width:104px;height:104px"><div class="jelly"><span class="wmark" style="font-size:58px">w<i>.</i></span><div class="sheen"></div></div></div><div class="tw hide " id="dr4" style="left:63px;top:103px;width:104px;height:104px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M4 10h16v8.4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M4 10l-.6-3.4 15.2-2.7.6 3.4z"/><path d="M8.4 5.8l2.3 3.3M13.4 4.9l2.3 3.3"/></svg><div class="sheen"></div></div></div><div class="tw hide " id="dr5" style="left:913px;top:103px;width:104px;height:104px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M7 3.6h7.2l4.4 4.4v10.4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5.6a2 2 0 0 1 2-2z"/><path d="M14 3.6v4.6h4.6M8.6 12.6h6.8M8.6 16.2h4.6"/></svg><div class="sheen"></div></div></div><div class="sqring" id="hub2R" style="left:455px;top:70px;width:170px;height:170px"></div><div class="tw hide " id="hub2" style="left:455px;top:70px;width:170px;height:170px"><div class="jelly"><svg class="mk"><use href="#i-claude" width="100%" height="100%"/></svg><div class="sheen"></div></div></div><div class="dglass edge hide" id="cm" style="left:90px;top:300px;width:900px;height:150px;border-radius:75px"><div class="tw circ" style="left:27px;top:27px;width:96px;height:96px"><div class="pearl"><svg class="sk" viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.8 3.7-5.8 7.2-5.8s6.3 2 7.2 5.8"/></svg></div></div><div class="ph" id="cmPh">Додайте коментар…</div><div class="pl hide" id="cmPl">+</div><div class="tw circ" id="cmS" style="left:777px;top:27px;width:96px;height:96px"><div class="jelly"><svg class="sk" viewBox="0 0 24 24"><path d="M12 19.2V5.4M6.2 11l5.8-5.8 5.8 5.8"/></svg></div></div><div class="ck" id="ckS" style="left:825px;top:75px"></div><div class="shc"><div class="sheen"></div></div></div></div>
+
+      <div id="scrim"></div>
+      <div class="cap" id="cap0">ДЛЯ</div>
+      <div class="cap" id="cap1">КАРТИНОК...</div>
+      <div class="cap" id="cap2">НІ,</div>
+      <div class="cap" id="cap4">В КЛОД.</div>
+      <div class="cap" id="cap5">ДЛЯ</div>
+      <div class="cap" id="cap6">ДЗВІНКІВ...</div>
+      <div class="cap" id="cap7">НІ,</div>
+      <div class="cap" id="cap9">В КЛОД.</div>
+      <div class="cap" id="cap10">ДЛЯ</div>
+      <div class="cap" id="cap11">КАРУСЕЛЕЙ...</div>
+      <div class="cap" id="cap13">В КЛОД.</div>
+      <div class="cap" id="cap14">ДЛЯ</div>
+      <div class="cap" id="cap15">СТАТИСТИКИ...</div>
+      <div class="cap" id="cap17">В КЛОД.</div>
+      <div class="cap" id="cap18">ДЛЯ</div>
+      <div class="cap" id="cap19">МОНТАЖУ...</div>
+      <div class="cap" id="cap22">В КЛОД.</div>
+      <div class="cap" id="cap23">ДЛЯ</div>
+      <div class="cap" id="cap24">СЦЕНАРІЇВ...</div>
+      <div class="cap" id="cap26">В</div>
+      <div class="cap" id="cap27">КЛОД.</div>
+      <div class="cap" id="cap28">ТРЕБА</div>
+      <div class="cap" id="cap29">ПЕРЕСТАТИ</div>
+      <div class="cap" id="cap30">СТРИБАТИ</div>
+      <div class="cap" id="cap31">МІЖ</div>
+      <div class="cap" id="cap32">КУПОЮ</div>
+      <div class="cap" id="cap33">РІЗНИХ</div>
+      <div class="cap" id="cap34">ШІ-ПЛАТФОРМ</div>
+      <div class="cap" id="cap35">І ПЛАТИТИ</div>
+      <div class="cap" id="cap36">ЗА</div>
+      <div class="cap" id="cap37">КОЖНУ,</div>
+      <div class="cap" id="cap38">А</div>
+      <div class="cap" id="cap39">ПРОСТО</div>
+      <div class="cap" id="cap40">ВЗЯТИ</div>
+      <div class="cap" id="cap41">ОДНУ</div>
+      <div class="cap" id="cap42">ПЛАТФОРМУ</div>
+      <div class="cap" id="cap43">І</div>
+      <div class="cap" id="cap44">НАЛАШТУВАТИ</div>
+      <div class="cap" id="cap45">ВСЮ</div>
+      <div class="cap" id="cap46">СИСТЕМУ</div>
+      <div class="cap" id="cap47">ПІД</div>
+      <div class="cap" id="cap48">ТЕБЕ.</div>
+      <div class="cap" id="cap49">ЯКЩО</div>
+      <div class="cap" id="cap50">ТИ</div>
+      <div class="cap" id="cap51">ХОЧЕШ</div>
+      <div class="cap" id="cap52">ТАК</div>
+      <div class="cap" id="cap53">САМО,</div>
+      <div class="cap" id="cap54">ТО</div>
+      <div class="cap" id="cap55">ПИШИ</div>
+      <div class="cap" id="cap56">ПЛЮС</div>
+      <div class="cap" id="cap57">В КОМЕНТАРІ.</div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="28.183" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  tl.set("#cap0", {autoAlpha: 1}, 0.000);
+  tl.set("#cap0", {autoAlpha: 0}, 0.455);
+  tl.set("#cap1", {autoAlpha: 1}, 0.540);
+  tl.set("#cap1", {autoAlpha: 0}, 1.462);
+  tl.set("#cap2", {autoAlpha: 1}, 1.547);
+  tl.set("#cap2", {autoAlpha: 0}, 1.937);
+  tl.set("#cap4", {autoAlpha: 1}, 2.882);
+  tl.set("#cap4", {autoAlpha: 0}, 3.215);
+  tl.set("#cap5", {autoAlpha: 1}, 3.300);
+  tl.set("#cap5", {autoAlpha: 0}, 3.625);
+  tl.set("#cap6", {autoAlpha: 1}, 3.710);
+  tl.set("#cap6", {autoAlpha: 0}, 4.562);
+  tl.set("#cap7", {autoAlpha: 1}, 4.647);
+  tl.set("#cap7", {autoAlpha: 0}, 5.142);
+  tl.set("#cap9", {autoAlpha: 1}, 5.598);
+  tl.set("#cap9", {autoAlpha: 0}, 6.015);
+  tl.set("#cap10", {autoAlpha: 1}, 6.100);
+  tl.set("#cap10", {autoAlpha: 0}, 6.385);
+  tl.set("#cap11", {autoAlpha: 1}, 6.470);
+  tl.set("#cap11", {autoAlpha: 0}, 7.055);
+  tl.set("#cap13", {autoAlpha: 1}, 8.109);
+  tl.set("#cap13", {autoAlpha: 0}, 8.705);
+  tl.set("#cap14", {autoAlpha: 1}, 8.790);
+  tl.set("#cap14", {autoAlpha: 0}, 8.965);
+  tl.set("#cap15", {autoAlpha: 1}, 9.050);
+  tl.set("#cap15", {autoAlpha: 0}, 10.147);
+  tl.set("#cap17", {autoAlpha: 1}, 10.699);
+  tl.set("#cap17", {autoAlpha: 0}, 11.082);
+  tl.set("#cap18", {autoAlpha: 1}, 11.167);
+  tl.set("#cap18", {autoAlpha: 0}, 11.512);
+  tl.set("#cap19", {autoAlpha: 1}, 11.597);
+  tl.set("#cap19", {autoAlpha: 0}, 12.382);
+  tl.set("#cap22", {autoAlpha: 1}, 13.037);
+  tl.set("#cap22", {autoAlpha: 0}, 13.848);
+  tl.set("#cap23", {autoAlpha: 1}, 13.933);
+  tl.set("#cap23", {autoAlpha: 0}, 14.379);
+  tl.set("#cap24", {autoAlpha: 1}, 14.464);
+  tl.set("#cap24", {autoAlpha: 0}, 15.291);
+  tl.set("#cap26", {autoAlpha: 1}, 15.883);
+  tl.set("#cap26", {autoAlpha: 0}, 15.983);
+  tl.set("#cap27", {autoAlpha: 1}, 16.063);
+  tl.set("#cap27", {autoAlpha: 0}, 16.315);
+  tl.set("#cap28", {autoAlpha: 1}, 16.400);
+  tl.set("#cap28", {autoAlpha: 0}, 16.729);
+  tl.set("#cap29", {autoAlpha: 1}, 16.814);
+  tl.set("#cap29", {autoAlpha: 0}, 17.229);
+  tl.set("#cap30", {autoAlpha: 1}, 17.314);
+  tl.set("#cap30", {autoAlpha: 0}, 17.729);
+  tl.set("#cap31", {autoAlpha: 1}, 17.814);
+  tl.set("#cap31", {autoAlpha: 0}, 18.049);
+  tl.set("#cap32", {autoAlpha: 1}, 18.134);
+  tl.set("#cap32", {autoAlpha: 0}, 18.529);
+  tl.set("#cap33", {autoAlpha: 1}, 18.614);
+  tl.set("#cap33", {autoAlpha: 0}, 19.029);
+  tl.set("#cap34", {autoAlpha: 1}, 19.114);
+  tl.set("#cap34", {autoAlpha: 0}, 19.829);
+  tl.set("#cap35", {autoAlpha: 1}, 19.914);
+  tl.set("#cap35", {autoAlpha: 0}, 20.309);
+  tl.set("#cap36", {autoAlpha: 1}, 20.394);
+  tl.set("#cap36", {autoAlpha: 0}, 20.609);
+  tl.set("#cap37", {autoAlpha: 1}, 20.694);
+  tl.set("#cap37", {autoAlpha: 0}, 20.949);
+  tl.set("#cap38", {autoAlpha: 1}, 21.034);
+  tl.set("#cap38", {autoAlpha: 0}, 21.269);
+  tl.set("#cap39", {autoAlpha: 1}, 21.354);
+  tl.set("#cap39", {autoAlpha: 0}, 21.589);
+  tl.set("#cap40", {autoAlpha: 1}, 21.674);
+  tl.set("#cap40", {autoAlpha: 0}, 22.129);
+  tl.set("#cap41", {autoAlpha: 1}, 22.214);
+  tl.set("#cap41", {autoAlpha: 0}, 22.469);
+  tl.set("#cap42", {autoAlpha: 1}, 22.554);
+  tl.set("#cap42", {autoAlpha: 0}, 23.189);
+  tl.set("#cap43", {autoAlpha: 1}, 23.274);
+  tl.set("#cap43", {autoAlpha: 0}, 23.374);
+  tl.set("#cap44", {autoAlpha: 1}, 23.414);
+  tl.set("#cap44", {autoAlpha: 0}, 24.049);
+  tl.set("#cap45", {autoAlpha: 1}, 24.134);
+  tl.set("#cap45", {autoAlpha: 0}, 24.269);
+  tl.set("#cap46", {autoAlpha: 1}, 24.354);
+  tl.set("#cap46", {autoAlpha: 0}, 24.829);
+  tl.set("#cap47", {autoAlpha: 1}, 24.914);
+  tl.set("#cap47", {autoAlpha: 0}, 25.089);
+  tl.set("#cap48", {autoAlpha: 1}, 25.174);
+  tl.set("#cap48", {autoAlpha: 0}, 25.415);
+  tl.set("#cap49", {autoAlpha: 1}, 25.500);
+  tl.set("#cap49", {autoAlpha: 0}, 25.899);
+  tl.set("#cap50", {autoAlpha: 1}, 25.984);
+  tl.set("#cap50", {autoAlpha: 0}, 26.084);
+  tl.set("#cap51", {autoAlpha: 1}, 26.144);
+  tl.set("#cap51", {autoAlpha: 0}, 26.359);
+  tl.set("#cap52", {autoAlpha: 1}, 26.444);
+  tl.set("#cap52", {autoAlpha: 0}, 26.544);
+  tl.set("#cap53", {autoAlpha: 1}, 26.604);
+  tl.set("#cap53", {autoAlpha: 0}, 26.882);
+  tl.set("#cap54", {autoAlpha: 1}, 26.967);
+  tl.set("#cap54", {autoAlpha: 0}, 27.125);
+  tl.set("#cap55", {autoAlpha: 1}, 27.210);
+  tl.set("#cap55", {autoAlpha: 0}, 27.365);
+  tl.set("#cap56", {autoAlpha: 1}, 27.450);
+  tl.set("#cap56", {autoAlpha: 0}, 27.550);
+  tl.set("#cap57", {autoAlpha: 1}, 27.630);
+  tl.set("#cap57", {autoAlpha: 0}, 28.190);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 28.290);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 1.802);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 2.797);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 5.007);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 5.513);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 6.920);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 8.024);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 10.012);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 10.614);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 12.247);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 12.952);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 15.156);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 15.798);
+
+
+function spring(z, w) {
+  var wd = w * Math.sqrt(1 - z * z);
+  function f(t) { return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + (z * w / wd) * Math.sin(wd * t)); }
+  var e = f(1);
+  return function (t) { return t >= 1 ? 1 : f(t) / e; };
+}
+var SP = spring(0.62, 13), POP = spring(0.46, 14), SOFT = spring(0.84, 11), FLIP = spring(0.58, 9);
+
+function helpers(tl) {
+  function blurIn(sel, t, b, d) {
+    tl.fromTo(sel, {autoAlpha: 0, filter: "blur(" + (b || 12) + "px)"},
+                   {autoAlpha: 1, filter: "blur(0px)", duration: d || 0.38, ease: "power2.out"}, t);
+  }
+  function blurOut(sel, t, b, d) {
+    tl.to(sel, {autoAlpha: 0, filter: "blur(" + (b || 10) + "px)", duration: d || 0.32, ease: "power2.in"}, t);
+  }
+  // arrive from depth: blur -> sharp, small -> full, with a spring. o: {s, x, y, ease, d}
+  function arrive(sel, t, o) {
+    o = o || {};
+    blurIn(sel, t, o.blur || 12, 0.36);
+    tl.fromTo(sel, {scale: o.s == null ? 0.5 : o.s, x: o.x || 0, y: o.y == null ? 34 : o.y},
+              {scale: 1, x: 0, y: 0, duration: o.d || 0.85, ease: o.ease || POP}, t);
+  }
+  // the contents land a beat after their container
+  function inner(sel, t) {
+    tl.fromTo(sel, {scale: 0.55, autoAlpha: 0}, {scale: 1, autoAlpha: 1, duration: 0.55, ease: SP}, t + 0.1);
+  }
+  function sheen(sel, t) { gsap.set(sel, {xPercent: -120}); tl.to(sel, {xPercent: 120, duration: 0.8, ease: "power2.inOut"}, t); }
+  function len(id) { return document.getElementById(id).getTotalLength(); }
+  // +3: a dash that ends exactly at the path start leaves a round-cap dot behind
+  function drawPrep(id) { var L = len(id) + 3; gsap.set("#" + id, {strokeDasharray: (L - 3) + " " + (L + 40), strokeDashoffset: L}); return L; }
+  function draw(id, t, d) { var L = drawPrep(id); tl.to("#" + id, {strokeDashoffset: 0, duration: d || 0.55, ease: "power2.inOut"}, t); return L; }
+  function packet(id, t, d) {
+    var L = len(id);
+    tl.fromTo("#" + id, {strokeDasharray: "46 " + (L + 200), strokeDashoffset: 49, autoAlpha: 1},
+              {strokeDashoffset: -L, duration: d || 0.5, ease: "power1.inOut", immediateRender: false}, t);
+    tl.set("#" + id, {autoAlpha: 0}, t + (d || 0.5));
+  }
+  // a tile the same shape grows out and fades — "something arrived here"
+  function ripple(sel, t) {
+    tl.fromTo(sel, {scale: 1, autoAlpha: 0.7}, {scale: 1.75, autoAlpha: 0, duration: 0.8, ease: "power2.out", immediateRender: false}, t);
+  }
+  function bump(sel, t) {
+    tl.to(sel, {scale: 1.07, duration: 0.1, ease: "power2.out"}, t);
+    tl.to(sel, {scale: 1, duration: 0.45, ease: SP}, t + 0.1);
+  }
+  // iris: a takeover opens out of (x, y) and later closes back into another point
+  function irisOpen(sel, t, x, y, d) {
+    tl.set(sel, {autoAlpha: 1}, t);
+    tl.fromTo(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)"},
+              {clipPath: "circle(2300px at " + x + "px " + y + "px)", duration: d || 0.85, ease: "power3.inOut", immediateRender: false}, t);
+  }
+  function irisClose(sel, t, x, y, d) {
+    tl.to(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)", duration: d || 0.6, ease: "power3.inOut"}, t);
+    tl.set(sel, {autoAlpha: 0}, t + (d || 0.6) + 0.02);
+  }
+  function drift(sel, t, dur) {
+    ["a1", "a2", "a3"].forEach(function (c, i) {
+      var v = [[-140, 90], [160, -120], [-90, -60]][i];
+      tl.fromTo(sel + " .aur." + c, {x: 0, y: 0}, {x: v[0], y: v[1], duration: dur, ease: "sine.inOut"}, t);
+    });
+  }
+  function haptic(sel, t) { tl.to(sel, {keyframes: {x: [0, -9, 8, -5, 3, 0]}, duration: 0.34, ease: "none"}, t); }
+  function count(sel, t, to, d, fmt) {
+    var o = {v: 0}, el = document.querySelector(sel);
+    tl.fromTo(o, {v: 0}, {v: to, duration: d || 1.1, ease: "power2.out",
+              onUpdate: function () { el.textContent = fmt ? fmt(o.v) : Math.round(o.v); }}, t);
+  }
+  return {blurIn: blurIn, blurOut: blurOut, arrive: arrive, inner: inner, sheen: sheen,
+          drawPrep: drawPrep, draw: draw, packet: packet, ripple: ripple, bump: bump,
+          irisOpen: irisOpen, irisClose: irisClose, drift: drift, haptic: haptic, count: count};
+}
+
+
+  var G = helpers(tl);
+  function bin(sel, t, b, d) { d = d || 0.38; G.blurIn(sel, t, b || 12, d); tl.set(sel, {filter: "none"}, t + d + 0.01); }
+  function bout(sel, t, b, d) { d = d || 0.32; G.blurOut(sel, t, b || 10, d); tl.set(sel, {filter: "none"}, t + d + 0.01); }
+  function arr(sel, t, o) {
+    o = o || {};
+    bin(sel, t, o.blur || 12, 0.36);
+    tl.fromTo(sel, {scale: o.s == null ? 0.5 : o.s, x: o.x || 0, y: o.y == null ? 34 : o.y},
+              {scale: 1, x: 0, y: 0, duration: o.d || 0.85, ease: o.ease || POP}, t);
+  }
+  function draw2(id, t, d) {
+    var L = document.getElementById(id).getTotalLength() + 3;
+    tl.fromTo("#" + id, {strokeDasharray: (L - 3) + " " + (L + 40), strokeDashoffset: L},
+              {strokeDashoffset: 0, duration: d || 0.5, ease: "power2.inOut", immediateRender: false}, t);
+    gsap.set("#" + id, {strokeDasharray: (L - 3) + " " + (L + 40), strokeDashoffset: L});
+  }
+  function shn(sel, t) {
+    gsap.set(sel, {xPercent: -120});
+    tl.fromTo(sel, {xPercent: -120}, {xPercent: 120, duration: 0.8, ease: "power2.inOut", immediateRender: false}, t);
+  }
+  function drift1(sel, t, d) { tl.fromTo(sel + " .aurs", {x: 0, y: 0}, {x: -110, y: 70, duration: d, ease: "sine.inOut"}, t); }
+  gsap.set(".sheen", {xPercent: -120});
+
+  gsap.set(["#vid"], {transformOrigin: "540px 900px"});
+  tl.fromTo(["#vid"], {scale: 1}, {scale: 1.045, duration: 28.183, ease: "none"}, 0);
+  /* a_swaps */
+
+  tl.set("#gN", {autoAlpha: 1}, 0);
+  arr("#dock", 0.0, {s: 0.86, y: -20, d: 0.8});
+  arr("#hub", 0.06, {s: 0.4, y: 0, d: 0.8});
+  gsap.set("#hub", {transformOrigin: "50% 50%"});
+  arr("#wc0", 0.120, {s: 0.62, x: -50, y: 20, d: 0.8});
+  draw2("ws0", 1.567, 0.22); G.haptic("#wc0", 1.627);
+  tl.to("#wc0", {x: -620, y: 150, rotation: -24, autoAlpha: 0, filter: "blur(8px)", duration: 0.42, ease: "power2.in"}, 1.987);
+  arr("#rc0", 1.942, {s: 0.6, x: 60, y: 20, d: 0.8});
+  shn("#rc0 .shc .sheen", 2.242);
+  tl.set("#rt0", {autoAlpha: 0}, 3.002);
+  tl.to("#rc0", {scale: 0.6, y: -70, autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 3.002);
+  tl.set("#dk0", {autoAlpha: 1}, 3.002);
+  tl.fromTo("#dk0", {x: 425, y: 233, scale: 1.154}, {x: 0, y: 0, scale: 1, duration: 0.6, ease: SP}, 3.002);
+  tl.to("#hub", {scale: 1.110, duration: 0.1, ease: "power2.out"}, 3.342);
+  tl.to("#hub", {scale: 1.030, duration: 0.45, ease: SP}, 3.442);
+  G.ripple("#hubR", 3.342);
+  arr("#wc1", 3.300, {s: 0.62, x: -50, y: 20, d: 0.8});
+  draw2("ws1", 4.667, 0.22); G.haptic("#wc1", 4.727);
+  tl.to("#wc1", {x: -620, y: 150, rotation: -24, autoAlpha: 0, filter: "blur(8px)", duration: 0.42, ease: "power2.in"}, 5.087);
+  arr("#rc1", 5.147, {s: 0.6, x: 60, y: 20, d: 0.8});
+  shn("#rc1 .shc .sheen", 5.447);
+  tl.set("#rt1", {autoAlpha: 0}, 5.718);
+  tl.to("#rc1", {scale: 0.6, y: -70, autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 5.718);
+  tl.set("#dk1", {autoAlpha: 1}, 5.718);
+  tl.fromTo("#dk1", {x: 95, y: 233, scale: 1.154}, {x: 0, y: 0, scale: 1, duration: 0.6, ease: SP}, 5.718);
+  tl.to("#hub", {scale: 1.140, duration: 0.1, ease: "power2.out"}, 6.058);
+  tl.to("#hub", {scale: 1.060, duration: 0.45, ease: SP}, 6.158);
+  G.ripple("#hubR", 6.058);
+  arr("#wc2", 6.100, {s: 0.62, x: -50, y: 20, d: 0.8});
+  draw2("ws2", 6.920, 0.16);
+  bin("#rc2", 7.060, 10, 0.22);
+  tl.fromTo("#rc2", {x: 380, rotation: 4}, {x: 0, rotation: 0, duration: 0.6, ease: SP}, 7.060);
+  tl.to("#wc2", {x: -660, y: 120, rotation: -30, autoAlpha: 0, filter: "blur(8px)", duration: 0.38, ease: "power2.in"}, 7.120);
+  shn("#rc2 .shc .sheen", 7.360);
+  tl.set("#rt2", {autoAlpha: 0}, 8.229);
+  tl.to("#rc2", {scale: 0.6, y: -70, autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 8.229);
+  tl.set("#dk2", {autoAlpha: 1}, 8.229);
+  tl.fromTo("#dk2", {x: 555, y: 233, scale: 1.154}, {x: 0, y: 0, scale: 1, duration: 0.6, ease: SP}, 8.229);
+  tl.to("#hub", {scale: 1.170, duration: 0.1, ease: "power2.out"}, 8.569);
+  tl.to("#hub", {scale: 1.090, duration: 0.45, ease: SP}, 8.669);
+  G.ripple("#hubR", 8.569);
+  arr("#wc3", 8.790, {s: 0.62, x: -50, y: 20, d: 0.8});
+  draw2("ws3", 10.012, 0.16);
+  bin("#rc3", 10.152, 10, 0.22);
+  tl.fromTo("#rc3", {x: 380, rotation: 4}, {x: 0, rotation: 0, duration: 0.6, ease: SP}, 10.152);
+  tl.to("#wc3", {x: -660, y: 120, rotation: -30, autoAlpha: 0, filter: "blur(8px)", duration: 0.38, ease: "power2.in"}, 10.212);
+  shn("#rc3 .shc .sheen", 10.452);
+  tl.set("#rt3", {autoAlpha: 0}, 10.819);
+  tl.to("#rc3", {scale: 0.6, y: -70, autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 10.819);
+  tl.set("#dk3", {autoAlpha: 1}, 10.819);
+  tl.fromTo("#dk3", {x: -35, y: 233, scale: 1.154}, {x: 0, y: 0, scale: 1, duration: 0.6, ease: SP}, 10.819);
+  tl.to("#hub", {scale: 1.200, duration: 0.1, ease: "power2.out"}, 11.159);
+  tl.to("#hub", {scale: 1.120, duration: 0.45, ease: SP}, 11.259);
+  G.ripple("#hubR", 11.159);
+  arr("#wc4", 11.167, {s: 0.62, x: -50, y: 20, d: 0.8});
+  draw2("ws4", 12.247, 0.16);
+  bin("#rc4", 12.387, 10, 0.22);
+  tl.fromTo("#rc4", {x: 380, rotation: 4}, {x: 0, rotation: 0, duration: 0.6, ease: SP}, 12.387);
+  tl.to("#wc4", {x: -660, y: 120, rotation: -30, autoAlpha: 0, filter: "blur(8px)", duration: 0.38, ease: "power2.in"}, 12.447);
+  shn("#rc4 .shc .sheen", 12.687);
+  tl.set("#rt4", {autoAlpha: 0}, 13.157);
+  tl.to("#rc4", {scale: 0.6, y: -70, autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 13.157);
+  tl.set("#dk4", {autoAlpha: 1}, 13.157);
+  tl.fromTo("#dk4", {x: 685, y: 233, scale: 1.154}, {x: 0, y: 0, scale: 1, duration: 0.6, ease: SP}, 13.157);
+  tl.to("#hub", {scale: 1.230, duration: 0.1, ease: "power2.out"}, 13.497);
+  tl.to("#hub", {scale: 1.150, duration: 0.45, ease: SP}, 13.597);
+  G.ripple("#hubR", 13.497);
+  arr("#wc5", 13.933, {s: 0.62, x: -50, y: 20, d: 0.8});
+  draw2("ws5", 15.156, 0.16);
+  bin("#rc5", 15.296, 10, 0.22);
+  tl.fromTo("#rc5", {x: 380, rotation: 4}, {x: 0, rotation: 0, duration: 0.6, ease: SP}, 15.296);
+  tl.to("#wc5", {x: -660, y: 120, rotation: -30, autoAlpha: 0, filter: "blur(8px)", duration: 0.38, ease: "power2.in"}, 15.356);
+  shn("#rc5 .shc .sheen", 15.596);
+  tl.set("#rt5", {autoAlpha: 0}, 16.003);
+  tl.to("#rc5", {scale: 0.6, y: -70, autoAlpha: 0, duration: 0.26, ease: "power2.in"}, 16.003);
+  tl.set("#dk5", {autoAlpha: 1}, 16.003);
+  tl.fromTo("#dk5", {x: -165, y: 233, scale: 1.154}, {x: 0, y: 0, scale: 1, duration: 0.6, ease: SP}, 16.003);
+  tl.to("#hub", {scale: 1.260, duration: 0.1, ease: "power2.out"}, 16.343);
+  tl.to("#hub", {scale: 1.180, duration: 0.45, ease: SP}, 16.443);
+  G.ripple("#hubR", 16.343);
+  tl.set("#gN", {autoAlpha: 0}, 17.060);
+  /* t_takeover */
+
+  G.irisOpen("#gT", 16.400, 540, 155, 0.62);
+  drift1("#gT", 16.400, 25.674-16.400);
+  gsap.set("#pa0", {rotation: -5});
+  arr("#pa0", 16.620, {s: 0.5, y: 40, d: 0.8});
+  bin("#pl0", 16.760, 8, 0.3);
+  gsap.set("#pa1", {rotation: 3});
+  arr("#pa1", 16.690, {s: 0.5, y: 40, d: 0.8});
+  bin("#pl1", 16.830, 8, 0.3);
+  gsap.set("#pa2", {rotation: 6});
+  arr("#pa2", 16.760, {s: 0.5, y: 40, d: 0.8});
+  bin("#pl2", 16.900, 8, 0.3);
+  gsap.set("#pa3", {rotation: 4});
+  arr("#pa3", 16.830, {s: 0.5, y: 40, d: 0.8});
+  bin("#pl3", 16.970, 8, 0.3);
+  gsap.set("#pa4", {rotation: -4});
+  arr("#pa4", 16.900, {s: 0.5, y: 40, d: 0.8});
+  bin("#pl4", 17.040, 8, 0.3);
+  gsap.set("#pa5", {rotation: -6});
+  arr("#pa5", 16.970, {s: 0.5, y: 40, d: 0.8});
+  bin("#pl5", 17.110, 8, 0.3);
+  arr("#pk", 17.214, {s: 0.3, y: -60, d: 0.6});
+  G.bump("#pa0", 17.464);
+  tl.to("#pk", {x: 375, duration: 0.32, ease: "power1.inOut"}, 17.814);
+  tl.to("#pk", {y: -230, duration: 0.16, ease: "power2.out"}, 17.814);
+  tl.to("#pk", {y: -80, duration: 0.16, ease: "power2.in"}, 17.974);
+  G.bump("#pa1", 18.114);
+  tl.to("#pk", {x: 750, duration: 0.32, ease: "power1.inOut"}, 18.134);
+  tl.to("#pk", {y: -230, duration: 0.16, ease: "power2.out"}, 18.134);
+  tl.to("#pk", {y: 30, duration: 0.16, ease: "power2.in"}, 18.294);
+  G.bump("#pa2", 18.434);
+  tl.to("#pk", {x: 740, duration: 0.32, ease: "power1.inOut"}, 18.614);
+  tl.to("#pk", {y: -120, duration: 0.16, ease: "power2.out"}, 18.614);
+  tl.to("#pk", {y: 500, duration: 0.16, ease: "power2.in"}, 18.774);
+  G.bump("#pa5", 18.914);
+  tl.to("#pk", {x: 390, duration: 0.32, ease: "power1.inOut"}, 19.114);
+  tl.to("#pk", {y: 230, duration: 0.16, ease: "power2.out"}, 19.114);
+  tl.to("#pk", {y: 380, duration: 0.16, ease: "power2.in"}, 19.274);
+  G.bump("#pa4", 19.414);
+  tl.to("#pk", {x: 20, duration: 0.32, ease: "power1.inOut"}, 19.534);
+  tl.to("#pk", {y: 230, duration: 0.16, ease: "power2.out"}, 19.534);
+  tl.to("#pk", {y: 460, duration: 0.16, ease: "power2.in"}, 19.694);
+  G.bump("#pa3", 19.834);
+  arr("#ce0", 19.994, {s: 0.2, y: 20, d: 0.5});
+  arr("#ce1", 20.064, {s: 0.2, y: 20, d: 0.5});
+  arr("#ce2", 20.134, {s: 0.2, y: 20, d: 0.5});
+  arr("#ce3", 20.204, {s: 0.2, y: 20, d: 0.5});
+  arr("#ce4", 20.274, {s: 0.2, y: 20, d: 0.5});
+  arr("#ce5", 20.344, {s: 0.2, y: 20, d: 0.5});
+  tl.to(["#pa0", "#pl0"], {x: 375, y: 195, scale: 0.15, autoAlpha: 0, duration: 0.44, ease: "power3.in"}, 21.074);
+  tl.to("#ce0", {x: 262, y: 304, scale: 0.15, autoAlpha: 0, duration: 0.44, ease: "power3.in"}, 21.074);
+  tl.to(["#pa1", "#pl1"], {x: 0, y: 275, scale: 0.15, autoAlpha: 0, duration: 0.44, ease: "power3.in"}, 21.094);
+  tl.to("#ce1", {x: -113, y: 384, scale: 0.15, autoAlpha: 0, duration: 0.44, ease: "power3.in"}, 21.094);
+  tl.to(["#pa2", "#pl2"], {x: -375, y: 165, scale: 0.15, autoAlpha: 0, duration: 0.44, ease: "power3.in"}, 21.114);
+  tl.to("#ce2", {x: -488, y: 274, scale: 0.15, autoAlpha: 0, duration: 0.44, ease: "power3.in"}, 21.114);
+  tl.to(["#pa3", "#pl3"], {x: 355, y: -265, scale: 0.15, autoAlpha: 0, duration: 0.44, ease: "power3.in"}, 21.134);
+  tl.to("#ce3", {x: 242, y: -156, scale: 0.15, autoAlpha: 0, duration: 0.44, ease: "power3.in"}, 21.134);
+  tl.to(["#pa4", "#pl4"], {x: -15, y: -185, scale: 0.15, autoAlpha: 0, duration: 0.44, ease: "power3.in"}, 21.154);
+  tl.to("#ce4", {x: -128, y: -76, scale: 0.15, autoAlpha: 0, duration: 0.44, ease: "power3.in"}, 21.154);
+  tl.to(["#pa5", "#pl5"], {x: -365, y: -305, scale: 0.15, autoAlpha: 0, duration: 0.44, ease: "power3.in"}, 21.174);
+  tl.to("#ce5", {x: -478, y: -196, scale: 0.15, autoAlpha: 0, duration: 0.44, ease: "power3.in"}, 21.174);
+  tl.to("#pk", {x: 375, y: 327, scale: 0.2, autoAlpha: 0, duration: 0.44, ease: "power3.in"}, 21.174);
+
+  arr("#tkC", 21.594, {s: 0.25, y: 0, d: 0.85, blur: 14});
+  G.ripple("#tkCR", 22.214); G.bump("#tkC", 22.234); shn("#tkC .sheen", 22.314);
+  /* it rises onto the sheet; the system switches on */
+  tl.to("#tkC", {y: -450, scale: 0.579, duration: 0.62, ease: SP}, 23.234);
+  gsap.set("#sh", {transformOrigin: "50% 0%"});
+  arr("#sh", 23.274, {s: 0.9, y: 90, d: 0.8});
+  shn("#sh > .sheen", 23.724);
+  tl.fromTo("#rw0", {autoAlpha: 0, x: -40}, {autoAlpha: 1, x: 0, duration: 0.45, ease: SP}, 23.414);
+  tl.to("#tgO0", {autoAlpha: 1, duration: 0.16}, 23.474);
+  tl.to("#tgK0", {x: 58, duration: 0.34, ease: SP}, 23.474);
+  tl.fromTo("#rw1", {autoAlpha: 0, x: -40}, {autoAlpha: 1, x: 0, duration: 0.45, ease: SP}, 23.464);
+  tl.to("#tgO1", {autoAlpha: 1, duration: 0.16}, 23.664);
+  tl.to("#tgK1", {x: 58, duration: 0.34, ease: SP}, 23.664);
+  tl.fromTo("#rw2", {autoAlpha: 0, x: -40}, {autoAlpha: 1, x: 0, duration: 0.45, ease: SP}, 23.514);
+  tl.to("#tgO2", {autoAlpha: 1, duration: 0.16}, 23.854);
+  tl.to("#tgK2", {x: 58, duration: 0.34, ease: SP}, 23.854);
+  tl.fromTo("#rw3", {autoAlpha: 0, x: -40}, {autoAlpha: 1, x: 0, duration: 0.45, ease: SP}, 23.564);
+  tl.to("#tgO3", {autoAlpha: 1, duration: 0.16}, 24.044);
+  tl.to("#tgK3", {x: 58, duration: 0.34, ease: SP}, 24.044);
+  tl.fromTo("#rw4", {autoAlpha: 0, x: -40}, {autoAlpha: 1, x: 0, duration: 0.45, ease: SP}, 23.614);
+  tl.to("#tgO4", {autoAlpha: 1, duration: 0.16}, 24.234);
+  tl.to("#tgK4", {x: 58, duration: 0.34, ease: SP}, 24.234);
+  tl.fromTo("#rw5", {autoAlpha: 0, x: -40}, {autoAlpha: 1, x: 0, duration: 0.45, ease: SP}, 23.664);
+  tl.to("#tgO5", {autoAlpha: 1, duration: 0.16}, 24.424);
+  tl.to("#tgK5", {x: 58, duration: 0.34, ease: SP}, 24.424);
+
+  arr("#tkP", 24.874, {s: 0.2, y: 0, d: 0.6}); G.ripple("#tkPR", 25.114);
+  G.irisClose("#gT", 25.204, 540, 160, 0.42);
+  /* c_cta */
+
+  tl.set("#gR", {autoAlpha: 1}, 25.474);
+  arr("#dock2", 25.474, {s: 0.9, y: 0, d: 0.7});
+  arr("#hub2", 25.514, {s: 0.5, y: 0, d: 0.7}); G.ripple("#hub2R", 25.750);
+  arr("#dr0", 25.594, {s: 0.3, y: 0, d: 0.6});
+  arr("#dr1", 25.644, {s: 0.3, y: 0, d: 0.6});
+  arr("#dr2", 25.694, {s: 0.3, y: 0, d: 0.6});
+  arr("#dr3", 25.744, {s: 0.3, y: 0, d: 0.6});
+  arr("#dr4", 25.794, {s: 0.3, y: 0, d: 0.6});
+  arr("#dr5", 25.844, {s: 0.3, y: 0, d: 0.6});
+
+  arr("#cm", 26.887, {s: 0.7, y: 40, d: 0.75});
+  tl.set("#cmPh", {autoAlpha: 0}, 27.420);
+  tl.fromTo("#cmPl", {autoAlpha: 0, scale: 1.8}, {autoAlpha: 1, scale: 1, duration: 0.3, ease: POP}, 27.420);
+  tl.to("#cmS", {scale: 0.86, duration: 0.09, ease: "power2.out"}, 27.710);
+  tl.to("#cmS", {scale: 1, duration: 0.4, ease: SP}, 27.800);
+  tl.fromTo("#ckS", {scale: 0.3, autoAlpha: 0.95}, {scale: 1.9, autoAlpha: 0, duration: 0.5, ease: "power2.out", immediateRender: false}, 27.730);
+  shn("#cm .sheen", 27.780);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>
