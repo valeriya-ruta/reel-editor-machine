@@ -26,7 +26,9 @@ for t in joins:
     ws = [w for w in ws if w[0]]
     for (w0, s0, e0), (w1, s1, e1) in zip(ws, ws[1:]):
         near = abs(e0 - t) < 0.5 or abs(s1 - t) < 0.5
-        same = w0 == w1 or (len(w0) >= 2 and w1.startswith(w0)) or (len(w1) >= 2 and w0.startswith(w1))
+        # a restart: the same word again, or a cut-off start of the next word followed
+        # by a pause («на… навчений»); «та таргет» said in one breath is not one
+        same = w0 == w1 or (w1.startswith(w0) and len(w0) < len(w1) and s1 - e0 > 0.15)
         if near and same:
             lines.append("REPEAT at %.2f: «%s» %.2f-%.2f then «%s» %.2f-%.2f" % (t, w0, s0, e0, w1, s1, e1))
     print("join %.2f: %s" % (t, " ".join(w[0] for w in ws)), flush=True)
