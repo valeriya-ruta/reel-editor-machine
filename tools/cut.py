@@ -460,6 +460,13 @@ def main():
     fixp = os.path.join(wd, "cut-fix.json")
     fix = json.load(open(fixp, encoding="utf-8")) if os.path.exists(fixp) else {}
     face = tuple(fix.get("face", (0.5, 0.45)))
+    if fix.get("landscape"):        # a horizontal take kept horizontal (reel 41): 16:9 plate
+        global SRC_W, SRC_H, OUT_W, OUT_H
+        SRC_W, SRC_H, OUT_W, OUT_H = 3840, 2160, 1920, 1080
+    if fix.get("static"):           # "keep it as it is, just cut out the pauses" (reel 41):
+        global CYCLE, SPLIT_OVER    # one framing throughout, no zoom cuts, no closeups
+        CYCLE, SPLIT_OVER = ["base"], 1e9
+        fix["punch"] = []
 
     scr = os.path.join(SCRATCH, "r" + nn)
     os.makedirs(scr, exist_ok=True)
