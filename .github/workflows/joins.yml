@@ -1,0 +1,41 @@
+# Listen to every join of finished plates (ci/joincheck.py). Push
+# join/<NN>.m4a (the plate's audio) + work/rNN/cut.json; one job per reel.
+name: joins
+on:
+  push:
+    branches: [asr-inbox]
+    paths: ["join/**"]
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      reels: ${{ steps.m.outputs.reels }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: m
+        run: echo "reels=$(ls join/*.m4a | xargs -n1 basename | sed 's/\.m4a$//' | python3 -c 'import sys,json;print(json.dumps(sys.stdin.read().split()))')" >> "$GITHUB_OUTPUT"
+  check:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        reel: ${{ fromJson(needs.plan.outputs.reels) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/whisper
+            ~/.cache/pip
+          key: whisper-medium-v1
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - run: pip install -q torch --index-url https://download.pytorch.org/whl/cpu && pip install -q openai-whisper
+      - run: mkdir -p out && python ci/joincheck.py join/${{ matrix.reel }}.m4a work/r${{ matrix.reel }}/cut.json out/joins-${{ matrix.reel }}.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: joins-${{ matrix.reel }}
+          path: out
