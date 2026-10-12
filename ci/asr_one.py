@@ -1,7 +1,9 @@
 # Same logic as work/b1005/asr_batch.py in the reel repo: utterances between
 # silences, packed into <=26 s whisper windows; anything that looks like it hides
 # a restart (a word > 1.2 s, too few words for its length) is re-run alone.
-import json, os, re, subprocess, sys
+import json, os, re, subprocess, sys, time
+T0 = time.time()
+SOLO_BUDGET = float(os.environ.get('SOLO_BUDGET', '1e9'))   # seconds of solo re-runs allowed
 import whisper
 src, out = sys.argv[1], sys.argv[2]
 os.makedirs(out, exist_ok=True)
@@ -50,7 +52,7 @@ with open(out + "/utt.jsonl", "w", encoding="utf-8") as f:
             per[k].append(w)
         for k in chunk:
             a, b = spans[k]; ws = per[k]; how = "pack"
-            if suspicious(a, b, ws):
+            if suspicious(a, b, ws) and time.time() - T0 < SOLO_BUDGET:
                 ws = run(a, b); how = "solo"
             f.write(json.dumps({"k": k, "a": round(a, 3), "b": round(b, 3), "how": how,
                                 "text": " ".join(w["w"] for w in ws), "words": ws}, ensure_ascii=False) + "\n")

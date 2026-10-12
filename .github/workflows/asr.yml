@@ -37,7 +37,7 @@ jobs:
           key: whisper-medium-v1
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - run: pip install -q torch --index-url https://download.pytorch.org/whl/cpu && pip install -q openai-whisper
-      - run: python ci/asr_one.py inbox/${{ matrix.reel }}.m4a out/${{ matrix.reel }}
+      - run: SOLO_BUDGET=420 python ci/asr_one.py inbox/${{ matrix.reel }}.m4a out/${{ matrix.reel }}
       - uses: actions/upload-artifact@v4
         with:
           name: asr-${{ matrix.reel }}
