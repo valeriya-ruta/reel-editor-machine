@@ -14,6 +14,7 @@ jobs:
     outputs:
       reels: ${{ steps.r.outputs.reels }}
       tag: ${{ steps.r.outputs.tag }}
+      release: ${{ steps.r.outputs.release }}
     steps:
       - uses: actions/checkout@v4
         with: {fetch-depth: 2}
@@ -22,6 +23,7 @@ jobs:
           f=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- plate/ | head -1)
           echo "reels=$(jq -c .reels "$f")" >> "$GITHUB_OUTPUT"
           echo "tag=$(jq -r .tag "$f")" >> "$GITHUB_OUTPUT"
+          echo "release=$(jq -r '.release // "raw-2026-10-05"' "$f")" >> "$GITHUB_OUTPUT"
   cut:
     needs: plan
     runs-on: ubuntu-latest
@@ -39,11 +41,13 @@ jobs:
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg && pip install -q numpy
       - run: |
           src=$(basename "$(cat work/r${{ matrix.reel }}/SOURCE.txt | tr -d '\r\n')")
-          mkdir -p raw && gh release download raw-2026-10-05 --repo ${{ github.repository }} -p "$src" -D raw
-      - run: CUT_RAW=raw CUT_SCRATCH=/tmp/s python tools/cut.py ${{ matrix.reel }} --render
+          mkdir -p raw && gh release download ${{ needs.plan.outputs.release }} --repo ${{ github.repository }} -p "$src" -D raw
+      - run: CUT_MOTION=1 CUT_RAW=raw CUT_SCRATCH=/tmp/s python tools/cut.py ${{ matrix.reel }} --render
       - uses: actions/upload-artifact@v4
         with:
           name: plate-${{ matrix.reel }}-${{ needs.plan.outputs.tag }}
           path: |
             reel-${{ matrix.reel }}/assets/voice.mp4
             work/r${{ matrix.reel }}/cut.json
+            work/r${{ matrix.reel }}/cut.txt
+            work/r${{ matrix.reel }}/words.json

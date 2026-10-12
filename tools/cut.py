@@ -397,6 +397,54 @@ def crop_filter(name, face):
     return "crop=%d:%d:%d:%d,scale=%d:%d:flags=lanczos" % (cw, ch, x, y, OUT_W, OUT_H)
 
 
+def motion_track(src):
+    """Mean absolute frame difference per frame of the raw take, at thumbnail
+    size — her body, not her words. Heavy (a full 4K decode): cloud only."""
+    w, h = 54, 96
+    p = subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-i", src, "-an", "-vf",
+                        "fps=%d,scale=%d:%d,format=gray" % (FPS, w, h), "-f", "rawvideo", "-"],
+                       capture_output=True, check=True)
+    fr = np.frombuffer(p.stdout, np.uint8).reshape(-1, h, w).astype(np.float32)
+    m = np.zeros(len(fr), np.float32)
+    m[1:] = np.abs(np.diff(fr, axis=0)).mean(axis=(1, 2))
+    return m
+
+
+def settle_edges(segs, kept, mot):
+    """The cutter only sees words, so a cut can land on a step back, a hand on
+    the mic, a glance (her REEL-21 notes, 0:09 and 0:19). Where an edge sits in
+    motion, slide it — inside the word-free lead-in / tail only, so no speech
+    moves — to the stillest moment there."""
+    thr = max(1.6 * float(np.median(mot)), 1.0)
+    log = []
+
+    def at(t):
+        return int(round(t * FPS))
+
+    for i, s in enumerate(segs):
+        ws = sorted((w for w in kept if s["a"] - 0.05 <= (w["s"] + w["e"]) / 2 <= s["b"] + 0.05),
+                    key=lambda w: w["s"])
+        if not ws:
+            continue
+        real_in = i == 0 or abs(segs[i - 1]["b"] - s["a"]) > 0.02      # content removed here
+        real_out = i == len(segs) - 1 or abs(segs[i + 1]["a"] - s["b"]) > 0.02
+        if real_in:
+            lo, hi = at(s["a"]), at(ws[0]["s"] - 0.04)
+            if hi - lo >= 3 and mot[lo:lo + 4].mean() > thr:
+                best = min(range(lo, hi - 1), key=lambda k: mot[k:k + 3].sum())
+                if best > lo:
+                    log.append("in  %7.2f -> %7.2f (motion %.1f > %.1f)" % (s["a"], best / FPS, mot[lo:lo + 4].mean(), thr))
+                    s["a"] = round(best / FPS, 3)
+        if real_out:
+            lo, hi = at(ws[-1]["e"] + 0.04), at(s["b"])
+            if hi - lo >= 3 and mot[hi - 4:hi].mean() > thr:
+                best = max(range(lo + 2, hi + 1), key=lambda k: -mot[k - 3:k].sum())
+                if best < hi:
+                    log.append("out %7.2f -> %7.2f (motion %.1f > %.1f)" % (s["b"], best / FPS, mot[hi - 4:hi].mean(), thr))
+                    s["b"] = round(best / FPS, 3)
+    return segs, log
+
+
 # ---------------------------------------------------------------- main
 
 def main():
@@ -426,6 +474,9 @@ def main():
     segs = build_segments(utts, kept, env, hop, None)
     punch_spans = [tuple(p) for p in fix.get("punch", [])]
     segs = split_for_punch(segs, punch_spans, env, hop)
+    motion_log = []
+    if os.environ.get("CUT_MOTION"):                    # the cloud runner only
+        segs, motion_log = settle_edges(segs, kept, motion_track(src))
     clips, total = frame_plan(segs, punch_spans)
 
     if "--dry" in sys.argv:
@@ -466,6 +517,10 @@ def main():
         f.write("raw %.1fs -> plate %.2fs, %d clips\n" % (len(audio) / sr, total, len(clips)))
         for fl in flags:
             f.write("FLAG " + fl + "\n")
+        if motion_log:
+            f.write("\nEDGES MOVED OFF MOTION\n")
+            for m in motion_log:
+                f.write("  " + m + "\n")
         f.write("\nDROPPED TAKES\n")
         for g in dropped:
             f.write("  %.2f-%.2f  %s\n" % (g[0]["s"], g[-1]["e"], " ".join(x["w"] for x in g)))
