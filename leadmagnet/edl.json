@@ -1,0 +1,1215 @@
+{
+ "fps": 30,
+ "frames": 36803,
+ "duration": 1226.7666666666667,
+ "segments": [
+  {
+   "src": 1.01,
+   "nf": 726,
+   "out": 0,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 25.54,
+   "nf": 32,
+   "out": 726,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 26.93,
+   "nf": 538,
+   "out": 758,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 45.1,
+   "nf": 16,
+   "out": 1296,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 45.9,
+   "nf": 104,
+   "out": 1312,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 49.99,
+   "nf": 577,
+   "out": 1416,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 69.42,
+   "nf": 196,
+   "out": 1993,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 76.17,
+   "nf": 31,
+   "out": 2189,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 77.39,
+   "nf": 875,
+   "out": 2220,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 106.83,
+   "nf": 188,
+   "out": 3095,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 113.4,
+   "nf": 19,
+   "out": 3283,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 114.31,
+   "nf": 21,
+   "out": 3302,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 115.32,
+   "nf": 130,
+   "out": 3323,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 119.87,
+   "nf": 326,
+   "out": 3453,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 131.81,
+   "nf": 200,
+   "out": 3779,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 138.79,
+   "nf": 97,
+   "out": 3979,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 142.69,
+   "nf": 104,
+   "out": 4076,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 149.815,
+   "nf": 220,
+   "out": 4180,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 157.58,
+   "nf": 79,
+   "out": 4400,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 160.46,
+   "nf": 903,
+   "out": 4479,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 190.78,
+   "nf": 468,
+   "out": 5382,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 206.65,
+   "nf": 35,
+   "out": 5850,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 208.18,
+   "nf": 24,
+   "out": 5885,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 209.35,
+   "nf": 53,
+   "out": 5909,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 211.39,
+   "nf": 143,
+   "out": 5962,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 216.34,
+   "nf": 94,
+   "out": 6105,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 219.72,
+   "nf": 193,
+   "out": 6199,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 226.43,
+   "nf": 76,
+   "out": 6392,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 229.49,
+   "nf": 55,
+   "out": 6468,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 231.65,
+   "nf": 205,
+   "out": 6523,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 238.89,
+   "nf": 58,
+   "out": 6728,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 241.21,
+   "nf": 316,
+   "out": 6786,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 252.29,
+   "nf": 563,
+   "out": 7102,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 271.33,
+   "nf": 836,
+   "out": 7665,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 299.4,
+   "nf": 146,
+   "out": 8501,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 304.62,
+   "nf": 387,
+   "out": 8647,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 317.74,
+   "nf": 168,
+   "out": 9034,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 323.52,
+   "nf": 14,
+   "out": 9202,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 324.22,
+   "nf": 315,
+   "out": 9216,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 335.17,
+   "nf": 101,
+   "out": 9531,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 339.05,
+   "nf": 198,
+   "out": 9632,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 346.27,
+   "nf": 96,
+   "out": 9830,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 349.94,
+   "nf": 118,
+   "out": 9926,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 354.04,
+   "nf": 167,
+   "out": 10044,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 359.78,
+   "nf": 84,
+   "out": 10211,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 362.77,
+   "nf": 216,
+   "out": 10295,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 375.265,
+   "nf": 622,
+   "out": 10511,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 396.43,
+   "nf": 172,
+   "out": 11133,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 402.34,
+   "nf": 233,
+   "out": 11305,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 410.37,
+   "nf": 153,
+   "out": 11538,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 415.73,
+   "nf": 362,
+   "out": 11691,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 428.23,
+   "nf": 511,
+   "out": 12053,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 445.47,
+   "nf": 226,
+   "out": 12564,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 453.23,
+   "nf": 258,
+   "out": 12790,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 462.44,
+   "nf": 560,
+   "out": 13048,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 481.62,
+   "nf": 142,
+   "out": 13608,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 490.07,
+   "nf": 16,
+   "out": 13750,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 491.42,
+   "nf": 95,
+   "out": 13766,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 494.85,
+   "nf": 44,
+   "out": 13861,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 496.57,
+   "nf": 216,
+   "out": 13905,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 504.34,
+   "nf": 342,
+   "out": 14121,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 516.01,
+   "nf": 317,
+   "out": 14463,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 526.95,
+   "nf": 61,
+   "out": 14780,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 529.21,
+   "nf": 679,
+   "out": 14841,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 552.13,
+   "nf": 531,
+   "out": 15520,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 570.19,
+   "nf": 304,
+   "out": 16051,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 580.57,
+   "nf": 101,
+   "out": 16355,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 584.14,
+   "nf": 73,
+   "out": 16456,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 586.96,
+   "nf": 281,
+   "out": 16529,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 596.5,
+   "nf": 450,
+   "out": 16810,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 611.85,
+   "nf": 285,
+   "out": 17260,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 621.54,
+   "nf": 236,
+   "out": 17545,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 629.69,
+   "nf": 120,
+   "out": 17781,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 633.88,
+   "nf": 374,
+   "out": 17901,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 646.59,
+   "nf": 60,
+   "out": 18275,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 648.77,
+   "nf": 647,
+   "out": 18335,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 670.54,
+   "nf": 380,
+   "out": 18982,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 683.55,
+   "nf": 30,
+   "out": 19362,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 685.11,
+   "nf": 46,
+   "out": 19392,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 686.99,
+   "nf": 45,
+   "out": 19438,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 688.76,
+   "nf": 31,
+   "out": 19483,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 690.12,
+   "nf": 56,
+   "out": 19514,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 692.25,
+   "nf": 478,
+   "out": 19570,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 708.52,
+   "nf": 233,
+   "out": 20048,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 716.72,
+   "nf": 18,
+   "out": 20281,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 717.56,
+   "nf": 62,
+   "out": 20299,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 720.07,
+   "nf": 68,
+   "out": 20361,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 722.53,
+   "nf": 100,
+   "out": 20429,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 726.11,
+   "nf": 341,
+   "out": 20529,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 737.72,
+   "nf": 185,
+   "out": 20870,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 744.08,
+   "nf": 188,
+   "out": 21055,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 750.56,
+   "nf": 505,
+   "out": 21243,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 774.435,
+   "nf": 370,
+   "out": 21748,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 787.18,
+   "nf": 143,
+   "out": 22118,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 792.29,
+   "nf": 35,
+   "out": 22261,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 793.67,
+   "nf": 135,
+   "out": 22296,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 798.38,
+   "nf": 507,
+   "out": 22431,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 815.65,
+   "nf": 15,
+   "out": 22938,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 816.35,
+   "nf": 81,
+   "out": 22953,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 819.59,
+   "nf": 45,
+   "out": 23034,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 821.36,
+   "nf": 180,
+   "out": 23079,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 827.67,
+   "nf": 287,
+   "out": 23259,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 837.46,
+   "nf": 153,
+   "out": 23546,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 842.78,
+   "nf": 42,
+   "out": 23699,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 844.46,
+   "nf": 101,
+   "out": 23741,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 848.37,
+   "nf": 47,
+   "out": 23842,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 851.13,
+   "nf": 63,
+   "out": 23889,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 853.65,
+   "nf": 35,
+   "out": 23952,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 855.03,
+   "nf": 128,
+   "out": 23987,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 859.56,
+   "nf": 92,
+   "out": 24115,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 863.31,
+   "nf": 321,
+   "out": 24207,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 874.34,
+   "nf": 262,
+   "out": 24528,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 885.24,
+   "nf": 229,
+   "out": 24790,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 893.09,
+   "nf": 175,
+   "out": 25019,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 899.17,
+   "nf": 424,
+   "out": 25194,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 913.6,
+   "nf": 91,
+   "out": 25618,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 917.0,
+   "nf": 167,
+   "out": 25709,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 922.75,
+   "nf": 484,
+   "out": 25876,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 939.42,
+   "nf": 114,
+   "out": 26360,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 943.77,
+   "nf": 494,
+   "out": 26474,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 964.835,
+   "nf": 1037,
+   "out": 26968,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 999.6,
+   "nf": 360,
+   "out": 28005,
+   "frame": "in",
+   "cut_after": "retake: keep only «Так от, є секретний промт… І є телеграм-бот.»"
+  },
+  {
+   "src": 1026.51,
+   "nf": 28,
+   "out": 28365,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1027.94,
+   "nf": 54,
+   "out": 28393,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1030.27,
+   "nf": 43,
+   "out": 28447,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1031.99,
+   "nf": 157,
+   "out": 28490,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1037.92,
+   "nf": 142,
+   "out": 28647,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1043.13,
+   "nf": 546,
+   "out": 28789,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1061.58,
+   "nf": 79,
+   "out": 29335,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1064.65,
+   "nf": 65,
+   "out": 29414,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1067.21,
+   "nf": 107,
+   "out": 29479,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1070.95,
+   "nf": 104,
+   "out": 29586,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1074.68,
+   "nf": 84,
+   "out": 29690,
+   "frame": "base",
+   "cut_after": "«На комп'ютер.» repeated"
+  },
+  {
+   "src": 1079.96,
+   "nf": 34,
+   "out": 29774,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1081.35,
+   "nf": 35,
+   "out": 29808,
+   "frame": "in",
+   "cut_after": "«На комп'ютері.» repeated"
+  },
+  {
+   "src": 1085.12,
+   "nf": 54,
+   "out": 29843,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1087.25,
+   "nf": 21,
+   "out": 29897,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1088.36,
+   "nf": 69,
+   "out": 29918,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1090.88,
+   "nf": 459,
+   "out": 29987,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1106.55,
+   "nf": 51,
+   "out": 30446,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1108.44,
+   "nf": 29,
+   "out": 30497,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1109.67,
+   "nf": 185,
+   "out": 30526,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1116.04,
+   "nf": 626,
+   "out": 30711,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1137.54,
+   "nf": 155,
+   "out": 31337,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1142.96,
+   "nf": 46,
+   "out": 31492,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1145.16,
+   "nf": 108,
+   "out": 31538,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1148.99,
+   "nf": 76,
+   "out": 31646,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1152.12,
+   "nf": 77,
+   "out": 31722,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1154.96,
+   "nf": 313,
+   "out": 31799,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1165.63,
+   "nf": 222,
+   "out": 32112,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1173.31,
+   "nf": 814,
+   "out": 32334,
+   "frame": "base",
+   "cut_after": "«Тому, як би.»"
+  },
+  {
+   "src": 1204.34,
+   "nf": 122,
+   "out": 33148,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1208.7,
+   "nf": 680,
+   "out": 33270,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1232.21,
+   "nf": 161,
+   "out": 33950,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1237.75,
+   "nf": 347,
+   "out": 34111,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1249.51,
+   "nf": 59,
+   "out": 34458,
+   "frame": "in",
+   "cut_after": "«і зможеш вже постати все.» — said again right after"
+  },
+  {
+   "src": 1255.03,
+   "nf": 67,
+   "out": 34517,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1257.47,
+   "nf": 54,
+   "out": 34584,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1260.95,
+   "nf": 489,
+   "out": 34638,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1277.91,
+   "nf": 125,
+   "out": 35127,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1282.59,
+   "nf": 203,
+   "out": 35252,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1289.55,
+   "nf": 268,
+   "out": 35455,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1299.58,
+   "nf": 326,
+   "out": 35723,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1310.72,
+   "nf": 432,
+   "out": 36049,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1325.4,
+   "nf": 216,
+   "out": 36481,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1332.82,
+   "nf": 67,
+   "out": 36697,
+   "frame": "in",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1335.28,
+   "nf": 20,
+   "out": 36764,
+   "frame": "base",
+   "cut_after": "pause"
+  },
+  {
+   "src": 1336.25,
+   "nf": 19,
+   "out": 36784,
+   "frame": "base",
+   "cut_after": "pause"
+  }
+ ],
+ "drops": [
+  [
+   0.0,
+   0.6,
+   "lead-in"
+  ],
+  [
+   1011.6,
+   1026.4,
+   "retake: keep only «Так от, є секретний промт… І є телеграм-бот.»"
+  ],
+  [
+   1077.5,
+   1079.6,
+   "«На комп'ютер.» repeated"
+  ],
+  [
+   1082.5,
+   1085.0,
+   "«На комп'ютері.» repeated"
+  ],
+  [
+   1200.4,
+   1204.5,
+   "«Тому, як би.»"
+  ],
+  [
+   1251.4,
+   1255.1,
+   "«і зможеш вже постати все.» — said again right after"
+  ]
+ ]
+}
