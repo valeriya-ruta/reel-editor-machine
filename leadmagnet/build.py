@@ -640,7 +640,7 @@ def _(T):
       LM.zoom(tl,{T(815.2)},null,0,1,1.0);
       tl.to("#pK",{{opacity:1,duration:0.35}},{T(815.6)}); tl.set("#url",{{textContent:"claude.ai/code"}},{T(815.6)});
       LM.pop(tl,"#k2",{T(818.2)}); tl.to("#k2",{{opacity:0,duration:0.3}},{T(824.6)});
-      document.getElementById("cth").innerHTML='<div class="ub">{user}</div>{tl_html}';
+      document.getElementById("cth").innerHTML={js_str('<div class="ub">' + user + '</div>' + tl_html)};
       tl.set("#cth .ub",{{opacity:0}},0);
       LM.zoom(tl,{T(825.4)},800,330,1.35,1.2);
       LM.type(tl,{T(825.6)},"#ctyped",{js_str(user)},22);
@@ -673,11 +673,11 @@ def _(T):
     js = chapter_js(0.0, T(904.2))
     js += f'''LM.cam(tl,{T(904.0)},"card",0.9);
       document.getElementById("stage").insertAdjacentHTML("beforeend",'<div class="gtitle" id="gt" style="left:80px;top:70px;opacity:0"><span class="dot"></span>Анімація: де живуть елементи</div>');
-      LM.rise(tl,"#gt",{T(912.4)});
-      LM.pop(tl,"#pf0",{T(924.0)}); LM.xt(tl,{T(924.4)},215,700,"перед тобою",36,"#a81428",{{center:1}});
-      LM.pop(tl,"#pf1",{T(927.2)}); LM.xt(tl,{T(927.6)},505,700,"за тобою",36,"#a81428",{{center:1}});
-      LM.pop(tl,"#pf2",{T(930.1)}); LM.xt(tl,{T(930.5)},795,700,"на весь екран",36,"#a81428",{{center:1}});
-      LM.pop(tl,"#pf3",{T(937.9)}); LM.xt(tl,{T(938.3)},1085,700,"ти в кружечку",36,"#a81428",{{center:1}});
+      LM.rise(tl,"#gt",{T(904.4)});
+      LM.pop(tl,"#pf0",{T(924.0)}); LM.xt(tl,{T(924.4)},199,632,"перед тобою",36,"#a81428",{{center:1}});
+      LM.pop(tl,"#pf1",{T(927.2)}); LM.xt(tl,{T(927.6)},458,632,"за тобою",36,"#a81428",{{center:1}});
+      LM.pop(tl,"#pf2",{T(930.1)}); LM.xt(tl,{T(930.5)},717,632,"на весь екран",36,"#a81428",{{center:1}});
+      LM.pop(tl,"#pf3",{T(937.9)}); LM.xt(tl,{T(938.3)},976,632,"ти в кружечку",36,"#a81428",{{center:1}});
       tl.to(["#gt","#pf0","#pf1","#pf2","#pf3","#stage div"],{{opacity:0,duration:0.35}},{E - 0.85}); LM.cam(tl,{E - 0.9},"full",0.8);'''
     return html, js
 
@@ -767,13 +767,13 @@ def _(T):
               f'<table class="sc" id="tb" style="opacity:0"><tr><th>#</th><th>таймкод</th><th>що в кадрі</th><th>анімація</th></tr>{tr}</table>'
               '<div class="ub" id="u2" style="opacity:0;margin-top:16px">Згенеруй перші 10 секунд у моєму стилі</div>'
               '<div class="tool" id="t2" style="opacity:0">Write <code>reels-style.md</code> · Render <code>preview_10s.mp4</code></div>')
-    vid = (f'<div id="pv" style="position:absolute;left:1100px;top:80px;width:280px;height:498px;border-radius:16px;overflow:hidden;background:#000;opacity:0;box-shadow:0 20px 50px -10px rgba(0,0,0,.4)">'
+    vid = (f'<div id="pv" style="position:absolute;left:800px;top:80px;width:280px;height:498px;border-radius:16px;overflow:hidden;background:#000;opacity:0;box-shadow:0 20px 50px -10px rgba(0,0,0,.4)">'
            f'<video class="clip" src="assets/REEL-26.mp4" data-start="0" data-duration="{1105.4 - 999.6:.2f}" data-media-start="5" muted playsinline style="width:280px;height:498px;object-fit:cover"></video></div>')
     html = html.replace('<div class="thread" id="cth" style="left:60px;width:1080px;top:76px"></div>',
                         f'<div class="thread" id="cth" style="left:60px;width:980px;top:76px">{thread}</div>{vid}')
     fb = ["вирізай мене краще", "субтитри менше", "ти не використав мої кольори — світліше"]
     html += "".join(f'<div class="chip light" id="f{i}" style="left:{110 + i * 30}px;top:{70 + i * 84}px;z-index:60;opacity:0">«{t}»</div>' for i, t in enumerate(fb))
-    for i, (t, x, y) in enumerate([("зверху", 1650, 360), ("за мною", 1650, 450), ("на весь екран", 1650, 540)]):
+    for i, (t, x, y) in enumerate([("зверху", 1190, 330), ("за мною", 1190, 420), ("на весь екран", 1190, 510)]):
         html += f'<div class="chip" id="L{i}" style="left:{x}px;top:{y}px;z-index:60;opacity:0;font-size:26px;padding:10px 20px">{t}</div>'
     html += '<div class="chip" id="n1" style="left:120px;top:60px;z-index:60;opacity:0">10–15 спроб до результату</div>'
     html += '<div class="chip light" id="n2" style="left:120px;top:60px;z-index:60;opacity:0">клієнтці — AI-монтаж за 15 хвилин</div>'
@@ -788,7 +788,7 @@ def _(T):
       LM.rise(tl,"#t2",{T(1023.7)},0.4);
       tl.to("#cth",{{y:-240,duration:1.0,ease:"power3.inOut"}},{T(1023.0)});
       LM.pop(tl,"#pv",{T(1025.0)},0.6);
-      LM.zoom(tl,{T(1027.6)},1240,330,1.25,1.2);
+      LM.zoom(tl,{T(1027.6)},1270,470,1.25,1.2);
       LM.pop(tl,"#L0",{T(1031.7)}); LM.pop(tl,"#L1",{T(1034.6)}); LM.pop(tl,"#L2",{T(1036.8)});
       tl.to(["#L0","#L1","#L2"],{{opacity:0,duration:0.3}},{T(1050.8)});
       LM.zoom(tl,{T(1051.2)},null,0,1,1.0);

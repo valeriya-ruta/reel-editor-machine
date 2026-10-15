@@ -31,12 +31,37 @@
       ring.style.opacity = c.ring;
     }
   }
+  // Camera moves are evaluated as a pure function of time (one driver tween
+  // reads the keyframe list), so seeking in any order gives the same frame.
+  const KEYS = [];
+  let camBase = Object.assign({}, CAM.full), driver = false;
+  function camEval(t) {
+    let st = camBase;
+    for (const k of KEYS) {
+      if (t >= k.at + k.dur) { st = k.to; continue; }
+      if (t > k.at) {
+        const p = k.ease((t - k.at) / k.dur), o = {};
+        for (const n in k.to) o[n] = k.from[n] + (k.to[n] - k.from[n]) * p;
+        st = o;
+      }
+      break;
+    }
+    Object.assign(camObj, st);
+    camApply();
+  }
   L.cam = function (tl, at, state, dur = 0.8, ease = "power3.inOut") {
-    const to = typeof state === "string" ? CAM[state] : state;
-    tl.fromTo(camObj, Object.assign({}, camNow), Object.assign({}, to, { duration: dur, ease, onUpdate: camApply, immediateRender: false }), at);
+    const to = Object.assign({}, typeof state === "string" ? CAM[state] : state);
+    KEYS.push({ at, dur, from: Object.assign({}, camNow), to, ease: gsap.parseEase(ease) });
+    KEYS.sort((a, b) => a.at - b.at);
     camNow = Object.assign({}, to);
+    if (!driver) {
+      driver = true;
+      const tlr = tl;
+      tl.to({ v: 0 }, { v: 1, duration: 9999, ease: "none", onUpdate: () => camEval(tlr.time()) }, 0);
+    }
   };
   L.camSet = function (state) {
+    camBase = Object.assign({}, CAM[state]);
     Object.assign(camObj, CAM[state]);
     camNow = Object.assign({}, CAM[state]);
     camApply();

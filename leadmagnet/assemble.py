@@ -103,6 +103,8 @@ def main():
     o.setnchannels(ch); o.setsampwidth(2); o.setframerate(SR)
     o.writeframes((mix * 32767).astype(np.int16).tobytes()); o.close()
     print("cues:", len(allc))
+    if "--audio-only" in sys.argv:
+        return
     # ---- video
     args = ["ffmpeg", "-v", "error", "-stats", "-y", "-i", os.path.join(SRC, "plate_v.mp4")]
     for t0, t1, d in beats:
