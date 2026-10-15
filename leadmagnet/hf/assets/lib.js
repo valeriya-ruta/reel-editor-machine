@@ -11,7 +11,7 @@
   const CAM = {
     full:   { s: 1, tx: 0, ty: 0, t: 0, r: 0, b: 0, l: 0, rad: 0, ring: 0 },
     card:   { s: 0.78, tx: 848.6, ty: 170, t: 0, r: 630, b: 160, l: 630, rad: 40, ring: 0 },
-    circle: { s: 0.5, tx: 1270, ty: 735, t: 60, r: 680, b: 460, l: 680, rad: 280, ring: 1 },
+    circle: { s: 0.3889, tx: 1308.7, ty: 448, t: 0, r: 420, b: 0, l: 420, rad: 67, ring: 1 },
     small:  { s: 0.34, tx: 1630, ty: 790, t: 60, r: 680, b: 460, l: 680, rad: 280, ring: 1 },
   };
   let camNow = Object.assign({}, CAM.full);
@@ -29,6 +29,7 @@
       ring.style.width = w + "px";
       ring.style.height = h + "px";
       ring.style.opacity = c.ring;
+      ring.style.borderRadius = c.rad * c.s + "px";
     }
   }
   // Camera moves are evaluated as a pure function of time (one driver tween
@@ -60,7 +61,11 @@
       tl.to({ v: 0 }, { v: 1, duration: 9999, ease: "none", onUpdate: () => camEval(tlr.time()) }, 0);
     }
   };
+  L.restScreen = function () {
+    if (document.getElementById("scrwrap")) gsap.set("#scrwrap", { x: REST.x - BASE.x, y: REST.y - BASE.y, scale: REST.k });
+  };
   L.camSet = function (state) {
+    L.restScreen && L.restScreen();
     camBase = Object.assign({}, CAM[state]);
     Object.assign(camObj, CAM[state]);
     camNow = Object.assign({}, CAM[state]);
@@ -95,21 +100,25 @@
   // ------------------------------------------------------------ screen camera
   // #scrwrap holds the 1600x900 desktop. zoom(x,y,k): bring desktop point
   // (x,y) to the frame centre at scale k. zoom(null) returns to the rest pose.
-  const REST = { x: 160, y: 62, k: 1 };
+  // BASE is #scrwrap's CSS position; REST the pose it sits in at rest:
+  // a little smaller and to the left, leaving the right column for the camera.
+  const BASE = { x: 160, y: 62 };
+  const REST = { x: 40, y: 76, k: 0.88 };
   let zNow = Object.assign({}, REST);
   L.zoom = function (tl, at, x, y, k = 1.6, dur = 1.1) {
     let to;
     if (x === null) to = Object.assign({}, REST);
     else to = { x: 960 - x * k, y: 520 - y * k, k: k };
-    tl.fromTo("#scrwrap", { x: zNow.x - REST.x, y: zNow.y - REST.y, scale: zNow.k },
-      { x: to.x - REST.x, y: to.y - REST.y, scale: to.k, duration: dur, ease: "power3.inOut", immediateRender: false }, at);
+    tl.fromTo("#scrwrap", { x: zNow.x - BASE.x, y: zNow.y - BASE.y, scale: zNow.k },
+      { x: to.x - BASE.x, y: to.y - BASE.y, scale: to.k, duration: dur, ease: "power3.inOut", immediateRender: false }, at);
     zNow = to;
   };
   L.screenIn = function (tl, at, dur = 0.9) {
-    tl.fromTo("#scrwrap", { opacity: 0, y: 60, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: dur, ease: "power3.out", immediateRender: false }, at);
+    const x = REST.x - BASE.x, y = REST.y - BASE.y;
+    tl.fromTo("#scrwrap", { opacity: 0, x: x, y: y + 60, scale: REST.k * 0.94 }, { opacity: 1, x: x, y: y, scale: REST.k, duration: dur, ease: "power3.out", immediateRender: false }, at);
   };
   L.screenOut = function (tl, at, dur = 0.5) {
-    tl.to("#scrwrap", { opacity: 0, scale: 0.96, duration: dur, ease: "power2.in" }, at);
+    tl.to("#scrwrap", { opacity: 0, scale: REST.k * 0.96, duration: dur, ease: "power2.in" }, at);
   };
 
   // ------------------------------------------------------------ cursor

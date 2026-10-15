@@ -20,7 +20,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#000}
 
 /* ---------- camera */
 #cam{object-fit:cover;transform-origin:0 0;will-change:transform,clip-path;z-index:40}
-#camring{position:absolute;z-index:39;border-radius:50%;opacity:0;
+#camring{position:absolute;z-index:39;border-radius:26px;opacity:0;
   box-shadow:0 0 0 6px #fff,0 18px 50px rgba(30,20,30,.35)}
 #flash{background:#fff;opacity:0;z-index:90;pointer-events:none}
 #dim{background:#000;opacity:0;z-index:89}
