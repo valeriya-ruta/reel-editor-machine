@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=1920, height=1080"/>
+<script src="assets/gsap.min.js"></script><script src="assets/rough.js"></script>
+<link rel="stylesheet" href="assets/excalifont.css"/><link rel="stylesheet" href="assets/lib.css"/>
+<script src="assets/lib.js"></script>
+</head><body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="65.300" data-width="1920" data-height="1080">
+  <div id="bg" class="clip paper" data-start="0" data-duration="65.300" style="opacity:0"></div>
+  <div id="stage" class="clip" data-start="0" data-duration="65.300">
+    <svg id="ex" width="1920" height="1080"></svg>
+    
+  </div>
+  <div id="camring"></div>
+  <video id="cam" class="clip" src="cam.mp4" data-start="0" data-duration="65.300" data-media-start="0" muted playsinline></video>
+  <div id="dim" class="clip" data-start="0" data-duration="65.300"></div>
+  <div id="flash" class="clip" data-start="0" data-duration="65.300"></div>
+</div>
+<script>
+window.__timelines = window.__timelines || {};
+const tl = gsap.timeline({ paused: true });
+LM.camSet("full");
+tl.to("#bg",{opacity:1,duration:0.4},0.05);tl.to("#bg",{opacity:0,duration:0.5},64.550);
+LM.flash(tl,0.25); LM.cam(tl,0.1,"card",0.9);
+      document.getElementById("stage").insertAdjacentHTML("beforeend",'<div class="gtitle" id="gt" style="left:80px;top:70px"><span class="dot"></span>StyleMD = дизайн-система</div>');
+      LM.rise(tl,"#gt",0.5);
+      LM.xt(tl,3.0,90,190,"основа, з якої AI дизайнить і монтує",40,"#5c6678");
+      LM.ex(tl,5.5,"rect",[100,300,330,170],{fill:"#fadee1",stroke:"#a81428"}); LM.xt(tl,6.0,265,350,"каруселі",44,"#1e1e1e",{center:1});
+      LM.ex(tl,6.6,"rect",[480,300,330,170],{fill:"#a5d8ff",stroke:"#1971c2"}); LM.xt(tl,7.1,645,350,"монтаж",44,"#1e1e1e",{center:1});
+      LM.ex(tl,11.6,"ellipse",[455,640,520,170],{stroke:"#a81428",strokeWidth:3}); LM.xt(tl,11.9,455,610,"дизайн-система",50,"#a81428",{center:1});
+      LM.ex(tl,12.5,"arrow",[300,560,265,480]); LM.ex(tl,12.8,"arrow",[610,560,645,480]);
+      LM.clearScene(tl,14.4); LM.scene();
+      tl.to("#gt",{opacity:0,duration:0.3},14.4);
+      document.getElementById("stage").insertAdjacentHTML("beforeend",'<div class="gtitle" id="gt2" style="left:80px;top:70px;opacity:0"><span class="dot"></span>Що таке .md?</div>');
+      LM.flash(tl,14.8,0.6); LM.rise(tl,"#gt2",14.9);
+      LM.xt(tl,25.5,90,190,"просто розширення файлу",44,"#5c6678");
+      [["xlsx","#2f9e44","#b2f2bb"],["docx","#1971c2","#a5d8ff"],["pdf","#e03131","#ffc9c9"],["md","#a81428","#fadee1"]].forEach((f,i)=>{
+        const x=100+i*290, t=34.2+i*0.9;
+        LM.ex(tl,t,"path","M"+x+" 300 L"+(x+150)+" 300 L"+(x+200)+" 350 L"+(x+200)+" 520 L"+x+" 520 Z",{fill:f[2],stroke:f[1]});
+        LM.xt(tl,t+0.3,x+100,390,"."+f[0],52,f[1],{center:1});
+      });
+      LM.ex(tl,39.6,"ellipse",[1070,410,270,250],{stroke:"#a81428",strokeWidth:3.4,roughness:2});
+      LM.ex(tl,40.5,"arrow",[1000,560,780,680],{bend:-40});
+      LM.xt(tl,41.2,120,650,"формат, в якому AI сам собі пише",40);
+      LM.xt(tl,43.0,120,705,"інструкції + пам'ять",52,"#a81428");
+      LM.clearScene(tl,52.0); LM.scene();
+      LM.ex(tl,52.6,"rect",[120,300,460,230],{fill:"#fadee1",stroke:"#a81428",strokeWidth:3});
+      LM.xt(tl,53.0,350,370,"StyleMD",64,"#a81428",{center:1});
+      LM.ex(tl,56.4,"arrow",[600,415,760,415]);
+      LM.ex(tl,56.8,"rect",[780,300,440,230],{stroke:"#1e1e1e"});
+      LM.xt(tl,57.2,1000,345,"брендбук",58,"#1e1e1e",{center:1});
+      LM.xt(tl,58.9,1000,425,"мовою агента",40,"#5c6678",{center:1});
+      LM.xt(tl,62.2,140,620,"дизайн · монтаж · і так далі",44);tl.to(["#gt2","#stage svg","#stage div"],{opacity:0,duration:0.35},64.45); LM.cam(tl,64.39999999999999,"full",0.8);
+tl.set({}, {}, 65.300);
+window.__timelines["main"] = tl;
+</script></body></html>

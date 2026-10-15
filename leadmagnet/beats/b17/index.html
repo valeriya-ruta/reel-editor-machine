@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=1920, height=1080"/>
+<script src="assets/gsap.min.js"></script><script src="assets/rough.js"></script>
+<link rel="stylesheet" href="assets/excalifont.css"/><link rel="stylesheet" href="assets/lib.css"/>
+<script src="assets/lib.js"></script>
+</head><body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="46.600" data-width="1920" data-height="1080">
+  <div id="bg" class="clip paper" data-start="0" data-duration="46.600" style="opacity:0"></div>
+  <div id="stage" class="clip" data-start="0" data-duration="46.600">
+    <svg id="ex" width="1920" height="1080"></svg>
+    <div id="chap" class="clip" style="z-index:30;opacity:0;background:radial-gradient(1200px 700px at 30% 20%,#b8213a 0%,#8d0d24 45%,#5c0716 100%)">
+      <div class="chap"><div class="num">ЧАСТИНА 04</div><div class="ttl">Стиль для <em>рілсів</em></div></div></div><div id="pf0" style="position:absolute;left:90px;top:230px;width:250px;height:444px;border-radius:28px;overflow:hidden;box-shadow:0 0 0 7px #1a1e27,0 30px 60px -20px rgba(0,0,0,.45);background:#000;opacity:0"><video class="clip" src="assets/REEL-12.mp4" data-start="0" data-duration="46.60" data-media-start="15" muted playsinline style="width:250px;height:444px;object-fit:cover"></video></div><div id="pf1" style="position:absolute;left:380px;top:230px;width:250px;height:444px;border-radius:28px;overflow:hidden;box-shadow:0 0 0 7px #1a1e27,0 30px 60px -20px rgba(0,0,0,.45);background:#000;opacity:0"><video class="clip" src="assets/REEL-21.mp4" data-start="0" data-duration="46.60" data-media-start="25" muted playsinline style="width:250px;height:444px;object-fit:cover"></video></div><div id="pf2" style="position:absolute;left:670px;top:230px;width:250px;height:444px;border-radius:28px;overflow:hidden;box-shadow:0 0 0 7px #1a1e27,0 30px 60px -20px rgba(0,0,0,.45);background:#000;opacity:0"><video class="clip" src="assets/REEL-15.mp4" data-start="0" data-duration="46.60" data-media-start="42" muted playsinline style="width:250px;height:444px;object-fit:cover"></video></div><div id="pf3" style="position:absolute;left:960px;top:230px;width:250px;height:444px;border-radius:28px;overflow:hidden;box-shadow:0 0 0 7px #1a1e27,0 30px 60px -20px rgba(0,0,0,.45);background:#000;opacity:0"><video class="clip" src="assets/REEL-18.mp4" data-start="0" data-duration="46.60" data-media-start="27" muted playsinline style="width:250px;height:444px;object-fit:cover"></video></div>
+  </div>
+  <div id="camring"></div>
+  <video id="cam" class="clip" src="cam.mp4" data-start="0" data-duration="46.600" data-media-start="0" muted playsinline></video>
+  <div id="dim" class="clip" data-start="0" data-duration="46.600"></div>
+  <div id="flash" class="clip" data-start="0" data-duration="46.600"></div>
+</div>
+<script>
+window.__timelines = window.__timelines || {};
+const tl = gsap.timeline({ paused: true });
+LM.camSet("full");
+tl.to("#bg",{opacity:1,duration:0.4},0.05);tl.to("#bg",{opacity:0,duration:0.5},45.850);
+LM.flash(tl,0.1); tl.set("#chap",{opacity:1},0.1); LM.rise(tl,"#chap .num",0.25); LM.rise(tl,"#chap .ttl",0.4,0.7);
+      LM.camHide(tl,0.1,0.05); tl.to("#chap",{opacity:0,duration:0.5},4.7); LM.camShow(tl,4.7,0.01);LM.cam(tl,5.0,"card",0.9);
+      document.getElementById("stage").insertAdjacentHTML("beforeend",'<div class="gtitle" id="gt" style="left:80px;top:70px;opacity:0"><span class="dot"></span>Анімація: де живуть елементи</div>');
+      LM.rise(tl,"#gt",13.4);
+      LM.pop(tl,"#pf0",25.0); LM.xt(tl,25.4,215,700,"перед тобою",36,"#a81428",{center:1});
+      LM.pop(tl,"#pf1",28.2); LM.xt(tl,28.6,505,700,"за тобою",36,"#a81428",{center:1});
+      LM.pop(tl,"#pf2",31.1); LM.xt(tl,31.5,795,700,"на весь екран",36,"#a81428",{center:1});
+      LM.pop(tl,"#pf3",38.9); LM.xt(tl,39.3,1085,700,"ти в кружечку",36,"#a81428",{center:1});
+      tl.to(["#gt","#pf0","#pf1","#pf2","#pf3","#stage div"],{opacity:0,duration:0.35},45.75); LM.cam(tl,45.7,"full",0.8);
+tl.set({}, {}, 46.600);
+window.__timelines["main"] = tl;
+</script></body></html>
