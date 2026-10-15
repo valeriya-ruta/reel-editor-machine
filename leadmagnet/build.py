@@ -668,7 +668,7 @@ def phone(i, x, y, src, ms, dur, w=250):
 def _(T):
     E = T(945.6)
     d = 945.6 - 899.0
-    ph = (phone(0, 90, 230, "REEL-12", 15, d) + phone(1, 380, 230, "REEL-21", 25, d) + phone(2, 670, 230, "REEL-15", 42, d) + phone(3, 960, 230, "REEL-18", 27, d))
+    ph = (phone(0, 90, 230, "REEL-14", 60, d) + phone(1, 380, 230, "REEL-21", 15, d) + phone(2, 670, 230, "REEL-15", 42, d) + phone(3, 960, 230, "REEL-18", 18, d))
     html = chapter_html("ЧАСТИНА 04", "Стиль для <em>рілсів</em>") + ph
     js = chapter_js(0.0, T(904.2))
     js += f'''LM.cam(tl,{T(904.0)},"card",0.9);
@@ -768,7 +768,7 @@ def _(T):
               '<div class="ub" id="u2" style="opacity:0;margin-top:16px">Згенеруй перші 10 секунд у моєму стилі</div>'
               '<div class="tool" id="t2" style="opacity:0">Write <code>reels-style.md</code> · Render <code>preview_10s.mp4</code></div>')
     vid = (f'<div id="pv" style="position:absolute;left:800px;top:80px;width:280px;height:498px;border-radius:16px;overflow:hidden;background:#000;opacity:0;box-shadow:0 20px 50px -10px rgba(0,0,0,.4)">'
-           f'<video class="clip" src="assets/REEL-26.mp4" data-start="0" data-duration="{1105.4 - 999.6:.2f}" data-media-start="5" muted playsinline style="width:280px;height:498px;object-fit:cover"></video></div>')
+           f'<video class="clip" src="assets/REEL-14.mp4" data-start="0" data-duration="{1105.4 - 999.6:.2f}" data-media-start="40" muted playsinline style="width:280px;height:498px;object-fit:cover"></video></div>')
     html = html.replace('<div class="thread" id="cth" style="left:60px;width:1080px;top:76px"></div>',
                         f'<div class="thread" id="cth" style="left:60px;width:980px;top:76px">{thread}</div>{vid}')
     fb = ["вирізай мене краще", "субтитри менше", "ти не використав мої кольори — світліше"]
@@ -805,12 +805,12 @@ def _(T):
     E = T(1172.0)
     js = theory_open("Що в тебе на руках", 0.4)
     js += f'''
-      LM.ex(tl,{T(1109.8)},"rect",[90,200,520,460],{{fill:"#fadee1",stroke:"#a81428",strokeWidth:3}});
-      LM.xt(tl,{T(1110)},350,225,"дизайн-система",50,"#a81428",{{center:1}});
+      LM.ex(tl,{T(1109.8)},"rect",[90,200,480,460],{{fill:"#fadee1",stroke:"#a81428",strokeWidth:3}});
+      LM.xt(tl,{T(1110)},330,225,"дизайн-система",50,"#a81428",{{center:1}});
       LM.xt(tl,{T(1113.4)},130,320,"• базовий брендбук",42); LM.xt(tl,{T(1115.1)},130,385,"• каруселі",42); LM.xt(tl,{T(1116.9)},130,450,"• інші статичні секції",42);
-      LM.ex(tl,{T(1120.7)},"rect",[680,200,520,460],{{fill:"#a5d8ff",stroke:"#1971c2",strokeWidth:3}});
-      LM.xt(tl,{T(1121)},940,225,"reels StyleMD",50,"#1971c2",{{center:1}});
-      LM.xt(tl,{T(1125.1)},720,320,"• анімація",42); LM.xt(tl,{T(1127.5)},720,385,"• елементи",42); LM.xt(tl,{T(1129.0)},720,450,"• рендер",42);
+      LM.ex(tl,{T(1120.7)},"rect",[640,200,470,460],{{fill:"#a5d8ff",stroke:"#1971c2",strokeWidth:3}});
+      LM.xt(tl,{T(1121)},875,225,"reels StyleMD",50,"#1971c2",{{center:1}});
+      LM.xt(tl,{T(1125.1)},670,320,"• анімація",42); LM.xt(tl,{T(1127.5)},670,385,"• елементи",42); LM.xt(tl,{T(1129.0)},670,450,"• рендер",42);
       LM.xt(tl,{T(1138.2)},120,720,"каруселі — вже можна постити ✓",48,"#2f9e44");
       LM.clearScene(tl,{T(1152.6)}); LM.scene();
       LM.xt(tl,{T(1153)},110,200,"для монтажу ще:",54,"#1e1e1e");
@@ -843,6 +843,7 @@ def _(T):
     E = T(1223.0)
     js = theory_open("Твій перший крок", 0.4)
     js += f'''
+      LM.xt(tl,{T(1202.0)},110,170,"сподобалось?",44,"#5c6678");
       LM.xt(tl,{T(1207.4)},110,240,"використай те, що я описала",50);
       LM.ex(tl,{T(1210.5)},"rect",[110,360,330,410],{{fill:"#fadee1",stroke:"#a81428",strokeWidth:3}});
       LM.xt(tl,{T(1210.8)},275,520,"твоя перша\\nкарусель",44,"#a81428",{{center:1}});
@@ -917,7 +918,10 @@ def emit(b):
         pg = re.sub(r'data-media-start="([0-9.]+)"', lambda m: 'data-media-start="%.4f"' % (float(m.group(1)) + off), pg)
         pg = re.sub(r'data-duration="[0-9.]+"', 'data-duration="%.4f"' % pdur, pg)
         q = os.path.join(pd, "p%02d" % k)
-        os.makedirs(q)
+        os.makedirs(q, exist_ok=True)
+        for ln in ("assets", "cam.mp4"):
+            if os.path.lexists(os.path.join(q, ln)):
+                os.remove(os.path.join(q, ln))
         open(os.path.join(q, "index.html"), "w").write(pg)
         for f in ("hyperframes.json", "package.json"):
             shutil.copy(os.path.join(HERE, "hf", f), q)

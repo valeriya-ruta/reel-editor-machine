@@ -10,3 +10,4 @@ beats/*/out.tmp.mp4
 beats/*/parts/
 beats/*/snap/
 beats/STOP
+delivery/chunk_*
