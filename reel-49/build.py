@@ -129,8 +129,10 @@ F.append(u'''
                box-shadow:0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.10)"></div>
         </div>
         <svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
-        <div id="t2" class="chip hid" style="position:absolute; left:152px; top:448px; padding:10px 16px; gap:12px">
-          <span class="check" id="t2c"></span><span class="line" style="width:44px"></span>
+        <div id="t2" class="chip hid" style="position:absolute; left:152px; top:448px; padding:10px 16px; gap:12px;
+             background:#fff; border:3px solid #7A1424">
+          <span class="check" id="t2c" style="border-color:#7A1424"></span>
+          <span class="line" style="width:44px; background:rgba(122,20,36,.4)"></span>
         </div>''' % (mark("claude", 58), mark("claude", 38)))
 js(u'''
   gsap.set("#cw", {transformOrigin: "540px 480px"});
@@ -220,11 +222,11 @@ js(u'''
   ell("a_car", 948, 634, 14, 14, {seed: 73});
   draw("a_car", %.3f, .45);
   sketch("a_carl", "skP"); label("a_carl", 990, 722, "карусель", {size: 44, anchor: "end"}); draw("a_carl", %.3f);
-  sketch("a_dz", "skP"); under("a_dz", 790, 808, 990, {stroke: "#7A1424", seed: 74});
-  label("a_dz", 990, 790, "твій дизайн", {size: 44, anchor: "end", color: "#7A1424"});
+  sketch("a_dz", "skP"); label("a_dz", 990, 790, "твій дизайн", {size: 44, anchor: "end", color: "#7A1424"});
+  under("a_dz", 790, 808, 990, {stroke: "#7A1424", seed: 74});
   draw("a_dz", %.3f, .45);
 ''' % (h0 + 0.1, h0 + 0.45, t_foto + 0.2, t_cla - 0.55, cloud("a_cl", *CL_P, o=u"{seed: 68}"), t_cla - 0.45, t_cla, t_cla + 0.1,
-       t_kar - 0.6, t_kar - 0.35, t_kar + 0.1, t_dyz - 0.35))
+       t_kar - 0.6, t_kar - 0.35, t_kar + 0.1, t_dyz - 0.4))
 js(u'''
   erase("a_ft", %.3f); erase("a_ftl", %.3f); erase("a_a1", %.3f); erase("a_a2", %.3f);
   erase("a_car", %.3f); erase("a_carl", %.3f); erase("a_dz", %.3f);

@@ -32,5 +32,10 @@ sketches over the footage; red is used only on the white panel.
 | 11.6–19.6 | **half** (matte) | phone + photo «фото» → 158 px arrow → cloud with Claude mark «Claude» → 154 px arrow → hatched slide + dots «карусель», red «твій дизайн» underlined on «дизайні»; on «Те саме» the photo/carousel clear, «монтаж» in the cloud, video glyph «відео», arrow again, cloud re-drawn red on «хмарі», laptop «твій компʼютер» crossed in red on «компʼютері» |
 | 20.8–26.65 | above | CTA chips блогерка / СММниця / підприємиця on their words; white cloud sticker on «хмарну», red «24/7» inside it on «24»; red «Став + в коментарі» pill on «став»; «сюди!» + 212 px arrow pointing DOWN to the lower right (tip x 882, y 986) |
 
-BLACKOUT: «то став + в коментарі.» 25.25 → end (the pill says it).
+BLACKOUT (captions stand down where a graphic's own text says the word):
+«мого налаштування АІ системи» 1.18 → 3.10 (the card, its title a heading) ·
+«блогерка, СММниця або підприємиця» 20.77 → 22.60 (the chips, as reel 45) ·
+«24/7» → «то став + в коментарі.» 24.29 → end (the big «24/7», then the pill).
+The panel's last word «компʼютері.» leaves with the panel at 19.82 (as reel 45),
+so it never hangs in ink over her hair.
 Matte: half1 11.500 → 20.767 (9.27 s, cut).

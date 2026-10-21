@@ -58,18 +58,11 @@ FIX = {
 }
 
 
-# a phrase too wide for the rail (801 px at 90 px: it would cross x 900, the IG
-# action column) is split anyway, its short lead word held 0.12 s
-FORCE_SPLIT = {u"то обов'язково"}
-
-
-def split_multi(caps, min_gap=0.12):
-    """captions are word by word (her review of 41): a phrase token («Мій Клод»,
-    «монтаж рілсів.») is split, its time shared by letters — but only when every
-    word then gets ≥ 0.12 s. Otherwise it stays one caption, as the aligner's
-    phrases do on reel 41 («до тредів», «по контенту»): split, «і в телеграмі,»
-    would flash «І» and «В» for a frame each, stacked on the next word (the kit
-    holds a word ≥ 0.10 s, so starts under 0.10 s apart overlap)."""
+def split_words(caps):
+    """captions are word by word (her review of 41): a phrase token from the
+    aligner («Мій Клод», «і в телеграмі,», «монтаж рілсів.») is split, its time
+    shared by letters. A word that then starts < 0.10 s after the last one waits
+    in the kit (g.words), so two words never share the rail."""
     out = []
     for c in caps:
         parts = c["w"].split()
@@ -78,35 +71,16 @@ def split_multi(caps, min_gap=0.12):
             continue
         n = float(sum(len(p) for p in parts))
         t, span = c["s"], c["e"] - c["s"]
-        pieces = []
         for p in parts:
             d = span * len(p) / n
-            pieces.append(dict(c, w=p, s=round(t, 3), e=round(t + d, 3)))
+            out.append(dict(c, w=p, s=round(t, 3), e=round(t + d, 3)))
             t += d
-        if min(x["e"] - x["s"] for x in pieces) >= min_gap:
-            out.extend(pieces)
-        elif c["w"] in FORCE_SPLIT:
-            t = c["s"]
-            for p in parts[:-1]:
-                out.append(dict(c, w=p, s=round(t, 3), e=round(t + min_gap, 3)))
-                t += min_gap
-            out.append(dict(c, w=parts[-1], s=round(t, 3), e=c["e"]))
-        else:
-            out.append(c)
     return out
 
 
-CAPS = split_multi(load_caps(NN, FIX))
+CAPS = split_words(load_caps(NN, FIX))
 W = Words(CAPS)
 S, E = W.s, W.e
-
-
-def S_in(phrase, near, word):
-    """where «word» starts inside a phrase caption kept whole (letter-shared time)"""
-    c = W.hit(phrase, near)
-    parts = c["w"].split()
-    i = parts.index(word)
-    return round(c["s"] + (c["e"] - c["s"]) * sum(len(p) for p in parts[:i]) / float(sum(len(p) for p in parts)), 3)
 
 # ---------------------------------------------------------------- the beats
 B, P, F, C, J = [], [], [], [], []     # behind / panel / front / cover html, js
@@ -178,10 +152,14 @@ js(u'''
   sketch("c1", "skB1"); box("c1", 22, 26, 796, 114, {r: 56, fill: false, strokeWidth: 5, seed: 3});
   draw("c1", %.3f, .6);
   sink("#b1", %.3f); erase("c1", %.3f);
-''' % (t_klod - 0.45, t_prac, t_koly - 0.2, t_nich - 0.1, e_pyshu - 0.2, e_pyshu - 0.2))
+''' % (t_klod - 0.45, t_prac, t_klod - 0.25, t_nich - 0.1, e_pyshu - 0.2, e_pyshu - 0.2))
 g.sfx("pop", t_klod - 0.4); g.sfx("click-soft", t_nich)
-# no blackout on «Мій Клод працює»: the kit fades the plaque in at the first word
-# regardless, so a blackout here left an empty plaque up until «на» (1.8 s)
+# «Мій Клод працює» — the card says it («Claude» · «працює»). A BLACKOUT at the
+# reel's first word leaves the kit's opening plaque fade-in standing empty until
+# «на», so these three words come off the rail instead (see main): the plaque
+# then first fades in under «на». Same effect as a blackout, reported as one.
+RAIL_FROM = S(u"на", 1.81) - 0.03
+HEAD_OFF = (round(S(u"Мій", 0.85) - 0.03, 3), round(RAIL_FROM, 3))
 
 # 2 · BEHIND — «рутини» -------------------------------------------------------
 t_rut, e_rut = S(u"рутини.", 5.92), E(u"рутини.", 5.92)
@@ -207,7 +185,7 @@ P.append(u'        <span id="ptg" class="hid" data-layout-allow-occlusion style=
          % mark("telegram", 60))
 t_kozh, t_kil, t_god = S(u"кожні", 7.94), S(u"кілька", 8.1), S(u"годин", 8.42)
 t_perev, t_chat = S(u"перевіряє", 8.92), S(u"чати", 9.66)
-t_ig, t_tg = S(u"інстаграмі", 10.0), S_in(u"і в телеграмі,", 10.42, u"телеграмі,")
+t_ig, t_tg = S(u"інстаграмі", 10.0), S(u"телеграмі,", 10.52)
 t_nich2, t_prop = S(u"нічого", 11.29), S(u"пропустила,", 11.73)
 t_sam, t_stv, t_zad = S(u"сам", 12.61), S(u"створює", 12.85), S(u"задачі", 13.51)
 t_meni, t_kom = S(u"мені", 13.99), S(u"команді.", 14.41)
@@ -265,12 +243,13 @@ js(u'''
        t_sam - 0.35, t_stv - 0.05, t_zad - 0.1, t_zad - 0.25, t_meni - 0.05, t_kom - 0.05, h1, h1))
 g.sfx("whoosh-short", h0); g.sfx("click-soft", t_kil); g.sfx("pop", t_ig); g.sfx("click-soft", t_nich2)
 g.sfx("pop", t_stv); g.sfx("whoosh-short", h1)
+BLACKOUT.append((t_kozh - 0.03, E(u"годин", 8.42) + 0.03))          # the label writes «кожні кілька годин»
 BLACKOUT.append((t_zad - 0.03, h1))                                 # the labels write «задачі · мені · команді»
 
 # 4 · ABOVE — a weekly report on the content, and next week's ideas -----------
-t_rut2, t_raz = S(u"рутина,", 15.4), S_in(u"яка раз", 15.86, u"раз")
-t_zvit, t_odr, t_idei = S(u"звіт", 16.82), S_in(u"і одразу", 17.84, u"одразу"), S(u"ідеї", 18.26)
-t_nast, e_tyzh = S(u"наступний", 18.9), E(u"тиждень.", 19.22)
+t_rut2, t_raz = S(u"рутина,", 15.4), S(u"раз", 15.95)
+t_zvit, t_odr, t_idei = S(u"звіт", 16.82), S(u"одразу", 17.9), S(u"ідеї", 18.26)
+t_nast, t_tyzh, e_tyzh = S(u"наступний", 18.9), S(u"тиждень.", 19.22), E(u"тиждень.", 19.22)
 bars = [40, 62, 50, 84, 70, 92, 100]
 bulb = (u'<svg width="30" height="40" viewBox="0 0 30 40" style="flex:none"><path d="M15 3 a11.5 11.5 0 0 1 7 20.6 '
         u'V28 H8 V23.6 A11.5 11.5 0 0 1 15 3 Z" fill="#7A1424"/><rect x="9" y="31" width="12" height="5" rx="2.5" '
@@ -289,7 +268,7 @@ F.append(u'''
           <div style="display:flex; margin-bottom:16px">
             <span class="chip hid" id="b4n" style="font-size:28px; padding:8px 16px; gap:10px; white-space:nowrap"><i></i>наступний тиждень</span>
           </div>
-          <span class="ttl" style="font-size:40px">Ідеї</span>
+          <span class="ttl hid" id="b4it" style="font-size:40px">Ідеї</span>
           %s
         </div>''' % (
     u"".join(u'<span class="bar" style="flex:1; height:%d%%; border-radius:10px; background:%s; display:block"></span>'
@@ -301,13 +280,17 @@ js(u'''
   rise("#b4t", %.3f, 24);
   tl.fromTo("#b4a .bar", {scaleY: 0, transformOrigin: "50%% 100%%"}, X({scaleY: 1, duration: .5, ease: RISE, stagger: .07}), %.3f);
   rise("#b4b", %.3f);
+  rise("#b4it", %.3f, 24);
   pop("#b4i0", %.3f, .45); pop("#b4i1", %.3f, .45); pop("#b4i2", %.3f, .45);
   pop("#b4n", %.3f, .5);
   sink("#b4a, #b4b", %.3f);
-''' % (t_rut2 - 0.25, t_raz, t_zvit - 0.2, t_zvit, t_odr - 0.3, t_idei, t_idei + 0.15, t_idei + 0.3,
-       t_nast - 0.05, e_tyzh - 0.15))
+''' % (t_rut2 - 0.25, t_raz, t_zvit - 0.2, t_zvit, t_odr - 0.3, t_idei - 0.15, t_idei + 0.05, t_idei + 0.2,
+       t_idei + 0.35, t_nast - 0.05, t_tyzh + 0.33))
 g.sfx("pop", t_rut2 - 0.2); g.sfx("pop", t_odr - 0.25)
-BLACKOUT.append((t_zvit - 0.03, S(u"і одразу", 17.84) - 0.03))              # the card title says it
+# the two cards spell out her sentence: «Рутина» · «раз на тиждень» · «Звіт по
+# контенту» · «Одразу» · «Ідеї» · «наступний тиждень». One span from «є» (it
+# joins the half screen's ink span, so the plaque does not blink in between)
+BLACKOUT.append((S(u"є", 15.28) - 0.03, e_tyzh))
 
 # 5 · ABOVE — the alarm rings; everything is already ticked --------------------
 t_tob, t_prok = S(u"Тобто", 19.9), S(u"прокидаюсь,", 20.24)
@@ -322,12 +305,15 @@ F.append(u'''
                               u'<span style="font-size:34px; font-weight:500">%s</span></div>'
                               % (0 if i == 0 else 16, i, esc(t)) for i, t in enumerate(rows5)))
 js(u'''
-  sketch("al", "skF"); bell("al", 255, 440, 95, -132, {seed: 62}); bell("al", 255, 440, 95, -48, {seed: 63});
-  ell("al", 255, 440, 190, 190, {seed: 61});
-  ln("al", 190, 524, 168, 556, {seed: 64}); ln("al", 320, 524, 342, 556, {seed: 65});
+  // three groups drawn side by side, so the whole alarm (face, hands, bells,
+  // legs) is there by «прокидаюсь» and rings on it; bells and legs sit under
+  // the face (created first), the wobble turns all three about its centre
+  sketch("alb", "skF"); bell("alb", 255, 440, 95, -132, {seed: 62}); bell("alb", 255, 440, 95, -48, {seed: 63});
+  sketch("all", "skF"); ln("all", 190, 524, 168, 556, {seed: 64}); ln("all", 320, 524, 342, 556, {seed: 65});
+  sketch("al", "skF"); ell("al", 255, 440, 190, 190, {seed: 61});
   ln("al", 255, 440, 255, 374, {seed: 66, strokeWidth: 5}); ln("al", 255, 440, 222, 478, {seed: 67, strokeWidth: 6});
-  draw("al", %.3f, .3);
-  tl.to("#sk-al", {rotation: 7, svgOrigin: "255 440", duration: .06, yoyo: true, repeat: 7, ease: "none"}, %.3f);
+  draw("al", %.3f, .18); draw("alb", %.3f, .18); draw("all", %.3f, .18);
+  tl.to("#sk-al, #sk-alb, #sk-all", {rotation: 7, svgOrigin: "255 440", duration: .06, yoyo: true, repeat: 7, ease: "none"}, %.3f);
   sketch("rg", "skF"); ln("rg", 132, 340, 110, 322, {seed: 68}); ln("rg", 124, 374, 100, 374, {seed: 69});
   ln("rg", 378, 340, 400, 322, {seed: 70}); ln("rg", 386, 374, 410, 374, {seed: 71});
   draw("rg", %.3f, .15);
@@ -335,10 +321,14 @@ js(u'''
   tl.set("#b5k0", {className: "check on"}, %.3f); pop("#b5k0", %.3f, .45);
   tl.set("#b5k1", {className: "check on"}, %.3f); pop("#b5k1", %.3f, .45);
   tl.set("#b5k2", {className: "check on"}, %.3f); pop("#b5k2", %.3f, .45);
-  sink("#b5", %.3f); erase("al", %.3f); erase("rg", %.3f);
-''' % (t_tob - 0.05, t_prok, t_prok, t_a - 0.45, t_vzhe, t_vzhe, t_vse, t_vse, t_lezh, t_lezh,
-       e_got - 0.15, e_got - 0.15, e_got - 0.15))
+  sink("#b5", %.3f); ["al", "alb", "all", "rg"].forEach(function (n) { erase(n, %.3f); });
+''' % (t_tob - 0.15, t_tob - 0.15, t_tob - 0.1, t_prok, t_prok, t_a - 0.45, t_vzhe, t_vzhe, t_vse, t_vse,
+       t_lezh, t_lezh, e_got - 0.15, e_got - 0.15))
 g.sfx("notification", t_prok); g.sfx("click-soft", t_vse)
+# the card's heading says «Вже готове»: the phrase goes, from «а» — a blackout
+# starting at «вже» would fade the plaque out under «в мене» (the kit pre-fades
+# 0.2 s), white type over her cream blouse; «прокидаюсь,» is long enough to keep it
+BLACKOUT.append((t_a - 0.03, e_got + 0.02))
 
 # 6 · ABOVE — the cloud: Claude and its actions --------------------------------
 t_klod2, t_bag, t_diy = S(u"Клод", 24.05), S(u"багато", 24.77), S(u"дій", 25.19)
@@ -400,7 +390,7 @@ js(u'''
   ["cl2", "lp", "lb", "zz", "ck2", "mh2", "hh2", "a3", "ph", "phl"].forEach(function (n) { erase(n, %.3f); });
   out("#pcl", %.3f);
 ''' % (t_ozn - 0.4, t_ozn + 0.3, t_trym - 0.25, t_trym + 0.1, t_vidk + 0.05, t_vin - 0.1,
-       t_bud - 0.75, t_bud - 0.35, t_bud - 0.3, t_bud, t_bud, t_napr - 0.05, t_mont - 0.4, t_mont, h3, h3))
+       t_bud - 0.75, t_bud - 0.35, t_bud - 0.3, t_bud, t_bud, t_napr - 0.05, t_mont - 0.4, t_mont - 0.12, h3, h3))
 g.sfx("whoosh-short", h2); g.sfx("pop", t_mont - 0.1); g.sfx("whoosh-short", h3)
 BLACKOUT.append((t_mont - 0.03, E(u"рілсів.", 33.8)))               # the label says «монтаж рілсів»
 
@@ -421,11 +411,12 @@ js(u'''
   pop("#b8p", %.3f, .6);
   // the pointer goes DOWN, never up at the pill (her review of 41): her CTA is
   // «підпишись», so it heads for the follow button by her username, lower left
-  sketch("pt", "skF"); arrow("pt", 330, 560, 190, 840, {seed: 97, bend: -.18, strokeWidth: 5});
+  // (as reel 47's), down the shelves left of her hair; lands on «підпишись»
+  sketch("pt", "skF"); arrow("pt", 330, 560, 200, 990, {seed: 97, bend: -.12, strokeWidth: 5});
   draw("pt", %.3f, .5);
-''' % (t_taki - 0.3, t_taki - 0.15, t_taki, t_taki + 0.15, t_to, t_to + 0.4))
+''' % (t_taki - 0.3, t_taki - 0.15, t_taki, t_taki + 0.15, t_to, t_to + 0.12))
 g.sfx("pop", t_taki - 0.3); g.sfx("pop", t_to)
-BLACKOUT.append((t_pid - 0.05, DUR))     # the pill says it
+BLACKOUT.append((t_to - 0.05, DUR))      # the pill says it — from «то», as reels 41/43/45
 
 # ---------------------------------------------------------------- mattes for the half screens
 for i, (a, b) in enumerate(HALF):

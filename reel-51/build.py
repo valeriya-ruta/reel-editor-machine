@@ -229,14 +229,17 @@ t_mon = S(u"монтажерка,", 20.88)
 t_vid, t_bud = S(u"відтворити", 24.21), S(u"будь-який", 24.81)
 t_tv, t_st = S(u"твоєму", 27.15), S(u"стилі.", 27.55)
 r0 = max(t_yak - 0.02, H1 + 0.03)
+# the rings are 260 wide so their haloed line clears the phone's corners (a
+# 236 ring cut through the bezel); the cross lies on the white phone, so no
+# halo — the kit's white halo erased the «2» under it
 js(u'''
   rise("#mp1", %.3f); rise("#mp2", %.3f);
-  sketch("v1", "skF"); ell("v1", 740, 438, 236, 320, {strokeWidth: 5, seed: 151, fill: false});
+  sketch("v1", "skF"); ell("v1", 740, 438, 260, 326, {strokeWidth: 5, seed: 151, fill: false});
   draw("v1", %.3f, .5);
-  sketch("v2", "skF"); cross("v2", 680, 350, 800, 530, {strokeWidth: 7, seed: 153});
+  sketch("v2", "skF"); cross("v2", 680, 350, 800, 530, {strokeWidth: 7, seed: 153, halo: false});
   draw("v2", %.3f, .28);
   erase("v1", %.3f); erase("v2", %.3f);
-  sketch("v3", "skF"); ell("v3", 340, 438, 236, 320, {strokeWidth: 5, seed: 155, fill: false});
+  sketch("v3", "skF"); ell("v3", 340, 438, 260, 326, {strokeWidth: 5, seed: 155, fill: false});
   draw("v3", %.3f, .5);
   pop("#mc1", %.3f);
   pop("#mc2", %.3f); erase("v3", %.3f);
@@ -247,6 +250,8 @@ js(u'''
        t_mon, t_mon - 0.05, t_vid - 0.4, t_bud - 0.3, t_bud - 0.3))
 g.sfx("pop", r0); g.sfx("click-soft", t_dru); g.sfx("click-soft", t_pom)
 g.sfx("pop", t_sht); g.sfx("pop", t_mon)
+# «штучний інтелект, а другий — монтажерка,»: chip 1, phone 2 and chip 2 say it
+BLACKOUT.append((t_sht - 0.05, S(u"ще", 21.4) - 0.01))
 
 # 3b · ABOVE — any editing, in your style: four reels, each cut another way -----
 PERSON = blk(47, 146, 44, 44, "#DEBFBF", "50%") + blk(24, 196, 90, 70, "#DEBFBF", "45px 45px 0 0")
@@ -262,19 +267,22 @@ TILES = [
     PERSON + blk(14, 34, 110, 78, "#fff", 14, u" box-shadow:0 1px 3px rgba(36,25,25,.18)")
     + blk(26, 50, 60, 12, "#7A1424", 6) + blk(26, 74, 86, 12, "#EFE3E3", 6),
 ]
+# 80 px between tiles (x 120-960, centred): the ring round tile 2 needs room
+# on both sides — at 40 px its haloed line ran over both neighbours' bezels
 for i, inner in enumerate(TILES):
-    F.append(phone("tl%d" % i, 180 + i * 190, 312, inner))
+    F.append(phone("tl%d" % i, 120 + i * 230, 312, inner))
 F.append(u'''
-        <div class="ctr" style="left:435px; top:612px; width:400px"><span class="chip on hid" id="tsc"
+        <div class="ctr" style="left:455px; top:624px; width:400px"><span class="chip on hid" id="tsc"
              style="font-size:30px; padding:10px 20px"><i></i>твій стиль</span></div>''')
 js(u'''
   %s
-  sketch("v5", "skF"); ell("v5", 635, 445, 230, 320, {strokeWidth: 5, seed: 159, fill: false});
+  sketch("v5", "skF"); ell("v5", 655, 445, 250, 330, {strokeWidth: 5, seed: 159, fill: false});
   draw("v5", %.3f, .5); pop("#tsc", %.3f);
   sink("#tl0, #tl1, #tl2, #tl3, #tsc", %.3f); erase("v5", %.3f);
 ''' % (u" ".join(u'pop("#tl%d", %.3f);' % (i, t_bud - 0.05 + i * 0.16) for i in range(4)),
-       t_tv - 0.3, t_st, E(u"стилі.", 27.55) + 0.1, E(u"стилі.", 27.55) + 0.1))
-g.sfx("pop", t_bud); g.sfx("click-soft", t_st)
+       t_tv - 0.3, t_tv, E(u"стилі.", 27.55) + 0.1, E(u"стилі.", 27.55) + 0.1))
+g.sfx("pop", t_bud); g.sfx("click-soft", t_tv)
+BLACKOUT.append((t_tv - 0.05, S(u"І", 28.0) - 0.01))      # «твоєму стилі.»: the chip says it
 
 # 4 · BEHIND — «200 €» -----------------------------------------------------------
 t_200, t_ne1 = S(u"200", 30.67), S(u"не", 32.26)
@@ -286,6 +294,7 @@ js(u'''
   sink("#bw1", %.3f);
 ''' % (t_200 - 0.12, m1 - 0.3))
 g.sfx("kaching", t_200)
+BLACKOUT.append((t_200 - 0.05, S(u"на", 31.4) - 0.01))     # «200 євро»: the big word says it
 
 # 5 · ABOVE — what she no longer has: each one popped on its verb, struck on its noun
 t_pla, t_mzh = S(u"платячи", 32.38), S(u"монтажеру,", 32.88)
@@ -325,11 +334,17 @@ P.append(u'''
 t_mom, t_zn = S(u"момент", 38.93), S(u"зняти", 39.17)
 t_vid2, t_kl = S(u"віддати", 40.22), S(u"Клоду", 40.86)
 t_20, t_got = S(u"20", 41.56), S(u"готовий", 42.62)
+# The phones' labels are sketches of their own, drawn ON their words: queued
+# after the phone strokes they landed 0.6 s late, and «готовий результат» only
+# 0.1 s before the panel left (the caption was blacked out — it never read).
+# «20 хв» lands on «20». The content rides out with the panel (erase at h1 + .4).
+hx = h1 + 0.4
 js(u'''
   sketch("p1", "skP"); box("p1", 100, 315, 150, 267, {seed: 171, r: 26}); ln("p1", 155, 342, 195, 342, {seed: 173});
   ell("p1", 175, 545, 32, 32, {stroke: "#7A1424", fill: "#7A1424", fillStyle: "solid", seed: 175});
-  label("p1", 175, 650, "зняти", {size: 44}); label("p1", 175, 698, "рілс", {size: 44});
   draw("p1", %.3f, .55);
+  sketch("p1l", "skP"); label("p1l", 175, 650, "зняти", {size: 44}); label("p1l", 175, 698, "рілс", {size: 44});
+  draw("p1l", %.3f);
   sketch("p2", "skP"); arrow("p2", 262, 470, 392, 600, {seed: 177, bend: .14}); box("p2", 405, 560, 250, 180, {seed: 179, r: 30});
   draw("p2", %.3f, .45); fadein("#pcl", %.3f);
   sketch("p3", "skP"); arrow("p3", 668, 600, 798, 470, {stroke: "#7A1424", seed: 181, bend: .14});
@@ -337,35 +352,44 @@ js(u'''
   draw("p3", %.3f, .4);
   sketch("p4", "skP"); box("p4", 805, 315, 150, 267, {seed: 183, r: 26}); ln("p4", 860, 342, 900, 342, {seed: 185});
   tick("p4", 878, 456, {stroke: "#7A1424", strokeWidth: 7, k: 1.2, seed: 187});
-  label("p4", 880, 650, "готовий", {size: 44}); label("p4", 880, 698, "результат", {size: 44});
   draw("p4", %.3f, .5);
-  erase("p1", %.3f); erase("p2", %.3f); erase("p3", %.3f); erase("p4", %.3f); out("#pcl", %.3f);
-''' % (t_mom - 0.35, t_vid2 - 0.05, t_kl, t_20 - 0.3, t_got - 0.45, h1, h1, h1, h1, h1))
+  sketch("p4l", "skP"); label("p4l", 880, 650, "готовий", {size: 44}); label("p4l", 880, 698, "результат", {size: 44});
+  draw("p4l", %.3f);
+  erase("p1", %.3f); erase("p1l", %.3f); erase("p2", %.3f); erase("p3", %.3f); erase("p4", %.3f); erase("p4l", %.3f);
+  out("#pcl", %.3f);
+''' % (t_mom - 0.35, t_zn - 0.05, t_vid2 - 0.05, t_kl, t_20 - 0.55, t_got - 0.62, t_got - 0.05,
+       hx, hx, hx, hx, hx, hx, hx))
 BLACKOUT.append((t_zn - 0.05, S(u"рілс,", 39.57) + 0.05))                   # «зняти рілс» label
+BLACKOUT.append((t_kl - 0.05, S(u"і", 41.2) - 0.01))                        # «Клоду»: the Claude box
+BLACKOUT.append((t_20 - 0.05, S(u"отримати", 42.2) - 0.01))                 # «20 хвилин»: «20 хв»
 BLACKOUT.append((t_got - 0.05, S(u"результат.", 43.0) + 0.05))              # «готовий результат» label
 g.sfx("click-soft", t_zn); g.sfx("pop", t_kl); g.sfx("pop", t_got)
 g.sfx("whoosh-short", h0); g.sfx("whoosh-short", h1)
 
 # 7 · ABOVE — the answer: 1 and 2 again; «≠» becomes «=» --------------------------
 t_tomu, t_kaz = S(u"Тому", 43.7), S(u"каже,", 45.41)
-t_nm, t_dob = S(u"не", 47.35), S(u"так", 48.22)
+t_ni, t_dob = S(u"ні,", 46.1), S(u"так", 48.22)
 t_lim = S(u"Ліміти", 50.1)
 BUB = bubble_d(540, 410, 105, 80, (470, 530))
+# «≠» is written on «ні» (on «не може» the bubble stood empty for 2 s); the
+# strokes lie on the white bubble, so no halo — the slash's halo cut the «=»
 js(u'''
   rise("#mp1, #mc1", %.3f); rise("#mp2, #mc2", %.3f);
   sketch("a1", "skF"); blob("a1", "%s", [435, 330, 210, 200], {seed: 191});
   draw("a1", %.3f, .5);
-  sketch("a2", "skF"); ln("a2", 500, 396, 580, 396, {seed: 193}); ln("a2", 500, 428, 580, 428, {seed: 195});
+  sketch("a2", "skF"); ln("a2", 500, 396, 580, 396, {seed: 193, halo: false}); ln("a2", 500, 428, 580, 428, {seed: 195, halo: false});
   draw("a2", %.3f, .3);
-  sketch("a3", "skF"); ln("a3", 562, 366, 518, 458, {seed: 197}); draw("a3", %.3f, .25);
+  sketch("a3", "skF"); ln("a3", 562, 366, 518, 458, {seed: 197, halo: false}); draw("a3", %.3f, .25);
   erase("a2", %.3f); erase("a3", %.3f);
-  sketch("a4", "skF"); ln("a4", 494, 394, 586, 394, {strokeWidth: 8, seed: 199});
-  ln("a4", 494, 430, 586, 430, {strokeWidth: 8, seed: 201});
+  sketch("a4", "skF"); ln("a4", 494, 394, 586, 394, {strokeWidth: 8, seed: 199, halo: false});
+  ln("a4", 494, 430, 586, 430, {strokeWidth: 8, seed: 201, halo: false});
   draw("a4", %.3f, .3);
   sink("#mp1, #mp2, #mc1, #mc2", %.3f); erase("a4", %.3f); erase("a1", %.3f);
-''' % (t_tomu, t_tomu + 0.12, BUB, t_kaz - 0.2, t_nm, t_nm + 0.3, t_dob - 0.1, t_dob - 0.1,
+''' % (t_tomu, t_tomu + 0.12, BUB, t_kaz - 0.2, t_ni - 0.1, t_ni + 0.2, t_dob - 0.1, t_dob - 0.1,
        t_dob - 0.05, t_lim - 0.4, t_lim - 0.4, t_lim - 0.4))
-g.sfx("pop", t_tomu + 0.05); g.sfx("click-soft", t_nm); g.sfx("pop", t_dob)
+g.sfx("pop", t_tomu + 0.05); g.sfx("click-soft", t_ni); g.sfx("pop", t_dob)
+# «штучний інтелект» again: chip 1 is on screen and says it
+BLACKOUT.append((S(u"штучний", 46.6) - 0.05, S(u"не", 47.35) - 0.01))
 
 # 8 · HALF — the limits: real creativity above the line, «creativity» below ------
 # it leaves as «капкаті» ends (blacked out: the CapCut chip says it), so «Тому» is white on the plaque
@@ -386,8 +410,9 @@ P.append(u'''
         </div>''')
 js(u'''
   sketch("q1", "skP"); ln("q1", 110, 512, 970, 506, {stroke: "#7A1424", strokeWidth: 6, seed: 211});
-  label("q1", 112, 492, "ліміти", {size: 46, color: "#7A1424", anchor: "start"});
   draw("q1", %.3f, .6);
+  sketch("q1l", "skP"); label("q1l", 112, 492, "ліміти", {size: 46, color: "#7A1424", anchor: "start"});
+  draw("q1l", %.3f); erase("q1l", %.3f);
   sketch("q2", "skP"); box("q2", 300, 320, 570, 150, {seed: 213, r: 30, fill: true});
   label("q2", 585, 412, "справжній креатив", {size: 54});
   draw("q2", %.3f, .6);
@@ -396,8 +421,10 @@ js(u'''
   draw("q3", %.3f, .6);
   pop("#psub", %.3f); pop("#pcap", %.3f);
   erase("q1", %.3f); erase("q2", %.3f); erase("q3", %.3f); out("#psub, #pcap", %.3f);
-''' % (t_lim - 0.15, t_spr - 0.3, t_kr2 - 0.3, t_cher, t_pl, h3, h3, h3, h3))
+''' % (t_lim - 0.15, t_lim - 0.05, h3, t_spr - 0.3, t_kr2 - 0.3, t_cher, t_pl, h3, h3, h3, h3))
+# no blackout on «Ліміти»: the panel is still sliding in, its label only shows from ≈ 50.4
 BLACKOUT.append((t_spr - 0.05, t_kr2 + 0.05))                      # «справжній креатив» / «креатив» boxes
+BLACKOUT.append((S(u"субтитрів", 57.1) - 0.05, S(u"і", 57.6) - 0.01))   # «СУБТИТРИ» says it
 BLACKOUT.append((S(u"капкаті.", 58.89) - 0.05, S(u"капкаті.", 58.89) + 0.05))   # the «CapCut» chip
 g.sfx("pop", t_spr); g.sfx("pop", t_kr2); g.sfx("pop", t_pl)
 g.sfx("whoosh-short", h2); g.sfx("whoosh-short", h3)
@@ -432,8 +459,10 @@ js(u'''
   sketch("e2", "skF"); label("e2", 800, 730, "сюди!", {size: 52});
   arrow("e2", 820, 760, 880, 975, {strokeWidth: 5, seed: 227, bend: -.25});
   draw("e2", %.3f, .5);
-''' % (t_blog - 0.05, t_blog, t_smm, t_pid, t_pro, t_24 - 0.35, t_24, t_vt - 0.35, t_stav, t_stav + 0.5))
+''' % (t_blog - 0.05, t_blog, t_smm, t_pid, t_pro, t_24 - 0.35, t_24, t_vt - 0.35, t_stav, t_stav + 0.15))
 g.sfx("pop", t_blog); g.sfx("pop", t_pro); g.sfx("pop", t_24); g.sfx("click-soft", t_vt); g.sfx("pop", t_stav)
+BLACKOUT.append((t_blog - 0.05, S(u"і", 63.1) - 0.01))     # the four chips say «блогерка … продюсерка»
+BLACKOUT.append((t_24 - 0.05, S(u"яка", 66.4) - 0.01))     # «24 на 7»: the pill says it
 BLACKOUT.append((t_stav - 0.05, DUR + 1.0))     # the pill says it (to the end: the plaque never returns)
 
 # ---------------------------------------------------------------- mattes for the half screens
