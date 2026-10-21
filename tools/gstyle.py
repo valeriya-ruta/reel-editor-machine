@@ -405,8 +405,10 @@ class G(object):
             if any(a <= c["s"] < b for a, b in blackout):
                 continue
             L.append('  tl.set("#cap%d", {autoAlpha: 1}, %.3f);' % (n, c["s"]))
-            L.append('  tl.fromTo("#cap%d .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, '
-                     'duration: .35, ease: RISE}), %.3f);' % (n, c["s"]))
+            # grows from its own bottom edge: a rise from below would dip under
+            # y 1520 for a few frames (reel 41's render check caught it)
+            L.append('  tl.fromTo("#cap%d .box", {opacity: 0, scale: .94, transformOrigin: "50%% 100%%"}, '
+                     'X({opacity: 1, scale: 1, duration: .35, ease: RISE}), %.3f);' % (n, c["s"]))
             if c["key"] is not None:
                 ks = c["words"][c["key"]]["s"]
                 L.append('  tl.fromTo("#cap%d .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, '
