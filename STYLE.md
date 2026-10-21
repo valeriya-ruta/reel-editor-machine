@@ -7,6 +7,84 @@ contract: what to build against, and what her machine will tolerate.
 
 ---
 
+## 00. Google style + Excalidraw sketches (her spec, 2026-10-21) — reels 41+
+
+Her ask with the 2026-10-21 batch: *"change the style a little bit, maybe not
+dramatically, but at least make it lighter"*, then this spec. **It wins over §0
+(refined glass), §2b (captions) and §2c (takeovers) for every reel from 41 on.**
+The approved reference is her 4-layer mock, the artifact **«Reel Layer States»**
+(claude.ai/artifact/8goY2j72LvmTdwND9mdvux): keep its motion and timing feel,
+with the changes below.
+
+**1 · No-go zones** — no text, captions or key graphics; background fills and
+panels may extend into them.
+- top y 0–270 · bottom y 1536–1920 (username, caption, music, progress bar) ·
+  right action column x 900–1080 × y 940–1536 · left edge x 0–90, full height.
+- The feed/grid preview crops 240 px off top and bottom (3:4): on the cover
+  frame the hook sits inside y 240–1680.
+- Safe content box ≈ 840 × 1350, centred (top buffer ~250, bottom ~320–450).
+
+**2 · Subtitles** — phrase chunks, one or two lines (the mock: «Вона кидала
+відео в [Gemini],»), not word-by-word.
+- Band: centred, box bottom ≤ y 1520, top ≈ y 1400; max width 720, never past x 900.
+- White box `rgba(255,255,255,.94)`, radius 28, padding 16/30, Google Sans 500
+  54 px, `#241919`, shadow `0 2px 10px rgba(36,25,25,.10)`. The key word sits in
+  a pill: `#7A1424`, white text, spring pop-in.
+- Half-screen layer: never in the bottom zone. Directly under the chin if the
+  chin is at or above ≈ y 1380 at that moment; otherwise on the white panel above
+  her head (box bottom ≥ 40 px above the hair, never above y 270).
+
+**3 · Layers** (person matte = her cut-out, frame-accurate)
+1. **Above me** — cards, chips, pills, the CTA, all inside the safe area. Cards
+   `#FFFFFF`, radius 40, shadow `0 1px 3px rgba(36,25,25,.10), 0 10px 30px
+   rgba(36,25,25,.10)`. Chips radius 16, 2 px border `#DEBFBF`, fill `#FFF8F7`.
+2. **Behind me** (masked) — big words, Google Sans 700, `#7A1424`, 240–300 px,
+   letter-spacing −0.04em, top at y ≥ 290. Readable: her head may cover at most
+   the bottom ~25 % of the lowest line (the mock's «чат» was hidden too much).
+3. **Half screen** — a white panel from the top to y 1240 slides in (0.85 s,
+   `cubic-bezier(.65,0,.25,1)`) while the whole video (plate + matte) pushes down
+   330 px, so she is cut at the shoulders and her head matte overlaps the panel
+   edge. Both reverse on exit. Panel content is Excalidraw explanation, between
+   y 290 and 40 px above the hair.
+4. **Full screen** — white slides up from the bottom over everything, head
+   included. Only for big explanation / section moments. **Never the CTA.**
+5. **CTA** — always in the above-me layer (card or pill in the safe area) with
+   her visible.
+
+**4 · Removed** — every star / starburst / cookie / flower / morphing Material
+shape. None anywhere.
+
+**5 · Excalidraw sketches** — only for explanations and pointer doodles
+(arrows, circles, underlines, boxes).
+- rough.js, sloppier than the mock: roughness 2.2–2.6, bowing 2.5, stroke 4–5 px,
+  multi-stroke on, slight overshoot at line ends.
+- Rectangles are rough *rounded* paths, radius 24–32.
+- Ink `#1E1E1E`, emphasis `#7A1424`, hachure fill `#F2C7CA` (gap 14–18, angle
+  −41, weight 2.5).
+- Handwritten labels in Pangolin 44–56 px (Excalifont only if it renders
+  Ukrainian correctly).
+- Draw-on: each stroke reveals in 0.6–0.8 s, in sequence; a box's label fades in
+  after its box.
+
+**6 · Colour and type** (Material 3, seeded from `#7A1424`)
+- primary `#7A1424`, on-primary `#FFFFFF`, surface `#FFFFFF`,
+  surface-container-low `#FFF0F0`, outline-variant `#DEBFBF`, on-surface
+  `#241919`, on-surface-variant `#574142`.
+- White and dark red only — no blue, no other hue.
+- UI and captions in **Google Sans** (Ukrainian Cyrillic). Not Google Sans Flex —
+  no Cyrillic.
+
+**7 · Motion** (unchanged from the mock)
+- Pops 0.5–0.6 s `cubic-bezier(.34,1.56,.64,1)` · rise-ins 0.7 s
+  `cubic-bezier(.2,.9,.25,1)` · panel and full-screen slides 0.85 s
+  `cubic-bezier(.65,0,.25,1)`.
+
+Still in force from below: spelling from her script (§2), a graphic lands on
+its word and never outstays its sentence (§4, §4a), every object nameable, no
+invented stats, proof is a screenshot, her closeups are comedy (NO_PAINT).
+
+---
+
 ## 0. The look — refined glass (locked 2026-09-28)
 
 Her brief: the reels were *"good and smooth"* but visually lacked *"refinement"* —
