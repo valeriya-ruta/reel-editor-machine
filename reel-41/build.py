@@ -164,8 +164,8 @@ F.append(u''.join(u'''
           <span style="display:block;margin-top:24px;height:84px;border-radius:18px;background:#FFF0F0"></span>
         </div>''' % (i, x, y, r) for i, (x, y, r) in enumerate(((150, 330, -6), (415, 300, 2), (680, 330, 7)))))
 B.append(u'''
-        <div id="bw1" class="big hid" style="top:300px; font-size:240px">дизайн-</div>
-        <div id="bw2" class="big hid" style="top:516px; font-size:240px">система</div>''')
+        <div id="bw1" class="big hid" style="top:320px; font-size:240px">дизайн-</div>
+        <div id="bw2" class="big hid" style="top:536px; font-size:240px">система</div>''')
 g.matte("design", round(m0, 3), round(m1 - m0 + 0.5, 3))
 js(u'''
   pop("#b4s0", %.3f); pop("#b4s1", %.3f); pop("#b4s2", %.3f);
@@ -352,7 +352,7 @@ BLACKOUT.append((S(u"то", 95.4) - 0.05, DUR))     # the pill says it
 for i, (a, b) in enumerate(HALF):
     g.matte("half%d" % (i + 1), round(a - 0.1, 3), round(b - a + 1.2, 3))
     js("  half(%.3f, %.3f);" % (a, b))
-    PLACE.append((a + 0.4, b + 0.2, "bottom", 1010))
+    PLACE.append((a + 0.4, b + 0.2, "bottom", 980))
 
 
 def main():

@@ -62,12 +62,12 @@ Ruta, never ask her anything**. Truly blocked → say so in your report and stop
   x 90–990, centred and wide. Over her chest only if it truly won't fit above.
 - **Captions**: automatic phrase chunks with a key-word pill (`g.chunks`).
   Default bottom y 1520. During a half screen, `PLACE` puts them on the panel
-  (bottom 1010) — reel-41's loop does it for every `HALF` span.
+  (bottom **980** — her hair rises to ≈ y 1035 when pushed down, and the spec wants ≥ 40 px of air) — reel-41's loop does it for every `HALF` span.
 - **Half screen** (`HALF.append((t0, t1))` + sketches in `#skP`): the explanation
   layer. Sketch zone on the panel: **y 290–820**. **At most two per reel, each
   ≤ 12 s** — every half-screen second costs a matte (~1 s/frame CPU).
 - **Behind me** (`B` + `g.matte`): big words, Google Sans 700, 240 px, top ≥ 290,
-  two lines max at line-height 0.9 (her head may cover ≤ 25 % of the lower line).
+  two lines max at line-height 0.9, first line top ≈ 320 so her hair just overlaps the lower line (≤ 25 % covered — and visibly > 0, or it doesn't read as behind).
   **At most one per reel, ≤ 4 s.**
 - **Full screen** (`full(t0, t1)` + `#cover` content): only for a big
   explanation / section moment. **Never the CTA.** Zero or one per reel.

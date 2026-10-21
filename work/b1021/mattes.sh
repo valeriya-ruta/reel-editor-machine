@@ -17,7 +17,7 @@ PY
     # the progress bar goes to a log, only the summary line comes back
     mkdir -p work/r$N/mattelog
     python3 tools/matte.py "reel-$N" "$a" "$b" "$name" < /dev/null > "work/r$N/mattelog/$name.log" 2>&1
-    tr '\r' '\n' < "work/r$N/mattelog/$name.log" | grep -E "^Removed|! asked|failed" | tail -2
+    tr '\r' '\n' < "work/r$N/mattelog/$name.log" | grep -E "Removed background|! asked|failed" | tail -2
   done
 done
 echo "MATTES DONE"
