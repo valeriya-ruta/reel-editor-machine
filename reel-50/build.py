@@ -238,7 +238,7 @@ js(u'''
   ["ck", "ckt", "mh", "hh", "ckl", "a1", "ch1", "ch2", "ok1", "ok2", "a2", "tk", "tkl", "tr", "as1", "as2"]
     .forEach(function (n) { erase(n, %.3f); });
   out("#pig, #ptg", %.3f);
-''' % (t_kozh - 0.5, t_kozh - 0.05, t_kozh + 0.05, t_kozh + 0.1, t_kil, t_god, t_god + 0.3, t_god - 0.1,
+''' % (t_kozh - 0.5, t_kozh - 0.05, t_kozh + 0.05, t_kozh + 0.1, t_kil, t_god, t_god + 0.3, t_kozh,
        t_perev - 0.15, t_chat - 0.45, t_ig + 0.05, t_ig, t_tg, t_nich2 - 0.05, t_prop,
        t_sam - 0.35, t_stv - 0.05, t_zad - 0.1, t_zad - 0.25, t_meni - 0.05, t_kom - 0.05, h1, h1))
 g.sfx("whoosh-short", h0); g.sfx("click-soft", t_kil); g.sfx("pop", t_ig); g.sfx("click-soft", t_nich2)
