@@ -82,6 +82,11 @@ js(u'''
     var x2 = cx + w / 2 * Math.cos(a1), y2 = cy + h / 2 * Math.sin(a1);
     headAt(s, x2, y2, Math.atan2(h / 2 * Math.cos(a1), -w / 2 * Math.sin(a1)), oo);
   }
+  function halo(name) {        // a hand label on her plate gets a white sticker edge
+    [].forEach.call(SK[name].g.querySelectorAll("text"), function (t) {
+      t.style.paintOrder = "stroke"; t.style.stroke = "#FFFFFF"; t.style.strokeWidth = "12px";
+      t.style.strokeLinejoin = "round"; });
+  }
   function parrow(name, pts, o) {
     var s = SK[name], oo = opt(o, (o && o.seed) || 67);
     _add(s, s.rc.curve(pts, oo));
@@ -92,7 +97,8 @@ js(u'''
 
 # 1 · ABOVE — «+» on «плюсів», «AI-система», «налаштовую я» -> her --------------
 t_plus, t_ai = S(u"плюсів", 1.65), S(u"AI-системи,", 2.11)
-t_nal, t_ya = S(u"налаштовую", 3.21), E(u"я,", 4.01)
+t_tak, t_nal = S(u"так", 2.95), S(u"налаштовую", 3.21)
+t_out1 = S(u"що", 4.92) - 0.42          # holds through «це те,», clear before the panel
 F.append(u'''
         <div id="b1p" class="hid" style="position:absolute; left:465px; top:350px; width:150px; height:150px;
              border-radius:50%%; background:#7A1424; color:#fff; display:flex; align-items:center;
@@ -103,16 +109,17 @@ F.append(u'''
              font-weight:700; font-size:60px; letter-spacing:-0.02em">
           <span style="color:#7A1424; display:flex">%s</span>AI-система</div>''' % mark("claude", 56))
 SKF.append(u'''
+  sketch("h1t", "skF"); label("h1t", 640, 598, "налаштовую я", {size: 52, color: "#7A1424", anchor: "end"}); halo("h1t");
+  draw("h1t", %.3f);
   sketch("h1", "skF"); parrow("h1", [[700, 512], [690, 590], [615, 668]], {stroke: "#7A1424", strokeWidth: 5, seed: 3});
-  label("h1", 655, 600, "налаштовую я", {size: 46, color: "#7A1424", anchor: "end"});
   draw("h1", %.3f, .5);
-  erase("h1", %.3f);''' % (t_nal - 0.15, t_ya + 0.12))
+  erase("h1t", %.3f); erase("h1", %.3f);''' % (t_tak - 0.05, t_nal - 0.1, t_out1, t_out1))
 js(u'''
   pop("#b1p", %.3f, .6);
   tl.to("#b1p", {x: -260, duration: .5, ease: RISE}, %.3f);
   pop("#b1a", %.3f);
   sink("#b1p, #b1a", %.3f);
-''' % (t_plus - 0.2, t_ai - 0.15, t_ai - 0.05, t_ya + 0.12))
+''' % (t_plus - 0.2, t_ai - 0.15, t_ai - 0.05, t_out1))
 g.sfx("pop", t_plus - 0.2); g.sfx("pop", t_ai - 0.05)
 
 # 2 · HALF — the loop, node by node ------------------------------------------
@@ -126,7 +133,7 @@ t_dali, t_vch = S(u"і далі", 14.98), S(u"вчиться.", 16.24)
 P.append(u'''<svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
         <div id="pm1" class="hid" style="position:absolute; left:436px; top:334px; color:#7A1424">%s</div>
         <div id="pm3" class="hid" style="position:absolute; left:136px; top:655px; color:#7A1424">%s</div>
-        <span id="pw" class="chip hid" style="position:absolute; left:786px; top:300px; font-size:30px;
+        <span id="pw" class="chip hid" style="position:absolute; left:766px; top:298px; font-size:34px;
               padding:10px 18px; gap:10px"><b style="font-weight:700; color:#7A1424">w.</b>Windsor</span>'''
          % (mark("instagram", 52), mark("claude", 50)))
 js(u'''
@@ -224,7 +231,7 @@ BLACKOUT.append((t_smm - 0.05, t_smm + 0.05))     # the chips say «СММниц
 # 5 · BEHIND — «24/7» --------------------------------------------------------
 m0, m1 = t_kom + 0.33, S(u"монтує,", 30.2) - 0.25
 B.append(u'''
-        <div id="bw" class="big hid" style="top:536px; font-size:240px">24/7</div>''')
+        <div id="bw" class="big hid" style="top:572px; font-size:240px">24/7</div>''')
 g.matte("bw", round(m0 - 0.05, 3), round(m1 - m0 + 0.5, 3))
 js(u'''
   rise("#bw", %.3f, 80);
@@ -262,7 +269,7 @@ F.append(u'''
         </div>''')
 SKF.append(u'''
   sketch("a7", "skF"); parrow("a7", [[800, 580], [850, 690], [872, 840]], {stroke: "#7A1424", strokeWidth: 5, seed: 47});
-  label("a7", 890, 905, "сюди!", {size: 52, color: "#7A1424"});
+  label("a7", 890, 905, "сюди!", {size: 52, color: "#7A1424"}); halo("a7");
   draw("a7", %.3f, .5);''' % (t_plus2 - 0.2))
 js(u'''
   pop("#b7", %.3f, .6);
