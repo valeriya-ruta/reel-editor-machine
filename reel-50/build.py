@@ -40,16 +40,17 @@ g = G(dur=DUR, reel=NN)
 # whisper's spelling of what she plainly said -> her word (re-heard on the plate)
 FIX = {
     u"Claude": u"Мій Клод",          # «Міклот» on the plate: «Мій Клод»
+    u"коли я йому": u"коли йому",    # no «я» on the plate (3 of 4 hearings)
     u"пишу.": u"пишу,",
     u"У нього": u"у нього",
     u"сорюю": u"створює",            # fast «створює»
-    u"виконуються": u"виконується",  # she says the singular (3 hearings agree)
+    u"виконуються": u"виконується",  # she says the singular (every unprompted hearing)
     u"Це": u"це",
     u"відкритим": u"відкритим.",
     (u"він", 29.9): u"Він",
     u"сам,": u"сам.",
     u"наприклад": u"Наприклад,",
-    u"монтаж": u"монтаж",
+    u"монтаж": u"монтаж рілсів.",    # the cut clips «рілсів» short; prompted pass hears it
 }
 
 
