@@ -22,8 +22,8 @@ username (a comment CTA would point lower-right).
 | time | layer | what |
 |---|---|---|
 | 00:00.6–04.2 | above | card: Claude mark · «Claude» · chip «працює» (1.3); empty composer «Напиши повідомлення…» (2.8), a rough outline (ink, `fill: false`) round it on «нічого» (3.3) |
-| 00:05.3–06.8 | behind | «рутини», 250 px, white, her hair over its lower edge (matte `rut`) |
-| 00:06.9–14.8 | half 1 | clock draws on «кожні», hour hand jumps 3→6→9→12 on «кілька годин»; label «кожні кілька годин»; arrow → two chat bubbles, Instagram (10.0) / Telegram (10.5) marks; red ticks on «нічого не пропустила»; arrow → checklist «задачі» (3 checkboxes + lines), «мені» / «команді» written on the rows on their words |
+| 00:05.3–07.1 | behind | «рутини», 240 px, top 530, white, her hair over ~25 % of its lower edge (matte `rut`) |
+| 00:06.9–14.8 | half 1 | clock draws on «кожні», hour hand jumps 4→7→10→1 on «кілька годин»; label «кожні кілька годин»; arrow → two chat bubbles, Instagram (10.0) / Telegram (10.5) marks; red ticks on «нічого не пропустила»; arrow → checklist «задачі» (3 checkboxes + lines), «мені» / «команді» written on the rows on their words |
 | 00:15.2–19.6 | above | two cards: «Рутина · раз на тиждень» → «Звіт по контенту», bars grow (shape only) on «звіт»; «Одразу · Ідеї», three idea rows (bulb + line) on «ідеї», chip «наступний тиждень» |
 | 00:19.9–22.3 | above | alarm clock (sticker face + two bells) draws, rings (wobble + ring marks) on «прокидаюсь»; card «Вже готове»: задачі мені і команді / звіт по контенту / ідеї на тиждень tick on «вже · все · лежить» |
 | 00:23.9–26.5 | above | pill «Claude» on «Клод», chips чати / задачі / звіти on «багато дій», a cloud sticker draws round them, landing on «хмарі» |

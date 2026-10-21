@@ -189,7 +189,7 @@ js(u'''
   pop("#b3k", %.3f); pop("#b3w", %.3f);
   // a ring round the chip, on the card: an outline only (fill: false), or the
   // kit's over-the-footage sticker fill would paint the chip over in white
-  sketch("c3", "skF"); ell("c3", 682, 606, 340, 100, {stroke: "#7A1424", strokeWidth: 5, seed: 23, fill: false});
+  sketch("c3", "skF"); ell("c3", 682, 600, 340, 92, {stroke: "#7A1424", strokeWidth: 5, seed: 23, fill: false});
   draw("c3", %.3f, .55);
   tl.set("#b3w", {className: "chip on"}, %.3f);
   pop("#b3q1", %.3f); pop("#b3q2", %.3f); pop("#b3q3", %.3f);
@@ -226,7 +226,7 @@ js(u'''
   sketch("p1", "skP");
   %s
   draw("p1", %.3f, .7);
-  sketch("p2", "skP"); box("p2", 262, 296, 112, 98, {seed: 33, r: 28}); label("p2", 318, 366, "?", {size: 62, color: "#7A1424"});
+  sketch("p2", "skP"); box("p2", 262, 296, 112, 98, {seed: 33, r: 28}); label("p2", 318, 364, "?", {size: 56, color: "#7A1424"});
   draw("p2", %.3f, .45);
   sketch("p3", "skP"); ell("p3", 190, 478, 260, 310, {stroke: "#7A1424", strokeWidth: 5, seed: 35});
   draw("p3", %.3f, .5);
@@ -300,7 +300,7 @@ t_sy, t_vyg, t_hol = S(u"сиджу", 29.23), S(u"вигадую", 29.71), S(u"�
 js(u'''
   sketch("cl6", "skF");
   blob("cl6", "M400 560 C330 560 320 480 395 468 C390 400 480 375 525 420 C555 350 680 355 700 425 C770 400 840 455 805 515 C860 540 830 600 760 590 C730 625 640 620 615 590 C580 625 470 620 450 585 C430 590 410 580 400 560 Z", [330, 365, 520, 255], {seed: 61});
-  label("cl6", 590, 520, "?", {size: 72});
+  label("cl6", 590, 516, "?", {size: 56});
   ell("cl6", 560, 640, 46, 34, {seed: 63}); ell("cl6", 540, 688, 26, 20, {seed: 65});
   draw("cl6", %.3f, .45);
   sketch("x6", "skF"); ln("x6", 390, 390, 830, 620, {strokeWidth: 7, seed: 67});
@@ -330,15 +330,18 @@ js(u'''
   sketch("r4", "skP"); box("r4", 405, 680, 270, 130, {seed: 81}); label("r4", 540, 760, "конкуренти", {size: 44});
   arrow("r4", 540, 668, 540, 512, {seed: 83, bend: .08});
   draw("r4", %.3f, .45);
+  // «дзвінки» is the last word before the panel leaves: its arrow draws with
+  // the box, not after it, or the arrowhead only lands as the panel goes
+  sketch("r5a", "skP"); arrow("r5a", 830, 668, 680, 508, {seed: 87, stroke: "#7A1424"});
+  draw("r5a", %.3f, .45);
   sketch("r5", "skP"); box("r5", 715, 680, 270, 130, {seed: 85, stroke: "#7A1424", strokeWidth: 5.5, fill: true});
   label("r5", 875, 762, "дзвінки", {size: 50, color: "#7A1424"});
-  arrow("r5", 830, 668, 680, 508, {seed: 87, stroke: "#7A1424"});
   draw("r5", %.3f, .45);
   fadein("#p7f", %.3f);
-  erase("r1", %.3f); erase("r2", %.3f); erase("r3", %.3f); erase("r4", %.3f); erase("r5", %.3f);
+  erase("r1", %.3f); erase("r2", %.3f); erase("r3", %.3f); erase("r4", %.3f); erase("r5", %.3f); erase("r5a", %.3f);
   tl.to("#p7f", {autoAlpha: 0, duration: .3}, %.3f);
-''' % (t_rut - 0.35, t_tyzh, t_kont - 0.35, t_konk - 0.35, t_dzv - 0.4, t_dzv + 0.1,
-       h3, h3, h3, h3, h3, h3))
+''' % (t_rut - 0.35, t_tyzh, t_kont - 0.35, t_konk - 0.35, t_dzv - 0.5, t_dzv - 0.4, t_dzv + 0.1,
+       h3, h3, h3, h3, h3, h3, h3))
 g.sfx("whoosh-short", h2); g.sfx("whoosh-short", h3)
 g.sfx("click-soft", t_konk)
 g.sfx("pop", t_dzv)

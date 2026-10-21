@@ -162,6 +162,7 @@ js(u'''
 ''' % (t_kons, t_same - 0.4, t_same - 0.05, t_dva - 0.1, t_dva, t_800, t_dor - 0.1,
        S(u"І", 14.55) - 0.25, S(u"І", 14.55) - 0.25))
 g.sfx("pop", t_kons); g.sfx("pop", t_dva); g.sfx("kaching", t_800)
+BLACKOUT.append((t_kons - 0.05, S(u"з", 8.6) - 0.01))               # the pill says «консультація»
 BLACKOUT.append((t_800 - 0.05, E(u"місяць,", 12.93) + 0.05))      # the pill says «€800 / місяць»
 
 # 3 · BEHIND — «навіщо / €1300?» ----------------------------------------------
@@ -201,6 +202,7 @@ js(u'''
   sink("#b4", %.3f);
 ''' % (t_cyf - 0.2, t_bil2, t_odn, S(u"Тобто", 23.15) - 0.3))
 g.sfx("pop", t_cyf - 0.2); g.sfx("click-soft", t_odn)
+BLACKOUT.append((t_odn - 0.05, S(u"Тобто", 23.15) - 0.01))         # the chip says «одноразова інвестиція»
 
 # 5 · ABOVE — six months of 1300, struck out but the first; the rest just work -
 t_tob, t_shch, t_13b = S(u"Тобто", 23.15), S(u"щомісяця", 24.03), S(u"1300,", 24.65)

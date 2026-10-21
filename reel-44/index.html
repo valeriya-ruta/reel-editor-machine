@@ -798,7 +798,7 @@
   pop("#b3k", 8.192); pop("#b3w", 9.272);
   // a ring round the chip, on the card: an outline only (fill: false), or the
   // kit's over-the-footage sticker fill would paint the chip over in white
-  sketch("c3", "skF"); ell("c3", 682, 606, 340, 100, {stroke: "#7A1424", strokeWidth: 5, seed: 23, fill: false});
+  sketch("c3", "skF"); ell("c3", 682, 600, 340, 92, {stroke: "#7A1424", strokeWidth: 5, seed: 23, fill: false});
   draw("c3", 11.282, .55);
   tl.set("#b3w", {className: "chip on"}, 11.632);
   pop("#b3q1", 12.554); pop("#b3q2", 12.914); pop("#b3q3", 13.314);
@@ -810,7 +810,7 @@
   sketch("p1", "skP");
   blob("p1", "M148 452 a42 42 0 1 0 84 0 a42 42 0 1 0 -84 0 M103 606 C103 508 277 508 277 606", [103, 410, 174, 196], {seed: 31});
   draw("p1", 16.921, .7);
-  sketch("p2", "skP"); box("p2", 262, 296, 112, 98, {seed: 33, r: 28}); label("p2", 318, 366, "?", {size: 62, color: "#7A1424"});
+  sketch("p2", "skP"); box("p2", 262, 296, 112, 98, {seed: 33, r: 28}); label("p2", 318, 364, "?", {size: 56, color: "#7A1424"});
   draw("p2", 17.961, .45);
   sketch("p3", "skP"); ell("p3", 190, 478, 260, 310, {stroke: "#7A1424", strokeWidth: 5, seed: 35});
   draw("p3", 19.531, .5);
@@ -840,7 +840,7 @@
 
   sketch("cl6", "skF");
   blob("cl6", "M400 560 C330 560 320 480 395 468 C390 400 480 375 525 420 C555 350 680 355 700 425 C770 400 840 455 805 515 C860 540 830 600 760 590 C730 625 640 620 615 590 C580 625 470 620 450 585 C430 590 410 580 400 560 Z", [330, 365, 520, 255], {seed: 61});
-  label("cl6", 590, 520, "?", {size: 72});
+  label("cl6", 590, 516, "?", {size: 56});
   ell("cl6", 560, 640, 46, 34, {seed: 63}); ell("cl6", 540, 688, 26, 20, {seed: 65});
   draw("cl6", 29.055, .45);
   sketch("x6", "skF"); ln("x6", 390, 390, 830, 620, {strokeWidth: 7, seed: 67});
@@ -861,12 +861,15 @@
   sketch("r4", "skP"); box("r4", 405, 680, 270, 130, {seed: 81}); label("r4", 540, 760, "конкуренти", {size: 44});
   arrow("r4", 540, 668, 540, 512, {seed: 83, bend: .08});
   draw("r4", 34.546, .45);
+  // «дзвінки» is the last word before the panel leaves: its arrow draws with
+  // the box, not after it, or the arrowhead only lands as the panel goes
+  sketch("r5a", "skP"); arrow("r5a", 830, 668, 680, 508, {seed: 87, stroke: "#7A1424"});
+  draw("r5a", 35.454, .45);
   sketch("r5", "skP"); box("r5", 715, 680, 270, 130, {seed: 85, stroke: "#7A1424", strokeWidth: 5.5, fill: true});
   label("r5", 875, 762, "дзвінки", {size: 50, color: "#7A1424"});
-  arrow("r5", 830, 668, 680, 508, {seed: 87, stroke: "#7A1424"});
   draw("r5", 35.554, .45);
   fadein("#p7f", 36.054);
-  erase("r1", 36.500); erase("r2", 36.500); erase("r3", 36.500); erase("r4", 36.500); erase("r5", 36.500);
+  erase("r1", 36.500); erase("r2", 36.500); erase("r3", 36.500); erase("r4", 36.500); erase("r5", 36.500); erase("r5a", 36.500);
   tl.to("#p7f", {autoAlpha: 0, duration: .3}, 36.500);
 
 

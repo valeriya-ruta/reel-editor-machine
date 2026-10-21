@@ -153,7 +153,8 @@ BLACKOUT.append((S(u"Мій", 0.8) - 0.03, S(u"на", 1.8) - 0.03))      # the c
 
 # 2 · BEHIND — «рутини» -------------------------------------------------------
 t_rut, e_rut = S(u"рутини.", 5.92), E(u"рутини.", 5.92)
-B.append(u'        <div id="bw" class="big hid" style="top:560px; font-size:250px">рутини</div>')
+# 240 px, x-height ≈ y 592–707: her hair (top ≈ 680–700 on the word) covers ~25 % of it
+B.append(u'        <div id="bw" class="big hid" style="top:530px; font-size:240px">рутини</div>')
 g.matte("rut", round(t_rut - 0.75, 3), round(e_rut - t_rut + 1.1, 3))
 js(u'''
   rise("#bw", %.3f); sink("#bw", %.3f);
@@ -182,11 +183,11 @@ js(u'''
   draw("ckt", %.3f, .2);
   sketch("mh", "skP"); ln("mh", 220, 410, 220, 340, {seed: 8, strokeWidth: 5});
   sketch("hh", "skP"); ln("hh", 220, 410, 220, 366, {seed: 9, strokeWidth: 7});
-  gsap.set("#sk-hh", {rotation: 90, svgOrigin: "220 410"});
+  gsap.set("#sk-hh", {rotation: 120, svgOrigin: "220 410"});
   draw("mh", %.3f, .3); draw("hh", %.3f, .25);
-  tl.to("#sk-hh", {rotation: 180, svgOrigin: "220 410", duration: .22, ease: POP}, %.3f);
-  tl.to("#sk-hh", {rotation: 270, svgOrigin: "220 410", duration: .22, ease: POP}, %.3f);
-  tl.to("#sk-hh", {rotation: 360, svgOrigin: "220 410", duration: .22, ease: POP}, %.3f);
+  tl.to("#sk-hh", {rotation: 210, svgOrigin: "220 410", duration: .22, ease: POP}, %.3f);
+  tl.to("#sk-hh", {rotation: 300, svgOrigin: "220 410", duration: .22, ease: POP}, %.3f);
+  tl.to("#sk-hh", {rotation: 390, svgOrigin: "220 410", duration: .22, ease: POP}, %.3f);
   sketch("ckl", "skP"); label("ckl", 220, 572, "кожні кілька", {size: 42}); label("ckl", 220, 618, "годин", {size: 42});
   draw("ckl", %.3f);
 
@@ -240,17 +241,17 @@ bulb = (u'<svg width="30" height="40" viewBox="0 0 30 40" style="flex:none"><pat
         u'fill="#7A1424"/></svg>')
 F.append(u'''
         <div id="b4a" class="card hid" style="left:96px; top:300px; width:430px; padding:30px 32px;">
-          <div class="row" style="justify-content:space-between; margin-bottom:16px">
-            <span class="lbl" style="margin:0">Рутина</span>
-            <span class="chip hid" id="b4w" style="font-size:28px; padding:8px 16px; gap:10px"><i></i>раз на тиждень</span>
+          <span class="lbl" style="margin-bottom:12px">Рутина</span>
+          <div style="display:flex; margin-bottom:16px">
+            <span class="chip hid" id="b4w" style="font-size:28px; padding:8px 16px; gap:10px; white-space:nowrap"><i></i>раз на тиждень</span>
           </div>
           <span class="ttl hid" id="b4t" style="font-size:40px">Звіт по контенту</span>
           <div style="display:flex; align-items:flex-end; gap:14px; height:120px; margin-top:22px">%s</div>
         </div>
         <div id="b4b" class="card hid" style="left:554px; top:300px; width:430px; padding:30px 32px;">
-          <div class="row" style="justify-content:space-between; margin-bottom:16px">
-            <span class="lbl" style="margin:0">Одразу</span>
-            <span class="chip hid" id="b4n" style="font-size:28px; padding:8px 16px; gap:10px"><i></i>наступний тиждень</span>
+          <span class="lbl" style="margin-bottom:12px">Одразу</span>
+          <div style="display:flex; margin-bottom:16px">
+            <span class="chip hid" id="b4n" style="font-size:28px; padding:8px 16px; gap:10px; white-space:nowrap"><i></i>наступний тиждень</span>
           </div>
           <span class="ttl" style="font-size:40px">Ідеї</span>
           %s
@@ -258,7 +259,7 @@ F.append(u'''
     u"".join(u'<span class="bar" style="flex:1; height:%d%%; border-radius:10px; background:%s; display:block"></span>'
              % (h, "#7A1424" if i == len(bars) - 1 else "#F2C7CA") for i, h in enumerate(bars)),
     u"".join(u'<div class="row hid" id="b4i%d" style="margin-top:%dpx">%s<span class="line" style="flex:none; width:%dpx"></span></div>'
-             % (i, 22 if i == 0 else 16, bulb, w) for i, w in enumerate((290, 230, 260)))))
+             % (i, 18 if i == 0 else 12, bulb, w) for i, w in enumerate((290, 230, 260)))))
 js(u'''
   rise("#b4a", %.3f); pop("#b4w", %.3f, .5);
   rise("#b4t", %.3f, 24);

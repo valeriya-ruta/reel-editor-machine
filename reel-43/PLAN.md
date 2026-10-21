@@ -31,7 +31,7 @@ unchanged (four ticks) → all the work: the unreliable SMM out, Claude in → C
 
 Captions: her old word rail (kit, from `g.chunks`), ink + above her head on the
 half screen. BLACKOUT: «400 євро на місяць за один акаунт,» (the card says it),
-«800 євро на місяць,» (pill), «а навіщо» and «1300,» (the behind words — «мені система за»
+«консультацію» (pill), «одноразова інвестиція.» (chip), «800 євро на місяць,» (pill), «а навіщо» and «1300,» (the behind words — «мені система за»
 stay captioned, the big type doesn't say them), CTA from «то пиши».
 Sketches over the footage (`#skF`) carry no colour of their own: the kit makes closed
 shapes white stickers and strokes / free labels ink with a white halo. Red only on
