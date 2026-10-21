@@ -149,12 +149,12 @@ t_ok2, t_sys2 = S(u"окремі", 12.45), S(u"системи.", 12.87)
 t_kozh = S(u"кожен", 13.82)
 t_skil, t_tov, t_diz = S(u"скіл", 15.5), S(u"tone of voice,", 16.91), S(u"дизайн-систему.", 17.93)
 t_voni = S(u"І вони,", 19.19)
-ROWS = [("r1", 490, u"скіл сценариста", t_skil - 0.45), ("r2", 600, u"tone of voice", t_tov - 0.3),
-        ("r3", 710, u"дизайн-система", t_diz - 0.3)]
+ROWS = [("r1", 480, u"скіл сценариста", t_skil - 0.45), ("r2", 585, u"tone of voice", t_tov - 0.3),
+        ("r3", 690, u"дизайн-система", t_diz - 0.3)]
 rows_js = u"".join(u'''
-  sketch("%sL", "skP"); box("%sL", 110, %d, 360, 90, {seed: %d}); label("%sL", 290, %d, "%s", {size: 42}); draw("%sL", %.3f, .5);
-  sketch("%sR", "skP"); box("%sR", 610, %d, 360, 90, {seed: %d}); label("%sR", 790, %d, "%s", {size: 42}); draw("%sR", %.3f, .5);'''
-                   % (n, n, y, 30 + i * 4, n, y + 58, t, n, a, n, n, y, 32 + i * 4, n, y + 58, t, n, a + 0.3)
+  sketch("%sL", "skP"); box("%sL", 110, %d, 360, 85, {seed: %d}); label("%sL", 290, %d, "%s", {size: 42}); draw("%sL", %.3f, .5);
+  sketch("%sR", "skP"); box("%sR", 610, %d, 360, 85, {seed: %d}); label("%sR", 790, %d, "%s", {size: 42}); draw("%sR", %.3f, .5);'''
+                   % (n, n, y, 30 + i * 4, n, y + 56, t, n, a, n, n, y, 32 + i * 4, n, y + 56, t, n, a + 0.3)
                    for i, (n, y, t, a) in enumerate(ROWS))
 names1 = ["hL", "hR", "wall", "dn"] + [n + s for n, _, _, _ in ROWS for s in "LR"] + ["ech"]
 js(u'''
@@ -162,13 +162,13 @@ js(u'''
   draw("hL", %.3f, .55);
   sketch("hR", "skP"); box("hR", 610, 300, 360, 100, {seed: 25, fill: true}); label("hR", 790, 366, "школа", {size: 50});
   draw("hR", %.3f, .55);
-  sketch("wall", "skP"); ln("wall", 540, 292, 538, 812, {stroke: "#7A1424", strokeWidth: 6, seed: 27});
+  sketch("wall", "skP"); ln("wall", 540, 292, 538, 785, {stroke: "#7A1424", strokeWidth: 6, seed: 27});
   draw("wall", %.3f, .55);
-  sketch("dn", "skP"); arrow("dn", 290, 410, 290, 478, {seed: 28, bend: 0}); arrow("dn", 790, 410, 790, 478, {seed: 29, bend: 0});
+  sketch("dn", "skP"); arrow("dn", 290, 408, 290, 470, {seed: 28, bend: 0}); arrow("dn", 790, 408, 790, 470, {seed: 29, bend: 0});
   draw("dn", %.3f, .35);
 %s
-  sketch("ech", "skP"); arrow("ech", 430, 652, 650, 652, {stroke: "#7A1424", strokeWidth: 5, seed: 41, bend: .28});
-  arrow("ech", 650, 690, 430, 690, {stroke: "#7A1424", strokeWidth: 5, seed: 43, bend: .28});
+  sketch("ech", "skP"); arrow("ech", 430, 625, 650, 625, {stroke: "#7A1424", strokeWidth: 5, seed: 41, bend: .28});
+  arrow("ech", 650, 662, 430, 662, {stroke: "#7A1424", strokeWidth: 5, seed: 43, bend: .28});
   draw("ech", %.3f, .45);
   %s
 ''' % (t_dv2 - 0.1, t_ok2 - 0.1, t_sys2 - 0.25, t_kozh - 0.15, rows_js, t_voni - 0.05,
@@ -212,8 +212,8 @@ t_ce, t_dv3, t_ok3, t_sy3 = S(u"це", 25.83), S(u"дві", 26.2), S(u"окре�
 t_te = S(u"Те", 28.05)
 m0, m1 = t_dv3 - 0.45, t_te + 0.05
 B.append(u'''
-        <div id="bw1" class="big hid" style="top:300px; font-size:240px">дві</div>
-        <div id="bw2" class="big hid" style="top:516px; font-size:240px">окремі</div>''')
+        <div id="bw1" class="big hid" style="top:320px; font-size:240px">дві</div>
+        <div id="bw2" class="big hid" style="top:536px; font-size:240px">окремі</div>''')
 g.matte("big", round(m0, 3), round(m1 - m0, 3))
 js(u'''
   rise("#bw1", %.3f); rise("#bw2", %.3f);
@@ -242,10 +242,10 @@ js(u'''
   sketch("anx", "skP"); ln("anx", 320, 720, 760, 585, {stroke: "#7A1424", strokeWidth: 7, seed: 61});
   draw("anx", %.3f, .35);
   erase("an1", %.3f); erase("an2", %.3f); erase("anx", %.3f);
-  sketch("cR", "skP"); box("cR", 600, 470, 370, 330, {seed: 63}); label("cR", 785, 532, "школа", {size: 48});
+  sketch("cR", "skP"); box("cR", 600, 470, 370, 300, {seed: 63}); label("cR", 785, 530, "школа", {size: 48});
   %s
   draw("cR", %.3f, .4);
-  sketch("cL", "skP"); box("cL", 110, 470, 370, 330, {seed: 65}); label("cL", 295, 532, "особистий блог", {size: 44});
+  sketch("cL", "skP"); box("cL", 110, 470, 370, 300, {seed: 65}); label("cL", 295, 530, "особистий блог", {size: 44});
   %s
   draw("cL", %.3f, .4);
   sketch("ne", "skP"); ln("ne", 512, 622, 570, 620, {stroke: "#7A1424", strokeWidth: 7, seed: 71});
@@ -253,12 +253,12 @@ js(u'''
   ln("ne", 562, 592, 522, 688, {stroke: "#7A1424", strokeWidth: 7, seed: 75});
   draw("ne", %.3f, .3);
   erase("ne", %.3f);
-  sketch("wall2", "skP"); ln("wall2", 540, 452, 538, 815, {stroke: "#7A1424", strokeWidth: 7, seed: 77});
+  sketch("wall2", "skP"); ln("wall2", 540, 452, 538, 782, {stroke: "#7A1424", strokeWidth: 7, seed: 77});
   draw("wall2", %.3f, .5);
   %s
 ''' % (t_rut - 0.3, t_zap - 0.2, t_odyn - 0.3, t_ale2 - 0.05, t_kon1 + 0.3, t_kon1 + 0.3, t_kon1 + 0.3,
-       people("cR", (690, 785, 880), 610), t_kon1 + 0.45,
-       people("cL", (200, 295, 390), 610, u', stroke: "#7A1424", fill: "#F2C7CA", fillStyle: "hachure", '
+       people("cR", (690, 785, 880), 596), t_kon1 + 0.45,
+       people("cL", (200, 295, 390), 596, u', stroke: "#7A1424", fill: "#F2C7CA", fillStyle: "hachure", '
               u'hachureGap: 12, hachureAngle: -41, fillWeight: 2.5', u'stroke: "#7A1424"'), t_kon2 - 0.05,
        t_rizni - 0.2, t_ne - 0.45, t_ne - 0.3, " ".join('erase("%s", %.3f);' % (n, h3) for n in names2)))
 g.sfx("whoosh-short", h2); g.sfx("click-soft", t_odyn - 0.3)
@@ -371,7 +371,7 @@ BLACKOUT.append((t_stav - 0.05, DUR))                   # the pill says it
 for i, (a, b) in enumerate(HALF):
     g.matte("half%d" % (i + 1), round(a - 0.1, 3), round(b - a + 1.2, 3))
     js("  half(%.3f, %.3f);" % (a, b))
-    PLACE.append((a + 0.4, b + 0.2, "bottom", 1010))
+    PLACE.append((a + 0.4, b + 0.2, "bottom", 980))
 
 # ---------------------------------------------------------------- captions
 # phrase breaks by meaning (word start times): add a break / drop the kit's one
