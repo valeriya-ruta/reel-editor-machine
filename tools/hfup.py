@@ -77,7 +77,10 @@ def call(method, url, key=None, body=None, raw=None, headers=None):
 
 def main():
     project = os.path.abspath(sys.argv[1])
-    key = json.load(open(os.path.expanduser("~/.heygen/credentials")))["api_key"]
+    cred = os.path.expanduser("~/.heygen/credentials")
+    # no credentials file in a Claude cloud session: its egress proxy sets the key
+    key = (json.load(open(cred))["api_key"] if os.path.exists(cred)
+           else os.environ.get("HEYGEN_API_KEY", "set-by-proxy"))
     data, n = build_zip(project)
     sha = hashlib.sha256(data).hexdigest()
     print("zip: %d files, %.1f MB" % (n, len(data) / 1e6))

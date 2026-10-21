@@ -28,7 +28,12 @@ API = "https://api.heygen.com"
 
 
 def key():
-    return json.load(open(os.path.expanduser("~/.heygen/credentials")))["api_key"]
+    p = os.path.expanduser("~/.heygen/credentials")
+    if os.path.exists(p):
+        return json.load(open(p))["api_key"]
+    # a Claude cloud session has no credentials file: its egress proxy puts
+    # her real key on every api.heygen.com request
+    return os.environ.get("HEYGEN_API_KEY", "set-by-proxy")
 
 
 def call(method, path, body=None):
