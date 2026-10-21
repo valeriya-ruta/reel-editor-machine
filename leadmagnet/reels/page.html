@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=1080, height=1920"/>
+<script src="assets/gsap.min.js"></script><script src="assets/rough.js"></script>
+<link rel="stylesheet" href="assets/excalifont.css"/><link rel="stylesheet" href="assets/lib.css"/>
+<script src="assets/lib.js"></script>
+<style>
+@font-face{font-family:"PSB";src:url("assets/fonts/ProductSans-Black.woff") format("woff");font-weight:900}
+html,body{width:1080px;height:1920px}
+.clip{width:1080px;height:1920px}
+#plate{object-fit:cover;z-index:1}
+#tk{z-index:10;opacity:0;visibility:hidden}
+#tkin{position:absolute;inset:0}
+.paper{position:absolute;inset:0;background:#fff;background-image:radial-gradient(#d9dbe0 1.1px,transparent 1.2px);background-size:22.74px 22.74px}
+.desk{position:absolute;inset:0;background:linear-gradient(170deg,#f7f5f4 0%%,#eef0f4 60%%,#e8ebf1 100%%)}
+.win{position:absolute;left:0;top:330px;width:1080px;height:828px;overflow:hidden}
+.win video{position:absolute}
+#scrim{position:absolute;left:20px;top:1247px;width:1040px;height:450px;background-image:url("assets/underlay.png");
+  background-size:100%% 100%%;opacity:0;visibility:hidden;z-index:20}
+.cap{position:absolute;left:0;width:1080px;top:1413px;height:118px;line-height:118px;text-align:center;color:#fff;
+  font:900 90px "PSB";letter-spacing:-.015em;white-space:nowrap;opacity:0;visibility:hidden;z-index:21}
+.cap.inv{color:#1a1e27}
+.hook{position:absolute;left:70px;right:70px;top:170px;z-index:30;background:#fff;border-radius:40px;padding:42px 46px;
+  font:700 66px/1.12 "PS";color:#1a1e27;letter-spacing:-.015em;text-wrap:balance;
+  box-shadow:0 30px 80px -20px rgba(20,15,25,.45),0 0 0 1px rgba(0,0,0,.04)}
+.hook .dot{display:inline-block;width:22px;height:22px;border-radius:50%%;background:#a81428;margin-right:20px;transform:translateY(-8px)}
+#cta{z-index:40;opacity:0;visibility:hidden}
+#cta .paper{background-position:0 0}
+.ct1{position:absolute;left:0;right:0;top:500px;text-align:center;font:700 84px "PS";color:#1a1e27}
+.ct2{position:absolute;left:0;right:0;top:690px;text-align:center;font:900 190px/1 "PSB";color:#a81428;letter-spacing:-.02em}
+.ct3{position:absolute;left:90px;right:90px;top:1000px;text-align:center;font:500 56px/1.25 "PS";color:#3c4557}
+#stage{z-index:41}
+#ex,#stage>div[id^="d"]{transform:none!important}
+#flash{z-index:90}
+</style>
+</head><body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="%(D).4f" data-width="1080" data-height="1920">
+  <video id="plate" class="clip" src="%(plate)s" data-start="0" data-duration="%(V).4f" data-media-start="0" muted playsinline></video>
+  <div id="tk" class="clip" data-start="0" data-duration="%(D).4f"><div id="tkin">%(ground)s%(lv)s</div></div>
+  <div id="scrim" data-start="0" data-duration="%(D).4f" class="clip"></div>
+  %(caps)s
+  <div id="hook" class="hook" style="opacity:0"><span class="dot"></span>%(hook)s</div>
+  %(extra)s
+  <div id="cta" class="clip" data-start="0" data-duration="%(D).4f"><div class="paper"></div>%(cta)s</div>
+  <div id="stage" class="clip" data-start="0" data-duration="%(D).4f"><svg id="ex" width="1080" height="1920"></svg></div>
+  <div id="flash" class="clip" data-start="0" data-duration="%(D).4f"></div>
+</div>
+<script>
+window.__timelines = window.__timelines || {};
+const tl = gsap.timeline({ paused: true });
+%(js)s
+tl.set({}, {}, %(D).4f);
+window.__timelines["main"] = tl;
+</script></body></html>

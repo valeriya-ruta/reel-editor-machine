@@ -11,3 +11,4 @@ beats/*/parts/
 beats/*/snap/
 beats/STOP
 delivery/chunk_*
+out/
