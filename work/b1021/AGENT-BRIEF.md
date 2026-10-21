@@ -72,6 +72,9 @@ Ruta, never ask her anything**. Truly blocked → say so in your report and stop
   of the cover arriving. Open it ON the word its headline/sketch shows.
 - **Arrows long** — ≥ 150 px, a gentle curve; space boxes apart to make room.
   **No arrowhead on a loop / ellipse.**
+- **A pointer to the comments points DOWN** toward the lower right (where the
+  IG comment button is), tip left of x 900 — never up at the CTA pill. Her
+  note: «in general we point down for comments».
 
 ## The look, in practice (measured on her plates this batch)
 

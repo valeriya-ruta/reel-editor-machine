@@ -26,9 +26,10 @@ re-hears every cut plate); and a lighter look → her spec, STYLE.md §00.
   41–46, the ones posting first; 47–52 render locally in the cloud container.
 - **Sound effects stay.** The kit lives in her laptop's `assets/sfx`
   (gitignored) — needed before the final renders.
-- **Reel 51**: keep 10 s of the pause after «…змонтував штучний інтелект» for
-  the two reels to play, then cut to the next text. The two reels themselves:
-  waiting on her.
+- **Reel 51**: keep 10 s of the pause after «…змонтував штучний інтелект»,
+  then cut to the next text. She adds the two reels herself — the pause stays
+  empty (her plate only, no graphics, no captions).
+- **Sound**: the stand-in kit from tools/sfxsynth.py — "they're fine".
 - **No covers** — Instagram previews are not generated.
 - Deliver here in the chat (SendUserFile), not her Desktop.
 
@@ -38,8 +39,8 @@ re-hears every cut plate); and a lighter look → her spec, STYLE.md §00.
 |---|---|---|---|---|
 | 53 | — | 144227 (14:45) | «Це не запланований рілс» — her process on camera: gallery → Drive → link → Claude → 2–3 h → Edits | 75.2 s |
 
-No script in RUTA: work/r53/script.txt is her own final wording. Steps are
-sketched until/unless she sends screen recordings of them.
+**Skipped completely** (her call, 2026-10-21: she edited it herself). Its
+cut plan and plate were made, then removed from the repo.
 
 ## Her review of reel 41 (2026-10-21)
 

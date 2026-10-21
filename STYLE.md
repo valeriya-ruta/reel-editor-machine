@@ -79,6 +79,22 @@ shape. None anywhere.
   `cubic-bezier(.2,.9,.25,1)` · panel and full-screen slides 0.85 s
   `cubic-bezier(.65,0,.25,1)`.
 
+**Her review of reel 41 (2026-10-21) — amends the spec above:**
+- **Captions stay exactly as before §00**: word by word, upper case, Product
+  Sans Black 90 px, white on the underlay plaque (kit.py's rail). Over the white
+  panel / cover they turn ink; on the panel they sit above her head. Not the
+  boxed phrase captions of §00.2.
+- **Sketches are calm**: roughness ≈ 1 (Excalidraw's own). §00.5's 2.2–2.6 was
+  "too sloppy".
+- **Over her footage nothing is a bare line**: white on her light room failed
+  even AA. Closed shapes are solid white stickers with the dark outline; arrows,
+  lines and free labels are dark ink with a thick white halo.
+- **Behind-me words are white** (soft shadow), not #7A1424 — the red read badly.
+- **A full screen never opens onto empty white**: its content lands with it.
+- **Arrows are long** (≥ 150 px, gentle curve); **no arrowhead on a loop**.
+- **A pointer to the comments points down** toward the lower right, never up.
+- Her verdict on the result: *"perfect delicious"*.
+
 Still in force from below: spelling from her script (§2), a graphic lands on
 its word and never outstays its sentence (§4, §4a), every object nameable, no
 invented stats, proof is a screenshot, her closeups are comedy (NO_PAINT).

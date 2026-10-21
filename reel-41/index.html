@@ -1024,8 +1024,10 @@
   fadein("#b10", 88.917, .01); pop("#b10a", 88.967); pop("#b10b", 89.767); pop("#b10c", 90.507);
   pop("#b10n", 93.154);
   pop("#b10cta", 95.534, .6);
-  sketch("a10", "skF"); arrow("a10", 940, 860, 830, 655, {strokeWidth: 5, seed: 97, bend: .2});
-  label("a10", 900, 915, "сюди!", {size: 52});
+  // comments are down at the right of the IG rail, so the pointer goes down to
+  // them — never up at the pill (her review of 41). Tip stays left of x 900.
+  sketch("a10", "skF"); label("a10", 800, 730, "сюди!", {size: 52});
+  arrow("a10", 820, 760, 880, 975, {strokeWidth: 5, seed: 97, bend: -.25});
   draw("a10", 96.084, .5);
 
   half(7.916, 18.874);
