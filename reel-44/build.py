@@ -116,6 +116,11 @@ def js(s):
     J.append(s)
 
 
+js(u'''
+  // a free rough path in a sketch's own ink (the kit sets _ink only in its shape helpers)
+  function pth(name, d, seed, o) { _ink = SK[name].ink; _add(SK[name], SK[name].rc.path(d, opt(o, seed))); }
+''')
+
 # 1 · ABOVE — the best ideas are not from ChatGPT, Claude or Manus -------------
 t_id, t_gpt, t_cl, t_man = S(u"ідеї", 0.89), S(u"GPT,", 2.72), S(u"Клода", 3.59), S(u"Мануса.", 4.29)
 t_ya = S(u"Я", 5.0)
@@ -218,7 +223,7 @@ def bust(x, y, s=1.0):
 
 js(u'''
   sketch("p1", "skP");
-  _add(SK.p1, SK.p1.rc.path("%s", opt({seed: 31}, 31)));
+  pth("p1", "%s", 31);
   draw("p1", %.3f, .7);
   sketch("p2", "skP"); box("p2", 262, 296, 112, 98, {seed: 33, r: 28}); label("p2", 318, 366, "?", {size: 62, color: "#7A1424"});
   draw("p2", %.3f, .45);
@@ -236,7 +241,7 @@ js(u'''
   draw("p5", %.3f, .5);
   erase("p1", %.3f); erase("p2", %.3f); erase("p3", %.3f); erase("p4", %.3f); erase("p5", %.3f);
 ''' % (bust(190, 452, 1.4), t_raz - 0.1, t_tak, t_odnu - 0.45,
-       u"\n  ".join(u'_add(SK.p4, SK.p4.rc.path("%s", opt({seed: %d}, %d)));' % (bust(x, 462, 1.0), 50 + i, 50 + i)
+       u"\n  ".join(u'pth("p4", "%s", %d);' % (bust(x, 462, 1.0), 50 + i)
                     for i, x in enumerate((565, 685, 805, 925))),
        t_lud - 0.6, t_vyh - 0.2, h1, h1, h1, h1, h1))
 g.sfx("click-soft", t_lud); g.sfx("pop", t_ide)
@@ -283,14 +288,14 @@ js(u'''
        u" ".join(u'pop("#b5q%d", %.3f, .45);' % (i, t_chy + 0.08 * n) for n, i in enumerate((1, 3, 5, 6))),
        u" ".join(u'pop("#b5st%d", %.3f, .5);' % (i, t_ril - 0.1 + 0.18 * n) for n, i in enumerate(STRAT)),
        u" ".join(u'pop("#b5ct%d", %.3f, .45);' % (i, t_zak + 0.12 * n) for n, i in enumerate(STRAT)),
-       t_str, E(u"дії,", 28.44) + 0.15))
+       t_str, S(u"я", 28.89) - 0.15))
 g.sfx("pop", t_nap - 0.2); g.sfx("pop", t_ril); g.sfx("click-soft", t_zak)
 
 # 6 · ABOVE — not out of my head: a thought cloud over her, crossed out --------
 t_sy, t_vyg, t_hol = S(u"сиджу", 29.23), S(u"вигадую", 29.71), E(u"голови.", 30.18)
 js(u'''
   sketch("cl6", "skF");
-  _add(SK.cl6, SK.cl6.rc.path("M400 560 C330 560 320 480 395 468 C390 400 480 375 525 420 C555 350 680 355 700 425 C770 400 840 455 805 515 C860 540 830 600 760 590 C730 625 640 620 615 590 C580 625 470 620 450 585 C430 590 410 580 400 560 Z", opt({seed: 61}, 61)));
+  pth("cl6", "M400 560 C330 560 320 480 395 468 C390 400 480 375 525 420 C555 350 680 355 700 425 C770 400 840 455 805 515 C860 540 830 600 760 590 C730 625 640 620 615 590 C580 625 470 620 450 585 C430 590 410 580 400 560 Z", 61);
   label("cl6", 590, 520, "?", {size: 72});
   ell("cl6", 560, 640, 46, 34, {seed: 63}); ell("cl6", 540, 688, 26, 20, {seed: 65});
   draw("cl6", %.3f, .45);
@@ -298,7 +303,7 @@ js(u'''
   ln("x6", 830, 380, 400, 630, {strokeWidth: 7, seed: 69});
   draw("x6", %.3f, .3);
   erase("cl6", %.3f); erase("x6", %.3f);
-''' % (t_sy - 0.25, t_vyg, t_hol + 0.12, t_hol + 0.12))
+''' % (t_sy - 0.18, t_vyg, t_hol + 0.12, t_hol + 0.12))
 g.sfx("click-soft", t_vyg)
 
 # 7 · HALF — the routine, weekly: my content, competitors, and the calls --------
