@@ -63,3 +63,27 @@ the encoder, so the ~8 MB/frame disk check never trips). Review page with
 720p copies and a download button per reel:
 https://claude.ai/artifact/Hpozkm3M6n9BrTomm8hABe — she comments in one batch.
 Full-quality files: reel-NN/renders/REEL-NN.mp4 (gitignored).
+
+## Posting (2026-10-21 evening, her calls)
+
+Full-quality files in her Drive folder (link-shared), posted through Buffer:
+- She posted **50 and 52 on Instagram** herself (from the 720p previews).
+- **TikTok now**: 50, 52.
+- **Queued, 2 a day**, Instagram on its queue slots, TikTok at fixed times on
+  its slots (its next slot was tonight, too close to 50/52):
+
+| reel | Instagram | TikTok |
+|---|---|---|
+| 41 | Thu 22 · 08:19 | Thu 22 · 21:37 |
+| 42 | Thu 22 · 10:21 | Thu 22 · 22:22 |
+| 43 | Fri 23 · 07:21 | Fri 23 · 20:18 |
+| 44 | Fri 23 · 08:05 | Fri 23 · 22:47 |
+| 45 | Sat 24 · 06:12 | Sat 24 · 08:25 |
+| 46 | Sat 24 · 22:01 | Sat 24 · 18:56 |
+| 47 | Sun 25 · 19:31 | Sun 25 · 09:29 |
+| 48 | Sun 25 · 22:50 | Sun 25 · 10:14 |
+| 49 | Mon 26 · 18:59 | Mon 26 · 08:01 |
+
+- **51 skipped**: it waits for her version with the two comparison reels.
+- Captions in her voice; the reel's own CTA on both; last line TikTok =
+  «Підпишись…», Instagram = «Відправ <one specific woman>…» (her rule).
