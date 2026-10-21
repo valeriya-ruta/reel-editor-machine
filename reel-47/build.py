@@ -82,7 +82,8 @@ js(u'''
                       opt(o, ((o && o.seed) || 61) + 3)));
   }
   function tick(name, x, y, o) { var s = SK[name];
-    _add(s, s.rc.linearPath([[x - 34, y], [x - 8, y + 28], [x + 40, y - 34]], opt(o, (o && o.seed) || 71))); }
+    var k = (o && o.k) || 1;
+    _add(s, s.rc.linearPath([[x - 34 * k, y], [x - 8 * k, y + 28 * k], [x + 40 * k, y - 34 * k]], opt(o, (o && o.seed) || 71))); }
   function cross(name, x1, y1, x2, y2, o) {
     var o2 = {}; for (var k in (o || {})) o2[k] = o[k]; o2.seed = ((o && o.seed) || 81) + 2;
     ln(name, x1, y1, x2, y2, o); ln(name, x2, y1, x1, y2, o2); }
@@ -92,10 +93,14 @@ js(u'''
     ell(name, x, y, 58, 58, {seed: 95, fill: "#7A1424", fillStyle: "solid"}); }
 ''')
 
+XMARK = (u'<svg id="b6x%d" class="hid" width="44" height="44" viewBox="0 0 44 44" style="position:absolute; left:-3px; top:-3px">'
+         u'<path d="M9 8 C17 17 26 26 36 36 M35 8 C27 17 17 27 8 36" fill="none" stroke="#7A1424" stroke-width="7" '
+         u'stroke-linecap="round"/></svg>')
+
 # 1 · ABOVE — Claude can do everything … but one big minus --------------------
 t_kl, t_diz, t_mon = S(u"Клод", 0.39), S(u"дизайнити,", 1.65), S(u"монтувати,", 2.37)
 t_pys, t_an = S(u"писати,", 2.95), S(u"аналізувати.", 3.49)
-t_ale, t_min = S(u"Але", 4.53), S(u"мінус,", 5.87)
+t_ale, t_min = S(u"Але в", 4.53), S(u"мінус,", 5.87)
 h0 = S(u"Його", 9.21) - 0.15
 SKILLS = [(u"дизайнити", t_diz), (u"монтувати", t_mon), (u"писати", t_pys), (u"аналізувати", t_an)]
 F.append(u'''
@@ -213,8 +218,8 @@ F.append(u"".join(u'<span class="chip hid" id="b5c%d" style="position:absolute; 
                   for i, (w, x, y, r) in enumerate(HEAP)))
 js(u'''
   %s
-  sketch("r5", "skF"); ell("r5", 540, 470, 900, 420, {stroke: "#7A1424", strokeWidth: 5, roughness: 2.8, seed: 31});
-  ell("r5", 548, 466, 860, 392, {stroke: "#7A1424", strokeWidth: 4, roughness: 3, seed: 33});
+  sketch("r5", "skF"); ell("r5", 540, 482, 890, 396, {stroke: "#7A1424", strokeWidth: 5, roughness: 2.8, seed: 31});
+  ell("r5", 548, 478, 850, 370, {stroke: "#7A1424", strokeWidth: 4, roughness: 3, seed: 33});
   draw("r5", %.3f, .45);
   tl.to("%s", {autoAlpha: 0, y: 60, duration: .35, ease: "power2.in", stagger: .03}, %.3f);
   erase("r5", %.3f);
@@ -232,36 +237,33 @@ F.append(u'''
           <span class="lbl">Система клієнта</span>
           <div class="chips">
             <span class="chip hid" id="b6a" style="color:#7A1424">%s<span style="color:#241919">Claude</span></span>
-            <span class="chip hid" id="b6s" style="border-style:dashed; color:#574142">+ додатковий</span>
-            <span class="chip on hid" id="b6n" style="position:absolute; left:%dpx; top:%dpx">%s Notion</span>
+            <span style="position:relative; display:inline-flex">
+              <span class="chip hid" id="b6s" style="border-style:dashed; color:#574142">+ додатковий</span>
+              <span class="chip on hid" id="b6n" style="position:absolute; left:0; top:0; white-space:nowrap">%s Notion</span></span>
           </div>
           <div style="height:2px; background:#EFE3E3; margin:26px 0 22px"></div>
-          <div class="row hid" id="b6r1"><span class="check" id="b6k1"></span>
+          <div class="row hid" id="b6r1"><span class="check">%s</span>
             <span style="font-size:40px; font-weight:500">клієнтка користується</span></div>
-          <div class="row hid" id="b6r2" style="margin-top:16px"><span class="check" id="b6k2"></span>
+          <div class="row hid" id="b6r2" style="margin-top:16px"><span class="check">%s</span>
             <span style="font-size:40px; font-weight:500">має посилання</span></div>
-        </div>''' % (mark("claude", 36), 40 + 210 + 14, 32 + 48, mark("notion", 36)))
+        </div>''' % (mark("claude", 36), mark("notion", 36), XMARK % 1, XMARK % 2))
 js(u'''
   rise("#b6", %.3f);
   pop("#b6a", %.3f);
   pop("#b6s", %.3f);
   tl.to("#b6s", {autoAlpha: 0, duration: .2}, %.3f); pop("#b6n", %.3f);
   rise("#b6r1", %.3f, 30); rise("#b6r2", %.3f, 30);
-  sketch("x6", "skF");
-  cross("x6", 172, 553, 204, 585, {stroke: "#7A1424", strokeWidth: 6, seed: 41});
-  draw("x6", %.3f, .25);
-  sketch("y6", "skF");
-  cross("y6", 172, 619, 204, 651, {stroke: "#7A1424", strokeWidth: 6, seed: 45});
-  draw("y6", %.3f, .25);
-  sink("#b6", %.3f); erase("x6", %.3f); erase("y6", %.3f);
+  pop("#b6x1", %.3f, .4);
+  pop("#b6x2", %.3f, .4);
+  sink("#b6", %.3f);
 ''' % (t_nal - 0.3, t_sys, t_dod, t_not - 0.05, t_not - 0.05, t_kli - 0.1, t_nav2 - 0.1,
-       t_kor, t_pos, S(u"Тому", 42.17) - 0.15, S(u"Тому", 42.17) - 0.15, S(u"Тому", 42.17) - 0.15))
+       t_kor, t_pos, S(u"Тому", 42.17) - 0.15))
 g.sfx("pop", t_nal - 0.25); g.sfx("click-soft", t_sys); g.sfx("pop", t_not - 0.05)
 g.sfx("click-soft", t_kor); g.sfx("click-soft", t_pos)
 
 # 7 · FULL — the point of reference -------------------------------------------
 c0, c1 = S(u"називаю,", 43.88) - 0.15, S(u"На", 52.86) - 0.3
-t_poi, t_mis = S(u"point", 44.66), S(u"місце,", 46.12)
+t_poi, t_mis = S(u"point", 44.66), S(u"Це місце,", 46.12)
 t_ne, t_klo = S(u"не", 46.82), S(u"Клода,", 47.7)
 t_nez, t_ty = S(u"незалежним.", 48.39), S(u"ти,", 49.56)
 t_ik, t_tud = S(u"і Клод", 49.69), S(u"туди", 50.54)
@@ -278,7 +280,7 @@ js(u'''
   draw("c1", %.3f, .45);
   sketch("c2", "skC"); box("c2", 360, 760, 620, 300, {seed: 53, fill: true, r: 32});
   draw("c2", %.3f, .7);
-  sketch("c3", "skC"); cross("c3", 80, 750, 300, 1080, {stroke: "#7A1424", strokeWidth: 7, seed: 55});
+  sketch("c3", "skC"); cross("c3", 98, 752, 292, 1072, {stroke: "#7A1424", strokeWidth: 7, seed: 55});
   draw("c3", %.3f, .3);
   sketch("c4", "skC"); label("c4", 670, 730, "незалежне", {size: 52, color: "#7A1424"});
   draw("c4", %.3f);
@@ -319,16 +321,16 @@ js(u'''
   rise("#b8", %.3f);
   pop("#b8d", %.3f);
   sketch("o8", "skF");
-  _add(SK.o8, SK.o8.rc.path("M 520 600 A 70 70 0 1 0 450 670", opt({stroke: "#7A1424", strokeWidth: 5}, 63)));
-  _add(SK.o8, SK.o8.rc.line(450, 670, 482, 648, opt({stroke: "#7A1424", strokeWidth: 5}, 65)), "head");
-  _add(SK.o8, SK.o8.rc.line(450, 670, 484, 690, opt({stroke: "#7A1424", strokeWidth: 5}, 67)), "head");
+  _add(SK.o8, SK.o8.rc.path("M 625 605 A 55 55 0 1 0 570 660", opt({stroke: "#7A1424", strokeWidth: 5}, 63)));
+  _add(SK.o8, SK.o8.rc.line(570, 660, 540, 640, opt({stroke: "#7A1424", strokeWidth: 5}, 65)), "head");
+  _add(SK.o8, SK.o8.rc.line(570, 660, 540, 682, opt({stroke: "#7A1424", strokeWidth: 5}, 67)), "head");
   draw("o8", %.3f, .5);
   fadein("#b8t", %.3f, .3);
   pop("#b8c", %.3f);
-  sketch("a8", "skF"); arrow("a8", 640, 520, 510, 520, {seed: 69, bend: -.18});
+  sketch("a8", "skF"); arrow("a8", 632, 470, 508, 474, {seed: 69, bend: -.18});
   draw("a8", %.3f, .4);
-  sketch("e8", "skF"); ln("e8", 216, 562, 455, 560, {stroke: "#7A1424", strokeWidth: 6, seed: 73});
-  under("e8", 216, 640, 430, {stroke: "#7A1424", strokeWidth: 6, seed: 75});
+  sketch("e8", "skF"); ln("e8", 214, 546, 452, 542, {stroke: "#7A1424", strokeWidth: 6, seed: 73});
+  under("e8", 222, 616, 420, {stroke: "#7A1424", strokeWidth: 6, seed: 75});
   draw("e8", %.3f, .3);
   sink("#b8, #b8d, #b8c", %.3f); erase("o8", %.3f); erase("a8", %.3f); erase("e8", %.3f);
 ''' % (t_pros - 0.2, t_doc, t_onov - 0.2, t_strat, t_kd - 0.05, t_kd + 0.2, t_onovl - 0.25,
@@ -385,19 +387,19 @@ t_pid, t_teb = S(u"підключаю", 71.70), S(u"тебе,", 72.58)
 t_kla, t_znav = S(u"Клода,", 74.02), S(u"знав,", 75.27)
 t_etap, t_kozh = S(u"етапі", 76.05), S(u"кожен", 76.71)
 t_stare, t_nov = S(u"старе", 78.13), S(u"новим.", 78.73)
-P.append(u'<div id="p10n" class="row hid" style="position:absolute; left:400px; top:338px; gap:14px; color:#241919">'
+P.append(u'<div id="p10n" class="row hid" style="position:absolute; left:410px; top:344px; gap:14px; color:#241919">'
          u'%s<b style="font-size:48px; font-weight:700">Notion</b></div>' % mark("notion", 56))
 js(u'''
   pop("#p10n", %.3f);
-  sketch("q1", "skP"); ell("q1", 200, 370, 200, 130, {seed: 101}); label("q1", 200, 388, "ти", {size: 56});
-  arrow("q1", 390, 370, 310, 370, {seed: 103, bend: .15});
+  sketch("q1", "skP"); ell("q1", 220, 380, 200, 124, {seed: 101}); label("q1", 220, 398, "ти", {size: 56});
+  arrow("q1", 395, 380, 330, 380, {seed: 103, bend: .15});
   draw("q1", %.3f, .4);
-  sketch("q2", "skP"); cross("q2", 120, 310, 280, 430, {stroke: "#7A1424", strokeWidth: 6, seed: 105});
+  sketch("q2", "skP"); cross("q2", 140, 322, 300, 438, {stroke: "#7A1424", strokeWidth: 6, seed: 105});
   draw("q2", %.3f, .3);
-  sketch("q3", "skP"); arrow("q3", 690, 370, 770, 370, {seed: 107, bend: -.15});
-  ell("q3", 880, 370, 210, 130, {seed: 109, stroke: "#7A1424"}); label("q3", 880, 388, "Клод", {size: 56});
+  sketch("q3", "skP"); arrow("q3", 655, 380, 728, 380, {seed: 107, bend: -.15});
+  ell("q3", 840, 380, 210, 124, {seed: 109, stroke: "#7A1424"}); label("q3", 840, 398, "Клод", {size: 56});
   draw("q3", %.3f, .4);
-  sketch("q4", "skP"); tick("q4", 990, 300, {stroke: "#7A1424", strokeWidth: 6, seed: 111});
+  sketch("q4", "skP"); tick("q4", 958, 318, {stroke: "#7A1424", strokeWidth: 6, seed: 111, k: .75});
   draw("q4", %.3f, .3);
   sketch("q5", "skP"); box("q5", 110, 500, 860, 290, {seed: 113, r: 28});
   ln("q5", 397, 515, 397, 775, {seed: 115}); ln("q5", 683, 515, 683, 775, {seed: 117});
@@ -429,17 +431,19 @@ F.append(u'''
           <span class="chip hid" id="b11a"><i></i>зекономити</span>
           <span class="chip hid" id="b11b"><i></i>AI-система самостійно</span>
         </div>
-        <div id="b11l" class="pill light hid" style="left:190px; top:438px; font-size:44px; padding:22px 44px">
-          лайфхак: <span style="color:#7A1424; display:inline-flex; align-items:center; gap:10px">+ %s<b style="font-weight:700">Notion</b></span></div>
-        <div id="b11cta" class="pill hid" style="left:330px; top:566px; font-size:52px">Підпишись</div>''' % mark("notion", 40))
+        <div id="b11l" class="hid" style="position:absolute; left:0; top:440px; width:1080px; display:flex; justify-content:center">
+          <span class="pill light" style="position:relative; font-size:44px; padding:22px 44px">лайфхак:
+          <span style="color:#7A1424; display:inline-flex; align-items:center; gap:10px">+ %s<b style="font-weight:700">Notion</b></span></span></div>
+        <div id="b11cta" class="hid" style="position:absolute; left:0; top:566px; width:1080px; display:flex; justify-content:center">
+          <span class="pill" style="position:relative; font-size:52px">Підпишись</span></div>''' % mark("notion", 40))
 js(u'''
   fadein("#b11", %.3f, .01); pop("#b11a", %.3f);
-  sketch("u11", "skF"); under("u11", 300, 404, 560, {stroke: "#7A1424", strokeWidth: 5, seed: 131});
+  sketch("u11", "skF"); under("u11", 172, 412, 420, {stroke: "#7A1424", strokeWidth: 5, seed: 131});
   draw("u11", %.3f, .4);
   pop("#b11b", %.3f);
   pop("#b11l", %.3f);
   pop("#b11cta", %.3f, .6);
-  sketch("a11", "skF"); arrow("a11", 900, 790, 790, 660, {stroke: "#7A1424", strokeWidth: 5, seed: 133});
+  sketch("a11", "skF"); arrow("a11", 880, 800, 752, 664, {stroke: "#7A1424", strokeWidth: 5, seed: 133});
   draw("a11", %.3f, .45);
 ''' % (t_zek - 0.05, t_zek, t_hro - 0.1, t_sam - 0.1, t_lh, t_obov - 0.1, t_obov + 0.3))
 g.sfx("pop", t_zek); g.sfx("kaching", t_hro); g.sfx("pop", t_sam - 0.1); g.sfx("pop", t_lh)

@@ -231,7 +231,7 @@ js(u'''
 g.sfx("pop", t_tob - 0.15); g.sfx("click-soft", t_13b); g.sfx("click-soft", t_dal + 0.1)
 
 # 6 · HALF — the payback ------------------------------------------------------
-h0, h1 = S(u"Якщо", 29.28) - 0.1, 41.18
+h0, h1 = S(u"Якщо", 29.28) - 0.1, 41.15
 HALF.append((h0, h1))
 P.append(u'<svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
 t_por, t_akk1, t_4b = S(u"порахувати", 29.46), S(u"акаунт:", 30.24), S(u"400", 30.74)

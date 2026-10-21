@@ -144,13 +144,13 @@ js(u'''
 ''' % (t_id - 0.3, t_gpt - 0.35, t_cl - 0.1, t_man - 0.1,
        t_gpt + 0.2, t_cl + 0.35, t_man + 0.4, t_ya - 0.3))
 g.sfx("pop", t_id - 0.3)
-for t in (t_gpt + 0.2, t_cl + 0.35, t_man + 0.4):
-    g.sfx("click-soft", t)
+g.sfx("click-soft", t_gpt + 0.2); g.sfx("click-soft", t_man + 0.4)
 
-# 2 · BEHIND — «дзвінки» (she leans in, hair top ≈ 575: one line, top 380) ------
+# 2 · BEHIND — «дзвінки» (she leans in, hair top 556-590 here: one line at top 400
+#     puts the baseline at ≈ 590, so her hair takes the bottom ~15 % of the letters)
 t_dz = S(u"з дзвінків", 5.7)
 bw0, bw1 = t_dz - 0.35, t_dz + 0.85
-B.append(u'<div id="bw" class="big hid" style="top:380px; font-size:240px">дзвінки</div>')
+B.append(u'<div id="bw" class="big hid" style="top:400px; font-size:240px">дзвінки</div>')
 g.matte("dzv", round(bw0 - 0.05, 3), round(bw1 - bw0 + 0.5, 3))
 js(u'''
   rise("#bw", %.3f, 80);
@@ -198,7 +198,7 @@ js(u'''
   sink("#b3, #b3q1, #b3q2, #b3q3, #b3x", %.3f);
 ''' % (t_pro - 0.25, t_kli, t_kli + 0.1, t_kons, t_vel, t_vel2 - 0.35, t_vel2,
        t_zad, t_pyt, t_pyt + 0.4, t_zad - 0.1, t_nik, t_dod + 0.05))
-g.sfx("pop", t_pro - 0.25); g.sfx("click-soft", t_kli); g.sfx("click-soft", t_kons); g.sfx("click-soft", t_vel)
+g.sfx("pop", t_pro - 0.25); g.sfx("click-soft", t_vel)
 g.sfx("notification", t_zad); g.sfx("pop", t_nik)
 
 # 4 · HALF — one person asks -> it is many people -> the ideal topic -----------
@@ -242,7 +242,7 @@ js(u'''
        u"\n  ".join(u'_add(SK.p4, SK.p4.rc.path("%s", opt({seed: %d}, %d)));' % (bust(x, 420, .85), 50 + i, 50 + i)
                     for i, x in enumerate((560, 665, 770, 875))),
        t_lud - 0.6, t_vyh - 0.2, h1, h1, h1, h1, h1))
-g.sfx("click-soft", t_tak); g.sfx("click-soft", t_lud); g.sfx("pop", t_ide)
+g.sfx("click-soft", t_lud); g.sfx("pop", t_ide)
 g.sfx("whoosh-short", h0); g.sfx("whoosh-short", h1)
 
 # 5 · ABOVE — the content plan: strategy reels with a CTA, empty days ----------
@@ -287,7 +287,7 @@ js(u'''
        u" ".join(u'pop("#b5st%d", %.3f, .5);' % (i, t_ril - 0.1 + 0.18 * n) for n, i in enumerate(STRAT)),
        u" ".join(u'pop("#b5ct%d", %.3f, .45);' % (i, t_zak + 0.12 * n) for n, i in enumerate(STRAT)),
        t_str, E(u"дії,", 28.44) + 0.15))
-g.sfx("pop", t_nap - 0.2); g.sfx("click-soft", t_chy); g.sfx("pop", t_ril); g.sfx("click-soft", t_zak)
+g.sfx("pop", t_nap - 0.2); g.sfx("pop", t_ril); g.sfx("click-soft", t_zak)
 
 # 6 · ABOVE — not out of my head: a thought cloud over her, crossed out --------
 t_sy, t_vyg, t_hol = S(u"сиджу", 29.23), S(u"вигадую", 29.71), E(u"голови.", 30.18)
@@ -302,7 +302,7 @@ js(u'''
   draw("x6", %.3f, .3);
   erase("cl6", %.3f); erase("x6", %.3f);
 ''' % (t_sy - 0.45, t_vyg, t_hol + 0.12, t_hol + 0.12))
-g.sfx("whoosh-short", t_sy - 0.45); g.sfx("click-soft", t_vyg)
+g.sfx("click-soft", t_vyg)
 
 # 7 · HALF — the routine, weekly: my content, competitors, and the calls --------
 h2, h3 = S(u"У", 30.68) - 0.15, S(u"І", 36.6) - 0.1
@@ -335,8 +335,7 @@ js(u'''
 ''' % (t_rut - 0.35, t_tyzh, t_kont - 0.35, t_konk - 0.35, t_dzv - 0.4, t_dzv + 0.1,
        h3, h3, h3, h3, h3, h3))
 g.sfx("whoosh-short", h2); g.sfx("whoosh-short", h3)
-for t in (t_rut, t_kont, t_konk):
-    g.sfx("click-soft", t)
+g.sfx("click-soft", t_konk)
 g.sfx("pop", t_dzv)
 
 # 8 · ABOVE — the plan again: the empty days fill with call ideas; the strategy
@@ -365,7 +364,7 @@ js(u'''
        t_dod2 + 0.3, t_pid - 0.1,
        u" ".join(u'pop("#b8st%d", %.3f, .45);' % (i, t_mst - 0.15 + 0.1 * n) for n, i in enumerate(STRAT)),
        E(u"стратегію.", 40.13) + 0.2, E(u"стратегію.", 40.13) + 0.2))
-g.sfx("pop", h3 + 0.4); g.sfx("click-soft", t_dod2); g.sfx("click-soft", t_pid)
+g.sfx("click-soft", t_dod2); g.sfx("click-soft", t_pid)
 
 # 9 · ABOVE — all her clients have it, and love it -----------------------------
 t_usim, t_klk = S(u"усім", 41.29), S(u"клієнткам", 41.73)
@@ -412,7 +411,7 @@ js(u'''
   tl.set("#b10k2", {className: "check on"}, %.3f); pop("#b10k2", %.3f, .4);
   sink("#b10, #b10p", %.3f);
 ''' % (t_tsil - 0.3, t_15, t_nl, t_nl, t_pk, t_pk, E(u"себе.", 51.67) + 0.2))
-g.sfx("pop", t_tsil - 0.3); g.sfx("kaching", t_15); g.sfx("click-soft", t_nl); g.sfx("click-soft", t_pk)
+g.sfx("pop", t_tsil - 0.3); g.sfx("kaching", t_15); g.sfx("click-soft", t_nl)
 
 # 11 · ABOVE — CTA: if you run consultations and need ideas -> write «дзвінок» --
 t_kons2, t_idei2 = S(u"консультації,", 54.29), S(u"ідеї", 55.99)
@@ -435,7 +434,7 @@ js(u'''
   draw("a11", %.3f, .45);
   pop("#b11i", %.3f, .55);
 ''' % (t_kons2 - 0.1, t_idei2 - 0.1, t_dzv2 - 0.2, t_dzv2 + 0.4, S(u"отримати", 58.32)))
-g.sfx("pop", t_kons2 - 0.1); g.sfx("pop", t_idei2 - 0.1); g.sfx("pop", t_dzv2 - 0.2); g.sfx("pop", S(u"отримати", 58.32))
+g.sfx("pop", t_kons2 - 0.1); g.sfx("pop", t_dzv2 - 0.2); g.sfx("pop", S(u"отримати", 58.32))
 BLACKOUT.append((t_pys - 0.05, DUR))     # the pill and the chip say it
 
 # ---------------------------------------------------------------- mattes for the half screens

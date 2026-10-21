@@ -15,7 +15,7 @@ CTA: консультації + ідеї → «Пиши «дзвінок»» →
 | time | layer | what |
 |---|---|---|
 | 00:00.6–04.7 | above | «Ідеї для контенту» card, ghost chips ChatGPT / Claude / Manus light up on their names, each struck in red |
-| 00:05.3–06.9 | behind | «дзвінки», 240 px, top 380 (she leans in, hair ≈ 575 overlaps the line) |
+| 00:05.3–06.9 | behind | «дзвінки», 240 px, top 400 (she leans in, hair top 556–590 overlaps the bottom of the letters) |
 | 00:06.5–16.4 | above | call card: Рута + клієнтка (7.4), REC · Fathom; chips консультація (8.2), велкам-дзвінок (9.3); велкам circled + lit (11.6); three «?» bubbles from the client (12.6); «?!» on her side (15.3) |
 | 00:16.5–23.5 | half | one person asks «?» (17.0) → circled «одну» (19.5) → arrow → four people «?» (19.6) → arrow → «ідеальна тема / для контенту» box (21.1) |
 | 00:24.3–28.6 | above | content plan, 7 days: «?» on the empty days (25.5), strategy reels (26.1), CTA tags (27.7), legend chip «стратегія з CTA» |
