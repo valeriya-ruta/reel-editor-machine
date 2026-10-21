@@ -68,6 +68,14 @@ class G51(G):
                 if a["s"] < H0 <= b["s"]:
                     end = min(end, H0 - 0.02)
                 j = re.sub(r'(tl\.set\("#w%d", \{autoAlpha: 0\}, )[\d.]+\)' % i, r'\g<1>%.3f)' % end, j)
+        # the plaque coming back after a blackout and standing down for a half
+        # screen 0.1 s later is a blink (37.85 → 37.99): it holds under the white
+        # words in between («Вона може») and leaves as the panel's ink words take over
+        sc = sorted((float(m.group(2)), int(m.group(1)), m.group(0)) for m in
+                    re.finditer(r'tl\.to\("#scrim", \{autoAlpha: ([01]), duration: [\d.]+\}, ([\d.]+)\)', j))
+        for (t1, v1, _), (t2, v2, s2) in zip(sc, sc[1:]):
+            if v1 == 1 and v2 == 0 and t2 < t1 + 0.25:
+                j = j.replace(s2, s2.replace("%.3f)" % t2, "%.3f)" % (t1 + 0.40)))
         return html, j
 
 
@@ -426,7 +434,7 @@ js(u'''
   draw("e2", %.3f, .5);
 ''' % (t_blog - 0.05, t_blog, t_smm, t_pid, t_pro, t_24 - 0.35, t_24, t_vt - 0.35, t_stav, t_stav + 0.5))
 g.sfx("pop", t_blog); g.sfx("pop", t_pro); g.sfx("pop", t_24); g.sfx("click-soft", t_vt); g.sfx("pop", t_stav)
-BLACKOUT.append((t_stav - 0.05, DUR))     # the pill says it
+BLACKOUT.append((t_stav - 0.05, DUR + 1.0))     # the pill says it (to the end: the plaque never returns)
 
 # ---------------------------------------------------------------- mattes for the half screens
 for i, (a, b) in enumerate(HALF):

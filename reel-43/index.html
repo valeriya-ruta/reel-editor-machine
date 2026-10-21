@@ -485,7 +485,7 @@
     SK[name] = {g: g, rc: rough.svg(svg), shapes: [], foot: foot, boxes: [], ink: "#1E1E1E"};
     return SK[name];
   }
-  function _add(s, node, kind) {
+  function _add(s, node, kind, o) {   // o.halo === false: a stroke over a white card / pill (a strike-through) needs none
     s.g.appendChild(node);
     var paths = [].slice.call(node.querySelectorAll ? node.querySelectorAll("path") : []);
     if (node.tagName === "path") paths = [node];
@@ -493,7 +493,7 @@
       var f = p.getAttribute("fill");
       if (f && f !== "none") { p.style.opacity = 0; p.dataset.fill = "1"; return; }  // a solid fill fades in
       var L = 0; try { L = p.getTotalLength(); } catch (e) {}
-      if (s.foot) {                  // the white halo under a stroke over the footage
+      if (s.foot && !(o && o.halo === false)) {   // the white halo under a stroke over the footage
         var h = p.cloneNode(false);
         h.setAttribute("stroke", "#FFFFFF");
         h.setAttribute("stroke-width", (parseFloat(p.getAttribute("stroke-width")) || 4.5) + 8);
@@ -528,16 +528,16 @@
   function blob(name, d, bbox, o) { _ink = SK[name].ink; var s = SK[name];
     _add(s, s.rc.path(d, _closed(s, opt(o, (o && o.seed) || 23), o, bbox[0], bbox[1], bbox[2], bbox[3]))); }
   function ln(name, x1, y1, x2, y2, o) { _ink = SK[name].ink; var s = SK[name];
-    _add(s, s.rc.line(x1, y1, x2, y2, opt(o, (o && o.seed) || 13))); }
+    _add(s, s.rc.line(x1, y1, x2, y2, opt(o, (o && o.seed) || 13)), null, o); }
   function under(name, x1, y, x2, o) { _ink = SK[name].ink; var s = SK[name];      // a hand underline
-    _add(s, s.rc.curve([[x1, y + 4], [(x1 + x2) / 2, y - 6], [x2, y + 2]], opt(o, (o && o.seed) || 17))); }
+    _add(s, s.rc.curve([[x1, y + 4], [(x1 + x2) / 2, y - 6], [x2, y + 2]], opt(o, (o && o.seed) || 17)), null, o); }
   function arrow(name, x1, y1, x2, y2, o) { _ink = SK[name].ink;
     var s = SK[name], oo = opt(o, (o && o.seed) || 19), bend = (o && o.bend != null) ? o.bend : .12;
     var mx = (x1 + x2) / 2 + (y2 - y1) * bend, my = (y1 + y2) / 2 - (x2 - x1) * bend;
-    _add(s, s.rc.curve([[x1, y1], [mx, my], [x2, y2]], oo));
+    _add(s, s.rc.curve([[x1, y1], [mx, my], [x2, y2]], oo), null, o);
     var ang = Math.atan2(y2 - my, x2 - mx), L = 38, sp = .5;
-    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang - sp), y2 - L * Math.sin(ang - sp), oo), "head");
-    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang + sp), y2 - L * Math.sin(ang + sp), oo), "head");
+    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang - sp), y2 - L * Math.sin(ang - sp), oo), "head", o);
+    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang + sp), y2 - L * Math.sin(ang + sp), oo), "head", o);
   }
   function label(name, x, y, txt, o) {   // Pangolin, fades in after its shapes
     var s = SK[name], t = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -829,8 +829,8 @@
 
 
   fadein("#b7", 41.732, .01); pop("#b7a", 41.732); pop("#b7b", 42.052);
-  sketch("x7", "skF"); ln("x7", 225, 432, 515, 445, {strokeWidth: 7, seed: 71});
-  ln("x7", 565, 445, 860, 432, {strokeWidth: 7, seed: 73});
+  sketch("x7", "skF"); ln("x7", 225, 432, 515, 445, {strokeWidth: 7, seed: 71, halo: false});
+  ln("x7", 565, 445, 860, 432, {strokeWidth: 7, seed: 73, halo: false});
   draw("x7", 42.432, .35);
   sink("#b7", 43.900); erase("x7", 43.900);
 
@@ -842,7 +842,7 @@
 
   rise("#b9", 53.118);
   pop("#b9s", 55.174);
-  sketch("x9", "skF"); ln("x9", 318, 592, 660, 586, {strokeWidth: 7, seed: 91});
+  sketch("x9", "skF"); ln("x9", 318, 592, 660, 586, {strokeWidth: 7, seed: 91, halo: false});
   draw("x9", 57.633, .35);
   tl.to("#b9s", {autoAlpha: 0, duration: .25}, 58.273); erase("x9", 58.273);
   pop("#b9c", 58.410);

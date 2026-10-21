@@ -344,7 +344,7 @@ js(u'''
   sketch("r8", "skC"); ell("r8", 536, 1090, 190, 230, {stroke: "#7A1424", strokeWidth: 5, seed: 19});
   label("r8", 655, 1105, "рендер", {size: 64, color: "#7A1424", anchor: "start"});
   draw("r8", %.3f, .6);
-''' % (c0, c1, c0 + 0.9, S(u"що таке", 32.2) - 0.1, t_kld - 0.4, t_kld - 0.1, t_bud, t_zv - 0.3, t_json - 0.1, t_per - 0.35,
+''' % (c0, c1, c0 + 0.6, S(u"що таке", 32.2) - 0.1, t_kld - 0.4, t_kld - 0.1, t_bud, t_zv - 0.3, t_json - 0.1, t_per - 0.35,
        t_got - 0.35, t_r2 - 0.75))
 g.sfx("whoosh-short", c0); g.sfx("click-soft", t_kld - 0.4); g.sfx("click-soft", t_json - 0.1)
 g.sfx("pop", t_r2 - 0.15)
@@ -498,8 +498,8 @@ g.sfx("pop", t_dla); g.sfx("click-soft", t_20 + 0.15); g.sfx("pop", t_prv - 0.1)
 t_ice = S(u"І це", 71.52)
 m0, m1 = t_23 - 0.2, t_ice - 0.05
 B.append(u'''
-        <div id="bw1" class="big hid" style="top:320px; font-size:240px">2–3</div>
-        <div id="bw2" class="big hid" style="top:536px; font-size:240px">години</div>''')
+        <div id="bw1" class="big hid" data-layout-allow-overlap style="top:320px; font-size:240px">2–3</div>
+        <div id="bw2" class="big hid" data-layout-allow-overlap style="top:536px; font-size:240px">години</div>''')
 g.matte("hours", round(m0 - 0.1, 3), round(m1 - m0 + 0.6, 3))
 js(u'''
   rise("#bw1", %.3f); rise("#bw2", %.3f);

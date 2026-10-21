@@ -58,9 +58,18 @@ FIX = {
 }
 
 
-def split_multi(caps):
-    """captions are word by word (her review of 41): a token the aligner kept
-    as a phrase («і в телеграмі,») is split, its time shared by letters"""
+# a phrase too wide for the rail (801 px at 90 px: it would cross x 900, the IG
+# action column) is split anyway, its short lead word held 0.12 s
+FORCE_SPLIT = {u"то обов'язково"}
+
+
+def split_multi(caps, min_gap=0.12):
+    """captions are word by word (her review of 41): a phrase token («Мій Клод»,
+    «монтаж рілсів.») is split, its time shared by letters — but only when every
+    word then gets ≥ 0.12 s. Otherwise it stays one caption, as the aligner's
+    phrases do on reel 41 («до тредів», «по контенту»): split, «і в телеграмі,»
+    would flash «І» and «В» for a frame each, stacked on the next word (the kit
+    holds a word ≥ 0.10 s, so starts under 0.10 s apart overlap)."""
     out = []
     for c in caps:
         parts = c["w"].split()
@@ -69,16 +78,35 @@ def split_multi(caps):
             continue
         n = float(sum(len(p) for p in parts))
         t, span = c["s"], c["e"] - c["s"]
+        pieces = []
         for p in parts:
             d = span * len(p) / n
-            out.append(dict(c, w=p, s=round(t, 3), e=round(t + d, 3)))
+            pieces.append(dict(c, w=p, s=round(t, 3), e=round(t + d, 3)))
             t += d
+        if min(x["e"] - x["s"] for x in pieces) >= min_gap:
+            out.extend(pieces)
+        elif c["w"] in FORCE_SPLIT:
+            t = c["s"]
+            for p in parts[:-1]:
+                out.append(dict(c, w=p, s=round(t, 3), e=round(t + min_gap, 3)))
+                t += min_gap
+            out.append(dict(c, w=parts[-1], s=round(t, 3), e=c["e"]))
+        else:
+            out.append(c)
     return out
 
 
 CAPS = split_multi(load_caps(NN, FIX))
 W = Words(CAPS)
 S, E = W.s, W.e
+
+
+def S_in(phrase, near, word):
+    """where «word» starts inside a phrase caption kept whole (letter-shared time)"""
+    c = W.hit(phrase, near)
+    parts = c["w"].split()
+    i = parts.index(word)
+    return round(c["s"] + (c["e"] - c["s"]) * sum(len(p) for p in parts[:i]) / float(sum(len(p) for p in parts)), 3)
 
 # ---------------------------------------------------------------- the beats
 B, P, F, C, J = [], [], [], [], []     # behind / panel / front / cover html, js
@@ -92,7 +120,10 @@ def js(s):
 
 
 F.append(u'<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>')
-P.append(u'<svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
+# the check reads the full-frame matte <video> over the panel as opaque; her
+# cut-out never reaches the panel sketches (head top ≈ y 1050 pushed, sketches
+# ≤ y 830, no raised hands in either half span — checked on the plate)
+P.append(u'<svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
 
 # helpers on top of the kit: a hand tick, a cloud at any size, a polyline
 js(u'''
@@ -149,12 +180,13 @@ js(u'''
   sink("#b1", %.3f); erase("c1", %.3f);
 ''' % (t_klod - 0.45, t_prac, t_koly - 0.2, t_nich - 0.1, e_pyshu - 0.2, e_pyshu - 0.2))
 g.sfx("pop", t_klod - 0.4); g.sfx("click-soft", t_nich)
-BLACKOUT.append((S(u"Мій", 0.8) - 0.03, S(u"на", 1.8) - 0.03))      # the card says «Claude · працює»
+# no blackout on «Мій Клод працює»: the kit fades the plaque in at the first word
+# regardless, so a blackout here left an empty plaque up until «на» (1.8 s)
 
 # 2 · BEHIND — «рутини» -------------------------------------------------------
 t_rut, e_rut = S(u"рутини.", 5.92), E(u"рутини.", 5.92)
 # 240 px, x-height ≈ y 592–707: her hair (top ≈ 680–700 on the word) covers ~25 % of it
-B.append(u'        <div id="bw" class="big hid" style="top:530px; font-size:240px">рутини</div>')
+B.append(u'        <div id="bw" class="big hid" data-layout-allow-occlusion style="top:530px; font-size:240px">рутини</div>')
 g.matte("rut", round(t_rut - 0.75, 3), round(e_rut - t_rut + 1.1, 3))
 js(u'''
   rise("#bw", %.3f); sink("#bw", %.3f);
@@ -163,15 +195,19 @@ g.sfx("whoosh-short", t_rut - 0.55)
 BLACKOUT.append((t_rut - 0.03, e_rut))                              # the big word says it
 
 # 3 · HALF — every few hours: chats -> checked -> tasks for me and the team -----
-h0, h1 = round(e_rut - 0.15, 3), E(u"команді.", 14.41)
+# the kit turns captions ink 0.45 s into a half and drops the plaque 0.2 s before
+# that: a word starting earlier stays white at the bottom, over her cream blouse
+# with no plaque («НАПРИКЛАД,» was). So the panel starts 0.45 s before
+# «Наприклад,» — the plaque's off-span then joins the «рутини.» blackout
+h0, h1 = round(e_rut - 0.45, 3), E(u"команді.", 14.41)
 HALF.append((h0, h1))
-P.append(u'        <span id="pig" class="hid" style="position:absolute; left:642px; top:322px; color:#7A1424">%s</span>'
+P.append(u'        <span id="pig" class="hid" data-layout-allow-occlusion style="position:absolute; left:642px; top:322px; color:#7A1424">%s</span>'
          % mark("instagram", 60))
-P.append(u'        <span id="ptg" class="hid" style="position:absolute; left:642px; top:457px; color:#7A1424">%s</span>'
+P.append(u'        <span id="ptg" class="hid" data-layout-allow-occlusion style="position:absolute; left:642px; top:457px; color:#7A1424">%s</span>'
          % mark("telegram", 60))
 t_kozh, t_kil, t_god = S(u"кожні", 7.94), S(u"кілька", 8.1), S(u"годин", 8.42)
 t_perev, t_chat = S(u"перевіряє", 8.92), S(u"чати", 9.66)
-t_ig, t_tg = S(u"інстаграмі", 10.0), S(u"телеграмі,", 10.5)
+t_ig, t_tg = S(u"інстаграмі", 10.0), S_in(u"і в телеграмі,", 10.42, u"телеграмі,")
 t_nich2, t_prop = S(u"нічого", 11.29), S(u"пропустила,", 11.73)
 t_sam, t_stv, t_zad = S(u"сам", 12.61), S(u"створює", 12.85), S(u"задачі", 13.51)
 t_meni, t_kom = S(u"мені", 13.99), S(u"команді.", 14.41)
@@ -232,8 +268,8 @@ g.sfx("pop", t_stv); g.sfx("whoosh-short", h1)
 BLACKOUT.append((t_zad - 0.03, h1))                                 # the labels write «задачі · мені · команді»
 
 # 4 · ABOVE — a weekly report on the content, and next week's ideas -----------
-t_rut2, t_raz = S(u"рутина,", 15.4), S(u"раз", 15.9)
-t_zvit, t_odr, t_idei = S(u"звіт", 16.82), S(u"одразу", 17.95), S(u"ідеї", 18.26)
+t_rut2, t_raz = S(u"рутина,", 15.4), S_in(u"яка раз", 15.86, u"раз")
+t_zvit, t_odr, t_idei = S(u"звіт", 16.82), S_in(u"і одразу", 17.84, u"одразу"), S(u"ідеї", 18.26)
 t_nast, e_tyzh = S(u"наступний", 18.9), E(u"тиждень.", 19.22)
 bars = [40, 62, 50, 84, 70, 92, 100]
 bulb = (u'<svg width="30" height="40" viewBox="0 0 30 40" style="flex:none"><path d="M15 3 a11.5 11.5 0 0 1 7 20.6 '
@@ -271,7 +307,7 @@ js(u'''
 ''' % (t_rut2 - 0.25, t_raz, t_zvit - 0.2, t_zvit, t_odr - 0.3, t_idei, t_idei + 0.15, t_idei + 0.3,
        t_nast - 0.05, e_tyzh - 0.15))
 g.sfx("pop", t_rut2 - 0.2); g.sfx("pop", t_odr - 0.25)
-BLACKOUT.append((t_zvit - 0.03, S(u"і", 17.8) - 0.03))              # the card title says it
+BLACKOUT.append((t_zvit - 0.03, S(u"і одразу", 17.84) - 0.03))              # the card title says it
 
 # 5 · ABOVE — the alarm rings; everything is already ticked --------------------
 t_tob, t_prok = S(u"Тобто", 19.9), S(u"прокидаюсь,", 20.24)
@@ -325,9 +361,10 @@ js(u'''
 g.sfx("pop", t_klod2 - 0.1)
 
 # 7 · HALF — the laptop closes and sleeps; the cloud works any time ------------
-h2, h3 = round(e_hm - 0.05, 3), round(S(u"тому", 34.14) - 0.2, 3)
+# 0.45 s before «І це означає»: those words go ink on the panel (see h0)
+h2, h3 = round(S(u"І", 26.9) - 0.45, 3), round(S(u"тому", 34.14) - 0.2, 3)
 HALF.append((h2, h3))
-P.append(u'        <span id="pcl" class="hid" style="position:absolute; left:760px; top:368px; color:#7A1424">%s</span>'
+P.append(u'        <span id="pcl" class="hid" data-layout-allow-occlusion style="position:absolute; left:760px; top:368px; color:#7A1424">%s</span>'
          % mark("claude", 60))
 t_ozn, t_trym, t_vidk = S(u"означає,", 27.15), S(u"тримати", 28.53), S(u"відкритим.", 29.39)
 t_vin, t_bud, t_sam2 = S(u"Він", 29.88), S(u"будь-який", 31.66), S(u"сам.", 32.42)

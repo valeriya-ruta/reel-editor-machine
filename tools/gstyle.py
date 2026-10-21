@@ -241,7 +241,7 @@ JS = r"""
     SK[name] = {g: g, rc: rough.svg(svg), shapes: [], foot: foot, boxes: [], ink: "#1E1E1E"};
     return SK[name];
   }
-  function _add(s, node, kind) {
+  function _add(s, node, kind, o) {   // o.halo === false: a stroke over a white card / pill (a strike-through) needs none
     s.g.appendChild(node);
     var paths = [].slice.call(node.querySelectorAll ? node.querySelectorAll("path") : []);
     if (node.tagName === "path") paths = [node];
@@ -249,7 +249,7 @@ JS = r"""
       var f = p.getAttribute("fill");
       if (f && f !== "none") { p.style.opacity = 0; p.dataset.fill = "1"; return; }  // a solid fill fades in
       var L = 0; try { L = p.getTotalLength(); } catch (e) {}
-      if (s.foot) {                  // the white halo under a stroke over the footage
+      if (s.foot && !(o && o.halo === false)) {   // the white halo under a stroke over the footage
         var h = p.cloneNode(false);
         h.setAttribute("stroke", "#FFFFFF");
         h.setAttribute("stroke-width", (parseFloat(p.getAttribute("stroke-width")) || 4.5) + 8);
@@ -284,16 +284,16 @@ JS = r"""
   function blob(name, d, bbox, o) { _ink = SK[name].ink; var s = SK[name];
     _add(s, s.rc.path(d, _closed(s, opt(o, (o && o.seed) || 23), o, bbox[0], bbox[1], bbox[2], bbox[3]))); }
   function ln(name, x1, y1, x2, y2, o) { _ink = SK[name].ink; var s = SK[name];
-    _add(s, s.rc.line(x1, y1, x2, y2, opt(o, (o && o.seed) || 13))); }
+    _add(s, s.rc.line(x1, y1, x2, y2, opt(o, (o && o.seed) || 13)), null, o); }
   function under(name, x1, y, x2, o) { _ink = SK[name].ink; var s = SK[name];      // a hand underline
-    _add(s, s.rc.curve([[x1, y + 4], [(x1 + x2) / 2, y - 6], [x2, y + 2]], opt(o, (o && o.seed) || 17))); }
+    _add(s, s.rc.curve([[x1, y + 4], [(x1 + x2) / 2, y - 6], [x2, y + 2]], opt(o, (o && o.seed) || 17)), null, o); }
   function arrow(name, x1, y1, x2, y2, o) { _ink = SK[name].ink;
     var s = SK[name], oo = opt(o, (o && o.seed) || 19), bend = (o && o.bend != null) ? o.bend : .12;
     var mx = (x1 + x2) / 2 + (y2 - y1) * bend, my = (y1 + y2) / 2 - (x2 - x1) * bend;
-    _add(s, s.rc.curve([[x1, y1], [mx, my], [x2, y2]], oo));
+    _add(s, s.rc.curve([[x1, y1], [mx, my], [x2, y2]], oo), null, o);
     var ang = Math.atan2(y2 - my, x2 - mx), L = 38, sp = .5;
-    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang - sp), y2 - L * Math.sin(ang - sp), oo), "head");
-    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang + sp), y2 - L * Math.sin(ang + sp), oo), "head");
+    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang - sp), y2 - L * Math.sin(ang - sp), oo), "head", o);
+    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang + sp), y2 - L * Math.sin(ang + sp), oo), "head", o);
   }
   function label(name, x, y, txt, o) {   // Pangolin, fades in after its shapes
     var s = SK[name], t = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -485,6 +485,9 @@ class G(object):
         they turn ink and the plaque stands down; on the panel they sit above her
         head. Returns (html, js)."""
         ws = [dict(w) for c in chunks for w in c["words"]]
+        for a, b in zip(ws, ws[1:]):          # a split token can start inside the
+            if b["s"] < a["s"] + 0.10:         # last word's 0.10 s floor: it waits
+                b["s"] = round(a["s"] + 0.10, 3)
         for a, b in zip(ws, ws[1:]):          # §2b: never two words at once
             a["e"] = round(max(a["s"] + 0.10, b["s"] - 0.085), 3)
         half = [(a + 0.45, b + 0.40) for a, b in self.spans(js, "half")]

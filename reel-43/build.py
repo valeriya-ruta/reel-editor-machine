@@ -306,8 +306,8 @@ F.append(u'''
         </div>''')
 js(u'''
   fadein("#b7", %.3f, .01); pop("#b7a", %.3f); pop("#b7b", %.3f);
-  sketch("x7", "skF"); ln("x7", 225, 432, 515, 445, {strokeWidth: 7, seed: 71});
-  ln("x7", 565, 445, 860, 432, {strokeWidth: 7, seed: 73});
+  sketch("x7", "skF"); ln("x7", 225, 432, 515, 445, {strokeWidth: 7, seed: 71, halo: false});
+  ln("x7", 565, 445, 860, 432, {strokeWidth: 7, seed: 73, halo: false});
   draw("x7", %.3f, .35);
   sink("#b7", %.3f); erase("x7", %.3f);
 ''' % (t_ty - 0.1, t_ty - 0.1, S(u"більше", 41.95) + 0.1, t_ni, 43.9, 43.9))
@@ -362,7 +362,7 @@ F.append(u'''
 js(u'''
   rise("#b9", %.3f);
   pop("#b9s", %.3f);
-  sketch("x9", "skF"); ln("x9", 318, 592, 660, 586, {strokeWidth: 7, seed: 91});
+  sketch("x9", "skF"); ln("x9", 318, 592, 660, 586, {strokeWidth: 7, seed: 91, halo: false});
   draw("x9", %.3f, .35);
   tl.to("#b9s", {autoAlpha: 0, duration: .25}, %.3f); erase("x9", %.3f);
   pop("#b9c", %.3f);

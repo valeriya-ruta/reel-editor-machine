@@ -190,9 +190,12 @@ t_te, t_mtzh = S(u"Те", 15.62), S(u"з монтажем:", 16.0)
 t_kyd2, t_vid = S(u"кидаєш", 16.6), S(u"відео,", 16.94)
 t_hm2, t_ane = S(u"в хмарі,", 18.18), S(u"а не", 18.82)
 t_komp2 = S(u"компʼютері.", 19.38)
-P.append(u'<svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
-P.append(u'<div id="pm" class="hid" style="position:absolute; left:510px; top:470px; color:#7A1424">%s</div>'
-         % mark("claude", 64))
+# her cut-out is a full-frame video over the panel: the layout audit reads it as
+# opaque, so the panel's sketches are marked as intentionally layered (as reels 43/45)
+P.append(u'''<div data-layout-allow-occlusion>
+        <svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
+        <div id="pm" class="hid" style="position:absolute; left:510px; top:470px; color:#7A1424">%s</div>
+        </div>''' % mark("claude", 64))
 CL_P = (392, 380, 300, 280)          # the panel cloud, drawn twice
 js(u'''
   sketch("a_ph", "skP"); box("a_ph", 95, 400, 130, 250, {seed: 61, r: 26});
@@ -241,7 +244,7 @@ js(u'''
   sketch("b_x", "skP"); ln("b_x", 835, 400, 995, 545, {seed: 87, stroke: "#7A1424", strokeWidth: 7});
   ln("b_x", 995, 400, 835, 545, {seed: 88, stroke: "#7A1424", strokeWidth: 7});
   draw("b_x", %.3f, .25);
-''' % ((t_te - 0.05,) * 7 + (t_mtzh - 0.1, t_mtzh, t_kyd2 - 0.25, t_vid, t_vid + 0.05,
+''' % ((t_te - 0.05,) * 7 + (t_mtzh - 0.35, t_mtzh + 0.05, t_kyd2 - 0.25, t_vid, t_vid + 0.05,
                               cloud("b_clr", *CL_P, o=u'{seed: 84, stroke: "#7A1424", strokeWidth: 5.5}'), t_hm2 - 0.3,
                               t_ane - 0.1, t_ane + 0.25, t_komp2 - 0.3)))
 g.sfx("whoosh-short", h0); g.sfx("pop", t_kar - 0.35); g.sfx("click-soft", t_komp2); g.sfx("whoosh-short", h1)

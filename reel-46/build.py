@@ -310,21 +310,22 @@ F.append(acct("a3", 110, 310, u"особистий", u"свій", shown=True) +
          acct("a4", 560, 310, u"професійний", u"школа", shown=True))
 
 
-def checklist(i, x, top, who):
+def checklist(i, x, top, who, under=False):
+    """the setup card; `under` is the second one, tucked under the first on
+    «плюс»: its rows are hidden on purpose (only its header peeks out), so
+    they carry the audit's waiver and the top card is marked as the cover"""
     rows = [u"скіл сценариста", u"tone of voice", u"дизайн-система"]
-    # the second card is meant to sit tucked under the first (the setup doubles):
-    # its rows are hidden on purpose, only its header peeks out above
-    return (u'<div id="%s" class="card hid" data-layout-allow-overlap data-layout-allow-occlusion'
-            u' style="left:%dpx; top:%dpx; width:500px; padding:30px 36px;">'
+    waive = u" data-layout-allow-overlap" if under else u""
+    return (u'<div id="%s" class="card hid"%s style="left:%dpx; top:%dpx; width:500px; padding:30px 36px;">'
             u'<div class="row" style="gap:12px; color:#7A1424; margin-bottom:18px">%s'
             u'<span class="lbl" style="margin:0">налаштування · %s</span></div>%s</div>'
-            % (i, x, top, mark("instagram", 30), esc(who),
+            % (i, u"" if under else u" data-layout-allow-occlusion", x, top, mark("instagram", 30), esc(who),
                u"".join(u'<div class="row" style="margin-top:%dpx"><span class="check"></span>'
-                        u'<span class="tick">%s</span></div>' % (0 if n == 0 else 16, esc(r))
+                        u'<span class="tick"%s>%s</span></div>' % (0 if n == 0 else 16, waive, esc(r))
                         for n, r in enumerate(rows))))
 
 
-F.append(checklist("ck2", 144, 296, u"школа") + checklist("ck1", 100, 372, u"особистий"))
+F.append(checklist("ck2", 144, 296, u"школа", under=True) + checklist("ck1", 100, 372, u"особистий"))
 F.append(u''.join(u'<div id="pl%d" class="hid" style="position:absolute; left:668px; top:%dpx">'
                   u'<span class="chip" style="font-size:40px; padding:14px 26px 14px 16px"><b class="plus">+</b>%s</span></div>'
                   % (n, y, w) for n, (y, w) in enumerate(((340, u"робота"), (448, u"час"), (556, u"гроші")))))
