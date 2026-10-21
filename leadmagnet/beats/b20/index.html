@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=1920, height=1080"/>
+<script src="assets/gsap.min.js"></script><script src="assets/rough.js"></script>
+<link rel="stylesheet" href="assets/excalifont.css"/><link rel="stylesheet" href="assets/lib.css"/>
+<script src="assets/lib.js"></script>
+</head><body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="66.600" data-width="1920" data-height="1080">
+  <div id="bg" class="clip paper" data-start="0" data-duration="66.600" style="opacity:0"></div>
+  <div id="stage" class="clip" data-start="0" data-duration="66.600">
+    <svg id="ex" width="1920" height="1080"></svg>
+    
+  </div>
+  <div id="camring"></div>
+  <video id="cam" class="clip" src="cam.mp4" data-start="0" data-duration="66.600" data-media-start="0" muted playsinline></video>
+  <div id="dim" class="clip" data-start="0" data-duration="66.600"></div>
+  <div id="flash" class="clip" data-start="0" data-duration="66.600"></div>
+</div>
+<script>
+window.__timelines = window.__timelines || {};
+const tl = gsap.timeline({ paused: true });
+LM.camSet("full");
+tl.to("#bg",{opacity:1,duration:0.4},0.05);tl.to("#bg",{opacity:0,duration:0.5},65.850);
+LM.flash(tl,0.25); LM.cam(tl,0.1,"card",0.9);
+      document.getElementById("stage").insertAdjacentHTML("beforeend",'<div class="gtitle" id="gt" style="left:80px;top:70px"><span class="dot"></span>Що в тебе на руках</div>');
+      LM.rise(tl,"#gt",0.4);
+      LM.ex(tl,4.4,"rect",[90,200,480,460],{fill:"#fadee1",stroke:"#a81428",strokeWidth:3});
+      LM.xt(tl,4.6,330,225,"дизайн-система",50,"#a81428",{center:1});
+      LM.xt(tl,8.0,130,320,"• базовий брендбук",42); LM.xt(tl,9.7,130,385,"• каруселі",42); LM.xt(tl,11.5,130,450,"• інші статичні секції",42);
+      LM.ex(tl,15.3,"rect",[640,200,470,460],{fill:"#a5d8ff",stroke:"#1971c2",strokeWidth:3});
+      LM.xt(tl,15.6,875,225,"reels StyleMD",50,"#1971c2",{center:1});
+      LM.xt(tl,19.7,670,320,"• анімація",42); LM.xt(tl,22.1,670,385,"• елементи",42); LM.xt(tl,23.6,670,450,"• рендер",42);
+      LM.xt(tl,32.8,120,720,"каруселі — вже можна постити ✓",48,"#2f9e44");
+      LM.clearScene(tl,47.2); LM.scene();
+      LM.xt(tl,47.6,110,200,"для монтажу ще:",54,"#1e1e1e");
+      ["скіли","рендер у хмарі","GitHub","працює з телефону"].forEach((n,i)=>{
+        const t=[53.2,54.0,55.6,61.5][i];
+        LM.ex(tl,t,"rect",[120,300+i*110,46,46],{stroke:"#a81428",strokeWidth:3});
+        LM.ex(tl,t+0.3,"path","M128 "+(322+i*110)+" L142 "+(338+i*110)+" L172 "+(296+i*110),{stroke:"#2f9e44",strokeWidth:5});
+        LM.xt(tl,t+0.2,200,298+i*110,n,46);
+      });tl.to(["#gt","#stage svg","#stage div"],{opacity:0,duration:0.35},65.75);
+      LM.cam(tl,65.69999999999999,"full",0.8);
+tl.set({}, {}, 66.600);
+window.__timelines["main"] = tl;
+</script></body></html>

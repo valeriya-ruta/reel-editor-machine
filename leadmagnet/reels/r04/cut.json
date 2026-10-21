@@ -1,0 +1,109 @@
+{
+ "fps": 30,
+ "frames": 1510,
+ "duration": 50.333333333333336,
+ "segments": [
+  {
+   "src": 14.54,
+   "nf": 43,
+   "out": 0,
+   "frame": "in"
+  },
+  {
+   "src": 16.2,
+   "nf": 28,
+   "out": 43,
+   "frame": "base"
+  },
+  {
+   "src": 17.38,
+   "nf": 61,
+   "out": 71,
+   "frame": "base"
+  },
+  {
+   "src": 19.63,
+   "nf": 112,
+   "out": 132,
+   "frame": "in"
+  },
+  {
+   "src": 23.55,
+   "nf": 48,
+   "out": 244,
+   "frame": "base"
+  },
+  {
+   "src": 25.58,
+   "nf": 29,
+   "out": 292,
+   "frame": "in"
+  },
+  {
+   "src": 26.97,
+   "nf": 91,
+   "out": 321,
+   "frame": "in"
+  },
+  {
+   "src": 30.16,
+   "nf": 99,
+   "out": 412,
+   "frame": "base"
+  },
+  {
+   "src": 33.62,
+   "nf": 42,
+   "out": 511,
+   "frame": "in"
+  },
+  {
+   "src": 35.24,
+   "nf": 65,
+   "out": 553,
+   "frame": "base"
+  },
+  {
+   "src": 37.64,
+   "nf": 215,
+   "out": 618,
+   "frame": "in"
+  },
+  {
+   "src": 45.14,
+   "nf": 14,
+   "out": 833,
+   "frame": "base"
+  },
+  {
+   "src": 45.94,
+   "nf": 58,
+   "out": 847,
+   "frame": "base"
+  },
+  {
+   "src": 48.13,
+   "nf": 14,
+   "out": 905,
+   "frame": "in"
+  },
+  {
+   "src": 48.81,
+   "nf": 16,
+   "out": 919,
+   "frame": "in"
+  },
+  {
+   "src": 50.03,
+   "nf": 575,
+   "out": 935,
+   "frame": "in"
+  }
+ ],
+ "ranges": [
+  [
+   38,
+   157
+  ]
+ ]
+}

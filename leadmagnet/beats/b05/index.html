@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=1920, height=1080"/>
+<script src="assets/gsap.min.js"></script><script src="assets/rough.js"></script>
+<link rel="stylesheet" href="assets/excalifont.css"/><link rel="stylesheet" href="assets/lib.css"/>
+<script src="assets/lib.js"></script>
+</head><body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="116.200" data-width="1920" data-height="1080">
+  <div id="bg" class="clip paper" data-start="0" data-duration="116.200" style="opacity:0"></div>
+  <div id="stage" class="clip" data-start="0" data-duration="116.200">
+    <svg id="ex" width="1920" height="1080"></svg>
+    
+  </div>
+  <div id="camring"></div>
+  <video id="cam" class="clip" src="cam.mp4" data-start="0" data-duration="116.200" data-media-start="0" muted playsinline></video>
+  <div id="dim" class="clip" data-start="0" data-duration="116.200"></div>
+  <div id="flash" class="clip" data-start="0" data-duration="116.200"></div>
+</div>
+<script>
+window.__timelines = window.__timelines || {};
+const tl = gsap.timeline({ paused: true });
+LM.camSet("full");
+tl.to("#bg",{opacity:1,duration:0.4},0.05);tl.to("#bg",{opacity:0,duration:0.5},115.450);
+LM.flash(tl,0.25); LM.cam(tl,0.1,"card",0.9);
+      document.getElementById("stage").insertAdjacentHTML("beforeend",'<div class="gtitle" id="gt" style="left:80px;top:70px"><span class="dot"></span>Як працює система</div>');
+      LM.rise(tl,"#gt",0.4);
+      LM.ex(tl,2.2,"rect",[90,200,560,420],{fill:"#fadee1",stroke:"#a81428",strokeWidth:3,hachureGap:12});
+      LM.xt(tl,4.5,370,225,"Основа · брендбук",48,"#a81428",{center:1});
+      LM.xt(tl,7.4,140,320,"• кольори",44); LM.xt(tl,10.4,140,385,"• шрифти",44);
+      LM.xt(tl,12.0,140,450,"• елементи",44); LM.xt(tl,13.2,140,515,"• стиль",44);
+      LM.xt(tl,15.6,720,300,"задає тон\nвсьому дизайну",44,"#5c6678");
+      LM.ex(tl,16.0,"arrow",[710,380,670,420],{});
+      LM.clearScene(tl,20.2); LM.scene();
+      [["#f08c00","#ffd8a8"],["#2f9e44","#b2f2bb"],["#1971c2","#a5d8ff"]].forEach((c,i)=>{
+        LM.ex(tl,23.0+i*1.3,"rect",[120+i*360,260,260,400],{fill:c[1],stroke:c[0]});
+        LM.xt(tl,23.2+i*1.3,250+i*360,430,["рілс","карусель","рілс"][i],40,c[0],{center:1});
+      });
+      LM.ex(tl,27.2,"line",[90,230,1130,700],{stroke:"#e03131",strokeWidth:6});
+      LM.ex(tl,27.5,"line",[1130,230,90,700],{stroke:"#e03131",strokeWidth:6});
+      LM.clearScene(tl,28.2); LM.scene();
+      LM.ex(tl,33.5,"rect",[110,260,420,260],{fill:"#ffec99",stroke:"#f08c00"}); LM.xt(tl,33.8,320,355,"персональний",46,"#1e1e1e",{center:1});
+      LM.ex(tl,36.9,"rect",[690,260,420,260],{fill:"#a5d8ff",stroke:"#1971c2"}); LM.xt(tl,37.2,900,355,"експертний",46,"#1e1e1e",{center:1});
+      LM.xt(tl,40.2,320,560,"дизайн-система 1",36,"#5c6678",{center:1}); LM.xt(tl,40.5,900,560,"дизайн-система 2",36,"#5c6678",{center:1});
+      LM.xt(tl,44.8,610,660,"✓ абсолютно нормально",48,"#2f9e44",{center:1});
+      LM.clearScene(tl,46.2); LM.scene();
+      LM.ex(tl,46.8,"ellipse",[610,430,700,420],{fill:"#e9ecef",stroke:"#1e1e1e",roughness:2.4});
+      LM.xt(tl,47.2,610,380,"все в одному стилі",44,"#1e1e1e",{center:1});
+      LM.xt(tl,50.6,610,520,"AI заплутається ?!",54,"#e03131",{center:1});
+      LM.xt(tl,54.5,610,720,"кожен стиль = свій брендбук",48,"#a81428",{center:1});
+      LM.clearScene(tl,57.4); LM.scene();
+      LM.ex(tl,57.7,"rect",[440,220,360,150],{fill:"#fadee1",stroke:"#a81428",strokeWidth:3}); LM.xt(tl,58.0,620,265,"основа",50,"#a81428",{center:1});
+      ["каруселі","рілси","гайди"].forEach((n,i)=>{
+        const x=110+i*380, t=60.1+i*0.5;
+        LM.ex(tl,t,"arrow",[620,380,x+150,520],{});
+        LM.ex(tl,t+0.3,"rect",[x,540,300,130],{stroke:"#1e1e1e"}); LM.xt(tl,t+0.5,x+150,575,n,44,"#1e1e1e",{center:1});
+      });
+      LM.xt(tl,63.6,620,720,"секція на кожен тип результату",40,"#5c6678",{center:1});
+      LM.clearScene(tl,67.2); LM.scene();
+      document.getElementById("stage").insertAdjacentHTML("beforeend",
+       '<div id="mybb" class="gl" style="position:absolute;left:110px;top:210px;width:1050px;height:520px;border-radius:40px;padding:44px 50px;font-family:PS;opacity:0">'+
+       '<div style="font:700 22px PS;letter-spacing:.16em;color:#a81428">МІЙ БРЕНДБУК</div>'+
+       '<div style="display:flex;gap:40px;margin-top:30px;align-items:flex-end"><div style="font:700 150px/1 PS;color:#1a1e27">Aa</div>'+
+       '<div style="font:500 30px PS;color:#5c6678;padding-bottom:20px">Product Sans<br>без засічок</div></div>'+
+       '<div style="display:flex;gap:18px;margin-top:40px"><div style="width:120px;height:120px;border-radius:28px;background:#a81428"></div>'+
+       '<div style="width:120px;height:120px;border-radius:28px;background:#7a1020"></div><div style="width:120px;height:120px;border-radius:28px;background:#fadee1"></div>'+
+       '<div style="width:120px;height:120px;border-radius:28px;background:#f9fafc;box-shadow:inset 0 0 0 1px #ddd"></div>'+
+       '<div style="font:700 34px/1.2 PS;color:#1a1e27;margin-left:30px;align-self:center" id="aplg">Apple / Google<br><span style="color:#a81428">мінімалізм</span></div></div></div>');
+      LM.pop(tl,"#mybb",69.7,0.7); LM.rise(tl,"#aplg",78.1);
+      tl.to("#mybb",{opacity:0,y:-20,duration:0.4},84.7);
+      LM.ex(tl,85.0,"rect",[90,200,330,120],{fill:"#fadee1",stroke:"#a81428",strokeWidth:3}); LM.xt(tl,85.2,255,232,"основа",46,"#a81428",{center:1});
+      LM.ex(tl,87.2,"arrow",[430,260,560,260],{});
+      LM.ex(tl,88.8,"rect",[580,200,330,120],{fill:"#a5d8ff",stroke:"#1971c2"}); LM.xt(tl,89.0,745,232,"+ каруселі",46,"#1e1e1e",{center:1});
+      LM.xt(tl,97.6,120,400,"• скільки тексту на слайд?",42);
+      LM.xt(tl,103.4,120,465,"• який розмір тексту?",42);
+      LM.xt(tl,105.2,120,530,"• як розміщуємо картинки?",42);
+      LM.xt(tl,106.9,120,595,"• як я люблю розставляти елементи?",42);
+      LM.xt(tl,110.4,120,660,"• скільки слайдів?",42);tl.to(["#gt","#stage svg","#stage div"],{opacity:0,duration:0.35},115.35000000000001);
+      LM.cam(tl,115.3,"full",0.8);
+tl.set({}, {}, 116.200);
+window.__timelines["main"] = tl;
+</script></body></html>

@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=1080, height=1920"/>
+<script src="assets/gsap.min.js"></script><script src="assets/rough.js"></script>
+<link rel="stylesheet" href="assets/excalifont.css"/><link rel="stylesheet" href="assets/lib.css"/>
+<script src="assets/lib.js"></script>
+<style>
+@font-face{font-family:"PSB";src:url("assets/fonts/ProductSans-Black.woff") format("woff");font-weight:900}
+html,body{width:1080px;height:1920px}
+.clip{width:1080px;height:1920px}
+#plate{object-fit:cover;z-index:1}
+#tk{z-index:10;opacity:0;visibility:hidden}
+#tkin{position:absolute;inset:0}
+.paper{position:absolute;inset:0;background:#fff;background-image:radial-gradient(#d9dbe0 1.1px,transparent 1.2px);background-size:22.74px 22.74px}
+.desk{position:absolute;inset:0;background:linear-gradient(170deg,#f7f5f4 0%,#eef0f4 60%,#e8ebf1 100%)}
+.win{position:absolute;left:0;top:330px;width:1080px;height:828px;overflow:hidden}
+.win video{position:absolute}
+#scrim{position:absolute;left:20px;top:1247px;width:1040px;height:450px;background-image:url("assets/underlay.png");
+  background-size:100% 100%;opacity:0;visibility:hidden;z-index:20}
+.cap{position:absolute;left:0;width:1080px;top:1413px;height:118px;line-height:118px;text-align:center;color:#fff;
+  font:900 90px "PSB";letter-spacing:-.015em;white-space:nowrap;opacity:0;visibility:hidden;z-index:21}
+.cap.inv{color:#1a1e27}
+.hook{position:absolute;left:70px;right:70px;top:170px;z-index:30;background:#fff;border-radius:40px;padding:42px 46px;
+  font:700 66px/1.12 "PS";color:#1a1e27;letter-spacing:-.015em;text-wrap:balance;
+  box-shadow:0 30px 80px -20px rgba(20,15,25,.45),0 0 0 1px rgba(0,0,0,.04)}
+.hook .dot{display:inline-block;width:22px;height:22px;border-radius:50%;background:#a81428;margin-right:20px;transform:translateY(-8px)}
+#cta{z-index:40;opacity:0;visibility:hidden}
+#cta .paper{background-position:0 0}
+.ct1{position:absolute;left:0;right:0;top:500px;text-align:center;font:700 84px "PS";color:#1a1e27}
+.ct2{position:absolute;left:0;right:0;top:690px;text-align:center;font:900 190px/1 "PSB";color:#a81428;letter-spacing:-.02em}
+.ct3{position:absolute;left:90px;right:90px;top:1000px;text-align:center;font:500 56px/1.25 "PS";color:#3c4557}
+#stage{z-index:41}
+#ex,#stage>div[id^="d"]{transform:none!important}
+#flash{z-index:90}
+</style>
+</head><body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="90.6667" data-width="1080" data-height="1920">
+  <video id="plate" class="clip" src="plate.mp4" data-start="0" data-duration="87.0667" data-media-start="0" muted playsinline></video>
+  <div id="tk" class="clip" data-start="0" data-duration="90.6667"><div id="tkin"><div class="desk"></div><div class="win"><video id="lv" class="clip" src="lv.mp4" data-start="0" data-duration="87.0667" data-media-start="0" muted playsinline style="left:0;top:0;width:1080px;height:828px"></video></div></div></div>
+  <div id="scrim" data-start="0" data-duration="90.6667" class="clip"></div>
+  <div class="cap" id="cap0">І</div>
+<div class="cap" id="cap1">ТЕПЕР</div>
+<div class="cap" id="cap2">МИ</div>
+<div class="cap" id="cap3">ЙДЕМО</div>
+<div class="cap" id="cap4">В</div>
+<div class="cap" id="cap5">ПІНТЕРЕСТ,</div>
+<div class="cap" id="cap6">І</div>
+<div class="cap" id="cap7">ПОЧИНАЄМО</div>
+<div class="cap inv" id="cap8">ЗБИРАТИ</div>
+<div class="cap inv" id="cap9">МУДБОРД.</div>
+<div class="cap inv" id="cap10">ПРИЧОМУ</div>
+<div class="cap inv" id="cap11">ЦЕ</div>
+<div class="cap inv" id="cap12">МОЖЕ</div>
+<div class="cap inv" id="cap13">БУТИ</div>
+<div class="cap inv" id="cap14">ПРИКЛАДИ</div>
+<div class="cap inv" id="cap15">РЕАЛЬНИХ</div>
+<div class="cap inv" id="cap16">ШТУК.</div>
+<div class="cap inv" id="cap17">НАПРИКЛАД,</div>
+<div class="cap inv" id="cap18">Я</div>
+<div class="cap inv" id="cap19">ЛЮБЛЮ</div>
+<div class="cap inv" id="cap20">ПОШУКАТИ</div>
+<div class="cap inv" id="cap21">В</div>
+<div class="cap inv" id="cap22">ПІНТЕРЕСТІ</div>
+<div class="cap inv" id="cap23">ДИЗАЙН</div>
+<div class="cap inv" id="cap24">КАРУСЕЛІ</div>
+<div class="cap inv" id="cap25">І</div>
+<div class="cap inv" id="cap26">ПОДИВИТИСЯ,</div>
+<div class="cap" id="cap27">ЯКІ</div>
+<div class="cap" id="cap28">Є</div>
+<div class="cap" id="cap29">ДИЗАЙНИ,</div>
+<div class="cap" id="cap30">ПОКОПІЮВАТИ,</div>
+<div class="cap" id="cap31">РОЗПОВІСТИ,</div>
+<div class="cap inv" id="cap32">ЩО</div>
+<div class="cap inv" id="cap33">МЕНІ</div>
+<div class="cap inv" id="cap34">ПОДОБАЄТЬСЯ</div>
+<div class="cap inv" id="cap35">В</div>
+<div class="cap inv" id="cap36">КОЖНОМУ</div>
+<div class="cap inv" id="cap37">СЛАЙДІ.</div>
+<div class="cap inv" id="cap38">КРАДЕМО,</div>
+<div class="cap inv" id="cap39">ЯК</div>
+<div class="cap inv" id="cap40">ХУДОЖНИКИ,</div>
+<div class="cap inv" id="cap41">КОЖНІ</div>
+<div class="cap inv" id="cap42">ЕЛЕМЕНТИ</div>
+<div class="cap inv" id="cap43">ТАМ</div>
+<div class="cap inv" id="cap44">І</div>
+<div class="cap inv" id="cap45">ТАМ.</div>
+<div class="cap inv" id="cap46">ТАКОЖ</div>
+<div class="cap inv" id="cap47">Я</div>
+<div class="cap inv" id="cap48">ЙОМУ</div>
+<div class="cap inv" id="cap49">ВІДПРАВЛЯЛА</div>
+<div class="cap inv" id="cap50">ЕЛЕМЕНТИ</div>
+<div class="cap inv" id="cap51">З</div>
+<div class="cap inv" id="cap52">ЯКИХОСЬ</div>
+<div class="cap inv" id="cap53">ДОДАТКІВ,</div>
+<div class="cap" id="cap54">ТАМ,</div>
+<div class="cap" id="cap55">ДЕ</div>
+<div class="cap" id="cap56">МЕНІ</div>
+<div class="cap" id="cap57">ПРОСТО</div>
+<div class="cap" id="cap58">ПОДОБАЄТЬСЯ</div>
+<div class="cap" id="cap59">ОЦЕЙ</div>
+<div class="cap" id="cap60">LIQUID</div>
+<div class="cap" id="cap61">GLASS,</div>
+<div class="cap" id="cap62">ЯКЩО</div>
+<div class="cap" id="cap63">ВИ</div>
+<div class="cap" id="cap64">ЗНАЄТЕ,</div>
+<div class="cap" id="cap65">ЩО</div>
+<div class="cap" id="cap66">ЦЕ.</div>
+<div class="cap" id="cap67">ТОБТО,</div>
+<div class="cap" id="cap68">Я</div>
+<div class="cap" id="cap69">ЙОМУ</div>
+<div class="cap" id="cap70">ЗБИРАЛА</div>
+<div class="cap" id="cap71">ЕЛЕМЕНТИ,</div>
+<div class="cap" id="cap72">ЯКІ</div>
+<div class="cap" id="cap73">МЕНІ</div>
+<div class="cap" id="cap74">ПОДОБАЮТЬСЯ,</div>
+<div class="cap" id="cap75">НАВІТЬ,</div>
+<div class="cap" id="cap76">ЯКЩО</div>
+<div class="cap" id="cap77">ВОНИ</div>
+<div class="cap" id="cap78">НІБИТО</div>
+<div class="cap" id="cap79">СИЛЬНО</div>
+<div class="cap" id="cap80">НЕ</div>
+<div class="cap" id="cap81">ПОВ'ЯЗАНІ</div>
+<div class="cap" id="cap82">МІЖ</div>
+<div class="cap" id="cap83">СОБОЮ,</div>
+<div class="cap" id="cap84">І</div>
+<div class="cap" id="cap85">ОПИСУВАЛА,</div>
+<div class="cap" id="cap86">ЧОМУ</div>
+<div class="cap" id="cap87">ВОНИ</div>
+<div class="cap" id="cap88">МЕНІ</div>
+<div class="cap" id="cap89">ПОДОБАЮТЬСЯ.</div>
+<div class="cap" id="cap90">І</div>
+<div class="cap" id="cap91">ВІН</div>
+<div class="cap" id="cap92">МЕНІ</div>
+<div class="cap" id="cap93">ГЕНЕРУВАВ</div>
+<div class="cap" id="cap94">НЕ</div>
+<div class="cap" id="cap95">ПРОСТО</div>
+<div class="cap" id="cap96">ДИЗАЙН-СИСТЕМУ,</div>
+<div class="cap" id="cap97">ВІН</div>
+<div class="cap" id="cap98">МЕНІ</div>
+<div class="cap" id="cap99">ГЕНЕРУВАВ</div>
+<div class="cap inv" id="cap100">ТАКОЖ</div>
+<div class="cap inv" id="cap101">ПРИКЛАДИ</div>
+<div class="cap inv" id="cap102">ЗАСТОСУВАННЯ.</div>
+<div class="cap inv" id="cap103">І</div>
+<div class="cap inv" id="cap104">ЦЕ</div>
+<div class="cap inv" id="cap105">СУПЕР</div>
+<div class="cap inv" id="cap106">ВАЖЛИВО.</div>
+<div class="cap inv" id="cap107">ТОМУ</div>
+<div class="cap inv" id="cap108">ЩО</div>
+<div class="cap inv" id="cap109">ЗВИЧАЙНІ</div>
+<div class="cap inv" id="cap110">ЛЮДИ,</div>
+<div class="cap inv" id="cap111">ЯК</div>
+<div class="cap inv" id="cap112">ТИ</div>
+<div class="cap inv" id="cap113">І</div>
+<div class="cap inv" id="cap114">Я,</div>
+<div class="cap inv" id="cap115">МИ</div>
+<div class="cap inv" id="cap116">НЕ</div>
+<div class="cap inv" id="cap117">ЗРОЗУМІЄМО</div>
+<div class="cap inv" id="cap118">ПРОСТО</div>
+<div class="cap inv" id="cap119">З</div>
+<div class="cap inv" id="cap120">ТИПОГРАФІЇ,</div>
+<div class="cap" id="cap121">З</div>
+<div class="cap" id="cap122">КОЛЬОРІВ,</div>
+<div class="cap" id="cap123">З</div>
+<div class="cap" id="cap124">ЯКИХОСЬ</div>
+<div class="cap" id="cap125">ЕЛЕМЕНТІВ,</div>
+<div class="cap" id="cap126">ЯК</div>
+<div class="cap" id="cap127">ЦЕ</div>
+<div class="cap" id="cap128">БУДЕ</div>
+<div class="cap" id="cap129">ВИГЛЯДАТИ.</div>
+<div class="cap" id="cap130">АЛЕ</div>
+<div class="cap inv" id="cap131">ЗРОЗУМІТИ</div>
+<div class="cap inv" id="cap132">І</div>
+<div class="cap inv" id="cap133">ДОДУМАТИ</div>
+<div class="cap inv" id="cap134">САМОСТІЙНО,</div>
+<div class="cap inv" id="cap135">ЦЕ</div>
+<div class="cap inv" id="cap136">АБСОЛЮТНО</div>
+<div class="cap inv" id="cap137">ІНШЕ,</div>
+<div class="cap inv" id="cap138">НІЖ</div>
+<div class="cap inv" id="cap139">ТЕ,</div>
+<div class="cap inv" id="cap140">ЯК</div>
+<div class="cap inv" id="cap141">ЦЕ</div>
+<div class="cap inv" id="cap142">БУДЕ</div>
+<div class="cap inv" id="cap143">РЕАЛЬНО</div>
+<div class="cap inv" id="cap144">ВИГЛЯДАТИ</div>
+<div class="cap inv" id="cap145">В</div>
+<div class="cap inv" id="cap146">КАРУСЕЛІ.</div>
+<div class="cap inv" id="cap147">ТОМУ</div>
+<div class="cap inv" id="cap148">ЩО</div>
+<div class="cap inv" id="cap149">НЕ</div>
+<div class="cap inv" id="cap150">КОЖЕН</div>
+<div class="cap inv" id="cap151">ДИЗАЙН</div>
+<div class="cap" id="cap152">ГАРНО</div>
+<div class="cap" id="cap153">БУДЕ</div>
+<div class="cap" id="cap154">ВИГЛЯДАТИ</div>
+<div class="cap" id="cap155">ОТУТ.</div>
+<div class="cap" id="cap156">ТОМУ</div>
+<div class="cap" id="cap157">ДУЖЕ</div>
+<div class="cap" id="cap158">ВАЖЛИВО</div>
+<div class="cap" id="cap159">ПРОПИСАТИ</div>
+<div class="cap inv" id="cap160">В</div>
+<div class="cap inv" id="cap161">ПРОМТІ.</div>
+<div class="cap inv" id="cap162">В</div>
+<div class="cap inv" id="cap163">ЦИХ</div>
+<div class="cap inv" id="cap164">ПРОМТАХ</div>
+<div class="cap inv" id="cap165">МИ</div>
+<div class="cap inv" id="cap166">ПРОСИМО</div>
+<div class="cap inv" id="cap167">ЙОГО</div>
+<div class="cap inv" id="cap168">ЗГЕНЕРУВАТИ.</div>
+<div class="cap inv" id="cap169">ПРИКЛАД</div>
+<div class="cap inv" id="cap170">КАРУСЕЛІ.</div>
+<div class="cap inv" id="cap171">ОБКЛАДИНКА,</div>
+<div class="cap inv" id="cap172">ТЕКСТ,</div>
+<div class="cap inv" id="cap173">ЗАКЛИК</div>
+<div class="cap inv" id="cap174">ДО</div>
+<div class="cap inv" id="cap175">ДІЙ,</div>
+<div class="cap inv" id="cap176">CTA.</div>
+<div class="cap" id="cap177">ПРИКЛАД</div>
+<div class="cap" id="cap178">САЙТУ.</div>
+<div class="cap" id="cap179">БУКВАЛЬНО</div>
+<div class="cap" id="cap180">ПЕРШИЙ</div>
+<div class="cap" id="cap181">ЕКРАН.</div>
+<div class="cap" id="cap182">ПРИКЛАД,</div>
+<div class="cap inv" id="cap183">ЯК</div>
+<div class="cap inv" id="cap184">ЦЕ</div>
+<div class="cap inv" id="cap185">МОЖЕ</div>
+<div class="cap inv" id="cap186">БУТИ</div>
+<div class="cap inv" id="cap187">В</div>
+<div class="cap inv" id="cap188">МОНТАЖІ.</div>
+<div class="cap inv" id="cap189">ТОБТО</div>
+<div class="cap inv" id="cap190">МИ</div>
+<div class="cap inv" id="cap191">ПРОСИМО</div>
+<div class="cap inv" id="cap192">ЙОГО</div>
+<div class="cap inv" id="cap193">ПОКАЗАТИ</div>
+<div class="cap inv" id="cap194">НАМ,</div>
+<div class="cap inv" id="cap195">ЯК</div>
+<div class="cap inv" id="cap196">ЦЕ</div>
+<div class="cap inv" id="cap197">РЕАЛЬНО</div>
+<div class="cap inv" id="cap198">БУДЕ</div>
+<div class="cap inv" id="cap199">ВИГЛЯДАТИ.</div>
+<div class="cap inv" id="cap200">І</div>
+<div class="cap inv" id="cap201">МИ</div>
+<div class="cap inv" id="cap202">ЗМОЖЕМО</div>
+<div class="cap inv" id="cap203">ОЦІНИТИ,</div>
+<div class="cap" id="cap204">ЧИ</div>
+<div class="cap" id="cap205">ЧИТАБЕЛЬНИЙ</div>
+<div class="cap" id="cap206">НАМ</div>
+<div class="cap" id="cap207">ТЕКСТ,</div>
+<div class="cap" id="cap208">ЧИ</div>
+<div class="cap" id="cap209">ПОДОБАЄТЬСЯ</div>
+<div class="cap" id="cap210">НАМ</div>
+<div class="cap" id="cap211">ЦЕЙ</div>
+<div class="cap" id="cap212">СТИЛЬ,</div>
+<div class="cap" id="cap213">ЧИ</div>
+<div class="cap" id="cap214">ГАРНІ</div>
+<div class="cap" id="cap215">ЦІ</div>
+<div class="cap" id="cap216">КОЛЬОРИ</div>
+<div class="cap" id="cap217">РАЗОМ.</div>
+<div class="cap" id="cap218">І</div>
+<div class="cap" id="cap219">НАМ</div>
+<div class="cap" id="cap220">БУДЕ</div>
+<div class="cap" id="cap221">ПРОСТІШЕ</div>
+<div class="cap" id="cap222">З</div>
+<div class="cap" id="cap223">ЦИМ</div>
+<div class="cap" id="cap224">ПРАЦЮВАТИ.</div>
+  <div id="hook" class="hook" style="opacity:0"><span class="dot"></span>Як зібрати мудборд, який AI зрозуміє</div>
+  
+  <div id="cta" class="clip" data-start="0" data-duration="90.6667"><div class="paper"></div><div id="c1" class="ct1">Напиши</div><div id="c2" class="ct2">ДИЗАЙН</div><div id="c3" class="ct3">у коментарях —<br>надішлю повне відео з промтами</div></div>
+  <div id="stage" class="clip" data-start="0" data-duration="90.6667"><svg id="ex" width="1080" height="1920"></svg></div>
+  <div id="flash" class="clip" data-start="0" data-duration="90.6667"></div>
+</div>
+<script>
+window.__timelines = window.__timelines || {};
+const tl = gsap.timeline({ paused: true });
+tl.set("#cap0",{autoAlpha:1},0.067);tl.set("#cap0",{autoAlpha:0},0.152);
+tl.set("#cap1",{autoAlpha:1},0.237);tl.set("#cap1",{autoAlpha:0},0.552);
+tl.set("#cap2",{autoAlpha:1},0.637);tl.set("#cap2",{autoAlpha:0},0.752);
+tl.set("#cap3",{autoAlpha:1},0.837);tl.set("#cap3",{autoAlpha:0},1.212);
+tl.set("#cap4",{autoAlpha:1},1.297);tl.set("#cap4",{autoAlpha:0},1.332);
+tl.set("#cap5",{autoAlpha:1},1.417);tl.set("#cap5",{autoAlpha:0},1.938);
+tl.set("#cap6",{autoAlpha:1},2.023);tl.set("#cap6",{autoAlpha:0},2.058);
+tl.set("#cap7",{autoAlpha:1},2.143);tl.set("#cap7",{autoAlpha:0},2.538);
+tl.set("#cap8",{autoAlpha:1},2.623);tl.set("#cap8",{autoAlpha:0},3.018);
+tl.set("#cap9",{autoAlpha:1},3.103);tl.set("#cap9",{autoAlpha:0},4.092);
+tl.set("#cap10",{autoAlpha:1},4.177);tl.set("#cap10",{autoAlpha:0},4.432);
+tl.set("#cap11",{autoAlpha:1},4.517);tl.set("#cap11",{autoAlpha:0},4.592);
+tl.set("#cap12",{autoAlpha:1},4.677);tl.set("#cap12",{autoAlpha:0},4.872);
+tl.set("#cap13",{autoAlpha:1},4.957);tl.set("#cap13",{autoAlpha:0},5.092);
+tl.set("#cap14",{autoAlpha:1},5.177);tl.set("#cap14",{autoAlpha:0},5.532);
+tl.set("#cap15",{autoAlpha:1},5.617);tl.set("#cap15",{autoAlpha:0},5.872);
+tl.set("#cap16",{autoAlpha:1},5.957);tl.set("#cap16",{autoAlpha:0},6.152);
+tl.set("#cap17",{autoAlpha:1},6.237);tl.set("#cap17",{autoAlpha:0},6.512);
+tl.set("#cap18",{autoAlpha:1},6.597);tl.set("#cap18",{autoAlpha:0},6.632);
+tl.set("#cap19",{autoAlpha:1},6.717);tl.set("#cap19",{autoAlpha:0},7.592);
+tl.set("#cap20",{autoAlpha:1},7.677);tl.set("#cap20",{autoAlpha:0},8.112);
+tl.set("#cap21",{autoAlpha:1},8.197);tl.set("#cap21",{autoAlpha:0},8.292);
+tl.set("#cap22",{autoAlpha:1},8.377);tl.set("#cap22",{autoAlpha:0},8.992);
+tl.set("#cap23",{autoAlpha:1},9.077);tl.set("#cap23",{autoAlpha:0},9.488);
+tl.set("#cap24",{autoAlpha:1},9.573);tl.set("#cap24",{autoAlpha:0},10.068);
+tl.set("#cap25",{autoAlpha:1},10.153);tl.set("#cap25",{autoAlpha:0},10.288);
+tl.set("#cap26",{autoAlpha:1},10.373);tl.set("#cap26",{autoAlpha:0},10.948);
+tl.set("#cap27",{autoAlpha:1},11.033);tl.set("#cap27",{autoAlpha:0},11.148);
+tl.set("#cap28",{autoAlpha:1},11.233);tl.set("#cap28",{autoAlpha:0},11.328);
+tl.set("#cap29",{autoAlpha:1},11.413);tl.set("#cap29",{autoAlpha:0},11.915);
+tl.set("#cap30",{autoAlpha:1},12.000);tl.set("#cap30",{autoAlpha:0},12.955);
+tl.set("#cap31",{autoAlpha:1},13.040);tl.set("#cap31",{autoAlpha:0},13.535);
+tl.set("#cap32",{autoAlpha:1},13.620);tl.set("#cap32",{autoAlpha:0},13.655);
+tl.set("#cap33",{autoAlpha:1},13.740);tl.set("#cap33",{autoAlpha:0},14.375);
+tl.set("#cap34",{autoAlpha:1},14.460);tl.set("#cap34",{autoAlpha:0},14.835);
+tl.set("#cap35",{autoAlpha:1},14.920);tl.set("#cap35",{autoAlpha:0},14.935);
+tl.set("#cap36",{autoAlpha:1},15.020);tl.set("#cap36",{autoAlpha:0},15.275);
+tl.set("#cap37",{autoAlpha:1},15.360);tl.set("#cap37",{autoAlpha:0},15.852);
+tl.set("#cap38",{autoAlpha:1},15.937);tl.set("#cap38",{autoAlpha:0},16.352);
+tl.set("#cap39",{autoAlpha:1},16.437);tl.set("#cap39",{autoAlpha:0},16.452);
+tl.set("#cap40",{autoAlpha:1},16.537);tl.set("#cap40",{autoAlpha:0},17.012);
+tl.set("#cap41",{autoAlpha:1},17.097);tl.set("#cap41",{autoAlpha:0},17.432);
+tl.set("#cap42",{autoAlpha:1},17.517);tl.set("#cap42",{autoAlpha:0},17.852);
+tl.set("#cap43",{autoAlpha:1},17.937);tl.set("#cap43",{autoAlpha:0},18.072);
+tl.set("#cap44",{autoAlpha:1},18.157);tl.set("#cap44",{autoAlpha:0},18.172);
+tl.set("#cap45",{autoAlpha:1},18.257);tl.set("#cap45",{autoAlpha:0},18.445);
+tl.set("#cap46",{autoAlpha:1},18.530);tl.set("#cap46",{autoAlpha:0},18.785);
+tl.set("#cap47",{autoAlpha:1},18.870);tl.set("#cap47",{autoAlpha:0},18.925);
+tl.set("#cap48",{autoAlpha:1},19.010);tl.set("#cap48",{autoAlpha:0},19.065);
+tl.set("#cap49",{autoAlpha:1},19.150);tl.set("#cap49",{autoAlpha:0},19.765);
+tl.set("#cap50",{autoAlpha:1},19.850);tl.set("#cap50",{autoAlpha:0},20.405);
+tl.set("#cap51",{autoAlpha:1},20.490);tl.set("#cap51",{autoAlpha:0},20.605);
+tl.set("#cap52",{autoAlpha:1},20.690);tl.set("#cap52",{autoAlpha:0},21.025);
+tl.set("#cap53",{autoAlpha:1},21.110);tl.set("#cap53",{autoAlpha:0},21.645);
+tl.set("#cap54",{autoAlpha:1},21.730);tl.set("#cap54",{autoAlpha:0},21.810);
+tl.set("#cap55",{autoAlpha:1},21.810);tl.set("#cap55",{autoAlpha:0},21.890);
+tl.set("#cap56",{autoAlpha:1},21.890);tl.set("#cap56",{autoAlpha:0},21.985);
+tl.set("#cap57",{autoAlpha:1},22.070);tl.set("#cap57",{autoAlpha:0},22.245);
+tl.set("#cap58",{autoAlpha:1},22.330);tl.set("#cap58",{autoAlpha:0},22.865);
+tl.set("#cap59",{autoAlpha:1},22.950);tl.set("#cap59",{autoAlpha:0},23.145);
+tl.set("#cap60",{autoAlpha:1},23.230);tl.set("#cap60",{autoAlpha:0},23.505);
+tl.set("#cap61",{autoAlpha:1},23.590);tl.set("#cap61",{autoAlpha:0},24.105);
+tl.set("#cap62",{autoAlpha:1},24.190);tl.set("#cap62",{autoAlpha:0},24.325);
+tl.set("#cap63",{autoAlpha:1},24.410);tl.set("#cap63",{autoAlpha:0},24.425);
+tl.set("#cap64",{autoAlpha:1},24.510);tl.set("#cap64",{autoAlpha:0},24.805);
+tl.set("#cap65",{autoAlpha:1},24.890);tl.set("#cap65",{autoAlpha:0},24.970);
+tl.set("#cap66",{autoAlpha:1},24.970);tl.set("#cap66",{autoAlpha:0},26.170);
+tl.set("#cap67",{autoAlpha:1},26.267);tl.set("#cap67",{autoAlpha:0},26.642);
+tl.set("#cap68",{autoAlpha:1},26.727);tl.set("#cap68",{autoAlpha:0},26.807);
+tl.set("#cap69",{autoAlpha:1},26.807);tl.set("#cap69",{autoAlpha:0},26.942);
+tl.set("#cap70",{autoAlpha:1},27.027);tl.set("#cap70",{autoAlpha:0},27.422);
+tl.set("#cap71",{autoAlpha:1},27.507);tl.set("#cap71",{autoAlpha:0},27.922);
+tl.set("#cap72",{autoAlpha:1},28.007);tl.set("#cap72",{autoAlpha:0},28.082);
+tl.set("#cap73",{autoAlpha:1},28.167);tl.set("#cap73",{autoAlpha:0},28.322);
+tl.set("#cap74",{autoAlpha:1},28.407);tl.set("#cap74",{autoAlpha:0},29.222);
+tl.set("#cap75",{autoAlpha:1},29.307);tl.set("#cap75",{autoAlpha:0},29.502);
+tl.set("#cap76",{autoAlpha:1},29.587);tl.set("#cap76",{autoAlpha:0},29.702);
+tl.set("#cap77",{autoAlpha:1},29.787);tl.set("#cap77",{autoAlpha:0},29.982);
+tl.set("#cap78",{autoAlpha:1},30.067);tl.set("#cap78",{autoAlpha:0},30.705);
+tl.set("#cap79",{autoAlpha:1},30.790);tl.set("#cap79",{autoAlpha:0},30.985);
+tl.set("#cap80",{autoAlpha:1},31.070);tl.set("#cap80",{autoAlpha:0},31.145);
+tl.set("#cap81",{autoAlpha:1},31.230);tl.set("#cap81",{autoAlpha:0},31.605);
+tl.set("#cap82",{autoAlpha:1},31.690);tl.set("#cap82",{autoAlpha:0},31.785);
+tl.set("#cap83",{autoAlpha:1},31.870);tl.set("#cap83",{autoAlpha:0},32.248);
+tl.set("#cap84",{autoAlpha:1},32.333);tl.set("#cap84",{autoAlpha:0},32.428);
+tl.set("#cap85",{autoAlpha:1},32.513);tl.set("#cap85",{autoAlpha:0},33.168);
+tl.set("#cap86",{autoAlpha:1},33.253);tl.set("#cap86",{autoAlpha:0},33.408);
+tl.set("#cap87",{autoAlpha:1},33.493);tl.set("#cap87",{autoAlpha:0},33.648);
+tl.set("#cap88",{autoAlpha:1},33.733);tl.set("#cap88",{autoAlpha:0},33.908);
+tl.set("#cap89",{autoAlpha:1},33.993);tl.set("#cap89",{autoAlpha:0},34.648);
+tl.set("#cap90",{autoAlpha:1},34.733);tl.set("#cap90",{autoAlpha:0},34.828);
+tl.set("#cap91",{autoAlpha:1},34.913);tl.set("#cap91",{autoAlpha:0},35.088);
+tl.set("#cap92",{autoAlpha:1},35.173);tl.set("#cap92",{autoAlpha:0},35.368);
+tl.set("#cap93",{autoAlpha:1},35.453);tl.set("#cap93",{autoAlpha:0},35.948);
+tl.set("#cap94",{autoAlpha:1},36.033);tl.set("#cap94",{autoAlpha:0},36.108);
+tl.set("#cap95",{autoAlpha:1},36.193);tl.set("#cap95",{autoAlpha:0},36.528);
+tl.set("#cap96",{autoAlpha:1},36.613);tl.set("#cap96",{autoAlpha:0},37.813);
+tl.set("#cap97",{autoAlpha:1},38.173);tl.set("#cap97",{autoAlpha:0},38.308);
+tl.set("#cap98",{autoAlpha:1},38.393);tl.set("#cap98",{autoAlpha:0},38.528);
+tl.set("#cap99",{autoAlpha:1},38.613);tl.set("#cap99",{autoAlpha:0},38.948);
+tl.set("#cap100",{autoAlpha:1},39.033);tl.set("#cap100",{autoAlpha:0},39.228);
+tl.set("#cap101",{autoAlpha:1},39.313);tl.set("#cap101",{autoAlpha:0},39.868);
+tl.set("#cap102",{autoAlpha:1},39.953);tl.set("#cap102",{autoAlpha:0},40.728);
+tl.set("#cap103",{autoAlpha:1},40.813);tl.set("#cap103",{autoAlpha:0},40.893);
+tl.set("#cap104",{autoAlpha:1},40.893);tl.set("#cap104",{autoAlpha:0},40.928);
+tl.set("#cap105",{autoAlpha:1},41.013);tl.set("#cap105",{autoAlpha:0},41.488);
+tl.set("#cap106",{autoAlpha:1},41.573);tl.set("#cap106",{autoAlpha:0},42.015);
+tl.set("#cap107",{autoAlpha:1},42.100);tl.set("#cap107",{autoAlpha:0},42.275);
+tl.set("#cap108",{autoAlpha:1},42.360);tl.set("#cap108",{autoAlpha:0},42.475);
+tl.set("#cap109",{autoAlpha:1},42.560);tl.set("#cap109",{autoAlpha:0},43.355);
+tl.set("#cap110",{autoAlpha:1},43.440);tl.set("#cap110",{autoAlpha:0},43.795);
+tl.set("#cap111",{autoAlpha:1},43.880);tl.set("#cap111",{autoAlpha:0},43.895);
+tl.set("#cap112",{autoAlpha:1},43.980);tl.set("#cap112",{autoAlpha:0},44.168);
+tl.set("#cap113",{autoAlpha:1},44.253);tl.set("#cap113",{autoAlpha:0},44.348);
+tl.set("#cap114",{autoAlpha:1},44.433);tl.set("#cap114",{autoAlpha:0},44.788);
+tl.set("#cap115",{autoAlpha:1},44.873);tl.set("#cap115",{autoAlpha:0},45.128);
+tl.set("#cap116",{autoAlpha:1},45.213);tl.set("#cap116",{autoAlpha:0},45.288);
+tl.set("#cap117",{autoAlpha:1},45.373);tl.set("#cap117",{autoAlpha:0},45.848);
+tl.set("#cap118",{autoAlpha:1},45.933);tl.set("#cap118",{autoAlpha:0},46.168);
+tl.set("#cap119",{autoAlpha:1},46.253);tl.set("#cap119",{autoAlpha:0},46.348);
+tl.set("#cap120",{autoAlpha:1},46.433);tl.set("#cap120",{autoAlpha:0},47.068);
+tl.set("#cap121",{autoAlpha:1},47.153);tl.set("#cap121",{autoAlpha:0},47.233);
+tl.set("#cap122",{autoAlpha:1},47.173);tl.set("#cap122",{autoAlpha:0},47.648);
+tl.set("#cap123",{autoAlpha:1},47.733);tl.set("#cap123",{autoAlpha:0},47.813);
+tl.set("#cap124",{autoAlpha:1},47.813);tl.set("#cap124",{autoAlpha:0},48.088);
+tl.set("#cap125",{autoAlpha:1},48.173);tl.set("#cap125",{autoAlpha:0},48.528);
+tl.set("#cap126",{autoAlpha:1},48.613);tl.set("#cap126",{autoAlpha:0},48.648);
+tl.set("#cap127",{autoAlpha:1},48.733);tl.set("#cap127",{autoAlpha:0},48.768);
+tl.set("#cap128",{autoAlpha:1},48.853);tl.set("#cap128",{autoAlpha:0},48.988);
+tl.set("#cap129",{autoAlpha:1},49.073);tl.set("#cap129",{autoAlpha:0},49.825);
+tl.set("#cap130",{autoAlpha:1},49.910);tl.set("#cap130",{autoAlpha:0},50.105);
+tl.set("#cap131",{autoAlpha:1},50.190);tl.set("#cap131",{autoAlpha:0},51.390);
+tl.set("#cap132",{autoAlpha:1},51.510);tl.set("#cap132",{autoAlpha:0},51.565);
+tl.set("#cap133",{autoAlpha:1},51.650);tl.set("#cap133",{autoAlpha:0},51.945);
+tl.set("#cap134",{autoAlpha:1},52.030);tl.set("#cap134",{autoAlpha:0},52.545);
+tl.set("#cap135",{autoAlpha:1},52.630);tl.set("#cap135",{autoAlpha:0},52.765);
+tl.set("#cap136",{autoAlpha:1},52.850);tl.set("#cap136",{autoAlpha:0},53.285);
+tl.set("#cap137",{autoAlpha:1},53.370);tl.set("#cap137",{autoAlpha:0},54.045);
+tl.set("#cap138",{autoAlpha:1},54.130);tl.set("#cap138",{autoAlpha:0},54.245);
+tl.set("#cap139",{autoAlpha:1},54.330);tl.set("#cap139",{autoAlpha:0},54.425);
+tl.set("#cap140",{autoAlpha:1},54.510);tl.set("#cap140",{autoAlpha:0},54.565);
+tl.set("#cap141",{autoAlpha:1},54.650);tl.set("#cap141",{autoAlpha:0},54.685);
+tl.set("#cap142",{autoAlpha:1},54.770);tl.set("#cap142",{autoAlpha:0},54.885);
+tl.set("#cap143",{autoAlpha:1},54.970);tl.set("#cap143",{autoAlpha:0},55.225);
+tl.set("#cap144",{autoAlpha:1},55.310);tl.set("#cap144",{autoAlpha:0},55.825);
+tl.set("#cap145",{autoAlpha:1},55.910);tl.set("#cap145",{autoAlpha:0},55.925);
+tl.set("#cap146",{autoAlpha:1},56.010);tl.set("#cap146",{autoAlpha:0},56.585);
+tl.set("#cap147",{autoAlpha:1},56.670);tl.set("#cap147",{autoAlpha:0},56.785);
+tl.set("#cap148",{autoAlpha:1},56.870);tl.set("#cap148",{autoAlpha:0},56.905);
+tl.set("#cap149",{autoAlpha:1},56.990);tl.set("#cap149",{autoAlpha:0},57.025);
+tl.set("#cap150",{autoAlpha:1},57.110);tl.set("#cap150",{autoAlpha:0},57.405);
+tl.set("#cap151",{autoAlpha:1},57.490);tl.set("#cap151",{autoAlpha:0},58.012);
+tl.set("#cap152",{autoAlpha:1},58.097);tl.set("#cap152",{autoAlpha:0},58.472);
+tl.set("#cap153",{autoAlpha:1},58.557);tl.set("#cap153",{autoAlpha:0},58.652);
+tl.set("#cap154",{autoAlpha:1},58.737);tl.set("#cap154",{autoAlpha:0},59.112);
+tl.set("#cap155",{autoAlpha:1},59.197);tl.set("#cap155",{autoAlpha:0},59.548);
+tl.set("#cap156",{autoAlpha:1},59.633);tl.set("#cap156",{autoAlpha:0},59.798);
+tl.set("#cap157",{autoAlpha:1},59.883);tl.set("#cap157",{autoAlpha:0},60.178);
+tl.set("#cap158",{autoAlpha:1},60.263);tl.set("#cap158",{autoAlpha:0},60.718);
+tl.set("#cap159",{autoAlpha:1},60.803);tl.set("#cap159",{autoAlpha:0},61.358);
+tl.set("#cap160",{autoAlpha:1},61.443);tl.set("#cap160",{autoAlpha:0},61.458);
+tl.set("#cap161",{autoAlpha:1},61.543);tl.set("#cap161",{autoAlpha:0},61.918);
+tl.set("#cap162",{autoAlpha:1},62.003);tl.set("#cap162",{autoAlpha:0},62.083);
+tl.set("#cap163",{autoAlpha:1},62.063);tl.set("#cap163",{autoAlpha:0},62.138);
+tl.set("#cap164",{autoAlpha:1},62.223);tl.set("#cap164",{autoAlpha:0},62.538);
+tl.set("#cap165",{autoAlpha:1},62.623);tl.set("#cap165",{autoAlpha:0},62.738);
+tl.set("#cap166",{autoAlpha:1},62.823);tl.set("#cap166",{autoAlpha:0},63.372);
+tl.set("#cap167",{autoAlpha:1},63.457);tl.set("#cap167",{autoAlpha:0},63.632);
+tl.set("#cap168",{autoAlpha:1},63.717);tl.set("#cap168",{autoAlpha:0},64.812);
+tl.set("#cap169",{autoAlpha:1},64.897);tl.set("#cap169",{autoAlpha:0},65.232);
+tl.set("#cap170",{autoAlpha:1},65.317);tl.set("#cap170",{autoAlpha:0},66.462);
+tl.set("#cap171",{autoAlpha:1},66.547);tl.set("#cap171",{autoAlpha:0},67.222);
+tl.set("#cap172",{autoAlpha:1},67.307);tl.set("#cap172",{autoAlpha:0},67.955);
+tl.set("#cap173",{autoAlpha:1},68.040);tl.set("#cap173",{autoAlpha:0},68.235);
+tl.set("#cap174",{autoAlpha:1},68.320);tl.set("#cap174",{autoAlpha:0},68.335);
+tl.set("#cap175",{autoAlpha:1},68.420);tl.set("#cap175",{autoAlpha:0},68.635);
+tl.set("#cap176",{autoAlpha:1},68.720);tl.set("#cap176",{autoAlpha:0},69.048);
+tl.set("#cap177",{autoAlpha:1},69.133);tl.set("#cap177",{autoAlpha:0},69.498);
+tl.set("#cap178",{autoAlpha:1},69.583);tl.set("#cap178",{autoAlpha:0},70.405);
+tl.set("#cap179",{autoAlpha:1},70.490);tl.set("#cap179",{autoAlpha:0},70.885);
+tl.set("#cap180",{autoAlpha:1},70.970);tl.set("#cap180",{autoAlpha:0},71.365);
+tl.set("#cap181",{autoAlpha:1},71.450);tl.set("#cap181",{autoAlpha:0},71.815);
+tl.set("#cap182",{autoAlpha:1},71.900);tl.set("#cap182",{autoAlpha:0},72.355);
+tl.set("#cap183",{autoAlpha:1},72.440);tl.set("#cap183",{autoAlpha:0},72.535);
+tl.set("#cap184",{autoAlpha:1},72.620);tl.set("#cap184",{autoAlpha:0},72.695);
+tl.set("#cap185",{autoAlpha:1},72.780);tl.set("#cap185",{autoAlpha:0},72.975);
+tl.set("#cap186",{autoAlpha:1},73.060);tl.set("#cap186",{autoAlpha:0},73.215);
+tl.set("#cap187",{autoAlpha:1},73.300);tl.set("#cap187",{autoAlpha:0},73.315);
+tl.set("#cap188",{autoAlpha:1},73.400);tl.set("#cap188",{autoAlpha:0},73.775);
+tl.set("#cap189",{autoAlpha:1},73.860);tl.set("#cap189",{autoAlpha:0},73.995);
+tl.set("#cap190",{autoAlpha:1},74.080);tl.set("#cap190",{autoAlpha:0},74.195);
+tl.set("#cap191",{autoAlpha:1},74.280);tl.set("#cap191",{autoAlpha:0},75.480);
+tl.set("#cap192",{autoAlpha:1},75.920);tl.set("#cap192",{autoAlpha:0},76.055);
+tl.set("#cap193",{autoAlpha:1},76.140);tl.set("#cap193",{autoAlpha:0},76.815);
+tl.set("#cap194",{autoAlpha:1},76.900);tl.set("#cap194",{autoAlpha:0},77.075);
+tl.set("#cap195",{autoAlpha:1},77.160);tl.set("#cap195",{autoAlpha:0},77.175);
+tl.set("#cap196",{autoAlpha:1},77.260);tl.set("#cap196",{autoAlpha:0},77.335);
+tl.set("#cap197",{autoAlpha:1},77.420);tl.set("#cap197",{autoAlpha:0},77.735);
+tl.set("#cap198",{autoAlpha:1},77.820);tl.set("#cap198",{autoAlpha:0},78.035);
+tl.set("#cap199",{autoAlpha:1},78.120);tl.set("#cap199",{autoAlpha:0},78.715);
+tl.set("#cap200",{autoAlpha:1},78.800);tl.set("#cap200",{autoAlpha:0},78.875);
+tl.set("#cap201",{autoAlpha:1},78.960);tl.set("#cap201",{autoAlpha:0},79.015);
+tl.set("#cap202",{autoAlpha:1},79.100);tl.set("#cap202",{autoAlpha:0},79.455);
+tl.set("#cap203",{autoAlpha:1},79.540);tl.set("#cap203",{autoAlpha:0},80.115);
+tl.set("#cap204",{autoAlpha:1},80.200);tl.set("#cap204",{autoAlpha:0},80.375);
+tl.set("#cap205",{autoAlpha:1},80.460);tl.set("#cap205",{autoAlpha:0},80.955);
+tl.set("#cap206",{autoAlpha:1},81.040);tl.set("#cap206",{autoAlpha:0},81.115);
+tl.set("#cap207",{autoAlpha:1},81.200);tl.set("#cap207",{autoAlpha:0},81.548);
+tl.set("#cap208",{autoAlpha:1},81.633);tl.set("#cap208",{autoAlpha:0},81.778);
+tl.set("#cap209",{autoAlpha:1},81.863);tl.set("#cap209",{autoAlpha:0},82.278);
+tl.set("#cap210",{autoAlpha:1},82.363);tl.set("#cap210",{autoAlpha:0},82.418);
+tl.set("#cap211",{autoAlpha:1},82.503);tl.set("#cap211",{autoAlpha:0},82.618);
+tl.set("#cap212",{autoAlpha:1},82.703);tl.set("#cap212",{autoAlpha:0},82.992);
+tl.set("#cap213",{autoAlpha:1},83.077);tl.set("#cap213",{autoAlpha:0},83.172);
+tl.set("#cap214",{autoAlpha:1},83.257);tl.set("#cap214",{autoAlpha:0},83.592);
+tl.set("#cap215",{autoAlpha:1},83.677);tl.set("#cap215",{autoAlpha:0},83.752);
+tl.set("#cap216",{autoAlpha:1},83.837);tl.set("#cap216",{autoAlpha:0},84.172);
+tl.set("#cap217",{autoAlpha:1},84.257);tl.set("#cap217",{autoAlpha:0},84.648);
+tl.set("#cap218",{autoAlpha:1},84.733);tl.set("#cap218",{autoAlpha:0},84.818);
+tl.set("#cap219",{autoAlpha:1},84.903);tl.set("#cap219",{autoAlpha:0},85.058);
+tl.set("#cap220",{autoAlpha:1},85.143);tl.set("#cap220",{autoAlpha:0},85.398);
+tl.set("#cap221",{autoAlpha:1},85.483);tl.set("#cap221",{autoAlpha:0},85.958);
+tl.set("#cap222",{autoAlpha:1},86.043);tl.set("#cap222",{autoAlpha:0},86.138);
+tl.set("#cap223",{autoAlpha:1},86.223);tl.set("#cap223",{autoAlpha:0},86.298);
+tl.set("#cap224",{autoAlpha:1},86.383);tl.set("#cap224",{autoAlpha:0},86.982);
+tl.to("#scrim",{autoAlpha:1,duration:0.3},0);tl.to("#scrim",{autoAlpha:0,duration:0.3},86.967);
+tl.to("#scrim",{autoAlpha:0,duration:0.15},2.300);tl.to("#scrim",{autoAlpha:1,duration:0.2},10.450);
+LM.flash(tl,2.450,0.85);tl.set("#tk",{autoAlpha:1},2.450);tl.fromTo("#tkin",{y:70,scale:0.96},{y:0,scale:1,duration:0.5,ease:"power3.out",immediateRender:false},2.450);tl.to("#tk",{autoAlpha:0,duration:0.25},10.200);
+tl.to("#scrim",{autoAlpha:0,duration:0.15},13.300);tl.to("#scrim",{autoAlpha:1,duration:0.2},21.450);
+LM.flash(tl,13.450,0.85);tl.set("#tk",{autoAlpha:1},13.450);tl.fromTo("#tkin",{y:70,scale:0.96},{y:0,scale:1,duration:0.5,ease:"power3.out",immediateRender:false},13.450);tl.to("#tk",{autoAlpha:0,duration:0.25},21.200);
+tl.to("#scrim",{autoAlpha:0,duration:0.15},38.850);tl.to("#scrim",{autoAlpha:1,duration:0.2},47.000);
+LM.flash(tl,39.000,0.85);tl.set("#tk",{autoAlpha:1},39.000);tl.fromTo("#tkin",{y:70,scale:0.96},{y:0,scale:1,duration:0.5,ease:"power3.out",immediateRender:false},39.000);tl.to("#tk",{autoAlpha:0,duration:0.25},46.750);
+tl.to("#scrim",{autoAlpha:0,duration:0.15},49.850);tl.to("#scrim",{autoAlpha:1,duration:0.2},58.000);
+LM.flash(tl,50.000,0.85);tl.set("#tk",{autoAlpha:1},50.000);tl.fromTo("#tkin",{y:70,scale:0.96},{y:0,scale:1,duration:0.5,ease:"power3.out",immediateRender:false},50.000);tl.to("#tk",{autoAlpha:0,duration:0.25},57.750);
+tl.to("#scrim",{autoAlpha:0,duration:0.15},60.850);tl.to("#scrim",{autoAlpha:1,duration:0.2},69.000);
+LM.flash(tl,61.000,0.85);tl.set("#tk",{autoAlpha:1},61.000);tl.fromTo("#tkin",{y:70,scale:0.96},{y:0,scale:1,duration:0.5,ease:"power3.out",immediateRender:false},61.000);tl.to("#tk",{autoAlpha:0,duration:0.25},68.750);
+tl.to("#scrim",{autoAlpha:0,duration:0.15},71.850);tl.to("#scrim",{autoAlpha:1,duration:0.2},80.000);
+LM.flash(tl,72.000,0.85);tl.set("#tk",{autoAlpha:1},72.000);tl.fromTo("#tkin",{y:70,scale:0.96},{y:0,scale:1,duration:0.5,ease:"power3.out",immediateRender:false},72.000);tl.to("#tk",{autoAlpha:0,duration:0.25},79.750);
+LM.pop(tl,"#hook",0.15,0.6);tl.to("#hook",{autoAlpha:0,y:-30,duration:0.35},2.75);
+LM.flash(tl,87.067,0.9);tl.set("#cta",{autoAlpha:1},87.067);
+LM.rise(tl,"#c1",87.217,0.5);LM.pop(tl,"#c2",87.517,0.6);LM.rise(tl,"#c3",87.967,0.5);LM.ex(tl,87.767,"ellipse",[540,790,920,250],{stroke:"#a81428",strokeWidth:5,roughness:1.8,dur:0.7});
+tl.set({}, {}, 90.6667);
+window.__timelines["main"] = tl;
+</script></body></html>

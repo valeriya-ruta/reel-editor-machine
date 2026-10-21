@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=1920, height=1080"/>
+<script src="assets/gsap.min.js"></script><script src="assets/rough.js"></script>
+<link rel="stylesheet" href="assets/excalifont.css"/><link rel="stylesheet" href="assets/lib.css"/>
+<script src="assets/lib.js"></script>
+</head><body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="38.200" data-width="1920" data-height="1080">
+  <div id="bg" class="clip paper" data-start="0" data-duration="38.200" style="opacity:0"></div>
+  <div id="stage" class="clip" data-start="0" data-duration="38.200">
+    <svg id="ex" width="1920" height="1080"></svg>
+    
+  </div>
+  <div id="camring"></div>
+  <video id="cam" class="clip" src="cam.mp4" data-start="0" data-duration="38.200" data-media-start="0" muted playsinline></video>
+  <div id="dim" class="clip" data-start="0" data-duration="38.200"></div>
+  <div id="flash" class="clip" data-start="0" data-duration="38.200"></div>
+</div>
+<script>
+window.__timelines = window.__timelines || {};
+const tl = gsap.timeline({ paused: true });
+LM.camSet("full");
+tl.to("#bg",{opacity:1,duration:0.4},0.05);tl.to("#bg",{opacity:0,duration:0.5},37.450);
+LM.flash(tl,0.25); LM.cam(tl,0.1,"card",0.9);
+      document.getElementById("stage").insertAdjacentHTML("beforeend",'<div class="gtitle" id="gt" style="left:80px;top:70px"><span class="dot"></span>Claude збирає. ChatGPT генерує.</div>');
+      LM.rise(tl,"#gt",0.4);
+      LM.xt(tl,0.4,110,190,"Claude",54,"#d97757");
+      LM.ex(tl,9.2,"rect",[110,270,480,520],{stroke:"#1e1e1e",strokeWidth:3});
+      LM.xt(tl,11.4,350,820,"як сайт — по елементах",38,"#5c6678",{center:1});
+      LM.ex(tl,14.8,"rect",[150,310,400,120],{fill:"#fadee1",stroke:"#a81428"}); LM.xt(tl,15.0,350,345,"прямокутник",36,"#a81428",{center:1});
+      LM.xt(tl,16.0,170,460,"текст текст текст",38);
+      LM.ex(tl,17.2,"ellipse",[260,640,170,170],{fill:"#a5d8ff",stroke:"#1971c2",fillStyle:"solid"}); LM.xt(tl,17.5,350,620,"",10);
+      LM.xt(tl,18.4,360,690,"кружечок\n(розблюрений)",30,"#1971c2");
+      LM.xt(tl,21.6,700,190,"ChatGPT",54,"#10a37f");
+      LM.ex(tl,21.8,"rect",[700,270,480,520],{fill:"#ced4da",stroke:"#495057",fillStyle:"cross-hatch",hachureGap:14});
+      LM.xt(tl,22.4,940,500,"одна картинка",42,"#1e1e1e",{center:1});
+      LM.xt(tl,31.6,940,820,"= слоп",50,"#e03131",{center:1});
+      LM.xt(tl,26.2,700,880,"якщо не попросиш зібрати кодом",34,"#5c6678");tl.to(["#gt","#stage svg","#stage div"],{opacity:0,duration:0.35},37.35);
+      LM.cam(tl,37.300000000000004,"full",0.8);
+tl.set({}, {}, 38.200);
+window.__timelines["main"] = tl;
+</script></body></html>

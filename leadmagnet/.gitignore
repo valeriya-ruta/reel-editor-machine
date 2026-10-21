@@ -1,0 +1,15 @@
+beats/*/cam.mp4
+beats/*/cam.mp4.stamp
+beats/*/out.mp4
+beats/*/renders/
+beats/*/assets
+hf/assets/REEL-*.mp4
+out/
+beats/*/render.log
+beats/*/out.tmp.mp4
+beats/*/parts/
+beats/*/snap/
+beats/STOP
+delivery/chunk_*
+out/
+delivery-reels/*.mp4

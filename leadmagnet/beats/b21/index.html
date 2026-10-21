@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=1920, height=1080"/>
+<script src="assets/gsap.min.js"></script><script src="assets/rough.js"></script>
+<link rel="stylesheet" href="assets/excalifont.css"/><link rel="stylesheet" href="assets/lib.css"/>
+<script src="assets/lib.js"></script>
+</head><body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="29.600" data-width="1920" data-height="1080">
+  <div id="bg" class="clip wine" data-start="0" data-duration="29.600" style="opacity:0"></div>
+  <div id="stage" class="clip" data-start="0" data-duration="29.600">
+    <svg id="ex" width="1920" height="1080"></svg>
+    <div id="ec" style="position:absolute;left:110px;top:220px;width:1100px;font-family:PS;color:#fff">
+      <div id="e0" style="font:700 26px PS;letter-spacing:.2em;color:#ffc2cf;opacity:0">ПЕРЕДПРОДАЖ · МІНІ-КУРС</div>
+      <div id="e1" style="font:700 150px/1 PS;letter-spacing:-.03em;margin-top:24px;opacity:0">AI-монтаж</div>
+      <div id="e2" style="font:500 46px/1.25 PS;margin-top:30px;opacity:0;color:rgba(255,255,255,.9)">Монтуй рілси з Claude<br>у своєму стилі</div>
+      <div id="e3" class="chip light" style="position:relative;display:inline-block;margin-top:56px;opacity:0;font-size:36px">Посилання в описі ↓</div></div>
+  </div>
+  <div id="camring"></div>
+  <video id="cam" class="clip" src="cam.mp4" data-start="0" data-duration="29.600" data-media-start="0" muted playsinline></video>
+  <div id="dim" class="clip" data-start="0" data-duration="29.600"></div>
+  <div id="flash" class="clip" data-start="0" data-duration="29.600"></div>
+</div>
+<script>
+window.__timelines = window.__timelines || {};
+const tl = gsap.timeline({ paused: true });
+LM.camSet("full");
+tl.to("#bg",{opacity:1,duration:0.4},0.05);tl.to("#bg",{opacity:0,duration:0.5},28.850);
+LM.flash(tl,0.25); LM.cam(tl,0.1,"card",0.9);
+      LM.rise(tl,"#e0",2.2); LM.rise(tl,"#e1",5.4,0.8); LM.rise(tl,"#e2",9.9); LM.pop(tl,"#e3",26.6);
+      tl.to("#ec",{opacity:0,duration:0.35},28.75); LM.cam(tl,28.700000000000003,"full",0.8);
+tl.set({}, {}, 29.600);
+window.__timelines["main"] = tl;
+</script></body></html>

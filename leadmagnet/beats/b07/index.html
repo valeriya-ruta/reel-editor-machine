@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=1920, height=1080"/>
+<script src="assets/gsap.min.js"></script><script src="assets/rough.js"></script>
+<link rel="stylesheet" href="assets/excalifont.css"/><link rel="stylesheet" href="assets/lib.css"/>
+<script src="assets/lib.js"></script>
+</head><body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="62.200" data-width="1920" data-height="1080">
+  <div id="bg" class="clip paper" data-start="0" data-duration="62.200" style="opacity:0"></div>
+  <div id="stage" class="clip" data-start="0" data-duration="62.200">
+    <svg id="ex" width="1920" height="1080"></svg>
+    
+  </div>
+  <div id="camring"></div>
+  <video id="cam" class="clip" src="cam.mp4" data-start="0" data-duration="62.200" data-media-start="0" muted playsinline></video>
+  <div id="dim" class="clip" data-start="0" data-duration="62.200"></div>
+  <div id="flash" class="clip" data-start="0" data-duration="62.200"></div>
+</div>
+<script>
+window.__timelines = window.__timelines || {};
+const tl = gsap.timeline({ paused: true });
+LM.camSet("full");
+tl.to("#bg",{opacity:1,duration:0.4},0.05);tl.to("#bg",{opacity:0,duration:0.5},61.450);
+LM.flash(tl,0.25); LM.cam(tl,0.1,"card",0.9);
+      document.getElementById("stage").insertAdjacentHTML("beforeend",'<div class="gtitle" id="gt" style="left:80px;top:70px"><span class="dot"></span>Слайди ≠ гайди</div>');
+      LM.rise(tl,"#gt",0.4);
+      LM.ex(tl,12.5,"rect",[120,220,420,520],{fill:"#fadee1",stroke:"#a81428",strokeWidth:3});
+      LM.xt(tl,12.8,330,250,"слайд",56,"#a81428",{center:1});
+      LM.xt(tl,16.2,160,360,"коротко",44); LM.xt(tl,17.4,160,430,"хайпово",44);
+      LM.xt(tl,18.6,160,500,"великий текст",44); LM.xt(tl,20.4,160,570,"швидко гортаємо →",44);
+      LM.ex(tl,23.2,"rect",[680,220,480,520],{fill:"#a5d8ff",stroke:"#1971c2",strokeWidth:3});
+      LM.xt(tl,23.5,920,250,"гайд",56,"#1971c2",{center:1});
+      LM.xt(tl,27.4,720,360,"прочитати",44); LM.xt(tl,28.4,720,430,"зрозуміти",44); LM.xt(tl,29.4,720,500,"застосувати",44);
+      LM.xt(tl,33.2,720,570,"текст + скріни",40,"#5c6678");
+      LM.clearScene(tl,42.8); LM.scene();
+      LM.ex(tl,45.8,"rect",[440,200,360,140],{fill:"#fadee1",stroke:"#a81428",strokeWidth:3}); LM.xt(tl,46.0,620,240,"основа",52,"#a81428",{center:1});
+      ["секція","секція","секція"].forEach((n,i)=>{ const x=150+i*330, t=46.8+i*0.4;
+        LM.ex(tl,t,"arrow",[620,350,x+120,470]); LM.ex(tl,t+0.2,"rect",[x,490,240,110],{stroke:"#1e1e1e"}); LM.xt(tl,t+0.4,x+120,515,n,40,"#1e1e1e",{center:1}); });
+      LM.xt(tl,49.6,620,640,"скільки — вирішуєш ти",40,"#5c6678",{center:1});
+      LM.xt(tl,52.3,620,730,"у мене дві: каруселі + монтаж",48,"#a81428",{center:1});tl.to(["#gt","#stage svg","#stage div"],{opacity:0,duration:0.35},61.35);
+      LM.cam(tl,61.300000000000004,"full",0.8);
+tl.set({}, {}, 62.200);
+window.__timelines["main"] = tl;
+</script></body></html>
