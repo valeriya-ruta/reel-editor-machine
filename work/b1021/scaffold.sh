@@ -11,5 +11,9 @@ for N in "$@"; do
   printf '{ "id": "reel-%s", "name": "reel-%s" }' "$N" "$N" > "reel-$N/meta.json"
   cp reel-07/assets/fonts/*.woff assets/fonts/ProductSans-*.ttf "reel-$N/assets/fonts/"
   cp reel-07/assets/underlay.png assets/grain.png "reel-$N/assets/"
+  # STYLE §00 (reels 41+): Google Sans, Pangolin, rough.js
+  mkdir -p "reel-$N/assets/js"
+  cp assets/fonts/GoogleSans-*.ttf assets/fonts/Pangolin.ttf "reel-$N/assets/fonts/"
+  cp assets/js/rough-4.6.6.js "reel-$N/assets/js/"
   echo "reel-$N scaffolded"
 done

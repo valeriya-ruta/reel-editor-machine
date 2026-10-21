@@ -28,6 +28,8 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 NPX = os.path.join(os.environ.get("APPDATA", ""), "npm", "npx.cmd")
+if not os.path.exists(NPX):        # the cloud container (Linux): npx on PATH
+    NPX = "npx"
 
 
 def run(cmd, **kw):
@@ -53,6 +55,8 @@ def main():
     reel, start, end, name = sys.argv[1], float(sys.argv[2]), float(sys.argv[3]), sys.argv[4]
 
     base = os.path.join(reel, "assets", "base.mp4")
+    if not os.path.exists(os.path.join(ROOT, base)):     # before the sfx mix: same frames
+        base = os.path.join(reel, "assets", "voice.mp4")
     if not os.path.exists(os.path.join(ROOT, base)):
         sys.exit("no such plate: " + base)
     fps, w, h = probe(base)
