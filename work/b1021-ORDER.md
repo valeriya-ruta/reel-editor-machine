@@ -31,7 +31,13 @@ re-hears every cut plate); and a lighter look → her spec, STYLE.md §00.
   empty (her plate only, no graphics, no captions).
 - **Sound**: the stand-in kit from tools/sfxsynth.py — "they're fine".
 - **No covers** — Instagram previews are not generated.
-- Deliver here in the chat (SendUserFile), not her Desktop.
+- Deliver here in the chat (SendUserFile), not her Desktop. **From 43 on: hold
+  them** — when all 12 are back, one review page (artifact) with every reel
+  and a download button; she comments in one batch.
+- **Drive, from now on**: every finished reel is saved to her Drive, so she can
+  revisit / repost from the phone. tools/driveup.py uploads any size with a
+  service account key in the env var GOOGLE_SA_JSON (she's adding it); the
+  folder must sit in a Shared drive the service account is a member of.
 
 ## Reel 53 — the unplanned take
 
