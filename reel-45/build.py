@@ -278,7 +278,7 @@ J.extend(SKF)
 for i, (a, b) in enumerate(HALF):
     g.matte("half%d" % (i + 1), round(a - 0.1, 3), round(b - a + 1.2, 3))
     js("  half(%.3f, %.3f);" % (a, b))
-    PLACE.append((a + 0.4, b + 0.2, "bottom", 1010))
+    PLACE.append((a + 0.4, b + 0.2, "bottom", 980))
 
 
 # captions: phrase by phrase, each break on her own phrasing; key words pinned
