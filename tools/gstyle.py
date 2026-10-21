@@ -110,12 +110,15 @@ CSS = """
            font-weight: 700; line-height: 0.9; letter-spacing: -0.04em;
            color: var(--primary); white-space: nowrap; }
 
-    /* §00.3.3 half screen — the panel's resting place is down; it starts up */
+    /* §00.3.3 half screen. Its parked position (up, off frame) is set from JS
+       with gsap.set: a CSS translate here would be parsed by GSAP as a px offset
+       and then stacked under yPercent, and the panel stalls a quarter of the
+       way in (reel 41's first snapshot). Same for #cover. */
     #panel { position: absolute; left: 0; top: 0; width: 1080px; height: 1240px;
-             background: #FFFFFF; transform: translateY(-101%%); }
+             background: #FFFFFF; }
     /* §00.3.4 full screen */
     #cover { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
-             background: #FFFFFF; transform: translateY(101%%); }
+             background: #FFFFFF; }
 
     /* §00.5 sketches */
     .sk { position: absolute; left: 0; top: 0; overflow: visible; }
@@ -162,6 +165,7 @@ JS = r"""
   }
   var POP = bez(.34, 1.56, .64, 1), RISE = bez(.2, .9, .25, 1), SLIDE = bez(.65, 0, .25, 1);
   var PUSH = "#vid, .matte";
+  gsap.set("#panel", {yPercent: -101}); gsap.set("#cover", {yPercent: 101});
   var NO = {immediateRender: false};
   function X(o) { for (var k in NO) o[k] = NO[k]; return o; }
 
@@ -241,8 +245,8 @@ JS = r"""
     var mx = (x1 + x2) / 2 + (y2 - y1) * bend, my = (y1 + y2) / 2 - (x2 - x1) * bend;
     _add(s, s.rc.curve([[x1, y1], [mx, my], [x2, y2]], oo));
     var ang = Math.atan2(y2 - my, x2 - mx), L = 38, sp = .5;
-    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang - sp), y2 - L * Math.sin(ang - sp), oo));
-    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang + sp), y2 - L * Math.sin(ang + sp), oo));
+    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang - sp), y2 - L * Math.sin(ang - sp), oo), "head");
+    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang + sp), y2 - L * Math.sin(ang + sp), oo), "head");
   }
   function label(name, x, y, txt, o) {   // Pangolin, fades in after its shapes
     var s = SK[name], t = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -259,6 +263,11 @@ JS = r"""
     var s = SK[name], at = t; per = per || .7;
     s.shapes.forEach(function (sh) {
       if (sh.text) { tl.to(sh.text, {opacity: 1, duration: .35}, at + .05); return; }
+      // an arrowhead is a flick, not a stroke: the arrow reads as one gesture
+      if (sh.kind === "head") {
+        sh.paths.forEach(function (p) { tl.to(p, {strokeDashoffset: 0, duration: .18, ease: "power1.out"}, at); });
+        at += .12; return;
+      }
       sh.paths.forEach(function (p, i) {
         tl.to(p, {strokeDashoffset: 0, duration: per, ease: "power1.inOut"}, at + i * .12);
       });
@@ -282,6 +291,11 @@ class G(object):
 
     # -- her cut-out for one beat -------------------------------------------
     def matte(self, name, start, dur):
+        # on the frame grid: matte.py cuts whole frames from int(start*fps), so
+        # an off-grid data-start would lay her cut-out half a frame off herself
+        f0 = int(start * self.fps + 1e-6)
+        n = int(round((start + dur) * self.fps)) + 1 - f0
+        start, dur = f0 / float(self.fps), n / float(self.fps)
         self.mattes.append(
             '      <video id="matte-%s" class="plate matte" src="assets/mattes/%s.webm"\n'
             '             data-start="%.3f" data-duration="%.3f" data-media-start="0"\n'

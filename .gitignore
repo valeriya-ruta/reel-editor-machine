@@ -60,3 +60,4 @@ work/b*/asr/
 # Per-reel copies of the shared fonts / underlay / grain (work/b1021/scaffold.sh);
 # the originals are tracked in assets/ and reel-07/assets/
 reel-*/assets/
+work/r*/mattelog/
