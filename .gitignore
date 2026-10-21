@@ -52,3 +52,7 @@ work/media/
 covers/*/.vercel/
 covers/*/out/
 covers/deploy.log
+
+# Per-take ASR intermediates for a batch; each take's utt.jsonl is copied into
+# work/rNN/ once matched to its reel, and that copy is the tracked one
+work/b*/asr/
