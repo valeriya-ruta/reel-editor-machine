@@ -422,6 +422,8 @@
       <div class="wc" id="w219">САМОСТІЙНО,</div>
       <div class="wc" id="w220">ТО КОРИСТУЙСЯ</div>
       <div class="wc" id="w221">ЛАЙФХАКОМ</div>
+      <div class="wc" id="w222">І</div>
+      <div class="wc" id="w223">ОБОВʼЯЗКОВО</div>
       </div>
 
       <audio id="vo" src="assets/base.mp4"
@@ -803,6 +805,8 @@
   tl.set("#w219", {autoAlpha: 1}, 83.550); tl.set("#w219", {autoAlpha: 0}, 84.672);
   tl.set("#w220", {autoAlpha: 1}, 84.757); tl.set("#w220", {autoAlpha: 0}, 85.292);
   tl.set("#w221", {autoAlpha: 1}, 85.377); tl.set("#w221", {autoAlpha: 0}, 85.882);
+  tl.set("#w222", {autoAlpha: 1}, 85.967); tl.set("#w222", {autoAlpha: 0}, 86.220);
+  tl.set("#w223", {autoAlpha: 1}, 86.305); tl.set("#w223", {autoAlpha: 0}, 86.720);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.087);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 87.425);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 1.398);
@@ -819,7 +823,7 @@
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 68.262);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 71.500);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 79.547);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 85.717);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 86.555);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 87.483);
 
 
@@ -836,11 +840,13 @@
   function cross(name, x1, y1, x2, y2, o) {
     var o2 = {}; for (var k in (o || {})) o2[k] = o[k]; o2.seed = ((o && o.seed) || 81) + 2;
     ln(name, x1, y1, x2, y2, o); ln(name, x2, y1, x1, y2, o2); }
+  // an eye: two lids, an iris ring and a pupil — open strokes only, so over the
+  // footage the kit gives them its dark ink + white halo (no colours of ours)
   function eye(name, x, y, o) { _ink = SK[name].ink; var s = SK[name];
     _add(s, s.rc.curve([[x - 100, y], [x, y - 62], [x + 100, y]], opt(o, 91)));
     _add(s, s.rc.curve([[x - 100, y], [x, y + 62], [x + 100, y]], opt(o, 93)));
-    ell(name, x, y, 58, 58, {seed: 95, fill: "#7A1424", fillStyle: "hachure", hachureGap: 5, fillWeight: 3,
-                             stroke: (o && o.stroke) || SK[name].ink}); }
+    ell(name, x, y, 64, 64, {seed: 95, fill: false});
+    ell(name, x, y, 14, 14, {seed: 97, fill: false, strokeWidth: 12}); }
 
 
   rise("#b1", 0.137);
@@ -889,8 +895,10 @@
 
 
   pop("#b5c0", 28.525, .45); pop("#b5c1", 28.655, .45); pop("#b5c2", 28.785, .45); pop("#b5c3", 28.915, .45); pop("#b5c4", 29.045, .45); pop("#b5c5", 29.175, .45); pop("#b5c6", 29.305, .45);
-  sketch("r5", "skF"); ell("r5", 540, 482, 890, 396, {strokeWidth: 5, roughness: 1.6, seed: 31});
-  ell("r5", 548, 478, 850, 370, {strokeWidth: 4, roughness: 1.8, seed: 33});
+  // a ring round the heap, not a sticker: fill false keeps the chips visible;
+  // the kit inks it dark with the white halo (no arrowhead on a loop)
+  sketch("r5", "skF"); ell("r5", 540, 482, 890, 396, {strokeWidth: 5, fill: false, seed: 31});
+  ell("r5", 548, 478, 850, 370, {fill: false, seed: 33});
   draw("r5", 30.205, .45);
   tl.to("#b5c0, #b5c1, #b5c2, #b5c3, #b5c4, #b5c5, #b5c6", {autoAlpha: 0, y: 60, duration: .35, ease: "power2.in", stagger: .03}, 31.506);
   erase("r5", 31.606);
@@ -930,12 +938,12 @@
 
   rise("#b8", 52.818);
   pop("#b8d", 55.153);
-  sketch("e8", "skF"); ln("e8", 214, 546, 452, 542, {stroke: "#7A1424", strokeWidth: 6, seed: 73});
-  under("e8", 222, 616, 420, {stroke: "#7A1424", strokeWidth: 6, seed: 75});
+  sketch("e8", "skF"); ln("e8", 214, 546, 452, 542, {strokeWidth: 6, seed: 73});
+  under("e8", 222, 616, 420, {strokeWidth: 6, seed: 75});
   draw("e8", 56.643, .3);
   fadein("#b8t", 58.213, .3);
   pop("#b8c", 59.309);
-  sketch("a8", "skF"); arrow("a8", 712, 476, 512, 478, {stroke: "#1E1E1E", seed: 69, bend: -.12});
+  sketch("a8", "skF"); arrow("a8", 712, 476, 512, 478, {seed: 69, bend: -.12});
   draw("a8", 59.559, .45);
   pop("#b8s", 61.399, .5);
   sink("#b8, #b8d, #b8c, #b8s", 62.089); erase("a8", 62.089); erase("e8", 62.089);
@@ -946,10 +954,10 @@
   tl.to("#b9l", {autoAlpha: 0, duration: .2}, 65.775); pop("#b9n", 65.825);
   pop("#b9p1", 66.775); pop("#b9p2", 67.795);
   out("#b9p1, #b9p2", 68.947);
-  sketch("e9", "skF"); eye("e9", 780, 470, {seed: 77, stroke: "#1E1E1E"});
-  label("e9", 780, 600, "тобі не треба", {size: 46, color: "#1E1E1E"});
+  sketch("e9", "skF"); eye("e9", 780, 470, {seed: 77});
+  label("e9", 780, 600, "тобі не треба", {size: 46});
   draw("e9", 69.097, .45);
-  sketch("s9", "skF"); ln("s9", 670, 560, 890, 380, {stroke: "#7A1424", strokeWidth: 7, seed: 79});
+  sketch("s9", "skF"); ln("s9", 670, 560, 890, 380, {strokeWidth: 7, seed: 79});
   draw("s9", 70.137, .3);
   sink("#b9", 70.950); erase("e9", 70.950); erase("s9", 70.950);
 
@@ -965,8 +973,8 @@
   draw("q3", 73.470, .4);
   sketch("q4", "skP"); tick("q4", 738, 505, {stroke: "#7A1424", strokeWidth: 6, seed: 111, k: .8});
   draw("q4", 74.070, .3);
-  sketch("q5", "skP"); box("q5", 110, 575, 860, 265, {seed: 113, r: 28});
-  ln("q5", 397, 590, 397, 825, {seed: 115}); ln("q5", 683, 590, 683, 825, {seed: 117});
+  sketch("q5", "skP"); box("q5", 110, 575, 860, 245, {seed: 113, r: 28});
+  ln("q5", 397, 590, 397, 805, {seed: 115}); ln("q5", 683, 590, 683, 805, {seed: 117});
   label("q5", 253, 630, "ідея", {size: 44}); label("q5", 540, 630, "в роботі", {size: 44});
   label("q5", 826, 630, "вийшло", {size: 44});
   draw("q5", 75.499, .45);
@@ -988,8 +996,11 @@
   sink("#b11", 85.077); erase("u11", 85.077);
   pop("#b11l", 85.377);
   pop("#b11cta", 86.205, .6);
-  sketch("a11", "skF"); arrow("a11", 185, 668, 338, 506, {strokeWidth: 5, seed: 133, bend: -.12});
-  draw("a11", 86.605, .45);
+  // her CTA is «підпишись»: IG's Follow sits by her username, bottom left, so the
+  // pointer goes DOWN to it past her hair, over the shelves — never up at the
+  // pill (her review of 41: "in general we point down"). Kit ink + halo.
+  sketch("a11", "skF"); arrow("a11", 300, 560, 190, 980, {strokeWidth: 5, seed: 133, bend: -.12});
+  draw("a11", 86.355, .45);
 
   half(9.059, 19.917);
   half(71.250, 79.147);

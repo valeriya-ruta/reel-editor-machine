@@ -268,6 +268,9 @@
       <div class="wc" id="w43">І</div>
       <div class="wc" id="w44">ВОНА</div>
       <div class="wc" id="w45">ПИТАЄ:</div>
+      <div class="wc" id="w47">МЕНІ</div>
+      <div class="wc" id="w48">СИСТЕМА</div>
+      <div class="wc" id="w49">ЗА</div>
       <div class="wc" id="w51">ЯКЩО</div>
       <div class="wc" id="w52">ЦЕ</div>
       <div class="wc" id="w53">ВЗАГАЛІ-ТО</div>
@@ -609,6 +612,9 @@
   tl.set("#w43", {autoAlpha: 1}, 14.547); tl.set("#w43", {autoAlpha: 0}, 14.647);
   tl.set("#w44", {autoAlpha: 1}, 14.667); tl.set("#w44", {autoAlpha: 0}, 14.767);
   tl.set("#w45", {autoAlpha: 1}, 14.807); tl.set("#w45", {autoAlpha: 0}, 15.182);
+  tl.set("#w47", {autoAlpha: 1}, 15.727); tl.set("#w47", {autoAlpha: 0}, 15.922);
+  tl.set("#w48", {autoAlpha: 1}, 16.007); tl.set("#w48", {autoAlpha: 0}, 16.442);
+  tl.set("#w49", {autoAlpha: 1}, 16.527); tl.set("#w49", {autoAlpha: 0}, 16.682);
   tl.set("#w51", {autoAlpha: 1}, 17.387); tl.set("#w51", {autoAlpha: 0}, 17.542);
   tl.set("#w52", {autoAlpha: 1}, 17.627); tl.set("#w52", {autoAlpha: 0}, 17.782);
   tl.set("#w53", {autoAlpha: 1}, 17.867); tl.set("#w53", {autoAlpha: 0}, 18.322);
@@ -740,7 +746,9 @@
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 11.760);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 13.195);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 15.017);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 16.817);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 15.717);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 16.517);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 17.377);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 29.427);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 41.550);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 61.057);
@@ -751,7 +759,7 @@
   pop("#b1n", 1.393); fadein("#b1m", 2.393); pop("#b1a", 2.853);
   pop("#b1s", 4.073);
   tl.to("#b1t0, #b1t1, #b1t2, #b1t3", {autoAlpha: 0, scale: .3, duration: .35, ease: "power2.in", stagger: .18}, 4.753);
-  sketch("x1", "skF"); ln("x1", 180, 540, 900, 600, {stroke: "#7A1424", strokeWidth: 6, seed: 3});
+  sketch("x1", "skF"); ln("x1", 180, 540, 900, 600, {strokeWidth: 6, seed: 3});
   draw("x1", 5.833, .45);
   sink("#b1", 6.450); erase("x1", 6.450);
 
@@ -778,9 +786,10 @@
 
   rise("#b5", 23.003);
   pop("#b5p0", 23.203, .45); pop("#b5p1", 23.363, .45); pop("#b5p2", 23.523, .45); pop("#b5p3", 23.683, .45); pop("#b5p4", 23.843, .45); pop("#b5p5", 24.003, .45);
-  sketch("s5", "skF"); ln("s5", 290, 405, 935, 410, {stroke: "#7A1424", strokeWidth: 7, seed: 31});
+  sketch("s5", "skF"); ln("s5", 290, 405, 935, 410, {strokeWidth: 7, seed: 31});
   draw("s5", 24.653, .45);
-  sketch("o5", "skF"); ell("o5", 220, 405, 170, 210, {stroke: "#7A1424", strokeWidth: 5, seed: 33});
+  // a ring around the first page: fill false, or the kit's sticker fill hides the page
+  sketch("o5", "skF"); ell("o5", 220, 405, 170, 210, {fill: false, strokeWidth: 5, seed: 33});
   draw("o5", 25.637, .5);
   erase("s5", 26.877);
   tl.to("#b5n1, #b5n2, #b5n3, #b5n4, #b5n5", {autoAlpha: 0, duration: .25}, 26.877);
@@ -791,7 +800,7 @@
 
 
   sketch("h1", "skP"); box("h1", 110, 400, 200, 340, {seed: 41, fill: true});
-  label("h1", 210, 585, "1300", {size: 64}); label("h1", 210, 800, "система", {size: 46});
+  label("h1", 210, 585, "1300", {size: 56}); label("h1", 210, 800, "система", {size: 46});
   draw("h1", 29.357, .7);
   sketch("h2", "skP"); label("h2", 510, 372, "1 акаунт", {size: 46}); draw("h2", 30.087);
   sketch("h3", "skP"); box("h3", 400, 642.9, 220, 97.1, {seed: 43, r: 18});
@@ -810,17 +819,17 @@
   sketch("r1", "skP"); label("r1", 830, 322, "2 акаунти", {size: 44}); box("r1", 720, 545.7, 220, 194.3, {seed: 57, r: 18});
   label("r1", 830, 660.9, "800", {size: 52}); draw("r1", 37.159, .55);
   sketch("r2", "skP"); label("r2", 830, 372, "або монтажер", {size: 40, color: "#574142"}); draw("r2", 38.879);
-  sketch("r3", "skP"); box("r3", 720, 400, 220, 145.7, {seed: 59, r: 18, fill: true}); draw("r3", 40.139, .45);
+  sketch("r3", "skP"); box("r3", 720, 400, 220, 145.7, {seed: 59, r: 18, fill: true}); draw("r3", 39.759, .45);
   sketch("r4", "skP"); label("r4", 830, 800, "< 2 міс", {size: 52, color: "#7A1424"});
-  under("r4", 745, 818, 915, {stroke: "#7A1424", seed: 61}); draw("r4", 40.759, .45);
+  under("r4", 745, 818, 915, {stroke: "#7A1424", seed: 61}); draw("r4", 40.189, .45);
   erase("h1", 42.050); erase("h2", 42.050); erase("h3", 42.050); erase("h5", 42.050);
   erase("h6", 42.050); erase("h7", 42.050); erase("h8", 42.050); erase("h9", 42.050);
   erase("r1", 42.050); erase("r2", 42.050); erase("r3", 42.050); erase("r4", 42.050);
 
 
   fadein("#b7", 41.732, .01); pop("#b7a", 41.732); pop("#b7b", 42.052);
-  sketch("x7", "skF"); ln("x7", 225, 432, 515, 445, {stroke: "#7A1424", strokeWidth: 7, seed: 71});
-  ln("x7", 565, 445, 860, 432, {stroke: "#7A1424", strokeWidth: 7, seed: 73});
+  sketch("x7", "skF"); ln("x7", 225, 432, 515, 445, {strokeWidth: 7, seed: 71});
+  ln("x7", 565, 445, 860, 432, {strokeWidth: 7, seed: 73});
   draw("x7", 42.432, .35);
   sink("#b7", 43.900); erase("x7", 43.900);
 
@@ -832,7 +841,7 @@
 
   rise("#b9", 52.968);
   pop("#b9s", 55.174);
-  sketch("x9", "skF"); ln("x9", 318, 592, 660, 586, {stroke: "#7A1424", strokeWidth: 7, seed: 91});
+  sketch("x9", "skF"); ln("x9", 318, 592, 660, 586, {strokeWidth: 7, seed: 91});
   draw("x9", 57.633, .35);
   tl.to("#b9s", {autoAlpha: 0, duration: .25}, 58.273); erase("x9", 58.273);
   pop("#b9c", 58.410);
@@ -842,8 +851,12 @@
 
   pop("#b10a", 59.847);
   pop("#b10b", 61.287, .6);
-  sketch("a10", "skF"); arrow("a10", 900, 615, 965, 830, {strokeWidth: 5, seed: 97, bend: -.2});
-  draw("a10", 61.837, .5);
+  // comments are down at the right of the IG rail: the pointer goes DOWN to
+  // them from under the pill, tip left of x 900 (her review of 41), ~270 px,
+  // right of her hair (it reaches x ~760 here); kit ink + white halo
+  sketch("a10", "skF");
+  arrow("a10", 790, 630, 878, 890, {strokeWidth: 5, seed: 97, bend: -.2});
+  draw("a10", 61.437, .5);
 
   half(29.177, 41.150);
 

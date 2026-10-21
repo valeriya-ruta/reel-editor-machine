@@ -24,7 +24,8 @@ is there for Claude, not for you.
   above   Notion for the fast things: контент-план / ідеї / задачі; free,
           simple; you don't even have to look (an eye, struck)
   half    not for you ✗, for Claude ✓ → a board by stage, старе apart from нове
-  above   CTA — зекономити, AI-система самостійно, лайфхак + Notion, «Підпишись»
+  above   CTA — зекономити, AI-система самостійно, лайфхак + Notion, «Підпишись»,
+          a pointer down to IG's Follow (bottom left)
 
 usage: python build.py      (then mattes; render is the orchestrator's)
 """
@@ -92,11 +93,13 @@ js(u'''
   function cross(name, x1, y1, x2, y2, o) {
     var o2 = {}; for (var k in (o || {})) o2[k] = o[k]; o2.seed = ((o && o.seed) || 81) + 2;
     ln(name, x1, y1, x2, y2, o); ln(name, x2, y1, x1, y2, o2); }
+  // an eye: two lids, an iris ring and a pupil — open strokes only, so over the
+  // footage the kit gives them its dark ink + white halo (no colours of ours)
   function eye(name, x, y, o) { _ink = SK[name].ink; var s = SK[name];
     _add(s, s.rc.curve([[x - 100, y], [x, y - 62], [x + 100, y]], opt(o, 91)));
     _add(s, s.rc.curve([[x - 100, y], [x, y + 62], [x + 100, y]], opt(o, 93)));
-    ell(name, x, y, 58, 58, {seed: 95, fill: "#7A1424", fillStyle: "hachure", hachureGap: 5, fillWeight: 3,
-                             stroke: (o && o.stroke) || SK[name].ink}); }
+    ell(name, x, y, 64, 64, {seed: 95, fill: false});
+    ell(name, x, y, 14, 14, {seed: 97, fill: false, strokeWidth: 12}); }
 ''')
 
 XMARK = (u'<svg id="b6x%d" class="hid" width="44" height="44" viewBox="0 0 44 44" style="position:absolute; left:-3px; top:-3px">'
@@ -220,8 +223,10 @@ F.append(u"".join(u'<span class="chip hid" id="b5c%d" style="position:absolute; 
                   for i, (w, x, y, r) in enumerate(HEAP)))
 js(u'''
   %s
-  sketch("r5", "skF"); ell("r5", 540, 482, 890, 396, {strokeWidth: 5, roughness: 1.6, seed: 31});
-  ell("r5", 548, 478, 850, 370, {strokeWidth: 4, roughness: 1.8, seed: 33});
+  // a ring round the heap, not a sticker: fill false keeps the chips visible;
+  // the kit inks it dark with the white halo (no arrowhead on a loop)
+  sketch("r5", "skF"); ell("r5", 540, 482, 890, 396, {strokeWidth: 5, fill: false, seed: 31});
+  ell("r5", 548, 478, 850, 370, {fill: false, seed: 33});
   draw("r5", %.3f, .45);
   tl.to("%s", {autoAlpha: 0, y: 60, duration: .35, ease: "power2.in", stagger: .03}, %.3f);
   erase("r5", %.3f);
@@ -322,12 +327,12 @@ F.append(u'''
 js(u'''
   rise("#b8", %.3f);
   pop("#b8d", %.3f);
-  sketch("e8", "skF"); ln("e8", 214, 546, 452, 542, {stroke: "#7A1424", strokeWidth: 6, seed: 73});
-  under("e8", 222, 616, 420, {stroke: "#7A1424", strokeWidth: 6, seed: 75});
+  sketch("e8", "skF"); ln("e8", 214, 546, 452, 542, {strokeWidth: 6, seed: 73});
+  under("e8", 222, 616, 420, {strokeWidth: 6, seed: 75});
   draw("e8", %.3f, .3);
   fadein("#b8t", %.3f, .3);
   pop("#b8c", %.3f);
-  sketch("a8", "skF"); arrow("a8", 712, 476, 512, 478, {stroke: "#1E1E1E", seed: 69, bend: -.12});
+  sketch("a8", "skF"); arrow("a8", 712, 476, 512, 478, {seed: 69, bend: -.12});
   draw("a8", %.3f, .45);
   pop("#b8s", %.3f, .5);
   sink("#b8, #b8d, #b8c, #b8s", %.3f); erase("a8", %.3f); erase("e8", %.3f);
@@ -362,10 +367,10 @@ js(u'''
   tl.to("#b9l", {autoAlpha: 0, duration: .2}, %.3f); pop("#b9n", %.3f);
   pop("#b9p1", %.3f); pop("#b9p2", %.3f);
   out("#b9p1, #b9p2", %.3f);
-  sketch("e9", "skF"); eye("e9", 780, 470, {seed: 77, stroke: "#1E1E1E"});
-  label("e9", 780, 600, "тобі не треба", {size: 46, color: "#1E1E1E"});
+  sketch("e9", "skF"); eye("e9", 780, 470, {seed: 77});
+  label("e9", 780, 600, "тобі не треба", {size: 46});
   draw("e9", %.3f, .45);
-  sketch("s9", "skF"); ln("s9", 670, 560, 890, 380, {stroke: "#7A1424", strokeWidth: 7, seed: 79});
+  sketch("s9", "skF"); ln("s9", 670, 560, 890, 380, {strokeWidth: 7, seed: 79});
   draw("s9", %.3f, .3);
   sink("#b9", %.3f); erase("e9", %.3f); erase("s9", %.3f);
 ''' % (t_ale2 - 0.1, " ".join('rise("#b9r%d", %.3f, 30);' % (i, t - 0.1) for i, (_, t) in enumerate(ROWS)),
@@ -396,8 +401,8 @@ js(u'''
   draw("q3", %.3f, .4);
   sketch("q4", "skP"); tick("q4", 738, 505, {stroke: "#7A1424", strokeWidth: 6, seed: 111, k: .8});
   draw("q4", %.3f, .3);
-  sketch("q5", "skP"); box("q5", 110, 575, 860, 265, {seed: 113, r: 28});
-  ln("q5", 397, 590, 397, 825, {seed: 115}); ln("q5", 683, 590, 683, 825, {seed: 117});
+  sketch("q5", "skP"); box("q5", 110, 575, 860, 245, {seed: 113, r: 28});
+  ln("q5", 397, 590, 397, 805, {seed: 115}); ln("q5", 683, 590, 683, 805, {seed: 117});
   label("q5", 253, 630, "ідея", {size: 44}); label("q5", 540, 630, "в роботі", {size: 44});
   label("q5", 826, 630, "вийшло", {size: 44});
   draw("q5", %.3f, .45);
@@ -418,7 +423,7 @@ for t in (t_teb + 0.05, t_kla + 0.05, t_etap - 0.5, t_stare):
 
 # 11 · ABOVE — CTA: save money, build it yourself, the lifehack, subscribe -----
 # the last clip (85.97-) is a hard punch-in: her hair top rises to y ≈ 505, so
-# the lifehack and the red pill sit in y 300-530 and the pointer comes from the left
+# the lifehack and the red pill sit in y 300-530; the pointer runs down the left
 t_zek, t_hro = S(u"зекономити", 80.47), S(u"грошей", 81.71)
 t_ai, t_sam = S(u"AI-систему", 82.93), S(u"самостійно,", 83.55)
 t_lh, t_obov = S(u"лайфхаком", 85.38), S(u"обовʼязково", 86.31)
@@ -441,11 +446,15 @@ js(u'''
   sink("#b11", %.3f); erase("u11", %.3f);
   pop("#b11l", %.3f);
   pop("#b11cta", %.3f, .6);
-  sketch("a11", "skF"); arrow("a11", 185, 668, 338, 506, {strokeWidth: 5, seed: 133, bend: -.12});
+  // her CTA is «підпишись»: IG's Follow sits by her username, bottom left, so the
+  // pointer goes DOWN to it past her hair, over the shelves — never up at the
+  // pill (her review of 41: "in general we point down"). Kit ink + halo.
+  sketch("a11", "skF"); arrow("a11", 300, 560, 190, 980, {strokeWidth: 5, seed: 133, bend: -.12});
   draw("a11", %.3f, .45);
-''' % (t_zek - 0.05, t_zek, t_hro - 0.1, t_sam - 0.1, t_lh - 0.3, t_lh - 0.3, t_lh, t_obov - 0.1, t_obov + 0.3))
+''' % (t_zek - 0.05, t_zek, t_hro - 0.1, t_sam - 0.1, t_lh - 0.3, t_lh - 0.3, t_lh, t_obov - 0.1,
+       S(u"підпишись.", 86.8) - 0.45))
 g.sfx("pop", t_zek); g.sfx("kaching", t_hro); g.sfx("pop", t_lh); g.sfx("pop", t_obov - 0.1)
-BLACKOUT.append((S(u"і", 85.97) - 0.05, DUR))     # the pill says it
+BLACKOUT.append((S(u"підпишись.", 86.8) - 0.05, DUR))     # the pill says it
 
 # ---------------------------------------------------------------- mattes for the half screens
 for i, (a, b) in enumerate(HALF):
@@ -456,45 +465,13 @@ for i, (a, b) in enumerate(HALF):
 F.append(u'<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>')
 
 
-# caption phrases: where her phrasing breaks, not where 40 characters run out
-SPLITS = [38.66, 40.25, 50.78, 55.15, 69.30, 81.15, 82.09, 84.76, 85.97]
-JOINS = [21.73, 39.22, 41.11, 51.08, 54.48, 56.79, 70.34, 81.37, 82.93, 83.55, 86.31]
-KEYS = {u"срака": True, u"мінус": True, u"думає": True, u"даних": True, u"памʼяттю": True, u"знав": True,
-        u"етапі": True, u"тебе": True, u"лайфхаком": True, u"грошей": True}
-
-
-def rechunk(chunks):
-    near = lambda t, ts: any(abs(t - x) < 0.06 for x in ts)
-    for t in SPLITS + JOINS:
-        assert any(abs(w["s"] - t) < 0.06 for c in chunks for w in c["words"]), t
-    groups = []
-    for c in chunks:
-        for i, w in enumerate(c["words"]):
-            start = (i == 0 and not near(w["s"], JOINS)) or (i > 0 and near(w["s"], SPLITS))
-            if start or not groups:
-                groups.append([])
-            groups[-1].append(w)
-    out = []
-    for n, ch in enumerate(groups):
-        s = ch[0]["s"]
-        nxt = groups[n + 1][0]["s"] if n + 1 < len(groups) else DUR
-        pos = ("bottom", 1920 - 1520)
-        for a, b, how, y in PLACE:
-            if a <= s < b:
-                pos = (how, y if how == "top" else 1920 - y)
-        out.append({"s": round(s, 3), "e": round(min(nxt, ch[-1]["e"] + 0.6), 3), "words": ch,
-                    "key": g._key(ch, KEYS), "pos": pos})
-    return out
-
-
+# captions: automatic, as in reel-41 — g.chunks hands the words to g.document,
+# which shows her old word-by-word rail (her review of 41), ink over the panel
+# and the cover. No key words, no pills.
 def main():
     if "--words" in sys.argv:
         print(" ".join("%s/%.1f" % (c["w"], c["s"]) for c in CAPS))
-    chunks = rechunk(g.chunks(CAPS, keys=KEYS, place=PLACE))
-    if "--chunks" in sys.argv:
-        for c in chunks:
-            print("%6.2f-%6.2f %s%s" % (c["s"], c["e"], " ".join(w["w"] for w in c["words"]),
-                                        "  [%s]" % c["words"][c["key"]]["w"] if c["key"] is not None else ""))
+    chunks = g.chunks(CAPS, place=PLACE)
     doc = g.document(title=u"Reel 47 — Навіщо Notion", plate="assets/base.mp4",
                      behind="\n".join(B), panel="\n".join(P), front="\n".join(F), cover="\n".join(C),
                      js="\n".join(J), chunks=chunks, blackout=BLACKOUT)

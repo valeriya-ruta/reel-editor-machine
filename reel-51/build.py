@@ -1,34 +1,40 @@
 # -*- coding: utf-8 -*-
 """Reel 51 — «Твій стиль з першого дня». Posts 2026-10-25.
 
-Google style + Excalidraw (STYLE.md §00), the reel-41 skeleton.
+Google style + Excalidraw (STYLE.md §00), the reel-41 skeleton, her review of
+reel 41 applied (word-rail captions, stickers / halos over the footage, long
+arrows, the comment pointer points down).
 
 The one object is **the two reels** — «1» and «2», a blind test. They are
-dealt above her on the hook, played big side by side through her 10 s silent
-hold (full screen), come back small for the verdict (2 is wrong, 1 is the AI,
-2 the editor), multiply into «any editing» and her style, and return once more
-for the answer to «AI can't edit as well» (≠ turns into =).
+dealt above her on the hook, come back small for the verdict (2 is wrong, 1 is
+the AI, 2 the editor), multiply into «any editing» and her style, and return
+once more for the answer to «AI can't edit as well» (≠ turns into =).
 
-  above   two phones «1» «2», a muted speaker, «?»
-  full    THE HOLD (5.23–15.23 on the plate, she is silent): two big phone
-          frames #cmp1 / #cmp2 side by side — placeholders until her two reels
-          arrive (see SWAP below)
+THE PAUSE (5.233–15.233 on the plate, the empty-text clip of cut.json) is
+EMPTY — her call: she drops the two comparison reels in herself, in her
+editor. Nothing of ours is on screen or in the sfx there: no cover, no frames,
+no captions, no plaque, no cues. Only the plate (and the kit's slow push).
+
+  above   two phones «1» «2», a muted speaker, «?» — gone before the pause
+  —       the pause: her plate only
   above   verdict: 2 ringed, crossed; 1 ringed → «штучний інтелект»,
           2 → «монтажерка»; arrow 2 → 1 on «відтворити»; four edit styles,
           one ringed → «твій стиль»
   behind  «200 €»
-  above   card: платити монтажеру / чекати на відео / її час і хвороби — struck
+  above   card: платити монтажеру / чекати на відео / залежати від її часу й
+          хвороб — each struck on its noun
   half    зняти рілс → Claude → 20 хв → готовий результат
   above   1 and 2 again: a speech bubble, ≠ on «не може», = on «так само добре»
   half    ліміти: справжній креатив above the line; «креатив» below it —
           red subtitles, CapCut €
   above   CTA — блогерка / СММниця / підприємиця / продюсерка, 24/7 + a full
-          battery, «Став + в коментарі»
+          battery, «Став + в коментарі», a pointer down to the comments
 
-usage: python build.py [--words] [--chunks]   (then mattes; render is the orchestrator's)
+usage: python build.py [--words]   (then mattes; render is the orchestrator's)
 """
 import io
 import json
+import math
 import os
 import re
 import sys
@@ -39,29 +45,33 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 from gstyle import G, Words, load_caps, mark, esc  # noqa: E402
 
 NN = "51"
+CUT = json.load(io.open(os.path.join(ROOT, "work", "r" + NN, "cut.json"), encoding="utf-8"))
+DUR = 70.516           # (2116 plate frames - 0.5) / 30
+
+# the pause: clip 1 of cut.json, the only clip with no text — left EMPTY
+HOLD = [c for c in CUT["clips"] if not c["text"].strip()][0]
+H0, H1 = HOLD["tl"], HOLD["tl"] + HOLD["dur"]            # 5.233 – 15.233
 
 
 class G51(G):
     """The kit's word rail ends each word where the next begins: «ІНТЕЛЕКТ.»
-    would then sit on the cover through her whole 10 s silent hold. A word
-    followed by a silence over 1 s leaves 0.3 s after she stops."""
+    would then sit on her plate through the whole 10 s pause. A word followed
+    by a silence over 1 s leaves 0.3 s after she stops — and the word before
+    the pause leaves as she stops, before the plate cuts into it."""
 
     def words(self, chunks, js, blackout=()):
         html, j = G.words(self, chunks, js, blackout)
         ws = [w for c in chunks for w in c["words"]]
         for i, (a, b) in enumerate(zip(ws, ws[1:])):
             if b["s"] - a["e"] > 1.0:
-                j = re.sub(r'(tl\.set\("#w%d", \{autoAlpha: 0\}, )[\d.]+\)' % i, r'\g<1>%.3f)' % (a["e"] + 0.3), j)
+                end = a["e"] + 0.3
+                if a["s"] < H0 <= b["s"]:
+                    end = min(end, H0 - 0.02)
+                j = re.sub(r'(tl\.set\("#w%d", \{autoAlpha: 0\}, )[\d.]+\)' % i, r'\g<1>%.3f)' % end, j)
         return html, j
 
 
-CUT = json.load(io.open(os.path.join(ROOT, "work", "r" + NN, "cut.json"), encoding="utf-8"))
-DUR = 70.516           # (2116 plate frames - 0.5) / 30
 g = G51(dur=DUR, reel=NN)
-
-# the silent hold: clip 1 of cut.json, the only clip with no text
-HOLD = [c for c in CUT["clips"] if not c["text"].strip()][0]
-H0, H1 = HOLD["tl"], HOLD["tl"] + HOLD["dur"]            # 5.233 – 15.233
 
 # whisper's spelling of what she plainly said -> her word (re-heard on the plate)
 FIX = {
@@ -104,7 +114,7 @@ def one_word(caps):
 
 
 CAPS = one_word(CAPS)
-# «інтелект.» is stretched over the silent hold by the aligner; she stops at 5.23
+# «інтелект.» is stretched over the pause by the aligner; she stops at 5.23
 for _c in CAPS:
     if _c["w"] == u"інтелект." and _c["s"] < H0:
         _c["e"] = round(H0 - 0.02, 3)
@@ -131,40 +141,30 @@ EXTRA_CSS = u"""
     .ph .n { position: absolute; left: 0; width: 100%; top: 50%; margin-top: -60px; text-align: center;
              font-family: "Pangolin", cursive; font-size: 110px; line-height: 120px; color: #1E1E1E; }
     .ph .b { position: absolute; display: block; }
-    /* the two big frames of the hold: 9:16, inside the safe box */
-    .bph { position: absolute; box-sizing: border-box; background: #fff; border: 10px solid #241919;
-           border-radius: 56px; overflow: hidden;
-           box-shadow: 0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.10); }
-    .cmp { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block;
-           object-fit: cover; background: #FFF0F0; border-radius: 46px; }
     .ctr { position: absolute; display: flex; justify-content: center; }
 """
 
-# sketch helpers on top of gstyle's
+# sketch helpers on top of gstyle's (open strokes only: a closed outline over
+# the footage goes through the kit's blob(), which makes it a sticker)
 js(u'''
-  function poly(name, pts, o) { var s = SK[name];
-    var oo = opt(o, (o && o.seed) || 101);
-    if (o && o.fill) { var f = hatch(o.fill === true ? {} : {fill: o.fill}); for (var k in f) oo[k] = f[k]; }
-    _add(s, s.rc.polygon(pts, oo)); }
   function cross(name, x1, y1, x2, y2, o) {
     var o2 = {}; for (var k in (o || {})) o2[k] = o[k]; o2.seed = ((o && o.seed) || 81) + 2;
     ln(name, x1, y1, x2, y2, o); ln(name, x2, y1, x1, y2, o2); }
   function tick(name, x, y, o) { var s = SK[name], k = (o && o.k) || 1;
     _add(s, s.rc.linearPath([[x - 34 * k, y], [x - 8 * k, y + 28 * k], [x + 40 * k, y - 34 * k]], opt(o, (o && o.seed) || 71))); }
-  // a loudspeaker, muted: body + cone, a red cross beside it
-  function spk(name, x, y, o) {
-    poly(name, [[x, y - 18], [x + 24, y - 18], [x + 58, y - 46], [x + 58, y + 46], [x + 24, y + 18], [x, y + 18]], o);
-    cross(name, x + 78, y - 24, x + 122, y + 24, {strokeWidth: 5, seed: 113});
-  }
-  // a solid fill has no stroke to draw on: the sketch is hidden until t
-  function fillin(name, t) { gsap.set("#sk-" + name, {autoAlpha: 0});
-    tl.to("#sk-" + name, {autoAlpha: 1, duration: .2}, t); }
-  // a speech bubble: an oval with a tail
-  function bubble(name, cx, cy, w, h, o) { var s = SK[name];
-    ell(name, cx, cy, w, h, o);
-    _add(s, s.rc.linearPath([[cx - 34, cy + h / 2 - 8], [cx - 58, cy + h / 2 + 46], [cx + 6, cy + h / 2 - 4]], opt(o, 117)));
-  }
 ''')
+
+
+def path_d(pts):
+    return u"M" + u" L".join(u"%g %g" % p for p in pts) + u" Z"
+
+
+def bubble_d(cx, cy, rx, ry, tip, a1=100, a2=125):
+    """A speech bubble as ONE closed outline (an oval with a tail at the lower
+    left), so over the footage the kit makes it a single white sticker."""
+    p = lambda a: (round(cx + rx * math.cos(math.radians(a)), 1), round(cy + ry * math.sin(math.radians(a)), 1))
+    (x1, y1), (x2, y2) = p(a1), p(a2)
+    return u"M%g %g L%g %g L%g %g A%g %g 0 1 1 %g %g Z" % (x1, y1, tip[0], tip[1], x2, y2, rx, ry, x1, y1)
 
 
 def phone(pid, left, top, inner, w=150, h=267, extra=u""):
@@ -188,85 +188,52 @@ F.append(u'''
              style="font-size:30px; padding:10px 20px"><i></i>монтажерка</span></div>''')
 
 # 1 · ABOVE — two reels, no sound, guess ----------------------------------------
+# everything is gone before the plate cuts into the pause at H0
 t_dva, t_bez = S(u"два", 0.85), S(u"без", 1.27)
 t_vga = S(u"вгадай,", 2.17)
+x_out = H0 - 0.42
+# a loudspeaker (a closed outline: a sticker) with a cross beside it — «без звуку»
+SPK = path_d([(470, 378), (500, 378), (542, 343), (542, 457), (500, 422), (470, 422)])
 js(u'''
   pop("#mp1", %.3f); pop("#mp2", %.3f);
-  sketch("h1", "skF"); spk("h1", 478, 400, {seed: 103});
+  sketch("h1", "skF"); blob("h1", "%s", [470, 343, 72, 114], {seed: 103});
+  cross("h1", 564, 374, 610, 426, {strokeWidth: 5, seed: 113});
   draw("h1", %.3f, .45);
   sketch("h2", "skF"); label("h2", 540, 585, "?", {size: 130});
   draw("h2", %.3f);
-  tl.set("#mp1, #mp2", {autoAlpha: 0}, %.3f); tl.set("#sk-h1, #sk-h2", {autoAlpha: 0}, %.3f);
-''' % (t_dva, t_dva + 0.22, t_bez - 0.2, t_vga - 0.05, H0 + 0.1, H0 + 0.1))
+  sink("#mp1, #mp2", %.3f); erase("h1", %.3f); erase("h2", %.3f);
+''' % (t_dva, t_dva + 0.22, SPK, t_bez - 0.2, t_vga - 0.05, x_out, x_out, x_out))
 g.sfx("pop", t_dva); g.sfx("click-soft", t_bez + 0.2); g.sfx("pop", t_vga)
 
-# 2 · FULL — THE HOLD: her two reels side by side, she is silent ----------------
-# Two 9:16 frames, 390 x 693 each (inner 370 x 673), x 93–483 and 507–897: two
-# 430 px frames (860 px) do not fit between the left edge zone (x 90) and the
-# action column (x 900), so they are 390 wide — the most the safe box allows.
-# it opens on «штучний інтелект» (the cover reaches the caption rail as «штучний»
-# ends, so «інтелект.» is ink on white) and leaves 0.15 s before the plate cuts
-# back to her (only the ceiling of the wide shot shows, 4 frames) so «якщо» is
-# still ink on white and «ти» is already white on the plaque.
-c0, c1 = S(u"штучний", 3.87) + 0.13, H1 - 0.15
-#
-# SWAP — once her two reels arrive (reel-51/assets/cmp1.mp4 = the AI reel «1»,
-# cmp2.mp4 = the editor's reel «2»), replace each CMP line below with:
-#   CMP1 = u'<video id="cmp1" class="cmp" src="assets/cmp1.mp4" data-start="%.3f" data-duration="%.3f" data-media-start="0" muted playsinline></video>' % (c0, c1 + 0.85 - c0)
-#   CMP2 = u'<video id="cmp2" class="cmp" src="assets/cmp2.mp4" data-start="%.3f" data-duration="%.3f" data-media-start="0" muted playsinline></video>' % (c0, c1 + 0.85 - c0)
-# (they play from the moment the white starts to rise until it has gone; the
-# play-triangle sketch is skipped by itself once #skCmp1 / #skCmp2 are gone)
-CMP1 = u'<div id="cmp1" class="cmp"><svg class="sk" id="skCmp1" width="370" height="673" viewBox="0 0 370 673"></svg></div>'
-CMP2 = u'<div id="cmp2" class="cmp"><svg class="sk" id="skCmp2" width="370" height="673" viewBox="0 0 370 673"></svg></div>'
-BPH_TOP = 630
-C.append(u'''
-        <div class="hand" style="left:93px; width:390px; top:%dpx; text-align:center; font-size:96px; line-height:120px">1</div>
-        <div class="hand" style="left:507px; width:390px; top:%dpx; text-align:center; font-size:96px; line-height:120px">2</div>
-        <div class="bph" style="left:93px; top:%dpx; width:390px; height:693px">
-          %s
-        </div>
-        <div class="bph" style="left:507px; top:%dpx; width:390px; height:693px">
-          %s
-        </div>
-        <svg class="sk" id="skC" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>''' % (
-    BPH_TOP - 158, BPH_TOP - 158, BPH_TOP, CMP1, BPH_TOP, CMP2))
-js(u'''
-  full(%.3f, %.3f);
-  sketch("c1", "skC"); ell("c1", 288, %d, 150, 138, {seed: 121}); ell("c1", 702, %d, 150, 138, {seed: 123});
-  draw("c1", %.3f, .45);
-  [1, 2].forEach(function (k) {
-    if (!document.getElementById("skCmp" + k)) return;      // her video is in: no placeholder
-    sketch("pl" + k, "skCmp" + k);
-    ell("pl" + k, 185, 336, 200, 200, {seed: 130 + k});
-    poly("pl" + k, [[158, 290], [158, 382], [236, 336]], {seed: 140 + k, fill: true});
-    draw("pl" + k, %.3f + (k - 1) * .25, .55);
-  });
-''' % (c0, c1, BPH_TOP - 98, BPH_TOP - 98, c0 + 0.6, c0 + 0.85))
-g.sfx("whoosh-short", c0); g.sfx("whoosh-short", c1)
+# 2 · THE PAUSE (H0–H1) — empty: her plate only. The caption plaque stands down
+# over it too (a blackout span with no words in it).
+BLACKOUT.append((H0, H1))
 
 # 3 · ABOVE — the verdict -------------------------------------------------------
+t_yak = S(u"Якщо", 15.3)                 # the plate is back on her at H1
 t_dru, t_pom = S(u"другий,", 16.2), S(u"помилилась.", 17.2)
 t_per, t_sht = S(u"Перший", 18.04), S(u"штучний", 19.3)
 t_mon = S(u"монтажерка,", 20.88)
 t_vid, t_bud = S(u"відтворити", 24.21), S(u"будь-який", 24.81)
 t_tv, t_st = S(u"твоєму", 27.15), S(u"стилі.", 27.55)
+r0 = max(t_yak - 0.02, H1 + 0.03)
 js(u'''
   rise("#mp1", %.3f); rise("#mp2", %.3f);
-  sketch("v1", "skF"); ell("v1", 740, 438, 236, 320, {strokeWidth: 5, seed: 151});
+  sketch("v1", "skF"); ell("v1", 740, 438, 236, 320, {strokeWidth: 5, seed: 151, fill: false});
   draw("v1", %.3f, .5);
-  sketch("v2", "skF"); cross("v2", 680, 350, 800, 530, {stroke: "#7A1424", strokeWidth: 7, seed: 153});
+  sketch("v2", "skF"); cross("v2", 680, 350, 800, 530, {strokeWidth: 7, seed: 153});
   draw("v2", %.3f, .28);
   erase("v1", %.3f); erase("v2", %.3f);
-  sketch("v3", "skF"); ell("v3", 340, 438, 236, 320, {strokeWidth: 5, seed: 155});
+  sketch("v3", "skF"); ell("v3", 340, 438, 236, 320, {strokeWidth: 5, seed: 155, fill: false});
   draw("v3", %.3f, .5);
   pop("#mc1", %.3f);
   pop("#mc2", %.3f); erase("v3", %.3f);
   sketch("v4", "skF"); arrow("v4", 650, 400, 430, 400, {strokeWidth: 5, seed: 157, bend: -.18});
   draw("v4", %.3f, .5);
   sink("#mp1, #mp2, #mc1, #mc2", %.3f); erase("v4", %.3f);
-''' % (c1 + 0.1, c1 + 0.2, t_dru - 0.1, t_pom, t_per - 0.12, t_per - 0.12, t_per - 0.05, t_sht,
+''' % (r0, r0 + 0.12, t_dru - 0.1, t_pom, t_per - 0.12, t_per - 0.12, t_per - 0.05, t_sht,
        t_mon, t_mon - 0.05, t_vid - 0.4, t_bud - 0.3, t_bud - 0.3))
-g.sfx("pop", c1 + 0.15); g.sfx("click-soft", t_dru); g.sfx("click-soft", t_pom)
+g.sfx("pop", r0); g.sfx("click-soft", t_dru); g.sfx("click-soft", t_pom)
 g.sfx("pop", t_sht); g.sfx("pop", t_mon)
 
 # 3b · ABOVE — any editing, in your style: four reels, each cut another way -----
@@ -290,7 +257,7 @@ F.append(u'''
              style="font-size:30px; padding:10px 20px"><i></i>твій стиль</span></div>''')
 js(u'''
   %s
-  sketch("v5", "skF"); ell("v5", 635, 445, 230, 320, {strokeWidth: 5, seed: 159});
+  sketch("v5", "skF"); ell("v5", 635, 445, 230, 320, {strokeWidth: 5, seed: 159, fill: false});
   draw("v5", %.3f, .5); pop("#tsc", %.3f);
   sink("#tl0, #tl1, #tl2, #tl3, #tsc", %.3f); erase("v5", %.3f);
 ''' % (u" ".join(u'pop("#tl%d", %.3f);' % (i, t_bud - 0.05 + i * 0.16) for i in range(4)),
@@ -308,27 +275,27 @@ js(u'''
 ''' % (t_200 - 0.12, m1 - 0.3))
 g.sfx("kaching", t_200)
 
-# 5 · ABOVE — what she no longer has: each one struck on its word ----------------
+# 5 · ABOVE — what she no longer has: each one popped on its verb, struck on its noun
 t_pla, t_mzh = S(u"платячи", 32.38), S(u"монтажеру,", 32.88)
 t_che, t_vio = S(u"чекаючи", 33.96), S(u"відео", 34.54)
 t_zal, t_hv = S(u"залежачи", 35.78), S(u"хвороб.", 37.18)
-ROWS = [u"платити монтажеру", u"чекати на відео", u"її час і хвороби"]
+ROWS = [u"платити монтажеру", u"чекати на відео", u"залежати від її часу й хвороб"]
 F.append(u'<div id="b5" class="card hid" style="left:150px; top:300px; width:780px; height:330px; padding:0"></div>')
 for i, txt in enumerate(ROWS):
-    F.append(u'<span class="chip hid" id="b5r%d" style="position:absolute; left:240px; top:%dpx; width:600px; '
-             u'font-size:40px; padding:12px 26px"><i></i>%s</span>' % (i, 330 + i * 92, esc(txt)))
+    F.append(u'<span class="chip hid" id="b5r%d" style="position:absolute; left:195px; top:%dpx; width:690px; '
+             u'font-size:38px; padding:12px 26px"><i></i>%s</span>' % (i, 330 + i * 92, esc(txt)))
+x_b5 = E(u"хвороб.", 37.18) + 0.05
 js(u'''
   rise("#b5", %.3f);
   pop("#b5r0", %.3f); pop("#b5r1", %.3f); pop("#b5r2", %.3f);
-  sketch("s0", "skF"); ln("s0", 255, 368, 825, 362, {stroke: "#7A1424", strokeWidth: 7, seed: 161}); draw("s0", %.3f, .35);
-  sketch("s1", "skF"); ln("s1", 255, 460, 825, 455, {stroke: "#7A1424", strokeWidth: 7, seed: 163}); draw("s1", %.3f, .35);
-  sketch("s2", "skF"); ln("s2", 255, 552, 825, 548, {stroke: "#7A1424", strokeWidth: 7, seed: 165}); draw("s2", %.3f, .35);
+  sketch("s0", "skF"); ln("s0", 215, 366, 865, 360, {strokeWidth: 7, seed: 161}); draw("s0", %.3f, .35);
+  sketch("s1", "skF"); ln("s1", 215, 458, 865, 453, {strokeWidth: 7, seed: 163}); draw("s1", %.3f, .35);
+  sketch("s2", "skF"); ln("s2", 215, 550, 865, 546, {strokeWidth: 7, seed: 165}); draw("s2", %.3f, .35);
   sink("#b5, #b5r0, #b5r1, #b5r2", %.3f); erase("s0", %.3f); erase("s1", %.3f); erase("s2", %.3f);
-''' % (t_ne1 + 0.02, t_pla, t_che, t_zal, t_mzh, t_vio, t_hv,
-       E(u"хвороб.", 37.18) + 0.05, E(u"хвороб.", 37.18) + 0.05, E(u"хвороб.", 37.18) + 0.05, E(u"хвороб.", 37.18) + 0.05))
+''' % (t_ne1 + 0.02, t_pla, t_che, t_zal, t_mzh, t_vio, t_hv, x_b5, x_b5, x_b5, x_b5))
 for t in (t_mzh, t_vio, t_hv):
     g.sfx("click-soft", t)
-BLACKOUT.append((t_ne1 - 0.05, E(u"хвороб.", 37.18) + 0.05))      # the three struck chips say it
+BLACKOUT.append((t_ne1 - 0.05, x_b5))      # the three struck chips say it
 
 # 6 · HALF — shoot → Claude → 20 min → a finished reel ---------------------------
 # it leaves in her pause before «Тому», so no rail word straddles the exit
@@ -346,7 +313,7 @@ js(u'''
   sketch("p1", "skP"); box("p1", 100, 315, 150, 267, {seed: 171, r: 26}); ln("p1", 155, 342, 195, 342, {seed: 173});
   ell("p1", 175, 545, 32, 32, {stroke: "#7A1424", fill: "#7A1424", fillStyle: "solid", seed: 175});
   label("p1", 175, 650, "зняти", {size: 44}); label("p1", 175, 698, "рілс", {size: 44});
-  draw("p1", %.3f, .55); fillin("p1", %.3f);
+  draw("p1", %.3f, .55);
   sketch("p2", "skP"); arrow("p2", 262, 470, 392, 600, {seed: 177, bend: .14}); box("p2", 405, 560, 250, 180, {seed: 179, r: 30});
   draw("p2", %.3f, .45); fadein("#pcl", %.3f);
   sketch("p3", "skP"); arrow("p3", 668, 600, 798, 470, {stroke: "#7A1424", seed: 181, bend: .14});
@@ -357,9 +324,9 @@ js(u'''
   label("p4", 880, 650, "готовий", {size: 44}); label("p4", 880, 698, "результат", {size: 44});
   draw("p4", %.3f, .5);
   erase("p1", %.3f); erase("p2", %.3f); erase("p3", %.3f); erase("p4", %.3f); out("#pcl", %.3f);
-''' % (t_mom - 0.35, t_mom - 0.35, t_vid2 - 0.05, t_kl, t_20 - 0.3, t_got - 0.45, h1, h1, h1, h1, h1))
-BLACKOUT.append((t_zn - 0.05, S(u"рілс,", 39.57) + 0.05))           # «зняти рілс» label
-BLACKOUT.append((S(u"отримати", 42.22) - 0.05, S(u"результат.", 43.0) + 0.05))  # «готовий результат» label
+''' % (t_mom - 0.35, t_vid2 - 0.05, t_kl, t_20 - 0.3, t_got - 0.45, h1, h1, h1, h1, h1))
+BLACKOUT.append((t_zn - 0.05, S(u"рілс,", 39.57) + 0.05))                   # «зняти рілс» label
+BLACKOUT.append((t_got - 0.05, S(u"результат.", 43.0) + 0.05))              # «готовий результат» label
 g.sfx("click-soft", t_zn); g.sfx("pop", t_kl); g.sfx("pop", t_got)
 g.sfx("whoosh-short", h0); g.sfx("whoosh-short", h1)
 
@@ -367,21 +334,22 @@ g.sfx("whoosh-short", h0); g.sfx("whoosh-short", h1)
 t_tomu, t_kaz = S(u"Тому", 43.7), S(u"каже,", 45.41)
 t_nm, t_dob = S(u"не", 47.35), S(u"так", 48.22)
 t_lim = S(u"Ліміти", 50.1)
+BUB = bubble_d(540, 410, 105, 80, (470, 530))
 js(u'''
   rise("#mp1, #mc1", %.3f); rise("#mp2, #mc2", %.3f);
-  sketch("a1", "skF"); bubble("a1", 540, 410, 210, 160, {seed: 191, fill: "#FFFFFF", fillStyle: "solid"});
-  draw("a1", %.3f, .5); fillin("a1", %.3f);
-  sketch("a2", "skF"); ln("a2", 500, 398, 580, 398, {stroke: "#1E1E1E", seed: 193}); ln("a2", 500, 430, 580, 430, {stroke: "#1E1E1E", seed: 195});
+  sketch("a1", "skF"); blob("a1", "%s", [435, 330, 210, 200], {seed: 191});
+  draw("a1", %.3f, .5);
+  sketch("a2", "skF"); ln("a2", 500, 396, 580, 396, {seed: 193}); ln("a2", 500, 428, 580, 428, {seed: 195});
   draw("a2", %.3f, .3);
-  sketch("a3", "skF"); ln("a3", 560, 368, 520, 462, {stroke: "#1E1E1E", seed: 197}); draw("a3", %.3f, .25);
+  sketch("a3", "skF"); ln("a3", 562, 366, 518, 458, {seed: 197}); draw("a3", %.3f, .25);
   erase("a2", %.3f); erase("a3", %.3f);
-  sketch("a4", "skF"); ln("a4", 486, 396, 594, 396, {stroke: "#7A1424", strokeWidth: 9, seed: 199});
-  ln("a4", 486, 436, 594, 436, {stroke: "#7A1424", strokeWidth: 9, seed: 201});
+  sketch("a4", "skF"); ln("a4", 494, 394, 586, 394, {strokeWidth: 8, seed: 199});
+  ln("a4", 494, 430, 586, 430, {strokeWidth: 8, seed: 201});
   draw("a4", %.3f, .3);
   sink("#mp1, #mp2, #mc1, #mc2", %.3f); erase("a4", %.3f); erase("a1", %.3f);
-''' % (t_tomu, t_tomu + 0.12, t_kaz - 0.2, t_kaz - 0.2, t_nm, t_nm + 0.3, t_dob - 0.1, t_dob - 0.1,
+''' % (t_tomu, t_tomu + 0.12, BUB, t_kaz - 0.2, t_nm, t_nm + 0.3, t_dob - 0.1, t_dob - 0.1,
        t_dob - 0.05, t_lim - 0.4, t_lim - 0.4, t_lim - 0.4))
-g.sfx("whoosh-short", t_tomu); g.sfx("click-soft", t_nm); g.sfx("pop", t_dob)
+g.sfx("pop", t_tomu + 0.05); g.sfx("click-soft", t_nm); g.sfx("pop", t_dob)
 
 # 8 · HALF — the limits: real creativity above the line, «creativity» below ------
 # it leaves as «капкаті» ends (blacked out: the CapCut chip says it), so «Тому» is white on the plaque
@@ -389,10 +357,11 @@ h2, h3 = t_lim - 0.15, S(u"капкаті.", 58.89) + 0.06
 HALF.append((h2, h3))
 t_spr, t_kr2 = S(u"справжнього", 52.28), S(u"креативу,", 54.55)
 t_cher, t_pl = S(u"червоному", 56.11), S(u"платній", 57.81)
+# «субтитри» drawn as a caption: upper case, Product Sans Black, in her red
 P.append(u'''
-        <div id="psub" class="hid" style="position:absolute; left:205px; top:660px; padding:12px 28px; border-radius:22px;
-             background:#fff; box-shadow:0 2px 10px rgba(36,25,25,.16); font-weight:700; font-size:46px;
-             color:#E0262F">субтитри</div>
+        <div id="psub" class="hid" style="position:absolute; left:190px; top:660px; padding:12px 28px; border-radius:22px;
+             background:#fff; box-shadow:0 2px 10px rgba(36,25,25,.16); font-family:'ProductSans', sans-serif;
+             font-weight:900; font-size:46px; letter-spacing:-0.015em; color:#7A1424">СУБТИТРИ</div>
         <div id="pcap" class="hid" style="position:absolute; left:560px; top:662px; display:flex; align-items:center; gap:14px;
              border:2px solid #DEBFBF; border-radius:16px; padding:12px 24px; background:#FFF8F7">
           <span style="font-weight:700; font-size:44px; letter-spacing:-0.02em; color:#241919">CapCut</span>
@@ -437,12 +406,16 @@ js(u'''
   fadein("#b9", %.3f, .01); pop("#b9a", %.3f); pop("#b9b", %.3f); pop("#b9c", %.3f); pop("#b9d", %.3f);
   sink("#b9", %.3f);
   pop("#b9n", %.3f);
+  // a full battery: case and nub are stickers, the charge inside is the kit's hatch
   sketch("e1", "skF"); box("e1", 640, 348, 160, 84, {seed: 221, r: 18}); box("e1", 800, 374, 16, 32, {seed: 223, r: 6});
-  box("e1", 654, 362, 132, 56, {seed: 225, r: 10, fill: "#FFFFFF", strokeWidth: 3});
+  box("e1", 654, 362, 132, 56, {seed: 225, r: 10, fill: true, strokeWidth: 3});
   draw("e1", %.3f, .45);
   pop("#b9cta", %.3f, .6);
-  sketch("e2", "skF"); arrow("e2", 965, 770, 815, 600, {strokeWidth: 5, seed: 227, bend: -.16});
-  draw("e2", %.3f, .45);
+  // comments are down at the right of the IG rail, so the pointer goes down to
+  // them — never up at the pill (her review of 41). Tip stays left of x 900.
+  sketch("e2", "skF"); label("e2", 800, 730, "сюди!", {size: 52});
+  arrow("e2", 820, 760, 880, 975, {strokeWidth: 5, seed: 227, bend: -.25});
+  draw("e2", %.3f, .5);
 ''' % (t_blog - 0.05, t_blog, t_smm, t_pid, t_pro, t_24 - 0.35, t_24, t_vt - 0.35, t_stav, t_stav + 0.5))
 g.sfx("pop", t_blog); g.sfx("pop", t_pro); g.sfx("pop", t_24); g.sfx("click-soft", t_vt); g.sfx("pop", t_stav)
 BLACKOUT.append((t_stav - 0.05, DUR))     # the pill says it
@@ -455,46 +428,14 @@ for i, (a, b) in enumerate(HALF):
 
 F.append(u'<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>')
 
-# caption phrases: where her phrasing breaks, not where 40 characters run out
-SPLITS = [1.95, 3.21, 24.81, 25.75, 34.8, 39.17, 40.22, 41.16, 42.22, 54.34, 57.57, 63.14, 64.32, 69.0]
-JOINS = [2.17, 4.47, 23.81, 25.95, 35.64, 37.18, 39.57, 41.56, 57.09, 63.56, 64.8, 68.17]
-KEYS = {1.55: True, 3.87: True, 16.2: True, 18.04: True, 24.21: True, 27.55: True, 29.57: True, 30.67: True,
-        38.59: True, 40.86: True, 41.56: True, 50.1: True, 52.28: True, 56.11: True, 57.81: True,
-        62.42: True, 65.42: True, 67.33: True}
-
-
-def rechunk(chunks):
-    near = lambda t, ts: any(abs(t - x) < 0.06 for x in ts)
-    for t in SPLITS + JOINS:
-        assert any(abs(w["s"] - t) < 0.06 for c in chunks for w in c["words"]), t
-    groups = []
-    for c in chunks:
-        for i, w in enumerate(c["words"]):
-            start = (i == 0 and not near(w["s"], JOINS)) or (i > 0 and near(w["s"], SPLITS))
-            if start or not groups:
-                groups.append([])
-            groups[-1].append(w)
-    out = []
-    for n, ch in enumerate(groups):
-        s = ch[0]["s"]
-        nxt = groups[n + 1][0]["s"] if n + 1 < len(groups) else DUR
-        pos = ("bottom", 1920 - 1520)
-        for a, b, how, y in PLACE:
-            if a <= s < b:
-                pos = (how, y if how == "top" else 1920 - y)
-        out.append({"s": round(s, 3), "e": round(min(nxt, ch[-1]["e"] + 0.6), 3), "words": ch,
-                    "key": g._key(ch, KEYS), "pos": pos})
-    return out
+# the pause carries nothing of ours, sound included
+assert not [c for c in g.cues if H0 - 0.05 < c["t"] < H1 + 0.03], [c for c in g.cues if H0 - 0.05 < c["t"] < H1 + 0.03]
 
 
 def main():
     if "--words" in sys.argv:
         print(" ".join("%s/%.1f" % (c["w"], c["s"]) for c in CAPS))
-    chunks = rechunk(g.chunks(CAPS, keys=KEYS, place=PLACE))
-    if "--chunks" in sys.argv:
-        for c in chunks:
-            print("%6.2f-%6.2f %s%s" % (c["s"], c["e"], " ".join(w["w"] for w in c["words"]),
-                                        "  [%s]" % c["words"][c["key"]]["w"] if c["key"] is not None else ""))
+    chunks = g.chunks(CAPS, place=PLACE)          # the kit turns them into the old word rail
     doc = g.document(title=u"Reel 51 — Твій стиль з першого дня", plate="assets/base.mp4",
                      behind="\n".join(B), panel="\n".join(P), front="\n".join(F), cover="\n".join(C),
                      js="\n".join(J), chunks=chunks, blackout=BLACKOUT, extra_css=EXTRA_CSS)

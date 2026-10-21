@@ -9,8 +9,8 @@ On the half screen the loop is drawn node by node as she names them: навча�
 (an ellipse around the word) → пост (Instagram) → w. Windsor → звіт → Claude аналізує → ✓ зайшло,
 ✗ ні → the red return arrow back to the post and the ellipse redrawn red on «вчиться». Then the loop's logic
 becomes a graph above her: posts pile up along «контент», the curve «знає тебе»
-rises, «краще» is circled at its tip. The CTA reuses both: the loop comes back as an
-outline ellipse round the «команда» pill («оновлювану»), «24/7» behind her, the team's jobs as chips, and
+rises, «краще» is circled at its tip. The CTA reuses both: the loop comes back as an open ring round the
+«оновлювана команда» pill («оновлювану» → «команду»), «24/7» behind her, the team's jobs as chips, and
 the «+» comes back in «Пиши + у коментарі».
 
 ## Beats
@@ -33,12 +33,12 @@ the «+» comes back in «Пиши + у коментарі».
 | 20.2 | above | rising curve «знає тебе» lands on «знає» |
 | 21.55 | above | red circle + «краще» on «краще»; out 22.86 |
 | 23.4 | above | chips блогерка / СММниця / підприємниця on their words |
-| 25.8 / 26.4 | above | «команда» pill on «таку», dark outline ellipse round it on «оновлювану»; out 27.75 |
+| 26.44 / 26.74 | above | «оновлювана команда» pill on «оновлювану»; the ring (dark ink, white halo, no arrowhead) closes round it by «команду»; out 27.87 |
 | 27.75 | behind | «24/7», white, 240 px, top 572 — her hair just over its foot (matte 27.67–30.40) |
 | 29.7 | above | card «Команда 24/7»: монтує / дизайнить / пише сценарії on their words; out 32.09 |
-| 32.46 | above | CTA pill «Пиши + у коментарі», pointer arrow + «сюди!» on «плюс» (dark ink, white halo) |
+| 32.46 / 32.76 | above | CTA pill «Пиши + у коментарі»; on «плюс» «сюди!» and a ~280 px arrow from it DOWN toward the comment button, tip (880, 940), left of x 900 (dark ink, white halo) |
 
-Captions: her old word-by-word rail (kit, after her review of 41), ink on the
-panel during the half screen. Over her footage the kit inks sketches dark with a white halo;
-on the panel and the card they are dark/red. Blackout where the graphic says the words:
+Captions: automatic — `g.chunks(CAPS, place=PLACE)` into `g.document`: her old
+word-by-word rail (her review of 41, no pills), ink on the panel during the half screen. Over her footage the kit inks sketches dark with a white halo;
+on the panel and inside the white card they are dark/red. Blackout where the graphic says the words:
 «блогерка, СММниця, підприємниця», «24 на 7», «монтує, дизайнить, пише сценарії», «то пиши плюс у коментарі».

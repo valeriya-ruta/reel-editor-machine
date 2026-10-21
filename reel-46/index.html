@@ -85,7 +85,7 @@
     /* §00.5 sketches */
     .sk { position: absolute; left: 0; top: 0; overflow: visible; }
     .sk text, .hand { font-family: "Pangolin", cursive; fill: #1E1E1E; color: #1E1E1E; }
-    #front .sk { filter: drop-shadow(0 2px 6px rgba(20,12,12,.35)); }
+    #front .sk { filter: drop-shadow(0 3px 10px rgba(20,12,12,.22)); }
     .hand { position: absolute; white-space: nowrap; }
 
     /* captions — exactly as before §00 (her call 2026-10-21, over the boxed
@@ -489,10 +489,14 @@
     var svg = document.getElementById(svgId);
     var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
     g.setAttribute("id", "sk-" + name); svg.appendChild(g);
-    // over her footage the ink is white (dark ink read badly over the room);
-    // on the white panel and cover it stays #1E1E1E. Explicit colours win.
+    // Over her footage (her review of 41, "not passing even AA"): a thin line
+    // of any one colour fails against her light room — white included. So
+    // over the footage closed shapes are solid white stickers with the dark
+    // Excalidraw outline, and open strokes and free labels are dark ink with a
+    // thick white halo, which reads on light and dark ground alike. On the
+    // white panel and cover nothing changes. Explicit colours win.
     var foot = !!(svg.closest && svg.closest("#front"));
-    SK[name] = {g: g, rc: rough.svg(svg), shapes: [], ink: foot ? "#FFFFFF" : "#1E1E1E"};
+    SK[name] = {g: g, rc: rough.svg(svg), shapes: [], foot: foot, boxes: [], ink: "#1E1E1E"};
     return SK[name];
   }
   function _add(s, node, kind) {
@@ -500,20 +504,43 @@
     var paths = [].slice.call(node.querySelectorAll ? node.querySelectorAll("path") : []);
     if (node.tagName === "path") paths = [node];
     paths.forEach(function (p) {
+      var f = p.getAttribute("fill");
+      if (f && f !== "none") { p.style.opacity = 0; p.dataset.fill = "1"; return; }  // a solid fill fades in
       var L = 0; try { L = p.getTotalLength(); } catch (e) {}
-      p.style.strokeDasharray = L + " " + (L + 2); p.style.strokeDashoffset = L + 1;
-      p.style.strokeLinecap = "round"; p.style.strokeLinejoin = "round";
+      if (s.foot) {                  // the white halo under a stroke over the footage
+        var h = p.cloneNode(false);
+        h.setAttribute("stroke", "#FFFFFF");
+        h.setAttribute("stroke-width", (parseFloat(p.getAttribute("stroke-width")) || 4.5) + 8);
+        p.parentNode.insertBefore(h, p);
+        p._halo = h;
+      }
+      [p, p._halo].forEach(function (q) { if (!q) return;
+        q.style.strokeDasharray = L + " " + (L + 2); q.style.strokeDashoffset = L + 1;
+        q.style.strokeLinecap = "round"; q.style.strokeLinejoin = "round"; });
     });
     s.shapes.push({paths: paths, kind: kind || "stroke"});
+  }
+  // a closed shape over the footage: solid white with a dark outline (see sketch())
+  function _closed(s, oo, o, x, y, w, h) {
+    if (s.foot && !(o && o.fill === false)) {
+      oo.fill = "#FFFFFF"; oo.fillStyle = "solid";
+      if (!(o && o.stroke)) oo.stroke = "#1E1E1E";
+      s.boxes.push([x, y, x + w, y + h]);
+    }
+    return oo;
   }
   function box(name, x, y, w, h, o) { _ink = SK[name].ink;      // rounded rough box, radius 28 (§00.5.2)
     var s = SK[name], r = (o && o.r) || 28;
     var oo = opt(o, (o && o.seed) || 7);
     if (o && o.fill) { var f = hatch(o.fill === true ? {} : {fill: o.fill}); for (var k in f) oo[k] = f[k]; }
+    else _closed(s, oo, o, x, y, w, h);
     _add(s, s.rc.path(rrectD(x, y, w, h, r), oo));
   }
   function ell(name, cx, cy, w, h, o) { _ink = SK[name].ink; var s = SK[name];
-    _add(s, s.rc.ellipse(cx, cy, w, h, opt(o, (o && o.seed) || 11))); }
+    _add(s, s.rc.ellipse(cx, cy, w, h, _closed(s, opt(o, (o && o.seed) || 11), o, cx - w / 2, cy - h / 2, w, h))); }
+  // any closed hand-drawn outline (a cloud…): d is an SVG path, bbox its bounds
+  function blob(name, d, bbox, o) { _ink = SK[name].ink; var s = SK[name];
+    _add(s, s.rc.path(d, _closed(s, opt(o, (o && o.seed) || 23), o, bbox[0], bbox[1], bbox[2], bbox[3]))); }
   function ln(name, x1, y1, x2, y2, o) { _ink = SK[name].ink; var s = SK[name];
     _add(s, s.rc.line(x1, y1, x2, y2, opt(o, (o && o.seed) || 13))); }
   function under(name, x1, y, x2, o) { _ink = SK[name].ink; var s = SK[name];      // a hand underline
@@ -531,7 +558,12 @@
     t.setAttribute("x", x); t.setAttribute("y", y);
     t.setAttribute("text-anchor", (o && o.anchor) || "middle");
     t.setAttribute("font-size", (o && o.size) || 50);
-    t.style.fill = (o && o.color) || s.ink;
+    var inside = s.boxes.some(function (b) { return x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3] + 20; });
+    t.style.fill = (o && o.color) || "#1E1E1E";
+    if (s.foot && !inside) {         // a free label over the footage gets the white halo too
+      t.style.stroke = "#FFFFFF"; t.style.strokeWidth = "12px"; t.style.paintOrder = "stroke";
+      t.style.strokeLinejoin = "round";
+    }
     t.textContent = txt; t.style.opacity = 0; s.g.appendChild(t);
     s.shapes.push({text: t});
   }
@@ -543,11 +575,12 @@
       if (sh.text) { tl.to(sh.text, {opacity: 1, duration: .35}, at + .05); return; }
       // an arrowhead is a flick, not a stroke: the arrow reads as one gesture
       if (sh.kind === "head") {
-        sh.paths.forEach(function (p) { tl.to(p, {strokeDashoffset: 0, duration: .18, ease: "power1.out"}, at); });
+        sh.paths.forEach(function (p) { tl.to([p, p._halo].filter(Boolean), {strokeDashoffset: 0, duration: .18, ease: "power1.out"}, at); });
         at += .12; return;
       }
       sh.paths.forEach(function (p, i) {
-        tl.to(p, {strokeDashoffset: 0, duration: per, ease: "power1.inOut"}, at + i * .12);
+        if (p.dataset.fill) { tl.to(p, {opacity: 1, duration: .3}, at); return; }
+        tl.to([p, p._halo].filter(Boolean), {strokeDashoffset: 0, duration: per, ease: "power1.inOut"}, at + i * .12);
       });
       at += per * .66 + (sh.paths.length - 1) * .12;
     });
@@ -763,13 +796,15 @@
   sketch("in2", "skF"); arrow("in2", 290, 492, 432, 566, {seed: 5, bend: -.1}); arrow("in2", 790, 492, 648, 566, {seed: 9, bend: .1});
   draw("in2", 6.138, .45);
   pop("#sys", 6.688);
-  sketch("c3", "skF"); ell("c3", 540, 622, 440, 160, {strokeWidth: 5, seed: 15});
+  // an outline round the pill, not a sticker: a white fill would hide the
+  // pill's arrowheads (the kit gives the open ring its white halo)
+  sketch("c3", "skF"); ell("c3", 540, 622, 440, 160, {strokeWidth: 5, seed: 15, fill: false});
   draw("c3", 8.537, .6);
   sketch("q3", "skT"); ln("q3", 545, 548, 535, 700, {strokeWidth: 6, seed: 21});
   label("q3", 790, 600, "?", {size: 72});
   draw("q3", 9.987, .4);
-  sink("#a1, #a2", 10.893);
-  out("#sys", 11.773); erase("in2", 10.893); erase("c3", 11.773); erase("q3", 11.773);
+  sink("#a1, #a2", 10.893); erase("in2", 10.893);
+  out("#sys", 11.773); erase("c3", 11.773); erase("q3", 11.773);
 
 
   sketch("hL", "skP"); box("hL", 110, 300, 360, 100, {seed: 23, fill: true}); label("hL", 290, 366, "особистий", {size: 50});
@@ -846,11 +881,13 @@
   rise("#bl", 50.868);
   pop("#bl1", 52.541); pop("#bl2", 53.241); pop("#blp", 53.861, .45);
   rise("#blt", 54.871, 30);
-  sketch("mx", "skT"); ell("mx", 540, 470, 700, 124, {stroke: "#7A1424", strokeWidth: 5, seed: 81});
+  // the ring round «особисте + професійне» is an outline (a sticker would
+  // cover the chips); ink + white halo from the kit, no colour of our own
+  sketch("mx", "skT"); ell("mx", 540, 470, 700, 124, {strokeWidth: 5, seed: 81, fill: false});
   draw("mx", 56.131, .6);
   sink("#bl", 56.981); erase("mx", 56.981);
   pop("#no2", 57.181);
-  sketch("nx", "skT"); ln("nx", 236, 500, 846, 470, {stroke: "#7A1424", strokeWidth: 8, seed: 83});
+  sketch("nx", "skT"); ln("nx", 236, 500, 846, 470, {strokeWidth: 8, seed: 83});
   draw("nx", 57.461, .35);
   out("#no2", 58.492); erase("nx", 58.492);
 
@@ -858,13 +895,20 @@
   pop("#ct1", 59.222); pop("#ct2", 60.142); pop("#ct3", 61.018);
   sketch("tm", "skF"); ell("tm", 330, 452, 58, 58, {seed: 100}); _add(SK["tm"], SK["tm"].rc.curve([[284, 564], [330, 496], [376, 564]], opt({}, 103))); ell("tm", 440, 452, 58, 58, {seed: 107}); _add(SK["tm"], SK["tm"].rc.curve([[394, 564], [440, 496], [486, 564]], opt({}, 110))); ell("tm", 550, 452, 58, 58, {seed: 114}); _add(SK["tm"], SK["tm"].rc.curve([[504, 564], [550, 496], [596, 564]], opt({}, 117)));
   draw("tm", 62.298, .4);
-  sketch("bt", "skF"); box("bt", 650, 470, 200, 104, {seed: 91, r: 20, fill: "#FFFFFF"});
+  // a battery: the kit makes the body and the nub white stickers; four dark
+  // charge bars fill it on «не втомлюється» — a full battery
+  sketch("bt", "skF"); box("bt", 650, 470, 200, 104, {seed: 91, r: 20});
   box("bt", 850, 500, 22, 44, {seed: 93, r: 8});
-  draw("bt", 63.118, .45);
-  erase("tm", 64.519); erase("bt", 64.519);
+  draw("bt", 62.918, .4);
+  sketch("bt2", "skF"); ln("bt2", 692, 494, 692, 550, {strokeWidth: 20, seed: 95}); ln("bt2", 732, 494, 732, 550, {strokeWidth: 20, seed: 96}); ln("bt2", 772, 494, 772, 550, {strokeWidth: 20, seed: 97}); ln("bt2", 812, 494, 812, 550, {strokeWidth: 20, seed: 98});
+  draw("bt2", 63.568, .22);
+  erase("tm", 64.519); erase("bt", 64.519); erase("bt2", 64.519);
   pop("#ctaP", 64.719, .6);
-  sketch("pt", "skF"); arrow("pt", 960, 765, 852, 588, {strokeWidth: 5, seed: 97, bend: .12});
-  draw("pt", 65.119, .45);
+  // comments are down at the right of the IG rail, so the pointer goes down to
+  // them — never up at the pill (her review of 41). Tip stays left of x 900.
+  sketch("pt", "skF"); label("pt", 800, 700, "сюди!", {size: 52});
+  arrow("pt", 820, 730, 880, 960, {strokeWidth: 5, seed: 97, bend: -.25});
+  draw("pt", 64.869, .5);
 
   half(10.993, 20.437);
   half(27.946, 38.324);

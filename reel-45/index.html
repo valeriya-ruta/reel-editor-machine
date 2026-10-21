@@ -160,7 +160,9 @@
           <span class="chip hid" id="b4b"><i></i>СММниця</span>
           <span class="chip hid" id="b4c"><i></i>підприємниця</span>
         </div>
-        <div id="b4t" class="pill light hid" style="left:390px; top:452px;">команда</div>
+        <div style="position:absolute; left:0; top:452px; width:1080px; display:flex; justify-content:center">
+          <div id="b4t" class="pill light hid" style="position:relative">оновлювана команда</div>
+        </div>
 
         <div id="b6" class="card hid" style="left:120px; top:300px; width:840px; padding:34px 40px;">
           <span class="lbl">Команда 24/7</span>
@@ -201,7 +203,7 @@
       <div class="wc inv" id="w17" style="top:862px">ТОМУ</div>
       <div class="wc inv" id="w18" style="top:862px">КОНТЕНТІ,</div>
       <div class="wc inv" id="w19" style="top:862px">ЯКИЙ МИ</div>
-      <div class="wc inv" id="w20" style="top:862px">ПОСТЕМО.</div>
+      <div class="wc inv" id="w20" style="top:862px">ПОСТИМО.</div>
       <div class="wc inv" id="w21" style="top:862px">ТОБТО</div>
       <div class="wc inv" id="w22" style="top:862px">У</div>
       <div class="wc inv" id="w23" style="top:862px">НАС</div>
@@ -586,8 +588,8 @@
 
 
   fadein("#b4", 23.387, .01); pop("#b4a", 23.437); pop("#b4b", 24.137); pop("#b4c", 24.837);
-  pop("#b4t", 25.817);
-  sink("#b4, #b4t", 27.749);
+  pop("#b4t", 26.437);
+  sink("#b4, #b4t", 27.869);
 
 
   rise("#bw", 27.749, 80);
@@ -615,17 +617,19 @@
   sketch("cv", "skF"); parrow("cv", [[236, 505], [450, 490], [650, 445], [868, 352]], {seed: 37});
   label("cv", 214, 350, "знає тебе", {size: 42, anchor: "start"});
   draw("cv", 20.234, .9);
+  // «краще» sits inside the white card (x 110-970, y 290-675), not over her
+  // footage, so it keeps the emphasis red as the panel does
   sketch("kr", "skF"); ell("kr", 862, 362, 170, 112, {stroke: "#7A1424", strokeWidth: 5, seed: 39, fill: false});
   label("kr", 752, 345, "краще", {size: 50, color: "#7A1424", anchor: "end"});
   draw("kr", 21.554, .5);
   erase("ax", 22.862); erase("tl", 22.862); erase("cv", 22.862); erase("kr", 22.862);
 
-  sketch("lp", "skF"); ell("lp", 540, 510, 420, 172, {strokeWidth: 5, seed: 43, fill: false});    // an outline round the pill, not a sticker over it
-  draw("lp", 26.437, .55);
-  erase("lp", 27.749);
+  sketch("lp", "skF"); ell("lp", 540, 510, 660, 176, {strokeWidth: 5, seed: 43, fill: false});
+  draw("lp", 26.737, .6);
+  erase("lp", 27.869);
 
-  sketch("a7", "skF"); parrow("a7", [[800, 580], [850, 690], [872, 840]], {strokeWidth: 5, seed: 47});
-  label("a7", 890, 905, "сюди!", {size: 52});
+  sketch("a7", "skF"); label("a7", 790, 640, "сюди!", {size: 52});
+  arrow("a7", 805, 672, 880, 940, {strokeWidth: 5, seed: 47, bend: -.18});
   draw("a7", 32.763, .5);
   half(4.983, 16.859);
 

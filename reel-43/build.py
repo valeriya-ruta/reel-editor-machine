@@ -124,7 +124,7 @@ js(u'''
   pop("#b1n", %.3f); fadein("#b1m", %.3f); pop("#b1a", %.3f);
   pop("#b1s", %.3f);
   tl.to("#b1t0, #b1t1, #b1t2, #b1t3", {autoAlpha: 0, scale: .3, duration: .35, ease: "power2.in", stagger: .18}, %.3f);
-  sketch("x1", "skF"); ln("x1", 180, 540, 900, 600, {stroke: "#7A1424", strokeWidth: 6, seed: 3});
+  sketch("x1", "skF"); ln("x1", 180, 540, 900, 600, {strokeWidth: 6, seed: 3});
   draw("x1", %.3f, .45);
   sink("#b1", %.3f); erase("x1", %.3f);
 ''' % (0.05, t_400, S(u"місяць", 2.39), t_akk, t_zah, t_kon, t_nem - 0.1, 6.45, 6.45))
@@ -179,7 +179,10 @@ js(u'''
 ''' % (t_nav - 0.05, t_1300 - 0.1, t_bil, 18.86))
 # line 1 (y 350-566) clears her head (top ~735), so it can rise before the matte starts
 g.sfx("whoosh-short", t_nav - 0.05); g.sfx("kaching", t_1300)
-BLACKOUT.append((t_nav - 0.05, t_1300 + 0.05))      # «а навіщо мені система за 1300,» stands behind her
+# only the words the big type says (§2b.1): «навіщо», «1300» — «мені система за»
+# stay on the rail, the words behind her don't say them
+BLACKOUT.append((t_nav - 0.05, S(u"мені", 15.73) - 0.01))
+BLACKOUT.append((t_1300 - 0.05, S(u"якщо", 17.39) - 0.01))
 
 # 4 · ABOVE — €400 every month vs €1300 once ----------------------------------
 t_cyf, t_bil2, t_odn = S(u"цифри", 20.33), S(u"більше,", 20.65), S(u"одноразова", 21.55)
@@ -212,9 +215,10 @@ F.append(u'''
 js(u'''
   rise("#b5", %.3f);
   %s
-  sketch("s5", "skF"); ln("s5", 290, 405, 935, 410, {stroke: "#7A1424", strokeWidth: 7, seed: 31});
+  sketch("s5", "skF"); ln("s5", 290, 405, 935, 410, {strokeWidth: 7, seed: 31});
   draw("s5", %.3f, .45);
-  sketch("o5", "skF"); ell("o5", 220, 405, 170, 210, {stroke: "#7A1424", strokeWidth: 5, seed: 33});
+  // a ring around the first page: fill false, or the kit's sticker fill hides the page
+  sketch("o5", "skF"); ell("o5", 220, 405, 170, 210, {fill: false, strokeWidth: 5, seed: 33});
   draw("o5", %.3f, .5);
   erase("s5", %.3f);
   tl.to("#b5n1, #b5n2, #b5n3, #b5n4, #b5n5", {autoAlpha: 0, duration: .25}, %.3f);
@@ -245,7 +249,7 @@ BASE, TOP = 740, 400
 b1 = 340 / 3.5
 js(u'''
   sketch("h1", "skP"); box("h1", 110, %(top)d, 200, %(hh)d, {seed: 41, fill: true});
-  label("h1", 210, 585, "1300", {size: 64}); label("h1", 210, 800, "система", {size: 46});
+  label("h1", 210, 585, "1300", {size: 56}); label("h1", 210, 800, "система", {size: 46});
   draw("h1", %(t1).3f, .7);
   sketch("h2", "skP"); label("h2", 510, 372, "1 акаунт", {size: 46}); draw("h2", %(t2).3f);
   sketch("h3", "skP"); box("h3", 400, %(y1).1f, 220, %(b).1f, {seed: 43, r: 18});
@@ -275,11 +279,13 @@ js(u'''
        "cy": BASE - b1 + 12, "ry1": BASE - 2 * b1, "rly1": BASE - b1 + 18, "rbh": BASE - TOP - 2 * b1,
        "t1": t_por - 0.1, "t2": t_akk1 - 0.15, "t3": t_4b - 0.1, "t4": t_min, "t5": t_oku - 0.1,
        "t6": t_des - 0.45, "t7": t_des - 0.1, "t8": t_try - 0.15, "t9": S(u"половиною", 35.53),
-       "t10": t_mis + 0.5, "t11": t_dva2 - 0.1, "t12": t_mon - 0.3, "t13": t_men - 0.1, "t14": t_dva3 - 0.1,
+       # «< 2 міс» on «менше», so it holds ~1 s before the panel goes
+       "t10": t_mis + 0.5, "t11": t_dva2 - 0.1, "t12": t_mon - 0.3, "t13": S(u"то взагалі", 39.86) - 0.1,
+       "t14": t_men - 0.05,
        "t15": h1 + 0.9})
 g.sfx("whoosh-short", h0); g.sfx("whoosh-short", h1)
 g.sfx("kaching", t_4b); g.sfx("click-soft", t_oku)
-g.sfx("pop", t_dva2); g.sfx("click-soft", t_dva3)
+g.sfx("pop", t_dva2); g.sfx("click-soft", t_men)
 
 # 7 · ABOVE — nobody to depend on --------------------------------------------
 t_ty, t_ni, t_zal = S(u"ти", 41.83), S(u"ні", 42.43), S(u"залежиш.", 43.44)
@@ -291,8 +297,8 @@ F.append(u'''
         </div>''')
 js(u'''
   fadein("#b7", %.3f, .01); pop("#b7a", %.3f); pop("#b7b", %.3f);
-  sketch("x7", "skF"); ln("x7", 225, 432, 515, 445, {stroke: "#7A1424", strokeWidth: 7, seed: 71});
-  ln("x7", 565, 445, 860, 432, {stroke: "#7A1424", strokeWidth: 7, seed: 73});
+  sketch("x7", "skF"); ln("x7", 225, 432, 515, 445, {strokeWidth: 7, seed: 71});
+  ln("x7", 565, 445, 860, 432, {strokeWidth: 7, seed: 73});
   draw("x7", %.3f, .35);
   sink("#b7", %.3f); erase("x7", %.3f);
 ''' % (t_ty - 0.1, t_ty - 0.1, S(u"більше", 41.95) + 0.1, t_ni, 43.9, 43.9))
@@ -347,7 +353,7 @@ F.append(u'''
 js(u'''
   rise("#b9", %.3f);
   pop("#b9s", %.3f);
-  sketch("x9", "skF"); ln("x9", 318, 592, 660, 586, {stroke: "#7A1424", strokeWidth: 7, seed: 91});
+  sketch("x9", "skF"); ln("x9", 318, 592, 660, 586, {strokeWidth: 7, seed: 91});
   draw("x9", %.3f, .35);
   tl.to("#b9s", {autoAlpha: 0, duration: .25}, %.3f); erase("x9", %.3f);
   pop("#b9c", %.3f);
@@ -368,9 +374,13 @@ F.append(u'''
 js(u'''
   pop("#b10a", %.3f);
   pop("#b10b", %.3f, .6);
-  sketch("a10", "skF"); arrow("a10", 900, 615, 965, 830, {strokeWidth: 5, seed: 97, bend: -.2});
+  // comments are down at the right of the IG rail: the pointer goes DOWN to
+  // them from under the pill, tip left of x 900 (her review of 41), ~270 px,
+  // right of her hair (it reaches x ~760 here); kit ink + white halo
+  sketch("a10", "skF");
+  arrow("a10", 790, 630, 878, 890, {strokeWidth: 5, seed: 97, bend: -.2});
   draw("a10", %.3f, .5);
-''' % (t_inv, t_pysh - 0.2, t_pysh + 0.35))
+''' % (t_inv, t_pysh - 0.2, t_pysh - 0.05))
 g.sfx("kaching", t_inv); g.sfx("pop", t_pysh - 0.2)
 BLACKOUT.append((S(u"то", 61.31) - 0.05, DUR))     # the pill says it
 

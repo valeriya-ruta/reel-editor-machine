@@ -2,7 +2,8 @@
 """Reel 48 — «Уроки і YouTube». Posts 2026-10-23.
 
 Google style + Excalidraw (STYLE.md §00, with her review of reel 41 on top:
-old word captions, calm white sketches over the footage, white behind-words),
+old word captions, calm sketches the kit inks over the footage — no explicit
+colours there — white behind-words),
 the reel-41 skeleton.
 
 The one object is **the video itself** — a short reel frame next to a long
@@ -21,14 +22,14 @@ with the edit, rendering it and splicing it back.
   above   render bars: reel fast, long video slow
   full    what a render is: Клод → код {JSON} → готове відео; the second arrow is «рендер»
   above   the render bars again — long is just longer
-  above   «1» «2» options; 1: no rush → the whole timeline re-renders ↻
+  above   «1» «2» options; 1: no rush → the whole timeline re-renders (underlined)
   above   bars: рілс < 2-й раз < 1-й раз
   half    «2»: промт; Claude cuts out the piece with the edit, renders only it,
           splices it back; a clock; not the whole render (struck)
   above   the lead magnet card again: 20 хв, новий стиль, усі правки
   behind  «2–3 години»
   above   my active work struck; render runs, I tick off other things
-  above   CTA — час на монтаж, система, «Пиши + в коментарі»
+  above   CTA — час на монтаж, система, «Пиши + в коментарі», a pointer DOWN to the comments
 
 usage: python build.py      (then mattes; render is the orchestrator's)
 """
@@ -217,10 +218,10 @@ REEL4 = u''.join(u'<div class="card hid" id="b4r%d" style="position:absolute; le
 F.append(REEL4)
 js(u'''
   pop("#b3ok", %.3f, .45);
-  sketch("c4", "skF");
-  ln("c4", 214, 350, 214, 572, {stroke: "#7A1424", strokeWidth: 6, seed: 41});
-  ln("c4", 306, 350, 306, 572, {stroke: "#7A1424", strokeWidth: 6, seed: 43});
-  ln("c4", 398, 350, 398, 572, {stroke: "#7A1424", strokeWidth: 6, seed: 45});
+  sketch("c4", "skF");     // over the footage layer: the kit inks it dark with a white halo
+  ln("c4", 214, 350, 214, 572, {strokeWidth: 6, seed: 41});
+  ln("c4", 306, 350, 306, 572, {strokeWidth: 6, seed: 43});
+  ln("c4", 398, 350, 398, 572, {strokeWidth: 6, seed: 45});
   draw("c4", %.3f, .3);
   out("#b3L, #b3k", %.3f); erase("c4", %.3f); erase("a3", %.3f);
   pop("#b4r0", %.3f, .5); pop("#b4r1", %.3f, .5); pop("#b4r2", %.3f, .5); pop("#b4r3", %.3f, .5);
@@ -304,7 +305,8 @@ C.append(u'''
         <div id="c8k" class="hid" style="position:absolute; left:396px; top:478px; color:#7A1424">%s</div>''' % mark("claude", 72))
 js(u'''
   full(%.3f, %.3f); tl.set("#b7", {autoAlpha: 0}, %.3f);
-  sketch("h8", "skC"); label("h8", 540, 380, "що таке рендер?", {size: 66});
+  // the headline rides up on the cover (her review: never open onto empty white)
+  sketch("h8", "skC"); label("h8", 540, 384, "що таке рендер?", {size: 76});
   draw("h8", %.3f);
   sketch("k8", "skC"); box("k8", 350, 448, 380, 140, {seed: 3}); label("k8", 610, 538, "Клод", {size: 60});
   draw("k8", %.3f, .55); fadein("#c8k", %.3f, .3);
@@ -324,7 +326,7 @@ js(u'''
   sketch("r8", "skC"); ell("r8", 536, 1090, 190, 230, {stroke: "#7A1424", strokeWidth: 5, seed: 19});
   label("r8", 655, 1105, "рендер", {size: 64, color: "#7A1424", anchor: "start"});
   draw("r8", %.3f, .6);
-''' % (c0, c1, c0 + 0.9, t_rq - 0.1, t_kld - 0.4, t_kld - 0.1, t_bud, t_zv - 0.3, t_json - 0.1, t_per - 0.35,
+''' % (c0, c1, c0 + 0.9, c0 + 0.3, t_kld - 0.4, t_kld - 0.1, t_bud, t_zv - 0.3, t_json - 0.1, t_per - 0.35,
        t_got - 0.35, t_r2 - 0.75))
 g.sfx("whoosh-short", c0); g.sfx("click-soft", t_kld - 0.4); g.sfx("click-soft", t_json - 0.1)
 g.sfx("pop", t_r2 - 0.15)
@@ -340,7 +342,7 @@ js(u'''
   rise("#b7", %.3f);
   fill("#b7b .bar b", %.3f, %.3f); pop("#b7bk", %.3f, .4);
   sink("#b7", %.3f);
-''' % (c1, c1, c1, c1, c1, c1, c1 + 0.25, t_dovg, t_dsh + 0.35 - t_dovg, t_dsh + 0.35, t_tomu - 0.3))
+''' % (c1, c1, c1, c1, c1, c1, c1 + 0.25, t_dovg, t_dsh - 0.1 - t_dovg, t_dsh - 0.1, t_tomu - 0.05))
 
 # 9-10 · ABOVE — two options; the first: no rush, the whole timeline re-renders
 t_vn, t_prk = S(u"вношу", 42.90), S(u"правку,", 43.26)
@@ -358,11 +360,11 @@ F.append(u'''
           <span class="chip hid" id="b10c" style="position:absolute; left:476px; top:72px; font-size:32px; padding:12px 20px"><i></i>нема куди спішити</span>
           <div id="b10t" class="hid" style="position:absolute; left:36px; top:226px; display:flex; gap:8px">%s</div>
           %s
-          <svg id="b10z" class="hid" width="86" height="86" viewBox="0 0 86 86" style="position:absolute; left:730px; top:226px">
-            <path d="M70 30 A30 30 0 1 0 72 52" fill="none" stroke="#7A1424" stroke-width="8" stroke-linecap="round"/>
-            <path d="M72 14 L72 32 L54 32" fill="none" stroke="#7A1424" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          %s
         </div>''' % (vf(260, 146), ink("b10e", 150, 52, 130, 100, [u"M100 16 C126 36 120 82 72 88 C28 92 6 70 10 46 C14 20 52 6 84 10 C96 12 104 16 110 24"]),
-                     SEGS, ink("b10p", 386, 236, 64, 64, [u"M8 40 C18 20 26 52 36 30 C44 14 50 40 58 24"])))
+                     SEGS, ink("b10p", 386, 236, 64, 64, [u"M8 40 C18 20 26 52 36 30 C44 14 50 40 58 24"]),
+                     # «усе відео»: a hand underline under the whole timeline (no ↻ — no arrowhead on a loop)
+                     ink("b10u", 28, 312, 716, 32, [u"M8 18 C160 26 380 8 706 16"])))
 js(u'''
   rise("#b10", %.3f); inkdraw("#b10e", %.3f, .4);
   pop("#b10n1", %.3f, .5); pop("#b10n2", %.3f, .5);
@@ -370,10 +372,10 @@ js(u'''
   out("#b10n2", %.3f); pop("#b10c", %.3f);
   rise("#b10t", %.3f, 30); tl.to("#b10s4", {borderColor: "#7A1424", duration: .2}, %.3f); inkdraw("#b10p", %.3f, .35);
   tl.to("#b10t .seg", {backgroundColor: "#7A1424", borderColor: "#7A1424", duration: .14, stagger: .15}, %.3f);
-  pop("#b10z", %.3f);
+  inkdraw("#b10u", %.3f, .45);
   sink("#b10", %.3f);
 ''' % (t_vn - 0.3, t_prk, t_dva, t_var, t_p1, t_p1, t_nema - 0.4, t_nema, t_pv - 0.1, t_pv + 0.3, t_pv + 0.3,
-       t_prr, t_zan, t_ce - 0.3))
+       t_prr, S(u"усе", 48.3) - 0.1, t_ce - 0.3))
 g.sfx("pop", t_vn - 0.3); g.sfx("pop", t_dva); g.sfx("pop", t_nema); g.sfx("typing", t_prr)
 
 # 10b · ABOVE — longer than a reel, but the second time still faster ----------
@@ -542,9 +544,11 @@ F.append(u'''
 js(u'''
   fadein("#b15", %.3f, .01); pop("#b15a", %.3f); pop("#b15b", %.3f);
   pop("#b15cta", %.3f, .6);
-  sketch("a15", "skF"); arrow("a15", 930, 720, 846, 560, {strokeWidth: 5, seed: 97, bend: .18});
-  draw("a15", %.3f, .45);
-''' % (t_zl - 0.05, t_chas, t_sys - 0.1, t_pysh - 0.1, t_pysh + 0.4))
+  // the comments are down at the right of the IG rail: the pointer goes DOWN to
+  // them, never up at the pill (her review of 41); tip left of x 900, ~300 px long
+  sketch("a15", "skF"); arrow("a15", 760, 600, 878, 884, {strokeWidth: 5, seed: 97, bend: -.08});
+  draw("a15", %.3f, .5);
+''' % (t_zl - 0.05, t_chas, t_sys - 0.1, t_pysh - 0.1, t_pysh + 0.15))
 g.sfx("pop", t_chas); g.sfx("pop", t_sys - 0.1); g.sfx("pop", t_pysh - 0.1)
 BLACKOUT.append((t_pysh - 0.05, DUR))     # the pill says it
 

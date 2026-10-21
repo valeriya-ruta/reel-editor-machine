@@ -2,14 +2,18 @@
 """Reel 50 — «Поки я сплю». Posts 2026-10-24.
 
 Her Google style + Excalidraw look (STYLE.md §00, with her review of reel 41:
-word-by-word captions, calm white sketches over the footage, white behind-me).
+word-by-word captions; sketches over the footage pass contrast by themselves —
+the kit makes closed shapes white stickers with a dark outline and gives
+strokes a white halo, so nothing here passes a colour over the footage; white
+behind-me; a pointer goes DOWN, never up at the pill).
 
 The one object is **the clock that runs while she doesn't**: an empty Claude
 chat that is still «працює»; the routines behind her; a clock that ticks every
 few hours and turns her chats into a checklist; a weekly report with ideas;
 the same clock as an alarm in the morning with everything already ticked; then
 the cloud — the laptop closes and sleeps, the clock spins (any time), the cloud
-makes the reel. CTA: «такі системи» as chips, «Підпишись».
+makes the reel. CTA: «такі системи» as chips, «Підпишись», a pointer down
+to the follow button.
 
   above   Claude card «працює» over an empty composer, circled on «нічого»
   behind  «рутини»
@@ -19,7 +23,7 @@ makes the reel. CTA: «такі системи» as chips, «Підпишись�
   above   alarm clock rings; «Вже готове» checklist ticks
   above   a cloud: Claude + чати / задачі / звіти
   half    cloud; the laptop closes (z z z); the clock spins; cloud -> a reel
-  above   CTA — chips, «Підпишись», pointer
+  above   CTA — chips, «Підпишись», pointer down to the follow button
 
 usage: python build.py
 """
@@ -79,6 +83,7 @@ S, E = W.s, W.e
 # ---------------------------------------------------------------- the beats
 B, P, F, C, J = [], [], [], [], []     # behind / panel / front / cover html, js
 BLACKOUT = []
+PLACE = []                             # caption placement over the half screens
 HALF = []
 
 
@@ -95,15 +100,24 @@ js(u'''
     _add(s, s.rc.linearPath([[x, y], [x + 16, y + 22], [x + 50, y - 24]], opt(o, (o && o.seed) || 23))); }
   function poly(name, pts, o) { _ink = SK[name].ink; var s = SK[name];
     _add(s, s.rc.linearPath(pts, opt(o, (o && o.seed) || 29))); }
-  function cloud(name, cx, cy, k, o) { _ink = SK[name].ink; var s = SK[name];
+  // closed outlines go through the kit's blob(): over the footage it makes them
+  // a white sticker with the dark outline (her review of 41), on the panel ink
+  function cloud(name, cx, cy, k, o) {
     var d = "M300 600 C240 600 230 520 300 505 C300 430 400 410 440 460 C470 380 610 380 630 455 " +
             "C700 420 790 470 760 540 C830 560 810 640 740 630 Z";
     var i = 0;
     d = d.replace(/[\\d.]+/g, function (v) { var n = parseFloat(v), r = (i++ % 2 === 0)
       ? cx + (n - 525) * k : cy + (n - 510) * k; return r.toFixed(1); });
-    _add(s, s.rc.path(d, opt(o, (o && o.seed) || 31))); }
-  function bell(name, cx, cy, o) { _ink = SK[name].ink; var s = SK[name];
-    _add(s, s.rc.arc(cx, cy, 78, 66, Math.PI, Math.PI * 2, true, opt(o, (o && o.seed) || 37))); }
+    blob(name, d, [cx - 295 * k, cy - 130 * k, 600 * k, 260 * k], {seed: (o && o.seed) || 31}); }
+  // an alarm-clock bell: a dome whose base sits on the face at angle a (deg)
+  function bell(name, cx, cy, r, a, o) {
+    var rad = a * Math.PI / 180, ux = Math.cos(rad), uy = Math.sin(rad), dx = -uy, dy = ux;
+    var bx = cx + ux * (r - 8), by = cy + uy * (r - 8), hw = 42;
+    var x1 = bx - dx * hw, y1 = by - dy * hw, x2 = bx + dx * hw, y2 = by + dy * hw;
+    var rot = Math.atan2(dy, dx) * 180 / Math.PI;
+    var d = "M" + x1.toFixed(1) + " " + y1.toFixed(1) + " A" + hw + " 36 " + rot.toFixed(1) + " 0 1 " +
+            x2.toFixed(1) + " " + y2.toFixed(1) + " Z";
+    blob(name, d, [bx - 50, by - 50, 100, 100], {seed: (o && o.seed) || 37}); }
 ''')
 
 # 1 · ABOVE — an empty Claude chat that still «працює» --------------------------
@@ -129,11 +143,13 @@ F.append(u'''
 js(u'''
   rise("#b1", %.3f); pop("#b1s", %.3f);
   rise("#b1in", %.3f, 24);
-  sketch("c1", "skB1"); box("c1", 22, 26, 796, 114, {r: 56, stroke: "#7A1424", strokeWidth: 5, seed: 3});
+  // round the empty composer: an outline, not a sticker (a white fill would hide it)
+  sketch("c1", "skB1"); box("c1", 22, 26, 796, 114, {r: 56, fill: false, strokeWidth: 5, seed: 3});
   draw("c1", %.3f, .6);
   sink("#b1", %.3f); erase("c1", %.3f);
 ''' % (t_klod - 0.45, t_prac, t_koly - 0.2, t_nich - 0.1, e_pyshu - 0.2, e_pyshu - 0.2))
 g.sfx("pop", t_klod - 0.4); g.sfx("click-soft", t_nich)
+BLACKOUT.append((S(u"Мій", 0.8) - 0.03, S(u"на", 1.8) - 0.03))      # the card says «Claude · працює»
 
 # 2 · BEHIND — «рутини» -------------------------------------------------------
 t_rut, e_rut = S(u"рутини.", 5.92), E(u"рутини.", 5.92)
@@ -143,6 +159,7 @@ js(u'''
   rise("#bw", %.3f); sink("#bw", %.3f);
 ''' % (t_rut - 0.6, e_rut - 0.3))
 g.sfx("whoosh-short", t_rut - 0.55)
+BLACKOUT.append((t_rut - 0.03, e_rut))                              # the big word says it
 
 # 3 · HALF — every few hours: chats -> checked -> tasks for me and the team -----
 h0, h1 = round(e_rut - 0.15, 3), E(u"команді.", 14.41)
@@ -199,9 +216,9 @@ js(u'''
     ln("tr", 358, y, 488, y, {seed: 51 + i, strokeWidth: 4});
   });
   draw("tr", %.3f, .25);
-  sketch("as1", "skP"); label("as1", 504, 702, "мені", {size: 36, anchor: "start", color: "#7A1424"});
-  label("as1", 504, 802, "мені", {size: 36, anchor: "start", color: "#7A1424"});
-  sketch("as2", "skP"); label("as2", 504, 752, "команді", {size: 36, anchor: "start", color: "#7A1424"});
+  sketch("as1", "skP"); label("as1", 504, 704, "мені", {size: 40, anchor: "start", color: "#7A1424"});
+  label("as1", 504, 804, "мені", {size: 40, anchor: "start", color: "#7A1424"});
+  sketch("as2", "skP"); label("as2", 504, 754, "команді", {size: 40, anchor: "start", color: "#7A1424"});
   draw("as1", %.3f); draw("as2", %.3f);
   ["ck", "ckt", "mh", "hh", "ckl", "a1", "ch1", "ch2", "ok1", "ok2", "a2", "tk", "tkl", "tr", "as1", "as2"]
     .forEach(function (n) { erase(n, %.3f); });
@@ -211,6 +228,7 @@ js(u'''
        t_sam - 0.35, t_stv - 0.05, t_zad - 0.1, t_zad - 0.25, t_meni - 0.05, t_kom - 0.05, h1, h1))
 g.sfx("whoosh-short", h0); g.sfx("click-soft", t_kil); g.sfx("pop", t_ig); g.sfx("click-soft", t_nich2)
 g.sfx("pop", t_stv); g.sfx("whoosh-short", h1)
+BLACKOUT.append((t_zad - 0.03, h1))                                 # the labels write «задачі · мені · команді»
 
 # 4 · ABOVE — a weekly report on the content, and next week's ideas -----------
 t_rut2, t_raz = S(u"рутина,", 15.4), S(u"раз", 15.9)
@@ -252,6 +270,7 @@ js(u'''
 ''' % (t_rut2 - 0.25, t_raz, t_zvit - 0.2, t_zvit, t_odr - 0.3, t_idei, t_idei + 0.15, t_idei + 0.3,
        t_nast - 0.05, e_tyzh - 0.15))
 g.sfx("pop", t_rut2 - 0.2); g.sfx("pop", t_odr - 0.25)
+BLACKOUT.append((t_zvit - 0.03, S(u"і", 17.8) - 0.03))              # the card title says it
 
 # 5 · ABOVE — the alarm rings; everything is already ticked --------------------
 t_tob, t_prok = S(u"Тобто", 19.9), S(u"прокидаюсь,", 20.24)
@@ -266,8 +285,8 @@ F.append(u'''
                               u'<span style="font-size:34px; font-weight:500">%s</span></div>'
                               % (0 if i == 0 else 16, i, esc(t)) for i, t in enumerate(rows5)))
 js(u'''
-  sketch("al", "skF"); ell("al", 255, 440, 190, 190, {seed: 61});
-  bell("al", 186, 368, {seed: 62}); bell("al", 324, 368, {seed: 63});
+  sketch("al", "skF"); bell("al", 255, 440, 95, -132, {seed: 62}); bell("al", 255, 440, 95, -48, {seed: 63});
+  ell("al", 255, 440, 190, 190, {seed: 61});
   ln("al", 190, 524, 168, 556, {seed: 64}); ln("al", 320, 524, 342, 556, {seed: 65});
   ln("al", 255, 440, 255, 374, {seed: 66, strokeWidth: 5}); ln("al", 255, 440, 222, 478, {seed: 67, strokeWidth: 6});
   draw("al", %.3f, .3);
@@ -298,7 +317,7 @@ F.append(u'''
 js(u'''
   pop("#b6p", %.3f);
   pop("#b6a", %.3f, .45); pop("#b6b", %.3f, .45); pop("#b6c", %.3f, .45);
-  sketch("cl", "skF"); cloud("cl", 540, 452, 1.0, {seed: 73});
+  sketch("cl", "skF"); cloud("cl", 540, 460, 1.2, {seed: 73});
   draw("cl", %.3f, .9);
   sink("#b6p, #b6a, #b6b, #b6c", %.3f); erase("cl", %.3f);
 ''' % (t_klod2 - 0.1, t_bag, t_diy - 0.15, t_diy + 0.05, t_vyk - 0.15, e_hm - 0.3, e_hm - 0.3))
@@ -321,7 +340,7 @@ js(u'''
   sketch("lb", "skP"); box("lb", 95, 752, 360, 30, {seed: 79, r: 12});
   draw("lb", %.3f, .45);
   tl.to("#sk-lp", {scaleY: .05, svgOrigin: "275 752", duration: .4, ease: "power2.in"}, %.3f);
-  sketch("zz", "skP"); label("zz", 300, 700, "z z z", {size: 60});
+  sketch("zz", "skP"); label("zz", 300, 700, "z z z", {size: 56});
   draw("zz", %.3f);
   sketch("ck2", "skP"); ell("ck2", 250, 395, 170, 170, {seed: 81});
   ln("ck2", 250, 318, 250, 332, {seed: 82}); ln("ck2", 327, 395, 313, 395, {seed: 83});
@@ -345,6 +364,7 @@ js(u'''
 ''' % (t_ozn - 0.4, t_ozn + 0.3, t_trym - 0.25, t_trym + 0.1, t_vidk + 0.05, t_vin - 0.1,
        t_bud - 0.75, t_bud - 0.35, t_bud - 0.3, t_bud, t_bud, t_napr - 0.05, t_mont - 0.4, t_mont, h3, h3))
 g.sfx("whoosh-short", h2); g.sfx("pop", t_mont - 0.1); g.sfx("whoosh-short", h3)
+BLACKOUT.append((t_mont - 0.03, E(u"рілсів.", 33.8)))               # the label says «монтаж рілсів»
 
 # 8 · ABOVE — CTA ---------------------------------------------------------------
 t_taki, t_to, t_pid = S(u"такі", 35.54), S(u"то", 36.42), S(u"підпишись.", 37.0)
@@ -361,7 +381,9 @@ F.append(u'''
 js(u'''
   pop("#b8a", %.3f, .45); pop("#b8b", %.3f, .45); pop("#b8c", %.3f, .45); pop("#b8d", %.3f, .45);
   pop("#b8p", %.3f, .6);
-  sketch("pt", "skF"); arrow("pt", 150, 600, 345, 478, {seed: 97, bend: .22, strokeWidth: 5});
+  // the pointer goes DOWN, never up at the pill (her review of 41): her CTA is
+  // «підпишись», so it heads for the follow button by her username, lower left
+  sketch("pt", "skF"); arrow("pt", 330, 560, 190, 840, {seed: 97, bend: -.18, strokeWidth: 5});
   draw("pt", %.3f, .5);
 ''' % (t_taki - 0.3, t_taki - 0.15, t_taki, t_taki + 0.15, t_to, t_to + 0.4))
 g.sfx("pop", t_taki - 0.3); g.sfx("pop", t_to)
@@ -371,11 +393,12 @@ BLACKOUT.append((t_pid - 0.05, DUR))     # the pill says it
 for i, (a, b) in enumerate(HALF):
     g.matte("half%d" % (i + 1), round(a - 0.1, 3), round(b - a + 1.2, 3))
     js("  half(%.3f, %.3f);" % (a, b))
+    PLACE.append((a + 0.4, b + 0.2, "bottom", 980))
 
 
 def main():
     print(" ".join(u"%s/%.1f" % (c["w"], c["s"]) for c in CAPS))
-    chunks = g.chunks(CAPS)
+    chunks = g.chunks(CAPS, place=PLACE)
     doc = g.document(title=u"Reel 50 — Поки я сплю", plate="assets/base.mp4",
                      behind="\n".join(B), panel="\n".join(P), front="\n".join(F), cover="\n".join(C),
                      js="\n".join(J), chunks=chunks, blackout=BLACKOUT)

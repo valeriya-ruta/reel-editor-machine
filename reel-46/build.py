@@ -150,15 +150,17 @@ js(u'''
   sketch("in2", "skF"); arrow("in2", 290, 492, 432, 566, {seed: 5, bend: -.1}); arrow("in2", 790, 492, 648, 566, {seed: 9, bend: .1});
   draw("in2", %.3f, .45);
   pop("#sys", %.3f);
-  sketch("c3", "skF"); ell("c3", 540, 622, 440, 160, {strokeWidth: 5, seed: 15});
+  // an outline round the pill, not a sticker: a white fill would hide the
+  // pill's arrowheads (the kit gives the open ring its white halo)
+  sketch("c3", "skF"); ell("c3", 540, 622, 440, 160, {strokeWidth: 5, seed: 15, fill: false});
   draw("c3", %.3f, .6);
   sketch("q3", "skT"); ln("q3", 545, 548, 535, 700, {strokeWidth: 6, seed: 21});
   label("q3", 790, 600, "?", {size: 72});
   draw("q3", %.3f, .4);
-  sink("#a1, #a2", %.3f);
-  out("#sys", %.3f); erase("in2", %.3f); erase("c3", %.3f); erase("q3", %.3f);
-''' % (t_nal - 0.1, t_ai - 0.55, t_ai, t_odna - 0.15, t_chy, h0 - 0.1, t_dv2 - 0.3, h0 - 0.1,
-       t_dv2 - 0.3, t_dv2 - 0.3))
+  sink("#a1, #a2", %.3f); erase("in2", %.3f);
+  out("#sys", %.3f); erase("c3", %.3f); erase("q3", %.3f);
+''' % (t_nal - 0.1, t_ai - 0.55, t_ai, t_odna - 0.15, t_chy, h0 - 0.1, h0 - 0.1,
+       t_dv2 - 0.3, t_dv2 - 0.3, t_dv2 - 0.3))
 g.sfx("pop", t_ai); g.sfx("click-soft", t_dvi)
 
 # 4 · HALF — two columns: headers, the wall, the three parts each, ⇄ ----------
@@ -346,11 +348,13 @@ js(u'''
   rise("#bl", %.3f);
   pop("#bl1", %.3f); pop("#bl2", %.3f); pop("#blp", %.3f, .45);
   rise("#blt", %.3f, 30);
-  sketch("mx", "skT"); ell("mx", 540, 470, 700, 124, {stroke: "#7A1424", strokeWidth: 5, seed: 81});
+  // the ring round «особисте + професійне» is an outline (a sticker would
+  // cover the chips); ink + white halo from the kit, no colour of our own
+  sketch("mx", "skT"); ell("mx", 540, 470, 700, 124, {strokeWidth: 5, seed: 81, fill: false});
   draw("mx", %.3f, .6);
   sink("#bl", %.3f); erase("mx", %.3f);
   pop("#no2", %.3f);
-  sketch("nx", "skT"); ln("nx", 236, 500, 846, 470, {stroke: "#7A1424", strokeWidth: 8, seed: 83});
+  sketch("nx", "skT"); ln("nx", 236, 500, 846, 470, {strokeWidth: 8, seed: 83});
   draw("nx", %.3f, .35);
   out("#no2", %.3f); erase("nx", %.3f);
 ''' % (t_blog - 0.1, t_osb, t_prf, t_odn, t_brand - 0.05, t_miks - 0.25, t_dovas - 0.2, t_dovas - 0.2,
@@ -372,15 +376,24 @@ js(u'''
   pop("#ct1", %.3f); pop("#ct2", %.3f); pop("#ct3", %.3f);
   sketch("tm", "skF"); %s
   draw("tm", %.3f, .4);
-  sketch("bt", "skF"); box("bt", 650, 470, 200, 104, {seed: 91, r: 20, fill: "#FFFFFF"});
+  // a battery: the kit makes the body and the nub white stickers; four dark
+  // charge bars fill it on «не втомлюється» — a full battery
+  sketch("bt", "skF"); box("bt", 650, 470, 200, 104, {seed: 91, r: 20});
   box("bt", 850, 500, 22, 44, {seed: 93, r: 8});
-  draw("bt", %.3f, .45);
-  erase("tm", %.3f); erase("bt", %.3f);
+  draw("bt", %.3f, .4);
+  sketch("bt2", "skF"); %s
+  draw("bt2", %.3f, .22);
+  erase("tm", %.3f); erase("bt", %.3f); erase("bt2", %.3f);
   pop("#ctaP", %.3f, .6);
-  sketch("pt", "skF"); arrow("pt", 960, 765, 852, 588, {strokeWidth: 5, seed: 97, bend: .12});
-  draw("pt", %.3f, .45);
-''' % (t_bl, t_smm, t_pid, people("tm", (330, 440, 550), 452), t_kom - 0.4, t_nik - 0.1,
-       t_stav - 0.2, t_stav - 0.2, t_stav, t_stav + 0.4))
+  // comments are down at the right of the IG rail, so the pointer goes down to
+  // them — never up at the pill (her review of 41). Tip stays left of x 900.
+  sketch("pt", "skF"); label("pt", 800, 700, "сюди!", {size: 52});
+  arrow("pt", 820, 730, 880, 960, {strokeWidth: 5, seed: 97, bend: -.25});
+  draw("pt", %.3f, .5);
+''' % (t_bl, t_smm, t_pid, people("tm", (330, 440, 550), 452), t_kom - 0.4, t_nik - 0.3,
+       u" ".join(u'ln("bt2", %d, 494, %d, 550, {strokeWidth: 20, seed: %d});' % (x, x, 95 + i)
+                 for i, x in enumerate((692, 732, 772, 812))), t_nik + 0.35,
+       t_stav - 0.2, t_stav - 0.2, t_stav - 0.2, t_stav, t_stav + 0.15))
 g.sfx("pop", t_bl)
 g.sfx("click-soft", t_kom - 0.4); g.sfx("pop", t_stav)
 BLACKOUT.append((t_stav - 0.05, DUR))                   # the pill says it

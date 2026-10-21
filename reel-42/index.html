@@ -85,7 +85,7 @@
     /* §00.5 sketches */
     .sk { position: absolute; left: 0; top: 0; overflow: visible; }
     .sk text, .hand { font-family: "Pangolin", cursive; fill: #1E1E1E; color: #1E1E1E; }
-    #front .sk { filter: drop-shadow(0 0 3px rgba(20,12,12,.45)) drop-shadow(0 3px 10px rgba(20,12,12,.30)); }
+    #front .sk { filter: drop-shadow(0 3px 10px rgba(20,12,12,.22)); }
     .hand { position: absolute; white-space: nowrap; }
 
     /* captions — exactly as before §00 (her call 2026-10-21, over the boxed
@@ -431,7 +431,6 @@
               fillWeight: 2.5};
   var _ink = "#1E1E1E";
   function opt(o, seed) { var r = {}; for (var k in SKO) r[k] = SKO[k]; r.stroke = _ink;
-    if (_ink === "#FFFFFF") r.strokeWidth = 6;
     for (var k2 in (o || {})) r[k2] = o[k2]; r.seed = seed; return r; }
   function hatch(o) { var r = {}; for (var k in HACH) r[k] = HACH[k];
     for (var k2 in (o || {})) r[k2] = o[k2]; return r; }
@@ -447,14 +446,14 @@
     var svg = document.getElementById(svgId);
     var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
     g.setAttribute("id", "sk-" + name); svg.appendChild(g);
-    // Over her footage (her review of 41): a thin line of any colour fails
-    // contrast against the light room, so closed shapes become solid white
-    // stickers with the dark Excalidraw outline, labels inside them go dark,
-    // and open strokes (arrows, lines) go white, thicker, with a shadow.
-    // On the white panel and cover everything stays #1E1E1E. Explicit colours win.
+    // Over her footage (her review of 41, "not passing even AA"): a thin line
+    // of any one colour fails against her light room — white included. So
+    // over the footage closed shapes are solid white stickers with the dark
+    // Excalidraw outline, and open strokes and free labels are dark ink with a
+    // thick white halo, which reads on light and dark ground alike. On the
+    // white panel and cover nothing changes. Explicit colours win.
     var foot = !!(svg.closest && svg.closest("#front"));
-    SK[name] = {g: g, rc: rough.svg(svg), shapes: [], foot: foot, boxes: [],
-                ink: foot ? "#FFFFFF" : "#1E1E1E"};
+    SK[name] = {g: g, rc: rough.svg(svg), shapes: [], foot: foot, boxes: [], ink: "#1E1E1E"};
     return SK[name];
   }
   function _add(s, node, kind) {
@@ -465,8 +464,16 @@
       var f = p.getAttribute("fill");
       if (f && f !== "none") { p.style.opacity = 0; p.dataset.fill = "1"; return; }  // a solid fill fades in
       var L = 0; try { L = p.getTotalLength(); } catch (e) {}
-      p.style.strokeDasharray = L + " " + (L + 2); p.style.strokeDashoffset = L + 1;
-      p.style.strokeLinecap = "round"; p.style.strokeLinejoin = "round";
+      if (s.foot) {                  // the white halo under a stroke over the footage
+        var h = p.cloneNode(false);
+        h.setAttribute("stroke", "#FFFFFF");
+        h.setAttribute("stroke-width", (parseFloat(p.getAttribute("stroke-width")) || 4.5) + 8);
+        p.parentNode.insertBefore(h, p);
+        p._halo = h;
+      }
+      [p, p._halo].forEach(function (q) { if (!q) return;
+        q.style.strokeDasharray = L + " " + (L + 2); q.style.strokeDashoffset = L + 1;
+        q.style.strokeLinecap = "round"; q.style.strokeLinejoin = "round"; });
     });
     s.shapes.push({paths: paths, kind: kind || "stroke"});
   }
@@ -509,7 +516,11 @@
     t.setAttribute("text-anchor", (o && o.anchor) || "middle");
     t.setAttribute("font-size", (o && o.size) || 50);
     var inside = s.boxes.some(function (b) { return x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3] + 20; });
-    t.style.fill = (o && o.color) || (s.foot && !inside ? "#FFFFFF" : "#1E1E1E");
+    t.style.fill = (o && o.color) || "#1E1E1E";
+    if (s.foot && !inside) {         // a free label over the footage gets the white halo too
+      t.style.stroke = "#FFFFFF"; t.style.strokeWidth = "12px"; t.style.paintOrder = "stroke";
+      t.style.strokeLinejoin = "round";
+    }
     t.textContent = txt; t.style.opacity = 0; s.g.appendChild(t);
     s.shapes.push({text: t});
   }
@@ -521,12 +532,12 @@
       if (sh.text) { tl.to(sh.text, {opacity: 1, duration: .35}, at + .05); return; }
       // an arrowhead is a flick, not a stroke: the arrow reads as one gesture
       if (sh.kind === "head") {
-        sh.paths.forEach(function (p) { tl.to(p, {strokeDashoffset: 0, duration: .18, ease: "power1.out"}, at); });
+        sh.paths.forEach(function (p) { tl.to([p, p._halo].filter(Boolean), {strokeDashoffset: 0, duration: .18, ease: "power1.out"}, at); });
         at += .12; return;
       }
       sh.paths.forEach(function (p, i) {
         if (p.dataset.fill) { tl.to(p, {opacity: 1, duration: .3}, at); return; }
-        tl.to(p, {strokeDashoffset: 0, duration: per, ease: "power1.inOut"}, at + i * .12);
+        tl.to([p, p._halo].filter(Boolean), {strokeDashoffset: 0, duration: per, ease: "power1.inOut"}, at + i * .12);
       });
       at += per * .66 + (sh.paths.length - 1) * .12;
     });

@@ -223,9 +223,7 @@
           <span class="chip hid" id="b10c" style="position:absolute; left:476px; top:72px; font-size:32px; padding:12px 20px"><i></i>нема куди спішити</span>
           <div id="b10t" class="hid" style="position:absolute; left:36px; top:226px; display:flex; gap:8px"><span class="seg" id="b10s0"></span><span class="seg" id="b10s1"></span><span class="seg" id="b10s2"></span><span class="seg" id="b10s3"></span><span class="seg" id="b10s4"></span><span class="seg" id="b10s5"></span><span class="seg" id="b10s6"></span><span class="seg" id="b10s7"></span></div>
           <svg class="ink hid" id="b10p" width="64" height="64" viewBox="0 0 64 64" style="left:386px; top:236px"><path pathLength="1" d="M8 40 C18 20 26 52 36 30 C44 14 50 40 58 24"/></svg>
-          <svg id="b10z" class="hid" width="86" height="86" viewBox="0 0 86 86" style="position:absolute; left:730px; top:226px">
-            <path d="M70 30 A30 30 0 1 0 72 52" fill="none" stroke="#7A1424" stroke-width="8" stroke-linecap="round"/>
-            <path d="M72 14 L72 32 L54 32" fill="none" stroke="#7A1424" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg class="ink hid" id="b10u" width="716" height="32" viewBox="0 0 716 32" style="left:28px; top:312px"><path pathLength="1" d="M8 18 C160 26 380 8 706 16"/></svg>
         </div>
 <div id="b11" class="card hid" style="left:120px; top:294px; width:840px; padding:32px 40px"><div class="row" id="b11a" style="margin-top:0px; gap:22px; height:84px"><div style="width:100px; display:flex; justify-content:center"><span class="vf" style="width:46px;height:82px;"><span class="pl" style="border-width:13px 0 13px 20px"></span><span class="tb"><b></b></span></span></div><span style="width:200px; font-size:36px; font-weight:500">рілс</span><div class="bar g" style="width:100px"><b></b></div><span class="check on hid" id="b11ak"></span></div><div class="row" id="b11b" style="margin-top:14px; gap:22px; height:84px"><div style="width:100px; display:flex; justify-content:center"><span class="vf" style="width:100px;height:56px;"><span class="pl" style="border-width:9px 0 9px 14px"></span><span class="tb"><b></b></span></span></div><span style="width:200px; font-size:36px; font-weight:500">2-й раз</span><div class="bar " style="width:230px"><b></b></div><span class="check on hid" id="b11bk"></span></div><div class="row" id="b11c" style="margin-top:14px; gap:22px; height:84px"><div style="width:100px; display:flex; justify-content:center"><span class="vf" style="width:100px;height:56px;"><span class="pl" style="border-width:9px 0 9px 14px"></span><span class="tb"><b></b></span></span></div><span style="width:200px; font-size:36px; font-weight:500">1-й раз</span><div class="bar g" style="width:350px"><b></b></div><span class="check on hid" id="b11ck"></span></div></div>
 
@@ -925,10 +923,10 @@
 
 
   pop("#b3ok", 18.110, .45);
-  sketch("c4", "skF");
-  ln("c4", 214, 350, 214, 572, {stroke: "#7A1424", strokeWidth: 6, seed: 41});
-  ln("c4", 306, 350, 306, 572, {stroke: "#7A1424", strokeWidth: 6, seed: 43});
-  ln("c4", 398, 350, 398, 572, {stroke: "#7A1424", strokeWidth: 6, seed: 45});
+  sketch("c4", "skF");     // over the footage layer: the kit inks it dark with a white halo
+  ln("c4", 214, 350, 214, 572, {strokeWidth: 6, seed: 41});
+  ln("c4", 306, 350, 306, 572, {strokeWidth: 6, seed: 43});
+  ln("c4", 398, 350, 398, 572, {strokeWidth: 6, seed: 45});
   draw("c4", 19.520, .3);
   out("#b3L, #b3k", 20.220); erase("c4", 20.220); erase("a3", 20.220);
   pop("#b4r0", 20.520, .5); pop("#b4r1", 20.640, .5); pop("#b4r2", 20.760, .5); pop("#b4r3", 20.880, .5);
@@ -958,8 +956,9 @@
   tl.set("#b7a, #b7b", {autoAlpha: 0}, 0);
 
   full(31.600, 39.745); tl.set("#b7", {autoAlpha: 0}, 32.500);
-  sketch("h8", "skC"); label("h8", 540, 380, "що таке рендер?", {size: 66});
-  draw("h8", 32.350);
+  // the headline rides up on the cover (her review: never open onto empty white)
+  sketch("h8", "skC"); label("h8", 540, 384, "що таке рендер?", {size: 76});
+  draw("h8", 31.900);
   sketch("k8", "skC"); box("k8", 350, 448, 380, 140, {seed: 3}); label("k8", 610, 538, "Клод", {size: 60});
   draw("k8", 32.910, .55); fadein("#c8k", 33.210, .3);
   sketch("a8", "skC"); arrow("a8", 540, 604, 548, 778, {seed: 5, bend: .1});
@@ -985,8 +984,8 @@
   tl.set("#b7b .bar b", {width: "0%"}, 39.745);
   tl.set("#b7", {y: 0}, 39.745);
   rise("#b7", 39.995);
-  fill("#b7b .bar b", 40.105, 1.890); pop("#b7bk", 41.995, .4);
-  sink("#b7", 41.976);
+  fill("#b7b .bar b", 40.105, 1.440); pop("#b7bk", 41.545, .4);
+  sink("#b7", 42.226);
 
 
   rise("#b10", 42.596); inkdraw("#b10e", 43.256, .4);
@@ -995,7 +994,7 @@
   out("#b10n2", 45.076); pop("#b10c", 45.476);
   rise("#b10t", 46.500, 30); tl.to("#b10s4", {borderColor: "#7A1424", duration: .2}, 46.900); inkdraw("#b10p", 46.900, .35);
   tl.to("#b10t .seg", {backgroundColor: "#7A1424", borderColor: "#7A1424", duration: .14, stagger: .15}, 47.660);
-  pop("#b10z", 48.820);
+  inkdraw("#b10u", 48.160, .45);
   sink("#b10", 49.230);
 
 
@@ -1064,8 +1063,10 @@
 
   fadein("#b15", 76.017, .01); pop("#b15a", 76.527); pop("#b15b", 78.647);
   pop("#b15cta", 79.327, .6);
-  sketch("a15", "skF"); arrow("a15", 930, 720, 846, 560, {strokeWidth: 5, seed: 97, bend: .18});
-  draw("a15", 79.827, .45);
+  // the comments are down at the right of the IG rail: the pointer goes DOWN to
+  // them, never up at the pill (her review of 41); tip left of x 900, ~300 px long
+  sketch("a15", "skF"); arrow("a15", 760, 600, 878, 884, {strokeWidth: 5, seed: 97, bend: -.08});
+  draw("a15", 79.577, .5);
 
   half(52.750, 63.962);
 

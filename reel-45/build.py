@@ -10,16 +10,17 @@ Claude, ✓ worked / ✗ didn't -> back to the post, in red, on «вчиться
 logic becomes a rising curve over a row of posts, and the «+» comes back in the
 CTA pill.
 
-  above   «+» badge on «плюсів», «AI-система» pill, a red pointer «налаштовую я»
+  above   «+» badge on «плюсів», «AI-система» pill, a pointer «налаштовую я»
+          down to her (dark ink, white halo — the kit, over her footage)
   half    the loop: навчається · пост · w. Windsor · звіт · Claude аналізує ·
           ✓ зайшло ✗ ні · the red return arrow on «вчиться»
   above   a card with a sketched graph: posts pile up along «контент», the
           curve «знає тебе» rises, red «краще» at its tip
-  above   CTA chips блогерка / СММниця / підприємниця, a «команда» pill with
-          the loop doodle on «оновлювану»
+  above   CTA chips блогерка / СММниця / підприємниця, an «оновлювана команда»
+          pill on «оновлювану», the loop back as a ring round it
   behind  «24/7»
   above   «Команда 24/7» card: монтує / дизайнить / пише сценарії / …
-  above   CTA pill «Пиши + у коментарі» + red pointer «сюди!»
+  above   CTA pill «Пиши + у коментарі» + pointer «сюди!» DOWN to the comments
 
 usage: python build.py      (mattes: sh work/b1021/mattes.sh 45)
 """
@@ -44,6 +45,7 @@ FIX = {
     u"IA": u"AI-системи,", u"системі": None,
     u"налаштовує": u"налаштовую",
     u"навчається.": u"навчається",
+    u"постемо.": u"постимо.",
     u"Коло": u"Клод",
     u"а що ні,": u"що ні,",
     (u"чим", 18.9): u"Чим",
@@ -187,6 +189,8 @@ SKF.append(u'''
   sketch("cv", "skF"); parrow("cv", [[236, 505], [450, 490], [650, 445], [868, 352]], {seed: 37});
   label("cv", 214, 350, "знає тебе", {size: 42, anchor: "start"});
   draw("cv", %.3f, .9);
+  // «краще» sits inside the white card (x 110-970, y 290-675), not over her
+  // footage, so it keeps the emphasis red as the panel does
   sketch("kr", "skF"); ell("kr", 862, 362, 170, 112, {stroke: "#7A1424", strokeWidth: 5, seed: 39, fill: false});
   label("kr", 752, 345, "краще", {size: 50, color: "#7A1424", anchor: "end"});
   draw("kr", %.3f, .5);
@@ -209,17 +213,23 @@ F.append(u'''
           <span class="chip hid" id="b4b"><i></i>СММниця</span>
           <span class="chip hid" id="b4c"><i></i>підприємниця</span>
         </div>
-        <div id="b4t" class="pill light hid" style="left:390px; top:452px;">команда</div>''')
+        <div style="position:absolute; left:0; top:452px; width:1080px; display:flex; justify-content:center">
+          <div id="b4t" class="pill light hid" style="position:relative">оновлювана команда</div>
+        </div>''')
+# the pill lands ON «оновлювану» (not 1.6 s early on «таку»); the loop from the
+# panel comes back as a ring round it, closing as she says «команду». An open
+# ring (no arrowhead), not a sticker: a white fill would cover the pill.
+t_b4out = t_kom + 0.45
 SKF.append(u'''
-  sketch("lp", "skF"); ell("lp", 540, 510, 420, 172, {strokeWidth: 5, seed: 43, fill: false});    // an outline round the pill, not a sticker over it
-  draw("lp", %.3f, .55);
-  erase("lp", %.3f);''' % (t_onov - 0.1, t_kom + 0.33))
+  sketch("lp", "skF"); ell("lp", 540, 510, 660, 176, {strokeWidth: 5, seed: 43, fill: false});
+  draw("lp", %.3f, .6);
+  erase("lp", %.3f);''' % (t_onov + 0.2, t_b4out))
 js(u'''
   fadein("#b4", %.3f, .01); pop("#b4a", %.3f); pop("#b4b", %.3f); pop("#b4c", %.3f);
   pop("#b4t", %.3f);
   sink("#b4, #b4t", %.3f);
-''' % (t_blog - 0.15, t_blog - 0.1, t_smm - 0.1, t_pid - 0.1, t_taku - 0.1, t_kom + 0.33))
-g.sfx("pop", t_blog - 0.1); g.sfx("pop", t_taku - 0.1)
+''' % (t_blog - 0.15, t_blog - 0.1, t_smm - 0.1, t_pid - 0.1, t_onov - 0.1, t_b4out))
+g.sfx("pop", t_blog - 0.1); g.sfx("pop", t_onov - 0.1)
 BLACKOUT.append((t_blog - 0.05, E(u"підприємниця,", 24.94) + 0.05))   # the chips say them
 
 # 5 · BEHIND — «24/7» --------------------------------------------------------
@@ -261,9 +271,12 @@ F.append(u'''
         <div style="position:absolute; left:0; top:440px; width:1080px; display:flex; justify-content:center">
           <div id="b7" class="pill hid" style="position:relative">Пиши + у коментарі</div>
         </div>''')
+# the comments are down at the right of the IG rail, so the pointer goes DOWN
+# to them from its label (never up at the pill; her review of 41), ~270 px,
+# tip left of x 900
 SKF.append(u'''
-  sketch("a7", "skF"); parrow("a7", [[800, 580], [850, 690], [872, 840]], {strokeWidth: 5, seed: 47});
-  label("a7", 890, 905, "сюди!", {size: 52});
+  sketch("a7", "skF"); label("a7", 790, 640, "сюди!", {size: 52});
+  arrow("a7", 805, 672, 880, 940, {strokeWidth: 5, seed: 47, bend: -.18});
   draw("a7", %.3f, .5);''' % (t_plus2 - 0.2))
 js(u'''
   pop("#b7", %.3f, .6);
@@ -282,45 +295,12 @@ for i, (a, b) in enumerate(HALF):
     PLACE.append((a + 0.4, b + 0.2, "bottom", 980))
 
 
-# captions: phrase by phrase, each break on her own phrasing; key words pinned
-BREAKS = [(u"так", 2.95), (u"це", 4.23), (u"навчається", 5.64), (u"на", 7.51), (u"Тобто", 9.46),
-          (u"аналітики", 11.24), (u"Клод", 12.55), (u"що", 13.81), (u"і далі", 14.98), (u"Але", 17.6),
-          (u"Чим", 18.87), (u"тим більше", 20.17), (u"і", 21.51), (u"Тому", 22.87), (u"СММниця,", 24.24),
-          (u"і ти", 25.52), (u"24", 28.0), (u"яка працює", 28.96), (u"монтує,", 30.2), (u"то", 32.58)]
-KEYS = [(u"плюсів", 1.65), (u"налаштовую", 3.21), (u"навчається", 5.64), (u"постемо.", 8.79),
-        (u"звітність", 10.64), (u"аналітики", 11.24), (u"аналізує,", 13.13), (u"зайшло,", 13.97),
-        (u"вчиться.", 16.24), (u"проста.", 18.37), (u"контенту,", 19.57), (u"знає,", 21.13),
-        (u"краще", 21.75), (u"блогерка,", 23.54), (u"оновлювану", 26.54), (u"контентом,", 29.6)]
-
-
-def phrase_chunks():
-    cut = sorted(S(w, t) for w, t in BREAKS)
-    groups, cur = [], []
-    for c in CAPS:
-        if cur and any(abs(c["s"] - t) < 0.01 for t in cut):
-            groups.append(cur)
-            cur = []
-        cur.append(c)
-    groups.append(cur)
-    keys = dict((S(w, t), True) for w, t in KEYS)
-    res = []
-    for grp in groups:
-        res.extend(g.chunks(grp, keys=keys, place=PLACE, max_chars=44, max_words=7))
-    for a, b in zip(res, res[1:]):
-        a["e"] = round(min(a["e"], b["s"]), 3)
-    for c in res:          # the panel's last caption leaves with the panel
-        if c["s"] < h1 < c["e"]:
-            c["e"] = round(h1 + 0.25, 3)
-    return res
-
-
 def main():
-    chunks = phrase_chunks()
+    # captions are the kit's: g.chunks feeds g.document's old word rail (her
+    # review of 41) — word by word, upper case, ink on the half-screen panel
+    chunks = g.chunks(CAPS, place=PLACE)
     if "-v" in sys.argv:
         print(" ".join(u"%s/%.1f" % (c["w"], c["s"]) for c in CAPS))
-        for n, c in enumerate(chunks):
-            k = c["words"][c["key"]]["w"] if c["key"] is not None else u"-"
-            print(u"cap%-2d %6.2f-%6.2f  [%s]  %s" % (n, c["s"], c["e"], k, u" ".join(w["w"] for w in c["words"])))
     doc = g.document(title=u"Reel 45 — Вчиться на статистиці", plate="assets/base.mp4",
                      behind="\n".join(B), panel="\n".join(P), front="\n".join(F), cover="\n".join(C),
                      js="\n".join(J), chunks=chunks, blackout=BLACKOUT)

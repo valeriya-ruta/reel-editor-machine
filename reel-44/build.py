@@ -116,11 +116,6 @@ def js(s):
     J.append(s)
 
 
-js(u'''
-  // a free rough path in a sketch's own ink (the kit sets _ink only in its shape helpers)
-  function pth(name, d, seed, o) { _ink = SK[name].ink; _add(SK[name], SK[name].rc.path(d, opt(o, seed))); }
-''')
-
 # 1 · ABOVE — the best ideas are not from ChatGPT, Claude or Manus -------------
 t_id, t_gpt, t_cl, t_man = S(u"ідеї", 0.89), S(u"GPT,", 2.72), S(u"Клода", 3.59), S(u"Мануса.", 4.29)
 t_ya = S(u"Я", 5.0)
@@ -191,7 +186,9 @@ js(u'''
   rise("#b3", %.3f);
   pop("#b3av", %.3f); fadein("#b3nm", %.3f);
   pop("#b3k", %.3f); pop("#b3w", %.3f);
-  sketch("c3", "skF"); ell("c3", 682, 606, 340, 100, {stroke: "#7A1424", strokeWidth: 5, seed: 23});
+  // a ring round the chip, on the card: an outline only (fill: false), or the
+  // kit's over-the-footage sticker fill would paint the chip over in white
+  sketch("c3", "skF"); ell("c3", 682, 606, 340, 100, {stroke: "#7A1424", strokeWidth: 5, seed: 23, fill: false});
   draw("c3", %.3f, .55);
   tl.set("#b3w", {className: "chip on"}, %.3f);
   pop("#b3q1", %.3f); pop("#b3q2", %.3f); pop("#b3q3", %.3f);
@@ -212,18 +209,21 @@ t_tsik, t_odnu, t_lud = S(u"цікавить", 19.12), S(u"одну", 19.98), S(
 t_vyh, t_ide, t_tema = S(u"виходить", 21.26), S(u"ідеальна", 21.86), S(u"тема", 22.56)
 
 
-def bust(x, y, s=1.0):
-    """a person: a round head and a shoulders arc, as one rough path"""
+def bust(name, x, y, s, seed):
+    """a person: a round head and a shoulders arc, one rough outline via the
+    kit's blob() (on the panel it stays a plain ink outline)"""
     r, w, h = 30 * s, 62 * s, 74 * s
-    return (u"M%.0f %.0f a%.0f %.0f 0 1 0 %.0f 0 a%.0f %.0f 0 1 0 %.0f 0 "
-            u"M%.0f %.0f C%.0f %.0f %.0f %.0f %.0f %.0f" % (
-                x - r, y, r, r, 2 * r, r, r, -2 * r,
-                x - w, y + h + 36 * s, x - w, y + 40 * s, x + w, y + 40 * s, x + w, y + h + 36 * s))
+    d = (u"M%.0f %.0f a%.0f %.0f 0 1 0 %.0f 0 a%.0f %.0f 0 1 0 %.0f 0 "
+         u"M%.0f %.0f C%.0f %.0f %.0f %.0f %.0f %.0f" % (
+             x - r, y, r, r, 2 * r, r, r, -2 * r,
+             x - w, y + h + 36 * s, x - w, y + 40 * s, x + w, y + 40 * s, x + w, y + h + 36 * s))
+    return u'blob("%s", "%s", [%.0f, %.0f, %.0f, %.0f], {seed: %d});' % (
+        name, d, x - w, y - r, 2 * w, r + h + 36 * s, seed)
 
 
 js(u'''
   sketch("p1", "skP");
-  pth("p1", "%s", 31);
+  %s
   draw("p1", %.3f, .7);
   sketch("p2", "skP"); box("p2", 262, 296, 112, 98, {seed: 33, r: 28}); label("p2", 318, 366, "?", {size: 62, color: "#7A1424"});
   draw("p2", %.3f, .45);
@@ -236,13 +236,12 @@ js(u'''
   draw("p4", %.3f, .3);
   sketch("p5", "skP"); arrow("p5", 762, 582, 612, 664, {seed: 41, bend: -.1});
   box("p5", 250, 672, 580, 146, {seed: 43, fill: true, r: 30});
-  label("p5", 540, 740, "ідеальна тема", {size: 58, color: "#7A1424"});
+  label("p5", 540, 740, "ідеальна тема", {size: 56, color: "#7A1424"});
   label("p5", 540, 796, "для контенту", {size: 42});
   draw("p5", %.3f, .5);
   erase("p1", %.3f); erase("p2", %.3f); erase("p3", %.3f); erase("p4", %.3f); erase("p5", %.3f);
-''' % (bust(190, 452, 1.4), t_raz - 0.1, t_tak, t_odnu - 0.45,
-       u"\n  ".join(u'pth("p4", "%s", %d);' % (bust(x, 462, 1.0), 50 + i)
-                    for i, x in enumerate((565, 685, 805, 925))),
+''' % (bust("p1", 190, 452, 1.4, 31), t_raz - 0.1, t_tak, t_odnu - 0.45,
+       u"\n  ".join(bust("p4", x, 462, 1.0, 50 + i) for i, x in enumerate((565, 685, 805, 925))),
        t_lud - 0.6, t_vyh - 0.2, h1, h1, h1, h1, h1))
 g.sfx("click-soft", t_lud); g.sfx("pop", t_ide)
 g.sfx("whoosh-short", h0); g.sfx("whoosh-short", h1)
@@ -293,9 +292,11 @@ g.sfx("pop", t_nap - 0.2); g.sfx("pop", t_ril); g.sfx("click-soft", t_zak)
 
 # 6 · ABOVE — not out of my head: a thought cloud over her, crossed out --------
 t_sy, t_vyg, t_hol = S(u"сиджу", 29.23), S(u"вигадую", 29.71), E(u"голови.", 30.18)
+#   over her footage: blob() makes the cloud a white sticker with the dark
+#   outline, the «?» inside it dark; the cross is the kit's ink with its halo
 js(u'''
   sketch("cl6", "skF");
-  pth("cl6", "M400 560 C330 560 320 480 395 468 C390 400 480 375 525 420 C555 350 680 355 700 425 C770 400 840 455 805 515 C860 540 830 600 760 590 C730 625 640 620 615 590 C580 625 470 620 450 585 C430 590 410 580 400 560 Z", 61);
+  blob("cl6", "M400 560 C330 560 320 480 395 468 C390 400 480 375 525 420 C555 350 680 355 700 425 C770 400 840 455 805 515 C860 540 830 600 760 590 C730 625 640 620 615 590 C580 625 470 620 450 585 C430 590 410 580 400 560 Z", [330, 365, 520, 255], {seed: 61});
   label("cl6", 590, 520, "?", {size: 72});
   ell("cl6", 560, 640, 46, 34, {seed: 63}); ell("cl6", 540, 688, 26, 20, {seed: 65});
   draw("cl6", %.3f, .45);
@@ -423,20 +424,24 @@ F.append(u'''
           <span class="chip hid" id="b11a" style="font-size:40px">%s консультації</span>
           <span class="chip hid" id="b11b" style="font-size:40px">%s ідеї для контенту</span>
         </div>
-        <div id="b11cta" class="pill hid" style="top:428px; left:50%%; margin-left:-300px; width:600px;
-             justify-content:center; font-size:62px; padding:30px 40px">Пиши «дзвінок»</div>
+        <div id="b11cta" class="pill hid" style="top:428px; left:50%%; margin-left:-390px; width:780px;
+             justify-content:center; font-size:58px; padding:30px 40px">Пиши слово «дзвінок»</div>
         <div id="b11i" class="pill light hid" style="left:50%%; margin-left:-195px; width:390px; top:586px;
              justify-content:center; font-size:44px; padding:18px 30px">%s інструкція</div>''' % (
     ico("call", 38, "#7A1424"), ico("bulb", 40, "#7A1424"), ico("doc", 46, "#7A1424")))
 js(u'''
   pop("#b11a", %.3f); pop("#b11b", %.3f);
   pop("#b11cta", %.3f, .6);
-  sketch("a11", "skF"); arrow("a11", 975, 700, 870, 540, {strokeWidth: 6, seed: 97});
-  draw("a11", %.3f, .45);
+  // the comments are down at the right of the IG rail, so the pointer goes down
+  // to them — never up at the pill (her review of 41). Tip left of x 900.
+  sketch("a11", "skF"); label("a11", 818, 738, "сюди!", {size: 52});
+  arrow("a11", 830, 768, 884, 978, {strokeWidth: 5, seed: 97, bend: -.25});
+  draw("a11", %.3f, .5);
   pop("#b11i", %.3f, .55);
-''' % (t_kons2 - 0.1, t_idei2 - 0.1, t_dzv2 - 0.2, t_dzv2 + 0.4, S(u"отримати", 58.32)))
+''' % (t_kons2 - 0.1, t_idei2 - 0.1, t_dzv2 - 0.2, t_dzv2 + 0.3, S(u"отримати", 58.32)))
 g.sfx("pop", t_kons2 - 0.1); g.sfx("pop", t_dzv2 - 0.2); g.sfx("pop", S(u"отримати", 58.32))
-BLACKOUT.append((t_pys - 0.05, DUR))     # the pill and the chip say it
+# the pill says «Пиши слово «дзвінок»»; «щоб отримати інструкцію» stays captioned
+BLACKOUT.append((t_pys - 0.05, E(u"«дзвінок»,", 57.35) + 0.05))
 
 # pointer doodles and circles draw over the cards, so their svg is last in #front
 F.append(u'<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>')
