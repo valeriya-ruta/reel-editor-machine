@@ -175,7 +175,7 @@ for t in (t_pam, t_baza, t_kont, t_zav):
 # 3 · BEHIND — «100%» -----------------------------------------------------------
 t_100, t_star = S(u"100%", 22.88), E(u"старе:", 24.36)
 m0, m1 = t_100 - 0.3, t_star + 0.3
-B.append(u'<div id="bw1" class="big hid" style="top:470px; font-size:300px">100%</div>')
+B.append(u'<div id="bw1" class="big hid" style="top:500px; font-size:300px">100%</div>')
 g.matte("pct", round(m0, 3), round(m1 - m0 + 0.45, 3))
 js(u'''
   rise("#bw1", %.3f, 80);
@@ -419,6 +419,8 @@ for t in (t_teb + 0.05, t_kla + 0.05, t_etap - 0.5, t_stare):
     g.sfx("click-soft", t)
 
 # 11 · ABOVE — CTA: save money, build it yourself, the lifehack, subscribe -----
+# the last clip (85.97-) is a hard punch-in: her hair top rises to y ≈ 505, so
+# the lifehack and the red pill sit in y 300-530 and the pointer comes from the left
 t_zek, t_hro = S(u"зекономити", 80.47), S(u"грошей", 81.71)
 t_ai, t_sam = S(u"AI-систему", 82.93), S(u"самостійно,", 83.55)
 t_lh, t_obov = S(u"лайфхаком", 85.38), S(u"обовʼязково", 86.31)
@@ -428,21 +430,22 @@ F.append(u'''
           <span class="chip hid" id="b11a"><i></i>зекономити</span>
           <span class="chip hid" id="b11b"><i></i>AI-система самостійно</span>
         </div>
-        <div id="b11l" class="hid" style="position:absolute; left:0; top:440px; width:1080px; display:flex; justify-content:center">
-          <span class="pill light" style="position:relative; font-size:44px; padding:22px 44px">лайфхак:
+        <div id="b11l" class="hid" style="position:absolute; left:0; top:296px; width:1080px; display:flex; justify-content:center">
+          <span class="pill light" style="position:relative; font-size:42px; padding:20px 42px">лайфхак:
           <span style="color:#7A1424; display:inline-flex; align-items:center; gap:10px">+ %s<b style="font-weight:700">Notion</b></span></span></div>
-        <div id="b11cta" class="hid" style="position:absolute; left:0; top:566px; width:1080px; display:flex; justify-content:center">
-          <span class="pill" style="position:relative; font-size:52px">Підпишись</span></div>''' % mark("notion", 40))
+        <div id="b11cta" class="hid" style="position:absolute; left:0; top:408px; width:1080px; display:flex; justify-content:center">
+          <span class="pill" style="position:relative; font-size:50px; padding:28px 54px">Підпишись</span></div>''' % mark("notion", 40))
 js(u'''
   fadein("#b11", %.3f, .01); pop("#b11a", %.3f);
   sketch("u11", "skF"); under("u11", 172, 412, 420, {stroke: "#7A1424", strokeWidth: 5, seed: 131});
   draw("u11", %.3f, .4);
   pop("#b11b", %.3f);
+  sink("#b11", %.3f); erase("u11", %.3f);
   pop("#b11l", %.3f);
   pop("#b11cta", %.3f, .6);
-  sketch("a11", "skF"); arrow("a11", 880, 800, 752, 664, {stroke: "#7A1424", strokeWidth: 5, seed: 133});
+  sketch("a11", "skF"); arrow("a11", 185, 668, 338, 506, {stroke: "#7A1424", strokeWidth: 5, seed: 133, bend: -.12});
   draw("a11", %.3f, .45);
-''' % (t_zek - 0.05, t_zek, t_hro - 0.1, t_sam - 0.1, t_lh, t_obov - 0.1, t_obov + 0.3))
+''' % (t_zek - 0.05, t_zek, t_hro - 0.1, t_sam - 0.1, t_lh - 0.3, t_lh - 0.3, t_lh, t_obov - 0.1, t_obov + 0.3))
 g.sfx("pop", t_zek); g.sfx("kaching", t_hro); g.sfx("pop", t_lh); g.sfx("pop", t_obov - 0.1)
 BLACKOUT.append((S(u"і", 85.97) - 0.05, DUR))     # the pill says it
 

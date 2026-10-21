@@ -45,10 +45,10 @@ g = G(dur=DUR, reel=NN)
 
 # whisper's spelling of what she plainly said -> her word (re-heard on the plate)
 FIX = {
-    (u"великим", 9.3): u"велкам", u"на великим": u"на велкам", u"З консультацій": u"З консультацій,",
+    (u"великим", 9.3): u"велкам", u"на великим": u"на велкам", u"З консультацій": u"З консультацією,", u"і вони": u"вони",
     u"б,": u"б", u"саджу": u"сиджу", u"Усім": u"усім", u"інструція": u"інструкція",
     u"15 євро.": u"15 євро,", (u"А", 49.3): u"я", u"консультації": u"консультації,",
-    u"Тобі": u"тобі", u"«цвінок».": u"«дзвінок»,",
+    u"Тобі": u"тобі", u"«цвінок».": u"«дзвінок»,", (u"в", 58.7): None,
 }
 CAPS = load_caps(NN, FIX)
 W = Words(CAPS)
@@ -161,7 +161,7 @@ BLACKOUT.append((S(u"Я", 5.0) - 0.05, S(u"Я", 5.0) + 0.05))     # «дзвін
 
 # 3 · ABOVE — the call: her and a client, recorded; consultations, welcome calls --
 t_pro, t_kli = S(u"проводжу", 6.77), S(u"клієнтками.", 7.43)
-t_kons, t_vel, t_vel2 = S(u"З консультацій,", 8.19), S(u"велкам", 9.27), S(u"на велкам", 11.63)
+t_kons, t_vel, t_vel2 = S(u"З консультацією,", 8.19), S(u"велкам", 9.27), S(u"на велкам", 11.63)
 t_zad, t_pyt = S(u"мені задають", 12.55), S(u"питання,", 12.91)
 t_nik, t_dod = S(u"ніколи", 15.31), E(u"додумалась.", 15.83)
 F.append(u'''
@@ -461,7 +461,7 @@ def glue(chunks):
 def main():
     if "--words" in sys.argv:
         print(" ".join(u"%s/%.1f" % (c["w"], c["s"]) for c in CAPS))
-    keys = {S(u"ідеї", 0.89): True, S(u"питання,", 12.91): True, S(u"питання,", 18.22): True,
+    keys = {S(u"ідеї", 0.89): True, S(u"велкам", 9.27): True, S(u"питання,", 12.91): True, S(u"питання,", 18.22): True,
             S(u"одну", 19.98): True, S(u"ідеальна", 21.86): True, S(u"тижня", 32.64): True,
             S(u"дзвінки.", 35.95): True, S(u"впроваджую", 42.69): True, S(u"ідеї", 55.99): True}
     chunks = glue(g.chunks(CAPS, keys=keys, place=PLACE))

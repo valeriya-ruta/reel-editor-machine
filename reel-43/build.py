@@ -41,21 +41,20 @@ g = G(dur=DUR, reel=NN)
 # whisper's spelling of what she plainly said -> her word (re-heard on the plate)
 FIX = {
     u"мене": u"СММниці",
-    u"якою": u"в якої",
+    u"якою": u"у якої",
     u"взагалі": u"взагалі-то", (u"то", 18.2): None,
     (u"Ти", 23.4): u"ти", u"щомісяця,": u"щомісяця",
     u"переховати": u"порахувати",
     u"клоун,": u"Claude,", (u"бла", 32.6): u"бла-бла-бла,", (u"бла", 32.8): None, u"бла,": None,
     u"опровнати": u"опрувнути",
-    u"СММ,": u"СММник,",
     u"виконай": u"виконає", u"СММники.": u"СММники,",
     u"тому": u"Тому", u"систему": u"систему,",
     u"акаунт": u"акаунт,", u"налаштовуєш": u"налаштовуєш,",
 }
 # words whisper lost on the plate (solo pass, cut-fix.json): «залежиш», «Claude»
 ADD = [
-    {"w": u"залежиш.", "s": 43.44, "e": 43.95},
-    {"w": u"Claude.", "s": 58.55, "e": 58.85},
+    {"w": u"залежиш.", "s": 43.44, "e": 43.90},
+    {"w": u"Claude.", "s": 58.56, "e": 58.80},
 ]
 
 
@@ -330,7 +329,7 @@ for t in (t_zv, t_op):
 
 # 9 · ABOVE — all the work: the unreliable SMM out, Claude in ------------------
 t_vsia, t_rob = S(u"вся", 53.17), S(u"робота,", 53.59)
-t_nen, t_to, t_cld = S(u"ненадійний", 55.17), S(u"то", 57.63), S(u"Claude.", 58.55)
+t_nen, t_to, t_cld = S(u"ненадійний", 55.17), S(u"то", 57.63), S(u"Claude.", 58.56)
 F.append(u'''
         <div id="b9" class="card hid" style="left:150px; top:300px; width:780px; padding:30px 40px;">
           <span class="lbl" style="margin-bottom:16px">Вся робота</span>
@@ -338,7 +337,7 @@ F.append(u'''
           <div class="row" style="margin-top:24px; gap:16px; height:68px">
             <span class="sm">робить:</span>
             <span style="position:relative; display:inline-block">
-              <span class="chip hid" id="b9s" style="white-space:nowrap">ненадійний СММник</span>
+              <span class="chip hid" id="b9s" style="white-space:nowrap">ненадійний СММ</span>
               <span class="chip on hid" id="b9c" style="position:absolute; left:0; top:0; white-space:nowrap">%s Claude</span>
             </span>
           </div>
@@ -348,7 +347,7 @@ F.append(u'''
 js(u'''
   rise("#b9", %.3f);
   pop("#b9s", %.3f);
-  sketch("x9", "skF"); ln("x9", 320, 592, 735, 586, {stroke: "#7A1424", strokeWidth: 7, seed: 91});
+  sketch("x9", "skF"); ln("x9", 318, 592, 660, 586, {stroke: "#7A1424", strokeWidth: 7, seed: 91});
   draw("x9", %.3f, .35);
   tl.to("#b9s", {autoAlpha: 0, duration: .25}, %.3f); erase("x9", %.3f);
   pop("#b9c", %.3f);

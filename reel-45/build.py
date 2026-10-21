@@ -40,7 +40,7 @@ g = G(dur=DUR, reel=NN)
 
 # whisper's spelling of what she plainly said -> her word (checked on the plate)
 FIX = {
-    (u"один", 0.5): u"Один",
+    (u"один", 0.5): u"Один", (u"з", 1.0): u"із",
     u"IA": u"AI-системи,", u"системі": None,
     u"налаштовує": u"налаштовую",
     u"навчається.": u"навчається",
