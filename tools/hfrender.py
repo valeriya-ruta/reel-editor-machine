@@ -28,13 +28,25 @@ API = "https://api.heygen.com"
 
 
 def key():
-    return json.load(open(os.path.expanduser("~/.heygen/credentials")))["api_key"]
+    p = os.path.expanduser("~/.heygen/credentials")
+    if os.path.exists(p):
+        return json.load(open(p))["api_key"]
+    # the cloud container: the egress proxy adds X-Api-Key for api.heygen.com
+    # itself (a network secret), so no key ever sits on the machine
+    return os.environ.get("HEYGEN_API_KEY")
+
+
+def auth(h):
+    k = key()
+    if k:
+        h["X-Api-Key"] = k
+    return h
 
 
 def call(method, path, body=None):
     r = urllib.request.Request(API + path, method=method,
                                data=json.dumps(body).encode() if body is not None else None,
-                               headers={"X-Api-Key": key(), "Content-Type": "application/json"})
+                               headers=auth({"Content-Type": "application/json"}))
     try:
         with urllib.request.urlopen(r, timeout=120) as resp:
             return resp.status, json.loads(resp.read().decode("utf-8", "replace") or "{}")

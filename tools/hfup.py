@@ -65,7 +65,9 @@ def build_zip(project):
 
 
 def call(method, url, key=None, body=None, raw=None, headers=None):
-    h = headers if headers is not None else {"X-Api-Key": key, "Content-Type": "application/json"}
+    h = headers if headers is not None else {"Content-Type": "application/json"}
+    if headers is None and key:      # no key: the cloud proxy adds X-Api-Key
+        h["X-Api-Key"] = key
     data = raw if raw is not None else (json.dumps(body).encode() if body is not None else None)
     r = urllib.request.Request(url, data=data, method=method, headers=h)
     try:
@@ -77,7 +79,8 @@ def call(method, url, key=None, body=None, raw=None, headers=None):
 
 def main():
     project = os.path.abspath(sys.argv[1])
-    key = json.load(open(os.path.expanduser("~/.heygen/credentials")))["api_key"]
+    cred = os.path.expanduser("~/.heygen/credentials")
+    key = json.load(open(cred))["api_key"] if os.path.exists(cred) else os.environ.get("HEYGEN_API_KEY")
     data, n = build_zip(project)
     sha = hashlib.sha256(data).hexdigest()
     print("zip: %d files, %.1f MB" % (n, len(data) / 1e6))

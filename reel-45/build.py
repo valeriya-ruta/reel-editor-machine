@@ -126,7 +126,7 @@ t_dali, t_vch = S(u"і далі", 14.98), S(u"вчиться.", 16.24)
 P.append(u'''<svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
         <div id="pm1" class="hid" style="position:absolute; left:436px; top:334px; color:#7A1424">%s</div>
         <div id="pm3" class="hid" style="position:absolute; left:136px; top:655px; color:#7A1424">%s</div>
-        <span id="pw" class="chip hid" style="position:absolute; left:796px; top:300px; font-size:30px;
+        <span id="pw" class="chip hid" style="position:absolute; left:786px; top:300px; font-size:30px;
               padding:10px 18px; gap:10px"><b style="font-weight:700; color:#7A1424">w.</b>Windsor</span>'''
          % (mark("instagram", 52), mark("claude", 50)))
 js(u'''
