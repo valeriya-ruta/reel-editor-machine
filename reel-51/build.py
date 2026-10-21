@@ -127,6 +127,9 @@ js(u'''
     poly(name, [[x, y - 18], [x + 24, y - 18], [x + 58, y - 46], [x + 58, y + 46], [x + 24, y + 18], [x, y + 18]], o);
     cross(name, x + 78, y - 24, x + 122, y + 24, {strokeWidth: 5, seed: 113});
   }
+  // a solid fill has no stroke to draw on: the sketch is hidden until t
+  function fillin(name, t) { gsap.set("#sk-" + name, {autoAlpha: 0});
+    tl.to("#sk-" + name, {autoAlpha: 1, duration: .2}, t); }
   // a speech bubble: an oval with a tail
   function bubble(name, cx, cy, w, h, o) { var s = SK[name];
     ell(name, cx, cy, w, h, o);
@@ -313,7 +316,7 @@ js(u'''
   sketch("p1", "skP"); box("p1", 100, 315, 150, 267, {seed: 171, r: 26}); ln("p1", 155, 342, 195, 342, {seed: 173});
   ell("p1", 175, 545, 32, 32, {stroke: "#7A1424", fill: "#7A1424", fillStyle: "solid", seed: 175});
   label("p1", 175, 650, "зняти", {size: 44}); label("p1", 175, 698, "рілс", {size: 44});
-  draw("p1", %.3f, .55);
+  draw("p1", %.3f, .55); fillin("p1", %.3f);
   sketch("p2", "skP"); arrow("p2", 262, 470, 392, 600, {seed: 177, bend: .14}); box("p2", 405, 560, 250, 180, {seed: 179, r: 30});
   draw("p2", %.3f, .45); fadein("#pcl", %.3f);
   sketch("p3", "skP"); arrow("p3", 668, 600, 798, 470, {stroke: "#7A1424", seed: 181, bend: .14});
@@ -324,7 +327,7 @@ js(u'''
   label("p4", 880, 650, "готовий", {size: 44}); label("p4", 880, 698, "результат", {size: 44});
   draw("p4", %.3f, .5);
   erase("p1", %.3f); erase("p2", %.3f); erase("p3", %.3f); erase("p4", %.3f); out("#pcl", %.3f);
-''' % (t_mom - 0.35, t_vid2 - 0.05, t_kl, t_20 - 0.3, t_got - 0.45, h1, h1, h1, h1, h1))
+''' % (t_mom - 0.35, t_mom - 0.35, t_vid2 - 0.05, t_kl, t_20 - 0.3, t_got - 0.45, h1, h1, h1, h1, h1))
 BLACKOUT.append((t_zn - 0.05, S(u"рілс,", 39.57) + 0.05))           # «зняти рілс» label
 BLACKOUT.append((S(u"отримати", 42.22) - 0.05, S(u"результат.", 43.0) + 0.05))  # «готовий результат» label
 g.sfx("click-soft", t_zn); g.sfx("pop", t_kl); g.sfx("pop", t_got)
@@ -337,7 +340,7 @@ t_lim = S(u"Ліміти", 50.1)
 js(u'''
   rise("#mp1, #mc1", %.3f); rise("#mp2, #mc2", %.3f);
   sketch("a1", "skF"); bubble("a1", 540, 410, 210, 160, {seed: 191, fill: "#FFFFFF", fillStyle: "solid"});
-  draw("a1", %.3f, .5);
+  draw("a1", %.3f, .5); fillin("a1", %.3f);
   sketch("a2", "skF"); ln("a2", 500, 398, 580, 398, {stroke: "#1E1E1E", seed: 193}); ln("a2", 500, 430, 580, 430, {stroke: "#1E1E1E", seed: 195});
   draw("a2", %.3f, .3);
   sketch("a3", "skF"); ln("a3", 560, 368, 520, 462, {stroke: "#1E1E1E", seed: 197}); draw("a3", %.3f, .25);
@@ -346,7 +349,7 @@ js(u'''
   ln("a4", 486, 436, 594, 436, {stroke: "#7A1424", strokeWidth: 9, seed: 201});
   draw("a4", %.3f, .3);
   sink("#mp1, #mp2, #mc1, #mc2", %.3f); erase("a4", %.3f); erase("a1", %.3f);
-''' % (t_tomu, t_tomu + 0.12, t_kaz - 0.2, t_nm, t_nm + 0.3, t_dob - 0.1, t_dob - 0.1,
+''' % (t_tomu, t_tomu + 0.12, t_kaz - 0.2, t_kaz - 0.2, t_nm, t_nm + 0.3, t_dob - 0.1, t_dob - 0.1,
        t_dob - 0.05, t_lim - 0.4, t_lim - 0.4, t_lim - 0.4))
 g.sfx("whoosh-short", t_tomu); g.sfx("click-soft", t_nm); g.sfx("pop", t_dob)
 
