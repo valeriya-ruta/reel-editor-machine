@@ -16,7 +16,7 @@ and press **окей / не окей** → CTA.
 
 | time | layer | what |
 |---|---|---|
-| 01.3–04.5 | behind (matte) | «під» / «ключ», 240 px, top 320 / 536 |
+| 01.3–04.5 | behind (matte) | «під» / «ключ», white, 240 px, top 320 / 536 |
 | 04.4 | above | checklist card «Від тебе», five ghost rows |
 | 05.3–06.4 | above | row 1 «доступи до акаунтів» + key, Instagram / Threads / Telegram, tick |
 | 07.0–09.4 | above | row 2 «блогери, які подобаються» + three avatars, heart on «подобаються», tick |
@@ -27,7 +27,7 @@ and press **окей / не окей** → CTA.
 | 19.6–24.8 | above | card «Правила для сценаріїв»: voice note pops on «голосове», waveform grows on «пояснюєш», red arrow → «скіли» card on «додаю», voice line drops into it on «скіли» |
 | 26.2–38.1 | half (matte) | ти: box drawn + scribbles, «ти» on «ти», «про тебе / ядро» on «про тебе», red underline on «краще», scribbles → ruled lines on «структуру», arrow on «місце», system box with the core slot on «системі», «я» on «Все», labels аналіз контенту · стилі · скіли · підключення · тести on each word, red ring round «я» on «моя» |
 | 39.0–41.8 | above | card «Результат»: four content tiles on «результат», buttons «окей» / «не окей» on their words |
-| 42.8–45.5 | above | CTA: light pill «АІ-система під ключ» on «ця система», red pill «Став + в коментарі» on «став», red pointer arrow |
+| 42.8–45.5 | above | CTA: light pill «АІ-система під ключ» on «ця система», red pill «Став + в коментарі» on «став», white pointer arrow (kit ink over footage) |
 
 BLACKOUT: «стилі, скіли, підключення,» (panel labels say it) · «окей чи не окей.» (buttons) · «то став плюс в коментарі.» (pill).
-Captions over the half screen: bottom 980.
+Captions: the kit's word rail (her review of 41); ink and above her head over the half screen.

@@ -26,8 +26,11 @@ CTA: консультації + ідеї → «Пиши «дзвінок»» →
 | 00:46.1–51.9 | above | «Інструкція» doc card, «€15» pill (48.5, kaching), checks налаштувати (50.2) / підключити для себе (51.0) |
 | 00:54.2–end | above | CTA: chips консультації (54.2), ідеї для контенту (55.9), red pill «Пиши «дзвінок»» (57.2) + red pointer arrow, light chip «інструкція» (58.3) |
 
-BLACKOUT: 4.95–5.05 (the «Я беру їх з дзвінків» chunk — «дзвінки» stands
-behind her), 56.84–end (the pill and the chip say it).
+BLACKOUT: 5.65–5.75 (the word «з дзвінків» — «дзвінки» stands behind her),
+56.84–end (the pill and the chip say it).
 
-Captions on the panel (bottom 980) for chunks starting inside each half.
+Captions: the kit's word-by-word rail (her review of 41); ink on the panel
+(top 862) inside each half. Sketches over her footage (cloud + X, CTA arrow)
+in the kit's white; red only on cards and the panel. Arrows ≥ 150 px, no
+arrowhead on the routine ellipse.
 Mattes: dzv 5.30 +1.70 s, half1 16.40 +8.18 s, half2 30.43 +7.17 s.
