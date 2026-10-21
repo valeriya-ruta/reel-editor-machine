@@ -84,11 +84,11 @@ def js(s):
 
 F.append(u'<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>')
 
-REEL = u'''<span class="th" id="%s"><svg width="34" height="34" viewBox="0 0 34 34"><path d="M10 6 L28 17 L10 28 Z" fill="#fff"/></svg></span>'''
+REEL = u'''<span class="th" id="%s"><svg width="34" height="34" viewBox="0 0 34 34"><path d="M10 6 L28 17 L10 28 Z" fill="#7A1424"/></svg></span>'''
 EXTRA_CSS = u'''
     .slot { width: 160px; height: 96px; border-radius: 18px; border: 3px dashed #DEBFBF;
             display: flex; align-items: center; justify-content: center; }
-    .th { width: 160px; height: 96px; border-radius: 18px; background: #C98A92;
+    .th { width: 160px; height: 96px; border-radius: 18px; background: #F2C7CA;
           display: flex; align-items: center; justify-content: center; margin: -3px; }
     .page { width: 112px; height: 150px; border-radius: 16px; background: #fff; position: relative;
             border: 3px solid #DEBFBF; overflow: hidden; flex: none; }
@@ -100,6 +100,7 @@ EXTRA_CSS = u'''
                  font-weight: 700; font-size: 34px; letter-spacing: -0.02em; color: #241919; }
     .page .ok { left: 34px; top: 66px; }
     .col { flex: 1; }
+    .ctr { position: absolute; left: 0; width: 1080px; display: flex; justify-content: center; }
     .sm { font-size: 34px; font-weight: 500; color: #574142; }
 '''
 
@@ -126,7 +127,7 @@ js(u'''
   pop("#b1n", %.3f); fadein("#b1m", %.3f); pop("#b1a", %.3f);
   pop("#b1s", %.3f);
   tl.to("#b1t0, #b1t1, #b1t2, #b1t3", {autoAlpha: 0, scale: .3, duration: .35, ease: "power2.in", stagger: .18}, %.3f);
-  sketch("x1", "skF"); ln("x1", 190, 560, 890, 640, {stroke: "#7A1424", strokeWidth: 6, seed: 3});
+  sketch("x1", "skF"); ln("x1", 180, 540, 900, 600, {stroke: "#7A1424", strokeWidth: 6, seed: 3});
   draw("x1", %.3f, .45);
   sink("#b1", %.3f); erase("x1", %.3f);
 ''' % (0.05, t_400, S(u"місяць", 2.39), t_akk, t_zah, t_kon, t_nem - 0.1, 6.45, 6.45))
@@ -139,7 +140,7 @@ t_dva, t_800, t_dor = S(u"два акаунти,", 10.79), S(u"800", 12.01), S(u
 CAM = (u'<svg width="58" height="40" viewBox="0 0 58 40"><rect x="2" y="4" width="36" height="32" rx="8" fill="#7A1424"/>'
        u'<path d="M41 14 L56 6 V34 L41 26 Z" fill="#7A1424"/></svg>')
 F.append(u'''
-        <div id="b2k" class="pill light hid" style="left:270px; top:340px; padding:22px 44px; font-size:44px;">%s консультація</div>
+        <div class="ctr" style="top:340px"><div id="b2k" class="pill light hid" style="position:relative; padding:22px 44px; font-size:44px;">%s консультація</div></div>
         <div id="b2a" class="card hid" style="left:120px; top:310px; width:390px; padding:28px 34px;">
           <span class="lbl" style="margin-bottom:8px">акаунт 1</span>
           <div class="row" style="align-items:baseline; gap:10px"><span class="num" style="font-size:80px">€400</span><span class="sm">/ міс</span></div>
@@ -150,15 +151,15 @@ F.append(u'''
           <span class="lbl" style="margin-bottom:8px">акаунт 2</span>
           <div class="row" style="align-items:baseline; gap:10px"><span class="num" style="font-size:80px">€400</span><span class="sm">/ міс</span></div>
         </div>
-        <div id="b2s" class="pill hid" style="left:250px; top:530px; padding:20px 46px; font-size:52px; font-weight:700">€800 / місяць</div>''' % CAM)
+        <div id="b2s" class="pill hid" style="left:190px; top:530px; padding:20px 46px; font-size:52px; font-weight:700">€800 / місяць</div>''' % CAM)
 js(u'''
   pop("#b2k", %.3f);
   sink("#b2k", %.3f);
   rise("#b2a", %.3f);
   pop("#b2p", %.3f, .45); rise("#b2b", %.3f);
   pop("#b2s", %.3f, .6);
-  sketch("d2", "skF"); label("d2", 812, 600, "дорого!", {size: 56, color: "#7A1424", anchor: "start"});
-  under("d2", 806, 618, 990, {stroke: "#7A1424", seed: 9});
+  sketch("d2", "skF"); label("d2", 690, 600, "дорого!", {size: 56, color: "#7A1424", anchor: "start"});
+  under("d2", 684, 618, 870, {stroke: "#7A1424", seed: 9});
   draw("d2", %.3f, .45);
   sink("#b2a, #b2p, #b2b, #b2s", %.3f); erase("d2", %.3f);
 ''' % (t_kons, t_same - 0.4, t_same - 0.05, t_dva - 0.1, t_dva, t_800, t_dor - 0.1,
@@ -347,7 +348,7 @@ F.append(u'''
 js(u'''
   rise("#b9", %.3f);
   pop("#b9s", %.3f);
-  sketch("x9", "skF"); ln("x9", 385, 597, 760, 592, {stroke: "#7A1424", strokeWidth: 7, seed: 91});
+  sketch("x9", "skF"); ln("x9", 320, 592, 735, 586, {stroke: "#7A1424", strokeWidth: 7, seed: 91});
   draw("x9", %.3f, .35);
   tl.to("#b9s", {autoAlpha: 0, duration: .25}, %.3f); erase("x9", %.3f);
   pop("#b9c", %.3f);
@@ -362,9 +363,9 @@ g.sfx("pop", t_vsia - 0.2); g.sfx("pop", t_nen); g.sfx("notification", t_cld - 0
 # 10 · ABOVE — CTA ------------------------------------------------------------
 t_inv, t_pysh = S(u"інвестувати", 59.85), S(u"пиши", 61.49)
 F.append(u'''
-        <div id="b10a" class="pill light hid" style="left:300px; top:330px; padding:22px 46px; font-size:46px">
-          <b style="color:#7A1424; font-weight:700">€1300</b>&nbsp;· один раз</div>
-        <div id="b10b" class="pill hid" style="left:200px; top:470px; font-size:52px; padding:30px 58px">Пиши + в коментарі</div>''')
+        <div class="ctr" style="top:330px"><div id="b10a" class="pill light hid" style="position:relative; padding:22px 46px; font-size:46px">
+          <b style="color:#7A1424; font-weight:700">€1300</b>&nbsp;· один раз</div></div>
+        <div class="ctr" style="top:470px"><div id="b10b" class="pill hid" style="position:relative; font-size:52px; padding:30px 58px">Пиши + в коментарі</div></div>''')
 js(u'''
   pop("#b10a", %.3f);
   pop("#b10b", %.3f, .6);
