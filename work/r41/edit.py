@@ -8,8 +8,7 @@ Unplanned reel, so there is no script for tools/cut.py to align against: the
 takes are picked here, by hand, off work/r41/utt.jsonl. Her brief: *"waaaay
 simpler — just cut out bad takes, pauses (except the one in the beginning)"*,
 the vibe *"unplanned content, didn't even bother to edit a lot"*. So: last take
-wins on every fumble, silences over ~0.45 s go, the pause where she reaches for
-her glasses (raw 19.2–23.9) stays whole, and the framing only steps
+wins on every fumble, silences over ~0.45 s go, and the framing only steps
 100 <-> 110 on a cut (tools/cutcam.py's rule, nothing slides) plus one closeup
 on the repeated «Це настільки просто».
 
@@ -36,12 +35,12 @@ FPS = cut.FPS
 # within ±80 ms below; times here are read off utt.jsonl + silences.txt.
 PLAN = [
     (1.15, 11.45, "base", "Це не запланований рілс … як я це роблю."),
-    (11.45, 16.70, "in", "Сьогодні я зняла 12 нових рілсів. Ось вони в мене в галереї …"),
-    # dropped 16.70-18.10: «І це інтепер» — restarted as «Тепер я показую…»
-    (18.10, 23.72, "base", "Тепер я показую свої рухи. + the glasses pause (kept, her ask)"),
-    (23.72, 32.60, "in", "Перше, що треба зробити … закинути їх на комп'ютер."),
-    (32.60, 40.52, "base", "Але я люблю робити все в хмарі … в хмарі."),
-    (40.84, 43.36, "in", "Тому перше, що я роблю … на Google Диск."),
+    (11.45, 16.55, "in", "Сьогодні я зняла 12 нових рілсів. Ось вони в мене в галереї …"),
+    # dropped 16.55-23.72: «І це інтепер. Тепер я показую свої рухи.» and the
+    # glasses pause. v1 kept the pause; her review cut 0:16 to «Перше».
+    (23.72, 32.60, "base", "Перше, що треба зробити … закинути їх на комп'ютер."),
+    (32.60, 40.52, "in", "Але я люблю робити все в хмарі … в хмарі."),
+    (40.84, 43.36, "base", "Тому перше, що я роблю … на Google Диск."),
     # dropped 43.36-45.40: she gets up and picks the phone up
     (45.40, 46.26, "base", "У мене є"),
     (46.60, 49.10, "base", "папочка, в якій я завантажила всі ці рілси."),

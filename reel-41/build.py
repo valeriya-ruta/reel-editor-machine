@@ -11,8 +11,8 @@ no matte, no iris. Captions all the way, and seven small things above her head
 or beside her, each on its word and gone with its sentence:
 
   Claude tile on «з Клодом»; a video tile drops into it on «дати їх Клоду» ->
-  her gallery screenshot (the 12 hearted takes, her own phone) on «в галереї»,
-  a heart on «сердечком» -> [the glasses pause, untouched] -> Drive on «диск»
+  her gallery screenshot (the 12 hearted takes, her own phone) in her raised
+  hand from «12 нових рілсів», a heart on «сердечком» -> Drive on «диск»
   -> a cloud on «в хмарі» -> Drive again on «Google Диск» -> [her screen, as
   filmed] -> a clock that spins on «почекати 2-3 годинки» -> Edits on «Edits»
   -> the comment box types «+» on «пиши плюс».
@@ -34,7 +34,7 @@ from kit import Kit  # noqa: E402
 from glass import Glass  # noqa: E402
 
 CUT = json.load(io.open(os.path.join(ROOT, "work", "r41", "cut.json"), encoding="utf-8"))
-DUR = 77.550           # (2327 plate frames - 0.5) / 30
+DUR = 71.783           # (2154 plate frames - 0.5) / 30
 FPS = 30
 k = Kit(width=1080, height=1920, fps=FPS, duration=DUR)
 g = Glass(["claude", "googledrive"])
@@ -74,15 +74,15 @@ def E(word, near):
 T = {
     "klodom": S(u"Клодом", 4.00), "video": S(u"відео", 6.60), "dati": S(u"дати", 7.42),
     "klodu": S(u"Клоду", 7.78), "tomu": S(u"Тому", 8.40),
-    "halerei": S(u"галереї", 13.30), "serd": S(u"сердечком", 14.54), "teper": S(u"Тепер", 15.64),
-    "dysk": S(u"диск", 23.51), "naspr": S(u"Насправді", 23.94),
-    "khmari": S(u"хмарі", 31.29), "komp": S(u"комп'ютер", 32.39),
-    "google": S(u"Google", 39.77), "u": S(u"У", 40.58),
-    "pochek": S(u"почекати", 52.96), "hod23": S("2-3", 53.54), "poky": S(u"поки", 54.34),
-    "ed1": S(u"Edits", 65.35), "ed1e": E(u"Edits", 65.35), "ed2": S(u"Edits", 66.97),
-    "ed2e": E(u"Edits", 66.97), "tomu2": S(u"Тому", 67.61),
-    "pyshy": S(u"пиши", 76.08), "plius": S(u"плюс", 76.36), "pliuse": E(u"плюс", 76.36),
-    "koment": S(u"коментарі", 76.66),
+    "rilsiv": S(u"рілсів", 11.96), "halerei": S(u"галереї", 13.30), "serd": S(u"сердечком", 14.54), "pershe": S(u"Перше", 15.53),
+    "dysk": S(u"диск", 17.74), "naspr": S(u"Насправді", 18.17),
+    "khmari": S(u"хмарі", 25.52), "komp": S(u"комп'ютер", 26.62),
+    "google": S(u"Google", 34.00), "u": S(u"У", 34.81),
+    "pochek": S(u"почекати", 47.19), "hod23": S("2-3", 47.77), "poky": S(u"поки", 48.57),
+    "ed1": S(u"Edits", 59.58), "ed1e": E(u"Edits", 59.58), "ed2": S(u"Edits", 61.20),
+    "ed2e": E(u"Edits", 61.20), "tomu2": S(u"Тому", 61.84),
+    "pyshy": S(u"пиши", 70.31), "plius": S(u"плюс", 70.59), "pliuse": E(u"плюс", 70.59),
+    "koment": S(u"коментарі", 70.89),
     "dur": DUR,
 }
 
@@ -151,7 +151,7 @@ k.css("""
   border-radius: 50%; background: #fff; z-index: 3; }
 
 /* her gallery screenshot, as a photo from her phone */
-.gal { position: absolute; left: 642px; top: 56px; width: 270px; height: 479px; border-radius: 34px;
+.gal { position: absolute; left: 619px; top: 370px; width: 372px; height: 659px; border-radius: 44px;
   overflow: hidden; background: #fff;
   box-shadow: 0 0 0 6px rgba(255,255,255,0.95), 0 44px 80px -26px rgba(24,4,12,0.62); }
 .gal img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -210,26 +210,27 @@ def b1_claude():
 """)
 
 
-# 2 · «Ось вони в мене в галереї, я їх відмітила сердечком»: her screenshot
+# 2 · «12 нових рілсів. Ось вони в мене в галереї, я їх відмітила сердечком»: her
+# screenshot, in her raised hand — size, angle and 0:12 arrival from her review
 @beat
 def b2_gallery():
     L.append('<div class="g full" id="g2">'
              '<div class="gal hide" id="gal"><img src="assets/gallery.jpg" alt=""><div class="sheen"></div></div>'
-             '<div class="heart hide" id="ht" style="left:578px;top:6px">' + HEART + '</div>'
+             '<div class="heart hide" id="ht" style="left:624px;top:274px">' + HEART + '</div>'
              '</div>')
-    sfx("pop", "@halerei+0.02")
+    sfx("pop", "@rilsiv")
     sfx("click-soft", "@serd+0.04")
     return js("""
-  tl.set("#g2", {autoAlpha: 1}, @halerei-0.1);
-  gsap.set("#gal", {rotation: 5, transformOrigin: "50% 40%"});
+  tl.set("#g2", {autoAlpha: 1}, @rilsiv-0.15);
+  gsap.set("#gal", {rotation: 13, transformOrigin: "50% 50%"});
   gsap.set("#ht", {rotation: -12});
-  arr("#gal", @halerei-0.06, {s: 0.45, x: 20, y: -40, d: 0.8});
-  shn("#gal .sheen", @halerei+0.3);
+  arr("#gal", @rilsiv-0.06, {s: 0.45, x: 20, y: 40, d: 0.8});
+  shn("#gal .sheen", @rilsiv+0.3);
   tl.fromTo("#ht", {autoAlpha: 0, scale: 0}, {autoAlpha: 1, scale: 1, duration: 0.6, ease: POP}, @serd);
   tl.to("#ht", {scale: 1.14, duration: 0.12, ease: "power2.out"}, @serd+0.62);
   tl.to("#ht", {scale: 1, duration: 0.4, ease: SP}, @serd+0.74);
-  bout(["#gal", "#ht"], @teper-0.3, 10, 0.28);
-  tl.set("#g2", {autoAlpha: 0}, @teper+0.05);
+  bout(["#gal", "#ht"], @pershe-0.3, 10, 0.28);
+  tl.set("#g2", {autoAlpha: 0}, @pershe+0.05);
 """)
 
 
