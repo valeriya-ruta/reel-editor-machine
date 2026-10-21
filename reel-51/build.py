@@ -229,17 +229,17 @@ t_mon = S(u"монтажерка,", 20.88)
 t_vid, t_bud = S(u"відтворити", 24.21), S(u"будь-який", 24.81)
 t_tv, t_st = S(u"твоєму", 27.15), S(u"стилі.", 27.55)
 r0 = max(t_yak - 0.02, H1 + 0.03)
-# the rings are 260 wide so their haloed line clears the phone's corners (a
+# the rings are 266 wide so their haloed line clears the phone's corners (a
 # 236 ring cut through the bezel); the cross lies on the white phone, so no
 # halo — the kit's white halo erased the «2» under it
 js(u'''
   rise("#mp1", %.3f); rise("#mp2", %.3f);
-  sketch("v1", "skF"); ell("v1", 740, 438, 260, 326, {strokeWidth: 5, seed: 151, fill: false});
+  sketch("v1", "skF"); ell("v1", 740, 438, 266, 334, {strokeWidth: 5, seed: 151, fill: false});
   draw("v1", %.3f, .5);
   sketch("v2", "skF"); cross("v2", 680, 350, 800, 530, {strokeWidth: 7, seed: 153, halo: false});
   draw("v2", %.3f, .28);
   erase("v1", %.3f); erase("v2", %.3f);
-  sketch("v3", "skF"); ell("v3", 340, 438, 260, 326, {strokeWidth: 5, seed: 155, fill: false});
+  sketch("v3", "skF"); ell("v3", 340, 438, 266, 334, {strokeWidth: 5, seed: 155, fill: false});
   draw("v3", %.3f, .5);
   pop("#mc1", %.3f);
   pop("#mc2", %.3f); erase("v3", %.3f);
@@ -276,7 +276,7 @@ F.append(u'''
              style="font-size:30px; padding:10px 20px"><i></i>твій стиль</span></div>''')
 js(u'''
   %s
-  sketch("v5", "skF"); ell("v5", 655, 445, 250, 330, {strokeWidth: 5, seed: 159, fill: false});
+  sketch("v5", "skF"); ell("v5", 655, 446, 260, 340, {strokeWidth: 5, seed: 159, fill: false});
   draw("v5", %.3f, .5); pop("#tsc", %.3f);
   sink("#tl0, #tl1, #tl2, #tl3, #tsc", %.3f); erase("v5", %.3f);
 ''' % (u" ".join(u'pop("#tl%d", %.3f);' % (i, t_bud - 0.05 + i * 0.16) for i in range(4)),

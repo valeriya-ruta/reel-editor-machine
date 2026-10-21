@@ -288,9 +288,10 @@ js(u'''
        t_idei + 0.35, t_nast - 0.05, t_tyzh + 0.33))
 g.sfx("pop", t_rut2 - 0.2); g.sfx("pop", t_odr - 0.25)
 # the two cards spell out her sentence: «Рутина» · «раз на тиждень» · «Звіт по
-# контенту» · «Одразу» · «Ідеї» · «наступний тиждень». One span from «є» (it
-# joins the half screen's ink span, so the plaque does not blink in between)
-BLACKOUT.append((S(u"є", 15.28) - 0.03, e_tyzh))
+# контенту» · «Одразу» · «Ідеї» · «наступний тиждень». One span from «є»; it
+# opens inside the half screen's ink span (h1 + 0.40), so the kit merges the two
+# and the plaque does not blink in between («Ще» starts before it, in ink)
+BLACKOUT.append((min(S(u"є", 15.28) - 0.03, h1 + 0.35), e_tyzh))
 
 # 5 · ABOVE — the alarm rings; everything is already ticked --------------------
 t_tob, t_prok = S(u"Тобто", 19.9), S(u"прокидаюсь,", 20.24)
@@ -395,7 +396,7 @@ g.sfx("whoosh-short", h2); g.sfx("pop", t_mont - 0.1); g.sfx("whoosh-short", h3)
 BLACKOUT.append((t_mont - 0.03, E(u"рілсів.", 33.8)))               # the label says «монтаж рілсів»
 
 # 8 · ABOVE — CTA ---------------------------------------------------------------
-t_taki, t_to, t_pid = S(u"такі", 35.54), S(u"то", 36.42), S(u"підпишись.", 37.0)
+t_taki, t_to = S(u"такі", 35.54), S(u"то", 36.42)
 F.append(u'''
         <div style="position:absolute; left:0; top:300px; width:1080px; display:flex; justify-content:center; gap:14px">
           <span class="chip hid" id="b8a" style="font-size:32px; padding:10px 20px"><i></i>рутини</span>
@@ -427,7 +428,11 @@ for i, (a, b) in enumerate(HALF):
 
 def main():
     print(" ".join(u"%s/%.1f" % (c["w"], c["s"]) for c in CAPS))
-    chunks = g.chunks(CAPS, place=PLACE)
+    # the rail starts at «на» (HEAD_OFF, beat 1); the rest drop through BLACKOUT
+    rail = [c for c in CAPS if c["s"] >= RAIL_FROM]
+    chunks = g.chunks(rail, place=PLACE)
+    print("off the rail: %.2f-%.2f (head) " % HEAD_OFF +
+          " ".join("%.2f-%.2f" % ab for ab in sorted(BLACKOUT)))
     doc = g.document(title=u"Reel 50 — Поки я сплю", plate="assets/base.mp4",
                      behind="\n".join(B), panel="\n".join(P), front="\n".join(F), cover="\n".join(C),
                      js="\n".join(J), chunks=chunks, blackout=BLACKOUT)
