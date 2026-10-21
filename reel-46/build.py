@@ -170,7 +170,7 @@ js(u'''
   // pill's arrowheads (the kit gives the open ring its white halo)
   sketch("c3", "skF"); ell("c3", 540, 622, 440, 160, {strokeWidth: 5, seed: 15, fill: false});
   draw("c3", %.3f, .6);
-  sketch("q3", "skT"); ln("q3", 545, 548, 535, 700, {strokeWidth: 6, seed: 21});
+  sketch("q3", "skT"); ln("q3", 545, 548, 535, 700, {strokeWidth: 6, seed: 21, halo: false});
   label("q3", 790, 600, "?", {size: 72});
   draw("q3", %.3f, .4);
   sink("#a1, #a2", %.3f); erase("in2", %.3f);
@@ -375,7 +375,7 @@ js(u'''
   draw("mx", %.3f, .6);
   sink("#bl", %.3f); erase("mx", %.3f);
   pop("#no2", %.3f);
-  sketch("nx", "skT"); ln("nx", 236, 500, 846, 470, {strokeWidth: 8, seed: 83});
+  sketch("nx", "skT"); ln("nx", 236, 500, 846, 470, {strokeWidth: 8, seed: 83, halo: false});
   draw("nx", %.3f, .35);
   out("#no2", %.3f); erase("nx", %.3f);
 ''' % (t_blog - 0.1, t_osb, t_prf, t_odn, t_brand - 0.05, t_miks - 0.25, t_dovas - 0.2, t_dovas - 0.2,
