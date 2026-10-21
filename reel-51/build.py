@@ -24,7 +24,7 @@ no captions, no plaque, no cues. Only the plate (and the kit's slow push).
   above   card: платити монтажеру / чекати на відео / залежати від її часу й
           хвороб — each struck on its noun
   half    зняти рілс → Claude → 20 хв → готовий результат
-  above   1 and 2 again: a speech bubble, ≠ on «не може», = on «так само добре»
+  above   1 and 2 again: a speech bubble, ≠ on «ні», = on «так само добре»
   half    ліміти: справжній креатив above the line; «креатив» below it —
           red subtitles, CapCut €
   above   CTA — блогерка / СММниця / підприємиця / продюсерка, 24/7 + a full
