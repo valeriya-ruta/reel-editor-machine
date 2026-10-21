@@ -130,7 +130,7 @@ js(u'''
   draw("x1", %.3f, .45);
   sink("#b1", %.3f); erase("x1", %.3f);
 ''' % (0.05, t_400, S(u"місяць", 2.39), t_akk, t_zah, t_kon, t_nem - 0.1, 6.45, 6.45))
-g.sfx("pop", 0.05); g.sfx("kaching", t_400); g.sfx("pop", t_zah); g.sfx("click-soft", t_nem)
+g.sfx("pop", 0.05); g.sfx("kaching", t_400); g.sfx("pop", t_zah)
 BLACKOUT.append((t_400 - 0.05, E(u"акаунт", 3.09) + 0.05))
 
 # 2 · ABOVE — a consultation; her bill, twice; €800, «дорого» -----------------
@@ -163,7 +163,7 @@ js(u'''
   sink("#b2a, #b2p, #b2b, #b2s", %.3f); erase("d2", %.3f);
 ''' % (t_kons, t_same - 0.4, t_same - 0.05, t_dva - 0.1, t_dva, t_800, t_dor - 0.1,
        S(u"І", 14.55) - 0.25, S(u"І", 14.55) - 0.25))
-g.sfx("pop", t_kons); g.sfx("pop", t_same); g.sfx("pop", t_dva); g.sfx("kaching", t_800)
+g.sfx("pop", t_kons); g.sfx("pop", t_dva); g.sfx("kaching", t_800)
 BLACKOUT.append((t_800 - 0.05, t_800 + 0.05))      # the pill says «€800 / місяць»
 
 # 3 · BEHIND — «система / €1300?» ---------------------------------------------
@@ -178,7 +178,7 @@ js(u'''
   tl.fromTo("#bwq", {autoAlpha: 0, y: -40}, X({autoAlpha: 1, y: 0, duration: .5, ease: POP}), %.3f);
   sink("#bw1, #bw2", %.3f);
 ''' % (t_sys - 0.1, t_1300 - 0.1, t_bil, 18.88))
-g.sfx("whoosh-short", t_sys - 0.1); g.sfx("kaching", t_1300); g.sfx("click-soft", t_bil)
+g.sfx("whoosh-short", t_sys - 0.1); g.sfx("kaching", t_1300)
 BLACKOUT.append((t_sys - 0.05, t_sys + 0.05))      # «система за 1300,» stands behind her
 
 # 4 · ABOVE — €400 every month vs €1300 once ----------------------------------
@@ -227,7 +227,7 @@ js(u'''
        t_13b, t_raz - 0.35, t_dal - 0.05, t_dal - 0.05,
        " ".join('pop("#b5k%d", %.3f, .4);' % (i, t_dal + 0.1 + (i - 1) * 0.14) for i in range(1, 6)),
        t_prac, 28.85, 28.85, 28.85))
-g.sfx("pop", t_tob - 0.15); g.sfx("click-soft", t_13b); g.sfx("click-soft", t_raz - 0.3); g.sfx("click-soft", t_dal + 0.1)
+g.sfx("pop", t_tob - 0.15); g.sfx("click-soft", t_13b); g.sfx("click-soft", t_dal + 0.1)
 
 # 6 · HALF — the payback ------------------------------------------------------
 h0, h1 = S(u"Якщо", 29.28) - 0.1, 41.18
@@ -278,7 +278,7 @@ js(u'''
        "t10": t_mis + 0.5, "t11": t_dva2 - 0.1, "t12": t_mon - 0.3, "t13": t_men - 0.1, "t14": t_dva3 - 0.1,
        "t15": h1 + 0.9})
 g.sfx("whoosh-short", h0); g.sfx("whoosh-short", h1)
-g.sfx("kaching", t_4b); g.sfx("click-soft", t_min); g.sfx("click-soft", t_oku); g.sfx("click-soft", t_try)
+g.sfx("kaching", t_4b); g.sfx("click-soft", t_oku)
 g.sfx("pop", t_dva2); g.sfx("click-soft", t_dva3)
 
 # 7 · ABOVE — nobody to depend on --------------------------------------------
@@ -324,7 +324,7 @@ js(u'''
                 % (k, t - 0.15, k, t + 0.2, k, t + 0.2) for _, k, t in rows),
        S(u"А", 52.95) - 0.15))
 g.sfx("pop", t_pro - 0.25)
-for t in (t_zv, t_an, t_op, t_sc):
+for t in (t_zv, t_op):
     g.sfx("click-soft", t + 0.2)
 
 # 9 · ABOVE — all the work: the unreliable SMM out, Claude in ------------------
@@ -357,7 +357,7 @@ js(u'''
        " ".join(u'tl.set("#b9k%d", {className: "check on"}, %.3f); pop("#b9k%d", %.3f, .4);'
                 % (i, t_cld + 0.1 + i * 0.12, i, t_cld + 0.1 + i * 0.12) for i in range(3)),
        S(u"ти готовий", 59.41) - 0.1))
-g.sfx("pop", t_vsia - 0.2); g.sfx("pop", t_nen); g.sfx("click-soft", t_to); g.sfx("notification", t_cld - 0.15)
+g.sfx("pop", t_vsia - 0.2); g.sfx("pop", t_nen); g.sfx("notification", t_cld - 0.15)
 
 # 10 · ABOVE — CTA ------------------------------------------------------------
 t_inv, t_pysh = S(u"інвестувати", 59.85), S(u"пиши", 61.49)
@@ -388,7 +388,7 @@ PHRASES = [0.0, 1.39, 2.65, 3.57, 4.65, 7.18, 8.62, 10.27, 11.23, 12.01, 13.23, 
            37.98, 39.86, 41.63, 44.00, 45.28, 46.98, 48.59, 49.67, 51.68, 52.95, 54.57, 56.49, 57.63,
            58.87, 60.45, 61.31]
 # the key word's pill, where the longest-word rule picks the wrong one
-KEYS = {u"немає.": 5.93, u"більше?": 18.41, u"щомісяця": 24.03, u"окупається": 33.71, u"три": 34.95,
+KEYS = {u"ненадійний": 55.17, u"немає.": 5.93, u"більше?": 18.41, u"щомісяця": 24.03, u"окупається": 33.71, u"три": 34.95,
         u"два,": 37.74, u"менше": 40.24, u"процес": 45.70, u"сценарії.": 52.28, u"робота,": 53.59}
 
 
@@ -404,7 +404,7 @@ def phrases(caps, place):
         s = ch[0]["s"]
         nxt = out[n + 1][0]["s"] if n + 1 < len(out) else DUR
         hit = [i for i, w in enumerate(ch) if any(abs(w["s"] - t) < 0.01 for t in keyt)]
-        kw = hit[0] if hit else g._key(ch, {})
+        kw = hit[0] if hit else (None if abs(s - 15.27) < 0.06 else g._key(ch, {}))
         pos = ("bottom", 1920 - 1520)
         for a, b, how, y in place:
             if a <= s < b:

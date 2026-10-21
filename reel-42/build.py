@@ -166,7 +166,7 @@ def tick(i, t):
     return u'tl.set("#r%dk", {className: "check on"}, %.3f); pop("#r%dk", %.3f, .45);' % (i, t, i, t)
 
 
-ck_out = t_toty - 0.2
+ck_out = t_toty + 0.05
 js(u'''
   rise("#ckl", %.3f);
   %s pop("#v1k", %.3f); pop("#v1a", %.3f); pop("#v1b", %.3f); pop("#v1c", %.3f); %s
@@ -182,7 +182,7 @@ js(u'''
        item(1, t_bl), t_dyv - 0.1, t_dyv + 0.05, t_dyv + 0.2, t_pod, tick(1, t_pod + 0.4),
        item(2, t_shr), t_shr + 0.2, t_kol + 0.05, t_kol + 0.2, t_kol + 0.35, t_nem, t_zb, tick(2, t_raz),
        item(3, t_pry), t_diz, t_diz + 0.2, t_mon + 0.05, tick(3, t_pod2),
-       item(4, t_prav), t_sc - 0.1, tick(4, t_sc + 0.2),
+       item(4, t_prav), t_sc - 0.25, tick(4, t_sc),
        ck_out))
 g.sfx("pop", t_pr - 0.2)
 for t in (t_bl, t_shr, t_pry, t_prav):
@@ -254,7 +254,7 @@ js(u'''
   ln("d4", 136, 658, 330, 658, {seed: 15, roughness: 1.6});
   draw("d4", %.3f, .35);
   sketch("d5", "skP"); arrow("d5", 446, 520, 528, 520, {seed: 17, bend: .2}); draw("d5", %.3f, .45);
-  sketch("d6", "skP"); box("d6", 540, 390, 450, 420, {seed: 19});
+  sketch("d6", "skP"); box("d6", 540, 390, 450, 404, {seed: 19});
   label("d6", 765, 440, "система", {size: 42, color: "#574142"});
   box("d6", 576, 462, 380, 64, {seed: 21, r: 20, fill: true}); label("d6", 766, 506, "про тебе", {size: 36});
   draw("d6", %.3f, .55);
@@ -266,7 +266,7 @@ js(u'''
 ''' % (h0 + 0.35, h0 + 0.8, t_ty, t_pro - 0.05, t_kra, t_str - 0.35, t_str - 0.25, t_mis - 0.45, t_sys - 0.6,
        t_vse,
        u"\n  ".join(u'sketch("d8%d", "skP"); label("d8%d", 586, %d, "%s", {size: 40, anchor: "start"}); '
-                    u'draw("d8%d", %.3f);' % (i, i, 578 + 50 * i, txt, i, t)
+                    u'draw("d8%d", %.3f);' % (i, i, 570 + 46 * i, txt, i, t)
                     for i, (txt, t) in enumerate(((u"аналіз контенту", t_an), (u"стиль", t_st), (u"скіли", t_sk),
                                                   (u"підключення", t_pk), (u"тести", t_ts)))),
        t_moya - 0.3,
@@ -292,7 +292,7 @@ F.append(u'''
             <span class="btn no hid" id="rno">не окей</span>
           </div>
         </div>''' % u"".join(
-    u'''<span class="hid" id="rt%d" style="position:relative; display:block; width:180px; height:150px; border-radius:22px;
+    u'''<span class="hid" id="rt%d" style="position:relative; display:block; width:180px; height:140px; border-radius:22px;
          background:#fff; border:3px solid #DEBFBF; overflow:hidden">
          <span style="position:absolute; left:16px; top:16px; width:60%%; height:16px; border-radius:6px; background:#7A1424"></span>
          <span class="line" style="position:absolute; left:16px; top:46px; width:80%%; height:12px"></span>

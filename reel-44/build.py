@@ -31,6 +31,7 @@ usage: python build.py
 import io
 import json
 import os
+import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -156,6 +157,7 @@ js(u'''
   sink("#bw", %.3f);
 ''' % (bw0, bw1))
 g.sfx("whoosh-short", bw0)
+BLACKOUT.append((S(u"Я", 5.0) - 0.05, S(u"Я", 5.0) + 0.05))     # «дзвінки» stands behind her
 
 # 3 · ABOVE — the call: her and a client, recorded; consultations, welcome calls --
 t_pro, t_kli = S(u"проводжу", 6.77), S(u"клієнтками.", 7.43)
@@ -200,7 +202,7 @@ g.sfx("pop", t_pro - 0.25); g.sfx("click-soft", t_kli); g.sfx("click-soft", t_ko
 g.sfx("notification", t_zad); g.sfx("pop", t_nik)
 
 # 4 · HALF — one person asks -> it is many people -> the ideal topic -----------
-h0, h1 = S(u"Але", 16.6) - 0.1, S(u"Тому", 23.58) - 0.3
+h0, h1 = S(u"Але", 16.6) - 0.1, S(u"Тому", 23.58) - 0.1
 HALF.append((h0, h1))
 P.append(u'<svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
 t_raz, t_tak = S(u"раз", 17.02), S(u"такі", 17.96)
@@ -432,21 +434,35 @@ js(u'''
   sketch("a11", "skF"); arrow("a11", 930, 690, 840, 545, {stroke: "#7A1424", strokeWidth: 5.5, seed: 97});
   draw("a11", %.3f, .45);
   pop("#b11i", %.3f, .55);
-''' % (t_kons2 - 0.1, t_idei2 - 0.1, t_dzv2 - 0.2, t_dzv2 + 0.4, t_instr - 0.25))
-g.sfx("pop", t_kons2 - 0.1); g.sfx("pop", t_idei2 - 0.1); g.sfx("pop", t_dzv2 - 0.2); g.sfx("pop", t_instr - 0.25)
+''' % (t_kons2 - 0.1, t_idei2 - 0.1, t_dzv2 - 0.2, t_dzv2 + 0.4, S(u"отримати", 58.32)))
+g.sfx("pop", t_kons2 - 0.1); g.sfx("pop", t_idei2 - 0.1); g.sfx("pop", t_dzv2 - 0.2); g.sfx("pop", S(u"отримати", 58.32))
 BLACKOUT.append((t_pys - 0.05, DUR))     # the pill and the chip say it
 
 # ---------------------------------------------------------------- mattes for the half screens
 for i, (a, b) in enumerate(HALF):
     g.matte("half%d" % (i + 1), round(a - 0.1, 3), round(b - a + 1.2, 3))
     js("  half(%.3f, %.3f);" % (a, b))
-    PLACE.append((a + 0.4, b + 0.2, "bottom", 980))
+    PLACE.append((a + 0.4, b, "bottom", 980))     # not past the exit: she rises into it
+
+
+def glue(chunks):
+    """a lone last word («Мануса.», «голови.», «себе.») goes back on the line it ends"""
+    out = []
+    for c in chunks:
+        p = out[-1] if out else None
+        if p and len(c["words"]) == 1 and not re.search(u"[.,!?:;…»]$", p["words"][-1]["w"]) \
+                and len(" ".join(w["w"] for w in p["words"] + c["words"])) <= 46:
+            p["words"] = p["words"] + c["words"]
+            p["e"] = c["e"]
+            continue
+        out.append(c)
+    return out
 
 
 def main():
     if "--words" in sys.argv:
         print(" ".join(u"%s/%.1f" % (c["w"], c["s"]) for c in CAPS))
-    chunks = g.chunks(CAPS, place=PLACE)
+    chunks = glue(g.chunks(CAPS, place=PLACE))
     if "--chunks" in sys.argv:
         for n, c in enumerate(chunks):
             print(n, "%.2f-%.2f" % (c["s"], c["e"]), " ".join(w["w"] for w in c["words"]),
