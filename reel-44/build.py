@@ -462,7 +462,10 @@ def glue(chunks):
 def main():
     if "--words" in sys.argv:
         print(" ".join(u"%s/%.1f" % (c["w"], c["s"]) for c in CAPS))
-    chunks = glue(g.chunks(CAPS, place=PLACE))
+    keys = {S(u"ідеї", 0.89): True, S(u"питання,", 12.91): True, S(u"питання,", 18.22): True,
+            S(u"одну", 19.98): True, S(u"ідеальна", 21.86): True, S(u"тижня", 32.64): True,
+            S(u"дзвінки.", 35.95): True, S(u"впроваджую", 42.69): True, S(u"ідеї", 55.99): True}
+    chunks = glue(g.chunks(CAPS, keys=keys, place=PLACE))
     if "--chunks" in sys.argv:
         for n, c in enumerate(chunks):
             print(n, "%.2f-%.2f" % (c["s"], c["e"]), " ".join(w["w"] for w in c["words"]),
