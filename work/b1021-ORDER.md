@@ -32,7 +32,18 @@ re-hears every cut plate); and a lighter look → her spec, STYLE.md §00.
 - **No covers** — Instagram previews are not generated.
 - Deliver here in the chat (SendUserFile), not her Desktop.
 
-## Later
+## Reel 53 — the unplanned take
 
-- A 13th take, 20261021_144227 (2:19), landed in the Inbox at 14:45 — being
-  identified.
+| reel | posts | take | what | plate |
+|---|---|---|---|---|
+| 53 | — | 144227 (14:45) | «Це не запланований рілс» — her process on camera: gallery → Drive → link → Claude → 2–3 h → Edits | 75.2 s |
+
+No script in RUTA: work/r53/script.txt is her own final wording. Steps are
+sketched until/unless she sends screen recordings of them.
+
+## Her review of reel 41 (2026-10-21)
+
+Captions back to the old rail; calmer sketches (roughness 1); behind-me words
+white; over the footage, sketches are white stickers / dark ink with a white
+halo (white lines failed AA on her light room); a full screen never opens onto
+empty white; longer arrows, no arrowhead on a loop. All in tools/gstyle.py.
