@@ -95,7 +95,8 @@ js(u'''
   function eye(name, x, y, o) { _ink = SK[name].ink; var s = SK[name];
     _add(s, s.rc.curve([[x - 100, y], [x, y - 62], [x + 100, y]], opt(o, 91)));
     _add(s, s.rc.curve([[x - 100, y], [x, y + 62], [x + 100, y]], opt(o, 93)));
-    ell(name, x, y, 58, 58, {seed: 95, fill: "#7A1424", fillStyle: "solid", stroke: (o && o.stroke) || SK[name].ink}); }
+    ell(name, x, y, 58, 58, {seed: 95, fill: "#7A1424", fillStyle: "hachure", hachureGap: 5, fillWeight: 3,
+                             stroke: (o && o.stroke) || SK[name].ink}); }
 ''')
 
 XMARK = (u'<svg id="b6x%d" class="hid" width="44" height="44" viewBox="0 0 44 44" style="position:absolute; left:-3px; top:-3px">'
@@ -211,9 +212,9 @@ BLACKOUT.append((t_strg - 0.3, E(u"закрили.", 27.64) + 0.05))
 # 5 · ABOVE — the statuses: a heap, ringed in red -----------------------------
 t_stat, t_bez = S(u"статуси", 28.62), S(u"безпросвітна", 30.4)
 t_tomu = S(u"Тому", 31.91)
-HEAP = [(u"ідея", 170, 330, -11), (u"в роботі", 420, 300, 7), (u"на апруві", 640, 352, -5),
-        (u"знято", 250, 470, 9), (u"готово", 520, 450, -14), (u"опубліковано", 600, 540, 4),
-        (u"сценарій", 140, 575, -4)]
+HEAP = [(u"ідея", 262, 338, -11), (u"в роботі", 430, 312, 7), (u"на апруві", 600, 356, -5),
+        (u"знято", 290, 462, 9), (u"готово", 520, 448, -14), (u"опубліковано", 560, 540, 4),
+        (u"сценарій", 290, 556, -4)]
 F.append(u"".join(u'<span class="chip hid" id="b5c%d" style="position:absolute; left:%dpx; top:%dpx; '
                   u'transform: rotate(%ddeg); font-size:40px"><i></i>%s</span>' % (i, x, y, r, esc(w))
                   for i, (w, x, y, r) in enumerate(HEAP)))
@@ -276,11 +277,11 @@ js(u'''
   full(%.3f, %.3f);
   pop("#c7h", %.3f, .55);
   sketch("c1", "skC"); cyl("c1", 190, 790, 180, 140, {seed: 51});
-  label("c1", 190, 1010, "памʼять", {size: 44}); label("c1", 190, 1058, "Клода", {size: 44});
+  label("c1", 190, 1030, "памʼять", {size: 48}); label("c1", 190, 1082, "Клода", {size: 48});
   draw("c1", %.3f, .45);
   sketch("c2", "skC"); box("c2", 360, 760, 620, 300, {seed: 53, fill: true, r: 32});
   draw("c2", %.3f, .7);
-  sketch("c3", "skC"); cross("c3", 98, 752, 292, 1072, {stroke: "#7A1424", strokeWidth: 7, seed: 55});
+  sketch("c3", "skC"); cross("c3", 100, 748, 282, 978, {stroke: "#7A1424", strokeWidth: 7, seed: 55});
   draw("c3", %.3f, .3);
   sketch("c4", "skC"); label("c4", 670, 730, "незалежне", {size: 52, color: "#7A1424"});
   draw("c4", %.3f);
@@ -388,7 +389,7 @@ js(u'''
   sketch("q1", "skP"); arrow("q1", 405, 360, 272, 440, {seed: 103, bend: .12});
   ell("q1", 195, 485, 190, 110, {seed: 101}); label("q1", 195, 502, "ти", {size: 56});
   draw("q1", %.3f, .4);
-  sketch("q2", "skP"); cross("q2", 115, 432, 275, 538, {stroke: "#7A1424", strokeWidth: 6, seed: 105});
+  sketch("q2", "skP"); cross("q2", 322, 388, 374, 440, {stroke: "#7A1424", strokeWidth: 6, seed: 105});
   draw("q2", %.3f, .3);
   sketch("q3", "skP"); arrow("q3", 668, 360, 806, 440, {seed: 107, bend: -.12});
   ell("q3", 880, 485, 200, 110, {seed: 109, stroke: "#7A1424"}); label("q3", 880, 502, "Клод", {size: 56});

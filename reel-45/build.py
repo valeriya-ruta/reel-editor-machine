@@ -121,11 +121,15 @@ t_kont, t_tob = S(u"контенті,", 7.91), S(u"Тобто", 9.46)
 t_zvit, t_anal = S(u"звітність", 10.64), S(u"аналітики", 11.24)
 t_klod, t_zai, t_ni = S(u"Клод", 12.55), S(u"зайшло,", 13.97), S(u"що ні,", 14.59)
 t_dali, t_vch = S(u"і далі", 14.98), S(u"вчиться.", 16.24)
-P.append(u'''<svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
+# her cut-out is a full-frame video over the panel: the layout audit reads it as
+# opaque, so the panel's labels are marked as intentionally layered
+P.append(u'''<div data-layout-allow-occlusion>
+        <svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
         <div id="pm1" class="hid" style="position:absolute; left:436px; top:334px; color:#7A1424">%s</div>
         <div id="pm3" class="hid" style="position:absolute; left:136px; top:655px; color:#7A1424">%s</div>
         <span id="pw" class="chip hid" style="position:absolute; left:766px; top:298px; font-size:34px;
-              padding:10px 18px; gap:10px"><b style="font-weight:700; color:#7A1424">w.</b>Windsor</span>'''
+              padding:10px 18px; gap:10px"><b style="font-weight:700; color:#7A1424">w.</b>Windsor</span>
+        </div>'''
          % (mark("instagram", 52), mark("claude", 50)))
 js(u'''
   sketch("l0", "skP"); ell("l0", 540, 505, 310, 116, {seed: 5});
@@ -222,7 +226,7 @@ BLACKOUT.append((t_blog - 0.05, E(u"підприємниця,", 24.94) + 0.05)) 
 # 5 · BEHIND — «24/7» --------------------------------------------------------
 m0, m1 = t_kom + 0.33, S(u"монтує,", 30.2) - 0.25
 B.append(u'''
-        <div id="bw" class="big hid" style="top:572px; font-size:240px">24/7</div>''')
+        <div id="bw" class="big hid" data-layout-allow-occlusion style="top:572px; font-size:240px">24/7</div>''')
 g.matte("bw", round(m0 - 0.05, 3), round(m1 - m0 + 0.5, 3))
 js(u'''
   rise("#bw", %.3f, 80);
@@ -232,7 +236,8 @@ g.sfx("whoosh-short", m0)
 BLACKOUT.append((t_24 - 0.05, E(u"7,", 28.66) + 0.05))       # «24/7» says it
 
 # 6 · ABOVE — what the team does --------------------------------------------
-t_mn, t_dz, t_ps, t_dal = S(u"монтує,", 30.2), S(u"дизайнить,", 30.62), S(u"пише", 31.16), S(u"так", 32.0)
+t_mn, t_dz, t_ps = S(u"монтує,", 30.2), S(u"дизайнить,", 30.62), S(u"пише", 31.16)
+t_out6 = E(u"сценарії", 31.36) + 0.3     # gone before the CTA pill lands
 t_to = S(u"то", 32.58)
 F.append(u'''
         <div id="b6" class="card hid" style="left:120px; top:300px; width:840px; padding:34px 40px;">
@@ -241,16 +246,15 @@ F.append(u'''
             <span class="chip on hid" id="b6a"><i></i>монтує</span>
             <span class="chip on hid" id="b6b"><i></i>дизайнить</span>
             <span class="chip on hid" id="b6c"><i></i>пише сценарії</span>
-            <span class="chip hid" id="b6d">…</span>
           </div>
         </div>''')
 js(u'''
   rise("#b6", %.3f);
-  pop("#b6a", %.3f); pop("#b6b", %.3f); pop("#b6c", %.3f); pop("#b6d", %.3f);
+  pop("#b6a", %.3f); pop("#b6b", %.3f); pop("#b6c", %.3f);
   sink("#b6", %.3f);
-''' % (m1 - 0.25, t_mn - 0.05, t_dz - 0.05, t_ps - 0.05, t_dal - 0.1, t_to - 0.2))
+''' % (m1 - 0.25, t_mn - 0.05, t_dz - 0.05, t_ps - 0.05, t_out6))
 g.sfx("pop", m1 - 0.25)
-BLACKOUT.append((t_mn - 0.05, E(u"далі,", 32.14) + 0.05))    # the chips say it
+BLACKOUT.append((t_mn - 0.05, E(u"сценарії", 31.36) + 0.05))    # the chips say it
 
 # 7 · ABOVE — CTA pill + pointer --------------------------------------------
 t_pyshy, t_plus2 = S(u"пиши", 32.7), S(u"плюс", 32.96)

@@ -35,10 +35,10 @@ the «+» comes back in «Пиши + у коментарі».
 | 23.4 | above | chips блогерка / СММниця / підприємниця on their words |
 | 25.8 / 26.4 | above | «команда» pill on «таку», white ellipse round it on «оновлювану»; out 27.75 |
 | 27.75 | behind | «24/7», white, 240 px, top 572 — her hair just over its foot (matte 27.67–30.40) |
-| 29.7 | above | card «Команда 24/7»: монтує / дизайнить / пише сценарії / … on their words |
+| 29.7 | above | card «Команда 24/7»: монтує / дизайнить / пише сценарії on their words; out 32.09 |
 | 32.46 | above | CTA pill «Пиши + у коментарі», white arrow + «сюди!» on «плюс» |
 
 Captions: her old word-by-word rail (kit, after her review of 41), ink on the
 panel during the half screen. Sketches over her footage are white (kit); on the
 panel and the card they stay dark/red. Blackout where the graphic says the words:
-«блогерка, СММниця, підприємниця», «24 на 7», «монтує … і так далі», «то пиши плюс у коментарі».
+«блогерка, СММниця, підприємниця», «24 на 7», «монтує, дизайнить, пише сценарії», «то пиши плюс у коментарі».
