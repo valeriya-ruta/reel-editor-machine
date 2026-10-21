@@ -59,7 +59,7 @@ FIX = {
     u"сценарій,": u"сценаріїв,", u"лід": u"лід-магнітів,", u"магнітів,": None,
     u"далі,": u"далі.", (u"тому", 43.9): u"Тому",
     u"посилання...": u"посилання,", u"youtube": u"YouTube", u"коментарі": u"коментарі,",
-    u"посилання.": u"посилання", u"плейліс": u"плейлист", u"вітобі": u"в YouTube.",
+    u"посилання.": u"посилання", u"плейліс": u"плейлист", u"вітобі": u"в Ютубі.",
 }
 CAPS = load_caps(NN, FIX)
 W = Words(CAPS)
@@ -263,7 +263,7 @@ js(u'''
   sketch("s3", "skP"); arrow("s3", 408, 640, 600, 610, {seed: 51, bend: .1}); draw("s3", %.3f, .45);
   sketch("s4", "skP"); box("s4", 620, 420, 370, 300, {seed: 53});
   ln("s4", 700, 680, 960, 680, {seed: 55}); ell("s4", 760, 680, 20, 20, {seed: 57});
-  _ink = SK.s4.ink; _add(SK.s4, SK.s4.rc.path("M652 664 L652 696 L678 680 Z", opt({seed: 59}, 59)));
+  blob("s4", "M652 664 L652 696 L678 680 Z", [652, 664, 26, 32], {seed: 59});
   draw("s4", %.3f, .45);
   sketch("s5", "skP"); box("s5", 705, 450, 200, 190, {seed: 61, r: 20, fill: true}); draw("s5", %.3f, .5);
   sketch("s6", "skP"); label("s6", 805, 800, "новий скіл", {size: 56, color: "#7A1424"}); draw("s6", %.3f);
@@ -352,7 +352,9 @@ F.append(u'''
 js(u'''
   rise("#plc", %.3f); pop("#plk", %.3f);
   pop("#cta", %.3f, .6);
-  sketch("pt", "skF"); arrow("pt", 958, 770, 884, 592, {seed: 71, bend: .12}); draw("pt", %.3f, .45);
+  // the comments are down at the right of the IG rail: the pointer goes DOWN to
+  // them, never up at the pill (her review of 41). Tip left of x 900.
+  sketch("pt", "skF"); arrow("pt", 815, 625, 886, 935, {strokeWidth: 5, seed: 71, bend: -.12}); draw("pt", %.3f, .45);
   tl.to("#plk", {backgroundColor: "#7A1424", borderColor: "#7A1424", color: "#FFFFFF", duration: .25}, %.3f);
   tl.to("#plkt", {color: "#FFFFFF", duration: .25}, %.3f);
   tl.fromTo("#plk", {scale: 1}, X({scale: 1.12, duration: .18, yoyo: true, repeat: 1}), %.3f);

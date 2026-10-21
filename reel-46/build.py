@@ -64,7 +64,23 @@ def split_tokens(caps):
     return out
 
 
-CAPS = split_tokens(load_caps(NN, FIX))
+def spaced(caps, gap=0.10):
+    """gstyle's rail shows every word for at least 0.10 s, so a word starting
+    sooner than that after the last one would sit on top of it for 1-3 frames
+    («що в», «до вас»…): its start waits out the last word's 0.10 s."""
+    out = []
+    for c in caps:
+        c = dict(c)
+        c["s"] = TIMES.get((c["w"], round(c["s"], 1)), c["s"])
+        if out and c["s"] < out[-1]["s"] + gap - 1e-6:
+            c["s"] = round(out[-1]["s"] + gap, 3)
+            c["e"] = round(max(c["e"], c["s"] + 0.05), 3)
+        out.append(c)
+    return out
+
+
+TIMES = {(u"І", 19.2): 19.113}     # «І вони,» — whisper's own time for «І»
+CAPS = spaced(split_tokens(load_caps(NN, FIX)))
 W = Words(CAPS)
 S, E = W.s, W.e
 

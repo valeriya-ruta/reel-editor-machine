@@ -1,7 +1,10 @@
 # Reel 46 — «Два акаунти, одна система» (posts 2026-10-21)
 
 Plate 1982 frames → DUR 66.050. Look: STYLE.md §00 (Google style + Excalidraw), with her
-review of reel 41: word-by-word captions, white calm sketches over the footage, white behind-me words.
+review of reel 41: word-by-word captions (g.chunks → g.document's old rail, no pills); over the footage
+no colours of our own — the kit makes closed shapes white stickers and lines/labels ink with a white halo
+(rings round a pill are `fill: false` outlines); white behind-me words; arrows ≥ 150 px; the comment
+pointer points down. No full screen in this reel.
 
 ## The chain
 
@@ -23,13 +26,13 @@ tires, «Став + в коментарі».
 | 01.0 | above | two IG account cards rise on «два» |
 | 02.1 | above | titles «особистий» / «професійний» land on their words; chips «свій» / «школа» |
 | 05.5 | above | cards shrink up; «AI-система» pill pops under them on «AI-систему», two arrows in |
-| 08.6 | above | circle round the pill on «одна»; split line + «?» on «дві окремі?» (white sketch) |
+| 08.6 | above | ring (outline, kit halo) round the pill on «одна»; split line + «?» on «чи дві окремі?»; cards + in-arrows leave as the panel comes |
 | 11.0–20.4 | half | panel: «особистий» | «школа» headers on «дві окремі», red wall; headers underlined on «кожен»; rows скіл сценариста / tone of voice / дизайн-система on their words; ⇄ arrows across the wall on «вони… перекликатися» |
 | 21.3 | above | chips особистий / школа, two posts pop on «вирішуємо», fly apart on «куди», chips fill on «постити» |
 | 25.8–28.0 | behind | «дві / окремі» big behind her |
 | 28.0–38.3 | half | «рутина» loop; особистий + школа → «один аналіз» (struck out on «але»); columns школа / особистий блог fill with people (ink / red); ≠ on «різні люди»; the wall on «не перетинаються» |
 | 39.5 | above | the account cards return on «декілька», tilt apart on «різних» |
 | 41.8 | above | setup checklist (особистий) rises; on «плюс» a second (школа) slides up from behind it; chips + робота / + час / + гроші on their words |
-| 51.0 | above | one blog card on «Блогери»; chips особисте, професійне, «+» on «одному»; «особистий бренд» lands; red circle on «мікс» |
+| 51.0 | above | one blog card on «Блогери»; chips особисте, професійне, «+» on «одному»; «особистий бренд» lands; ring (outline, kit halo) on «мікс» |
 | 57.2 | above | pill «дві окремі системи» struck out on «не стосується» |
-| 59.2 | above (CTA) | chips блогерка / СММниця / підприємниця; three people on «команду», a full battery on «ніколи не втомлюється»; red pill «Став + в коментарі» + a pointer (white sketch) |
+| 59.2 | above (CTA) | chips блогерка / СММниця / підприємиця; three people on «команду», a battery on «ніколи», its charge bars fill on «не втомлюється»; red pill «Став + в коментарі» on «то став» + «сюди!» pointer DOWN to the lower right (tip x 880, y 960) |
