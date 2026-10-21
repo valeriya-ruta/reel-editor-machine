@@ -116,8 +116,8 @@ EXTRA_CSS = u"""
 t_fomo, t_sht = S(u"фомо", 0.75), S(u"цей штучний", 1.45)
 b_out = S(u"що", 3.09) - 0.2
 B.append(u'''
-        <div id="bw1" class="big hid" style="top:360px; font-size:240px">фомо</div>
-        <div id="bw2" class="big hid" style="top:576px; font-size:240px">на ШІ</div>''')
+        <div id="bw1" class="big hid" data-layout-allow-overlap style="top:360px; font-size:240px">фомо</div>
+        <div id="bw2" class="big hid" data-layout-allow-overlap style="top:576px; font-size:240px">на ШІ</div>''')
 g.matte("fomo", 0.5, round(b_out + 0.45 - 0.5, 3))
 js(u'''
   rise("#bw1", %.3f); rise("#bw2", %.3f);
