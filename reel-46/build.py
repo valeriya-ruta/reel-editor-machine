@@ -188,23 +188,24 @@ t_voni = S(u"І", 19.19)
 ROWS = [("r1", 480, u"скіл сценариста", t_skil - 0.45), ("r2", 585, u"tone of voice", t_tov - 0.3),
         ("r3", 690, u"дизайн-система", t_diz - 0.3)]
 rows_js = u"".join(u'''
-  sketch("%sL", "skP"); box("%sL", 110, %d, 360, 85, {seed: %d}); label("%sL", 290, %d, "%s", {size: 42}); draw("%sL", %.3f, .5);
-  sketch("%sR", "skP"); box("%sR", 610, %d, 360, 85, {seed: %d}); label("%sR", 790, %d, "%s", {size: 42}); draw("%sR", %.3f, .5);'''
+  sketch("%sL", "skP"); box("%sL", 100, %d, 350, 85, {seed: %d}); label("%sL", 275, %d, "%s", {size: 42}); draw("%sL", %.3f, .5);
+  sketch("%sR", "skP"); box("%sR", 630, %d, 350, 85, {seed: %d}); label("%sR", 805, %d, "%s", {size: 42}); draw("%sR", %.3f, .5);'''
                    % (n, n, y, 30 + i * 4, n, y + 56, t, n, a, n, n, y, 32 + i * 4, n, y + 56, t, n, a + 0.3)
                    for i, (n, y, t, a) in enumerate(ROWS))
 names1 = ["hL", "hR", "wall", "dn"] + [n + s for n, _, _, _ in ROWS for s in "LR"] + ["ech"]
 js(u'''
-  sketch("hL", "skP"); box("hL", 110, 300, 360, 100, {seed: 23, fill: true}); label("hL", 290, 366, "особистий", {size: 50});
+  sketch("hL", "skP"); box("hL", 100, 300, 350, 100, {seed: 23, fill: true}); label("hL", 275, 366, "особистий", {size: 50});
   draw("hL", %.3f, .55);
-  sketch("hR", "skP"); box("hR", 610, 300, 360, 100, {seed: 25, fill: true}); label("hR", 790, 366, "школа", {size: 50});
+  sketch("hR", "skP"); box("hR", 630, 300, 350, 100, {seed: 25, fill: true}); label("hR", 805, 366, "школа", {size: 50});
   draw("hR", %.3f, .55);
   sketch("wall", "skP"); ln("wall", 540, 292, 538, 785, {stroke: "#7A1424", strokeWidth: 6, seed: 27});
   draw("wall", %.3f, .55);
-  sketch("dn", "skP"); under("dn", 200, 382, 380, {stroke: "#7A1424", seed: 28}); under("dn", 720, 382, 860, {stroke: "#7A1424", seed: 29});
+  sketch("dn", "skP"); under("dn", 185, 382, 365, {stroke: "#7A1424", seed: 28}); under("dn", 735, 382, 875, {stroke: "#7A1424", seed: 29});
   draw("dn", %.3f, .35);
 %s
-  sketch("ech", "skP"); arrow("ech", 420, 625, 660, 625, {stroke: "#7A1424", strokeWidth: 5, seed: 41, bend: .2});
-  arrow("ech", 660, 662, 420, 662, {stroke: "#7A1424", strokeWidth: 5, seed: 43, bend: .2});
+  // ⇄ across the wall, in the 180 px gap between the columns, box edge to box edge
+  sketch("ech", "skP"); arrow("ech", 448, 616, 632, 616, {stroke: "#7A1424", strokeWidth: 5, seed: 41, bend: .2});
+  arrow("ech", 632, 670, 448, 670, {stroke: "#7A1424", strokeWidth: 5, seed: 43, bend: .2});
   draw("ech", %.3f, .45);
   %s
 ''' % (t_dv2 - 0.1, t_ok2 - 0.1, t_sys2 - 0.25, t_kozh - 0.15, rows_js, t_voni - 0.05,

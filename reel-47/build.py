@@ -322,7 +322,7 @@ F.append(u'''
           <span class="line" style="margin-top:16px; width:86%%"></span>
           <span class="line" style="margin-top:16px; width:60%%"></span>
         </div>
-        <div id="b8s" class="pill hid" style="left:390px; top:590px; font-size:34px; padding:12px 28px; transform:rotate(-5deg)">оновлено</div>
+        <div id="b8s" class="pill hid" style="left:440px; top:596px; font-size:34px; padding:12px 28px; transform:rotate(-5deg)">оновлено</div>
         <div id="b8c" class="chip hid" style="position:absolute; left:724px; top:436px; color:#7A1424">%s<span style="color:#241919">Claude</span></div>''' % (mark("claude", 40), mark("claude", 36)))
 js(u'''
   rise("#b8", %.3f);
@@ -423,7 +423,7 @@ for t in (t_teb + 0.05, t_kla + 0.05, t_etap - 0.5, t_stare):
 
 # 11 · ABOVE — CTA: save money, build it yourself, the lifehack, subscribe -----
 # the last clip (85.97-) is a hard punch-in: her hair top rises to y ≈ 505, so
-# the lifehack and the red pill sit in y 300-530; the pointer runs down the left
+# the lifehack and the red pill sit in y 280-495; the pointer runs down the left
 t_zek, t_hro = S(u"зекономити", 80.47), S(u"грошей", 81.71)
 t_ai, t_sam = S(u"AI-систему", 82.93), S(u"самостійно,", 83.55)
 t_lh, t_obov = S(u"лайфхаком", 85.38), S(u"обовʼязково", 86.31)
@@ -433,10 +433,10 @@ F.append(u'''
           <span class="chip hid" id="b11a"><i></i>зекономити</span>
           <span class="chip hid" id="b11b"><i></i>AI-система самостійно</span>
         </div>
-        <div id="b11l" class="hid" style="position:absolute; left:0; top:296px; width:1080px; display:flex; justify-content:center">
-          <span class="pill light" style="position:relative; font-size:42px; padding:20px 42px">лайфхак:
+        <div id="b11l" class="hid" style="position:absolute; left:0; top:280px; width:1080px; display:flex; justify-content:center">
+          <span class="pill light" style="position:relative; font-size:38px; padding:18px 38px">лайфхак:
           <span style="color:#7A1424; display:inline-flex; align-items:center; gap:10px">+ %s<b style="font-weight:700">Notion</b></span></span></div>
-        <div id="b11cta" class="hid" style="position:absolute; left:0; top:408px; width:1080px; display:flex; justify-content:center">
+        <div id="b11cta" class="hid" style="position:absolute; left:0; top:378px; width:1080px; display:flex; justify-content:center">
           <span class="pill" style="position:relative; font-size:50px; padding:28px 54px">Підпишись</span></div>''' % mark("notion", 40))
 js(u'''
   fadein("#b11", %.3f, .01); pop("#b11a", %.3f);
@@ -449,7 +449,7 @@ js(u'''
   // her CTA is «підпишись»: IG's Follow sits by her username, bottom left, so the
   // pointer goes DOWN to it past her hair, over the shelves — never up at the
   // pill (her review of 41: "in general we point down"). Kit ink + halo.
-  sketch("a11", "skF"); arrow("a11", 300, 560, 190, 980, {strokeWidth: 5, seed: 133, bend: -.12});
+  sketch("a11", "skF"); arrow("a11", 300, 530, 190, 980, {strokeWidth: 5, seed: 133, bend: -.12});
   draw("a11", %.3f, .45);
 ''' % (t_zek - 0.05, t_zek, t_hro - 0.1, t_sam - 0.1, t_lh - 0.3, t_lh - 0.3, t_lh, t_obov - 0.1,
        S(u"підпишись.", 86.8) - 0.45))

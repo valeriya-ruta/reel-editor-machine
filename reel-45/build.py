@@ -214,14 +214,14 @@ F.append(u'''
           <span class="chip hid" id="b4c"><i></i>підприємниця</span>
         </div>
         <div style="position:absolute; left:0; top:452px; width:1080px; display:flex; justify-content:center">
-          <div id="b4t" class="pill light hid" style="position:relative">оновлювана команда</div>
+          <div id="b4t" class="pill light hid" style="position:relative; font-size:42px; padding:26px 44px">оновлювана команда</div>
         </div>''')
 # the pill lands ON «оновлювану» (not 1.6 s early on «таку»); the loop from the
 # panel comes back as a ring round it, closing as she says «команду». An open
 # ring (no arrowhead), not a sticker: a white fill would cover the pill.
 t_b4out = t_kom + 0.45
 SKF.append(u'''
-  sketch("lp", "skF"); ell("lp", 540, 510, 660, 176, {strokeWidth: 5, seed: 43, fill: false});
+  sketch("lp", "skF"); ell("lp", 540, 504, 740, 200, {strokeWidth: 5, seed: 43, fill: false});
   draw("lp", %.3f, .6);
   erase("lp", %.3f);''' % (t_onov + 0.2, t_b4out))
 js(u'''
@@ -235,7 +235,7 @@ BLACKOUT.append((t_blog - 0.05, E(u"підприємниця,", 24.94) + 0.05)) 
 # 5 · BEHIND — «24/7» --------------------------------------------------------
 m0, m1 = t_kom + 0.33, S(u"монтує,", 30.2) - 0.25
 B.append(u'''
-        <div id="bw" class="big hid" data-layout-allow-occlusion style="top:572px; font-size:240px">24/7</div>''')
+        <div id="bw" class="big hid" data-layout-allow-occlusion style="top:548px; font-size:240px">24/7</div>''')
 g.matte("bw", round(m0 - 0.05, 3), round(m1 - m0 + 0.5, 3))
 js(u'''
   rise("#bw", %.3f, 80);

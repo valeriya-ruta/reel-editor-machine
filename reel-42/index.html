@@ -137,6 +137,7 @@
     .btn.ok { background: var(--primary); color: #fff;
               box-shadow: 0 1px 3px rgba(36,25,25,.12), 0 10px 30px rgba(122,20,36,.22); }
     .btn.no { background: #fff; color: var(--on-surface); border: 3px solid var(--outline-var); }
+    .btn.no.on { border-color: var(--primary); color: var(--primary); }
 
     </style>
   </head>
@@ -226,8 +227,8 @@
          <span style="position:absolute; left:16px; right:16px; bottom:14px; height:44px; border-radius:12px; background:#FFF0F0"></span><svg width="40" height="40" viewBox="0 0 72 72" style="position:absolute;right:20px;bottom:16px"><path d="M24 16 L56 36 L24 56 Z" fill="#7A1424"/></svg>
        </span></div>
           <div class="row" style="gap:20px; margin-top:22px; justify-content:center">
-            <span class="btn ok hid" id="rok"><svg width="34" height="34" viewBox="0 0 34 34"><path d="M6 18 L14 26 L29 8"
-              fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>окей</span>
+            <span class="btn no hid" id="rok"><svg width="34" height="34" viewBox="0 0 34 34"><path d="M6 18 L14 26 L29 8"
+              fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>окей</span>
             <span class="btn no hid" id="rno">не окей</span>
           </div>
         </div>
@@ -246,8 +247,6 @@
       <div class="wc" id="w1">НАЛАШТОВУЮ</div>
       <div class="wc" id="w2">АІ</div>
       <div class="wc" id="w3">СИСТЕМУ</div>
-      <div class="wc" id="w4">ПІД</div>
-      <div class="wc" id="w5">КЛЮЧ,</div>
       <div class="wc" id="w6">І</div>
       <div class="wc" id="w7">ОСЬ</div>
       <div class="wc" id="w8">ЩО МЕНІ</div>
@@ -552,8 +551,6 @@
   tl.set("#w1", {autoAlpha: 1}, 0.330); tl.set("#w1", {autoAlpha: 0}, 0.905);
   tl.set("#w2", {autoAlpha: 1}, 0.990); tl.set("#w2", {autoAlpha: 0}, 1.090);
   tl.set("#w3", {autoAlpha: 1}, 1.095); tl.set("#w3", {autoAlpha: 0}, 1.377);
-  tl.set("#w4", {autoAlpha: 1}, 1.462); tl.set("#w4", {autoAlpha: 0}, 1.562);
-  tl.set("#w5", {autoAlpha: 1}, 1.620); tl.set("#w5", {autoAlpha: 0}, 1.965);
   tl.set("#w6", {autoAlpha: 1}, 2.050); tl.set("#w6", {autoAlpha: 0}, 2.150);
   tl.set("#w7", {autoAlpha: 1}, 2.170); tl.set("#w7", {autoAlpha: 0}, 2.270);
   tl.set("#w8", {autoAlpha: 1}, 2.350); tl.set("#w8", {autoAlpha: 0}, 2.525);
@@ -674,6 +671,8 @@
   tl.set("#w130", {autoAlpha: 1}, 43.583); tl.set("#w130", {autoAlpha: 0}, 44.078);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 45.463);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 1.212);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 2.015);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 26.413);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 38.513);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 40.615);
@@ -693,7 +692,7 @@
   tl.to("#v3s0 i, #v3s1 i, #v3s2 i", {scale: 0, duration: .3, ease: "power2.in", stagger: .08}, 12.124);
   tl.to("#v3s0 i, #v3s1 i, #v3s2 i", {scale: 1, duration: .5, ease: POP, stagger: .15}, 13.224); tl.set("#r2k", {className: "check on"}, 13.624); pop("#r2k", 13.624, .45);
   out("#r3g", 14.159); rise("#r3t", 14.209, 20); pop("#v4a", 14.699); pop("#v4b", 14.899); pop("#v4c", 15.149); tl.set("#r3k", {className: "check on"}, 16.019); pop("#r3k", 16.019, .45);
-  out("#r4g", 18.048); rise("#r4t", 18.098, 20); pop("#v5a", 18.898); tl.set("#r4k", {className: "check on"}, 19.148); pop("#r4k", 19.148, .45);
+  out("#r4g", 18.048); rise("#r4t", 18.098, 20); pop("#v5a", 18.498); tl.set("#r4k", {className: "check on"}, 19.148); pop("#r4k", 19.148, .45);
   sink("#ckl", 19.704);
 
 
@@ -704,7 +703,7 @@
   sketch("va", "skF"); arrow("va", 500, 508, 682, 508, {strokeWidth: 5, seed: 5, bend: .14});
   draw("va", 22.454, .45);
   pop("#vs", 22.954);
-  pop("#vsw", 24.394, .45);
+  pop("#vsw", 23.934, .45);
   sink("#vc", 24.935); erase("va", 24.935);
 
 
@@ -742,7 +741,10 @@
 
   rise("#rc", 39.015);
   pop("#rt0", 39.725); pop("#rt1", 39.875); pop("#rt2", 40.025); pop("#rt3", 40.175);
-  pop("#rok", 40.815); pop("#rno", 41.375);
+  pop("#rok", 40.335); pop("#rno", 40.485);
+  // pressed on its word: lights up and gives a little spring, no blink
+  tl.set("#rok", {className: "btn ok"}, 40.815); tl.fromTo("#rok", {scale: .82}, X({scale: 1, duration: .45, ease: POP}), 40.815);
+  tl.set("#rno", {className: "btn no on"}, 41.375); tl.fromTo("#rno", {scale: .82}, X({scale: 1, duration: .45, ease: POP}), 41.375);
   sink("#rc", 41.833);
 
 

@@ -169,17 +169,16 @@
           <span class="check" id="t2c"></span><span class="line" style="width:44px"></span>
         </div>
 
-        <div id="c1" style="position:absolute; left:90px; width:900px; top:300px; display:flex; gap:14px;
+        <div id="c1" style="position:absolute; left:90px; width:900px; top:290px; display:flex; gap:14px;
              justify-content:center">
           <span class="chip hid" id="c1a"><i></i>блогерка</span>
           <span class="chip hid" id="c1b"><i></i>СММниця</span>
           <span class="chip hid" id="c1c"><i></i>підприємиця</span>
         </div>
-        <div style="position:absolute; left:0; width:1080px; top:448px; display:flex; justify-content:center">
-          <span id="c24" class="pill light hid" style="position:relative; font-weight:700; font-size:64px;
-                padding:12px 40px; color:#7A1424">24/7</span></div>
-        <div style="position:absolute; left:0; width:1080px; top:574px; display:flex; justify-content:center">
-          <span id="cta" class="pill hid" style="position:relative; padding:24px 50px">Став + в коментарі</span></div>
+        <div style="position:absolute; left:0; width:1080px; top:436px; display:flex; justify-content:center">
+          <span id="c24" class="num hid" style="position:relative; font-size:92px">24/7</span></div>
+        <div style="position:absolute; left:0; width:1080px; top:572px; display:flex; justify-content:center">
+          <span id="cta" class="pill hid" style="position:relative; padding:22px 50px">Став + в коментарі</span></div>
       </div>
       <div id="cover">
 
@@ -256,7 +255,6 @@
       <div class="wc" id="w67">ХМАРНУ</div>
       <div class="wc" id="w68">КОМАНДУ</div>
       <div class="wc" id="w69">24/7,</div>
-      <div class="wc" id="w70">ТО</div>
       </div>
 
       <audio id="vo" src="assets/base.mp4"
@@ -509,18 +507,15 @@
   tl.set("#w67", {autoAlpha: 1}, 23.377); tl.set("#w67", {autoAlpha: 0}, 23.872);
   tl.set("#w68", {autoAlpha: 1}, 23.957); tl.set("#w68", {autoAlpha: 0}, 24.252);
   tl.set("#w69", {autoAlpha: 1}, 24.337); tl.set("#w69", {autoAlpha: 0}, 25.192);
-  tl.set("#w70", {autoAlpha: 1}, 25.277); tl.set("#w70", {autoAlpha: 0}, 25.377);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.130);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 26.577);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 11.869);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 20.019);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 25.147);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 25.027);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 26.650);
 
 
-  function cloud(name, d, o) { _ink = (o && o.stroke) || SK[name].ink;
-    _add(SK[name], SK[name].rc.path(d, opt(o, (o && o.seed) || 41))); }
-  function poly(name, pts, o) { _ink = (o && o.stroke) || SK[name].ink;
+  function poly(name, pts, o) { _ink = SK[name].ink;
     _add(SK[name], SK[name].rc.linearPath(pts, opt(o, (o && o.seed) || 45))); }
 
 
@@ -528,7 +523,7 @@
   gsap.set("#lapf", {scaleX: 0, transformOrigin: "0% 50%"});
   rise("#b1", 0.300);
   pop("#b1x", 0.910);
-  sketch("cl", "skW"); cloud("cl", "M260 661 C140 661, 124 522, 252 506 C220 388, 412 346, 476 405 C524 270, 764 279, 780 396 C924 371, 972 497, 876 539 C972 590, 924 674, 820 661 Z", {seed: 41});
+  sketch("cl", "skW"); blob("cl", "M260 661 C140 661, 124 522, 252 506 C220 388, 412 346, 476 405 C524 270, 764 279, 780 396 C924 371, 972 497, 876 539 C972 590, 924 674, 820 661 Z", [140, 262, 800, 420], {seed: 41});
   draw("cl", 3.980, .7);
   sink("#b1, #b1x", 5.097);
 
@@ -543,7 +538,7 @@
   tl.to("#t2", {keyframes: [{x: 245, y: -110, duration: .32, ease: "power1.out"},
                             {x: 487, y: 20, duration: .33, ease: "power1.in"}]}, 6.002);
   sketch("phl", "skF"); label("phl", 220, 676, "телефон", {size: 42});
-  draw("phl", 6.652);
+  draw("phl", 6.442);
   erase("ph", 7.297); erase("ar", 7.297); erase("phl", 7.297);
 
 
@@ -553,10 +548,13 @@
   pop("#laph", 7.737, .5);
   tl.set("#t2c", {className: "check on"}, 8.017); pop("#t2c", 8.017, .45);
   fadein("#lapp", 8.357, .3);
-  tl.to("#lapf", {scaleX: 1, duration: 2.477, ease: "power1.inOut"}, 8.477);
-  sketch("cl2", "skW"); cloud("cl2", "M260 661 C140 661, 124 522, 252 506 C220 388, 412 346, 476 405 C524 270, 764 279, 780 396 C924 371, 972 497, 876 539 C972 590, 924 674, 820 661 Z", {seed: 53, strokeWidth: 6});
+  tl.to("#lapf", {scaleX: 1, duration: 2.292, ease: "power1.inOut"}, 8.477);
+  // a second outline on «хмарному»: it lies on the white cloud sticker drawn
+  // above, so it stays an outline (fill: false) instead of a second sticker
+  // that would paint over the first outline
+  sketch("cl2", "skW"); blob("cl2", "M260 661 C140 661, 124 522, 252 506 C220 388, 412 346, 476 405 C524 270, 764 279, 780 396 C924 371, 972 497, 876 539 C972 590, 924 674, 820 661 Z", [140, 262, 800, 420], {seed: 53, strokeWidth: 6, fill: false});
   draw("cl2", 9.297, .6);
-  tl.to("#w1, #t2", {autoAlpha: 0, duration: .3, ease: "power2.in"}, 11.154);
+  tl.to("#w1, #t2", {autoAlpha: 0, duration: .3, ease: "power2.in"}, 10.969);
 
 
   sketch("a_ph", "skP"); box("a_ph", 95, 400, 130, 250, {seed: 61, r: 26});
@@ -569,7 +567,7 @@
   sketch("a_ftl", "skP"); label("a_ftl", 160, 722, "фото", {size: 46}); draw("a_ftl", 12.429);
   sketch("a_a1", "skP"); arrow("a_a1", 238, 528, 396, 518, {seed: 67});
   draw("a_a1", 12.639, .35);
-  sketch("a_cl", "skP"); cloud("a_cl", "M437 646 C392 646, 386 554, 434 542 C422 464, 494 436, 518 475 C536 386, 626 391, 632 470 C686 453, 704 537, 668 565 C704 598, 686 654, 647 646 Z", {seed: 68});
+  sketch("a_cl", "skP"); blob("a_cl", "M437 646 C392 646, 386 554, 434 542 C422 464, 494 436, 518 475 C536 386, 626 391, 632 470 C686 453, 704 537, 668 565 C704 598, 686 654, 647 646 Z", [392, 380, 300, 280], {seed: 68});
   draw("a_cl", 12.739, .55);
   pop("#pm", 13.189, .5);
   sketch("a_cll", "skP"); label("a_cll", 545, 622, "Claude", {size: 46}); draw("a_cll", 13.289);
@@ -595,7 +593,7 @@
   sketch("b_vdl", "skP"); label("b_vdl", 160, 722, "відео", {size: 46}); draw("b_vdl", 16.944);
   sketch("b_a1", "skP"); arrow("b_a1", 238, 528, 396, 518, {seed: 83});
   draw("b_a1", 16.994, .35);
-  sketch("b_clr", "skP"); cloud("b_clr", "M437 646 C392 646, 386 554, 434 542 C422 464, 494 436, 518 475 C536 386, 626 391, 632 470 C686 453, 704 537, 668 565 C704 598, 686 654, 647 646 Z", {seed: 84, stroke: "#7A1424", strokeWidth: 5.5});
+  sketch("b_clr", "skP"); blob("b_clr", "M437 646 C392 646, 386 554, 434 542 C422 464, 494 436, 518 475 C536 386, 626 391, 632 470 C686 453, 704 537, 668 565 C704 598, 686 654, 647 646 Z", [392, 380, 300, 280], {seed: 84, stroke: "#7A1424", strokeWidth: 5.5});
   draw("b_clr", 17.884, .5);
   sketch("b_lp", "skP"); box("b_lp", 860, 420, 110, 84, {seed: 85, r: 12}); box("b_lp", 842, 512, 146, 16, {seed: 86, r: 8});
   draw("b_lp", 18.716, .4);
@@ -607,13 +605,15 @@
 
 
   pop("#c1a", 20.817); pop("#c1b", 21.317); pop("#c1c", 21.997);
-  sketch("cc", "skF"); cloud("cc", "M386 560 C320 560, 311 490, 382 482 C364 423, 470 402, 505 431 C531 364, 663 368, 672 427 C751 415, 778 478, 725 499 C778 524, 751 566, 694 560 Z", {seed: 91});
+  sketch("cc", "skF"); blob("cc", "M400 552 C340 552, 332 490, 396 482 C380 429, 476 410, 508 437 C532 376, 652 380, 660 433 C732 421, 756 478, 708 497 C756 520, 732 558, 680 552 Z", [340, 372, 400, 190], {seed: 91});
   draw("cc", 22.927, .7);
   pop("#c24", 24.337);
   pop("#cta", 25.397, .6);
-  sketch("pt", "skF"); arrow("pt", 950, 850, 845, 668, {strokeWidth: 5, seed: 97, bend: .2});
-  label("pt", 915, 912, "сюди!", {size: 50});
-  draw("pt", 25.947, .5);
+  // the comments button is down the IG rail on the right: the pointer goes DOWN
+  // toward the lower right, tip left of x 900 — never up at the pill (her review of 41)
+  sketch("pt", "skF"); label("pt", 838, 748, "сюди!", {size: 50});
+  arrow("pt", 842, 778, 882, 986, {strokeWidth: 5, seed: 97, bend: -.22});
+  draw("pt", 25.497, .5);
 
   half(11.619, 19.619);
 

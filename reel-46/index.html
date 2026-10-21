@@ -807,23 +807,24 @@
   out("#sys", 11.773); erase("c3", 11.773); erase("q3", 11.773);
 
 
-  sketch("hL", "skP"); box("hL", 110, 300, 360, 100, {seed: 23, fill: true}); label("hL", 290, 366, "особистий", {size: 50});
+  sketch("hL", "skP"); box("hL", 100, 300, 350, 100, {seed: 23, fill: true}); label("hL", 275, 366, "особистий", {size: 50});
   draw("hL", 11.973, .55);
-  sketch("hR", "skP"); box("hR", 610, 300, 360, 100, {seed: 25, fill: true}); label("hR", 790, 366, "школа", {size: 50});
+  sketch("hR", "skP"); box("hR", 630, 300, 350, 100, {seed: 25, fill: true}); label("hR", 805, 366, "школа", {size: 50});
   draw("hR", 12.353, .55);
   sketch("wall", "skP"); ln("wall", 540, 292, 538, 785, {stroke: "#7A1424", strokeWidth: 6, seed: 27});
   draw("wall", 12.623, .55);
-  sketch("dn", "skP"); under("dn", 200, 382, 380, {stroke: "#7A1424", seed: 28}); under("dn", 720, 382, 860, {stroke: "#7A1424", seed: 29});
+  sketch("dn", "skP"); under("dn", 185, 382, 365, {stroke: "#7A1424", seed: 28}); under("dn", 735, 382, 875, {stroke: "#7A1424", seed: 29});
   draw("dn", 13.673, .35);
 
-  sketch("r1L", "skP"); box("r1L", 110, 480, 360, 85, {seed: 30}); label("r1L", 290, 536, "скіл сценариста", {size: 42}); draw("r1L", 15.053, .5);
-  sketch("r1R", "skP"); box("r1R", 610, 480, 360, 85, {seed: 32}); label("r1R", 790, 536, "скіл сценариста", {size: 42}); draw("r1R", 15.353, .5);
-  sketch("r2L", "skP"); box("r2L", 110, 585, 360, 85, {seed: 34}); label("r2L", 290, 641, "tone of voice", {size: 42}); draw("r2L", 16.613, .5);
-  sketch("r2R", "skP"); box("r2R", 610, 585, 360, 85, {seed: 36}); label("r2R", 790, 641, "tone of voice", {size: 42}); draw("r2R", 16.913, .5);
-  sketch("r3L", "skP"); box("r3L", 110, 690, 360, 85, {seed: 38}); label("r3L", 290, 746, "дизайн-система", {size: 42}); draw("r3L", 17.633, .5);
-  sketch("r3R", "skP"); box("r3R", 610, 690, 360, 85, {seed: 40}); label("r3R", 790, 746, "дизайн-система", {size: 42}); draw("r3R", 17.933, .5);
-  sketch("ech", "skP"); arrow("ech", 420, 625, 660, 625, {stroke: "#7A1424", strokeWidth: 5, seed: 41, bend: .2});
-  arrow("ech", 660, 662, 420, 662, {stroke: "#7A1424", strokeWidth: 5, seed: 43, bend: .2});
+  sketch("r1L", "skP"); box("r1L", 100, 480, 350, 85, {seed: 30}); label("r1L", 275, 536, "скіл сценариста", {size: 42}); draw("r1L", 15.053, .5);
+  sketch("r1R", "skP"); box("r1R", 630, 480, 350, 85, {seed: 32}); label("r1R", 805, 536, "скіл сценариста", {size: 42}); draw("r1R", 15.353, .5);
+  sketch("r2L", "skP"); box("r2L", 100, 585, 350, 85, {seed: 34}); label("r2L", 275, 641, "tone of voice", {size: 42}); draw("r2L", 16.613, .5);
+  sketch("r2R", "skP"); box("r2R", 630, 585, 350, 85, {seed: 36}); label("r2R", 805, 641, "tone of voice", {size: 42}); draw("r2R", 16.913, .5);
+  sketch("r3L", "skP"); box("r3L", 100, 690, 350, 85, {seed: 38}); label("r3L", 275, 746, "дизайн-система", {size: 42}); draw("r3L", 17.633, .5);
+  sketch("r3R", "skP"); box("r3R", 630, 690, 350, 85, {seed: 40}); label("r3R", 805, 746, "дизайн-система", {size: 42}); draw("r3R", 17.933, .5);
+  // ⇄ across the wall, in the 180 px gap between the columns, box edge to box edge
+  sketch("ech", "skP"); arrow("ech", 448, 616, 632, 616, {stroke: "#7A1424", strokeWidth: 5, seed: 41, bend: .2});
+  arrow("ech", 632, 670, 448, 670, {stroke: "#7A1424", strokeWidth: 5, seed: 43, bend: .2});
   draw("ech", 19.063, .45);
   erase("hL", 20.437); erase("hR", 20.437); erase("wall", 20.437); erase("dn", 20.437); erase("r1L", 20.437); erase("r1R", 20.437); erase("r2L", 20.437); erase("r2R", 20.437); erase("r3L", 20.437); erase("r3R", 20.437); erase("ech", 20.437);
 

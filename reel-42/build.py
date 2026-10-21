@@ -83,6 +83,7 @@ EXTRA_CSS = u"""
     .btn.ok { background: var(--primary); color: #fff;
               box-shadow: 0 1px 3px rgba(36,25,25,.12), 0 10px 30px rgba(122,20,36,.22); }
     .btn.no { background: #fff; color: var(--on-surface); border: 3px solid var(--outline-var); }
+    .btn.no.on { border-color: var(--primary); color: var(--primary); }
 """
 
 KEY = (u'<svg width="44" height="44" viewBox="0 0 44 44"><circle cx="14" cy="22" r="9" fill="none" '
@@ -121,6 +122,7 @@ js(u'''
   sink("#bw1, #bw2", %.3f);
 ''' % (t_pid - 0.15, t_kl, b_out))
 g.sfx("whoosh-short", t_pid - 0.2)
+BLACKOUT.append((t_pid - 0.05, E(u"ключ,", 1.62) + 0.05))   # the big words say it (as r41's «дизайн-система»)
 
 # 2 · ABOVE — the checklist fills in -------------------------------------------
 t_dos, t_ak = S(u"доступи", 5.33), S(u"до акаунтів.", 5.88)
@@ -183,7 +185,7 @@ js(u'''
        item(1, t_bl), t_dyv - 0.1, t_dyv + 0.05, t_dyv + 0.2, t_pod, tick(1, t_pod + 0.4),
        item(2, t_shr), t_shr + 0.2, t_kol + 0.05, t_kol + 0.2, t_kol + 0.35, t_nem, t_zb, tick(2, t_raz),
        item(3, t_pry), t_diz, t_diz + 0.2, t_mon + 0.05, tick(3, t_pod2),
-       item(4, t_prav), t_sc - 0.25, tick(4, t_sc),
+       item(4, t_prav), t_prav + 0.35, tick(4, t_sc),
        ck_out))
 g.sfx("pop", t_pr - 0.2)
 for t in (t_bl, t_shr, t_pry, t_prav):
@@ -222,8 +224,8 @@ js(u'''
   pop("#vs", %.3f);
   pop("#vsw", %.3f, .45);
   sink("#vc", %.3f); erase("va", %.3f);
-''' % (ck_out + 0.2, t_gol - 0.1, t_poya - 0.1, t_dod - 0.5, t_dod, t_skil, v_out, v_out))
-g.sfx("pop", t_gol - 0.1); g.sfx("pop", t_dod); g.sfx("click-soft", t_skil)
+''' % (ck_out + 0.2, t_gol - 0.1, t_poya - 0.1, t_dod - 0.5, t_dod, t_potr - 0.1, v_out, v_out))
+g.sfx("pop", t_gol - 0.1); g.sfx("pop", t_dod); g.sfx("click-soft", t_potr - 0.1)
 
 # 4 · HALF — ти: the core; я: everything else in the system ---------------------
 h0 = S(u"сама", 26.56) - 0.4
@@ -282,15 +284,15 @@ BLACKOUT.append((t_st - 0.05, t_ts - 0.05))         # the system's own labels sa
 
 # 5 · ABOVE — the result, and the client's two buttons -------------------------
 t_pod3, t_rez = S(u"подивитись", 39.27), S(u"результат", 39.83)
-t_ok, t_ne = S(u"окей", 40.87), S(u"не", 41.42)
+t_ska, t_ok, t_ne = S(u"сказати,", 40.4), S(u"окей", 40.87), S(u"не", 41.42)
 t_tomu = S(u"Тому", 41.93)
 F.append(u'''
         <div id="rc" class="card hid" style="left:120px; top:318px; width:840px; padding:28px 36px 30px;">
           <span class="lbl" style="margin-bottom:16px">Результат</span>
           <div class="row" style="gap:16px">%s</div>
           <div class="row" style="gap:20px; margin-top:22px; justify-content:center">
-            <span class="btn ok hid" id="rok"><svg width="34" height="34" viewBox="0 0 34 34"><path d="M6 18 L14 26 L29 8"
-              fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>окей</span>
+            <span class="btn no hid" id="rok"><svg width="34" height="34" viewBox="0 0 34 34"><path d="M6 18 L14 26 L29 8"
+              fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>окей</span>
             <span class="btn no hid" id="rno">не окей</span>
           </div>
         </div>''' % u"".join(
@@ -308,9 +310,13 @@ js(u'''
   rise("#rc", %.3f);
   pop("#rt0", %.3f); pop("#rt1", %.3f); pop("#rt2", %.3f); pop("#rt3", %.3f);
   pop("#rok", %.3f); pop("#rno", %.3f);
+  // pressed on its word: lights up and gives a little spring, no blink
+  tl.set("#rok", {className: "btn ok"}, %.3f); tl.fromTo("#rok", {scale: .82}, X({scale: 1, duration: .45, ease: POP}), %.3f);
+  tl.set("#rno", {className: "btn no on"}, %.3f); tl.fromTo("#rno", {scale: .82}, X({scale: 1, duration: .45, ease: POP}), %.3f);
   sink("#rc", %.3f);
-''' % (t_pod3 - 0.25, t_rez - 0.1, t_rez + 0.05, t_rez + 0.2, t_rez + 0.35, t_ok - 0.05, t_ne - 0.05, r_out))
-g.sfx("pop", t_pod3 - 0.25); g.sfx("click-soft", t_ok)
+''' % (t_pod3 - 0.25, t_rez - 0.1, t_rez + 0.05, t_rez + 0.2, t_rez + 0.35, t_ska - 0.05, t_ska + 0.1,
+       t_ok - 0.05, t_ok - 0.05, t_ne - 0.05, t_ne - 0.05, r_out))
+g.sfx("pop", t_pod3 - 0.25); g.sfx("click-soft", t_ok); g.sfx("click-soft", t_ne)
 BLACKOUT.append((t_ok - 0.05, t_tomu - 0.05))      # the buttons say it
 
 # 6 · ABOVE — CTA ---------------------------------------------------------------

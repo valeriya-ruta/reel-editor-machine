@@ -24,7 +24,8 @@ Then: all her clients have it, the €15 instruction, and the CTA.
           under the strategy
   above   all her clients: checks, hearts
   above   the instruction card, €15, two steps
-  above   CTA chips -> «Пиши «дзвінок»» pill + pointer -> instruction chip
+  above   CTA chips -> «Пиши слово «дзвінок»» pill + a pointer down to the
+          comments -> instruction chip
 
 usage: python build.py
 """
@@ -291,7 +292,9 @@ js(u'''
 g.sfx("pop", t_nap - 0.2); g.sfx("pop", t_ril); g.sfx("click-soft", t_zak)
 
 # 6 · ABOVE — not out of my head: a thought cloud over her, crossed out --------
-t_sy, t_vyg, t_hol = S(u"сиджу", 29.23), S(u"вигадую", 29.71), E(u"голови.", 30.18)
+# it clears ON «голови», before the half screen at 30.5 slides in under it
+#   (fading at the word's end left a ghost cloud on the white panel)
+t_sy, t_vyg, t_hol = S(u"сиджу", 29.23), S(u"вигадую", 29.71), S(u"голови.", 30.18)
 #   over her footage: blob() makes the cloud a white sticker with the dark
 #   outline, the «?» inside it dark; the cross is the kit's ink with its halo
 js(u'''
@@ -304,7 +307,7 @@ js(u'''
   ln("x6", 830, 380, 400, 630, {strokeWidth: 7, seed: 69});
   draw("x6", %.3f, .3);
   erase("cl6", %.3f); erase("x6", %.3f);
-''' % (t_sy - 0.18, t_vyg, t_hol + 0.12, t_hol + 0.12))
+''' % (t_sy - 0.18, t_vyg, t_hol + 0.15, t_hol + 0.15))
 g.sfx("click-soft", t_vyg)
 
 # 7 · HALF — the routine, weekly: my content, competitors, and the calls --------

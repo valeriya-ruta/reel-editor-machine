@@ -34,7 +34,7 @@ the «+» comes back in «Пиши + у коментарі».
 | 21.55 | above | red circle + «краще» on «краще»; out 22.86 |
 | 23.4 | above | chips блогерка / СММниця / підприємниця on their words |
 | 26.44 / 26.74 | above | «оновлювана команда» pill on «оновлювану»; the ring (dark ink, white halo, no arrowhead) closes round it by «команду»; out 27.87 |
-| 27.75 | behind | «24/7», white, 240 px, top 572 — her hair just over its foot (matte 27.67–30.40) |
+| 27.75 | behind | «24/7», white, 240 px, top 548 (glyphs y 562–736) — her hair (top ≈ 692–720 here) covers ≤ 25 % of the «4/» foot (matte 27.67–30.43) |
 | 29.7 | above | card «Команда 24/7»: монтує / дизайнить / пише сценарії on their words; out 32.09 |
 | 32.46 / 32.76 | above | CTA pill «Пиши + у коментарі»; on «плюс» «сюди!» and a ~280 px arrow from it DOWN toward the comment button, tip (880, 940), left of x 900 (dark ink, white halo) |
 

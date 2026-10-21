@@ -26,7 +26,7 @@ subscribe.
 | 0:52.8–0:62.1 | above | «Проста система»: Claude doc pops on «Клод-док», a line struck + new line on «оновлюється», title «Стратегія», Claude chip → 200 px arrow → doc, «оновлено» stamp on «оновлюємо» |
 | 0:62.2–0:71.0 | above | «Все швидке» → Notion: rows Контент-план / Ідеї / Задачі; pills безкоштовний / простий; eye + «тобі не треба», struck on «не» |
 | 0:71.3–0:79.2 | half 2 | Notion → ти ✗, → Клод ✓; board ідея / в роботі / вийшло, three cards on «кожен контент»; «старе», «нове» |
-| 1:20.4–1:27.5 | above (CTA) | chips зекономити (underline + kaching on «грошей»), AI-система самостійно; «лайфхак: + Notion»; red «Підпишись» on «обовʼязково» + a pointer drawn DOWN the left (300,560 → 190,980) toward IG's Follow by her username, landing on «підпишись» — never up at the pill (the last clip is a big punch-in, head top ≈ y 505) |
+| 1:20.4–1:27.5 | above (CTA) | chips зекономити (underline + kaching on «грошей»), AI-система самостійно; «лайфхак: + Notion»; red «Підпишись» on «обовʼязково» + a pointer drawn DOWN the left (300,530 → 190,980) toward IG's Follow by her username, landing on «підпишись» — never up at the pill (the last clip is a big punch-in, head top ≈ y 505) |
 
 Captions: automatic — `g.chunks(CAPS, place=PLACE)` into `g.document`, her old
 word-by-word rail (kit, after her review of 41), ink over the half / full spans;
