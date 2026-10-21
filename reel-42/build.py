@@ -59,17 +59,18 @@ def js(s):
 
 
 EXTRA_CSS = u"""
-    .ck { height: 48px; margin-top: 10px; }
+    .ck { height: 52px; margin-top: 8px; }
     .ck .check { width: 44px; height: 44px; }
-    .slot { position: relative; flex: 1; height: 48px; display: flex; align-items: center; }
-    .gl { position: absolute; left: 0; top: 15px; }
-    .tx { font-size: 36px; font-weight: 500; white-space: nowrap; color: var(--on-surface); }
+    .slot { position: relative; flex: 1; height: 52px; display: flex; align-items: center; }
+    .gl { position: absolute; left: 0; top: 17px; }
+    .tx { font-size: 40px; font-weight: 500; white-space: nowrap; color: var(--on-surface);
+          letter-spacing: -0.01em; }
     .vis { display: flex; align-items: center; gap: 10px; margin-left: auto; }
     .vis .mark { color: var(--primary); }
-    .sw { position: relative; width: 36px; height: 36px; flex: none; }
+    .sw { position: relative; width: 40px; height: 40px; flex: none; }
     .sw b { position: absolute; inset: 0; border-radius: 50%; border: 3px dashed var(--outline-var); }
     .sw i { position: absolute; inset: 0; border-radius: 50%; }
-    .tile { position: relative; width: 40px; height: 50px; border-radius: 10px; flex: none;
+    .tile { position: relative; width: 44px; height: 54px; border-radius: 10px; flex: none;
             background: #fff; border: 3px solid var(--outline-var); overflow: hidden; }
     .tile u { position: absolute; left: 5px; right: 5px; top: 6px; height: 8px; border-radius: 4px;
               background: var(--primary); }
@@ -99,8 +100,8 @@ WAVE_H = [18, 30, 46, 26, 54, 38, 22, 48, 60, 34, 20, 42, 56, 30, 16]
 
 def tile(i, play=False):
     if play:
-        return (u'<span class="tile" id="%s" style="border-color:#7A1424"><svg width="34" height="44" '
-                u'viewBox="0 0 34 44" style="position:absolute;left:0;top:0"><path d="M12 14 L25 22 L12 30 Z" '
+        return (u'<span class="tile" id="%s" style="border-color:#7A1424"><svg width="38" height="48" '
+                u'viewBox="0 0 38 48" style="position:absolute;left:0;top:0"><path d="M13 15 L28 24 L13 33 Z" '
                 u'fill="#7A1424"/></svg></span>' % i)
     return (u'<span class="tile" id="%s"><u></u><s style="top:21px"></s><s style="top:30px;right:14px"></s>'
             u'<s style="top:39px"></s></span>' % i)
@@ -130,31 +131,31 @@ t_pry, t_diz, t_mon, t_pod2 = S(u"Приклади", 14.26), S(u"дизайну"
 t_prav, t_sc = S(u"правила,", 18.15), S(u"сценарій,", 19.15)
 t_toty = S(u"то ти", 19.65)
 ROWS = [
-    (u"доступи до акаунтів", 290,
+    (u"доступи до акаунтів", 320,
      u'%s<span class="hid" id="v1a">%s</span><span class="hid" id="v1b">%s</span><span class="hid" id="v1c">%s</span>'
-     % (u'<span class="hid" id="v1k">%s</span>' % KEY, mark("instagram", 36), mark("threads", 36), mark("telegram", 36))),
-    (u"блогери, які подобаються", 380,
+     % (u'<span class="hid" id="v1k">%s</span>' % KEY, mark("instagram", 40), mark("threads", 40), mark("telegram", 40))),
+    (u"блогери, які подобаються", 420,
      u'<span class="row" style="gap:0">%s</span><span class="hid" id="v2h">%s</span>'
      % (u"".join(u'<span class="hid" id="v2a%d">%s</span>' % (i, AVA) for i in range(3)), HEART)),
-    (u"шрифти і кольори", 260,
-     u'<span class="hid" id="v3a" style="font-weight:700;font-size:38px;color:#7A1424;margin-right:6px">Aa</span>%s'
+    (u"шрифти і кольори", 290,
+     u'<span class="hid" id="v3a" style="font-weight:700;font-size:42px;color:#7A1424;margin-right:6px">Aa</span>%s'
      % u"".join(u'<span class="sw hid" id="v3s%d"><b></b><i style="background:%s"></i></span>' % (i, c)
                 for i, c in enumerate(("#7A1424", "#DEBFBF", "#F2C7CA")))),
-    (u"приклади дизайну і монтажу", 420,
+    (u"приклади дизайну і монтажу", 460,
      u'<span class="hid" id="v4a">%s</span><span class="hid" id="v4b">%s</span><span class="hid" id="v4c">%s</span>'
      % (tile("v4t0"), tile("v4t1"), tile("v4t2", play=True))),
-    (u"правила для сценаріїв", 330,
+    (u"правила для сценаріїв", 360,
      u'<span class="hid" id="v5a" style="display:flex;align-items:center;gap:10px;background:#FFF0F0;border-radius:24px;'
      u'padding:4px 16px 4px 4px">%s<span class="wave">%s</span></span>'
-     % (PLAY % (40, 40), u"".join(u'<span style="height:%dpx;width:5px"></span>' % h for h in (12, 22, 30, 18, 26, 14)))),
+     % (PLAY % (44, 44), u"".join(u'<span style="height:%dpx;width:5px"></span>' % h for h in (12, 24, 34, 18, 28, 14)))),
 ]
 rows = u"".join(u'''
           <div class="row ck"><span class="check" id="r%dk"></span>
             <span class="slot"><span class="line gl" id="r%dg" style="width:%dpx"></span><span class="tx hid" id="r%dt">%s</span></span>
             <span class="vis">%s</span></div>''' % (i, i, w, i, esc(t), v) for i, (t, w, v) in enumerate(ROWS))
 F.append(u'''
-        <div id="ckl" class="card hid" style="left:120px; top:298px; width:840px; padding:24px 36px 26px;">
-          <span class="lbl" style="margin-bottom:6px">Від тебе</span>%s
+        <div id="ckl" class="card hid" style="left:110px; top:292px; width:860px; padding:22px 34px 22px;">
+          <span class="lbl" style="margin-bottom:4px">Від тебе</span>%s
         </div>''' % rows)
 
 

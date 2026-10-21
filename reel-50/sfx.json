@@ -1,0 +1,78 @@
+[
+ {
+  "t": 0.619,
+  "name": "pop"
+ },
+ {
+  "t": 3.39,
+  "name": "click-soft"
+ },
+ {
+  "t": 5.375,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 6.903,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 8.098,
+  "name": "click-soft"
+ },
+ {
+  "t": 9.998,
+  "name": "pop"
+ },
+ {
+  "t": 11.29,
+  "name": "click-soft"
+ },
+ {
+  "t": 12.85,
+  "name": "pop"
+ },
+ {
+  "t": 14.848,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 15.203,
+  "name": "pop"
+ },
+ {
+  "t": 17.64,
+  "name": "pop"
+ },
+ {
+  "t": 20.242,
+  "name": "notification"
+ },
+ {
+  "t": 21.382,
+  "name": "click-soft"
+ },
+ {
+  "t": 23.954,
+  "name": "pop"
+ },
+ {
+  "t": 26.757,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 33.47,
+  "name": "pop"
+ },
+ {
+  "t": 33.944,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 35.244,
+  "name": "pop"
+ },
+ {
+  "t": 36.418,
+  "name": "pop"
+ }
+]

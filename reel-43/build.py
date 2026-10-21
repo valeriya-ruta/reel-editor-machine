@@ -81,8 +81,6 @@ def js(s):
     J.append(s)
 
 
-F.append(u'<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>')
-
 REEL = u'''<span class="th" id="%s"><svg width="34" height="34" viewBox="0 0 34 34"><path d="M10 6 L28 17 L10 28 Z" fill="#7A1424"/></svg></span>'''
 EXTRA_CSS = u'''
     .slot { width: 160px; height: 96px; border-radius: 18px; border: 3px dashed #DEBFBF;
@@ -166,20 +164,22 @@ js(u'''
 g.sfx("pop", t_kons); g.sfx("pop", t_dva); g.sfx("kaching", t_800)
 BLACKOUT.append((t_800 - 0.05, E(u"місяць,", 12.93) + 0.05))      # the pill says «€800 / місяць»
 
-# 3 · BEHIND — «система / €1300?» ---------------------------------------------
+# 3 · BEHIND — «навіщо / €1300?» ----------------------------------------------
+t_nav = S(u"а навіщо", 15.27)
 t_sys, t_1300, t_bil = S(u"система", 16.01), S(u"1300,", 16.77), S(u"більше?", 18.41)
 m0, m1 = t_sys - 0.15, 19.30
 B.append(u'''
-        <div id="bw1" class="big hid" style="top:350px; font-size:240px">система</div>
+        <div id="bw1" class="big hid" style="top:350px; font-size:240px">навіщо</div>
         <div id="bw2" class="big hid" style="top:566px; font-size:240px">€1300<span id="bwq" style="visibility:hidden">?</span></div>''')
 g.matte("sys", round(m0, 3), round(m1 - m0, 3))
 js(u'''
   rise("#bw1", %.3f); rise("#bw2", %.3f);
   tl.fromTo("#bwq", {autoAlpha: 0, y: -40}, X({autoAlpha: 1, y: 0, duration: .5, ease: POP}), %.3f);
   sink("#bw1, #bw2", %.3f);
-''' % (t_sys - 0.1, t_1300 - 0.1, t_bil, 18.88))
-g.sfx("whoosh-short", t_sys - 0.1); g.sfx("kaching", t_1300)
-BLACKOUT.append((t_sys - 0.05, t_1300 + 0.05))      # «система за 1300,» stands behind her
+''' % (t_nav - 0.05, t_1300 - 0.1, t_bil, 18.86))
+# line 1 (y 350-566) clears her head (top ~735), so it can rise before the matte starts
+g.sfx("whoosh-short", t_nav - 0.05); g.sfx("kaching", t_1300)
+BLACKOUT.append((t_nav - 0.05, t_1300 + 0.05))      # «а навіщо мені система за 1300,» stands behind her
 
 # 4 · ABOVE — €400 every month vs €1300 once ----------------------------------
 t_cyf, t_bil2, t_odn = S(u"цифри", 20.33), S(u"більше,", 20.65), S(u"одноразова", 21.55)
@@ -188,9 +188,9 @@ F.append(u'''
           <div class="row" style="align-items:flex-start; gap:30px">
             <div class="col"><span class="lbl">СММниця</span>
               <div class="row" style="align-items:baseline; gap:10px"><span class="num" style="font-size:84px; color:#241919">€400</span><span class="sm">/ міс</span></div></div>
-            <div class="col"><span class="lbl">Система</span>
+            <div class="col" style="flex:1.4"><span class="lbl">Система</span>
               <span class="num hid" id="b4n" style="display:block; font-size:84px">€1300</span>
-              <span class="chip on hid" id="b4c" style="margin-top:18px; font-size:30px; padding:10px 20px"><i></i>одноразова інвестиція</span></div>
+              <span class="chip on hid" id="b4c" style="margin-top:18px; font-size:28px; padding:10px 20px; white-space:nowrap"><i></i>одноразова інвестиція</span></div>
           </div>
         </div>''')
 js(u'''
@@ -373,6 +373,9 @@ js(u'''
 ''' % (t_inv, t_pysh - 0.2, t_pysh + 0.35))
 g.sfx("kaching", t_inv); g.sfx("pop", t_pysh - 0.2)
 BLACKOUT.append((S(u"то", 61.31) - 0.05, DUR))     # the pill says it
+
+# the sketch layer goes last in #front, so strikes and circles draw over the cards
+F.append(u'<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>')
 
 # ---------------------------------------------------------------- mattes for the half screens
 for i, (a, b) in enumerate(HALF):

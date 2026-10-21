@@ -1,0 +1,54 @@
+[
+ {
+  "t": 0.3,
+  "name": "pop"
+ },
+ {
+  "t": 3.98,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 5.442,
+  "name": "pop"
+ },
+ {
+  "t": 6.002,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 7.297,
+  "name": "pop"
+ },
+ {
+  "t": 8.017,
+  "name": "click-soft"
+ },
+ {
+  "t": 11.619,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 13.899,
+  "name": "pop"
+ },
+ {
+  "t": 19.376,
+  "name": "click-soft"
+ },
+ {
+  "t": 19.619,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 20.817,
+  "name": "pop"
+ },
+ {
+  "t": 24.337,
+  "name": "pop"
+ },
+ {
+  "t": 25.397,
+  "name": "pop"
+ }
+]

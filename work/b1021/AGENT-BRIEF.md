@@ -60,9 +60,13 @@ Ruta, never ask her anything**. Truly blocked → say so in your report and stop
   chunks into the old rail and switches to ink over every `half()` / `full()`
   span (on the panel they sit above her head). Keep calling `g.chunks()` as in
   reel-41; ignore key words / pills.
-- **Sketches are calmer** (roughness 1, set in the kit). Over her footage the
-  default ink is **white** (kit); on the white panel / cover it stays dark.
-  Don't pass red or dark ink for sketches/labels that sit over the footage.
+- **Sketches are calmer** (roughness 1, set in the kit). **Over her footage the
+  kit makes them pass contrast by itself**: closed shapes (box / ell / the new
+  `blob(name, d, [x, y, w, h])` for a free outline like a cloud) become solid
+  white stickers with a dark outline and dark labels inside; arrows, lines and
+  free labels are dark ink with a thick white halo. Don't pass white for
+  anything over the footage (white on her light room fails AA — her words).
+  For a custom closed path use `blob()`, not `_add(... rc.path(...))`.
 - **Behind-me words are white** with a soft shadow (kit).
 - **Full screen never opens onto empty white**: its content lands within ~0.3 s
   of the cover arriving. Open it ON the word its headline/sketch shows.

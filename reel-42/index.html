@@ -85,7 +85,7 @@
     /* §00.5 sketches */
     .sk { position: absolute; left: 0; top: 0; overflow: visible; }
     .sk text, .hand { font-family: "Pangolin", cursive; fill: #1E1E1E; color: #1E1E1E; }
-    #front .sk { filter: drop-shadow(0 2px 6px rgba(20,12,12,.35)); }
+    #front .sk { filter: drop-shadow(0 0 3px rgba(20,12,12,.45)) drop-shadow(0 3px 10px rgba(20,12,12,.30)); }
     .hand { position: absolute; white-space: nowrap; }
 
     /* captions — exactly as before §00 (her call 2026-10-21, over the boxed
@@ -113,17 +113,18 @@
                opacity: 0; }
     .cap .kt { position: relative; }
 
-    .ck { height: 48px; margin-top: 10px; }
+    .ck { height: 52px; margin-top: 8px; }
     .ck .check { width: 44px; height: 44px; }
-    .slot { position: relative; flex: 1; height: 48px; display: flex; align-items: center; }
-    .gl { position: absolute; left: 0; top: 15px; }
-    .tx { font-size: 36px; font-weight: 500; white-space: nowrap; color: var(--on-surface); }
+    .slot { position: relative; flex: 1; height: 52px; display: flex; align-items: center; }
+    .gl { position: absolute; left: 0; top: 17px; }
+    .tx { font-size: 40px; font-weight: 500; white-space: nowrap; color: var(--on-surface);
+          letter-spacing: -0.01em; }
     .vis { display: flex; align-items: center; gap: 10px; margin-left: auto; }
     .vis .mark { color: var(--primary); }
-    .sw { position: relative; width: 36px; height: 36px; flex: none; }
+    .sw { position: relative; width: 40px; height: 40px; flex: none; }
     .sw b { position: absolute; inset: 0; border-radius: 50%; border: 3px dashed var(--outline-var); }
     .sw i { position: absolute; inset: 0; border-radius: 50%; }
-    .tile { position: relative; width: 40px; height: 50px; border-radius: 10px; flex: none;
+    .tile { position: relative; width: 44px; height: 54px; border-radius: 10px; flex: none;
             background: #fff; border: 3px solid var(--outline-var); overflow: hidden; }
     .tile u { position: absolute; left: 5px; right: 5px; top: 6px; height: 8px; border-radius: 4px;
               background: var(--primary); }
@@ -162,23 +163,23 @@
              muted playsinline></video>
       <div id="front" class="L">
 
-        <div id="ckl" class="card hid" style="left:120px; top:298px; width:840px; padding:24px 36px 26px;">
-          <span class="lbl" style="margin-bottom:6px">Від тебе</span>
+        <div id="ckl" class="card hid" style="left:110px; top:292px; width:860px; padding:22px 34px 22px;">
+          <span class="lbl" style="margin-bottom:4px">Від тебе</span>
           <div class="row ck"><span class="check" id="r0k"></span>
-            <span class="slot"><span class="line gl" id="r0g" style="width:290px"></span><span class="tx hid" id="r0t">доступи до акаунтів</span></span>
-            <span class="vis"><span class="hid" id="v1k"><svg width="44" height="44" viewBox="0 0 44 44"><circle cx="14" cy="22" r="9" fill="none" stroke="#7A1424" stroke-width="5"/><path d="M23 22 H40 M33 22 V30 M39 22 V28" fill="none" stroke="#7A1424" stroke-width="5" stroke-linecap="round"/></svg></span><span class="hid" id="v1a"><svg class="mark" width="36" height="36" viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></span><span class="hid" id="v1b"><svg class="mark" width="36" height="36" viewBox="0 0 24 24"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg></span><span class="hid" id="v1c"><svg class="mark" width="36" height="36" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></span></span></div>
+            <span class="slot"><span class="line gl" id="r0g" style="width:320px"></span><span class="tx hid" id="r0t">доступи до акаунтів</span></span>
+            <span class="vis"><span class="hid" id="v1k"><svg width="44" height="44" viewBox="0 0 44 44"><circle cx="14" cy="22" r="9" fill="none" stroke="#7A1424" stroke-width="5"/><path d="M23 22 H40 M33 22 V30 M39 22 V28" fill="none" stroke="#7A1424" stroke-width="5" stroke-linecap="round"/></svg></span><span class="hid" id="v1a"><svg class="mark" width="40" height="40" viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></span><span class="hid" id="v1b"><svg class="mark" width="40" height="40" viewBox="0 0 24 24"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg></span><span class="hid" id="v1c"><svg class="mark" width="40" height="40" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></span></span></div>
           <div class="row ck"><span class="check" id="r1k"></span>
-            <span class="slot"><span class="line gl" id="r1g" style="width:380px"></span><span class="tx hid" id="r1t">блогери, які подобаються</span></span>
+            <span class="slot"><span class="line gl" id="r1g" style="width:420px"></span><span class="tx hid" id="r1t">блогери, які подобаються</span></span>
             <span class="vis"><span class="row" style="gap:0"><span class="hid" id="v2a0"><svg width="44" height="44" viewBox="0 0 44 44" style="margin-left:-12px"><circle cx="22" cy="22" r="20" fill="#FFF0F0" stroke="#DEBFBF" stroke-width="3"/><circle cx="22" cy="17" r="7.5" fill="#7A1424"/><path d="M9 36 C11 26 33 26 35 36 Z" fill="#7A1424"/></svg></span><span class="hid" id="v2a1"><svg width="44" height="44" viewBox="0 0 44 44" style="margin-left:-12px"><circle cx="22" cy="22" r="20" fill="#FFF0F0" stroke="#DEBFBF" stroke-width="3"/><circle cx="22" cy="17" r="7.5" fill="#7A1424"/><path d="M9 36 C11 26 33 26 35 36 Z" fill="#7A1424"/></svg></span><span class="hid" id="v2a2"><svg width="44" height="44" viewBox="0 0 44 44" style="margin-left:-12px"><circle cx="22" cy="22" r="20" fill="#FFF0F0" stroke="#DEBFBF" stroke-width="3"/><circle cx="22" cy="17" r="7.5" fill="#7A1424"/><path d="M9 36 C11 26 33 26 35 36 Z" fill="#7A1424"/></svg></span></span><span class="hid" id="v2h"><svg width="40" height="40" viewBox="0 0 40 40"><path d="M20 35 C6 25 2 18 4 12 C6 5 15 4 20 11 C25 4 34 5 36 12 C38 18 34 25 20 35 Z" fill="#7A1424"/></svg></span></span></div>
           <div class="row ck"><span class="check" id="r2k"></span>
-            <span class="slot"><span class="line gl" id="r2g" style="width:260px"></span><span class="tx hid" id="r2t">шрифти і кольори</span></span>
-            <span class="vis"><span class="hid" id="v3a" style="font-weight:700;font-size:38px;color:#7A1424;margin-right:6px">Aa</span><span class="sw hid" id="v3s0"><b></b><i style="background:#7A1424"></i></span><span class="sw hid" id="v3s1"><b></b><i style="background:#DEBFBF"></i></span><span class="sw hid" id="v3s2"><b></b><i style="background:#F2C7CA"></i></span></span></div>
+            <span class="slot"><span class="line gl" id="r2g" style="width:290px"></span><span class="tx hid" id="r2t">шрифти і кольори</span></span>
+            <span class="vis"><span class="hid" id="v3a" style="font-weight:700;font-size:42px;color:#7A1424;margin-right:6px">Aa</span><span class="sw hid" id="v3s0"><b></b><i style="background:#7A1424"></i></span><span class="sw hid" id="v3s1"><b></b><i style="background:#DEBFBF"></i></span><span class="sw hid" id="v3s2"><b></b><i style="background:#F2C7CA"></i></span></span></div>
           <div class="row ck"><span class="check" id="r3k"></span>
-            <span class="slot"><span class="line gl" id="r3g" style="width:420px"></span><span class="tx hid" id="r3t">приклади дизайну і монтажу</span></span>
-            <span class="vis"><span class="hid" id="v4a"><span class="tile" id="v4t0"><u></u><s style="top:21px"></s><s style="top:30px;right:14px"></s><s style="top:39px"></s></span></span><span class="hid" id="v4b"><span class="tile" id="v4t1"><u></u><s style="top:21px"></s><s style="top:30px;right:14px"></s><s style="top:39px"></s></span></span><span class="hid" id="v4c"><span class="tile" id="v4t2" style="border-color:#7A1424"><svg width="34" height="44" viewBox="0 0 34 44" style="position:absolute;left:0;top:0"><path d="M12 14 L25 22 L12 30 Z" fill="#7A1424"/></svg></span></span></span></div>
+            <span class="slot"><span class="line gl" id="r3g" style="width:460px"></span><span class="tx hid" id="r3t">приклади дизайну і монтажу</span></span>
+            <span class="vis"><span class="hid" id="v4a"><span class="tile" id="v4t0"><u></u><s style="top:21px"></s><s style="top:30px;right:14px"></s><s style="top:39px"></s></span></span><span class="hid" id="v4b"><span class="tile" id="v4t1"><u></u><s style="top:21px"></s><s style="top:30px;right:14px"></s><s style="top:39px"></s></span></span><span class="hid" id="v4c"><span class="tile" id="v4t2" style="border-color:#7A1424"><svg width="38" height="48" viewBox="0 0 38 48" style="position:absolute;left:0;top:0"><path d="M13 15 L28 24 L13 33 Z" fill="#7A1424"/></svg></span></span></span></div>
           <div class="row ck"><span class="check" id="r4k"></span>
-            <span class="slot"><span class="line gl" id="r4g" style="width:330px"></span><span class="tx hid" id="r4t">правила для сценаріїв</span></span>
-            <span class="vis"><span class="hid" id="v5a" style="display:flex;align-items:center;gap:10px;background:#FFF0F0;border-radius:24px;padding:4px 16px 4px 4px"><svg width="40" height="40" viewBox="0 0 72 72"><circle cx="36" cy="36" r="36" fill="#7A1424"/><path d="M29 22 L52 36 L29 50 Z" fill="#fff"/></svg><span class="wave"><span style="height:12px;width:5px"></span><span style="height:22px;width:5px"></span><span style="height:30px;width:5px"></span><span style="height:18px;width:5px"></span><span style="height:26px;width:5px"></span><span style="height:14px;width:5px"></span></span></span></span></div>
+            <span class="slot"><span class="line gl" id="r4g" style="width:360px"></span><span class="tx hid" id="r4t">правила для сценаріїв</span></span>
+            <span class="vis"><span class="hid" id="v5a" style="display:flex;align-items:center;gap:10px;background:#FFF0F0;border-radius:24px;padding:4px 16px 4px 4px"><svg width="44" height="44" viewBox="0 0 72 72"><circle cx="36" cy="36" r="36" fill="#7A1424"/><path d="M29 22 L52 36 L29 50 Z" fill="#fff"/></svg><span class="wave"><span style="height:12px;width:5px"></span><span style="height:24px;width:5px"></span><span style="height:34px;width:5px"></span><span style="height:18px;width:5px"></span><span style="height:28px;width:5px"></span><span style="height:14px;width:5px"></span></span></span></span></div>
         </div>
 
         <div id="vc" class="card hid" style="left:120px; top:320px; width:840px; height:330px;">
@@ -430,6 +431,7 @@
               fillWeight: 2.5};
   var _ink = "#1E1E1E";
   function opt(o, seed) { var r = {}; for (var k in SKO) r[k] = SKO[k]; r.stroke = _ink;
+    if (_ink === "#FFFFFF") r.strokeWidth = 6;
     for (var k2 in (o || {})) r[k2] = o[k2]; r.seed = seed; return r; }
   function hatch(o) { var r = {}; for (var k in HACH) r[k] = HACH[k];
     for (var k2 in (o || {})) r[k2] = o[k2]; return r; }
@@ -445,10 +447,14 @@
     var svg = document.getElementById(svgId);
     var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
     g.setAttribute("id", "sk-" + name); svg.appendChild(g);
-    // over her footage the ink is white (dark ink read badly over the room);
-    // on the white panel and cover it stays #1E1E1E. Explicit colours win.
+    // Over her footage (her review of 41): a thin line of any colour fails
+    // contrast against the light room, so closed shapes become solid white
+    // stickers with the dark Excalidraw outline, labels inside them go dark,
+    // and open strokes (arrows, lines) go white, thicker, with a shadow.
+    // On the white panel and cover everything stays #1E1E1E. Explicit colours win.
     var foot = !!(svg.closest && svg.closest("#front"));
-    SK[name] = {g: g, rc: rough.svg(svg), shapes: [], ink: foot ? "#FFFFFF" : "#1E1E1E"};
+    SK[name] = {g: g, rc: rough.svg(svg), shapes: [], foot: foot, boxes: [],
+                ink: foot ? "#FFFFFF" : "#1E1E1E"};
     return SK[name];
   }
   function _add(s, node, kind) {
@@ -456,20 +462,35 @@
     var paths = [].slice.call(node.querySelectorAll ? node.querySelectorAll("path") : []);
     if (node.tagName === "path") paths = [node];
     paths.forEach(function (p) {
+      var f = p.getAttribute("fill");
+      if (f && f !== "none") { p.style.opacity = 0; p.dataset.fill = "1"; return; }  // a solid fill fades in
       var L = 0; try { L = p.getTotalLength(); } catch (e) {}
       p.style.strokeDasharray = L + " " + (L + 2); p.style.strokeDashoffset = L + 1;
       p.style.strokeLinecap = "round"; p.style.strokeLinejoin = "round";
     });
     s.shapes.push({paths: paths, kind: kind || "stroke"});
   }
+  // a closed shape over the footage: solid white with a dark outline (see sketch())
+  function _closed(s, oo, o, x, y, w, h) {
+    if (s.foot && !(o && o.fill === false)) {
+      oo.fill = "#FFFFFF"; oo.fillStyle = "solid";
+      if (!(o && o.stroke)) oo.stroke = "#1E1E1E";
+      s.boxes.push([x, y, x + w, y + h]);
+    }
+    return oo;
+  }
   function box(name, x, y, w, h, o) { _ink = SK[name].ink;      // rounded rough box, radius 28 (§00.5.2)
     var s = SK[name], r = (o && o.r) || 28;
     var oo = opt(o, (o && o.seed) || 7);
     if (o && o.fill) { var f = hatch(o.fill === true ? {} : {fill: o.fill}); for (var k in f) oo[k] = f[k]; }
+    else _closed(s, oo, o, x, y, w, h);
     _add(s, s.rc.path(rrectD(x, y, w, h, r), oo));
   }
   function ell(name, cx, cy, w, h, o) { _ink = SK[name].ink; var s = SK[name];
-    _add(s, s.rc.ellipse(cx, cy, w, h, opt(o, (o && o.seed) || 11))); }
+    _add(s, s.rc.ellipse(cx, cy, w, h, _closed(s, opt(o, (o && o.seed) || 11), o, cx - w / 2, cy - h / 2, w, h))); }
+  // any closed hand-drawn outline (a cloud…): d is an SVG path, bbox its bounds
+  function blob(name, d, bbox, o) { _ink = SK[name].ink; var s = SK[name];
+    _add(s, s.rc.path(d, _closed(s, opt(o, (o && o.seed) || 23), o, bbox[0], bbox[1], bbox[2], bbox[3]))); }
   function ln(name, x1, y1, x2, y2, o) { _ink = SK[name].ink; var s = SK[name];
     _add(s, s.rc.line(x1, y1, x2, y2, opt(o, (o && o.seed) || 13))); }
   function under(name, x1, y, x2, o) { _ink = SK[name].ink; var s = SK[name];      // a hand underline
@@ -487,7 +508,8 @@
     t.setAttribute("x", x); t.setAttribute("y", y);
     t.setAttribute("text-anchor", (o && o.anchor) || "middle");
     t.setAttribute("font-size", (o && o.size) || 50);
-    t.style.fill = (o && o.color) || s.ink;
+    var inside = s.boxes.some(function (b) { return x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3] + 20; });
+    t.style.fill = (o && o.color) || (s.foot && !inside ? "#FFFFFF" : "#1E1E1E");
     t.textContent = txt; t.style.opacity = 0; s.g.appendChild(t);
     s.shapes.push({text: t});
   }
@@ -503,6 +525,7 @@
         at += .12; return;
       }
       sh.paths.forEach(function (p, i) {
+        if (p.dataset.fill) { tl.to(p, {opacity: 1, duration: .3}, at); return; }
         tl.to(p, {strokeDashoffset: 0, duration: per, ease: "power1.inOut"}, at + i * .12);
       });
       at += per * .66 + (sh.paths.length - 1) * .12;
