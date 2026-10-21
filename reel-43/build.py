@@ -157,14 +157,14 @@ js(u'''
   rise("#b2a", %.3f);
   pop("#b2p", %.3f, .45); rise("#b2b", %.3f);
   pop("#b2s", %.3f, .6);
-  sketch("d2", "skF"); label("d2", 690, 600, "дорого!", {size: 56, color: "#7A1424", anchor: "start"});
-  under("d2", 684, 618, 870, {stroke: "#7A1424", seed: 9});
+  sketch("d2", "skF"); label("d2", 690, 600, "дорого!", {size: 56, anchor: "start"});
+  under("d2", 684, 618, 870, {seed: 9});
   draw("d2", %.3f, .45);
   sink("#b2a, #b2p, #b2b, #b2s", %.3f); erase("d2", %.3f);
 ''' % (t_kons, t_same - 0.4, t_same - 0.05, t_dva - 0.1, t_dva, t_800, t_dor - 0.1,
        S(u"І", 14.55) - 0.25, S(u"І", 14.55) - 0.25))
 g.sfx("pop", t_kons); g.sfx("pop", t_dva); g.sfx("kaching", t_800)
-BLACKOUT.append((t_800 - 0.05, t_800 + 0.05))      # the pill says «€800 / місяць»
+BLACKOUT.append((t_800 - 0.05, E(u"місяць,", 12.93) + 0.05))      # the pill says «€800 / місяць»
 
 # 3 · BEHIND — «система / €1300?» ---------------------------------------------
 t_sys, t_1300, t_bil = S(u"система", 16.01), S(u"1300,", 16.77), S(u"більше?", 18.41)
@@ -179,7 +179,7 @@ js(u'''
   sink("#bw1, #bw2", %.3f);
 ''' % (t_sys - 0.1, t_1300 - 0.1, t_bil, 18.88))
 g.sfx("whoosh-short", t_sys - 0.1); g.sfx("kaching", t_1300)
-BLACKOUT.append((t_sys - 0.05, t_sys + 0.05))      # «система за 1300,» stands behind her
+BLACKOUT.append((t_sys - 0.05, t_1300 + 0.05))      # «система за 1300,» stands behind her
 
 # 4 · ABOVE — €400 every month vs €1300 once ----------------------------------
 t_cyf, t_bil2, t_odn = S(u"цифри", 20.33), S(u"більше,", 20.65), S(u"одноразова", 21.55)
@@ -219,7 +219,7 @@ js(u'''
   erase("s5", %.3f);
   tl.to("#b5n1, #b5n2, #b5n3, #b5n4, #b5n5", {autoAlpha: 0, duration: .25}, %.3f);
   %s
-  sketch("w5", "skF"); label("w5", 540, 560, "далі просто працює", {size: 50, color: "#7A1424"});
+  sketch("w5", "skF"); label("w5", 540, 572, "далі просто працює", {size: 50});
   draw("w5", %.3f);
   sink("#b5", %.3f); erase("o5", %.3f); erase("w5", %.3f);
 ''' % (t_tob - 0.15,
@@ -368,7 +368,7 @@ F.append(u'''
 js(u'''
   pop("#b10a", %.3f);
   pop("#b10b", %.3f, .6);
-  sketch("a10", "skF"); arrow("a10", 905, 620, 960, 820, {stroke: "#7A1424", strokeWidth: 5, seed: 97, bend: -.25});
+  sketch("a10", "skF"); arrow("a10", 900, 615, 965, 830, {strokeWidth: 5, seed: 97, bend: -.2});
   draw("a10", %.3f, .5);
 ''' % (t_inv, t_pysh - 0.2, t_pysh + 0.35))
 g.sfx("kaching", t_inv); g.sfx("pop", t_pysh - 0.2)
@@ -381,43 +381,10 @@ for i, (a, b) in enumerate(HALF):
     PLACE.append((a + 0.4, b + 0.2, "bottom", 980))
 
 
-# her phrases, by the start time of their first word: the automatic chunker
-# splits «СММниці 400 євро на / місяць» mid-thought on this fast take
-PHRASES = [0.0, 1.39, 2.65, 3.57, 4.65, 7.18, 8.62, 10.27, 11.23, 12.01, 13.23, 14.55, 15.27, 16.01,
-           17.39, 18.90, 20.33, 21.15, 23.15, 25.33, 26.77, 28.05, 29.28, 30.74, 32.63, 34.29, 36.63,
-           37.98, 39.86, 41.63, 44.00, 45.28, 46.98, 48.59, 49.67, 51.68, 52.95, 54.57, 56.49, 57.63,
-           58.87, 60.45, 61.31]
-# the key word's pill, where the longest-word rule picks the wrong one
-KEYS = {u"ненадійний": 55.17, u"немає.": 5.93, u"більше?": 18.41, u"щомісяця": 24.03, u"окупається": 33.71, u"три": 34.95,
-        u"два,": 37.74, u"менше": 40.24, u"процес": 45.70, u"сценарії.": 52.28, u"робота,": 53.59}
-
-
-def phrases(caps, place):
-    out = []
-    for c in caps:
-        if not out or any(abs(c["s"] - t) < 0.06 for t in PHRASES):
-            out.append([])
-        out[-1].append(c)
-    keyt = [W.s(w, t) for w, t in KEYS.items()]
-    res = []
-    for n, ch in enumerate(out):
-        s = ch[0]["s"]
-        nxt = out[n + 1][0]["s"] if n + 1 < len(out) else DUR
-        hit = [i for i, w in enumerate(ch) if any(abs(w["s"] - t) < 0.01 for t in keyt)]
-        kw = hit[0] if hit else (None if abs(s - 15.27) < 0.06 else g._key(ch, {}))
-        pos = ("bottom", 1920 - 1520)
-        for a, b, how, y in place:
-            if a <= s < b:
-                pos = (how, y if how == "top" else 1920 - y)
-        res.append({"s": round(s, 3), "e": round(min(nxt, ch[-1]["e"] + 0.6), 3), "words": ch, "key": kw, "pos": pos})
-    assert len(res) == len(PHRASES), (len(res), len(PHRASES))
-    return res
-
-
 def main():
     if "--words" in sys.argv:
         print(" ".join("%s/%.1f" % (c["w"], c["s"]) for c in CAPS))
-    chunks = phrases(CAPS, PLACE)
+    chunks = g.chunks(CAPS, place=PLACE)
     if "--chunks" in sys.argv:
         for n, c in enumerate(chunks):
             print("%2d %6.2f-%6.2f %s%s" % (n, c["s"], c["e"], " ".join(w["w"] for w in c["words"]),

@@ -75,6 +75,33 @@ FIX = {
     u"SMM": u"СММниця,", u"нація,": None, u"підприємуця": u"підприємиця",
 }
 CAPS = load_caps(NN, FIX)
+
+
+def one_word(caps):
+    """The rail shows one word at a time: whisper's merged tokens («то став»,
+    «а не») and FIX's «на два рілси» are split, the time shared by letters;
+    a bare dash stays with its word."""
+    out = []
+    for c in caps:
+        parts = []
+        for p in c["w"].split():
+            if parts and not any(ch.isalnum() for ch in p):
+                parts[-1] += u" " + p
+            else:
+                parts.append(p)
+        if len(parts) == 1:
+            out.append(c)
+            continue
+        n = float(sum(len(p) for p in parts))
+        t, d = c["s"], c["e"] - c["s"]
+        for p in parts:
+            dd = d * len(p) / n
+            out.append(dict(c, w=p, s=round(t, 3), e=round(t + dd - 0.02, 3)))
+            t += dd
+    return out
+
+
+CAPS = one_word(CAPS)
 # «інтелект.» is stretched over the silent hold by the aligner; she stops at 5.23
 for _c in CAPS:
     if _c["w"] == u"інтелект." and _c["s"] < H0:
@@ -159,7 +186,7 @@ F.append(u'''
              style="font-size:30px; padding:10px 20px"><i></i>монтажерка</span></div>''')
 
 # 1 · ABOVE — two reels, no sound, guess ----------------------------------------
-t_dva, t_bez = S(u"на два рілси", 0.77), S(u"без", 1.27)
+t_dva, t_bez = S(u"два", 0.85), S(u"без", 1.27)
 t_vga = S(u"вгадай,", 2.17)
 js(u'''
   pop("#mp1", %.3f); pop("#mp2", %.3f);
@@ -302,7 +329,8 @@ for t in (t_mzh, t_vio, t_hv):
 BLACKOUT.append((t_ne1 - 0.05, E(u"хвороб.", 37.18) + 0.05))      # the three struck chips say it
 
 # 6 · HALF — shoot → Claude → 20 min → a finished reel ---------------------------
-h0, h1 = S(u"Вона", 37.89) - 0.15, S(u"Тому", 43.7) - 0.25
+# it leaves in her pause before «Тому», so no rail word straddles the exit
+h0, h1 = S(u"Вона", 37.89) - 0.15, S(u"Тому", 43.7) - 0.4
 HALF.append((h0, h1))
 P.append(u'<svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
 P.append(u'''
@@ -354,7 +382,8 @@ js(u'''
 g.sfx("whoosh-short", t_tomu); g.sfx("click-soft", t_nm); g.sfx("pop", t_dob)
 
 # 8 · HALF — the limits: real creativity above the line, «creativity» below ------
-h2, h3 = t_lim - 0.15, S(u"Тому", 59.43) - 0.25
+# it leaves as «капкаті» ends (blacked out: the CapCut chip says it), so «Тому» is white on the plaque
+h2, h3 = t_lim - 0.15, S(u"капкаті.", 58.89) + 0.06
 HALF.append((h2, h3))
 t_spr, t_kr2 = S(u"справжнього", 52.28), S(u"креативу,", 54.55)
 t_cher, t_pl = S(u"червоному", 56.11), S(u"платній", 57.81)
@@ -382,6 +411,7 @@ js(u'''
   erase("q1", %.3f); erase("q2", %.3f); erase("q3", %.3f); out("#psub, #pcap", %.3f);
 ''' % (t_lim - 0.15, t_spr - 0.3, t_kr2 - 0.3, t_cher, t_pl, h3, h3, h3, h3))
 BLACKOUT.append((t_spr - 0.05, t_kr2 + 0.05))                      # «справжній креатив» / «креатив» boxes
+BLACKOUT.append((S(u"капкаті.", 58.89) - 0.05, S(u"капкаті.", 58.89) + 0.05))   # the «CapCut» chip
 g.sfx("pop", t_spr); g.sfx("pop", t_kr2); g.sfx("pop", t_pl)
 g.sfx("whoosh-short", h2); g.sfx("whoosh-short", h3)
 
@@ -389,7 +419,7 @@ g.sfx("whoosh-short", h2); g.sfx("whoosh-short", h3)
 t_blog, t_smm = S(u"блогерка,", 60.04), S(u"СММниця,", 60.78)
 t_pid, t_pro = S(u"підприємиця", 61.3), S(u"продюсерка", 62.42)
 t_24, t_vt = S(u"24", 65.42), S(u"втомлюється", 67.33)
-t_stav = S(u"то став", 69.0)
+t_stav = S(u"то", 69.0)
 F.append(u'''
         <div id="b9" class="hid" style="position:absolute; left:120px; top:310px; width:840px;
              display:flex; gap:14px; justify-content:center; flex-wrap:wrap">

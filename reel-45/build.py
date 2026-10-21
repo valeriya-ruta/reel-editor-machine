@@ -68,26 +68,17 @@ def js(s):
     J.append(s)
 
 
-# two sketch helpers this reel needs: a looping arc with a head, and an arrow
-# along a hand-placed curve
+# sketch helpers this reel needs: an arrow along a hand-placed curve, and dark
+# ink for a sketch that sits on a white card (over her footage the kit inks white)
 js(u'''
   function headAt(s, x2, y2, ang, oo) {
     var L = 34, sp = .5;
     _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang - sp), y2 - L * Math.sin(ang - sp), oo), "head");
     _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang + sp), y2 - L * Math.sin(ang + sp), oo), "head");
   }
-  function loopArc(name, cx, cy, w, h, a0, a1, o) {
-    var s = SK[name], oo = opt(o, (o && o.seed) || 61);
-    _add(s, s.rc.arc(cx, cy, w, h, a0, a1, false, oo));
-    var x2 = cx + w / 2 * Math.cos(a1), y2 = cy + h / 2 * Math.sin(a1);
-    headAt(s, x2, y2, Math.atan2(h / 2 * Math.cos(a1), -w / 2 * Math.sin(a1)), oo);
-  }
-  function halo(name) {        // a hand label on her plate gets a white sticker edge
-    [].forEach.call(SK[name].g.querySelectorAll("text"), function (t) {
-      t.style.paintOrder = "stroke"; t.style.stroke = "#FFFFFF"; t.style.strokeWidth = "12px";
-      t.style.strokeLinejoin = "round"; });
-  }
+  function card(name) { SK[name].ink = "#1E1E1E"; }
   function parrow(name, pts, o) {
+    _ink = SK[name].ink;
     var s = SK[name], oo = opt(o, (o && o.seed) || 67);
     _add(s, s.rc.curve(pts, oo));
     var a = pts[pts.length - 2], b = pts[pts.length - 1];
@@ -109,9 +100,9 @@ F.append(u'''
              font-weight:700; font-size:60px; letter-spacing:-0.02em">
           <span style="color:#7A1424; display:flex">%s</span>AI-система</div>''' % mark("claude", 56))
 SKF.append(u'''
-  sketch("h1t", "skF"); label("h1t", 640, 598, "налаштовую я", {size: 52, color: "#7A1424", anchor: "end"}); halo("h1t");
+  sketch("h1t", "skF"); label("h1t", 640, 598, "налаштовую я", {size: 52, anchor: "end"});
   draw("h1t", %.3f);
-  sketch("h1", "skF"); parrow("h1", [[700, 512], [690, 590], [615, 668]], {stroke: "#7A1424", strokeWidth: 5, seed: 3});
+  sketch("h1", "skF"); parrow("h1", [[700, 512], [690, 590], [615, 668]], {strokeWidth: 5, seed: 3});
   draw("h1", %.3f, .5);
   erase("h1t", %.3f); erase("h1", %.3f);''' % (t_tak - 0.05, t_nal - 0.1, t_out1, t_out1))
 js(u'''
@@ -137,8 +128,8 @@ P.append(u'''<svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 10
               padding:10px 18px; gap:10px"><b style="font-weight:700; color:#7A1424">w.</b>Windsor</span>'''
          % (mark("instagram", 52), mark("claude", 50)))
 js(u'''
-  sketch("l0", "skP"); loopArc("l0", 540, 500, 112, 112, -1.75, 3.6, {seed: 5});
-  label("l0", 540, 612, "навчається", {size: 46});
+  sketch("l0", "skP"); ell("l0", 540, 505, 310, 116, {seed: 5});
+  label("l0", 540, 522, "навчається", {size: 48});
   draw("l0", %.3f, .7);
   sketch("n1", "skP"); box("n1", 390, 300, 300, 120, {seed: 7}); label("n1", 512, 380, "пост", {size: 52, anchor: "start"});
   draw("n1", %.3f, .6); fadein("#pm1", %.3f);
@@ -162,7 +153,7 @@ js(u'''
   draw("no", %.3f, .25);
   sketch("a31", "skP"); parrow("a31", [[255, 606], [262, 450], [378, 368]], {stroke: "#7A1424", strokeWidth: 5.5, seed: 29});
   draw("a31", %.3f, .7);
-  sketch("l1", "skP"); loopArc("l1", 540, 500, 112, 112, -1.75, 3.6, {stroke: "#7A1424", strokeWidth: 5.5, seed: 31});
+  sketch("l1", "skP"); ell("l1", 540, 505, 310, 116, {stroke: "#7A1424", strokeWidth: 5.5, seed: 31});
   draw("l1", %.3f, .5);
   tl.to("#sk-l0 text", {fill: "#7A1424", duration: .3}, %.3f);
   %s
@@ -186,14 +177,14 @@ F.append(u'''
 tiles = u" ".join(u'box("tl", %d, 548, 52, 64, {seed: %d, r: 12, fill: true});' % (250 + i * 100, 40 + i)
                   for i in range(6))
 SKF.append(u'''
-  sketch("ax", "skF"); arrow("ax", 190, 618, 190, 330, {seed: 33, bend: 0}); arrow("ax", 190, 618, 912, 618, {seed: 35, bend: 0});
+  sketch("ax", "skF"); card("ax"); arrow("ax", 190, 618, 190, 330, {seed: 33, bend: 0}); arrow("ax", 190, 618, 912, 618, {seed: 35, bend: 0});
   draw("ax", %.3f, .45);
-  sketch("tl", "skF"); %s label("tl", 905, 664, "контент", {size: 40, anchor: "end"});
+  sketch("tl", "skF"); card("tl"); %s label("tl", 905, 664, "контент", {size: 40, anchor: "end"});
   draw("tl", %.3f, .3);
-  sketch("cv", "skF"); parrow("cv", [[236, 505], [450, 490], [650, 445], [868, 352]], {seed: 37});
+  sketch("cv", "skF"); card("cv"); parrow("cv", [[236, 505], [450, 490], [650, 445], [868, 352]], {seed: 37});
   label("cv", 214, 350, "знає тебе", {size: 42, anchor: "start"});
   draw("cv", %.3f, .9);
-  sketch("kr", "skF"); ell("kr", 862, 362, 170, 112, {stroke: "#7A1424", strokeWidth: 5, seed: 39});
+  sketch("kr", "skF"); card("kr"); ell("kr", 862, 362, 170, 112, {stroke: "#7A1424", strokeWidth: 5, seed: 39});
   label("kr", 752, 345, "краще", {size: 50, color: "#7A1424", anchor: "end"});
   draw("kr", %.3f, .5);
   erase("ax", %.3f); erase("tl", %.3f); erase("cv", %.3f); erase("kr", %.3f);''' % (
@@ -215,9 +206,9 @@ F.append(u'''
           <span class="chip hid" id="b4b"><i></i>СММниця</span>
           <span class="chip hid" id="b4c"><i></i>підприємниця</span>
         </div>
-        <div id="b4t" class="pill light hid" style="left:358px; top:452px; padding-left:122px">команда</div>''')
+        <div id="b4t" class="pill light hid" style="left:390px; top:452px;">команда</div>''')
 SKF.append(u'''
-  sketch("lp", "skF"); loopArc("lp", 420, 509, 62, 62, -1.75, 3.6, {stroke: "#7A1424", strokeWidth: 5, seed: 43});
+  sketch("lp", "skF"); ell("lp", 540, 510, 420, 172, {strokeWidth: 5, seed: 43});
   draw("lp", %.3f, .55);
   erase("lp", %.3f);''' % (t_onov - 0.1, t_kom + 0.33))
 js(u'''
@@ -226,7 +217,7 @@ js(u'''
   sink("#b4, #b4t", %.3f);
 ''' % (t_blog - 0.15, t_blog - 0.1, t_smm - 0.1, t_pid - 0.1, t_taku - 0.1, t_kom + 0.33))
 g.sfx("pop", t_blog - 0.1); g.sfx("pop", t_taku - 0.1)
-BLACKOUT.append((t_smm - 0.05, t_smm + 0.05))     # the chips say «СММниця, підприємниця»
+BLACKOUT.append((t_blog - 0.05, E(u"підприємниця,", 24.94) + 0.05))   # the chips say them
 
 # 5 · BEHIND — «24/7» --------------------------------------------------------
 m0, m1 = t_kom + 0.33, S(u"монтує,", 30.2) - 0.25
@@ -238,7 +229,7 @@ js(u'''
   sink("#bw", %.3f);
 ''' % (m0, m1 - 0.3))
 g.sfx("whoosh-short", m0)
-BLACKOUT.append((t_24 - 0.05, t_24 + 0.05))       # «24/7» says it
+BLACKOUT.append((t_24 - 0.05, E(u"7,", 28.66) + 0.05))       # «24/7» says it
 
 # 6 · ABOVE — what the team does --------------------------------------------
 t_mn, t_dz, t_ps, t_dal = S(u"монтує,", 30.2), S(u"дизайнить,", 30.62), S(u"пише", 31.16), S(u"так", 32.0)
@@ -259,7 +250,7 @@ js(u'''
   sink("#b6", %.3f);
 ''' % (m1 - 0.25, t_mn - 0.05, t_dz - 0.05, t_ps - 0.05, t_dal - 0.1, t_to - 0.2))
 g.sfx("pop", m1 - 0.25)
-BLACKOUT.append((t_mn - 0.05, t_mn + 0.05))       # the chips say it
+BLACKOUT.append((t_mn - 0.05, E(u"далі,", 32.14) + 0.05))    # the chips say it
 
 # 7 · ABOVE — CTA pill + pointer --------------------------------------------
 t_pyshy, t_plus2 = S(u"пиши", 32.7), S(u"плюс", 32.96)
@@ -268,8 +259,8 @@ F.append(u'''
           <div id="b7" class="pill hid" style="position:relative">Пиши + у коментарі</div>
         </div>''')
 SKF.append(u'''
-  sketch("a7", "skF"); parrow("a7", [[800, 580], [850, 690], [872, 840]], {stroke: "#7A1424", strokeWidth: 5, seed: 47});
-  label("a7", 890, 905, "сюди!", {size: 52, color: "#7A1424"}); halo("a7");
+  sketch("a7", "skF"); parrow("a7", [[800, 580], [850, 690], [872, 840]], {strokeWidth: 5, seed: 47});
+  label("a7", 890, 905, "сюди!", {size: 52});
   draw("a7", %.3f, .5);''' % (t_plus2 - 0.2))
 js(u'''
   pop("#b7", %.3f, .6);

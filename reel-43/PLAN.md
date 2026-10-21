@@ -29,8 +29,9 @@ unchanged (four ticks) → all the work: the unreliable SMM out, Claude in → C
 | 0:53 | above | «Вся робота» checklist; «робить: ненадійний СММник» → struck on «то» → Claude chip on «Claude», three ticks |
 | 0:59 | above | CTA: «€1300 · один раз» on «інвестувати» (kaching), red pill «Пиши + в коментарі» + red arrow toward the comment button |
 
-Captions: explicit phrase chunks (`PHRASES`), key-word pill; on the half screen
-bottom 980. BLACKOUT: «400 євро на місяць / за один акаунт,» (card says it),
+Captions: her old word rail (kit, from `g.chunks`), ink + above her head on the
+half screen. BLACKOUT: «400 євро на місяць за один акаунт,» (the card says it),
 «800 євро на місяць,» (pill), «система за 1300,» (behind words), CTA from «то пиши».
+Sketches over the footage are white (kit); red only on cards and the panel.
 
 Mattes: `sys` 15.83–19.33 (3.5 s), `half1` 29.07–42.30 (13.2 s).

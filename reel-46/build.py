@@ -40,13 +40,31 @@ g = G(dur=DUR, reel=NN)
 # whisper's spelling of what she plainly said -> her word (checked on the plate)
 FIX = {
     u"Вони": u"І вони,", u"можуть перекликатися,": u"можуть перекликатися.", u"і в": u"І в",
-    u"постати.": u"постити.", u"особистеблух": u"особистий блог —",
+    u"постати.": u"постити.", u"особистеблух": u"особистий блог",
     (u"трошки", 48.0): u"трошечки", (u"більше", 48.7): u"більше.", u"мікс": u"мікс,",
     u"есемемниця,": u"СММниця,", (u"плюс", 64.9): u"+", u"коментарі": u"коментарі.",
     u"команду": u"команду,", u"підприємниця,": u"підприємиця,", u"втомлюється": u"втомлюється,",
-    u"tone": u"tone of voice,", u"of": None, u"voice,": None,
 }
-CAPS = load_caps(NN, FIX)
+
+
+def split_tokens(caps):
+    """the caption rail shows one word at a time: align.py's merged tokens
+    («можуть перекликатися.») are split, their time shared by length"""
+    out = []
+    for c in caps:
+        parts = c["w"].split()
+        if len(parts) < 2:
+            out.append(c)
+            continue
+        t, span, tot = c["s"], c["e"] - c["s"], float(sum(len(x) for x in parts))
+        for x in parts:
+            d = span * len(x) / tot
+            out.append(dict(c, w=x, s=round(t, 3), e=round(t + d, 3)))
+            t += d
+    return out
+
+
+CAPS = split_tokens(load_caps(NN, FIX))
 W = Words(CAPS)
 S, E = W.s, W.e
 
@@ -121,21 +139,21 @@ BLACKOUT.append((t_os - 0.05, t_pro + 0.05))           # the titles say it
 # 2 · ABOVE — one «AI-система» under both; 3 · circled, then split «?» ---------
 t_nal, t_ai = S(u"налаштувати", 5.76), S(u"AI-систему", 6.69)
 t_odna, t_chy, t_dvi = S(u"одна", 8.69), S(u"чи", 9.99), S(u"дві", 10.21)
-h0, h1 = S(u"Так", 11.19) - 0.2, S(u"І в", 20.69) - 0.25
+h0, h1 = S(u"Так", 11.19) - 0.2, S(u"І", 20.69) - 0.25
 t_dv2 = S(u"дві", 12.07)
 F.append(u'''
         <div class="ctr" style="top:572px"><div id="sys" class="pill hid"
              style="padding:22px 46px; font-size:44px">AI-система</div></div>''')
 js(u'''
   gsap.set("#a1, #a2", {transformOrigin: "50%% 0%%"});
-  tl.to("#a1, #a2", {scale: .72, y: -14, duration: .6, ease: RISE}, %.3f);
-  sketch("in2", "skF"); arrow("in2", 330, 532, 440, 596, {seed: 5, bend: -.1}); arrow("in2", 750, 532, 640, 596, {seed: 9, bend: .1});
+  tl.to("#a1, #a2", {scale: .62, y: -14, duration: .6, ease: RISE}, %.3f);
+  sketch("in2", "skF"); arrow("in2", 290, 492, 432, 566, {seed: 5, bend: -.1}); arrow("in2", 790, 492, 648, 566, {seed: 9, bend: .1});
   draw("in2", %.3f, .45);
   pop("#sys", %.3f);
-  sketch("c3", "skF"); ell("c3", 540, 622, 440, 160, {stroke: "#7A1424", strokeWidth: 5, seed: 15});
+  sketch("c3", "skF"); ell("c3", 540, 622, 440, 160, {strokeWidth: 5, seed: 15});
   draw("c3", %.3f, .6);
-  sketch("q3", "skF"); ln("q3", 545, 548, 535, 700, {stroke: "#7A1424", strokeWidth: 7, seed: 21});
-  label("q3", 790, 600, "?", {size: 72, color: "#7A1424"});
+  sketch("q3", "skT"); ln("q3", 545, 548, 535, 700, {strokeWidth: 6, seed: 21});
+  label("q3", 790, 600, "?", {size: 72});
   draw("q3", %.3f, .4);
   sink("#a1, #a2", %.3f);
   out("#sys", %.3f); erase("in2", %.3f); erase("c3", %.3f); erase("q3", %.3f);
@@ -147,8 +165,8 @@ g.sfx("pop", t_ai); g.sfx("click-soft", t_dvi)
 HALF.append((h0, h1))
 t_ok2, t_sys2 = S(u"окремі", 12.45), S(u"системи.", 12.87)
 t_kozh = S(u"кожен", 13.82)
-t_skil, t_tov, t_diz = S(u"скіл", 15.5), S(u"tone of voice,", 16.91), S(u"дизайн-систему.", 17.93)
-t_voni = S(u"І вони,", 19.19)
+t_skil, t_tov, t_diz = S(u"скіл", 15.5), S(u"tone", 16.91), S(u"дизайн-систему.", 17.93)
+t_voni = S(u"І", 19.19)
 ROWS = [("r1", 480, u"скіл сценариста", t_skil - 0.45), ("r2", 585, u"tone of voice", t_tov - 0.3),
         ("r3", 690, u"дизайн-система", t_diz - 0.3)]
 rows_js = u"".join(u'''
@@ -164,11 +182,11 @@ js(u'''
   draw("hR", %.3f, .55);
   sketch("wall", "skP"); ln("wall", 540, 292, 538, 785, {stroke: "#7A1424", strokeWidth: 6, seed: 27});
   draw("wall", %.3f, .55);
-  sketch("dn", "skP"); arrow("dn", 290, 408, 290, 470, {seed: 28, bend: 0}); arrow("dn", 790, 408, 790, 470, {seed: 29, bend: 0});
+  sketch("dn", "skP"); under("dn", 200, 382, 380, {stroke: "#7A1424", seed: 28}); under("dn", 720, 382, 860, {stroke: "#7A1424", seed: 29});
   draw("dn", %.3f, .35);
 %s
-  sketch("ech", "skP"); arrow("ech", 430, 625, 650, 625, {stroke: "#7A1424", strokeWidth: 5, seed: 41, bend: .28});
-  arrow("ech", 650, 662, 430, 662, {stroke: "#7A1424", strokeWidth: 5, seed: 43, bend: .28});
+  sketch("ech", "skP"); arrow("ech", 420, 625, 660, 625, {stroke: "#7A1424", strokeWidth: 5, seed: 41, bend: .2});
+  arrow("ech", 660, 662, 420, 662, {stroke: "#7A1424", strokeWidth: 5, seed: 43, bend: .2});
   draw("ech", %.3f, .45);
   %s
 ''' % (t_dv2 - 0.1, t_ok2 - 0.1, t_sys2 - 0.25, t_kozh - 0.15, rows_js, t_voni - 0.05,
@@ -220,7 +238,7 @@ js(u'''
   sink("#bw1, #bw2", %.3f);
 ''' % (t_dv3 - 0.25, t_ok3 - 0.3, t_te - 0.4))
 g.sfx("whoosh-short", t_dv3 - 0.25)
-BLACKOUT.append((t_ce - 0.05, t_ce + 0.05))            # the big words say it
+BLACKOUT.append((t_dv3 - 0.05, t_ok3 + 0.05))          # the big words say it
 
 # 7 · HALF — the routine: one analysis struck out; different people; the wall ---
 h2, h3 = S(u"Те", 28.05) - 0.1, S(u"Тому", 38.57) - 0.25
@@ -231,15 +249,14 @@ t_rizni, t_ne = S(u"різні", 35.11), S(u"не", 37.46)
 names2 = ["lp", "an1", "an2", "anx", "cR", "cL", "ne", "wall2"]
 js(u'''
   sketch("lp", "skP"); ell("lp", 540, 378, 420, 150, {seed: 51});
-  arrow("lp", 668, 310, 722, 340, {seed: 53, bend: 0});
   label("lp", 540, 396, "рутина", {size: 52});
   draw("lp", %.3f, .7);
-  sketch("an1", "skP"); label("an1", 225, 540, "особистий", {size: 44}); label("an1", 855, 540, "школа", {size: 44});
-  arrow("an1", 230, 562, 335, 632, {seed: 55, bend: -.12}); arrow("an1", 850, 562, 745, 632, {seed: 57, bend: .12});
+  sketch("an1", "skP"); label("an1", 205, 505, "особистий", {size: 44}); label("an1", 875, 505, "школа", {size: 44});
+  arrow("an1", 215, 530, 345, 655, {seed: 55, bend: -.1}); arrow("an1", 865, 530, 735, 655, {seed: 57, bend: .1});
   draw("an1", %.3f, .45);
-  sketch("an2", "skP"); box("an2", 340, 600, 400, 104, {seed: 59, fill: true}); label("an2", 540, 668, "один аналіз", {size: 48});
+  sketch("an2", "skP"); box("an2", 350, 612, 380, 104, {seed: 59, fill: true}); label("an2", 540, 680, "один аналіз", {size: 48});
   draw("an2", %.3f, .5);
-  sketch("anx", "skP"); ln("anx", 320, 720, 760, 585, {stroke: "#7A1424", strokeWidth: 7, seed: 61});
+  sketch("anx", "skP"); ln("anx", 330, 735, 750, 600, {stroke: "#7A1424", strokeWidth: 7, seed: 61});
   draw("anx", %.3f, .35);
   erase("an1", %.3f); erase("an2", %.3f); erase("anx", %.3f);
   sketch("cR", "skP"); box("cR", 600, 470, 370, 300, {seed: 63}); label("cR", 785, 530, "школа", {size: 48});
@@ -285,29 +302,30 @@ def checklist(i, x, top, who):
                         for n, r in enumerate(rows))))
 
 
-F.append(checklist("ck2", 140, 342, u"школа") + checklist("ck1", 100, 300, u"особистий"))
+F.append(checklist("ck2", 144, 296, u"школа") + checklist("ck1", 100, 372, u"особистий"))
 F.append(u''.join(u'<div id="pl%d" class="hid" style="position:absolute; left:668px; top:%dpx">'
                   u'<span class="chip" style="font-size:40px; padding:14px 26px 14px 16px"><b class="plus">+</b>%s</span></div>'
-                  % (n, y, w) for n, (y, w) in enumerate(((322, u"робота"), (430, u"час"), (538, u"гроші")))))
+                  % (n, y, w) for n, (y, w) in enumerate(((340, u"робота"), (448, u"час"), (556, u"гроші")))))
 js(u'''
   rise("#a3", %.3f); rise("#a4", %.3f);
   tl.to("#a3", {rotation: -4, x: -14, duration: .5, ease: POP}, %.3f);
   tl.to("#a4", {rotation: 4, x: 14, duration: .5, ease: POP}, %.3f);
   sink("#a3, #a4", %.3f);
   rise("#ck1", %.3f);
-  tl.fromTo("#ck2", {autoAlpha: 0, x: -40, y: -42}, X({autoAlpha: 1, x: 0, y: 0, duration: .55, ease: POP}), %.3f);
+  tl.fromTo("#ck2", {autoAlpha: 0, x: -44, y: 76}, X({autoAlpha: 1, x: 0, y: 0, duration: .55, ease: POP}), %.3f);
   pop("#pl0", %.3f); pop("#pl1", %.3f); pop("#pl2", %.3f);
   sink("#ck1, #ck2, #pl0, #pl1, #pl2", %.3f);
 ''' % (t_dek - 0.1, t_dek + 0.1, t_riz, t_riz, t_u - 0.25, t_rob - 0.05, t_plus, t_plus + 0.1, t_chas, t_kosh,
        t_ale3 - 0.2))
 g.sfx("pop", t_dek - 0.1); g.sfx("pop", t_rob - 0.05); g.sfx("pop", t_plus)
 g.sfx("click-soft", t_chas); g.sfx("kaching", t_kosh)
-BLACKOUT.append((t_plus - 0.05, t_plus + 0.05))         # «+ робота» says it
+BLACKOUT.append((t_plus - 0.05, S(u"роботи.", 44.54) + 0.05))   # «+ робота» says it
+BLACKOUT.append((t_chas - 0.05, t_chas + 0.05))         # «+ час»
 
 # 9 · ABOVE — the exception: one blog, особисте + професійне = особистий бренд --
 t_blog, t_osb, t_prf = S(u"Блогери,", 50.97), S(u"особисте", 52.54), S(u"професійне", 53.24)
 t_odn, t_brand, t_miks = S(u"одному", 53.86), S(u"особистий", 54.92), S(u"мікс,", 56.38)
-t_dovas, t_ne2, t_tomu = S(u"до вас", 57.18), S(u"не", 57.56), S(u"Тому", 58.64)
+t_dovas, t_ne2, t_tomu = S(u"до", 57.18), S(u"не", 57.56), S(u"Тому", 58.64)
 F.append(u'''
         <div id="bl" class="card hid" style="left:120px; top:300px; width:840px; padding:34px 40px;">
           <div class="row" style="gap:20px">
@@ -328,11 +346,11 @@ js(u'''
   rise("#bl", %.3f);
   pop("#bl1", %.3f); pop("#bl2", %.3f); pop("#blp", %.3f, .45);
   rise("#blt", %.3f, 30);
-  sketch("mx", "skF"); ell("mx", 540, 470, 700, 124, {stroke: "#7A1424", strokeWidth: 5, seed: 81});
+  sketch("mx", "skT"); ell("mx", 540, 470, 700, 124, {stroke: "#7A1424", strokeWidth: 5, seed: 81});
   draw("mx", %.3f, .6);
   sink("#bl", %.3f); erase("mx", %.3f);
   pop("#no2", %.3f);
-  sketch("nx", "skF"); ln("nx", 236, 500, 846, 470, {stroke: "#7A1424", strokeWidth: 8, seed: 83});
+  sketch("nx", "skT"); ln("nx", 236, 500, 846, 470, {stroke: "#7A1424", strokeWidth: 8, seed: 83});
   draw("nx", %.3f, .35);
   out("#no2", %.3f); erase("nx", %.3f);
 ''' % (t_blog - 0.1, t_osb, t_prf, t_odn, t_brand - 0.05, t_miks - 0.25, t_dovas - 0.2, t_dovas - 0.2,
@@ -342,7 +360,7 @@ g.sfx("pop", t_dovas); g.sfx("click-soft", t_ne2 - 0.1)
 
 # 10 · ABOVE — CTA: who it is for, a team that never tires, the pill ----------
 t_bl, t_smm, t_pid = S(u"блогерка,", 59.22), S(u"СММниця,", 60.14), S(u"підприємиця,", 61.02)
-t_kom, t_nik, t_stav = S(u"команду,", 62.7), S(u"ніколи", 63.22), S(u"то став", 64.72)
+t_kom, t_nik, t_stav = S(u"команду,", 62.7), S(u"ніколи", 63.22), S(u"то", 64.72)
 F.append(u'''
         <div class="ctr" style="top:312px">
           <span class="chip hid" id="ct1"><i></i>блогерка</span>
@@ -354,12 +372,12 @@ js(u'''
   pop("#ct1", %.3f); pop("#ct2", %.3f); pop("#ct3", %.3f);
   sketch("tm", "skF"); %s
   draw("tm", %.3f, .4);
-  sketch("bt", "skF"); box("bt", 650, 470, 200, 104, {seed: 91, r: 20, fill: "#F2C7CA"});
+  sketch("bt", "skF"); box("bt", 650, 470, 200, 104, {seed: 91, r: 20, fill: "#FFFFFF"});
   box("bt", 850, 500, 22, 44, {seed: 93, r: 8});
   draw("bt", %.3f, .45);
   erase("tm", %.3f); erase("bt", %.3f);
   pop("#ctaP", %.3f, .6);
-  sketch("pt", "skF"); arrow("pt", 930, 700, 852, 582, {stroke: "#7A1424", strokeWidth: 5, seed: 97, bend: .15});
+  sketch("pt", "skF"); arrow("pt", 960, 765, 852, 588, {strokeWidth: 5, seed: 97, bend: .12});
   draw("pt", %.3f, .45);
 ''' % (t_bl, t_smm, t_pid, people("tm", (330, 440, 550), 452), t_kom - 0.4, t_nik - 0.1,
        t_stav - 0.2, t_stav - 0.2, t_stav, t_stav + 0.4))
@@ -373,50 +391,13 @@ for i, (a, b) in enumerate(HALF):
     js("  half(%.3f, %.3f);" % (a, b))
     PLACE.append((a + 0.4, b + 0.2, "bottom", 980))
 
-# ---------------------------------------------------------------- captions
-# phrase breaks by meaning (word start times): add a break / drop the kit's one
-ADD = [6.31, 15.06, 16.63, 25.83, 30.71, 31.53, 33.03, 39.53, 41.77, 43.05, 43.90, 46.66,
-       53.70, 54.50, 55.64]
-DROP = [7.23, 15.50, 26.76, 30.93, 32.75, 40.91, 42.47, 44.54, 46.80, 50.50, 54.12, 55.92]
-KEYS = {1.16: True, 8.69: True, 10.21: True, 12.45: True, 19.87: True, 33.75: True, 40.91: True,
-        u"школи": True, u"налаштувати": True, u"AI-систему": True, u"кожен": True, u"сценариста": True,
-        u"tone of voice": True, u"дизайн-систему": True, u"вирішуємо": True, u"куди": True,
-        u"основі": True, u"рутиною": True, u"запхати": True, u"один": True, u"різні": True,
-        u"нормально": True, u"перетинаються": True, u"AI-системою": True, u"часу": True,
-        u"коштує": True, u"всіх": True, u"Блогери": True, u"одному": True, u"бренд": True,
-        u"мікс": True, u"команду": True, "off": [38.57, 43.05]}
-
-
-def rechunk(chunks):
-    words = [w for c in chunks for w in c["words"]]
-    starts = [c["s"] for c in chunks if not any(abs(c["s"] - t) < 0.03 for t in DROP)] + ADD
-    groups = []
-    for w in words:
-        if not groups or any(abs(w["s"] - t) < 0.03 for t in starts):
-            groups.append([w])
-        else:
-            groups[-1].append(w)
-    res = []
-    for n, ch in enumerate(groups):
-        s = ch[0]["s"]
-        nxt = groups[n + 1][0]["s"] if n + 1 < len(groups) else DUR
-        pos = ("bottom", 1920 - 1520)
-        for a, b, how, y in PLACE:
-            if a <= s < b:
-                pos = (how, y if how == "top" else 1920 - y)
-        res.append({"s": round(s, 3), "e": round(min(nxt, ch[-1]["e"] + 0.6), 3), "words": ch,
-                    "key": g._key(ch, KEYS), "pos": pos})
-    return res
-
-
 def main():
-    chunks = rechunk(g.chunks(CAPS, place=PLACE))
+    chunks = g.chunks(CAPS, place=PLACE)
     if "-v" in sys.argv:
         print(" ".join("%s/%.1f" % (c["w"], c["s"]) for c in CAPS))
         for c in chunks:
-            k = c["key"]
-            print("%6.2f-%6.2f %-6s %s   [%s]" % (c["s"], c["e"], c["pos"][1], " ".join(w["w"] for w in c["words"]),
-                                                 c["words"][k]["w"] if k is not None else "-"))
+            print("%6.2f-%6.2f  %s" % (c["s"], c["e"], " ".join(w["w"] for w in c["words"])))
+    F.append(u'<svg class="sk" id="skT" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>')
     doc = g.document(title=u"Reel 46 — Два акаунти, одна система", plate="assets/base.mp4",
                      behind="\n".join(B), panel="\n".join(P), front="\n".join(F), cover="\n".join(C),
                      js="\n".join(J), chunks=chunks, blackout=BLACKOUT, extra_css=EXTRA_CSS)
