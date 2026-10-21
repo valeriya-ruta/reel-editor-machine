@@ -68,15 +68,14 @@ def js(s):
     J.append(s)
 
 
-# sketch helpers this reel needs: an arrow along a hand-placed curve, and dark
-# ink for a sketch that sits on a white card (over her footage the kit inks white)
+# sketch helper this reel needs: an arrow along a hand-placed curve (over her
+# footage the kit gives its strokes the white halo, as it does arrow())
 js(u'''
   function headAt(s, x2, y2, ang, oo) {
     var L = 34, sp = .5;
     _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang - sp), y2 - L * Math.sin(ang - sp), oo), "head");
     _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang + sp), y2 - L * Math.sin(ang + sp), oo), "head");
   }
-  function card(name) { SK[name].ink = "#1E1E1E"; }
   function parrow(name, pts, o) {
     _ink = SK[name].ink;
     var s = SK[name], oo = opt(o, (o && o.seed) || 67);
@@ -181,14 +180,14 @@ F.append(u'''
 tiles = u" ".join(u'box("tl", %d, 548, 52, 64, {seed: %d, r: 12, fill: true});' % (250 + i * 100, 40 + i)
                   for i in range(6))
 SKF.append(u'''
-  sketch("ax", "skF"); card("ax"); arrow("ax", 190, 618, 190, 330, {seed: 33, bend: 0}); arrow("ax", 190, 618, 912, 618, {seed: 35, bend: 0});
+  sketch("ax", "skF"); arrow("ax", 190, 618, 190, 330, {seed: 33, bend: 0}); arrow("ax", 190, 618, 912, 618, {seed: 35, bend: 0});
   draw("ax", %.3f, .45);
-  sketch("tl", "skF"); card("tl"); %s label("tl", 905, 664, "контент", {size: 40, anchor: "end"});
+  sketch("tl", "skF"); %s label("tl", 905, 664, "контент", {size: 40, anchor: "end"});
   draw("tl", %.3f, .3);
-  sketch("cv", "skF"); card("cv"); parrow("cv", [[236, 505], [450, 490], [650, 445], [868, 352]], {seed: 37});
+  sketch("cv", "skF"); parrow("cv", [[236, 505], [450, 490], [650, 445], [868, 352]], {seed: 37});
   label("cv", 214, 350, "знає тебе", {size: 42, anchor: "start"});
   draw("cv", %.3f, .9);
-  sketch("kr", "skF"); card("kr"); ell("kr", 862, 362, 170, 112, {stroke: "#7A1424", strokeWidth: 5, seed: 39});
+  sketch("kr", "skF"); ell("kr", 862, 362, 170, 112, {stroke: "#7A1424", strokeWidth: 5, seed: 39, fill: false});
   label("kr", 752, 345, "краще", {size: 50, color: "#7A1424", anchor: "end"});
   draw("kr", %.3f, .5);
   erase("ax", %.3f); erase("tl", %.3f); erase("cv", %.3f); erase("kr", %.3f);''' % (
@@ -212,7 +211,7 @@ F.append(u'''
         </div>
         <div id="b4t" class="pill light hid" style="left:390px; top:452px;">команда</div>''')
 SKF.append(u'''
-  sketch("lp", "skF"); ell("lp", 540, 510, 420, 172, {strokeWidth: 5, seed: 43});
+  sketch("lp", "skF"); ell("lp", 540, 510, 420, 172, {strokeWidth: 5, seed: 43, fill: false});    // an outline round the pill, not a sticker over it
   draw("lp", %.3f, .55);
   erase("lp", %.3f);''' % (t_onov - 0.1, t_kom + 0.33))
 js(u'''

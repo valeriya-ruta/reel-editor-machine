@@ -82,7 +82,7 @@ EXTRA_CSS = u"""
     .btn { display: inline-flex; align-items: center; justify-content: center;
            background: var(--primary); color: #fff; border-radius: 999px;
            font-weight: 500; font-size: 32px; padding: 14px 40px; }
-    .ch { opacity: 0; visibility: hidden; }
+    .ch { display: none; }
     .caret { display: inline-block; width: 4px; height: 40px; background: var(--primary);
              vertical-align: -6px; margin-left: 3px; }
     .plh { display: flex; align-items: center; gap: 16px; }
@@ -107,7 +107,7 @@ EXTRA_CSS = u"""
     .hd .rw { width: 420px; height: 68px; }
     .hd .rw .gl { top: 25px; }
     .hd .rw .rt { line-height: 68px; font-size: 54px; font-weight: 700; letter-spacing: -0.02em; }
-    .wl { display: block; height: 18px; border-radius: 9px; background: #EFE3E3; width: 0; margin-top: 18px; }
+    .wl { display: block; height: 20px; border-radius: 10px; background: #E3CFCF; width: 0; margin-top: 22px; }
     .ctr { position: absolute; left: 0; width: 1080px; display: flex; justify-content: center; }
     .ctr .pill { position: relative; }
 """
@@ -116,8 +116,8 @@ EXTRA_CSS = u"""
 t_fomo, t_sht = S(u"фомо", 0.75), S(u"цей штучний", 1.45)
 b_out = S(u"що", 3.09) - 0.2
 B.append(u'''
-        <div id="bw1" class="big hid" style="top:320px; font-size:240px">фомо</div>
-        <div id="bw2" class="big hid" style="top:536px; font-size:240px">на ШІ</div>''')
+        <div id="bw1" class="big hid" style="top:360px; font-size:240px">фомо</div>
+        <div id="bw2" class="big hid" style="top:576px; font-size:240px">на ШІ</div>''')
 g.matte("fomo", 0.5, round(b_out + 0.45 - 0.5, 3))
 js(u'''
   rise("#bw1", %.3f); rise("#bw2", %.3f);
@@ -155,7 +155,7 @@ js(u'''
   %s
   sink("#b2a, #b2b, #b2cur", %.3f);
 ''' % (t_kup - 0.35, t_kurs - 0.45, t_kurs, t_thr - 0.25, t_thr + 0.2,
-       " ".join(u'tl.set("#b2b .ch:nth-child(%d)", {autoAlpha: 1}, %.3f);' % (i + 1, t_yak + i * step)
+       " ".join(u'tl.set("#b2b .ch:nth-child(%d)", {display: "inline"}, %.3f);' % (i + 1, t_yak + i * step)
                 for i in range(len(Q))),
        t_poch - 0.12))
 g.sfx("pop", t_kup - 0.35); g.sfx("click-soft", t_kurs); g.sfx("pop", t_thr - 0.25); g.sfx("typing", t_yak)
@@ -166,14 +166,16 @@ t_tomu = S(u"Тому", 8.99)
 F.append(u'<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>')
 js(u'''
   sketch("sw", "skF");
-  ell("sw", 540, 490, 250, 250, {seed: 3});
-  ln("sw", 540, 365, 540, 338, {seed: 5}); box("sw", 512, 306, 56, 30, {seed: 7, r: 10});
-  ln("sw", 540, 395, 540, 412, {seed: 9}); ln("sw", 635, 490, 618, 490, {seed: 11});
-  ln("sw", 540, 585, 540, 568, {seed: 13}); ln("sw", 445, 490, 462, 490, {seed: 15});
-  ln("sw", 540, 490, 588, 418, {seed: 17, strokeWidth: 6});
-  draw("sw", %.3f, .4);
-  erase("sw", %.3f);
-''' % (t_poch, t_tomu - 0.2))
+  ell("sw", 540, 490, 260, 260, {seed: 3, strokeWidth: 5.5});
+  ln("sw", 540, 360, 540, 338, {seed: 5, strokeWidth: 5.5}); box("sw", 512, 306, 56, 30, {seed: 7, r: 10, strokeWidth: 5.5});
+  draw("sw", %.3f, .35);
+  sketch("sw2", "skF");
+  ln("sw2", 540, 490, 592, 412, {seed: 17, strokeWidth: 7});
+  ln("sw2", 540, 388, 540, 408, {seed: 9}); ln("sw2", 642, 490, 622, 490, {seed: 11});
+  ln("sw2", 540, 592, 540, 572, {seed: 13}); ln("sw2", 438, 490, 458, 490, {seed: 15});
+  draw("sw2", %.3f, .25);
+  erase("sw", %.3f); erase("sw2", %.3f);
+''' % (t_poch - 0.05, t_poch + 0.55, t_tomu - 0.2, t_tomu - 0.2))
 g.sfx("click-soft", t_poch)
 
 # 4 · ABOVE — the playlist card ------------------------------------------------
@@ -203,14 +205,13 @@ F.append(u'''
                      % mark("claude", 36), u"".join(row(i + 1, t) for i, t in
                                                    enumerate((u"Конектори", u"Скіли", u"Копірайтер")))))
 js(u'''
-  gsap.set("#plcl", {autoAlpha: 0});
   rise("#pl", %.3f);
   fadein("#plt2", %.3f, .3);
   pop("#plc1", %.3f); pop("#plc2", %.3f);
   tl.to("#plyt", {color: "#7A1424", duration: .2}, %.3f); tl.fromTo("#plyt", {scale: 1}, X({scale: 1.25, duration: .18, yoyo: true, repeat: 1}), %.3f);
   tl.fromTo("#pl .plr", {autoAlpha: 0, y: -16}, X({autoAlpha: 1, y: 0, duration: .45, ease: RISE, stagger: .16}), %.3f);
   pop("#plc3", %.3f);
-  pop("#plcl", %.3f, .5);
+  tl.fromTo("#plcl", {scale: 1}, X({scale: 1.45, duration: .2, yoyo: true, repeat: 1}), %.3f);
   tl.to("#pr1", {backgroundColor: "#FFF0F0", duration: .25}, %.3f);
   tl.to("#pr1 .th", {backgroundColor: "#7A1424", duration: .25}, %.3f);
   tl.to("#pr1 .gl", {autoAlpha: 0, duration: .15}, %.3f); tl.to("#pr1 .rt", {opacity: 1, duration: .25}, %.3f);
@@ -296,7 +297,7 @@ t_pys, t_tv, t_tekst = S(u"писати", 33.93), S(u"твоєму", 34.83), S(u
 t_kor, t_sc, t_lid, t_pov, t_tak = (S(u"користуюсь", 38.00), S(u"сценаріїв,", 39.88), S(u"лід-магнітів,", 40.72),
                                     S(u"повідомлень", 41.77), S(u"так", 42.47))
 t_end7 = E(u"далі.", 42.61) + 0.3
-WL = (92, 84, 96, 62)
+WL = (94, 86, 97, 90, 58)
 F.append(u'''
         <div id="cw" class="card hid" style="left:120px; top:300px; width:840px; height:370px; padding:30px 36px;">
           <div class="row" style="gap:16px; color:#7A1424">%s
