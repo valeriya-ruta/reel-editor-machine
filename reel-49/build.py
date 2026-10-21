@@ -142,6 +142,7 @@ js(u'''
   sink("#b1, #b1x", %.3f);
 ''' % (t_gol - 0.13, t_plus, cloud("cl", 140, 262, 800, 420, u"{seed: 41}"), t_hm1 - 0.65, e_hm1))
 g.sfx("pop", t_gol - 0.13); g.sfx("whoosh-short", t_hm1 - 0.65)
+BLACKOUT.append((S(u"мого", 1.23) - 0.05, E(u"системи", 2.64) + 0.05))   # the card says it (its title is a heading)
 
 # 2 · ABOVE — the cloud steps aside; a task thrown from the phone into it -------
 t_mv = e_hm1 + 0.02
@@ -160,7 +161,7 @@ js(u'''
   sketch("phl", "skF"); label("phl", 220, 676, "телефон", {size: 42});
   draw("phl", %.3f);
   erase("ph", %.3f); erase("ar", %.3f); erase("phl", %.3f);
-''' % (t_mv, t_mv - 0.05, t_zad, t_kyn - 0.15, t_kyn, S(u"прямо", 6.3) + 0.1, t_back, t_back, t_back))
+''' % (t_mv, t_mv - 0.05, t_zad, t_kyn - 0.15, t_kyn, S(u"прямо", 6.3) - 0.1, t_back, t_back, t_back))
 g.sfx("pop", t_zad); g.sfx("whoosh-short", t_kyn)
 
 # 3 · ABOVE — the cloud grows back: Claude's laptop, the task ticks, an edit renders
@@ -248,6 +249,11 @@ js(u'''
                               cloud("b_clr", *CL_P, o=u'{seed: 84, stroke: "#7A1424", strokeWidth: 5.5}'), t_hm2 - 0.3,
                               t_ane - 0.1, t_ane + 0.25, t_komp2 - 0.3)))
 g.sfx("whoosh-short", h0); g.sfx("pop", t_kar - 0.35); g.sfx("click-soft", t_komp2); g.sfx("whoosh-short", h1)
+# the kit's rail keeps a word up until the next one starts, so «компʼютері.»
+# (19.38) would hang in ink on the panel's caption line until «Тому» (20.07) —
+# over her hair once the panel has slid past y 980 (~h1 + 0.3). It leaves with
+# the panel, while the line is still on white (as reel 45).
+js(u'  tl.set("#w%d", {autoAlpha: 0}, %.3f);' % (CAPS.index(W.hit(u"компʼютері.", 19.38)), h1 + 0.2))
 
 # 5 · ABOVE — CTA: who it is for, a cloud team 24/7, «став +» ---------------------
 t_blog, t_smm, t_pid = S(u"блогерка,", 20.82), S(u"СММниця", 21.32), S(u"підприємиця", 22.0)
@@ -280,6 +286,10 @@ js(u'''
 ''' % (t_blog, t_smm, t_pid, cloud("cc", 340, 372, 400, 190, u"{seed: 91}"), t_hmn2 - 0.45, t_24, t_stav,
        t_stav + 0.1))
 g.sfx("pop", t_blog); g.sfx("pop", t_24); g.sfx("pop", t_stav)
+BLACKOUT.append((t_blog - 0.05, E(u"підприємиця", 22.0) + 0.05))   # the chips say them (as reel 45)
+# the big «24/7» in the cloud says it; it runs on into the pill's blackout, or
+# the plaque would blink back for 0.3 s over the pause before «то став»
+BLACKOUT.append((t_24 - 0.05, t_to - 0.05))
 BLACKOUT.append((t_to - 0.05, DUR))     # «то став + в коментарі»: the pill says it
 
 # ---------------------------------------------------------------- matte for the half screen

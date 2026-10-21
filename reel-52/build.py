@@ -116,14 +116,15 @@ EXTRA_CSS = u"""
 t_fomo, t_sht = S(u"фомо", 0.75), S(u"цей штучний", 1.45)
 b_out = S(u"що", 3.09) - 0.2
 B.append(u'''
-        <div id="bw1" class="big hid" data-layout-allow-overlap style="top:360px; font-size:240px">фомо</div>
-        <div id="bw2" class="big hid" data-layout-allow-overlap style="top:576px; font-size:240px">на ШІ</div>''')
+        <div id="bw1" class="big hid" data-layout-allow-overlap data-layout-allow-occlusion style="top:360px; font-size:240px">фомо</div>
+        <div id="bw2" class="big hid" data-layout-allow-overlap data-layout-allow-occlusion style="top:576px; font-size:240px">на ШІ</div>''')
 g.matte("fomo", 0.5, round(b_out + 0.45 - 0.5, 3))
 js(u'''
   rise("#bw1", %.3f); rise("#bw2", %.3f);
   sink("#bw1, #bw2", %.3f);
 ''' % (t_fomo - 0.15, t_sht - 0.1, b_out))
 g.sfx("whoosh-short", t_fomo - 0.15)
+BLACKOUT.append((t_fomo - 0.05, S(u"і", 2.2) - 0.03))   # «фомо / на ШІ» says it (r47's «100%» twice)
 
 # 2 · ABOVE — buy a course · ask Threads ---------------------------------------
 t_kup, t_kurs = S(u"купувати", 4.19), S(u"курс", 4.77)
@@ -159,7 +160,9 @@ js(u'''
                 for i in range(len(Q))),
        t_poch - 0.12))
 g.sfx("pop", t_kup - 0.35); g.sfx("click-soft", t_kurs); g.sfx("pop", t_thr - 0.25); g.sfx("typing", t_yak)
-BLACKOUT.append((t_yak - 0.03, t_poch - 0.03))          # the post types it
+# «Курс по ШІ» / «Купити» say «купувати курс», the Threads card «Threads», the post types
+# «який курс взяти» — one span: «чи йти в» alone between them would pulse the plaque
+BLACKOUT.append((t_kup - 0.05, t_poch - 0.03))
 
 # 3 · ABOVE — «почекай хвилинку»: a stopwatch ----------------------------------
 t_tomu = S(u"Тому", 8.99)
@@ -200,7 +203,7 @@ F.append(u'''
             <span class="chip sm hid" id="plc2"><i></i>безкоштовно</span>
             <span class="chip sm on hid" id="plc3"><i></i>база</span>
           </div>
-          <div style="margin-top:8px">%s</div>
+          <div id="plrows" style="margin-top:8px; height:0; overflow:hidden">%s</div>
         </div>''' % (mark("youtube", 52), u'<span id="plcl" style="display:inline-block; vertical-align:-4px; color:#7A1424">%s</span>'
                      % mark("claude", 36), u"".join(row(i + 1, t) for i, t in
                                                    enumerate((u"Конектори", u"Скіли", u"Копірайтер")))))
@@ -209,6 +212,7 @@ js(u'''
   fadein("#plt2", %.3f, .3);
   pop("#plc1", %.3f); pop("#plc2", %.3f);
   tl.to("#plyt", {color: "#7A1424", duration: .2}, %.3f); tl.fromTo("#plyt", {scale: 1}, X({scale: 1.25, duration: .18, yoyo: true, repeat: 1}), %.3f);
+  tl.fromTo("#plrows", {height: 0}, X({height: 204, duration: .45, ease: RISE}), %.3f);
   tl.fromTo("#pl .plr", {autoAlpha: 0, y: -16}, X({autoAlpha: 1, y: 0, duration: .45, ease: RISE, stagger: .16}), %.3f);
   pop("#plc3", %.3f);
   tl.fromTo("#plcl", {scale: 1}, X({scale: 1.45, duration: .2, yoyo: true, repeat: 1}), %.3f);
@@ -216,11 +220,13 @@ js(u'''
   tl.to("#pr1 .th", {backgroundColor: "#7A1424", duration: .25}, %.3f);
   tl.to("#pr1 .gl", {autoAlpha: 0, duration: .15}, %.3f); tl.to("#pr1 .rt", {opacity: 1, duration: .25}, %.3f);
   sink("#pl", %.3f);
-''' % (t_zn - 0.25, t_po, t_ukr, t_bez, t_yt, t_yt, t_try - 0.05, t_baz, t_kl, t_od, t_od,
+''' % (t_zn - 0.25, t_po, t_ukr, t_bez, t_yt, t_yt, t_try - 0.1, t_try - 0.05, t_baz, t_kl, t_od, t_od,
        t_kon - 0.05, t_kon - 0.05, h0 - 0.1))
 g.sfx("pop", t_zn - 0.25); g.sfx("click-soft", t_ukr); g.sfx("pop", t_yt)
 g.sfx("pop", t_try - 0.05); g.sfx("click-soft", t_kon)
-BLACKOUT.append((t_ukr - 0.03, S(u"на", 12.63) - 0.03))   # the chips say it
+BLACKOUT.append((t_mk - 0.05, S(u"на", 12.63) - 0.03))    # the title + chips say «міні-курс по Клоду українською безкоштовно»
+BLACKOUT.append((t_baz - 0.05, S(u"основу", 15.9) - 0.03))  # the chip says «база»
+BLACKOUT.append((t_kon - 0.05, h0 + 0.46))                 # row 1 says «Конектори»; runs into the panel's ink span
 
 # 5 · HALF — 1 Конектори: твій ШІ gets hands · 2 Скіли: a new one, in the video --
 h1 = S(u"І", 30.43) - 0.15
@@ -231,11 +237,13 @@ t_dr, t_sk = S(u"Друге", 24.45), S(u"скіли.", 25.19)
 t_sho, t_tak, t_stv = S(u"Що", 25.88), S(u"таке?", 26.22), S(u"створити?", 26.90)
 t_uv, t_stvm, t_nov = S(u"у", 28.18), S(u"створюємо", 28.86), S(u"новий", 29.70)
 P.append(u'''
+        <div data-layout-allow-occlusion>
         <div class="hd hid" id="hd1"><span class="th"><b></b></span>
           <span class="rw"><span class="rt" style="opacity:1">Конектори</span></span></div>
         <div class="hd hid" id="hd2"><span class="th"><b></b></span>
           <span class="rw"><span class="gl"></span><span class="rt">Скіли</span></span></div>
-        <svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>''')
+        <svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
+        </div>''')
 js(u'''
   rise("#hd1", %.3f);
   sketch("k1", "skP"); box("k1", 100, 470, 300, 170, {seed: 21}); label("k1", 250, 572, "твій ШІ", {size: 54});
@@ -272,10 +280,13 @@ js(u'''
 ''' % (h0 + 0.45, t_te - 0.05, t_pid - 0.15, t_daty - 0.1, t_pot - 0.2,
        t_dr - 0.2, t_dr - 0.2, t_dr - 0.2, t_dr - 0.2, t_dr - 0.2,
        t_dr, t_sk - 0.05, t_sk - 0.05,
-       t_sho - 0.1, t_tak - 0.1, t_stv - 0.25, t_uv - 0.1, t_stvm - 0.05, t_nov - 0.05,
+       t_sk - 0.1, t_tak - 0.1, t_stv - 0.25, t_uv - 0.1, t_stvm - 0.05, t_nov - 0.05,
        h1, h1, h1, h1, h1, h1, h1))
 g.sfx("whoosh-short", h0); g.sfx("click-soft", t_pot); g.sfx("pop", t_stvm)
 g.sfx("whoosh-short", h1)
+BLACKOUT.append((t_pot - 0.05, t_dr - 0.03))               # «потужні руки» is written
+BLACKOUT.append((t_sk - 0.05, t_sho - 0.03))               # the heading says «Скіли»
+BLACKOUT.append((t_nov - 0.05, h1 + 0.12))                 # «новий скіл» is written
 
 # 6 · ABOVE — back to the playlist: row 3 «Копірайтер» ------------------------
 t_tr, t_kop, t_kld = S(u"третє", 30.81), S(u"копірайтера", 31.51), S(u"Клоді,", 33.01)
@@ -291,6 +302,7 @@ js(u'''
 ''' % (h0 + 0.5, h0 + 0.5, h0 + 0.5, h0 + 0.5, t_tr - 0.15, t_tr, t_kop - 0.05, t_kop - 0.05, t_kop - 0.05,
        t_kld - 0.45))
 g.sfx("pop", t_tr - 0.15)
+BLACKOUT.append((t_kop - 0.05, S(u"в", 32.8) - 0.03))      # row 3 says «Копірайтер»
 
 # 7 · ABOVE — the copywriter writes in your style; then her own texts ---------
 t_pys, t_tv, t_tekst = S(u"писати", 33.93), S(u"твоєму", 34.83), S(u"текст,", 36.40)
@@ -361,7 +373,8 @@ js(u'''
   sink("#plc, #cta", %.3f); erase("pt", %.3f);
 ''' % (t_otr - 0.3, t_pos1, t_pys2, t_kom - 0.3, t_pos2, t_pos2, t_pos2, t_ya - 0.3, t_ya - 0.3))
 g.sfx("pop", t_otr - 0.3); g.sfx("pop", t_pys2); g.sfx("notification", t_pos2)
-BLACKOUT.append((t_pys2 - 0.03, S(u"і", 47.61) - 0.03))            # the pill says it
+BLACKOUT.append((t_pos1 - 0.05, S(u"і", 47.61) - 0.03))  # the chip «посилання», then the pill («то просто» between)
+BLACKOUT.append((t_pos2 - 0.05, S(u"на", 49.1) - 0.03))    # the chip «посилання» lights
 
 # 9 · ABOVE — «підпишись»: the follow button is pressed ------------------------
 t_pidp = S(u"підпишись!", 53.71)

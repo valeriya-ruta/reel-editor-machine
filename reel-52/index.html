@@ -156,16 +156,18 @@
              muted playsinline></video>
       <div id="behind" class="L">
 
-        <div id="bw1" class="big hid" data-layout-allow-overlap style="top:360px; font-size:240px">фомо</div>
-        <div id="bw2" class="big hid" data-layout-allow-overlap style="top:576px; font-size:240px">на ШІ</div>
+        <div id="bw1" class="big hid" data-layout-allow-overlap data-layout-allow-occlusion style="top:360px; font-size:240px">фомо</div>
+        <div id="bw2" class="big hid" data-layout-allow-overlap data-layout-allow-occlusion style="top:576px; font-size:240px">на ШІ</div>
       </div>
       <div id="panel">
 
+        <div data-layout-allow-occlusion>
         <div class="hd hid" id="hd1"><span class="th"><b></b></span>
           <span class="rw"><span class="rt" style="opacity:1">Конектори</span></span></div>
         <div class="hd hid" id="hd2"><span class="th"><b></b></span>
           <span class="rw"><span class="gl"></span><span class="rt">Скіли</span></span></div>
         <svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
+        </div>
       </div>
       <video id="matte-fomo" class="plate matte" src="assets/mattes/fomo.webm"
              data-start="0.500" data-duration="2.867" data-media-start="0"
@@ -200,7 +202,7 @@
             <span class="chip sm hid" id="plc2"><i></i>безкоштовно</span>
             <span class="chip sm on hid" id="plc3"><i></i>база</span>
           </div>
-          <div style="margin-top:8px"><div class="plr" id="pr1"><span class="th"><b></b></span><span class="rw"><span class="gl"></span><span class="rt">Конектори</span></span></div><div class="plr" id="pr2"><span class="th"><b></b></span><span class="rw"><span class="gl"></span><span class="rt">Скіли</span></span></div><div class="plr" id="pr3"><span class="th"><b></b></span><span class="rw"><span class="gl"></span><span class="rt">Копірайтер</span></span></div></div>
+          <div id="plrows" style="margin-top:8px; height:0; overflow:hidden"><div class="plr" id="pr1"><span class="th"><b></b></span><span class="rw"><span class="gl"></span><span class="rt">Конектори</span></span></div><div class="plr" id="pr2"><span class="th"><b></b></span><span class="rw"><span class="gl"></span><span class="rt">Скіли</span></span></div><div class="plr" id="pr3"><span class="th"><b></b></span><span class="rw"><span class="gl"></span><span class="rt">Копірайтер</span></span></div></div>
         </div>
 
         <div id="cw" class="card hid" style="left:120px; top:300px; width:840px; height:370px; padding:30px 36px;">
@@ -238,11 +240,6 @@
       <div id="caps">
       <div class="wc" id="w0">ЯКЩО</div>
       <div class="wc" id="w1">В ТЕБЕ</div>
-      <div class="wc" id="w2">ФОМО</div>
-      <div class="wc" id="w3">НА</div>
-      <div class="wc" id="w4">ВЕСЬ</div>
-      <div class="wc" id="w5">ЦЕЙ ШТУЧНИЙ</div>
-      <div class="wc" id="w6">ІНТЕЛЕКТ</div>
       <div class="wc" id="w7">І</div>
       <div class="wc" id="w8">ТОБІ</div>
       <div class="wc" id="w9">ЗДАЄТЬСЯ,</div>
@@ -250,29 +247,18 @@
       <div class="wc" id="w11">ВЖЕ</div>
       <div class="wc" id="w12">ТРЕБА</div>
       <div class="wc" id="w13">БІГТИ</div>
-      <div class="wc" id="w14">КУПУВАТИ</div>
-      <div class="wc" id="w15">КУРС</div>
-      <div class="wc" id="w16">ЧИ</div>
-      <div class="wc" id="w17">ЙТИ</div>
-      <div class="wc" id="w18">В</div>
-      <div class="wc" id="w19">THREADS,</div>
-      <div class="wc" id="w20">СПИТАТИ,</div>
       <div class="wc" id="w24">ПОЧЕКАЙ</div>
       <div class="wc" id="w25">ХВИЛИНКУ.</div>
       <div class="wc" id="w26">ТОМУ</div>
       <div class="wc" id="w27">ЩО</div>
       <div class="wc" id="w28">Я</div>
       <div class="wc" id="w29">ЗНЯЛА</div>
-      <div class="wc" id="w30">МІНІ-КУРС</div>
-      <div class="wc" id="w31">ПО</div>
-      <div class="wc" id="w32">КЛОДУ</div>
       <div class="wc" id="w35">НА</div>
       <div class="wc" id="w36">ЮТУБІ.</div>
       <div class="wc" id="w37">ТРИ</div>
       <div class="wc" id="w38">ВІДЕО,</div>
       <div class="wc" id="w39">ЯКІ</div>
       <div class="wc" id="w40">ПОЯСНЮЮТЬ</div>
-      <div class="wc" id="w41">БАЗУ,</div>
       <div class="wc" id="w42">ОСНОВУ</div>
       <div class="wc" id="w43">РОБОТИ</div>
       <div class="wc" id="w44">З</div>
@@ -281,9 +267,6 @@
       <div class="wc" id="w47">ВІДЕО,</div>
       <div class="wc" id="w48">ЦЕ</div>
       <div class="wc" id="w49">ПРО</div>
-      <div class="wc" id="w50">КОНЕКТОРИ,</div>
-      <div class="wc" id="w51">ПРО</div>
-      <div class="wc" id="w52">ТЕ,</div>
       <div class="wc inv" id="w53" style="top:862px">ЯК ЇХ</div>
       <div class="wc inv" id="w54" style="top:862px">ПІДКЛЮЧИТИ,</div>
       <div class="wc inv" id="w55" style="top:862px">ЯК</div>
@@ -292,12 +275,9 @@
       <div class="wc inv" id="w58" style="top:862px">ШТУЧНОМУ</div>
       <div class="wc inv" id="w59" style="top:862px">ІНТЕЛЕКТУ</div>
       <div class="wc inv" id="w60" style="top:862px">ДУЖЕ</div>
-      <div class="wc inv" id="w61" style="top:862px">ПОТУЖНІ</div>
-      <div class="wc inv" id="w62" style="top:862px">РУКИ.</div>
       <div class="wc inv" id="w63" style="top:862px">ДРУГЕ</div>
       <div class="wc inv" id="w64" style="top:862px">ВІДЕО</div>
       <div class="wc inv" id="w65" style="top:862px">ПРО</div>
-      <div class="wc inv" id="w66" style="top:862px">СКІЛИ.</div>
       <div class="wc inv" id="w67" style="top:862px">ЩО</div>
       <div class="wc inv" id="w68" style="top:862px">ЦЕ</div>
       <div class="wc inv" id="w69" style="top:862px">ТАКЕ?</div>
@@ -310,12 +290,9 @@
       <div class="wc inv" id="w76" style="top:862px">ВІДЕО</div>
       <div class="wc inv" id="w77" style="top:862px">СТВОРЮЄМО</div>
       <div class="wc inv" id="w78" style="top:862px">РАЗОМ</div>
-      <div class="wc inv" id="w79" style="top:862px">НОВИЙ</div>
-      <div class="wc inv" id="w80" style="top:862px">СКІЛ.</div>
       <div class="wc inv" id="w81" style="top:862px">І</div>
       <div class="wc" id="w82">ТРЕТЄ</div>
       <div class="wc" id="w83">ЦЕ ПРО</div>
-      <div class="wc" id="w84">КОПІРАЙТЕРА</div>
       <div class="wc" id="w85">В</div>
       <div class="wc" id="w86">КЛОДІ,</div>
       <div class="wc" id="w87">ЯКИЙ</div>
@@ -340,13 +317,9 @@
       <div class="wc" id="w111">ТИ</div>
       <div class="wc" id="w112">ХОЧЕШ</div>
       <div class="wc" id="w113">ОТРИМАТИ</div>
-      <div class="wc" id="w114">ПОСИЛАННЯ,</div>
-      <div class="wc" id="w115">ТО</div>
-      <div class="wc" id="w116">ПРОСТО</div>
       <div class="wc" id="w121">І</div>
       <div class="wc" id="w122">Я ВИШЛЮ</div>
       <div class="wc" id="w123">ТОБІ</div>
-      <div class="wc" id="w124">ПОСИЛАННЯ</div>
       <div class="wc" id="w125">НА</div>
       <div class="wc" id="w126">ЦЕЙ</div>
       <div class="wc" id="w127">ПЛЕЙЛИСТ</div>
@@ -542,11 +515,6 @@
 
   tl.set("#w0", {autoAlpha: 1}, 0.000); tl.set("#w0", {autoAlpha: 0}, 0.405);
   tl.set("#w1", {autoAlpha: 1}, 0.490); tl.set("#w1", {autoAlpha: 0}, 0.665);
-  tl.set("#w2", {autoAlpha: 1}, 0.750); tl.set("#w2", {autoAlpha: 0}, 0.965);
-  tl.set("#w3", {autoAlpha: 1}, 1.050); tl.set("#w3", {autoAlpha: 0}, 1.165);
-  tl.set("#w4", {autoAlpha: 1}, 1.250); tl.set("#w4", {autoAlpha: 0}, 1.365);
-  tl.set("#w5", {autoAlpha: 1}, 1.450); tl.set("#w5", {autoAlpha: 0}, 1.825);
-  tl.set("#w6", {autoAlpha: 1}, 1.910); tl.set("#w6", {autoAlpha: 0}, 2.165);
   tl.set("#w7", {autoAlpha: 1}, 2.250); tl.set("#w7", {autoAlpha: 0}, 2.350);
   tl.set("#w8", {autoAlpha: 1}, 2.430); tl.set("#w8", {autoAlpha: 0}, 2.565);
   tl.set("#w9", {autoAlpha: 1}, 2.650); tl.set("#w9", {autoAlpha: 0}, 3.002);
@@ -554,29 +522,18 @@
   tl.set("#w11", {autoAlpha: 1}, 3.207); tl.set("#w11", {autoAlpha: 0}, 3.322);
   tl.set("#w12", {autoAlpha: 1}, 3.407); tl.set("#w12", {autoAlpha: 0}, 3.682);
   tl.set("#w13", {autoAlpha: 1}, 3.767); tl.set("#w13", {autoAlpha: 0}, 4.102);
-  tl.set("#w14", {autoAlpha: 1}, 4.187); tl.set("#w14", {autoAlpha: 0}, 4.682);
-  tl.set("#w15", {autoAlpha: 1}, 4.767); tl.set("#w15", {autoAlpha: 0}, 5.062);
-  tl.set("#w16", {autoAlpha: 1}, 5.147); tl.set("#w16", {autoAlpha: 0}, 5.247);
-  tl.set("#w17", {autoAlpha: 1}, 5.327); tl.set("#w17", {autoAlpha: 0}, 5.462);
-  tl.set("#w18", {autoAlpha: 1}, 5.547); tl.set("#w18", {autoAlpha: 0}, 5.647);
-  tl.set("#w19", {autoAlpha: 1}, 5.727); tl.set("#w19", {autoAlpha: 0}, 5.942);
-  tl.set("#w20", {autoAlpha: 1}, 6.027); tl.set("#w20", {autoAlpha: 0}, 6.382);
   tl.set("#w24", {autoAlpha: 1}, 7.433); tl.set("#w24", {autoAlpha: 0}, 7.918);
   tl.set("#w25", {autoAlpha: 1}, 8.003); tl.set("#w25", {autoAlpha: 0}, 8.907);
   tl.set("#w26", {autoAlpha: 1}, 8.992); tl.set("#w26", {autoAlpha: 0}, 9.092);
   tl.set("#w27", {autoAlpha: 1}, 9.172); tl.set("#w27", {autoAlpha: 0}, 9.272);
   tl.set("#w28", {autoAlpha: 1}, 9.332); tl.set("#w28", {autoAlpha: 0}, 9.432);
   tl.set("#w29", {autoAlpha: 1}, 9.512); tl.set("#w29", {autoAlpha: 0}, 9.827);
-  tl.set("#w30", {autoAlpha: 1}, 9.912); tl.set("#w30", {autoAlpha: 0}, 10.447);
-  tl.set("#w31", {autoAlpha: 1}, 10.532); tl.set("#w31", {autoAlpha: 0}, 10.647);
-  tl.set("#w32", {autoAlpha: 1}, 10.732); tl.set("#w32", {autoAlpha: 0}, 11.187);
   tl.set("#w35", {autoAlpha: 1}, 12.632); tl.set("#w35", {autoAlpha: 0}, 12.732);
   tl.set("#w36", {autoAlpha: 1}, 12.812); tl.set("#w36", {autoAlpha: 0}, 13.409);
   tl.set("#w37", {autoAlpha: 1}, 13.494); tl.set("#w37", {autoAlpha: 0}, 13.709);
   tl.set("#w38", {autoAlpha: 1}, 13.794); tl.set("#w38", {autoAlpha: 0}, 14.317);
   tl.set("#w39", {autoAlpha: 1}, 14.402); tl.set("#w39", {autoAlpha: 0}, 14.502);
   tl.set("#w40", {autoAlpha: 1}, 14.522); tl.set("#w40", {autoAlpha: 0}, 15.277);
-  tl.set("#w41", {autoAlpha: 1}, 15.362); tl.set("#w41", {autoAlpha: 0}, 15.837);
   tl.set("#w42", {autoAlpha: 1}, 15.922); tl.set("#w42", {autoAlpha: 0}, 16.717);
   tl.set("#w43", {autoAlpha: 1}, 16.802); tl.set("#w43", {autoAlpha: 0}, 17.277);
   tl.set("#w44", {autoAlpha: 1}, 17.362); tl.set("#w44", {autoAlpha: 0}, 17.462);
@@ -585,9 +542,6 @@
   tl.set("#w47", {autoAlpha: 1}, 18.407); tl.set("#w47", {autoAlpha: 0}, 18.682);
   tl.set("#w48", {autoAlpha: 1}, 18.767); tl.set("#w48", {autoAlpha: 0}, 18.867);
   tl.set("#w49", {autoAlpha: 1}, 18.927); tl.set("#w49", {autoAlpha: 0}, 19.062);
-  tl.set("#w50", {autoAlpha: 1}, 19.147); tl.set("#w50", {autoAlpha: 0}, 19.756);
-  tl.set("#w51", {autoAlpha: 1}, 19.841); tl.set("#w51", {autoAlpha: 0}, 20.036);
-  tl.set("#w52", {autoAlpha: 1}, 20.121); tl.set("#w52", {autoAlpha: 0}, 20.276);
   tl.set("#w53", {autoAlpha: 1}, 20.361); tl.set("#w53", {autoAlpha: 0}, 20.496);
   tl.set("#w54", {autoAlpha: 1}, 20.581); tl.set("#w54", {autoAlpha: 0}, 21.066);
   tl.set("#w55", {autoAlpha: 1}, 21.151); tl.set("#w55", {autoAlpha: 0}, 21.251);
@@ -596,12 +550,9 @@
   tl.set("#w58", {autoAlpha: 1}, 21.971); tl.set("#w58", {autoAlpha: 0}, 22.266);
   tl.set("#w59", {autoAlpha: 1}, 22.351); tl.set("#w59", {autoAlpha: 0}, 22.826);
   tl.set("#w60", {autoAlpha: 1}, 22.911); tl.set("#w60", {autoAlpha: 0}, 23.106);
-  tl.set("#w61", {autoAlpha: 1}, 23.191); tl.set("#w61", {autoAlpha: 0}, 23.566);
-  tl.set("#w62", {autoAlpha: 1}, 23.651); tl.set("#w62", {autoAlpha: 0}, 24.366);
   tl.set("#w63", {autoAlpha: 1}, 24.451); tl.set("#w63", {autoAlpha: 0}, 24.646);
   tl.set("#w64", {autoAlpha: 1}, 24.731); tl.set("#w64", {autoAlpha: 0}, 24.926);
   tl.set("#w65", {autoAlpha: 1}, 25.011); tl.set("#w65", {autoAlpha: 0}, 25.111);
-  tl.set("#w66", {autoAlpha: 1}, 25.191); tl.set("#w66", {autoAlpha: 0}, 25.796);
   tl.set("#w67", {autoAlpha: 1}, 25.881); tl.set("#w67", {autoAlpha: 0}, 25.981);
   tl.set("#w68", {autoAlpha: 1}, 26.061); tl.set("#w68", {autoAlpha: 0}, 26.161);
   tl.set("#w69", {autoAlpha: 1}, 26.221); tl.set("#w69", {autoAlpha: 0}, 26.556);
@@ -614,12 +565,9 @@
   tl.set("#w76", {autoAlpha: 1}, 28.541); tl.set("#w76", {autoAlpha: 0}, 28.776);
   tl.set("#w77", {autoAlpha: 1}, 28.861); tl.set("#w77", {autoAlpha: 0}, 29.276);
   tl.set("#w78", {autoAlpha: 1}, 29.361); tl.set("#w78", {autoAlpha: 0}, 29.616);
-  tl.set("#w79", {autoAlpha: 1}, 29.701); tl.set("#w79", {autoAlpha: 0}, 29.876);
-  tl.set("#w80", {autoAlpha: 1}, 29.961); tl.set("#w80", {autoAlpha: 0}, 30.348);
   tl.set("#w81", {autoAlpha: 1}, 30.433); tl.set("#w81", {autoAlpha: 0}, 30.724);
   tl.set("#w82", {autoAlpha: 1}, 30.809); tl.set("#w82", {autoAlpha: 0}, 31.124);
   tl.set("#w83", {autoAlpha: 1}, 31.209); tl.set("#w83", {autoAlpha: 0}, 31.424);
-  tl.set("#w84", {autoAlpha: 1}, 31.509); tl.set("#w84", {autoAlpha: 0}, 32.706);
   tl.set("#w85", {autoAlpha: 1}, 32.791); tl.set("#w85", {autoAlpha: 0}, 32.926);
   tl.set("#w86", {autoAlpha: 1}, 33.011); tl.set("#w86", {autoAlpha: 0}, 33.386);
   tl.set("#w87", {autoAlpha: 1}, 33.471); tl.set("#w87", {autoAlpha: 0}, 33.571);
@@ -644,13 +592,9 @@
   tl.set("#w111", {autoAlpha: 1}, 44.317); tl.set("#w111", {autoAlpha: 0}, 44.417);
   tl.set("#w112", {autoAlpha: 1}, 44.417); tl.set("#w112", {autoAlpha: 0}, 44.612);
   tl.set("#w113", {autoAlpha: 1}, 44.697); tl.set("#w113", {autoAlpha: 0}, 44.912);
-  tl.set("#w114", {autoAlpha: 1}, 44.997); tl.set("#w114", {autoAlpha: 0}, 45.561);
-  tl.set("#w115", {autoAlpha: 1}, 45.646); tl.set("#w115", {autoAlpha: 0}, 45.942);
-  tl.set("#w116", {autoAlpha: 1}, 46.027); tl.set("#w116", {autoAlpha: 0}, 46.302);
   tl.set("#w121", {autoAlpha: 1}, 47.606); tl.set("#w121", {autoAlpha: 0}, 47.706);
   tl.set("#w122", {autoAlpha: 1}, 47.747); tl.set("#w122", {autoAlpha: 0}, 48.021);
   tl.set("#w123", {autoAlpha: 1}, 48.106); tl.set("#w123", {autoAlpha: 0}, 48.262);
-  tl.set("#w124", {autoAlpha: 1}, 48.347); tl.set("#w124", {autoAlpha: 0}, 49.001);
   tl.set("#w125", {autoAlpha: 1}, 49.086); tl.set("#w125", {autoAlpha: 0}, 49.281);
   tl.set("#w126", {autoAlpha: 1}, 49.366); tl.set("#w126", {autoAlpha: 0}, 49.466);
   tl.set("#w127", {autoAlpha: 1}, 49.527); tl.set("#w127", {autoAlpha: 0}, 49.821);
@@ -664,18 +608,26 @@
   tl.set("#w135", {autoAlpha: 1}, 53.211); tl.set("#w135", {autoAlpha: 0}, 53.626);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 54.251);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 6.237);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 0.500);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 2.220);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 3.937);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 7.403);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 11.042);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 9.662);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 12.602);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 19.941);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 15.112);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 15.892);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 18.897);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 30.683);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 31.259);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 32.761);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 34.601);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 35.813);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 39.648);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 42.281);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 46.157);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 44.747);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 47.576);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 48.097);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 49.056);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 53.481);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 54.416);
 
@@ -708,6 +660,7 @@
   fadein("#plt2", 10.732, .3);
   pop("#plc1", 11.272); pop("#plc2", 11.972);
   tl.to("#plyt", {color: "#7A1424", duration: .2}, 12.812); tl.fromTo("#plyt", {scale: 1}, X({scale: 1.25, duration: .18, yoyo: true, repeat: 1}), 12.812);
+  tl.fromTo("#plrows", {height: 0}, X({height: 204, duration: .45, ease: RISE}), 13.394);
   tl.fromTo("#pl .plr", {autoAlpha: 0, y: -16}, X({autoAlpha: 1, y: 0, duration: .45, ease: RISE, stagger: .16}), 13.444);
   pop("#plc3", 15.362);
   tl.fromTo("#plcl", {scale: 1}, X({scale: 1.45, duration: .2, yoyo: true, repeat: 1}), 17.522);
@@ -738,7 +691,7 @@
   sketch("s1", "skP"); box("s1", 110, 430, 280, 330, {seed: 41});
   label("s1", 250, 510, "скіл", {size: 56});
   ln("s1", 150, 590, 350, 590, {seed: 43}); ln("s1", 150, 650, 350, 650, {seed: 45}); ln("s1", 150, 710, 300, 710, {seed: 47});
-  draw("s1", 25.781, .45);
+  draw("s1", 25.091, .45);
   sketch("s2", "skP"); label("s2", 470, 540, "?", {size: 120, color: "#7A1424"}); draw("s2", 26.121);
   sketch("s3", "skP"); arrow("s3", 408, 640, 600, 610, {seed: 51, bend: .1}); draw("s3", 26.651, .45);
   sketch("s4", "skP"); box("s4", 620, 420, 370, 300, {seed: 53});

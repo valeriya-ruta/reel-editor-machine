@@ -191,6 +191,12 @@ g.sfx("pop", t_pr - 0.2)
 for t in (t_bl, t_shr, t_pry, t_prav):
     g.sfx("click-soft", t)
 g.sfx("pop", t_zb)
+# each row writes her words as she says them (STYLE §2b.1); «Кілька» and «Твої» ride along
+# so the plaque doesn't blink on and off for one short word
+BLACKOUT.append((t_dos - 0.05, E(u"блогерів,", 7.03) + 0.05))          # rows 1-2 say it
+BLACKOUT.append((S(u"Твої", 9.9) - 0.05, E(u"і кольори,", 10.52) + 0.05))  # row 3
+BLACKOUT.append((t_pry - 0.05, E(u"і монтажу,", 15.10) + 0.05))         # row 4
+BLACKOUT.append((t_prav - 0.05, E(u"сценарій,", 19.15) + 0.05))         # row 5 «правила для сценаріїв»
 
 # 3 · ABOVE — the voice note goes into the skills ------------------------------
 t_gol, t_poya = S(u"голосове", 20.65), S(u"пояснюєш,", 21.25)
@@ -224,8 +230,9 @@ js(u'''
   pop("#vs", %.3f);
   pop("#vsw", %.3f, .45);
   sink("#vc", %.3f); erase("va", %.3f);
-''' % (ck_out + 0.2, t_gol - 0.1, t_poya - 0.1, t_dod - 0.5, t_dod, t_potr - 0.1, v_out, v_out))
+''' % (ck_out + 0.3, t_gol - 0.1, t_poya - 0.1, t_dod - 0.5, t_dod, t_potr - 0.1, v_out, v_out))
 g.sfx("pop", t_gol - 0.1); g.sfx("pop", t_dod); g.sfx("click-soft", t_potr - 0.1)
+BLACKOUT.append((S(u"скіли.", 24.39) - 0.05, E(u"скіли.", 24.39) + 0.05))   # the «скіли» box says it
 
 # 4 · HALF — ти: the core; я: everything else in the system ---------------------
 h0 = S(u"сама", 26.56) - 0.4
@@ -249,7 +256,8 @@ js(u'''
   _add(SK.d1s, SK.d1s.rc.curve([[120, 610], [150, 596], [210, 620], [260, 598], [320, 615]], opt({seed: 7}, 7)));
   draw("d1s", %.3f, .45);
   sketch("d1t", "skP"); label("d1t", 235, 350, "ти", {size: 64, color: "#7A1424"}); draw("d1t", %.3f);
-  sketch("d2", "skP"); label("d2", 235, 470, "про тебе", {size: 52}); label("d2", 235, 515, "ядро", {size: 36, color: "#574142"});
+  sketch("d2y", "skP"); label("d2y", 235, 515, "ядро", {size: 36, color: "#574142"}); draw("d2y", %.3f);
+  sketch("d2", "skP"); label("d2", 235, 470, "про тебе", {size: 52});
   draw("d2", %.3f);
   sketch("d3", "skP"); under("d3", 130, 486, 340, {stroke: "#7A1424", strokeWidth: 5, seed: 9}); draw("d3", %.3f, .5);
   erase("d1s", %.3f);
@@ -265,22 +273,25 @@ js(u'''
   sketch("d7", "skP"); label("d7", 776, 350, "я", {size: 64, color: "#7A1424"}); draw("d7", %.3f);
   %s
   sketch("d9", "skP"); ell("d9", 776, 330, 120, 96, {stroke: "#7A1424", strokeWidth: 5, seed: 41}); draw("d9", %.3f, .5);
-  erase("d1", %.3f); erase("d1t", %.3f); erase("d2", %.3f); erase("d3", %.3f); erase("d4", %.3f);
+  erase("d1", %.3f); erase("d1t", %.3f); erase("d2y", %.3f); erase("d2", %.3f); erase("d3", %.3f); erase("d4", %.3f);
   erase("d5", %.3f); erase("d6", %.3f); erase("d7", %.3f); erase("d9", %.3f);
-''' % (h0 + 0.35, h0 + 0.8, t_ty, t_pro - 0.05, t_kra, t_str - 0.35, t_str - 0.25, t_mis - 0.45, t_sys - 0.6,
+''' % (h0 + 0.35, h0 + 0.8, t_ty, t_yad - 0.05, t_pro - 0.05, t_kra, t_str - 0.35, t_str - 0.25, t_mis - 0.45, t_sys - 0.6,
        t_vse,
        u"\n  ".join(u'sketch("d8%d", "skP"); label("d8%d", 600, %d, "%s", {size: 40, anchor: "start"}); '
                     u'draw("d8%d", %.3f);' % (i, i, 570 + 46 * i, txt, i, t)
                     for i, (txt, t) in enumerate(((u"аналіз контенту", t_an), (u"стилі", t_st), (u"скіли", t_sk),
                                                   (u"підключення", t_pk), (u"тести", t_ts)))),
        t_moya - 0.3,
-       h1, h1, h1, h1, h1, h1, h1, h1, h1))
+       h1, h1, h1, h1, h1, h1, h1, h1, h1, h1))
 js(u"  " + u" ".join(u'erase("d8%d", %.3f);' % (i, h1) for i in range(5)))
 g.sfx("whoosh-short", h0); g.sfx("whoosh-short", h1)
 for t in (t_ty, t_pro, t_str, t_an, t_ts):
     g.sfx("click-soft", t)
 g.sfx("pop", t_sys - 0.1)
-BLACKOUT.append((t_st - 0.05, t_ts - 0.05))         # the system's own labels say it
+BLACKOUT.append((t_ty - 0.05, E(u"ти,", 26.80) + 0.05))            # the «ти» heading says it
+BLACKOUT.append((t_yad - 0.05, E(u"тебе»,", 28.3) + 0.05))         # «ядро» / «про тебе» say it
+BLACKOUT.append((t_sys - 0.05, E(u"системі.", 33.16) + 0.05))      # the «система» heading says it
+BLACKOUT.append((t_an - 0.05, E(u"тести —", 36.88) + 0.05))        # the system's own labels say it
 
 # 5 · ABOVE — the result, and the client's two buttons -------------------------
 t_pod3, t_rez = S(u"подивитись", 39.27), S(u"результат", 39.83)
@@ -317,7 +328,7 @@ js(u'''
 ''' % (t_pod3 - 0.25, t_rez - 0.1, t_rez + 0.05, t_rez + 0.2, t_rez + 0.35, t_ska - 0.05, t_ska + 0.1,
        t_ok - 0.05, t_ok - 0.05, t_ne - 0.05, t_ne - 0.05, r_out))
 g.sfx("pop", t_pod3 - 0.25); g.sfx("click-soft", t_ok); g.sfx("click-soft", t_ne)
-BLACKOUT.append((t_ok - 0.05, t_tomu - 0.05))      # the buttons say it
+BLACKOUT.append((t_rez - 0.05, t_tomu - 0.05))     # «Результат» heading, then the buttons say it
 
 # 6 · ABOVE — CTA ---------------------------------------------------------------
 t_tsya, t_stav = S(u"ця", 42.88), S(u"то став", 44.16)
@@ -334,8 +345,9 @@ js(u'''
   sketch("ca", "skF"); label("ca", 790, 668, "сюди!", {size: 52});
   arrow("ca", 800, 695, 875, 915, {strokeWidth: 5, seed: 97, bend: -.25});
   draw("ca", %.3f, .5);
-''' % (t_tsya - 0.05, t_stav + 0.05, t_stav + 0.5))
+''' % (t_tsya - 0.05, t_stav + 0.05, t_stav + 0.15))
 g.sfx("pop", t_tsya - 0.05); g.sfx("pop", t_stav + 0.05)
+BLACKOUT.append((t_tsya - 0.05, E(u"система", 43.0) + 0.05))   # «АІ-система під ключ» says it
 BLACKOUT.append((t_stav - 0.05, DUR))               # the pill says it
 
 # ---------------------------------------------------------------- mattes for the half screens

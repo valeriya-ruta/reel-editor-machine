@@ -189,10 +189,6 @@
       <div id="caps">
       <div class="wc" id="w0">ГОЛОВНИЙ</div>
       <div class="wc" id="w1">ПЛЮС</div>
-      <div class="wc" id="w2">МОГО</div>
-      <div class="wc" id="w3">НАЛАШТУВАННЯ</div>
-      <div class="wc" id="w4">АІ</div>
-      <div class="wc" id="w5">СИСТЕМИ</div>
       <div class="wc" id="w6">В</div>
       <div class="wc" id="w7">ТОМУ,</div>
       <div class="wc" id="w8">ЩО</div>
@@ -247,16 +243,11 @@
       <div class="wc" id="w57">ТОМУ</div>
       <div class="wc" id="w58">ЯКЩО</div>
       <div class="wc" id="w59">ТИ</div>
-      <div class="wc" id="w60">БЛОГЕРКА,</div>
-      <div class="wc" id="w61">СММНИЦЯ</div>
-      <div class="wc" id="w62">АБО</div>
-      <div class="wc" id="w63">ПІДПРИЄМИЦЯ</div>
       <div class="wc" id="w64">І</div>
       <div class="wc" id="w65">ХОЧЕШ</div>
       <div class="wc" id="w66">МАТИ</div>
       <div class="wc" id="w67">ХМАРНУ</div>
       <div class="wc" id="w68">КОМАНДУ</div>
-      <div class="wc" id="w69">24/7,</div>
       </div>
 
       <audio id="vo" src="assets/base.mp4"
@@ -441,10 +432,6 @@
 
   tl.set("#w0", {autoAlpha: 1}, 0.430); tl.set("#w0", {autoAlpha: 0}, 0.825);
   tl.set("#w1", {autoAlpha: 1}, 0.910); tl.set("#w1", {autoAlpha: 0}, 1.145);
-  tl.set("#w2", {autoAlpha: 1}, 1.230); tl.set("#w2", {autoAlpha: 0}, 1.545);
-  tl.set("#w3", {autoAlpha: 1}, 1.630); tl.set("#w3", {autoAlpha: 0}, 2.285);
-  tl.set("#w4", {autoAlpha: 1}, 2.370); tl.set("#w4", {autoAlpha: 0}, 2.555);
-  tl.set("#w5", {autoAlpha: 1}, 2.640); tl.set("#w5", {autoAlpha: 0}, 3.045);
   tl.set("#w6", {autoAlpha: 1}, 3.130); tl.set("#w6", {autoAlpha: 0}, 3.230);
   tl.set("#w7", {autoAlpha: 1}, 3.230); tl.set("#w7", {autoAlpha: 0}, 3.445);
   tl.set("#w8", {autoAlpha: 1}, 3.530); tl.set("#w8", {autoAlpha: 0}, 3.630);
@@ -499,21 +486,20 @@
   tl.set("#w57", {autoAlpha: 1}, 20.067); tl.set("#w57", {autoAlpha: 0}, 20.392);
   tl.set("#w58", {autoAlpha: 1}, 20.477); tl.set("#w58", {autoAlpha: 0}, 20.632);
   tl.set("#w59", {autoAlpha: 1}, 20.717); tl.set("#w59", {autoAlpha: 0}, 20.817);
-  tl.set("#w60", {autoAlpha: 1}, 20.817); tl.set("#w60", {autoAlpha: 0}, 21.232);
-  tl.set("#w61", {autoAlpha: 1}, 21.317); tl.set("#w61", {autoAlpha: 0}, 21.792);
-  tl.set("#w62", {autoAlpha: 1}, 21.877); tl.set("#w62", {autoAlpha: 0}, 21.977);
-  tl.set("#w63", {autoAlpha: 1}, 21.997); tl.set("#w63", {autoAlpha: 0}, 22.552);
   tl.set("#w64", {autoAlpha: 1}, 22.637); tl.set("#w64", {autoAlpha: 0}, 22.792);
   tl.set("#w65", {autoAlpha: 1}, 22.877); tl.set("#w65", {autoAlpha: 0}, 22.992);
   tl.set("#w66", {autoAlpha: 1}, 23.077); tl.set("#w66", {autoAlpha: 0}, 23.292);
   tl.set("#w67", {autoAlpha: 1}, 23.377); tl.set("#w67", {autoAlpha: 0}, 23.872);
   tl.set("#w68", {autoAlpha: 1}, 23.957); tl.set("#w68", {autoAlpha: 0}, 24.252);
-  tl.set("#w69", {autoAlpha: 1}, 24.337); tl.set("#w69", {autoAlpha: 0}, 25.192);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.130);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 26.577);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 0.980);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 3.095);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 11.869);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 20.019);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 25.027);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 20.567);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 22.602);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 24.087);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 26.650);
 
 
@@ -540,7 +526,7 @@
   tl.to("#t2", {keyframes: [{x: 245, y: -110, duration: .32, ease: "power1.out"},
                             {x: 487, y: 20, duration: .33, ease: "power1.in"}]}, 6.002);
   sketch("phl", "skF"); label("phl", 220, 676, "телефон", {size: 42});
-  draw("phl", 6.442);
+  draw("phl", 6.242);
   erase("ph", 7.297); erase("ar", 7.297); erase("phl", 7.297);
 
 
@@ -600,6 +586,7 @@
   ln("b_x", 995, 400, 835, 545, {seed: 88, stroke: "#7A1424", strokeWidth: 7});
   draw("b_x", 19.076, .25);
 
+  tl.set("#w56", {autoAlpha: 0}, 19.819);
 
   pop("#c1a", 20.817); pop("#c1b", 21.317); pop("#c1c", 21.997);
   sketch("cc", "skF"); blob("cc", "M400 552 C340 552, 332 490, 396 482 C380 429, 476 410, 508 437 C532 376, 652 380, 660 433 C732 421, 756 478, 708 497 C756 520, 732 558, 680 552 Z", [340, 372, 400, 190], {seed: 91});
