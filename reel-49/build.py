@@ -46,6 +46,7 @@ FIX = {
     u"24": u"24/7,", (u"на", 24.8): None, u"7,": None,
     (u"плюс", 25.6): u"+",
     u"коментарі": u"коментарі.",
+    u"в твоєму": u"в своєму",                      # three plain solo passes: «в своєму» (0.94)
 }
 CAPS = load_caps(NN, FIX)
 # «єйсистеми» is two words, «АІ системи»: split it so the rail shows each

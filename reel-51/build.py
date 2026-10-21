@@ -142,6 +142,10 @@ EXTRA_CSS = u"""
              font-family: "Pangolin", cursive; font-size: 110px; line-height: 120px; color: #1E1E1E; }
     .ph .b { position: absolute; display: block; }
     .ctr { position: absolute; display: flex; justify-content: center; }
+    /* a strike across a chip on the white card: an HTML bar in her red, not a
+       sketch — a haloed ink line wiped the chip text out (snapshot 37.5) */
+    .strk { position: absolute; left: -8px; right: -8px; top: 50%; height: 6px; margin-top: -1px;
+            border-radius: 3px; background: #7A1424; transform-origin: 0 50%; transform: scaleX(0); }
 """
 
 # sketch helpers on top of gstyle's (open strokes only: a closed outline over
@@ -283,16 +287,18 @@ ROWS = [u"платити монтажеру", u"чекати на відео", u
 F.append(u'<div id="b5" class="card hid" style="left:150px; top:300px; width:780px; height:330px; padding:0"></div>')
 for i, txt in enumerate(ROWS):
     F.append(u'<span class="chip hid" id="b5r%d" style="position:absolute; left:195px; top:%dpx; width:690px; '
-             u'font-size:38px; padding:12px 26px"><i></i>%s</span>' % (i, 330 + i * 92, esc(txt)))
+             u'font-size:38px; padding:12px 26px"><i></i><span style="position:relative">%s<span class="strk" id="b5k%d"></span></span></span>'
+             % (i, 330 + i * 92, esc(txt), i))
 x_b5 = E(u"хвороб.", 37.18) + 0.05
 js(u'''
   rise("#b5", %.3f);
   pop("#b5r0", %.3f); pop("#b5r1", %.3f); pop("#b5r2", %.3f);
-  sketch("s0", "skF"); ln("s0", 215, 366, 865, 360, {strokeWidth: 7, seed: 161}); draw("s0", %.3f, .35);
-  sketch("s1", "skF"); ln("s1", 215, 458, 865, 453, {strokeWidth: 7, seed: 163}); draw("s1", %.3f, .35);
-  sketch("s2", "skF"); ln("s2", 215, 550, 865, 546, {strokeWidth: 7, seed: 165}); draw("s2", %.3f, .35);
-  sink("#b5, #b5r0, #b5r1, #b5r2", %.3f); erase("s0", %.3f); erase("s1", %.3f); erase("s2", %.3f);
-''' % (t_ne1 + 0.02, t_pla, t_che, t_zal, t_mzh, t_vio, t_hv, x_b5, x_b5, x_b5, x_b5))
+  [%.3f, %.3f, %.3f].forEach(function (t, k) {
+    tl.fromTo("#b5k" + k, {scaleX: 0, rotation: -.6}, X({scaleX: 1, rotation: -.6, duration: .35, ease: "power1.inOut"}), t);
+    tl.to("#b5r" + k, {color: "#574142", duration: .3}, t);
+  });
+  sink("#b5, #b5r0, #b5r1, #b5r2", %.3f);
+''' % (t_ne1 + 0.02, t_pla, t_che, t_zal, t_mzh, t_vio, t_hv, x_b5))
 for t in (t_mzh, t_vio, t_hv):
     g.sfx("click-soft", t)
 BLACKOUT.append((t_ne1 - 0.05, x_b5))      # the three struck chips say it
@@ -301,9 +307,11 @@ BLACKOUT.append((t_ne1 - 0.05, x_b5))      # the three struck chips say it
 # it leaves in her pause before «Тому», so no rail word straddles the exit
 h0, h1 = S(u"Вона", 37.89) - 0.15, S(u"Тому", 43.7) - 0.4
 HALF.append((h0, h1))
-P.append(u'<svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
+# her cut-out sits above the panel by design (§00.3.3, the head overlaps the
+# panel edge): the panel content is marked as intentional layering for check
+P.append(u'<svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
 P.append(u'''
-        <div id="pcl" class="hid" style="position:absolute; left:405px; top:560px; width:250px; height:180px;
+        <div id="pcl" class="hid" data-layout-allow-occlusion style="position:absolute; left:405px; top:560px; width:250px; height:180px;
              display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
              color:#7A1424">%s<span style="font-weight:500; font-size:44px; color:#241919">Claude</span></div>''' % mark("claude", 70))
 t_mom, t_zn = S(u"момент", 38.93), S(u"зняти", 39.17)
@@ -359,10 +367,10 @@ t_spr, t_kr2 = S(u"справжнього", 52.28), S(u"креативу,", 54.5
 t_cher, t_pl = S(u"червоному", 56.11), S(u"платній", 57.81)
 # «субтитри» drawn as a caption: upper case, Product Sans Black, in her red
 P.append(u'''
-        <div id="psub" class="hid" style="position:absolute; left:190px; top:660px; padding:12px 28px; border-radius:22px;
+        <div id="psub" class="hid" data-layout-allow-occlusion style="position:absolute; left:190px; top:660px; padding:12px 28px; border-radius:22px;
              background:#fff; box-shadow:0 2px 10px rgba(36,25,25,.16); font-family:'ProductSans', sans-serif;
              font-weight:900; font-size:46px; letter-spacing:-0.015em; color:#7A1424">СУБТИТРИ</div>
-        <div id="pcap" class="hid" style="position:absolute; left:560px; top:662px; display:flex; align-items:center; gap:14px;
+        <div id="pcap" class="hid" data-layout-allow-occlusion style="position:absolute; left:560px; top:662px; display:flex; align-items:center; gap:14px;
              border:2px solid #DEBFBF; border-radius:16px; padding:12px 24px; background:#FFF8F7">
           <span style="font-weight:700; font-size:44px; letter-spacing:-0.02em; color:#241919">CapCut</span>
           <span style="display:inline-flex; width:56px; height:56px; border-radius:50%; background:#7A1424; color:#fff;
@@ -370,10 +378,10 @@ P.append(u'''
         </div>''')
 js(u'''
   sketch("q1", "skP"); ln("q1", 110, 512, 970, 506, {stroke: "#7A1424", strokeWidth: 6, seed: 211});
-  label("q1", 118, 490, "ліміти", {size: 46, color: "#7A1424", anchor: "start"});
+  label("q1", 112, 492, "ліміти", {size: 46, color: "#7A1424", anchor: "start"});
   draw("q1", %.3f, .6);
-  sketch("q2", "skP"); box("q2", 230, 320, 620, 150, {seed: 213, r: 30, fill: true});
-  label("q2", 540, 412, "справжній креатив", {size: 54});
+  sketch("q2", "skP"); box("q2", 300, 320, 570, 150, {seed: 213, r: 30, fill: true});
+  label("q2", 585, 412, "справжній креатив", {size: 54});
   draw("q2", %.3f, .6);
   sketch("q3", "skP"); box("q3", 170, 560, 740, 225, {seed: 215, r: 30});
   label("q3", 540, 630, "«креатив»", {size: 52});

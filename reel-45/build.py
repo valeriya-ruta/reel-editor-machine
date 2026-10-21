@@ -219,7 +219,7 @@ F.append(u'''
 # the pill lands ON «оновлювану» (not 1.6 s early on «таку»); the loop from the
 # panel comes back as a ring round it, closing as she says «команду». An open
 # ring (no arrowhead), not a sticker: a white fill would cover the pill.
-t_b4out = t_kom + 0.45
+t_b4out = t_kom + 0.33       # = the «24/7» rise: a clean swap, no overlap
 SKF.append(u'''
   sketch("lp", "skF"); ell("lp", 540, 504, 740, 200, {strokeWidth: 5, seed: 43, fill: false});
   draw("lp", %.3f, .6);
@@ -227,7 +227,7 @@ SKF.append(u'''
 js(u'''
   fadein("#b4", %.3f, .01); pop("#b4a", %.3f); pop("#b4b", %.3f); pop("#b4c", %.3f);
   pop("#b4t", %.3f);
-  sink("#b4, #b4t", %.3f);
+  out("#b4, #b4t", %.3f);
 ''' % (t_blog - 0.15, t_blog - 0.1, t_smm - 0.1, t_pid - 0.1, t_onov - 0.1, t_b4out))
 g.sfx("pop", t_blog - 0.1); g.sfx("pop", t_onov - 0.1)
 BLACKOUT.append((t_blog - 0.05, E(u"підприємниця,", 24.94) + 0.05))   # the chips say them

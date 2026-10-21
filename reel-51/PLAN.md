@@ -41,4 +41,7 @@ half screens). BLACKOUT: the pause (plaque down, no words in it) · «не пл�
 
 Over the footage no sketch carries an explicit colour: the kit makes closed shapes white
 stickers (speaker and bubble via `blob()`), rings are `fill: false` outlines, strokes are
-ink with a white halo. Explicit red only on the white panel.
+ink with a white halo. Explicit red only on the white panel, and in the strike bars of the
+32–37 s card — HTML bars on the white chips, not sketches (a haloed ink strike wiped the
+chip text out). Panel content carries `data-layout-allow-occlusion`: her cut-out sits above
+the panel by design (§00.3.3).
