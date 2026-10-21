@@ -117,8 +117,6 @@ def js(s):
     J.append(s)
 
 
-F.append(u'<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>')
-
 # 1 · ABOVE — the best ideas are not from ChatGPT, Claude or Manus -------------
 t_id, t_gpt, t_cl, t_man = S(u"ідеї", 0.89), S(u"GPT,", 2.72), S(u"Клода", 3.59), S(u"Мануса.", 4.29)
 t_ya = S(u"Я", 5.0)
@@ -223,24 +221,24 @@ js(u'''
   sketch("p1", "skP");
   _add(SK.p1, SK.p1.rc.path("%s", opt({seed: 31}, 31)));
   draw("p1", %.3f, .7);
-  sketch("p2", "skP"); box("p2", 250, 300, 96, 84, {seed: 33, r: 26}); label("p2", 298, 362, "?", {size: 56, color: "#7A1424"});
+  sketch("p2", "skP"); box("p2", 262, 296, 112, 98, {seed: 33, r: 28}); label("p2", 318, 366, "?", {size: 62, color: "#7A1424"});
   draw("p2", %.3f, .45);
-  sketch("p3", "skP"); ell("p3", 180, 430, 220, 260, {stroke: "#7A1424", strokeWidth: 5, seed: 35});
+  sketch("p3", "skP"); ell("p3", 190, 478, 260, 310, {stroke: "#7A1424", strokeWidth: 5, seed: 35});
   draw("p3", %.3f, .5);
-  sketch("p4", "skP"); arrow("p4", 330, 440, 460, 440, {seed: 37, bend: .08});
+  sketch("p4", "skP"); arrow("p4", 345, 478, 475, 478, {seed: 37, bend: .08});
   %s
-  label("p4", 560, 372, "?", {size: 48, color: "#7A1424"}); label("p4", 665, 372, "?", {size: 48, color: "#7A1424"});
-  label("p4", 770, 372, "?", {size: 48, color: "#7A1424"}); label("p4", 875, 372, "?", {size: 48, color: "#7A1424"});
+  label("p4", 565, 412, "?", {size: 52, color: "#7A1424"}); label("p4", 685, 412, "?", {size: 52, color: "#7A1424"});
+  label("p4", 805, 412, "?", {size: 52, color: "#7A1424"}); label("p4", 925, 412, "?", {size: 52, color: "#7A1424"});
   draw("p4", %.3f, .3);
-  sketch("p5", "skP"); arrow("p5", 717, 545, 620, 640, {seed: 41, bend: -.1});
-  box("p5", 260, 650, 560, 160, {seed: 43, fill: true, r: 30});
-  label("p5", 540, 722, "ідеальна тема", {size: 56, color: "#7A1424"});
-  label("p5", 540, 782, "для контенту", {size: 44});
+  sketch("p5", "skP"); arrow("p5", 745, 585, 650, 664, {seed: 41, bend: -.1});
+  box("p5", 250, 672, 580, 146, {seed: 43, fill: true, r: 30});
+  label("p5", 540, 740, "ідеальна тема", {size: 58, color: "#7A1424"});
+  label("p5", 540, 796, "для контенту", {size: 42});
   draw("p5", %.3f, .5);
   erase("p1", %.3f); erase("p2", %.3f); erase("p3", %.3f); erase("p4", %.3f); erase("p5", %.3f);
-''' % (bust(180, 410, 1.15), t_raz - 0.1, t_tak, t_odnu - 0.45,
-       u"\n  ".join(u'_add(SK.p4, SK.p4.rc.path("%s", opt({seed: %d}, %d)));' % (bust(x, 420, .85), 50 + i, 50 + i)
-                    for i, x in enumerate((560, 665, 770, 875))),
+''' % (bust(190, 452, 1.4), t_raz - 0.1, t_tak, t_odnu - 0.45,
+       u"\n  ".join(u'_add(SK.p4, SK.p4.rc.path("%s", opt({seed: %d}, %d)));' % (bust(x, 462, 1.0), 50 + i, 50 + i)
+                    for i, x in enumerate((565, 685, 805, 925))),
        t_lud - 0.6, t_vyh - 0.2, h1, h1, h1, h1, h1))
 g.sfx("click-soft", t_lud); g.sfx("pop", t_ide)
 g.sfx("whoosh-short", h0); g.sfx("whoosh-short", h1)
@@ -294,14 +292,14 @@ t_sy, t_vyg, t_hol = S(u"сиджу", 29.23), S(u"вигадую", 29.71), E(u"�
 js(u'''
   sketch("cl6", "skF");
   _add(SK.cl6, SK.cl6.rc.path("M400 560 C330 560 320 480 395 468 C390 400 480 375 525 420 C555 350 680 355 700 425 C770 400 840 455 805 515 C860 540 830 600 760 590 C730 625 640 620 615 590 C580 625 470 620 450 585 C430 590 410 580 400 560 Z", opt({seed: 61}, 61)));
-  ell("cl6", 560, 640, 46, 34, {seed: 63}); ell("cl6", 540, 688, 26, 20, {seed: 65});
   label("cl6", 590, 520, "?", {size: 72});
-  draw("cl6", %.3f, .55);
+  ell("cl6", 560, 640, 46, 34, {seed: 63}); ell("cl6", 540, 688, 26, 20, {seed: 65});
+  draw("cl6", %.3f, .45);
   sketch("x6", "skF"); ln("x6", 390, 390, 830, 620, {stroke: "#7A1424", strokeWidth: 7, seed: 67});
   ln("x6", 830, 380, 400, 630, {stroke: "#7A1424", strokeWidth: 7, seed: 69});
   draw("x6", %.3f, .3);
   erase("cl6", %.3f); erase("x6", %.3f);
-''' % (t_sy - 0.45, t_vyg, t_hol + 0.12, t_hol + 0.12))
+''' % (t_sy - 0.25, t_vyg, t_hol + 0.12, t_hol + 0.12))
 g.sfx("click-soft", t_vyg)
 
 # 7 · HALF — the routine, weekly: my content, competitors, and the calls --------
@@ -313,7 +311,7 @@ P.append(u'''
         <div id="p7f" class="hid" style="position:absolute; left:740px; top:686px; color:#7A1424">%s</div>''' % mark("fathom", 40))
 js(u'''
   sketch("r1", "skP"); ell("r1", 540, 410, 400, 190, {seed: 71});
-  arrow("r1", 700, 500, 625, 512, {seed: 73, bend: .05});
+  arrow("r1", 676, 336, 672, 488, {seed: 73, bend: .6});
   label("r1", 540, 428, "рутина", {size: 56});
   draw("r1", %.3f, .7);
   sketch("r2", "skP"); label("r2", 860, 330, "щотижня", {size: 46, color: "#7A1424"});
@@ -419,23 +417,26 @@ t_pys, t_dzv2, t_instr = S(u"то пиши", 56.89), S(u"«дзвінок»,", 5
 F.append(u'''
         <div id="b11" style="position:absolute; left:110px; top:318px; width:860px;
              display:flex; gap:14px; justify-content:center">
-          <span class="chip hid" id="b11a">%s консультації</span>
-          <span class="chip hid" id="b11b">%s ідеї для контенту</span>
+          <span class="chip hid" id="b11a" style="font-size:40px">%s консультації</span>
+          <span class="chip hid" id="b11b" style="font-size:40px">%s ідеї для контенту</span>
         </div>
-        <div id="b11cta" class="pill hid" style="left:0; top:430px; left:50%%; margin-left:-265px; width:530px;
-             justify-content:center; font-size:54px; padding:28px 40px">Пиши «дзвінок»</div>
-        <div id="b11i" class="pill light hid" style="left:50%%; margin-left:-170px; width:340px; top:572px;
-             justify-content:center; font-size:38px; padding:18px 30px">%s інструкція</div>''' % (
-    ico("call", 34, "#7A1424"), ico("bulb", 36, "#7A1424"), ico("doc", 40, "#7A1424")))
+        <div id="b11cta" class="pill hid" style="top:428px; left:50%%; margin-left:-300px; width:600px;
+             justify-content:center; font-size:62px; padding:30px 40px">Пиши «дзвінок»</div>
+        <div id="b11i" class="pill light hid" style="left:50%%; margin-left:-195px; width:390px; top:586px;
+             justify-content:center; font-size:44px; padding:18px 30px">%s інструкція</div>''' % (
+    ico("call", 38, "#7A1424"), ico("bulb", 40, "#7A1424"), ico("doc", 46, "#7A1424")))
 js(u'''
   pop("#b11a", %.3f); pop("#b11b", %.3f);
   pop("#b11cta", %.3f, .6);
-  sketch("a11", "skF"); arrow("a11", 930, 690, 840, 545, {stroke: "#7A1424", strokeWidth: 5.5, seed: 97});
+  sketch("a11", "skF"); arrow("a11", 975, 700, 870, 540, {stroke: "#7A1424", strokeWidth: 6, seed: 97});
   draw("a11", %.3f, .45);
   pop("#b11i", %.3f, .55);
 ''' % (t_kons2 - 0.1, t_idei2 - 0.1, t_dzv2 - 0.2, t_dzv2 + 0.4, S(u"отримати", 58.32)))
 g.sfx("pop", t_kons2 - 0.1); g.sfx("pop", t_dzv2 - 0.2); g.sfx("pop", S(u"отримати", 58.32))
 BLACKOUT.append((t_pys - 0.05, DUR))     # the pill and the chip say it
+
+# pointer doodles and circles draw over the cards, so their svg is last in #front
+F.append(u'<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>')
 
 # ---------------------------------------------------------------- mattes for the half screens
 for i, (a, b) in enumerate(HALF):
@@ -463,7 +464,7 @@ def main():
         print(" ".join(u"%s/%.1f" % (c["w"], c["s"]) for c in CAPS))
     keys = {S(u"ідеї", 0.89): True, S(u"велкам", 9.27): True, S(u"питання,", 12.91): True, S(u"питання,", 18.22): True,
             S(u"одну", 19.98): True, S(u"ідеальна", 21.86): True, S(u"тижня", 32.64): True,
-            S(u"дзвінки.", 35.95): True, S(u"впроваджую", 42.69): True, S(u"ідеї", 55.99): True}
+            S(u"дзвінки.", 35.95): True, S(u"впроваджую", 42.69): True, S(u"стратегію.", 40.13): True, S(u"ідеї", 55.99): True}
     chunks = glue(g.chunks(CAPS, keys=keys, place=PLACE))
     if "--chunks" in sys.argv:
         for n, c in enumerate(chunks):
@@ -472,6 +473,10 @@ def main():
     doc = g.document(title=u"Reel 44 — Дзвінок → пропозиція", plate="assets/base.mp4",
                      behind="\n".join(B), panel="\n".join(P), front="\n".join(F), cover="\n".join(C),
                      js="\n".join(J), chunks=chunks, blackout=BLACKOUT, extra_css=EXTRA_CSS)
+    # the kit leaves the punctuation after a key-word pill free to wrap onto the
+    # next line («питання / , про які»): keep pill + punctuation together
+    doc = re.sub(u'(<span class="k"><span class="kb"></span><span class="kt">[^<]*</span></span>)([.,!?:;…»]+)',
+                 u'<span style="white-space:nowrap">\\1\\2</span>', doc)
     g.write(HERE, doc)
     print("index.html  %d caption chunks, %d sfx cues, %d mattes" % (len(chunks), len(g.cues), len(g.mattes)))
 
