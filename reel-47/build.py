@@ -186,6 +186,7 @@ js(u'''
   sink("#bw1", %.3f);
 ''' % (t_100 - 0.25, m1 - 0.35))
 g.sfx("whoosh-short", t_100 - 0.2)
+BLACKOUT.append((t_100 - 0.05, E(u"100%", 22.88) + 0.05))      # the big type says it
 
 # 4 · ABOVE — Claude's memory recalls the stale things -------------------------
 t_strg, t_neak = S(u"стратегію,", 25.34), S(u"неактуальна,", 26.1)
