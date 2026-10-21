@@ -125,7 +125,7 @@ F.append(u'''
 js(u'''
   rise("#b1", %.3f);
   %s
-  tl.to("#b1cs", {opacity: .38, duration: .4}, %.3f);
+  tl.to("#b1cs", {opacity: .55, duration: .4}, %.3f);   // dimmed, still ≥ 3:1
   pop("#b1m", %.3f, .6);
   sink("#b1, #b1m", %.3f);
 ''' % (t_kl - 0.25, " ".join('pop("#b1c%d", %.3f, .45);' % (i, t) for i, (_, t) in enumerate(SKILLS)),
@@ -377,7 +377,7 @@ js(u'''
        t_not2 - 0.1, t_not2 - 0.05, t_bezk, t_prost, t_tobi - 0.35, t_tobi - 0.2, t_ne2, h2 - 0.3, h2 - 0.3, h2 - 0.3))
 g.sfx("pop", t_ale2 - 0.1); g.sfx("click-soft", t_kp)
 g.sfx("pop", t_not2 - 0.05); g.sfx("pop", t_bezk); g.sfx("click-soft", t_ne2)
-BLACKOUT.append((t_kp - 0.3, E(u"задач,", 64.66) + 0.05))
+BLACKOUT.append((t_kp - 0.05, E(u"задач,", 64.66) + 0.05))   # late start: «швидкого» keeps its plaque
 BLACKOUT.append((S(u"Він", 66.66) - 0.05, E(u"простий,", 67.80) + 0.05))
 
 # 10 · HALF — not for you, for Claude: a board by stage, old apart from new ----

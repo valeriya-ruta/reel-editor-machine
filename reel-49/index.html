@@ -134,7 +134,7 @@
              muted playsinline></video>
       <div id="front" class="L">
 
-        <div id="w1" class="L">
+        <div id="cw" class="L">
           <svg class="sk" id="skW" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
           <div id="b1" class="card hid" style="left:330px; top:455px; width:420px; padding:26px 30px;">
             <div class="row" style="gap:20px">
@@ -519,7 +519,7 @@
     _add(SK[name], SK[name].rc.linearPath(pts, opt(o, (o && o.seed) || 45))); }
 
 
-  gsap.set("#w1", {transformOrigin: "540px 480px"});
+  gsap.set("#cw", {transformOrigin: "540px 480px"});
   gsap.set("#lapf", {scaleX: 0, transformOrigin: "0% 50%"});
   rise("#b1", 0.300);
   pop("#b1x", 0.910);
@@ -528,7 +528,7 @@
   sink("#b1, #b1x", 5.097);
 
 
-  tl.to("#w1", {x: 165, y: 0, scale: .6, duration: .7, ease: SLIDE}, 5.117);
+  tl.to("#cw", {x: 165, y: 0, scale: .6, duration: .7, ease: SLIDE}, 5.117);
   sketch("ph", "skF"); box("ph", 140, 330, 160, 300, {seed: 43, r: 30});
   ln("ph", 200, 352, 240, 352, {seed: 45}); ln("ph", 195, 606, 245, 606, {seed: 47});
   draw("ph", 5.067, .5);
@@ -542,19 +542,14 @@
   erase("ph", 7.297); erase("ar", 7.297); erase("phl", 7.297);
 
 
-  tl.to("#w1", {x: 0, y: 0, scale: 1, duration: .7, ease: SLIDE}, 7.297);
+  tl.to("#cw", {x: 0, y: 0, scale: 1, duration: .7, ease: SLIDE}, 7.297);
   tl.to("#t2", {x: 232, y: 40, duration: .7, ease: SLIDE}, 7.297);
   pop("#lap", 7.297, .6); pop("#lapb", 7.377, .55);
   pop("#laph", 7.737, .5);
   tl.set("#t2c", {className: "check on"}, 8.017); pop("#t2c", 8.017, .45);
   fadein("#lapp", 8.357, .3);
   tl.to("#lapf", {scaleX: 1, duration: 2.292, ease: "power1.inOut"}, 8.477);
-  // a second outline on «хмарному»: it lies on the white cloud sticker drawn
-  // above, so it stays an outline (fill: false) instead of a second sticker
-  // that would paint over the first outline
-  sketch("cl2", "skW"); blob("cl2", "M260 661 C140 661, 124 522, 252 506 C220 388, 412 346, 476 405 C524 270, 764 279, 780 396 C924 371, 972 497, 876 539 C972 590, 924 674, 820 661 Z", [140, 262, 800, 420], {seed: 53, strokeWidth: 6, fill: false});
-  draw("cl2", 9.297, .6);
-  tl.to("#w1, #t2", {autoAlpha: 0, duration: .3, ease: "power2.in"}, 10.969);
+  tl.to("#cw, #t2", {autoAlpha: 0, duration: .3, ease: "power2.in"}, 10.969);
 
 
   sketch("a_ph", "skP"); box("a_ph", 95, 400, 130, 250, {seed: 61, r: 26});

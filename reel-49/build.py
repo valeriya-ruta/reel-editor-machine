@@ -2,8 +2,10 @@
 """Reel 49 — «Все з телефону». Posts 2026-10-24.
 
 Short (26.6 s), her Google style + Excalidraw look (STYLE.md §00, with her
-review of reel 41 on top: word-by-word captions, calm white sketches over
-the footage, long arrows).
+review of reel 41 on top: the kit's word-by-word caption rail, every sketch
+over the footage left to the kit — clouds are blob() stickers, arrows and free
+labels dark ink with a white halo, no colours passed — long arrows, and the
+comments pointer pointing down).
 
 The one object is **the cloud**. It is drawn round her AI system, shrinks
 aside so a task can be thrown into it from a phone, grows back with Claude's
@@ -17,7 +19,7 @@ the CTA closes on the cloud again, holding «24/7».
   half    phone → Claude cloud → carousel «твій дизайн»; then video → «монтаж»
           in the cloud (red) and «твій компʼютер» crossed out
   above   CTA — блогерка / СММниця / підприємиця, a cloud holding «24/7»,
-          «Став + в коментарі» + pointer
+          «Став + в коментарі» + «сюди!» pointing down to the comments
 
 usage: python build.py
 """
@@ -92,10 +94,11 @@ js(u'''
 # 1 · ABOVE — the system, its plus, the cloud round it ---------------------------
 t_gol, t_plus = S(u"Головний", 0.43), S(u"плюс", 0.91)
 t_hm1, e_hm1 = S(u"хмарі.", 4.63), E(u"хмарі.", 4.63)
-# the cloud and everything that lives in it share one wrapper, so the cloud can
+# the cloud and everything that lives in it share one wrapper (#cw — not #w1,
+# that id is the caption rail's word 1), so the cloud can
 # step aside for the phone (beat 2) and come back (beat 3) with its contents
 F.append(u'''
-        <div id="w1" class="L">
+        <div id="cw" class="L">
           <svg class="sk" id="skW" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
           <div id="b1" class="card hid" style="left:330px; top:455px; width:420px; padding:26px 30px;">
             <div class="row" style="gap:20px">
@@ -130,7 +133,7 @@ F.append(u'''
           <span class="check" id="t2c"></span><span class="line" style="width:44px"></span>
         </div>''' % (mark("claude", 58), mark("claude", 38)))
 js(u'''
-  gsap.set("#w1", {transformOrigin: "540px 480px"});
+  gsap.set("#cw", {transformOrigin: "540px 480px"});
   gsap.set("#lapf", {scaleX: 0, transformOrigin: "0%% 50%%"});
   rise("#b1", %.3f);
   pop("#b1x", %.3f);
@@ -145,7 +148,7 @@ t_mv = e_hm1 + 0.02
 t_zad, t_kyn, t_tel = S(u"задачу", 5.44), S(u"кинути", 6.0), S(u"телефона,", 6.7)
 t_back = S(u"а", 7.42) - 0.12
 js(u'''
-  tl.to("#w1", {x: 165, y: 0, scale: .6, duration: .7, ease: SLIDE}, %.3f);
+  tl.to("#cw", {x: 165, y: 0, scale: .6, duration: .7, ease: SLIDE}, %.3f);
   sketch("ph", "skF"); box("ph", 140, 330, 160, 300, {seed: 43, r: 30});
   ln("ph", 200, 352, 240, 352, {seed: 45}); ln("ph", 195, 606, 245, 606, {seed: 47});
   draw("ph", %.3f, .5);
@@ -162,25 +165,19 @@ g.sfx("pop", t_zad); g.sfx("whoosh-short", t_kyn)
 
 # 3 · ABOVE — the cloud grows back: Claude's laptop, the task ticks, an edit renders
 t_kl, t_pra, t_mon = S(u"Клод", 7.74), S(u"працює", 7.94), S(u"і монтує", 8.48)
-t_hmn, e_komp = S(u"хмарному", 9.7), E(u"компʼютері.", 10.4)
+e_komp = E(u"компʼютері.", 10.4)
 t_clr = min(e_komp - 0.03, S(u"Наприклад,", 11.27) - 0.3)   # gone before «Наприклад»
 js(u'''
-  tl.to("#w1", {x: 0, y: 0, scale: 1, duration: .7, ease: SLIDE}, %.3f);
+  tl.to("#cw", {x: 0, y: 0, scale: 1, duration: .7, ease: SLIDE}, %.3f);
   tl.to("#t2", {x: 232, y: 40, duration: .7, ease: SLIDE}, %.3f);
   pop("#lap", %.3f, .6); pop("#lapb", %.3f, .55);
   pop("#laph", %.3f, .5);
   tl.set("#t2c", {className: "check on"}, %.3f); pop("#t2c", %.3f, .45);
   fadein("#lapp", %.3f, .3);
   tl.to("#lapf", {scaleX: 1, duration: %.3f, ease: "power1.inOut"}, %.3f);
-  // a second outline on «хмарному»: it lies on the white cloud sticker drawn
-  // above, so it stays an outline (fill: false) instead of a second sticker
-  // that would paint over the first outline
-  sketch("cl2", "skW"); %s
-  draw("cl2", %.3f, .6);
-  tl.to("#w1, #t2", {autoAlpha: 0, duration: .3, ease: "power2.in"}, %.3f);
+  tl.to("#cw, #t2", {autoAlpha: 0, duration: .3, ease: "power2.in"}, %.3f);
 ''' % (t_back, t_back, t_back, t_back + 0.08, t_kl, t_pra + 0.08, t_pra + 0.08, t_mon - 0.12,
-       t_clr - 0.2 - t_mon, t_mon, cloud("cl2", 140, 262, 800, 420, u"{seed: 53, strokeWidth: 6, fill: false}"),
-       t_hmn - 0.4, t_clr))
+       t_clr - 0.2 - t_mon, t_mon, t_clr))
 g.sfx("pop", t_back); g.sfx("click-soft", t_pra + 0.08)
 
 # 4 · HALF — phone → Claude → carousel; video → «монтаж» in the cloud, not your computer

@@ -170,8 +170,12 @@ t_nav = S(u"а навіщо", 15.27)
 t_sys, t_1300, t_bil = S(u"система", 16.01), S(u"1300,", 16.77), S(u"більше?", 18.41)
 m0, m1 = t_sys - 0.15, 19.30
 B.append(u'''
-        <div id="bw1" class="big hid" style="top:350px; font-size:240px">навіщо</div>
-        <div id="bw2" class="big hid" style="top:566px; font-size:240px">€1300<span id="bwq" style="visibility:hidden">?</span></div>''')
+        <div id="bw1" class="big hid" data-layout-allow-overlap data-layout-allow-occlusion
+             style="top:350px; font-size:240px">навіщо</div>
+        <div id="bw2" class="big hid" data-layout-allow-overlap data-layout-allow-occlusion
+             style="top:566px; font-size:240px">€1300<span id="bwq" data-layout-allow-overlap
+             data-layout-allow-occlusion style="visibility:hidden">?</span></div>''')
+# two lines at line-height 0.9 (spec) touch by design, and she stands in front of them
 g.matte("sys", round(m0, 3), round(m1 - m0, 3))
 js(u'''
   rise("#bw1", %.3f); rise("#bw2", %.3f);
@@ -238,7 +242,10 @@ g.sfx("pop", t_tob - 0.15); g.sfx("click-soft", t_13b); g.sfx("click-soft", t_da
 # 6 · HALF — the payback ------------------------------------------------------
 h0, h1 = S(u"Якщо", 29.28) - 0.1, 41.15
 HALF.append((h0, h1))
-P.append(u'<svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
+# her cut-out is a full-frame video over the panel: the layout audit reads it as
+# opaque, so the panel's labels are marked as intentionally layered (as reel 45)
+P.append(u'<div data-layout-allow-occlusion>'
+         u'<svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg></div>')
 t_por, t_akk1, t_4b = S(u"порахувати", 29.46), S(u"акаунт:", 30.24), S(u"400", 30.74)
 t_min, t_cl = S(u"мінус", 31.61), S(u"Claude,", 32.37)
 t_sys2, t_oku, t_des = S(u"система", 33.39), S(u"окупається", 33.71), S(u"десь", 34.29)
@@ -361,11 +368,11 @@ js(u'''
   pop("#b9c", %.3f);
   %s
   sink("#b9", %.3f);
-''' % (t_vsia - 0.2, t_nen, t_to, S(u"твій", 58.32) - 0.05, S(u"твій", 58.32) - 0.05, t_cld - 0.15,
+''' % (t_vsia - 0.05, t_nen, t_to, S(u"твій", 58.32) - 0.05, S(u"твій", 58.32) - 0.05, t_cld - 0.15,
        " ".join(u'tl.set("#b9k%d", {className: "check on"}, %.3f); pop("#b9k%d", %.3f, .4);'
                 % (i, t_cld + 0.1 + i * 0.12, i, t_cld + 0.1 + i * 0.12) for i in range(3)),
        S(u"ти готовий", 59.41) - 0.1))
-g.sfx("pop", t_vsia - 0.2); g.sfx("pop", t_nen); g.sfx("notification", t_cld - 0.15)
+g.sfx("pop", t_vsia - 0.05); g.sfx("pop", t_nen); g.sfx("notification", t_cld - 0.15)
 
 # 10 · ABOVE — CTA ------------------------------------------------------------
 t_inv, t_pysh = S(u"інвестувати", 59.85), S(u"пиши", 61.49)

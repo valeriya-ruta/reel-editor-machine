@@ -26,11 +26,11 @@ tick off other things → CTA.
 | 0:13.1–0:16.3 | above | the reel slides into the input slot, Claude card on the right; red ✗ on «короткого»; the reel leaves, «одне велике» long card rises; arrow (214 px, kit ink) → Claude on «велике» |
 | 0:18.1–0:21.7 | above | ✓ on the long card («змонтує»); three cut lines (kit ink) on «поріже»; four reel cards dealt on «маленькі рілси» |
 | 0:21.8–0:24.5 | above | the three format cards return (badges on); on «граєшся» they shuffle order |
-| 0:24.7–0:28.6 | above | «2» + long video frame; red pen ring + «правка» on «правки» |
+| 0:24.7–0:28.6 | above | «2» + long video frame; red ring + playhead tick on its timeline bar + «правка» on «правки» (off the play triangle: ring + triangle read as ↻) |
 | 0:28.8–0:31.6 | above | «Рендер» card: рілс bar fills fast ✓, довге відео bar crawls |
-| 0:31.6–0:39.7 | full | «що таке рендер?» rides up on the cover, landing with it on «рендер:»; Клод → (long arrow) {JSON} / код → (long arrow) готове відео ▶; red ring + «рендер» on the second arrow |
+| 0:31.6–0:39.7 | full | «що таке рендер?» (Google Sans 700, red) rides up on the cover and lands with it on «що таке рендер»; Клод → (long arrow) {JSON} / код → (long arrow) готове відео ▶; red ring + «рендер» on the second arrow |
 | 0:39.9–0:42.0 | above | the render card again: the long bar fills slowly to ✓ on «довше», clears on «Тому» |
-| 0:42.6–0:49.2 | above | frame with «правка» ring; «1» «2» on «два варіанти»; 1 lights, «нема куди спішити»; the timeline (8 segments) with the edit marked; all segments re-render on «перерендерить» (the sweep ends on «заново»), a hand underline under the whole timeline on «усе» |
+| 0:42.6–0:49.2 | above | frame with the «правка» ring on its timeline bar; «1» «2» on «два варіанти»; 1 lights, «нема куди спішити»; the timeline (8 segments) with the edit marked; all segments re-render on «перерендерить» (the sweep ends on «заново»), a hand underline under the whole timeline on «усе» |
 | 0:49.4–0:52.6 | above | bars: 2-й раз on «довше», рілс on «за рілс», 1-й раз on «другий раз», ✓ on «швидше» |
 | 0:52.75–0:63.96 | half | «2»; the timeline drawn; промт doc on «промт»; red cut lines on «вирізає»; «правка» squiggle; the piece lifts out, «рендер» bar fills on «рендерить тільки його»; it drops back on «вклеює назад», ✓; clock on «займає час»; «весь рендер» bar struck on «не весь» |
 | 1:04.9–1:09.6 | above | the lead magnet card returns; «20 хв» badge on «20»; chips новий стиль / усі правки |
@@ -39,7 +39,7 @@ tick off other things → CTA.
 | 1:15.0–1:20.6 | above (CTA) | chips «час на монтаж» on «час», «така система» (Claude) on «систему»; red pill «Пиши + в коментарі» on «пиши» + a pointer arrow (~300 px, kit ink) DOWN toward the lower right / the comment button, tip (878, 884) |
 
 Captions: her old word rail (kit), ink over the full / half spans. BLACKOUT
-where a graphic says the words: «уроки для курсу чи довгі відео на ютуб», «2–3
+where a graphic says the words: «що таке рендер:» (cover headline), «уроки для курсу чи довгі відео на ютуб», «2–3
 години», «не моя активна робота», the CTA from «то пиши».
 
 Mattes: half1 12.41 s, hours 2.23 s = 14.6 s.

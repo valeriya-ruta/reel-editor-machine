@@ -249,8 +249,8 @@ t_ce, t_dv3, t_ok3, t_sy3 = S(u"це", 25.83), S(u"дві", 26.2), S(u"окре�
 t_te = S(u"Те", 28.05)
 m0, m1 = t_dv3 - 0.45, t_te + 0.05
 B.append(u'''
-        <div id="bw1" class="big hid" style="top:320px; font-size:240px">дві</div>
-        <div id="bw2" class="big hid" style="top:536px; font-size:240px">окремі</div>''')
+        <div id="bw1" class="big hid" data-layout-allow-overlap style="top:320px; font-size:240px">дві</div>
+        <div id="bw2" class="big hid" data-layout-allow-overlap style="top:536px; font-size:240px">окремі</div>''')
 g.matte("big", round(m0, 3), round(m1 - m0, 3))
 js(u'''
   rise("#bw1", %.3f); rise("#bw2", %.3f);
@@ -312,7 +312,10 @@ F.append(acct("a3", 110, 310, u"особистий", u"свій", shown=True) +
 
 def checklist(i, x, top, who):
     rows = [u"скіл сценариста", u"tone of voice", u"дизайн-система"]
-    return (u'<div id="%s" class="card hid" style="left:%dpx; top:%dpx; width:500px; padding:30px 36px;">'
+    # the second card is meant to sit tucked under the first (the setup doubles):
+    # its rows are hidden on purpose, only its header peeks out above
+    return (u'<div id="%s" class="card hid" data-layout-allow-overlap data-layout-allow-occlusion'
+            u' style="left:%dpx; top:%dpx; width:500px; padding:30px 36px;">'
             u'<div class="row" style="gap:12px; color:#7A1424; margin-bottom:18px">%s'
             u'<span class="lbl" style="margin:0">налаштування · %s</span></div>%s</div>'
             % (i, x, top, mark("instagram", 30), esc(who),

@@ -219,11 +219,11 @@ F.append(u'''
 # the pill lands ON «оновлювану» (not 1.6 s early on «таку»); the loop from the
 # panel comes back as a ring round it, closing as she says «команду». An open
 # ring (no arrowhead), not a sticker: a white fill would cover the pill.
-t_b4out = t_kom + 0.33       # = the «24/7» rise: a clean swap, no overlap
+t_b4out = t_kom + 0.25       # gone before «24/7» rises behind her: a clean swap
 SKF.append(u'''
   sketch("lp", "skF"); ell("lp", 540, 504, 740, 200, {strokeWidth: 5, seed: 43, fill: false});
   draw("lp", %.3f, .6);
-  erase("lp", %.3f);''' % (t_onov + 0.2, t_b4out))
+  erase("lp", %.3f);''' % (t_onov + 0.1, t_b4out))
 js(u'''
   fadein("#b4", %.3f, .01); pop("#b4a", %.3f); pop("#b4b", %.3f); pop("#b4c", %.3f);
   pop("#b4t", %.3f);
@@ -233,15 +233,16 @@ g.sfx("pop", t_blog - 0.1); g.sfx("pop", t_onov - 0.1)
 BLACKOUT.append((t_blog - 0.05, E(u"підприємниця,", 24.94) + 0.05))   # the chips say them
 
 # 5 · BEHIND — «24/7» --------------------------------------------------------
-m0, m1 = t_kom + 0.33, S(u"монтує,", 30.2) - 0.25
+m0, m1 = t_kom + 0.33, S(u"монтує,", 30.2) - 0.25     # the matte span (cut: 27.667-30.433)
+t_rise = t_24 - 0.15                                   # inside it, after the CTA chips are gone
 B.append(u'''
         <div id="bw" class="big hid" data-layout-allow-occlusion style="top:548px; font-size:240px">24/7</div>''')
 g.matte("bw", round(m0 - 0.05, 3), round(m1 - m0 + 0.5, 3))
 js(u'''
   rise("#bw", %.3f, 80);
   sink("#bw", %.3f);
-''' % (m0, m1 - 0.3))
-g.sfx("whoosh-short", m0)
+''' % (t_rise, m1 - 0.3))
+g.sfx("whoosh-short", t_rise)
 BLACKOUT.append((t_24 - 0.05, E(u"7,", 28.66) + 0.05))       # «24/7» says it
 
 # 6 · ABOVE — what the team does --------------------------------------------
@@ -283,6 +284,12 @@ js(u'''
 ''' % (t_to - 0.12))
 g.sfx("pop", t_to - 0.12)
 BLACKOUT.append((t_to - 0.05, DUR))               # the pill says it
+
+# the half screen's last word: the kit's rail keeps a word up until the next
+# one starts, so «вчиться.» (16.24) would hang in ink on the panel's caption
+# line until «Але» (17.60) — over her hair once the panel has slid away. It
+# leaves with the panel, while the line is still on white.
+js(u'  tl.set("#w%d", {autoAlpha: 0}, %.3f);' % (CAPS.index(W.hit(u"вчиться.", 16.24)), h1 + 0.2))
 
 # the front sketch layer goes last so its strokes sit on top of the cards
 F.append(u'<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>')

@@ -121,6 +121,22 @@ def ink(iid, x, y, w, h, paths):
             % (iid, w, h, w, h, x, y, u"".join(u'<path pathLength="1" d="%s"/>' % d for d in paths)))
 
 
+RING = u"M100 16 C126 36 120 82 72 88 C28 92 6 70 10 46 C14 20 52 6 84 10 C96 12 104 16 110 24"   # in 130 x 100
+
+
+def edit_mark(iid, cx, cy, w, h):
+    """«правка» on a video frame: a red ring around one spot of its timeline bar
+    with a playhead tick in it. Kept off the play triangle — ring + triangle read
+    as ↻, a loop with an arrowhead (her review of 41)."""
+    import re
+    num = r"-?\d+(?:\.\d+)?"
+    pts = [float(n) for n in re.findall(num, RING)]          # M/C absolute pairs: x, y, x, y…
+    it = iter(p * (w / 130.0 if i % 2 == 0 else h / 100.0) for i, p in enumerate(pts))
+    ring = re.sub(num, lambda m: u"%.0f" % next(it), RING)
+    tick = u"M%.0f %.0f L%.0f %.0f" % (w * 0.5, h * 0.24, w * 0.5, h * 0.78)
+    return ink(iid, int(cx - w / 2), int(cy - h / 2), w, h, [tick, ring])
+
+
 # helpers on top of gstyle's
 js(u'''
   function inkdraw(sel, t, d) {
@@ -254,8 +270,8 @@ F.append(u'''
           <div class="nb on" style="position:absolute; left:44px; top:105px">2</div>
           <div style="position:absolute; left:200px; top:42px">%s</div>
           %s
-          <span class="hd hid" id="b6l" style="left:660px; top:44px; font-size:50px">правка</span>
-        </div>''' % (vf(420, 236), ink("b6c", 380, 70, 190, 130, [u"M150 22 C186 46 182 106 112 118 C46 128 8 96 14 62 C20 26 70 6 120 10 C140 12 152 16 160 26"])))
+          <span class="hd hid" id="b6l" style="left:640px; top:212px; font-size:50px">правка</span>
+        </div>''' % (vf(420, 236), edit_mark("b6c", 520, 246, 124, 72)))
 js(u'''
   rise("#b6", %.3f);
   inkdraw("#b6c", %.3f, .45); fadein("#b6l", %.3f, .3);
@@ -301,13 +317,15 @@ t_naz, t_r2 = S(u"називається", 38.68), S(u"рендер.", 39.22)
 t_i = S(u"І", 39.83)
 c1 = round(t_i - 0.08, 3)
 C.append(u'''
+        <div id="c8h" class="hid" style="position:absolute; left:0; width:1080px; top:290px; text-align:center;
+             font-weight:700; font-size:96px; line-height:1.05; letter-spacing:-0.035em; color:#7A1424">що таке рендер?</div>
         <svg class="sk" id="skC" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
         <div id="c8k" class="hid" style="position:absolute; left:396px; top:478px; color:#7A1424">%s</div>''' % mark("claude", 72))
 js(u'''
   full(%.3f, %.3f); tl.set("#b7", {autoAlpha: 0}, %.3f);
-  // the headline rides up on the cover (her review: never open onto empty white)
-  sketch("h8", "skC"); label("h8", 540, 384, "що таке рендер?", {size: 76});
-  draw("h8", %.3f);
+  // the headline rides up on the cover and lands with it on «що таке рендер»
+  // (her review: a full screen never opens onto empty white)
+  pop("#c8h", %.3f, .6);
   sketch("k8", "skC"); box("k8", 350, 448, 380, 140, {seed: 3}); label("k8", 610, 538, "Клод", {size: 60});
   draw("k8", %.3f, .55); fadein("#c8k", %.3f, .3);
   sketch("a8", "skC"); arrow("a8", 540, 604, 548, 778, {seed: 5, bend: .1});
@@ -326,10 +344,11 @@ js(u'''
   sketch("r8", "skC"); ell("r8", 536, 1090, 190, 230, {stroke: "#7A1424", strokeWidth: 5, seed: 19});
   label("r8", 655, 1105, "рендер", {size: 64, color: "#7A1424", anchor: "start"});
   draw("r8", %.3f, .6);
-''' % (c0, c1, c0 + 0.9, c0 + 0.3, t_kld - 0.4, t_kld - 0.1, t_bud, t_zv - 0.3, t_json - 0.1, t_per - 0.35,
+''' % (c0, c1, c0 + 0.9, S(u"що таке", 32.2) - 0.1, t_kld - 0.4, t_kld - 0.1, t_bud, t_zv - 0.3, t_json - 0.1, t_per - 0.35,
        t_got - 0.35, t_r2 - 0.75))
 g.sfx("whoosh-short", c0); g.sfx("click-soft", t_kld - 0.4); g.sfx("click-soft", t_json - 0.1)
 g.sfx("pop", t_r2 - 0.15)
+BLACKOUT.append((S(u"що таке", 32.2) - 0.05, E(u"рендер:", 32.45) + 0.05))      # the headline says it
 
 # 8b · ABOVE — the bars again: on a long video it is just longer ---------------
 t_dovg, t_dsh = S(u"довгому", 40.10), S(u"довше.", 41.65)
@@ -361,7 +380,7 @@ F.append(u'''
           <div id="b10t" class="hid" style="position:absolute; left:36px; top:226px; display:flex; gap:8px">%s</div>
           %s
           %s
-        </div>''' % (vf(260, 146), ink("b10e", 150, 52, 130, 100, [u"M100 16 C126 36 120 82 72 88 C28 92 6 70 10 46 C14 20 52 6 84 10 C96 12 104 16 110 24"]),
+        </div>''' % (vf(260, 146), edit_mark("b10e", 200, 158, 96, 58),
                      SEGS, ink("b10p", 386, 236, 64, 64, [u"M8 40 C18 20 26 52 36 30 C44 14 50 40 58 24"]),
                      # «усе відео»: a hand underline under the whole timeline (no ↻ — no arrowhead on a loop)
                      ink("b10u", 28, 312, 716, 32, [u"M8 18 C160 26 380 8 706 16"])))
@@ -442,7 +461,7 @@ js(u'''
   sketch("cl", "skP"); clock("cl", 885, 420, 62, {seed: 79});
   draw("cl", %.3f, .45);
   fadein("#p2f", %.3f, .3);
-  sketch("x2", "skP"); ln("x2", 90, 740, 990, 726, {stroke: "#7A1424", strokeWidth: 7, seed: 81});
+  sketch("x2", "skP"); ln("x2", 384, 792, 696, 776, {stroke: "#7A1424", strokeWidth: 7, seed: 81});
   draw("x2", %.3f, .35);
 ''' % (t_v2 - 0.1,
        u" ".join(u'box("st", %d, 562, 100, 104, {seed: %d, r: 14});' % (x, 21 + i) for i, x in enumerate(SEGX) if i != 5),

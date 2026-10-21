@@ -589,10 +589,10 @@
 
   fadein("#b4", 23.387, .01); pop("#b4a", 23.437); pop("#b4b", 24.137); pop("#b4c", 24.837);
   pop("#b4t", 26.437);
-  out("#b4, #b4t", 27.749);
+  out("#b4, #b4t", 27.669);
 
 
-  rise("#bw", 27.749, 80);
+  rise("#bw", 27.849, 80);
   sink("#bw", 29.649);
 
 
@@ -603,6 +603,7 @@
 
   pop("#b7", 32.463, .6);
 
+  tl.set("#w40", {autoAlpha: 0}, 17.059);
 
   sketch("h1t", "skF"); label("h1t", 640, 598, "налаштовую я", {size: 52, anchor: "end"});
   draw("h1t", 2.900);
@@ -625,8 +626,8 @@
   erase("ax", 22.862); erase("tl", 22.862); erase("cv", 22.862); erase("kr", 22.862);
 
   sketch("lp", "skF"); ell("lp", 540, 504, 740, 200, {strokeWidth: 5, seed: 43, fill: false});
-  draw("lp", 26.737, .6);
-  erase("lp", 27.749);
+  draw("lp", 26.637, .6);
+  erase("lp", 27.669);
 
   sketch("a7", "skF"); label("a7", 790, 640, "сюди!", {size: 52});
   arrow("a7", 805, 672, 880, 940, {strokeWidth: 5, seed: 47, bend: -.18});

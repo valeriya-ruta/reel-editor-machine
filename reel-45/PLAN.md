@@ -27,14 +27,14 @@ the «+» comes back in «Пиши + у коментарі».
 | 12.0 | half | arrow → box «[claude] аналізує» on «Клод» |
 | 13.9 / 14.5 | half | ✓ «зайшло», red ✗ «ні» |
 | 15.3 / 16.0 | half | red return arrow Claude → пост, the ellipse redrawn red on «вчиться» |
-| 16.86 | half | panel out |
+| 16.86 | half | panel out; «ВЧИТЬСЯ.» (ink, panel line) leaves with it at 17.06 rather than hang over her hair until «Але» |
 | 17.5 | above | white card; axes on «проста» (dark ink — it is on the card) |
 | 19.0 | above | six post tiles pile along «контент» on «робиш контенту» |
 | 20.2 | above | rising curve «знає тебе» lands on «знає» |
 | 21.55 | above | red circle + «краще» on «краще»; out 22.86 |
 | 23.4 | above | chips блогерка / СММниця / підприємниця on their words |
-| 26.44 / 26.74 | above | «оновлювана команда» pill on «оновлювану»; the ring (dark ink, white halo, no arrowhead) closes round it by «команду»; out 27.75 as «24/7» rises |
-| 27.75 | behind | «24/7», white, 240 px, top 548 (glyphs y 562–736) — her hair (top ≈ 692–720 here) covers ≤ 25 % of the «4/» foot (matte 27.67–30.43) |
+| 26.44 / 26.64 | above | «оновлювана команда» pill on «оновлювану»; the ring (dark ink, white halo, no arrowhead) closes round it by «команду»; out 27.67, before «24/7» rises |
+| 27.85 | behind | «24/7», white, 240 px, top 548 (glyphs y 562–736) — her hair (top ≈ 692–720 here) covers ≤ 25 % of the «4/» foot (matte 27.67–30.43) |
 | 29.7 | above | card «Команда 24/7»: монтує / дизайнить / пише сценарії on their words; out 32.09 |
 | 32.46 / 32.76 | above | CTA pill «Пиши + у коментарі»; on «плюс» «сюди!» and a ~280 px arrow from it DOWN toward the comment button, tip (880, 940), left of x 900 (dark ink, white halo) |
 
