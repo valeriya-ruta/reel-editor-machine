@@ -46,7 +46,11 @@ def run(k):
                 break
         f = os.path.join(tmp, "l%03d.mp4" % i)
         lst.append("file '%s'" % f)
-        hit = [bt for bt in BEATS if t is not None and bt[0] - 1.0 <= t < bt[1] - 0.05]
+        # pick the beat by the segment's middle, not its first frame: a segment
+        # that opens in the last breath of one beat belongs to the next
+        tm = src_to_out(EDL, s["src"] + s["nf"] / 60)
+        tm = tm if tm is not None else t
+        hit = [bt for bt in BEATS if tm is not None and t is not None and bt[0] <= tm < bt[1]]
         dur = s["nf"] / 30
         if hit:
             t0, t1, b = hit[0]

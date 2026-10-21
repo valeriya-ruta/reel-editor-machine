@@ -1,0 +1,85 @@
+<title>StyleMD Reel Cuts</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a header, then a grid of eight phone-shaped cards; each loads its reel on demand. Her RUTA palette. */
+:root{
+  --bg:#f6f7fa; --panel:#ffffff; --ink:#1a1e27; --muted:#5c6678; --line:rgba(26,30,39,.10);
+  --accent:#a81428; --accent-ink:#fff; --chip:#fadee1; --chip-ink:#7a1020; --chip2:#e8ecf3; --chip2-ink:#333b4a;
+  --display:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#14161c; --panel:#1d2029; --ink:#eef0f4; --muted:#a3abba; --line:rgba(238,240,244,.12);
+  --accent:#e0475c; --chip:#3a1d24; --chip-ink:#ffb3c0; --chip2:#262a35; --chip2-ink:#c9cfdb; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14161c; --panel:#1d2029; --ink:#eef0f4; --muted:#a3abba; --line:rgba(238,240,244,.12);
+  --accent:#e0475c; --chip:#3a1d24; --chip-ink:#ffb3c0; --chip2:#262a35; --chip2-ink:#c9cfdb; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.5 var(--display)}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:22px}
+.eyebrow{font:600 12px var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+h1{font:600 clamp(26px,4.4vw,40px)/1.05 var(--display);letter-spacing:-.03em;margin:6px 0 0;text-wrap:balance}
+.sub{color:var(--muted);max-width:66ch;margin:8px 0 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.screen{position:relative;aspect-ratio:9/16;max-width:100%;border-radius:12px;overflow:hidden;background:#0e0f13;display:flex;align-items:center;justify-content:center}
+.screen video{width:100%;height:100%;display:block}
+.screen .hook{position:absolute;inset:auto 12px 12px 12px;color:#fff;font:600 17px/1.25 var(--display);text-wrap:balance}
+.screen .num{position:absolute;top:10px;left:12px;color:rgba(255,255,255,.7);font:600 12px var(--display);letter-spacing:.14em;font-variant-numeric:tabular-nums}
+.screen .bar{position:absolute;left:12px;right:12px;top:50%;height:4px;border-radius:9px;background:rgba(255,255,255,.18);overflow:hidden}
+.screen .bar i{display:block;height:100%;width:0;background:#ff6e9c}
+h2{font:600 16px/1.25 var(--display);margin:0;letter-spacing:-.01em}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pill{font:600 11.5px var(--display);border-radius:999px;padding:3px 10px;background:var(--chip2);color:var(--chip2-ink);font-variant-numeric:tabular-nums}
+.pill.k{background:var(--chip);color:var(--chip-ink)}
+.btns{display:flex;gap:8px}
+button{font:600 14px var(--display);border:0;border-radius:999px;padding:9px 16px;cursor:pointer;background:var(--accent);color:var(--accent-ink);flex:1}
+button.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+button:disabled{opacity:.45;cursor:default}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.note{color:var(--muted);font-size:12.5px;min-height:1.1em}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">8 рілсів · 9:16 · з лід-магніту StyleMD</div>
+    <h1>Нарізка рілсів зі StyleMD</h1>
+    <p class="sub">Each reel opens with its hook on screen, carries your usual big captions, switches to the long video's diagrams and screens in the clean Google + Excalidraw look, and ends on a full-screen CTA. The two «підписка» reels keep empty space under the arrow for your Edits profile link.</p>
+  </header>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+const fmt=s=>Math.floor(s/60)+":"+String(Math.round(s%60)).padStart(2,"0");
+let downloads=null;
+claude.use("downloads").then(d=>{downloads=d;document.querySelectorAll("button.dl").forEach(b=>{if(!d)b.hidden=true;});});
+async function loadReel(r,card){
+  const scr=card.querySelector(".screen"), bar=document.createElement("div");
+  bar.className="bar";bar.innerHTML="<i></i>";scr.append(bar);
+  let got=0;const bufs=[];
+  for(const p of r.parts){const res=await fetch(p);const rd=res.body.getReader();
+    for(;;){const {done,value}=await rd.read();if(done)break;bufs.push(value);got+=value.length;bar.firstChild.style.width=(100*got/r.size)+"%";}}
+  const blob=new Blob(bufs,{type:"video/mp4"});r.blob=blob;
+  scr.innerHTML="";const v=document.createElement("video");v.controls=true;v.playsInline=true;v.src=URL.createObjectURL(blob);scr.append(v);v.play().catch(()=>{});
+  return blob;
+}
+fetch("reels.json").then(r=>r.json()).then(list=>{
+  const g=document.getElementById("grid");
+  list.forEach(r=>{
+    const c=document.createElement("article");c.className="card";
+    c.innerHTML=`<div class="screen"><span class="num">${String(r.n).padStart(2,"0")}</span><span class="hook"></span></div>
+      <h2></h2><div class="row"><span class="pill">${fmt(r.dur)}</span><span class="pill k"></span><span class="pill">${Math.round(r.size/1048576)} MB</span></div>
+      <div class="btns"><button class="ghost play">Play</button><button class="dl">Download</button></div><div class="note"></div>`;
+    c.querySelector(".hook").textContent=r.hook;c.querySelector("h2").textContent=r.title;
+    c.querySelector(".k").textContent="CTA: "+r.cta;
+    const note=c.querySelector(".note");
+    c.querySelector(".play").onclick=async e=>{e.target.disabled=true;if(!r.blob){try{await loadReel(r,c);}catch(_){note.textContent="Didn't load. Try again.";e.target.disabled=false;}}};
+    c.querySelector(".dl").onclick=async e=>{
+      if(!downloads){note.textContent="Downloading isn't available in this view.";return;}
+      e.target.disabled=true;
+      try{const b=r.blob||await loadReel(r,c);await downloads.save({filename:r.file,data:b});note.textContent="Saved.";}
+      catch(err){note.textContent=err&&err.code==="declined"?"Download cancelled.":"Couldn't save here. Open the page in claude.ai.";}
+      e.target.disabled=false;};
+    g.append(c);
+  });
+});
+</script>

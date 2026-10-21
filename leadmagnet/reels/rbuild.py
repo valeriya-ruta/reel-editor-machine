@@ -26,7 +26,7 @@ CTAK = {1: "dyz", 2: "dyz", 3: "dyz", 4: "dyz", 5: "dyz", 6: "dyz", 7: "sub", 8:
 # takeover windows, in long-video seconds (where the graphic is on screen there)
 TK = {1: [(742.0, 755.0), (764.8, 779.0), (785.0, 796.8)],
       2: [(950.4, 958.8), (980.8, 991.8), (992.4, 1012.0), (1021.4, 1040.5), (1057.5, 1078.0), (1082.0, 1087.0), (1099.4, 1105.3)],
-      3: [(389.5, 418.7)], 4: [(13.0, 37.5)], 5: [(258.5, 288.0)],
+      3: [(389.5, 418.7)], 4: [(13.0, 35.7)], 5: [(258.5, 288.0)],
       6: [(552.0, 592.4), (606.0, 666.5)], 7: [(99.4, 139.2)], 8: [(811.0, 831.0), (841.5, 858.5)]}
 
 FIX = {"етелектом.": "інтелектом.", "телек": "інтелект", "щитує": "зчитує", "Хіксфілд,": "Higgsfield,",
@@ -183,9 +183,13 @@ def build(k):
         pg = html.replace('window.__timelines["main"] = tl;', root)
         pg = re.sub(r'data-media-start="([0-9.]+)"', lambda m: 'data-media-start="%.4f"' % (float(m.group(1)) + off), pg)
         pg = re.sub(r'data-duration="[0-9.]+"', 'data-duration="%.4f"' % pdur, pg)
+        if off >= V - 0.05:          # a CTA-only part: the footage has run out
+            pg = re.sub(r'<video id="(plate|lv)"[^>]*></video>', '', pg)
         q = os.path.join(pd, "p%02d" % k2)
         os.makedirs(q, exist_ok=True)
-        open(os.path.join(q, "index.html"), "w").write(pg)
+        ip = os.path.join(q, "index.html")
+        if not (os.path.exists(ip) and open(ip).read() == pg):   # unchanged parts keep their render
+            open(ip, "w").write(pg)
         for f in ("hyperframes.json", "package.json"):
             shutil.copy(os.path.join(LM, "hf", f), q)
         json.dump({"id": "lmr%d-%d" % (k, k2), "name": "lmr%d-%d" % (k, k2)}, open(os.path.join(q, "meta.json"), "w"))

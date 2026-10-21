@@ -1,0 +1,103 @@
+[
+ {
+  "n": 1,
+  "title": "OpenRouter",
+  "hook": "Ти переплачуєш за Higgsfield",
+  "cta": "ДИЗАЙН",
+  "file": "REEL-LM-01-openrouter.mp4",
+  "size": 19384790,
+  "dur": 59.4,
+  "parts": [
+   "r1_0.mp4",
+   "r1_1.mp4"
+  ]
+ },
+ {
+  "n": 2,
+  "title": "Як скопіювати монтаж чужого рілса",
+  "hook": "Як змусити AI змонтувати рілс як у того блогера",
+  "cta": "ДИЗАЙН",
+  "file": "REEL-LM-02-skopiyuvaty-montazh.mp4",
+  "size": 21262222,
+  "dur": 73.1,
+  "parts": [
+   "r2_0.mp4",
+   "r2_1.mp4"
+  ]
+ },
+ {
+  "n": 3,
+  "title": "Чому AI-каруселі виглядають як слоп",
+  "hook": "Чому твої AI-каруселі виглядають як слоп",
+  "cta": "ДИЗАЙН",
+  "file": "REEL-LM-03-ai-slop.mp4",
+  "size": 13013831,
+  "dur": 40.7,
+  "parts": [
+   "r3_0.mp4"
+  ]
+ },
+ {
+  "n": 4,
+  "title": "Мої рілси монтує AI",
+  "hook": "Останні 30 моїх рілсів монтувала не я",
+  "cta": "ДИЗАЙН",
+  "file": "REEL-LM-04-moi-rilsy-montuye-ai.mp4",
+  "size": 24236575,
+  "dur": 53.9,
+  "parts": [
+   "r4_0.mp4",
+   "r4_1.mp4"
+  ]
+ },
+ {
+  "n": 5,
+  "title": "Безпечні зони рілса",
+  "hook": "Чому AI ставить текст під кнопки Instagram",
+  "cta": "ДИЗАЙН",
+  "file": "REEL-LM-05-bezpechni-zony.mp4",
+  "size": 9571885,
+  "dur": 36.0,
+  "parts": [
+   "r5_0.mp4"
+  ]
+ },
+ {
+  "n": 6,
+  "title": "Мудборд для AI",
+  "hook": "Як зібрати мудборд, який AI зрозуміє",
+  "cta": "ДИЗАЙН",
+  "file": "REEL-LM-06-mudbord.mp4",
+  "size": 30700611,
+  "dur": 90.7,
+  "parts": [
+   "r6_0.mp4",
+   "r6_1.mp4",
+   "r6_2.mp4"
+  ]
+ },
+ {
+  "n": 7,
+  "title": "Що таке .md",
+  "hook": "Що таке .md — простими словами",
+  "cta": "підписка",
+  "file": "REEL-LM-07-shcho-take-md.mp4",
+  "size": 10882322,
+  "dur": 39.7,
+  "parts": [
+   "r7_0.mp4"
+  ]
+ },
+ {
+  "n": 8,
+  "title": "Чат vs Code у Claude",
+  "hook": "Claude сам знайшов і вирізав картинки для мого відео",
+  "cta": "підписка",
+  "file": "REEL-LM-08-chat-vs-code.mp4",
+  "size": 14293699,
+  "dur": 44.9,
+  "parts": [
+   "r8_0.mp4"
+  ]
+ }
+]

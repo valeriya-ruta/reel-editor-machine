@@ -12,3 +12,4 @@ beats/*/snap/
 beats/STOP
 delivery/chunk_*
 out/
+delivery-reels/*.mp4
