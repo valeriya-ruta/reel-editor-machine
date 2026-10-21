@@ -35,9 +35,9 @@ re-hears every cut plate); and a lighter look → her spec, STYLE.md §00.
   them** — when all 12 are back, one review page (artifact) with every reel
   and a download button; she comments in one batch.
 - **Drive, from now on**: every finished reel is saved to her Drive, so she can
-  revisit / repost from the phone. tools/driveup.py uploads any size with a
-  service account key in the env var GOOGLE_SA_JSON (she's adding it); the
-  folder must sit in a Shared drive the service account is a member of.
+  revisit / repost from the phone. tools/driveup.py uploads any size through
+  her own Apps Script (tools/drive-hook.gs, a web app; its URL in the env var
+  REELS_DRIVE_HOOK — she's adding it). Files land in «Reels» in her My Drive.
 
 ## Reel 53 — the unplanned take
 
