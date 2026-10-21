@@ -86,16 +86,16 @@ js(u'''
     _add(s, s.rc.path("M" + (cx - rx) + " " + (top + h) + " A " + rx + " 28 0 0 0 " + (cx + rx) + " " + (top + h),
                       opt(o, ((o && o.seed) || 61) + 3)));
   }
-  function tick(name, x, y, o) { var s = SK[name];
+  function tick(name, x, y, o) { _ink = SK[name].ink; var s = SK[name];
     var k = (o && o.k) || 1;
     _add(s, s.rc.linearPath([[x - 34 * k, y], [x - 8 * k, y + 28 * k], [x + 40 * k, y - 34 * k]], opt(o, (o && o.seed) || 71))); }
   function cross(name, x1, y1, x2, y2, o) {
     var o2 = {}; for (var k in (o || {})) o2[k] = o[k]; o2.seed = ((o && o.seed) || 81) + 2;
     ln(name, x1, y1, x2, y2, o); ln(name, x2, y1, x1, y2, o2); }
-  function eye(name, x, y, o) { var s = SK[name];
+  function eye(name, x, y, o) { _ink = SK[name].ink; var s = SK[name];
     _add(s, s.rc.curve([[x - 100, y], [x, y - 62], [x + 100, y]], opt(o, 91)));
     _add(s, s.rc.curve([[x - 100, y], [x, y + 62], [x + 100, y]], opt(o, 93)));
-    ell(name, x, y, 58, 58, {seed: 95, fill: "#7A1424", fillStyle: "solid"}); }
+    ell(name, x, y, 58, 58, {seed: 95, fill: "#7A1424", fillStyle: "solid", stroke: (o && o.stroke) || SK[name].ink}); }
 ''')
 
 XMARK = (u'<svg id="b6x%d" class="hid" width="44" height="44" viewBox="0 0 44 44" style="position:absolute; left:-3px; top:-3px">'
@@ -145,11 +145,11 @@ js(u'''
   draw("p1", %.3f, .5);
   sketch("p2", "skP"); label("p2", 500, 368, "?!", {size: 84, color: "#7A1424"});
   draw("p2", %.3f);
-  sketch("p3", "skP"); cyl("p3", 280, 440, 300, 150, {seed: 5});
-  label("p3", 280, 548, "база даних", {size: 48});
+  sketch("p3", "skP"); cyl("p3", 280, 425, 300, 110, {seed: 5});
+  label("p3", 280, 512, "база даних", {size: 48});
   draw("p3", %.3f, .55);
-  sketch("p4", "skP"); arrow("p4", 280, 640, 280, 715, {seed: 9, bend: 0});
-  label("p4", 280, 775, "Клод", {size: 52});
+  sketch("p4", "skP"); arrow("p4", 280, 580, 268, 745, {seed: 9, bend: .1});
+  label("p4", 268, 808, "Клод", {size: 52});
   draw("p4", %.3f, .45);
   sketch("p5", "skP"); box("p5", 610, 318, 350, 170, {seed: 11, fill: true});
   label("p5", 785, 420, "контент", {size: 54});
@@ -159,11 +159,11 @@ js(u'''
   sketch("p7", "skP"); label("p7", 700, 600, "стратегія", {size: 48});
   draw("p7", %.3f);
   sketch("p8", "skP"); ln("p8", 600, 588, 805, 584, {stroke: "#7A1424", strokeWidth: 5, seed: 15});
-  arrow("p8", 818, 590, 870, 590, {seed: 17, bend: 0}); label("p8", 930, 603, "нова", {size: 48, color: "#7A1424"});
+  label("p8", 900, 603, "нова", {size: 48, color: "#7A1424"});
   draw("p8", %.3f, .35);
   sketch("p9", "skP"); label("p9", 700, 712, "теми", {size: 48});
   ln("p9", 640, 698, 765, 696, {stroke: "#7A1424", strokeWidth: 5, seed: 19});
-  arrow("p9", 818, 702, 870, 702, {seed: 21, bend: 0}); label("p9", 930, 715, "нові", {size: 48, color: "#7A1424"});
+  label("p9", 900, 715, "нові", {size: 48, color: "#7A1424"});
   draw("p9", %.3f, .3);
   ["p1","p2","p3","p4","p5","p6","p7","p8","p9"].forEach(function (n) { erase(n, %.3f); });
 ''' % (t_pam - 0.1, t_nel, t_baza - 0.45, t_bere - 0.2, t_kont - 0.45, t_zav, t_str - 0.05, t_zm,
@@ -219,8 +219,8 @@ F.append(u"".join(u'<span class="chip hid" id="b5c%d" style="position:absolute; 
                   for i, (w, x, y, r) in enumerate(HEAP)))
 js(u'''
   %s
-  sketch("r5", "skF"); ell("r5", 540, 482, 890, 396, {stroke: "#7A1424", strokeWidth: 5, roughness: 2.8, seed: 31});
-  ell("r5", 548, 478, 850, 370, {stroke: "#7A1424", strokeWidth: 4, roughness: 3, seed: 33});
+  sketch("r5", "skF"); ell("r5", 540, 482, 890, 396, {strokeWidth: 5, roughness: 1.6, seed: 31});
+  ell("r5", 548, 478, 850, 370, {strokeWidth: 4, roughness: 1.8, seed: 33});
   draw("r5", %.3f, .45);
   tl.to("%s", {autoAlpha: 0, y: 60, duration: .35, ease: "power2.in", stagger: .03}, %.3f);
   erase("r5", %.3f);
@@ -262,7 +262,7 @@ js(u'''
 g.sfx("pop", t_nal - 0.25); g.sfx("pop", t_not - 0.05); g.sfx("click-soft", t_pos)
 
 # 7 · FULL — the point of reference -------------------------------------------
-c0, c1 = S(u"називаю,", 43.88) - 0.15, S(u"На", 52.86) - 0.3
+c0, c1 = S(u"point", 44.66) - 0.5, S(u"На", 52.86) - 0.3
 t_poi, t_mis = S(u"point", 44.66), S(u"Це місце,", 46.12)
 t_ne, t_klo = S(u"не", 46.82), S(u"Клода,", 47.7)
 t_nez, t_ty = S(u"незалежним.", 48.39), S(u"ти,", 49.56)
@@ -274,7 +274,7 @@ C.append(u'''
         <svg class="sk" id="skC" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>''')
 js(u'''
   full(%.3f, %.3f);
-  pop("#c7h", %.3f, .6);
+  pop("#c7h", %.3f, .55);
   sketch("c1", "skC"); cyl("c1", 190, 790, 180, 140, {seed: 51});
   label("c1", 190, 1010, "памʼять", {size: 44}); label("c1", 190, 1058, "Клода", {size: 44});
   draw("c1", %.3f, .45);
@@ -293,7 +293,7 @@ js(u'''
   sketch("c7", "skC"); label("c7", 670, 900, "актуальна", {size: 54});
   label("c7", 670, 965, "інформація", {size: 54});
   draw("c7", %.3f);
-''' % (c0, c1, t_poi, t_mis - 0.95, t_mis - 0.5, t_ne, t_nez, t_ty - 0.35, t_ik - 0.2, t_akt))
+''' % (c0, c1, t_poi - 0.1, t_mis - 0.95, t_mis - 0.5, t_ne, t_nez, t_ty - 0.35, t_ik - 0.2, t_akt))
 g.sfx("whoosh-short", c0); g.sfx("pop", t_poi); g.sfx("click-soft", t_ne); g.sfx("click-soft", t_akt)
 g.sfx("whoosh-short", c1)
 BLACKOUT.append((t_poi - 0.05, E(u"reference.", 45.24) + 0.05))      # the heading says it
@@ -316,26 +316,23 @@ F.append(u'''
           <span class="line" style="margin-top:16px; width:86%%"></span>
           <span class="line" style="margin-top:16px; width:60%%"></span>
         </div>
-        <div id="b8c" class="chip hid" style="position:absolute; left:640px; top:430px; color:#7A1424">%s<span style="color:#241919">Claude</span></div>''' % (mark("claude", 40), mark("claude", 36)))
+        <div id="b8s" class="pill hid" style="left:390px; top:590px; font-size:34px; padding:12px 28px; transform:rotate(-5deg)">оновлено</div>
+        <div id="b8c" class="chip hid" style="position:absolute; left:724px; top:436px; color:#7A1424">%s<span style="color:#241919">Claude</span></div>''' % (mark("claude", 40), mark("claude", 36)))
 js(u'''
   rise("#b8", %.3f);
   pop("#b8d", %.3f);
-  sketch("o8", "skF");
-  _add(SK.o8, SK.o8.rc.path("M 625 605 A 55 55 0 1 0 570 660", opt({stroke: "#7A1424", strokeWidth: 5}, 63)));
-  _add(SK.o8, SK.o8.rc.line(570, 660, 540, 640, opt({stroke: "#7A1424", strokeWidth: 5}, 65)), "head");
-  _add(SK.o8, SK.o8.rc.line(570, 660, 540, 682, opt({stroke: "#7A1424", strokeWidth: 5}, 67)), "head");
-  draw("o8", %.3f, .5);
-  fadein("#b8t", %.3f, .3);
-  pop("#b8c", %.3f);
-  sketch("a8", "skF"); arrow("a8", 632, 470, 508, 474, {seed: 69, bend: -.18});
-  draw("a8", %.3f, .4);
   sketch("e8", "skF"); ln("e8", 214, 546, 452, 542, {stroke: "#7A1424", strokeWidth: 6, seed: 73});
   under("e8", 222, 616, 420, {stroke: "#7A1424", strokeWidth: 6, seed: 75});
   draw("e8", %.3f, .3);
-  sink("#b8, #b8d, #b8c", %.3f); erase("o8", %.3f); erase("a8", %.3f); erase("e8", %.3f);
-''' % (t_pros - 0.2, t_doc, t_onov - 0.2, t_strat, t_kd - 0.05, t_kd + 0.2, t_onovl - 0.25,
-       t_ale2 - 0.25, t_ale2 - 0.25, t_ale2 - 0.25, t_ale2 - 0.25))
-g.sfx("pop", t_doc); g.sfx("click-soft", t_onov - 0.2); g.sfx("pop", t_kd - 0.05); g.sfx("click-soft", t_onovl - 0.2)
+  fadein("#b8t", %.3f, .3);
+  pop("#b8c", %.3f);
+  sketch("a8", "skF"); arrow("a8", 712, 476, 512, 478, {stroke: "#1E1E1E", seed: 69, bend: -.12});
+  draw("a8", %.3f, .45);
+  pop("#b8s", %.3f, .5);
+  sink("#b8, #b8d, #b8c, #b8s", %.3f); erase("a8", %.3f); erase("e8", %.3f);
+''' % (t_pros - 0.2, t_doc, t_onov - 0.15, t_strat, t_kd - 0.05, t_kd + 0.2, t_onovl - 0.1,
+       t_ale2 - 0.25, t_ale2 - 0.25, t_ale2 - 0.25))
+g.sfx("pop", t_doc); g.sfx("click-soft", t_onov - 0.2); g.sfx("pop", t_kd - 0.05); g.sfx("pop", t_onovl - 0.1)
 
 # 9 · ABOVE — Notion for the fast things; free, simple, not for your eyes -----
 t_kp, t_id, t_zad = S(u"контент-плану,", 63.32), S(u"ідей,", 64.18), S(u"задач,", 64.66)
@@ -364,8 +361,8 @@ js(u'''
   tl.to("#b9l", {autoAlpha: 0, duration: .2}, %.3f); pop("#b9n", %.3f);
   pop("#b9p1", %.3f); pop("#b9p2", %.3f);
   out("#b9p1, #b9p2", %.3f);
-  sketch("e9", "skF"); eye("e9", 780, 470, {seed: 77});
-  label("e9", 780, 600, "тобі не треба", {size: 46});
+  sketch("e9", "skF"); eye("e9", 780, 470, {seed: 77, stroke: "#1E1E1E"});
+  label("e9", 780, 600, "тобі не треба", {size: 46, color: "#1E1E1E"});
   draw("e9", %.3f, .45);
   sketch("s9", "skF"); ln("s9", 670, 560, 890, 380, {stroke: "#7A1424", strokeWidth: 7, seed: 79});
   draw("s9", %.3f, .3);
@@ -384,31 +381,31 @@ t_pid, t_teb = S(u"підключаю", 71.70), S(u"тебе,", 72.58)
 t_kla, t_znav = S(u"Клода,", 74.02), S(u"знав,", 75.27)
 t_etap, t_kozh = S(u"етапі", 76.05), S(u"кожен", 76.71)
 t_stare, t_nov = S(u"старе", 78.13), S(u"новим.", 78.73)
-P.append(u'<div id="p10n" class="row hid" style="position:absolute; left:410px; top:344px; gap:14px; color:#241919">'
+P.append(u'<div id="p10n" class="row hid" style="position:absolute; left:418px; top:322px; gap:14px; color:#241919">'
          u'%s<b style="font-size:48px; font-weight:700">Notion</b></div>' % mark("notion", 56))
 js(u'''
   pop("#p10n", %.3f);
-  sketch("q1", "skP"); ell("q1", 220, 380, 200, 124, {seed: 101}); label("q1", 220, 398, "ти", {size: 56});
-  arrow("q1", 395, 380, 330, 380, {seed: 103, bend: .15});
+  sketch("q1", "skP"); arrow("q1", 405, 360, 272, 440, {seed: 103, bend: .12});
+  ell("q1", 195, 485, 190, 110, {seed: 101}); label("q1", 195, 502, "ти", {size: 56});
   draw("q1", %.3f, .4);
-  sketch("q2", "skP"); cross("q2", 140, 322, 300, 438, {stroke: "#7A1424", strokeWidth: 6, seed: 105});
+  sketch("q2", "skP"); cross("q2", 115, 432, 275, 538, {stroke: "#7A1424", strokeWidth: 6, seed: 105});
   draw("q2", %.3f, .3);
-  sketch("q3", "skP"); arrow("q3", 655, 380, 728, 380, {seed: 107, bend: -.15});
-  ell("q3", 840, 380, 210, 124, {seed: 109, stroke: "#7A1424"}); label("q3", 840, 398, "Клод", {size: 56});
+  sketch("q3", "skP"); arrow("q3", 668, 360, 806, 440, {seed: 107, bend: -.12});
+  ell("q3", 880, 485, 200, 110, {seed: 109, stroke: "#7A1424"}); label("q3", 880, 502, "Клод", {size: 56});
   draw("q3", %.3f, .4);
-  sketch("q4", "skP"); tick("q4", 958, 318, {stroke: "#7A1424", strokeWidth: 6, seed: 111, k: .75});
+  sketch("q4", "skP"); tick("q4", 738, 505, {stroke: "#7A1424", strokeWidth: 6, seed: 111, k: .8});
   draw("q4", %.3f, .3);
-  sketch("q5", "skP"); box("q5", 110, 500, 860, 290, {seed: 113, r: 28});
-  ln("q5", 397, 515, 397, 775, {seed: 115}); ln("q5", 683, 515, 683, 775, {seed: 117});
-  label("q5", 253, 562, "ідея", {size: 46}); label("q5", 540, 562, "в роботі", {size: 46});
-  label("q5", 826, 562, "вийшло", {size: 46});
+  sketch("q5", "skP"); box("q5", 110, 575, 860, 265, {seed: 113, r: 28});
+  ln("q5", 397, 590, 397, 825, {seed: 115}); ln("q5", 683, 590, 683, 825, {seed: 117});
+  label("q5", 253, 630, "ідея", {size: 44}); label("q5", 540, 630, "в роботі", {size: 44});
+  label("q5", 826, 630, "вийшло", {size: 44});
   draw("q5", %.3f, .45);
-  sketch("q6", "skP"); box("q6", 168, 600, 170, 84, {seed: 121, r: 18, fill: true});
-  box("q6", 455, 600, 170, 84, {seed: 123, r: 18, fill: true}); box("q6", 741, 600, 170, 84, {seed: 125, r: 18, fill: true});
+  sketch("q6", "skP"); box("q6", 173, 655, 160, 64, {seed: 121, r: 16, fill: true});
+  box("q6", 460, 655, 160, 64, {seed: 123, r: 16, fill: true}); box("q6", 746, 655, 160, 64, {seed: 125, r: 16, fill: true});
   draw("q6", %.3f, .35);
-  sketch("q7", "skP"); label("q7", 826, 746, "старе", {size: 48, color: "#7A1424"});
+  sketch("q7", "skP"); label("q7", 826, 788, "старе", {size: 48, color: "#7A1424"});
   draw("q7", %.3f);
-  sketch("q8", "skP"); label("q8", 253, 746, "нове", {size: 48, color: "#7A1424"});
+  sketch("q8", "skP"); label("q8", 253, 788, "нове", {size: 48, color: "#7A1424"});
   draw("q8", %.3f);
   out("#p10n", %.3f);
   ["q1","q2","q3","q4","q5","q6","q7","q8"].forEach(function (n) { erase(n, %.3f); });
@@ -437,13 +434,13 @@ F.append(u'''
           <span class="pill" style="position:relative; font-size:50px; padding:28px 54px">Підпишись</span></div>''' % mark("notion", 40))
 js(u'''
   fadein("#b11", %.3f, .01); pop("#b11a", %.3f);
-  sketch("u11", "skF"); under("u11", 172, 412, 420, {stroke: "#7A1424", strokeWidth: 5, seed: 131});
+  sketch("u11", "skF"); under("u11", 172, 412, 420, {strokeWidth: 5, seed: 131});
   draw("u11", %.3f, .4);
   pop("#b11b", %.3f);
   sink("#b11", %.3f); erase("u11", %.3f);
   pop("#b11l", %.3f);
   pop("#b11cta", %.3f, .6);
-  sketch("a11", "skF"); arrow("a11", 185, 668, 338, 506, {stroke: "#7A1424", strokeWidth: 5, seed: 133, bend: -.12});
+  sketch("a11", "skF"); arrow("a11", 185, 668, 338, 506, {strokeWidth: 5, seed: 133, bend: -.12});
   draw("a11", %.3f, .45);
 ''' % (t_zek - 0.05, t_zek, t_hro - 0.1, t_sam - 0.1, t_lh - 0.3, t_lh - 0.3, t_lh, t_obov - 0.1, t_obov + 0.3))
 g.sfx("pop", t_zek); g.sfx("kaching", t_hro); g.sfx("pop", t_lh); g.sfx("pop", t_obov - 0.1)

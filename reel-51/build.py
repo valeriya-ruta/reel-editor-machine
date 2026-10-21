@@ -30,6 +30,7 @@ usage: python build.py [--words] [--chunks]   (then mattes; render is the orches
 import io
 import json
 import os
+import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -38,9 +39,25 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 from gstyle import G, Words, load_caps, mark, esc  # noqa: E402
 
 NN = "51"
+
+
+class G51(G):
+    """The kit's word rail ends each word where the next begins: «ІНТЕЛЕКТ.»
+    would then sit on the cover through her whole 10 s silent hold. A word
+    followed by a silence over 1 s leaves 0.3 s after she stops."""
+
+    def words(self, chunks, js, blackout=()):
+        html, j = G.words(self, chunks, js, blackout)
+        ws = [w for c in chunks for w in c["words"]]
+        for i, (a, b) in enumerate(zip(ws, ws[1:])):
+            if b["s"] - a["e"] > 1.0:
+                j = re.sub(r'(tl\.set\("#w%d", \{autoAlpha: 0\}, )[\d.]+\)' % i, r'\g<1>%.3f)' % (a["e"] + 0.3), j)
+        return html, j
+
+
 CUT = json.load(io.open(os.path.join(ROOT, "work", "r" + NN, "cut.json"), encoding="utf-8"))
 DUR = 70.516           # (2116 plate frames - 0.5) / 30
-g = G(dur=DUR, reel=NN)
+g = G51(dur=DUR, reel=NN)
 
 # the silent hold: clip 1 of cut.json, the only clip with no text
 HOLD = [c for c in CUT["clips"] if not c["text"].strip()][0]
@@ -108,7 +125,7 @@ js(u'''
   // a loudspeaker, muted: body + cone, a red cross beside it
   function spk(name, x, y, o) {
     poly(name, [[x, y - 18], [x + 24, y - 18], [x + 58, y - 46], [x + 58, y + 46], [x + 24, y + 18], [x, y + 18]], o);
-    cross(name, x + 78, y - 24, x + 122, y + 24, {stroke: "#7A1424", strokeWidth: 5, seed: 113});
+    cross(name, x + 78, y - 24, x + 122, y + 24, {strokeWidth: 5, seed: 113});
   }
   // a speech bubble: an oval with a tail
   function bubble(name, cx, cy, w, h, o) { var s = SK[name];
@@ -145,7 +162,7 @@ js(u'''
   pop("#mp1", %.3f); pop("#mp2", %.3f);
   sketch("h1", "skF"); spk("h1", 478, 400, {seed: 103});
   draw("h1", %.3f, .45);
-  sketch("h2", "skF"); label("h2", 540, 585, "?", {size: 130, color: "#7A1424"});
+  sketch("h2", "skF"); label("h2", 540, 585, "?", {size: 130});
   draw("h2", %.3f);
   tl.set("#mp1, #mp2", {autoAlpha: 0}, %.3f); tl.set("#sk-h1, #sk-h2", {autoAlpha: 0}, %.3f);
 ''' % (t_dva, t_dva + 0.22, t_bez - 0.2, t_vga - 0.05, H0 + 0.1, H0 + 0.1))
@@ -155,7 +172,11 @@ g.sfx("pop", t_dva); g.sfx("click-soft", t_bez + 0.2); g.sfx("pop", t_vga)
 # Two 9:16 frames, 390 x 693 each (inner 370 x 673), x 93–483 and 507–897: two
 # 430 px frames (860 px) do not fit between the left edge zone (x 90) and the
 # action column (x 900), so they are 390 wide — the most the safe box allows.
-c0, c1 = E(u"штучний", 3.87) + 0.05, H1 - 0.03
+# it opens on «штучний інтелект» (the cover reaches the caption rail as «штучний»
+# ends, so «інтелект.» is ink on white) and leaves 0.15 s before the plate cuts
+# back to her (only the ceiling of the wide shot shows, 4 frames) so «якщо» is
+# still ink on white and «ти» is already white on the plaque.
+c0, c1 = S(u"штучний", 3.87) + 0.13, H1 - 0.15
 #
 # SWAP — once her two reels arrive (reel-51/assets/cmp1.mp4 = the AI reel «1»,
 # cmp2.mp4 = the editor's reel «2»), replace each CMP line below with:
@@ -180,7 +201,7 @@ C.append(u'''
 js(u'''
   full(%.3f, %.3f);
   sketch("c1", "skC"); ell("c1", 288, %d, 150, 138, {seed: 121}); ell("c1", 702, %d, 150, 138, {seed: 123});
-  draw("c1", %.3f, .5);
+  draw("c1", %.3f, .45);
   [1, 2].forEach(function (k) {
     if (!document.getElementById("skCmp" + k)) return;      // her video is in: no placeholder
     sketch("pl" + k, "skCmp" + k);
@@ -188,7 +209,7 @@ js(u'''
     poly("pl" + k, [[158, 290], [158, 382], [236, 336]], {seed: 140 + k, fill: true});
     draw("pl" + k, %.3f + (k - 1) * .25, .55);
   });
-''' % (c0, c1, BPH_TOP - 98, BPH_TOP - 98, H0 + 0.15, H0 + 0.5))
+''' % (c0, c1, BPH_TOP - 98, BPH_TOP - 98, c0 + 0.6, c0 + 0.85))
 g.sfx("whoosh-short", c0); g.sfx("whoosh-short", c1)
 
 # 3 · ABOVE — the verdict -------------------------------------------------------
@@ -199,16 +220,16 @@ t_vid, t_bud = S(u"відтворити", 24.21), S(u"будь-який", 24.81)
 t_tv, t_st = S(u"твоєму", 27.15), S(u"стилі.", 27.55)
 js(u'''
   rise("#mp1", %.3f); rise("#mp2", %.3f);
-  sketch("v1", "skF"); ell("v1", 740, 438, 236, 320, {stroke: "#7A1424", strokeWidth: 5, seed: 151});
+  sketch("v1", "skF"); ell("v1", 740, 438, 236, 320, {strokeWidth: 5, seed: 151});
   draw("v1", %.3f, .5);
   sketch("v2", "skF"); cross("v2", 680, 350, 800, 530, {stroke: "#7A1424", strokeWidth: 7, seed: 153});
   draw("v2", %.3f, .28);
   erase("v1", %.3f); erase("v2", %.3f);
-  sketch("v3", "skF"); ell("v3", 340, 438, 236, 320, {stroke: "#7A1424", strokeWidth: 5, seed: 155});
+  sketch("v3", "skF"); ell("v3", 340, 438, 236, 320, {strokeWidth: 5, seed: 155});
   draw("v3", %.3f, .5);
   pop("#mc1", %.3f);
   pop("#mc2", %.3f); erase("v3", %.3f);
-  sketch("v4", "skF"); arrow("v4", 650, 400, 430, 400, {stroke: "#7A1424", strokeWidth: 5, seed: 157, bend: -.22});
+  sketch("v4", "skF"); arrow("v4", 650, 400, 430, 400, {strokeWidth: 5, seed: 157, bend: -.18});
   draw("v4", %.3f, .5);
   sink("#mp1, #mp2, #mc1, #mc2", %.3f); erase("v4", %.3f);
 ''' % (c1 + 0.1, c1 + 0.2, t_dru - 0.1, t_pom, t_per - 0.12, t_per - 0.12, t_per - 0.05, t_sht,
@@ -237,7 +258,7 @@ F.append(u'''
              style="font-size:30px; padding:10px 20px"><i></i>твій стиль</span></div>''')
 js(u'''
   %s
-  sketch("v5", "skF"); ell("v5", 635, 445, 230, 320, {stroke: "#7A1424", strokeWidth: 5, seed: 159});
+  sketch("v5", "skF"); ell("v5", 635, 445, 230, 320, {strokeWidth: 5, seed: 159});
   draw("v5", %.3f, .5); pop("#tsc", %.3f);
   sink("#tl0, #tl1, #tl2, #tl3, #tsc", %.3f); erase("v5", %.3f);
 ''' % (u" ".join(u'pop("#tl%d", %.3f);' % (i, t_bud - 0.05 + i * 0.16) for i in range(4)),
@@ -282,30 +303,30 @@ h0, h1 = S(u"Вона", 37.89) - 0.15, S(u"Тому", 43.7) - 0.25
 HALF.append((h0, h1))
 P.append(u'<svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
 P.append(u'''
-        <div id="pcl" class="hid" style="position:absolute; left:400px; top:392px; width:260px; height:196px;
+        <div id="pcl" class="hid" style="position:absolute; left:405px; top:560px; width:250px; height:180px;
              display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
              color:#7A1424">%s<span style="font-weight:500; font-size:44px; color:#241919">Claude</span></div>''' % mark("claude", 70))
 t_mom, t_zn = S(u"момент", 38.93), S(u"зняти", 39.17)
 t_vid2, t_kl = S(u"віддати", 40.22), S(u"Клоду", 40.86)
 t_20, t_got = S(u"20", 41.56), S(u"готовий", 42.62)
 js(u'''
-  sketch("p1", "skP"); box("p1", 110, 330, 180, 320, {seed: 171, r: 28}); ln("p1", 175, 360, 225, 360, {seed: 173});
-  ell("p1", 200, 590, 36, 36, {stroke: "#7A1424", fill: "#7A1424", fillStyle: "solid", seed: 175});
-  label("p1", 200, 715, "зняти рілс", {size: 44});
+  sketch("p1", "skP"); box("p1", 100, 315, 150, 267, {seed: 171, r: 26}); ln("p1", 155, 342, 195, 342, {seed: 173});
+  ell("p1", 175, 545, 32, 32, {stroke: "#7A1424", fill: "#7A1424", fillStyle: "solid", seed: 175});
+  label("p1", 175, 650, "зняти", {size: 44}); label("p1", 175, 698, "рілс", {size: 44});
   draw("p1", %.3f, .55);
-  sketch("p2", "skP"); arrow("p2", 300, 490, 388, 490, {seed: 177, bend: 0}); box("p2", 400, 392, 260, 196, {seed: 179, r: 30});
+  sketch("p2", "skP"); arrow("p2", 262, 470, 392, 600, {seed: 177, bend: .14}); box("p2", 405, 560, 250, 180, {seed: 179, r: 30});
   draw("p2", %.3f, .45); fadein("#pcl", %.3f);
-  sketch("p3", "skP"); arrow("p3", 672, 490, 788, 490, {stroke: "#7A1424", seed: 181, bend: 0});
-  label("p3", 730, 452, "20 хв", {size: 50, color: "#7A1424"});
+  sketch("p3", "skP"); arrow("p3", 668, 600, 798, 470, {stroke: "#7A1424", seed: 181, bend: .14});
+  label("p3", 730, 440, "20 хв", {size: 50, color: "#7A1424"});
   draw("p3", %.3f, .4);
-  sketch("p4", "skP"); box("p4", 800, 330, 180, 320, {seed: 183, r: 28}); ln("p4", 865, 360, 915, 360, {seed: 185});
-  tick("p4", 888, 492, {stroke: "#7A1424", strokeWidth: 7, k: 1.3, seed: 187});
-  label("p4", 890, 712, "готовий", {size: 44}); label("p4", 890, 762, "результат", {size: 44});
+  sketch("p4", "skP"); box("p4", 805, 315, 150, 267, {seed: 183, r: 26}); ln("p4", 860, 342, 900, 342, {seed: 185});
+  tick("p4", 878, 456, {stroke: "#7A1424", strokeWidth: 7, k: 1.2, seed: 187});
+  label("p4", 880, 650, "готовий", {size: 44}); label("p4", 880, 698, "результат", {size: 44});
   draw("p4", %.3f, .5);
   erase("p1", %.3f); erase("p2", %.3f); erase("p3", %.3f); erase("p4", %.3f); out("#pcl", %.3f);
 ''' % (t_mom - 0.35, t_vid2 - 0.05, t_kl, t_20 - 0.3, t_got - 0.45, h1, h1, h1, h1, h1))
-BLACKOUT.append((t_zn - 0.05, t_zn + 0.05))                        # «зняти рілс» label
-BLACKOUT.append((S(u"отримати", 42.22) - 0.05, S(u"отримати", 42.22) + 0.05))   # «готовий результат» label
+BLACKOUT.append((t_zn - 0.05, S(u"рілс,", 39.57) + 0.05))           # «зняти рілс» label
+BLACKOUT.append((S(u"отримати", 42.22) - 0.05, S(u"результат.", 43.0) + 0.05))  # «готовий результат» label
 g.sfx("click-soft", t_zn); g.sfx("pop", t_kl); g.sfx("pop", t_got)
 g.sfx("whoosh-short", h0); g.sfx("whoosh-short", h1)
 
@@ -315,18 +336,18 @@ t_nm, t_dob = S(u"не", 47.35), S(u"так", 48.22)
 t_lim = S(u"Ліміти", 50.1)
 js(u'''
   rise("#mp1, #mc1", %.3f); rise("#mp2, #mc2", %.3f);
-  sketch("a1", "skF"); bubble("a1", 540, 410, 210, 160, {seed: 191});
+  sketch("a1", "skF"); bubble("a1", 540, 410, 210, 160, {seed: 191, fill: "#FFFFFF", fillStyle: "solid"});
   draw("a1", %.3f, .5);
-  sketch("a2", "skF"); ln("a2", 500, 398, 580, 398, {seed: 193}); ln("a2", 500, 430, 580, 430, {seed: 195});
+  sketch("a2", "skF"); ln("a2", 500, 398, 580, 398, {stroke: "#1E1E1E", seed: 193}); ln("a2", 500, 430, 580, 430, {stroke: "#1E1E1E", seed: 195});
   draw("a2", %.3f, .3);
-  sketch("a3", "skF"); ln("a3", 560, 368, 520, 462, {seed: 197}); draw("a3", %.3f, .25);
-  erase("a2", %.3f); erase("a3", %.3f); erase("a1", %.3f);
+  sketch("a3", "skF"); ln("a3", 560, 368, 520, 462, {stroke: "#1E1E1E", seed: 197}); draw("a3", %.3f, .25);
+  erase("a2", %.3f); erase("a3", %.3f);
   sketch("a4", "skF"); ln("a4", 486, 396, 594, 396, {stroke: "#7A1424", strokeWidth: 9, seed: 199});
   ln("a4", 486, 436, 594, 436, {stroke: "#7A1424", strokeWidth: 9, seed: 201});
   draw("a4", %.3f, .3);
-  sink("#mp1, #mp2, #mc1, #mc2", %.3f); erase("a4", %.3f);
-''' % (t_tomu, t_tomu + 0.12, t_kaz - 0.2, t_nm, t_nm + 0.3, t_dob - 0.1, t_dob - 0.1, t_dob - 0.1,
-       t_dob - 0.05, t_lim - 0.4, t_lim - 0.4))
+  sink("#mp1, #mp2, #mc1, #mc2", %.3f); erase("a4", %.3f); erase("a1", %.3f);
+''' % (t_tomu, t_tomu + 0.12, t_kaz - 0.2, t_nm, t_nm + 0.3, t_dob - 0.1, t_dob - 0.1,
+       t_dob - 0.05, t_lim - 0.4, t_lim - 0.4, t_lim - 0.4))
 g.sfx("whoosh-short", t_tomu); g.sfx("click-soft", t_nm); g.sfx("pop", t_dob)
 
 # 8 · HALF — the limits: real creativity above the line, «creativity» below ------
@@ -357,7 +378,7 @@ js(u'''
   pop("#psub", %.3f); pop("#pcap", %.3f);
   erase("q1", %.3f); erase("q2", %.3f); erase("q3", %.3f); out("#psub, #pcap", %.3f);
 ''' % (t_lim - 0.15, t_spr - 0.3, t_kr2 - 0.3, t_cher, t_pl, h3, h3, h3, h3))
-BLACKOUT.append((t_spr - 0.05, S(u"а не", 54.34) + 0.05))          # «справжній креатив» / «креатив» boxes
+BLACKOUT.append((t_spr - 0.05, t_kr2 + 0.05))                      # «справжній креатив» / «креатив» boxes
 g.sfx("pop", t_spr); g.sfx("pop", t_kr2); g.sfx("pop", t_pl)
 g.sfx("whoosh-short", h2); g.sfx("whoosh-short", h3)
 
@@ -382,10 +403,10 @@ js(u'''
   sink("#b9", %.3f);
   pop("#b9n", %.3f);
   sketch("e1", "skF"); box("e1", 640, 348, 160, 84, {seed: 221, r: 18}); box("e1", 800, 374, 16, 32, {seed: 223, r: 6});
-  box("e1", 654, 362, 132, 56, {seed: 225, r: 10, stroke: "#7A1424", fill: "#7A1424", strokeWidth: 3});
+  box("e1", 654, 362, 132, 56, {seed: 225, r: 10, fill: "#FFFFFF", strokeWidth: 3});
   draw("e1", %.3f, .45);
   pop("#b9cta", %.3f, .6);
-  sketch("e2", "skF"); arrow("e2", 925, 695, 805, 592, {stroke: "#7A1424", strokeWidth: 5, seed: 227, bend: -.18});
+  sketch("e2", "skF"); arrow("e2", 965, 770, 815, 600, {strokeWidth: 5, seed: 227, bend: -.16});
   draw("e2", %.3f, .45);
 ''' % (t_blog - 0.05, t_blog, t_smm, t_pid, t_pro, t_24 - 0.35, t_24, t_vt - 0.35, t_stav, t_stav + 0.5))
 g.sfx("pop", t_blog); g.sfx("pop", t_pro); g.sfx("pop", t_24); g.sfx("click-soft", t_vt); g.sfx("pop", t_stav)

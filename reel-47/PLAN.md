@@ -22,15 +22,19 @@ subscribe.
 | 0:24.9–0:28.0 | above | «Памʼять Клода»: стратегія + «неактуальна», тема + «закрита» |
 | 0:28.5–0:31.6 | above | status chips dealt in a heap, ringed in red on «безпросвітна» (captions keep her quip) |
 | 0:32.6–0:42.0 | above | «Система клієнта»: Claude chip, «+ додатковий» slot → Notion on «Notion»; rows клієнтка користується ✗, має посилання ✗ |
-| 0:43.7–0:52.6 | full | «point of reference»; memory cylinder crossed; hatched box «незалежне»; ти → / Клод → arrows; «актуальна інформація» |
-| 0:52.8–0:62.1 | above | «Проста система»: Claude doc, refresh arrow on «оновлюється», title «Стратегія», Claude chip → doc, a line struck + new line on «оновлюємо» |
+| 0:44.2–0:52.6 | full | «point of reference»; memory cylinder crossed; hatched box «незалежне»; ти → / Клод → arrows; «актуальна інформація» |
+| 0:52.8–0:62.1 | above | «Проста система»: Claude doc pops on «Клод-док», a line struck + new line on «оновлюється», title «Стратегія», Claude chip → long arrow → doc, «оновлено» stamp on «оновлюємо» |
 | 0:62.2–0:71.0 | above | «Все швидке» → Notion: rows Контент-план / Ідеї / Задачі; pills безкоштовний / простий; eye + «тобі не треба», struck on «не» |
 | 0:71.3–0:79.2 | half 2 | Notion → ти ✗, → Клод ✓; board ідея / в роботі / вийшло, three cards on «кожен контент»; «старе», «нове» |
-| 1:20.4–1:27.5 | above (CTA) | chips зекономити (underline + kaching on «грошей»), AI-система самостійно; «лайфхак: + Notion»; red «Підпишись» + red pointer from the left (the last clip is a big punch-in, head top ≈ y 505) |
+| 1:20.4–1:27.5 | above (CTA) | chips зекономити (underline + kaching on «грошей»), AI-система самостійно; «лайфхак: + Notion»; red «Підпишись» + white pointer from the left (the last clip is a big punch-in, head top ≈ y 505) |
 
-Captions: phrase chunks, re-split at her phrasing (SPLITS / JOINS in build.py);
-on the half panels at bottom 980. BLACKOUT where a graphic says the words: the four
+Captions: her old word-by-word rail (kit, after her review of 41), ink over the
+half / full spans; build.py still groups words into phrases (SPLITS / JOINS). BLACKOUT where a graphic says the words: the four
 verbs, the стратегія/тема card, «point of reference», the Notion rows, «безкоштовний,
 простий», the CTA pill.
 
 Mattes: half1 12.13 s, half2 9.13 s, pct 3.23 s = 24.5 s.
+
+After her review of 41: sketches over the footage are white (kit default), red/dark
+only on the cards, panel and cover; every arrow ≥ 150 px; no looped arrow; the full
+screen opens on «point» so the headline lands as the cover arrives.
