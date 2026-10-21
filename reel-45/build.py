@@ -224,7 +224,7 @@ BLACKOUT.append((t_smm - 0.05, t_smm + 0.05))     # the chips say «СММниц
 # 5 · BEHIND — «24/7» --------------------------------------------------------
 m0, m1 = t_kom + 0.33, S(u"монтує,", 30.2) - 0.25
 B.append(u'''
-        <div id="bw" class="big hid" style="top:470px; font-size:300px">24/7</div>''')
+        <div id="bw" class="big hid" style="top:536px; font-size:240px">24/7</div>''')
 g.matte("bw", round(m0 - 0.05, 3), round(m1 - m0 + 0.5, 3))
 js(u'''
   rise("#bw", %.3f, 80);

@@ -251,7 +251,7 @@ js(u'''
   sketch("h2", "skP"); label("h2", 510, 372, "1 акаунт", {size: 46}); draw("h2", %(t2).3f);
   sketch("h3", "skP"); box("h3", 400, %(y1).1f, 220, %(b).1f, {seed: 43, r: 18});
   label("h3", 510, %(ly1).1f, "400", {size: 48}); draw("h3", %(t3).3f, .55);
-  sketch("h4", "skP"); label("h4", 634, %(ly1).1f, "− Claude", {size: 42, color: "#7A1424", anchor: "start"});
+  sketch("h4", "skP"); label("h4", 634, %(ly1).1f, "– Claude", {size: 42, color: "#7A1424", anchor: "start"});
   ln("h4", 404, %(cy).1f, 616, %(cy).1f, {stroke: "#7A1424", strokeWidth: 5, seed: 45});
   draw("h4", %(t4).3f, .4);
   sketch("h5", "skP"); ln("h5", 312, %(top)d, 990, %(top)d, {stroke: "#7A1424", strokeWidth: 4, seed: 47});
