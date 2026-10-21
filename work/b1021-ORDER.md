@@ -54,3 +54,12 @@ Captions back to the old rail; calmer sketches (roughness 1); behind-me words
 white; over the footage, sketches are white stickers / dark ink with a white
 halo (white lines failed AA on her light room); a full screen never opens onto
 empty white; longer arrows, no arrowhead on a loop. All in tools/gstyle.py.
+
+## Status (2026-10-21, afternoon)
+
+All 12 rendered and verified (frame count = plate, audio, no black tail):
+41–46 on HeyGen, 47–52 here with `render --workers 1` (streams frames into
+the encoder, so the ~8 MB/frame disk check never trips). Review page with
+720p copies and a download button per reel:
+https://claude.ai/artifact/Hpozkm3M6n9BrTomm8hABe — she comments in one batch.
+Full-quality files: reel-NN/renders/REEL-NN.mp4 (gitignored).
