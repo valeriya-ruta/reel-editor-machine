@@ -205,6 +205,14 @@ still follow §3 and sit below her. Use `tools/matte.py` to cut it and
 `k.matte()` to place it; the matte layer sits above every graphic and below the
 scrim, so one call per beat is enough.
 
+**The matte is her own pixels, repainted** (her catch on 41–52, 2026-10-21:
+"my colors change to slightly more orange" whenever a word sat behind her or a
+half screen opened). Straight out of remove-background the cut-out rendered
+~9 levels short of blue against the plate. `tools/matte.py` now keeps only the
+shape and repaints it with the plate's YUV, tagged so the render decodes it the
+way it decodes the plate. Its docstring has the three causes and the
+measurement; `--repaint` fixes an old matte without re-running removal.
+
 There are **two variants**, and which one applies changes how much freedom the
 animation has:
 
