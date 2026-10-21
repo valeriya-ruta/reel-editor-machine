@@ -18,7 +18,7 @@ buttons: окей / не окей. CTA above her.
   half    ти: ядро «про тебе» -> структура -> місце в системі;
           я: аналіз контенту, стиль, скіли, підключення, тести
   above   результат -> окей / не окей
-  above   CTA — «АІ-система під ключ», «Став + в коментарі», a red pointer
+  above   CTA — «АІ-система під ключ», «Став + в коментарі», a pointer down to the comments
 
 usage: python build.py
 """
@@ -216,7 +216,8 @@ js(u'''
   rise("#vc", %.3f);
   pop("#vb", %.3f);
   tl.fromTo("#vw span", {scaleY: .15}, X({scaleY: 1, duration: .35, ease: RISE, stagger: .045}), %.3f);
-  sketch("va", "skF"); arrow("va", 500, 508, 682, 508, {stroke: "#7A1424", strokeWidth: 5, seed: 5, bend: .14});   // over the white card
+  // kit ink (no explicit colour: #front sketches are over her footage)
+  sketch("va", "skF"); arrow("va", 500, 508, 682, 508, {strokeWidth: 5, seed: 5, bend: .14});
   draw("va", %.3f, .45);
   pop("#vs", %.3f);
   pop("#vsw", %.3f, .45);
@@ -322,7 +323,10 @@ F.append(u'''
 js(u'''
   pop("#ct1", %.3f);
   pop("#ct2", %.3f, .6);
-  sketch("ca", "skF"); arrow("ca", 930, 770, 836, 618, {strokeWidth: 5, seed: 97});
+  // comments are down at the right of the IG rail, so the pointer goes down to
+  // them — never up at the pill (her review of 41). Tip stays left of x 900.
+  sketch("ca", "skF"); label("ca", 790, 668, "сюди!", {size: 52});
+  arrow("ca", 800, 695, 875, 915, {strokeWidth: 5, seed: 97, bend: -.25});
   draw("ca", %.3f, .5);
 ''' % (t_tsya - 0.05, t_stav + 0.05, t_stav + 0.5))
 g.sfx("pop", t_tsya - 0.05); g.sfx("pop", t_stav + 0.05)

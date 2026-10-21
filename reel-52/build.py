@@ -249,14 +249,14 @@ js(u'''
   arrow("k3", 412, 515, 676, 447, {seed: 31, bend: .1}); arrow("k3", 412, 555, 676, 580, {seed: 33, bend: .06});
   arrow("k3", 412, 595, 676, 712, {seed: 35, bend: -.06});
   draw("k3", %.3f, .45);
-  sketch("k4", "skP"); label("k4", 500, 800, "потужні руки", {size: 58, color: "#7A1424"});
+  sketch("k4", "skP"); label("k4", 500, 800, "потужні руки", {size: 56, color: "#7A1424"});
   under("k4", 330, 818, 670, {stroke: "#7A1424", seed: 37});
   draw("k4", %.3f, .45);
   erase("k1", %.3f); erase("k2", %.3f); erase("k3", %.3f); erase("k4", %.3f); sink("#hd1", %.3f);
   rise("#hd2", %.3f);
   tl.to("#hd2 .gl", {autoAlpha: 0, duration: .15}, %.3f); tl.to("#hd2 .rt", {opacity: 1, duration: .25}, %.3f);
   sketch("s1", "skP"); box("s1", 110, 430, 280, 330, {seed: 41});
-  label("s1", 250, 510, "скіл", {size: 58});
+  label("s1", 250, 510, "скіл", {size: 56});
   ln("s1", 150, 590, 350, 590, {seed: 43}); ln("s1", 150, 650, 350, 650, {seed: 45}); ln("s1", 150, 710, 300, 710, {seed: 47});
   draw("s1", %.3f, .45);
   sketch("s2", "skP"); label("s2", 470, 540, "?", {size: 120, color: "#7A1424"}); draw("s2", %.3f);

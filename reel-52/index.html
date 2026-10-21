@@ -350,7 +350,7 @@
       <div class="wc" id="w125">НА</div>
       <div class="wc" id="w126">ЦЕЙ</div>
       <div class="wc" id="w127">ПЛЕЙЛИСТ</div>
-      <div class="wc" id="w128">В YOUTUBE.</div>
+      <div class="wc" id="w128">В ЮТУБІ.</div>
       <div class="wc" id="w129">ПОБАЧИМОСЬ</div>
       <div class="wc" id="w130">ТАМ!</div>
       <div class="wc" id="w131">А ЯКЩО</div>
@@ -729,21 +729,21 @@
   arrow("k3", 412, 515, 676, 447, {seed: 31, bend: .1}); arrow("k3", 412, 555, 676, 580, {seed: 33, bend: .06});
   arrow("k3", 412, 595, 676, 712, {seed: 35, bend: -.06});
   draw("k3", 21.231, .45);
-  sketch("k4", "skP"); label("k4", 500, 800, "потужні руки", {size: 58, color: "#7A1424"});
+  sketch("k4", "skP"); label("k4", 500, 800, "потужні руки", {size: 56, color: "#7A1424"});
   under("k4", 330, 818, 670, {stroke: "#7A1424", seed: 37});
   draw("k4", 22.991, .45);
   erase("k1", 24.251); erase("k2", 24.251); erase("k3", 24.251); erase("k4", 24.251); sink("#hd1", 24.251);
   rise("#hd2", 24.451);
   tl.to("#hd2 .gl", {autoAlpha: 0, duration: .15}, 25.141); tl.to("#hd2 .rt", {opacity: 1, duration: .25}, 25.141);
   sketch("s1", "skP"); box("s1", 110, 430, 280, 330, {seed: 41});
-  label("s1", 250, 510, "скіл", {size: 58});
+  label("s1", 250, 510, "скіл", {size: 56});
   ln("s1", 150, 590, 350, 590, {seed: 43}); ln("s1", 150, 650, 350, 650, {seed: 45}); ln("s1", 150, 710, 300, 710, {seed: 47});
   draw("s1", 25.781, .45);
   sketch("s2", "skP"); label("s2", 470, 540, "?", {size: 120, color: "#7A1424"}); draw("s2", 26.121);
   sketch("s3", "skP"); arrow("s3", 408, 640, 600, 610, {seed: 51, bend: .1}); draw("s3", 26.651, .45);
   sketch("s4", "skP"); box("s4", 620, 420, 370, 300, {seed: 53});
   ln("s4", 700, 680, 960, 680, {seed: 55}); ell("s4", 760, 680, 20, 20, {seed: 57});
-  _ink = SK.s4.ink; _add(SK.s4, SK.s4.rc.path("M652 664 L652 696 L678 680 Z", opt({seed: 59}, 59)));
+  blob("s4", "M652 664 L652 696 L678 680 Z", [652, 664, 26, 32], {seed: 59});
   draw("s4", 28.081, .45);
   sketch("s5", "skP"); box("s5", 705, 450, 200, 190, {seed: 61, r: 20, fill: true}); draw("s5", 28.811, .5);
   sketch("s6", "skP"); label("s6", 805, 800, "новий скіл", {size: 56, color: "#7A1424"}); draw("s6", 29.651);
@@ -771,7 +771,9 @@
 
   rise("#plc", 44.397); pop("#plk", 44.997);
   pop("#cta", 46.387, .6);
-  sketch("pt", "skF"); arrow("pt", 958, 770, 884, 592, {seed: 71, bend: .12}); draw("pt", 46.826, .45);
+  // the comments are down at the right of the IG rail: the pointer goes DOWN to
+  // them, never up at the pill (her review of 41). Tip left of x 900.
+  sketch("pt", "skF"); arrow("pt", 815, 625, 886, 935, {strokeWidth: 5, seed: 71, bend: -.12}); draw("pt", 46.826, .45);
   tl.to("#plk", {backgroundColor: "#7A1424", borderColor: "#7A1424", color: "#FFFFFF", duration: .25}, 48.347);
   tl.to("#plkt", {color: "#FFFFFF", duration: .25}, 48.347);
   tl.fromTo("#plk", {scale: 1}, X({scale: 1.12, duration: .18, yoyo: true, repeat: 1}), 48.347);

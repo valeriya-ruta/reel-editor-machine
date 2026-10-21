@@ -700,7 +700,8 @@
   rise("#vc", 19.904);
   pop("#vb", 20.554);
   tl.fromTo("#vw span", {scaleY: .15}, X({scaleY: 1, duration: .35, ease: RISE, stagger: .045}), 21.154);
-  sketch("va", "skF"); arrow("va", 500, 508, 682, 508, {stroke: "#7A1424", strokeWidth: 5, seed: 5, bend: .14});   // over the white card
+  // kit ink (no explicit colour: #front sketches are over her footage)
+  sketch("va", "skF"); arrow("va", 500, 508, 682, 508, {strokeWidth: 5, seed: 5, bend: .14});
   draw("va", 22.454, .45);
   pop("#vs", 22.954);
   pop("#vsw", 24.394, .45);
@@ -747,7 +748,10 @@
 
   pop("#ct1", 42.833);
   pop("#ct2", 44.213, .6);
-  sketch("ca", "skF"); arrow("ca", 930, 770, 836, 618, {strokeWidth: 5, seed: 97});
+  // comments are down at the right of the IG rail, so the pointer goes down to
+  // them — never up at the pill (her review of 41). Tip stays left of x 900.
+  sketch("ca", "skF"); label("ca", 790, 668, "сюди!", {size: 52});
+  arrow("ca", 800, 695, 875, 915, {strokeWidth: 5, seed: 97, bend: -.25});
   draw("ca", 44.663, .5);
 
   half(26.163, 38.113);
