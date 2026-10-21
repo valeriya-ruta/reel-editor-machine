@@ -54,6 +54,8 @@ CSS = """
                  src: url("assets/fonts/GoogleSans-500.ttf") format("truetype"); }
     @font-face { font-family: "Google Sans"; font-weight: 700; font-display: block;
                  src: url("assets/fonts/GoogleSans-700.ttf") format("truetype"); }
+    @font-face { font-family: "ProductSans"; font-weight: 900; font-display: block;
+                 src: url("assets/fonts/ProductSans-Black.woff") format("woff"); }
     @font-face { font-family: "Pangolin"; font-weight: 400; font-display: block;
                  src: url("assets/fonts/Pangolin.ttf") format("truetype"); }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -108,7 +110,9 @@ CSS = """
     /* §00.3.2 behind me */
     .big { position: absolute; left: 0; width: 1080px; text-align: center;
            font-weight: 700; line-height: 0.9; letter-spacing: -0.04em;
-           color: var(--primary); white-space: nowrap; }
+           /* white, her call 2026-10-21: the red read badly over the room */
+           color: #FFFFFF; white-space: nowrap;
+           text-shadow: 0 6px 40px rgba(20,12,12,.30), 0 2px 8px rgba(20,12,12,.22); }
 
     /* §00.3.3 half screen. Its parked position (up, off frame) is set from JS
        with gsap.set: a CSS translate here would be parsed by GSAP as a px offset
@@ -123,9 +127,20 @@ CSS = """
     /* §00.5 sketches */
     .sk { position: absolute; left: 0; top: 0; overflow: visible; }
     .sk text, .hand { font-family: "Pangolin", cursive; fill: %(ink)s; color: %(ink)s; }
+    #front .sk { filter: drop-shadow(0 2px 6px rgba(20,12,12,.35)); }
     .hand { position: absolute; white-space: nowrap; }
 
-    /* §00.2 captions */
+    /* captions — exactly as before §00 (her call 2026-10-21, over the boxed
+       phrases of the spec): kit.py's rail, word by word, upper case */
+    #scrim { position: absolute; left: 20px; top: 1247px; width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png"); background-size: 100%% 100%%;
+             background-repeat: no-repeat; opacity: 0; visibility: hidden; pointer-events: none; }
+    .wc { position: absolute; left: 0; width: 1080px; top: 1413px; height: 118px;
+          line-height: 118px; text-align: center; color: #fff;
+          font-family: "ProductSans", system-ui, sans-serif; font-size: 90px; font-weight: 900;
+          letter-spacing: -0.015em; white-space: nowrap; opacity: 0; visibility: hidden; }
+    .wc.inv { color: %(on)s; }
+    /* §00.2 boxed phrase captions (spec; not in use — see .wc) */
     #caps { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
             pointer-events: none; }
     .cap { position: absolute; left: 0; width: 1080px; display: flex;
@@ -194,11 +209,13 @@ JS = r"""
   }
 
   // ---- §00.5 Excalidraw sketches (rough.js), drawn on stroke by stroke ----
-  var SKO = {roughness: 2.4, bowing: 2.5, strokeWidth: 4.5, stroke: "#1E1E1E",
+  // roughness 1 ≈ Excalidraw's own default — 2.4 was "too sloppy" (her review of 41)
+  var SKO = {roughness: 1.0, bowing: 1.0, strokeWidth: 4.5, stroke: "#1E1E1E",
              disableMultiStroke: false, preserveVertices: false};
   var HACH = {fill: "#F2C7CA", fillStyle: "hachure", hachureGap: 16, hachureAngle: -41,
               fillWeight: 2.5};
-  function opt(o, seed) { var r = {}; for (var k in SKO) r[k] = SKO[k];
+  var _ink = "#1E1E1E";
+  function opt(o, seed) { var r = {}; for (var k in SKO) r[k] = SKO[k]; r.stroke = _ink;
     for (var k2 in (o || {})) r[k2] = o[k2]; r.seed = seed; return r; }
   function hatch(o) { var r = {}; for (var k in HACH) r[k] = HACH[k];
     for (var k2 in (o || {})) r[k2] = o[k2]; return r; }
@@ -214,7 +231,10 @@ JS = r"""
     var svg = document.getElementById(svgId);
     var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
     g.setAttribute("id", "sk-" + name); svg.appendChild(g);
-    SK[name] = {g: g, rc: rough.svg(svg), shapes: []};
+    // over her footage the ink is white (dark ink read badly over the room);
+    // on the white panel and cover it stays #1E1E1E. Explicit colours win.
+    var foot = !!(svg.closest && svg.closest("#front"));
+    SK[name] = {g: g, rc: rough.svg(svg), shapes: [], ink: foot ? "#FFFFFF" : "#1E1E1E"};
     return SK[name];
   }
   function _add(s, node, kind) {
@@ -228,19 +248,19 @@ JS = r"""
     });
     s.shapes.push({paths: paths, kind: kind || "stroke"});
   }
-  function box(name, x, y, w, h, o) {      // rounded rough box, radius 28 (§00.5.2)
+  function box(name, x, y, w, h, o) { _ink = SK[name].ink;      // rounded rough box, radius 28 (§00.5.2)
     var s = SK[name], r = (o && o.r) || 28;
     var oo = opt(o, (o && o.seed) || 7);
     if (o && o.fill) { var f = hatch(o.fill === true ? {} : {fill: o.fill}); for (var k in f) oo[k] = f[k]; }
     _add(s, s.rc.path(rrectD(x, y, w, h, r), oo));
   }
-  function ell(name, cx, cy, w, h, o) { var s = SK[name];
+  function ell(name, cx, cy, w, h, o) { _ink = SK[name].ink; var s = SK[name];
     _add(s, s.rc.ellipse(cx, cy, w, h, opt(o, (o && o.seed) || 11))); }
-  function ln(name, x1, y1, x2, y2, o) { var s = SK[name];
+  function ln(name, x1, y1, x2, y2, o) { _ink = SK[name].ink; var s = SK[name];
     _add(s, s.rc.line(x1, y1, x2, y2, opt(o, (o && o.seed) || 13))); }
-  function under(name, x1, y, x2, o) { var s = SK[name];      // a hand underline
+  function under(name, x1, y, x2, o) { _ink = SK[name].ink; var s = SK[name];      // a hand underline
     _add(s, s.rc.curve([[x1, y + 4], [(x1 + x2) / 2, y - 6], [x2, y + 2]], opt(o, (o && o.seed) || 17))); }
-  function arrow(name, x1, y1, x2, y2, o) {
+  function arrow(name, x1, y1, x2, y2, o) { _ink = SK[name].ink;
     var s = SK[name], oo = opt(o, (o && o.seed) || 19), bend = (o && o.bend != null) ? o.bend : .12;
     var mx = (x1 + x2) / 2 + (y2 - y1) * bend, my = (y1 + y2) / 2 - (x2 - x1) * bend;
     _add(s, s.rc.curve([[x1, y1], [mx, my], [x2, y2]], oo));
@@ -253,7 +273,7 @@ JS = r"""
     t.setAttribute("x", x); t.setAttribute("y", y);
     t.setAttribute("text-anchor", (o && o.anchor) || "middle");
     t.setAttribute("font-size", (o && o.size) || 50);
-    if (o && o.color) t.style.fill = o.color;
+    t.style.fill = (o && o.color) || s.ink;
     t.textContent = txt; t.style.opacity = 0; s.g.appendChild(t);
     s.shapes.push({text: t});
   }
@@ -417,10 +437,58 @@ class G(object):
             L.append('  tl.set("#cap%d", {autoAlpha: 0}, %.3f);' % (n, c["e"]))
         return "\n".join(L)
 
+    # -- captions as before §00: kit.py's word rail ------------------------
+    PANEL_TOP = 862      # on the half-screen panel: bottom 980, 40+ px clear of her hair
+
+    @staticmethod
+    def spans(js, fn):
+        """the (t0, t1) of every half(...) / full(...) call a build's js makes"""
+        return [(float(a), float(b)) for a, b in
+                re.findall(r"(?<![\w.])%s\(\s*([\d.]+)\s*,\s*([\d.]+)\s*\)" % fn, js)]
+
+    def words(self, chunks, js, blackout=()):
+        """Her old captions (STYLE §2b): one word at a time, upper case, white on
+        the underlay plaque. Over the white half-screen panel and the white cover
+        they turn ink and the plaque stands down; on the panel they sit above her
+        head. Returns (html, js)."""
+        ws = [dict(w) for c in chunks for w in c["words"]]
+        for a, b in zip(ws, ws[1:]):          # §2b: never two words at once
+            a["e"] = round(max(a["s"] + 0.10, b["s"] - 0.085), 3)
+        half = [(a + 0.45, b + 0.40) for a, b in self.spans(js, "half")]
+        full = [(a + 0.45, b + 0.40) for a, b in self.spans(js, "full")]
+        inv = sorted(half + full)
+        H, J = [], []
+        for i, w in enumerate(ws):
+            if any(a <= w["s"] < b for a, b in blackout):
+                continue
+            on_panel = any(a <= w["s"] < b for a, b in half)
+            ink = on_panel or any(a <= w["s"] < b for a, b in full)
+            H.append('<div class="wc%s" id="w%d"%s>%s</div>' % (
+                " inv" if ink else "", i,
+                (' style="top:%dpx"' % self.PANEL_TOP) if on_panel else "", esc(w["w"].upper())))
+            J.append('  tl.set("#w%d", {autoAlpha: 1}, %.3f); tl.set("#w%d", {autoAlpha: 0}, %.3f);'
+                     % (i, w["s"], i, w["e"]))
+        if ws:
+            J.append('  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, %.3f);' % max(0.0, ws[0]["s"] - 0.3))
+            J.append('  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, %.3f);' % (ws[-1]["e"] + 0.1))
+        # the plaque stands down over ink captions and blackouts — as one union,
+        # or a nested span switches it back on mid-takeover (STYLE §2b.1, trap 1)
+        off = []
+        for a, b in sorted([list(x) for x in list(blackout) + inv]):
+            if off and a <= off[-1][1] + 0.001:
+                off[-1][1] = max(off[-1][1], b)
+            else:
+                off.append([a, b])
+        for a, b in off:
+            J.append('  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, %.3f);' % max(0.0, a - 0.20))
+            J.append('  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, %.3f);' % b)
+        return "\n      ".join(H), "\n".join(J)
+
     # -- assembly ----------------------------------------------------------
     def document(self, title, plate, behind="", panel="", front="", cover="", js="",
                  chunks=(), blackout=(), extra_css="", push=True):
         head = JS
+        caps_html, caps_js = self.words(chunks, js, blackout)
         if push:   # §0.8, kept: a slow push on the plate, the matte moving with it
             head += ('\n  gsap.set(PUSH, {transformOrigin: "540px 900px"});\n'
                      '  tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: %.3f, ease: "none"}, 0);\n'
@@ -455,6 +523,7 @@ class G(object):
       <div id="cover">
 %(cover)s
       </div>
+      <div id="scrim"></div>
       <div id="caps">
       %(caps)s
       </div>
@@ -480,8 +549,8 @@ class G(object):
 </html>
 ''' % {"title": esc(title), "css": CSS, "extra": extra_css, "dur": self.dur, "fps": self.fps,
        "plate": plate, "behind": behind, "panel": panel, "mattes": "\n".join(self.mattes),
-       "front": front, "cover": cover, "caps": self.caps_html(chunks), "head": head,
-       "capjs": self.caps_js(chunks, blackout), "js": js}
+       "front": front, "cover": cover, "caps": caps_html, "head": head,
+       "capjs": caps_js, "js": js}
 
     def write(self, here, doc):
         io.open(os.path.join(here, "index.html"), "w", encoding="utf-8").write(doc)

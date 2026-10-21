@@ -98,11 +98,11 @@ t_kon, t_ana = S(u"контент", 9.7), S(u"аналізую", 11.6)
 t_for, t_naik = S(u"формати", 13.0), S(u"найкраще,", 14.6)
 t_skil, t_dva = S(u"скіл", 16.4), S(u"два", 18.1)
 js(u'''
-  sketch("p1", "skP"); box("p1", 90, 300, 400, 170, {seed: 3}); label("p1", 290, 380, "твій контент", {size: 50});
-  label("p1", 290, 440, "2–3 місяці", {size: 40, color: "#574142"});
+  sketch("p1", "skP"); box("p1", 90, 300, 340, 170, {seed: 3}); label("p1", 260, 380, "твій контент", {size: 48});
+  label("p1", 260, 440, "2–3 місяці", {size: 40, color: "#574142"});
   draw("p1", %.3f);
-  sketch("p2", "skP"); arrow("p2", 505, 385, 585, 385, {seed: 7}); box("p2", 595, 300, 400, 170, {seed: 9});
-  label("p2", 795, 400, "аналіз", {size: 52});
+  sketch("p2", "skP"); arrow("p2", 450, 385, 625, 385, {seed: 7}); box("p2", 640, 300, 350, 170, {seed: 9});
+  label("p2", 815, 400, "аналіз", {size: 52});
   draw("p2", %.3f - .55);
   sketch("p3", "skP"); box("p3", 600, 520, 110, 190, {seed: 21, r: 24}); box("p3", 740, 520, 110, 190, {seed: 23, r: 24});
   box("p3", 880, 520, 110, 190, {seed: 25, r: 24, fill: true});
@@ -110,11 +110,11 @@ js(u'''
   draw("p3", %.3f, .5);
   sketch("p4", "skP"); ell("p4", 935, 615, 190, 250, {stroke: "#7A1424", strokeWidth: 5, seed: 29});
   draw("p4", %.3f, .6);
-  sketch("p5", "skP"); arrow("p5", 590, 640, 470, 640, {seed: 31}); box("p5", 90, 540, 370, 200, {seed: 33, fill: true});
-  label("p5", 275, 655, "скіл сценариста", {size: 46});
+  sketch("p5", "skP"); arrow("p5", 585, 640, 425, 640, {seed: 31}); box("p5", 90, 540, 320, 200, {seed: 33, fill: true});
+  label("p5", 250, 630, "скіл", {size: 46}); label("p5", 250, 685, "сценариста", {size: 46});
   draw("p5", %.3f - .55);
-  sketch("p6", "skP"); label("p6", 275, 805, "точніше — два!", {size: 50, color: "#7A1424"});
-  under("p6", 120, 822, 430, {stroke: "#7A1424", seed: 37});
+  sketch("p6", "skP"); label("p6", 250, 805, "точніше — два!", {size: 50, color: "#7A1424"});
+  under("p6", 95, 822, 405, {stroke: "#7A1424", seed: 37});
   draw("p6", %.3f, .5);
   erase("p1", %.3f); erase("p2", %.3f); erase("p3", %.3f); erase("p4", %.3f); erase("p5", %.3f); erase("p6", %.3f);
 ''' % (t_kon, t_ana, t_for, t_naik, t_skil, t_dva, h1, h1, h1, h1, h1, h1))
@@ -197,8 +197,8 @@ js(u'''
   _add(SK.cl, SK.cl.rc.path("M300 600 C240 600 230 520 300 505 C300 430 400 410 440 460 C470 380 610 380 630 455 C700 420 790 470 760 540 C830 560 810 640 740 630 Z", opt({seed: 41}, 41)));
   label("cl", 530, 560, "хмара", {size: 56});
   draw("cl", %.3f, .8);
-  sketch("ph", "skF"); box("ph", 860, 360, 120, 220, {seed: 43, r: 24}); ln("ph", 900, 548, 940, 548, {seed: 45});
-  arrow("ph", 850, 470, 790, 540, {seed: 47, stroke: "#7A1424"});
+  sketch("ph", "skF"); box("ph", 870, 400, 110, 210, {seed: 43, r: 24}); ln("ph", 905, 578, 945, 578, {seed: 45});
+  arrow("ph", 860, 600, 700, 640, {seed: 47, bend: -.25});
   draw("ph", %.3f, .55);
   erase("cl", %.3f); erase("ph", %.3f);
 ''' % (t_mon - 0.2, t_ref, t_monts - 0.2, t_monts, t_hm - 0.45, t_hm - 0.3, t_tel,
@@ -229,8 +229,9 @@ for i in range(0, len(CON), 3):
     g.sfx("click-soft", t_kon2 - 0.5 + i * 0.16)
 
 # 7 · FULL — «проактивна», the routine loop ------------------------------------
-c0, c1 = S(u"Але", 54.8) - 0.1, S(u"Наприклад,", 63.84) - 0.3
+c1 = S(u"Наприклад,", 63.84) - 0.3
 t_pro, t_rut, t_per = S(u"проактивна.", 58.4), S(u"рутини,", 60.6), S(u"періодичністю.", 62.4)
+c0 = t_pro - 0.6        # the cover lands with its headline (her review: no empty white)
 C.append(u'''
         <div id="c7h" class="hid" style="position:absolute; left:0; width:1080px; top:430px; text-align:center;
              font-weight:700; font-size:150px; letter-spacing:-0.04em; color:#7A1424">проактивна</div>
@@ -241,9 +242,8 @@ js(u'''
   sketch("u7", "skC"); under("u7", 170, 640, 910, {stroke: "#7A1424", strokeWidth: 6, seed: 51});
   draw("u7", %.3f, .6);
   sketch("r7", "skC"); ell("r7", 540, 960, 520, 330, {seed: 53});
-  arrow("r7", 790, 1020, 760, 1080, {seed: 55, bend: 0});
   label("r7", 540, 980, "рутини", {size: 60});
-  draw("r7", %.3f - .4, .8);
+  draw("r7", %.3f - .2, .8);
   sketch("q7", "skC"); label("q7", 540, 1230, "спрацьовують самі", {size: 50, color: "#7A1424"});
   draw("q7", %.3f);
 ''' % (c0, c1, t_pro, t_pro + 0.25, t_rut - 0.1, S(u"самі,", 61.4)))
@@ -259,16 +259,16 @@ t_zat, t_tre = S(u"затверджуєш", 70.0), S(u"треди,", 72.0)
 t_kar2, t_sc = S(u"каруселі", 73.0), S(u"сценарії", 74.2)
 t_plan, t_nap = S(u"планує", 76.2), S(u"наперед.", 77.6)
 js(u'''
-  sketch("r1", "skP"); box("r1", 90, 300, 520, 420, {seed: 61});
-  label("r1", 350, 375, "звіт · неділя", {size: 52});
+  sketch("r1", "skP"); box("r1", 90, 300, 470, 420, {seed: 61});
+  label("r1", 325, 375, "звіт · неділя", {size: 52});
   draw("r1", %.3f, .7);
   sketch("r2", "skP"); box("r2", 130, 430, 40, 40, {seed: 63, r: 10}); label("r2", 195, 465, "твій контент", {size: 44, anchor: "start"}); draw("r2", %.3f, .4);
   sketch("r3", "skP"); box("r3", 130, 520, 40, 40, {seed: 65, r: 10}); label("r3", 195, 555, "конкуренти", {size: 44, anchor: "start"}); draw("r3", %.3f, .4);
   sketch("r4", "skP"); box("r4", 130, 610, 40, 40, {seed: 67, r: 10}); label("r4", 195, 645, "нові ідеї", {size: 44, anchor: "start"}); draw("r4", %.3f, .4);
-  sketch("r5", "skP"); _add(SK.r5, SK.r5.rc.curve([[420, 560], [470, 640], [600, 440]], opt({stroke: "#7A1424", strokeWidth: 9, seed: 69}, 69)));
-  label("r5", 520, 760, "ок!", {size: 56, color: "#7A1424"});
+  sketch("r5", "skP"); _add(SK.r5, SK.r5.rc.curve([[400, 560], [440, 640], [540, 450]], opt({stroke: "#7A1424", strokeWidth: 9, seed: 69}, 69)));
+  label("r5", 470, 770, "ок!", {size: 56, color: "#7A1424"});
   draw("r5", %.3f, .5);
-  sketch("r6", "skP"); arrow("r6", 625, 420, 700, 360, {seed: 71});
+  sketch("r6", "skP"); arrow("r6", 560, 560, 700, 360, {seed: 71});
   box("r6", 710, 300, 280, 110, {seed: 73, fill: true}); label("r6", 850, 370, "треди", {size: 46}); draw("r6", %.3f - .4, .55);
   sketch("r7b", "skP"); box("r7b", 710, 440, 280, 110, {seed: 75, fill: true}); label("r7b", 850, 510, "каруселі", {size: 46}); draw("r7b", %.3f, .55);
   sketch("r8", "skP"); box("r8", 710, 580, 280, 110, {seed: 77, fill: true}); label("r8", 850, 650, "сценарії", {size: 46}); draw("r8", %.3f, .55);
@@ -341,8 +341,8 @@ js(u'''
   fadein("#b10", %.3f, .01); pop("#b10a", %.3f); pop("#b10b", %.3f); pop("#b10c", %.3f);
   pop("#b10n", %.3f);
   pop("#b10cta", %.3f, .6);
-  sketch("a10", "skF"); arrow("a10", 900, 760, 830, 640, {stroke: "#7A1424", strokeWidth: 5, seed: 97});
-  label("a10", 930, 810, "сюди!", {size: 52, color: "#7A1424"});
+  sketch("a10", "skF"); arrow("a10", 940, 860, 830, 655, {strokeWidth: 5, seed: 97, bend: .2});
+  label("a10", 900, 915, "сюди!", {size: 52});
   draw("a10", %.3f, .5);
 ''' % (t_blog - 0.05, t_blog, t_smm, t_pid, t_24, t_stav, t_stav + 0.55))
 g.sfx("pop", t_blog); g.sfx("pop", t_24); g.sfx("pop", t_stav)

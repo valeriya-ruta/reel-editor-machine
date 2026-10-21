@@ -31,7 +31,6 @@ usage: python build.py
 import io
 import json
 import os
-import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -155,7 +154,7 @@ js(u'''
   sink("#bw", %.3f);
 ''' % (bw0, bw1))
 g.sfx("whoosh-short", bw0)
-BLACKOUT.append((S(u"Я", 5.0) - 0.05, S(u"Я", 5.0) + 0.05))     # «дзвінки» stands behind her
+BLACKOUT.append((t_dz - 0.05, t_dz + 0.05))     # «дзвінки» stands behind her
 
 # 3 · ABOVE — the call: her and a client, recorded; consultations, welcome calls --
 t_pro, t_kli = S(u"проводжу", 6.77), S(u"клієнтками.", 7.43)
@@ -225,12 +224,12 @@ js(u'''
   draw("p2", %.3f, .45);
   sketch("p3", "skP"); ell("p3", 190, 478, 260, 310, {stroke: "#7A1424", strokeWidth: 5, seed: 35});
   draw("p3", %.3f, .5);
-  sketch("p4", "skP"); arrow("p4", 345, 478, 475, 478, {seed: 37, bend: .08});
+  sketch("p4", "skP"); arrow("p4", 332, 478, 490, 478, {seed: 37, bend: .08});
   %s
   label("p4", 565, 412, "?", {size: 52, color: "#7A1424"}); label("p4", 685, 412, "?", {size: 52, color: "#7A1424"});
   label("p4", 805, 412, "?", {size: 52, color: "#7A1424"}); label("p4", 925, 412, "?", {size: 52, color: "#7A1424"});
   draw("p4", %.3f, .3);
-  sketch("p5", "skP"); arrow("p5", 745, 585, 650, 664, {seed: 41, bend: -.1});
+  sketch("p5", "skP"); arrow("p5", 762, 582, 612, 664, {seed: 41, bend: -.1});
   box("p5", 250, 672, 580, 146, {seed: 43, fill: true, r: 30});
   label("p5", 540, 740, "ідеальна тема", {size: 58, color: "#7A1424"});
   label("p5", 540, 796, "для контенту", {size: 42});
@@ -295,8 +294,8 @@ js(u'''
   label("cl6", 590, 520, "?", {size: 72});
   ell("cl6", 560, 640, 46, 34, {seed: 63}); ell("cl6", 540, 688, 26, 20, {seed: 65});
   draw("cl6", %.3f, .45);
-  sketch("x6", "skF"); ln("x6", 390, 390, 830, 620, {stroke: "#7A1424", strokeWidth: 7, seed: 67});
-  ln("x6", 830, 380, 400, 630, {stroke: "#7A1424", strokeWidth: 7, seed: 69});
+  sketch("x6", "skF"); ln("x6", 390, 390, 830, 620, {strokeWidth: 7, seed: 67});
+  ln("x6", 830, 380, 400, 630, {strokeWidth: 7, seed: 69});
   draw("x6", %.3f, .3);
   erase("cl6", %.3f); erase("x6", %.3f);
 ''' % (t_sy - 0.25, t_vyg, t_hol + 0.12, t_hol + 0.12))
@@ -308,24 +307,23 @@ HALF.append((h2, h3))
 t_rut, t_tyzh, t_ana = S(u"рутина,", 31.2), S(u"кожного", 32.28), S(u"аналізує", 33.14)
 t_kont, t_konk, t_dzv = S(u"контент", 34.06), S(u"конкурентів,", 34.9), S(u"дзвінки.", 35.95)
 P.append(u'''
-        <div id="p7f" class="hid" style="position:absolute; left:740px; top:686px; color:#7A1424">%s</div>''' % mark("fathom", 40))
+        <div id="p7f" class="hid" style="position:absolute; left:740px; top:726px; color:#7A1424">%s</div>''' % mark("fathom", 40))
 js(u'''
   sketch("r1", "skP"); ell("r1", 540, 410, 400, 190, {seed: 71});
-  arrow("r1", 676, 336, 672, 488, {seed: 73, bend: .6});
   label("r1", 540, 428, "рутина", {size: 56});
   draw("r1", %.3f, .7);
   sketch("r2", "skP"); label("r2", 860, 330, "щотижня", {size: 46, color: "#7A1424"});
   under("r2", 770, 348, 950, {stroke: "#7A1424", seed: 75});
   draw("r2", %.3f, .45);
-  sketch("r3", "skP"); box("r3", 95, 640, 270, 130, {seed: 77}); label("r3", 230, 720, "мій контент", {size: 44});
-  arrow("r3", 260, 630, 380, 500, {seed: 79});
+  sketch("r3", "skP"); box("r3", 95, 680, 270, 130, {seed: 77}); label("r3", 230, 760, "мій контент", {size: 44});
+  arrow("r3", 250, 668, 400, 508, {seed: 79});
   draw("r3", %.3f, .45);
-  sketch("r4", "skP"); box("r4", 405, 640, 270, 130, {seed: 81}); label("r4", 540, 720, "конкуренти", {size: 44});
-  arrow("r4", 540, 630, 540, 520, {seed: 83, bend: 0});
+  sketch("r4", "skP"); box("r4", 405, 680, 270, 130, {seed: 81}); label("r4", 540, 760, "конкуренти", {size: 44});
+  arrow("r4", 540, 668, 540, 512, {seed: 83, bend: .08});
   draw("r4", %.3f, .45);
-  sketch("r5", "skP"); box("r5", 715, 640, 270, 130, {seed: 85, stroke: "#7A1424", strokeWidth: 5.5, fill: true});
-  label("r5", 875, 722, "дзвінки", {size: 50, color: "#7A1424"});
-  arrow("r5", 820, 630, 700, 505, {seed: 87, stroke: "#7A1424"});
+  sketch("r5", "skP"); box("r5", 715, 680, 270, 130, {seed: 85, stroke: "#7A1424", strokeWidth: 5.5, fill: true});
+  label("r5", 875, 762, "дзвінки", {size: 50, color: "#7A1424"});
+  arrow("r5", 830, 668, 680, 508, {seed: 87, stroke: "#7A1424"});
   draw("r5", %.3f, .45);
   fadein("#p7f", %.3f);
   erase("r1", %.3f); erase("r2", %.3f); erase("r3", %.3f); erase("r4", %.3f); erase("r5", %.3f);
@@ -428,7 +426,7 @@ F.append(u'''
 js(u'''
   pop("#b11a", %.3f); pop("#b11b", %.3f);
   pop("#b11cta", %.3f, .6);
-  sketch("a11", "skF"); arrow("a11", 975, 700, 870, 540, {stroke: "#7A1424", strokeWidth: 6, seed: 97});
+  sketch("a11", "skF"); arrow("a11", 975, 700, 870, 540, {strokeWidth: 6, seed: 97});
   draw("a11", %.3f, .45);
   pop("#b11i", %.3f, .55);
 ''' % (t_kons2 - 0.1, t_idei2 - 0.1, t_dzv2 - 0.2, t_dzv2 + 0.4, S(u"отримати", 58.32)))
@@ -445,27 +443,10 @@ for i, (a, b) in enumerate(HALF):
     PLACE.append((a + 0.4, b, "bottom", 980))     # not past the exit: she rises into it
 
 
-def glue(chunks):
-    """a lone last word («Мануса.», «голови.», «себе.») goes back on the line it ends"""
-    out = []
-    for c in chunks:
-        p = out[-1] if out else None
-        if p and len(c["words"]) == 1 and not re.search(u"[.,!?:;…»]$", p["words"][-1]["w"]) \
-                and len(" ".join(w["w"] for w in p["words"] + c["words"])) <= 46:
-            p["words"] = p["words"] + c["words"]
-            p["e"] = c["e"]
-            continue
-        out.append(c)
-    return out
-
-
 def main():
     if "--words" in sys.argv:
         print(" ".join(u"%s/%.1f" % (c["w"], c["s"]) for c in CAPS))
-    keys = {S(u"ідеї", 0.89): True, S(u"велкам", 9.27): True, S(u"питання,", 12.91): True, S(u"питання,", 18.22): True,
-            S(u"одну", 19.98): True, S(u"ідеальна", 21.86): True, S(u"тижня", 32.64): True,
-            S(u"дзвінки.", 35.95): True, S(u"впроваджую", 42.69): True, S(u"стратегію.", 40.13): True, S(u"ідеї", 55.99): True}
-    chunks = glue(g.chunks(CAPS, keys=keys, place=PLACE))
+    chunks = g.chunks(CAPS, place=PLACE)     # the kit turns them into her word-by-word rail
     if "--chunks" in sys.argv:
         for n, c in enumerate(chunks):
             print(n, "%.2f-%.2f" % (c["s"], c["e"]), " ".join(w["w"] for w in c["words"]),
@@ -473,10 +454,6 @@ def main():
     doc = g.document(title=u"Reel 44 — Дзвінок → пропозиція", plate="assets/base.mp4",
                      behind="\n".join(B), panel="\n".join(P), front="\n".join(F), cover="\n".join(C),
                      js="\n".join(J), chunks=chunks, blackout=BLACKOUT, extra_css=EXTRA_CSS)
-    # the kit leaves the punctuation after a key-word pill free to wrap onto the
-    # next line («питання / , про які»): keep pill + punctuation together
-    doc = re.sub(u'(<span class="k"><span class="kb"></span><span class="kt">[^<]*</span></span>)([.,!?:;…»]+)',
-                 u'<span style="white-space:nowrap">\\1\\2</span>', doc)
     g.write(HERE, doc)
     print("index.html  %d caption chunks, %d sfx cues, %d mattes" % (len(chunks), len(g.cues), len(g.mattes)))
 

@@ -53,6 +53,22 @@ Ruta, never ask her anything**. Truly blocked → say so in your report and stop
 5. `sh work/b1021/heavy.sh npx --yes hyperframes@0.8.33 check reel-NN` → 0 errors.
 6. **Do not render, do not commit, do not push.** The orchestrator does that.
 
+## Her review of reel 41 (2026-10-21) — these override anything below
+
+- **Captions are exactly as before §00**: word by word, upper case, Product
+  Sans Black, white on the plaque. The kit does it — `g.document()` turns the
+  chunks into the old rail and switches to ink over every `half()` / `full()`
+  span (on the panel they sit above her head). Keep calling `g.chunks()` as in
+  reel-41; ignore key words / pills.
+- **Sketches are calmer** (roughness 1, set in the kit). Over her footage the
+  default ink is **white** (kit); on the white panel / cover it stays dark.
+  Don't pass red or dark ink for sketches/labels that sit over the footage.
+- **Behind-me words are white** with a soft shadow (kit).
+- **Full screen never opens onto empty white**: its content lands within ~0.3 s
+  of the cover arriving. Open it ON the word its headline/sketch shows.
+- **Arrows long** — ≥ 150 px, a gentle curve; space boxes apart to make room.
+  **No arrowhead on a loop / ellipse.**
+
 ## The look, in practice (measured on her plates this batch)
 
 - Her head top ≈ y 710–735, chin ≈ y 1065–1100, face centred x ≈ 520.

@@ -32,20 +32,12 @@
   "name": "click-soft"
  },
  {
-  "t": 18.037,
-  "name": "click-soft"
- },
- {
   "t": 19.297,
   "name": "pop"
  },
  {
   "t": 20.883,
   "name": "pop"
- },
- {
-  "t": 23.906,
-  "name": "whoosh-short"
  },
  {
   "t": 24.806,
@@ -60,24 +52,12 @@
   "name": "kaching"
  },
  {
-  "t": 32.384,
-  "name": "pop"
- },
- {
   "t": 32.884,
   "name": "click-soft"
  },
  {
-  "t": 33.96,
-  "name": "pop"
- },
- {
   "t": 34.54,
   "name": "click-soft"
- },
- {
-  "t": 35.78,
-  "name": "pop"
  },
  {
   "t": 37.18,
@@ -96,10 +76,6 @@
   "name": "pop"
  },
  {
-  "t": 41.56,
-  "name": "click-soft"
- },
- {
   "t": 42.62,
   "name": "pop"
  },
@@ -110,10 +86,6 @@
  {
   "t": 43.7,
   "name": "whoosh-short"
- },
- {
-  "t": 45.41,
-  "name": "click-soft"
  },
  {
   "t": 47.355,
@@ -128,19 +100,11 @@
   "name": "whoosh-short"
  },
  {
-  "t": 50.1,
-  "name": "click-soft"
- },
- {
   "t": 52.285,
   "name": "pop"
  },
  {
   "t": 54.545,
-  "name": "pop"
- },
- {
-  "t": 56.112,
   "name": "pop"
  },
  {

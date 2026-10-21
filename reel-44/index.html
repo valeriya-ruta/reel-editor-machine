@@ -12,6 +12,8 @@
                  src: url("assets/fonts/GoogleSans-500.ttf") format("truetype"); }
     @font-face { font-family: "Google Sans"; font-weight: 700; font-display: block;
                  src: url("assets/fonts/GoogleSans-700.ttf") format("truetype"); }
+    @font-face { font-family: "ProductSans"; font-weight: 900; font-display: block;
+                 src: url("assets/fonts/ProductSans-Black.woff") format("woff"); }
     @font-face { font-family: "Pangolin"; font-weight: 400; font-display: block;
                  src: url("assets/fonts/Pangolin.ttf") format("truetype"); }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -66,7 +68,9 @@
     /* §00.3.2 behind me */
     .big { position: absolute; left: 0; width: 1080px; text-align: center;
            font-weight: 700; line-height: 0.9; letter-spacing: -0.04em;
-           color: var(--primary); white-space: nowrap; }
+           /* white, her call 2026-10-21: the red read badly over the room */
+           color: #FFFFFF; white-space: nowrap;
+           text-shadow: 0 6px 40px rgba(20,12,12,.30), 0 2px 8px rgba(20,12,12,.22); }
 
     /* §00.3.3 half screen. Its parked position (up, off frame) is set from JS
        with gsap.set: a CSS translate here would be parsed by GSAP as a px offset
@@ -81,9 +85,20 @@
     /* §00.5 sketches */
     .sk { position: absolute; left: 0; top: 0; overflow: visible; }
     .sk text, .hand { font-family: "Pangolin", cursive; fill: #1E1E1E; color: #1E1E1E; }
+    #front .sk { filter: drop-shadow(0 2px 6px rgba(20,12,12,.35)); }
     .hand { position: absolute; white-space: nowrap; }
 
-    /* §00.2 captions */
+    /* captions — exactly as before §00 (her call 2026-10-21, over the boxed
+       phrases of the spec): kit.py's rail, word by word, upper case */
+    #scrim { position: absolute; left: 20px; top: 1247px; width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png"); background-size: 100% 100%;
+             background-repeat: no-repeat; opacity: 0; visibility: hidden; pointer-events: none; }
+    .wc { position: absolute; left: 0; width: 1080px; top: 1413px; height: 118px;
+          line-height: 118px; text-align: center; color: #fff;
+          font-family: "ProductSans", system-ui, sans-serif; font-size: 90px; font-weight: 900;
+          letter-spacing: -0.015em; white-space: nowrap; opacity: 0; visibility: hidden; }
+    .wc.inv { color: #241919; }
+    /* §00.2 boxed phrase captions (spec; not in use — see .wc) */
     #caps { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
             pointer-events: none; }
     .cap { position: absolute; left: 0; width: 1080px; display: flex;
@@ -142,7 +157,7 @@
       <div id="panel">
 <svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
 
-        <div id="p7f" class="hid" style="position:absolute; left:740px; top:686px; color:#7A1424"><svg class="mark" width="40" height="40" viewBox="0 0 24 24"><path d="M14.185 0c-1.702.008-3.693.467-6.068 1.331C.115 4.244-1.581 7.881 1.33 15.883c2.912 8.002 6.55 9.698 14.552 6.786 8.002-2.913 9.699-6.55 6.786-14.552C20.62 2.491 18.214-.018 14.185 0zm2.77 6.57h1.253a.25.25 0 01.199.098.25.25 0 01.043.217L15.672 17.22a.25.25 0 01-.241.186h-1.254a.25.25 0 01-.242-.315l.169-.628.123-.457 2.486-9.252a.25.25 0 01.241-.185zm-9.184.808h.504a.25.25 0 01.25.25v.844a.25.25 0 01-.25.25h-.428a1.7 1.7 0 00-.258.012.221.221 0 00-.12.048.197.197 0 00-.049.078.886.886 0 00-.043.315v.641h.898a.25.25 0 01.25.25v.844a.25.25 0 01-.25.25h-.898v5.094a.25.25 0 01-.25.25h-.985a.25.25 0 01-.25-.25v-7.23a1.723 1.723 0 01.169-.78 1.395 1.395 0 01.453-.523c.37-.257.826-.341 1.257-.343zm3.85 2.344c.767 0 1.419.218 1.883.622.465.404.725.994.723 1.668v1.683l-.755 2.809h-.48a.25.25 0 01-.25-.25v-.187a1.84 1.84 0 01-.223.167c-.335.213-.79.352-1.39.352a2.936 2.936 0 01-1.337-.29 1.898 1.898 0 01-.883-.907 2.193 2.193 0 01-.187-.916 1.907 1.907 0 01.245-.99 1.724 1.724 0 01.646-.618c.52-.293 1.16-.396 1.788-.48H11.4c.342-.046.616-.075.827-.103a1.968 1.968 0 00.431-.088.147.147 0 00.065-.04l.01-.021a.319.319 0 00.009-.086v-.035a.809.809 0 00-.274-.638c-.178-.155-.458-.26-.847-.261-.385 0-.686.106-.89.262a.821.821 0 00-.338.588.25.25 0 01-.249.228H9.101a.25.25 0 01-.25-.261 2.139 2.139 0 01.825-1.593c.491-.391 1.165-.615 1.945-.615zm1.121 3.783c-.09.024-.187.047-.296.068-.303.06-.67.113-1.025.163a2.855 2.855 0 00-.692.171c-.196.082-.333.186-.407.308a.569.569 0 00-.08.307v.007a.604.604 0 00.062.275.554.554 0 00.176.198c.16.115.428.194.79.194.56-.002.915-.164 1.14-.39.223-.228.33-.542.332-.896v-.404z"/></svg></div>
+        <div id="p7f" class="hid" style="position:absolute; left:740px; top:726px; color:#7A1424"><svg class="mark" width="40" height="40" viewBox="0 0 24 24"><path d="M14.185 0c-1.702.008-3.693.467-6.068 1.331C.115 4.244-1.581 7.881 1.33 15.883c2.912 8.002 6.55 9.698 14.552 6.786 8.002-2.913 9.699-6.55 6.786-14.552C20.62 2.491 18.214-.018 14.185 0zm2.77 6.57h1.253a.25.25 0 01.199.098.25.25 0 01.043.217L15.672 17.22a.25.25 0 01-.241.186h-1.254a.25.25 0 01-.242-.315l.169-.628.123-.457 2.486-9.252a.25.25 0 01.241-.185zm-9.184.808h.504a.25.25 0 01.25.25v.844a.25.25 0 01-.25.25h-.428a1.7 1.7 0 00-.258.012.221.221 0 00-.12.048.197.197 0 00-.049.078.886.886 0 00-.043.315v.641h.898a.25.25 0 01.25.25v.844a.25.25 0 01-.25.25h-.898v5.094a.25.25 0 01-.25.25h-.985a.25.25 0 01-.25-.25v-7.23a1.723 1.723 0 01.169-.78 1.395 1.395 0 01.453-.523c.37-.257.826-.341 1.257-.343zm3.85 2.344c.767 0 1.419.218 1.883.622.465.404.725.994.723 1.668v1.683l-.755 2.809h-.48a.25.25 0 01-.25-.25v-.187a1.84 1.84 0 01-.223.167c-.335.213-.79.352-1.39.352a2.936 2.936 0 01-1.337-.29 1.898 1.898 0 01-.883-.907 2.193 2.193 0 01-.187-.916 1.907 1.907 0 01.245-.99 1.724 1.724 0 01.646-.618c.52-.293 1.16-.396 1.788-.48H11.4c.342-.046.616-.075.827-.103a1.968 1.968 0 00.431-.088.147.147 0 00.065-.04l.01-.021a.319.319 0 00.009-.086v-.035a.809.809 0 00-.274-.638c-.178-.155-.458-.26-.847-.261-.385 0-.686.106-.89.262a.821.821 0 00-.338.588.25.25 0 01-.249.228H9.101a.25.25 0 01-.25-.261 2.139 2.139 0 01.825-1.593c.491-.391 1.165-.615 1.945-.615zm1.121 3.783c-.09.024-.187.047-.296.068-.303.06-.67.113-1.025.163a2.855 2.855 0 00-.692.171c-.196.082-.333.186-.407.308a.569.569 0 00-.08.307v.007a.604.604 0 00.062.275.554.554 0 00.176.198c.16.115.428.194.79.194.56-.002.915-.164 1.14-.39.223-.228.33-.542.332-.896v-.404z"/></svg></div>
       </div>
       <video id="matte-dzv" class="plate matte" src="assets/mattes/dzv.webm"
              data-start="5.300" data-duration="1.733" data-media-start="0"
@@ -226,43 +241,176 @@
       <div id="cover">
 
       </div>
+      <div id="scrim"></div>
       <div id="caps">
-      <div class="cap" id="cap0" style="bottom:400px"><span class="box">Найкращі <span class="k"><span class="kb"></span><span class="kt">ідеї</span></span> для контенту я беру</span></div>
-      <div class="cap" id="cap1" style="bottom:400px"><span class="box">не з чату <span style="white-space:nowrap"><span class="k"><span class="kb"></span><span class="kt">GPT</span></span>,</span></span></div>
-      <div class="cap" id="cap2" style="bottom:400px"><span class="box">не з <span class="k"><span class="kb"></span><span class="kt">Клода</span></span> і не з Мануса.</span></div>
-      <div class="cap" id="cap3" style="bottom:400px"><span class="box">Я беру їх <span style="white-space:nowrap"><span class="k"><span class="kb"></span><span class="kt">з дзвінків</span></span>,</span></span></div>
-      <div class="cap" id="cap4" style="bottom:400px"><span class="box">які я проводжу зі своїми <span style="white-space:nowrap"><span class="k"><span class="kb"></span><span class="kt">клієнтками</span></span>.</span></span></div>
-      <div class="cap" id="cap5" style="bottom:400px"><span class="box">З консультацією, з <span class="k"><span class="kb"></span><span class="kt">велкам</span></span> дзвінків.</span></div>
-      <div class="cap" id="cap6" style="bottom:400px"><span class="box">Тому що саме там,</span></div>
-      <div class="cap" id="cap7" style="bottom:400px"><span class="box"><span class="k"><span class="kb"></span><span class="kt">особливо</span></span> на велкам дзвінках,</span></div>
-      <div class="cap" id="cap8" style="bottom:400px"><span class="box">мені задають <span style="white-space:nowrap"><span class="k"><span class="kb"></span><span class="kt">питання</span></span>,</span> про які я навіть</span></div>
-      <div class="cap" id="cap9" style="bottom:400px"><span class="box">сама б ніколи не <span style="white-space:nowrap"><span class="k"><span class="kb"></span><span class="kt">додумалась</span></span>.</span></span></div>
-      <div class="cap" id="cap10" style="bottom:400px"><span class="box">Але раз мені задають такі <span style="white-space:nowrap"><span class="k"><span class="kb"></span><span class="kt">питання</span></span>,</span></span></div>
-      <div class="cap" id="cap11" style="bottom:940px"><span class="box">значить це цікавить не тільки <span class="k"><span class="kb"></span><span class="kt">одну</span></span></span></div>
-      <div class="cap" id="cap12" style="bottom:940px"><span class="box">людину, і з цього виходить <span class="k"><span class="kb"></span><span class="kt">ідеальна</span></span> тема</span></div>
-      <div class="cap" id="cap13" style="bottom:940px"><span class="box">для <span style="white-space:nowrap"><span class="k"><span class="kb"></span><span class="kt">контенту</span></span>.</span></span></div>
-      <div class="cap" id="cap14" style="bottom:400px"><span class="box">Тому коли мені треба <span class="k"><span class="kb"></span><span class="kt">наповнити</span></span></span></div>
-      <div class="cap" id="cap15" style="bottom:400px"><span class="box"><span class="k"><span class="kb"></span><span class="kt">контент-план</span></span> чимось, окрім рілсів по</span></div>
-      <div class="cap" id="cap16" style="bottom:400px"><span class="box"><span class="k"><span class="kb"></span><span class="kt">стратегії</span></span> з чіткими закликами до дії,</span></div>
-      <div class="cap" id="cap17" style="bottom:400px"><span class="box">я не сиджу і не <span class="k"><span class="kb"></span><span class="kt">вигадую</span></span> з голови.</span></div>
-      <div class="cap" id="cap18" style="bottom:400px"><span class="box">У мене є <span style="white-space:nowrap"><span class="k"><span class="kb"></span><span class="kt">рутина</span></span>,</span></span></div>
-      <div class="cap" id="cap19" style="bottom:940px"><span class="box">яка працює кожного <span class="k"><span class="kb"></span><span class="kt">тижня</span></span> і аналізує</span></div>
-      <div class="cap" id="cap20" style="bottom:940px"><span class="box">не тільки мій <span class="k"><span class="kb"></span><span class="kt">контент</span></span> і моїх</span></div>
-      <div class="cap" id="cap21" style="bottom:940px"><span class="box">конкурентів, а ще й мої <span style="white-space:nowrap"><span class="k"><span class="kb"></span><span class="kt">дзвінки</span></span>.</span></span></div>
-      <div class="cap" id="cap22" style="bottom:400px"><span class="box">І з цього вона створює <span class="k"><span class="kb"></span><span class="kt">додатковий</span></span></span></div>
-      <div class="cap" id="cap23" style="bottom:400px"><span class="box">контент, який підкреслює мою <span style="white-space:nowrap"><span class="k"><span class="kb"></span><span class="kt">стратегію</span></span>.</span></span></div>
-      <div class="cap" id="cap24" style="bottom:400px"><span class="box">І усім своїм <span class="k"><span class="kb"></span><span class="kt">клієнткам</span></span> я це</span></div>
-      <div class="cap" id="cap25" style="bottom:400px"><span class="box">теж <span class="k"><span class="kb"></span><span class="kt">впроваджую</span></span> як налаштування,</span></div>
-      <div class="cap" id="cap26" style="bottom:400px"><span class="box">вони від цього в <span style="white-space:nowrap"><span class="k"><span class="kb"></span><span class="kt">захваті</span></span>.</span></span></div>
-      <div class="cap" id="cap27" style="bottom:400px"><span class="box">І в мене навіть є ціла <span class="k"><span class="kb"></span><span class="kt">інструкція</span></span></span></div>
-      <div class="cap" id="cap28" style="bottom:400px"><span class="box">за всього лише <span style="white-space:nowrap"><span class="k"><span class="kb"></span><span class="kt">15 євро</span></span>,</span></span></div>
-      <div class="cap" id="cap29" style="bottom:400px"><span class="box">де я <span style="white-space:nowrap"><span class="k"><span class="kb"></span><span class="kt">показую</span></span>,</span></span></div>
-      <div class="cap" id="cap30" style="bottom:400px"><span class="box">як це <span class="k"><span class="kb"></span><span class="kt">налаштувати</span></span> і підключити для себе.</span></div>
-      <div class="cap" id="cap31" style="bottom:400px"><span class="box">Тому якщо ти <span class="k"><span class="kb"></span><span class="kt">постійно</span></span> проводиш якісь</span></div>
-      <div class="cap" id="cap32" style="bottom:400px"><span class="box"><span style="white-space:nowrap"><span class="k"><span class="kb"></span><span class="kt">консультації</span></span>,</span> тобі постійно потрібні</span></div>
-      <div class="cap" id="cap33" style="bottom:400px"><span class="box"><span class="k"><span class="kb"></span><span class="kt">ідеї</span></span> для контенту,</span></div>
-      <div class="cap" id="cap34" style="bottom:400px"><span class="box">то пиши слово <span style="white-space:nowrap"><span class="k"><span class="kb"></span><span class="kt">«дзвінок</span></span>»,</span></span></div>
-      <div class="cap" id="cap35" style="bottom:400px"><span class="box">щоб отримати <span style="white-space:nowrap"><span class="k"><span class="kb"></span><span class="kt">інструкцію</span></span>.</span></span></div>
+      <div class="wc" id="w0">НАЙКРАЩІ</div>
+      <div class="wc" id="w1">ІДЕЇ</div>
+      <div class="wc" id="w2">ДЛЯ</div>
+      <div class="wc" id="w3">КОНТЕНТУ</div>
+      <div class="wc" id="w4">Я</div>
+      <div class="wc" id="w5">БЕРУ</div>
+      <div class="wc" id="w6">НЕ</div>
+      <div class="wc" id="w7">З</div>
+      <div class="wc" id="w8">ЧАТУ</div>
+      <div class="wc" id="w9">GPT,</div>
+      <div class="wc" id="w10">НЕ</div>
+      <div class="wc" id="w11">З</div>
+      <div class="wc" id="w12">КЛОДА</div>
+      <div class="wc" id="w13">І</div>
+      <div class="wc" id="w14">НЕ</div>
+      <div class="wc" id="w15">З</div>
+      <div class="wc" id="w16">МАНУСА.</div>
+      <div class="wc" id="w17">Я</div>
+      <div class="wc" id="w18">БЕРУ</div>
+      <div class="wc" id="w19">ЇХ</div>
+      <div class="wc" id="w21">ЯКІ Я</div>
+      <div class="wc" id="w22">ПРОВОДЖУ</div>
+      <div class="wc" id="w23">ЗІ СВОЇМИ</div>
+      <div class="wc" id="w24">КЛІЄНТКАМИ.</div>
+      <div class="wc" id="w25">З КОНСУЛЬТАЦІЄЮ,</div>
+      <div class="wc" id="w26">З</div>
+      <div class="wc" id="w27">ВЕЛКАМ</div>
+      <div class="wc" id="w28">ДЗВІНКІВ.</div>
+      <div class="wc" id="w29">ТОМУ</div>
+      <div class="wc" id="w30">ЩО</div>
+      <div class="wc" id="w31">САМЕ</div>
+      <div class="wc" id="w32">ТАМ,</div>
+      <div class="wc" id="w33">ОСОБЛИВО</div>
+      <div class="wc" id="w34">НА ВЕЛКАМ</div>
+      <div class="wc" id="w35">ДЗВІНКАХ,</div>
+      <div class="wc" id="w36">МЕНІ ЗАДАЮТЬ</div>
+      <div class="wc" id="w37">ПИТАННЯ,</div>
+      <div class="wc" id="w38">ПРО ЯКІ</div>
+      <div class="wc" id="w39">Я</div>
+      <div class="wc" id="w40">НАВІТЬ</div>
+      <div class="wc" id="w41">САМА</div>
+      <div class="wc" id="w42">Б</div>
+      <div class="wc" id="w43">НІКОЛИ</div>
+      <div class="wc" id="w44">НЕ</div>
+      <div class="wc" id="w45">ДОДУМАЛАСЬ.</div>
+      <div class="wc" id="w46">АЛЕ</div>
+      <div class="wc inv" id="w47" style="top:862px">РАЗ</div>
+      <div class="wc inv" id="w48" style="top:862px">МЕНІ</div>
+      <div class="wc inv" id="w49" style="top:862px">ЗАДАЮТЬ</div>
+      <div class="wc inv" id="w50" style="top:862px">ТАКІ</div>
+      <div class="wc inv" id="w51" style="top:862px">ПИТАННЯ,</div>
+      <div class="wc inv" id="w52" style="top:862px">ЗНАЧИТЬ</div>
+      <div class="wc inv" id="w53" style="top:862px">ЦЕ</div>
+      <div class="wc inv" id="w54" style="top:862px">ЦІКАВИТЬ</div>
+      <div class="wc inv" id="w55" style="top:862px">НЕ</div>
+      <div class="wc inv" id="w56" style="top:862px">ТІЛЬКИ</div>
+      <div class="wc inv" id="w57" style="top:862px">ОДНУ</div>
+      <div class="wc inv" id="w58" style="top:862px">ЛЮДИНУ,</div>
+      <div class="wc inv" id="w59" style="top:862px">І</div>
+      <div class="wc inv" id="w60" style="top:862px">З ЦЬОГО</div>
+      <div class="wc inv" id="w61" style="top:862px">ВИХОДИТЬ</div>
+      <div class="wc inv" id="w62" style="top:862px">ІДЕАЛЬНА</div>
+      <div class="wc inv" id="w63" style="top:862px">ТЕМА</div>
+      <div class="wc inv" id="w64" style="top:862px">ДЛЯ</div>
+      <div class="wc inv" id="w65" style="top:862px">КОНТЕНТУ.</div>
+      <div class="wc inv" id="w66" style="top:862px">ТОМУ</div>
+      <div class="wc inv" id="w67" style="top:862px">КОЛИ</div>
+      <div class="wc" id="w68">МЕНІ</div>
+      <div class="wc" id="w69">ТРЕБА</div>
+      <div class="wc" id="w70">НАПОВНИТИ</div>
+      <div class="wc" id="w71">КОНТЕНТ-ПЛАН</div>
+      <div class="wc" id="w72">ЧИМОСЬ,</div>
+      <div class="wc" id="w73">ОКРІМ</div>
+      <div class="wc" id="w74">РІЛСІВ</div>
+      <div class="wc" id="w75">ПО</div>
+      <div class="wc" id="w76">СТРАТЕГІЇ</div>
+      <div class="wc" id="w77">З</div>
+      <div class="wc" id="w78">ЧІТКИМИ</div>
+      <div class="wc" id="w79">ЗАКЛИКАМИ</div>
+      <div class="wc" id="w80">ДО</div>
+      <div class="wc" id="w81">ДІЇ,</div>
+      <div class="wc" id="w82">Я</div>
+      <div class="wc" id="w83">НЕ</div>
+      <div class="wc" id="w84">СИДЖУ</div>
+      <div class="wc" id="w85">І НЕ</div>
+      <div class="wc" id="w86">ВИГАДУЮ</div>
+      <div class="wc" id="w87">З</div>
+      <div class="wc" id="w88">ГОЛОВИ.</div>
+      <div class="wc" id="w89">У</div>
+      <div class="wc" id="w90">МЕНЕ</div>
+      <div class="wc inv" id="w91" style="top:862px">Є</div>
+      <div class="wc inv" id="w92" style="top:862px">РУТИНА,</div>
+      <div class="wc inv" id="w93" style="top:862px">ЯКА</div>
+      <div class="wc inv" id="w94" style="top:862px">ПРАЦЮЄ</div>
+      <div class="wc inv" id="w95" style="top:862px">КОЖНОГО</div>
+      <div class="wc inv" id="w96" style="top:862px">ТИЖНЯ</div>
+      <div class="wc inv" id="w97" style="top:862px">І</div>
+      <div class="wc inv" id="w98" style="top:862px">АНАЛІЗУЄ</div>
+      <div class="wc inv" id="w99" style="top:862px">НЕ</div>
+      <div class="wc inv" id="w100" style="top:862px">ТІЛЬКИ</div>
+      <div class="wc inv" id="w101" style="top:862px">МІЙ</div>
+      <div class="wc inv" id="w102" style="top:862px">КОНТЕНТ</div>
+      <div class="wc inv" id="w103" style="top:862px">І</div>
+      <div class="wc inv" id="w104" style="top:862px">МОЇХ</div>
+      <div class="wc inv" id="w105" style="top:862px">КОНКУРЕНТІВ,</div>
+      <div class="wc inv" id="w106" style="top:862px">А</div>
+      <div class="wc inv" id="w107" style="top:862px">ЩЕ Й</div>
+      <div class="wc inv" id="w108" style="top:862px">МОЇ</div>
+      <div class="wc inv" id="w109" style="top:862px">ДЗВІНКИ.</div>
+      <div class="wc inv" id="w110" style="top:862px">І</div>
+      <div class="wc inv" id="w111" style="top:862px">З</div>
+      <div class="wc" id="w112">ЦЬОГО</div>
+      <div class="wc" id="w113">ВОНА</div>
+      <div class="wc" id="w114">СТВОРЮЄ</div>
+      <div class="wc" id="w115">ДОДАТКОВИЙ</div>
+      <div class="wc" id="w116">КОНТЕНТ,</div>
+      <div class="wc" id="w117">ЯКИЙ</div>
+      <div class="wc" id="w118">ПІДКРЕСЛЮЄ</div>
+      <div class="wc" id="w119">МОЮ</div>
+      <div class="wc" id="w120">СТРАТЕГІЮ.</div>
+      <div class="wc" id="w121">І</div>
+      <div class="wc" id="w122">УСІМ</div>
+      <div class="wc" id="w123">СВОЇМ</div>
+      <div class="wc" id="w124">КЛІЄНТКАМ</div>
+      <div class="wc" id="w125">Я</div>
+      <div class="wc" id="w126">ЦЕ</div>
+      <div class="wc" id="w127">ТЕЖ</div>
+      <div class="wc" id="w128">ВПРОВАДЖУЮ</div>
+      <div class="wc" id="w129">ЯК</div>
+      <div class="wc" id="w130">НАЛАШТУВАННЯ,</div>
+      <div class="wc" id="w131">ВОНИ</div>
+      <div class="wc" id="w132">ВІД</div>
+      <div class="wc" id="w133">ЦЬОГО</div>
+      <div class="wc" id="w134">В</div>
+      <div class="wc" id="w135">ЗАХВАТІ.</div>
+      <div class="wc" id="w136">І</div>
+      <div class="wc" id="w137">В МЕНЕ</div>
+      <div class="wc" id="w138">НАВІТЬ</div>
+      <div class="wc" id="w139">Є</div>
+      <div class="wc" id="w140">ЦІЛА</div>
+      <div class="wc" id="w141">ІНСТРУКЦІЯ</div>
+      <div class="wc" id="w142">ЗА</div>
+      <div class="wc" id="w143">ВСЬОГО</div>
+      <div class="wc" id="w144">ЛИШЕ</div>
+      <div class="wc" id="w145">15 ЄВРО,</div>
+      <div class="wc" id="w146">ДЕ</div>
+      <div class="wc" id="w147">Я</div>
+      <div class="wc" id="w148">ПОКАЗУЮ,</div>
+      <div class="wc" id="w149">ЯК</div>
+      <div class="wc" id="w150">ЦЕ</div>
+      <div class="wc" id="w151">НАЛАШТУВАТИ</div>
+      <div class="wc" id="w152">І</div>
+      <div class="wc" id="w153">ПІДКЛЮЧИТИ</div>
+      <div class="wc" id="w154">ДЛЯ</div>
+      <div class="wc" id="w155">СЕБЕ.</div>
+      <div class="wc" id="w156">ТОМУ</div>
+      <div class="wc" id="w157">ЯКЩО</div>
+      <div class="wc" id="w158">ТИ</div>
+      <div class="wc" id="w159">ПОСТІЙНО</div>
+      <div class="wc" id="w160">ПРОВОДИШ</div>
+      <div class="wc" id="w161">ЯКІСЬ</div>
+      <div class="wc" id="w162">КОНСУЛЬТАЦІЇ,</div>
+      <div class="wc" id="w163">ТОБІ</div>
+      <div class="wc" id="w164">ПОСТІЙНО</div>
+      <div class="wc" id="w165">ПОТРІБНІ</div>
+      <div class="wc" id="w166">ІДЕЇ</div>
+      <div class="wc" id="w167">ДЛЯ</div>
+      <div class="wc" id="w168">КОНТЕНТУ,</div>
       </div>
 
       <audio id="vo" src="assets/base.mp4"
@@ -321,11 +469,13 @@
   }
 
   // ---- §00.5 Excalidraw sketches (rough.js), drawn on stroke by stroke ----
-  var SKO = {roughness: 2.4, bowing: 2.5, strokeWidth: 4.5, stroke: "#1E1E1E",
+  // roughness 1 ≈ Excalidraw's own default — 2.4 was "too sloppy" (her review of 41)
+  var SKO = {roughness: 1.0, bowing: 1.0, strokeWidth: 4.5, stroke: "#1E1E1E",
              disableMultiStroke: false, preserveVertices: false};
   var HACH = {fill: "#F2C7CA", fillStyle: "hachure", hachureGap: 16, hachureAngle: -41,
               fillWeight: 2.5};
-  function opt(o, seed) { var r = {}; for (var k in SKO) r[k] = SKO[k];
+  var _ink = "#1E1E1E";
+  function opt(o, seed) { var r = {}; for (var k in SKO) r[k] = SKO[k]; r.stroke = _ink;
     for (var k2 in (o || {})) r[k2] = o[k2]; r.seed = seed; return r; }
   function hatch(o) { var r = {}; for (var k in HACH) r[k] = HACH[k];
     for (var k2 in (o || {})) r[k2] = o[k2]; return r; }
@@ -341,7 +491,10 @@
     var svg = document.getElementById(svgId);
     var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
     g.setAttribute("id", "sk-" + name); svg.appendChild(g);
-    SK[name] = {g: g, rc: rough.svg(svg), shapes: []};
+    // over her footage the ink is white (dark ink read badly over the room);
+    // on the white panel and cover it stays #1E1E1E. Explicit colours win.
+    var foot = !!(svg.closest && svg.closest("#front"));
+    SK[name] = {g: g, rc: rough.svg(svg), shapes: [], ink: foot ? "#FFFFFF" : "#1E1E1E"};
     return SK[name];
   }
   function _add(s, node, kind) {
@@ -355,19 +508,19 @@
     });
     s.shapes.push({paths: paths, kind: kind || "stroke"});
   }
-  function box(name, x, y, w, h, o) {      // rounded rough box, radius 28 (§00.5.2)
+  function box(name, x, y, w, h, o) { _ink = SK[name].ink;      // rounded rough box, radius 28 (§00.5.2)
     var s = SK[name], r = (o && o.r) || 28;
     var oo = opt(o, (o && o.seed) || 7);
     if (o && o.fill) { var f = hatch(o.fill === true ? {} : {fill: o.fill}); for (var k in f) oo[k] = f[k]; }
     _add(s, s.rc.path(rrectD(x, y, w, h, r), oo));
   }
-  function ell(name, cx, cy, w, h, o) { var s = SK[name];
+  function ell(name, cx, cy, w, h, o) { _ink = SK[name].ink; var s = SK[name];
     _add(s, s.rc.ellipse(cx, cy, w, h, opt(o, (o && o.seed) || 11))); }
-  function ln(name, x1, y1, x2, y2, o) { var s = SK[name];
+  function ln(name, x1, y1, x2, y2, o) { _ink = SK[name].ink; var s = SK[name];
     _add(s, s.rc.line(x1, y1, x2, y2, opt(o, (o && o.seed) || 13))); }
-  function under(name, x1, y, x2, o) { var s = SK[name];      // a hand underline
+  function under(name, x1, y, x2, o) { _ink = SK[name].ink; var s = SK[name];      // a hand underline
     _add(s, s.rc.curve([[x1, y + 4], [(x1 + x2) / 2, y - 6], [x2, y + 2]], opt(o, (o && o.seed) || 17))); }
-  function arrow(name, x1, y1, x2, y2, o) {
+  function arrow(name, x1, y1, x2, y2, o) { _ink = SK[name].ink;
     var s = SK[name], oo = opt(o, (o && o.seed) || 19), bend = (o && o.bend != null) ? o.bend : .12;
     var mx = (x1 + x2) / 2 + (y2 - y1) * bend, my = (y1 + y2) / 2 - (x2 - x1) * bend;
     _add(s, s.rc.curve([[x1, y1], [mx, my], [x2, y2]], oo));
@@ -380,7 +533,7 @@
     t.setAttribute("x", x); t.setAttribute("y", y);
     t.setAttribute("text-anchor", (o && o.anchor) || "middle");
     t.setAttribute("font-size", (o && o.size) || 50);
-    if (o && o.color) t.style.fill = o.color;
+    t.style.fill = (o && o.color) || s.ink;
     t.textContent = txt; t.style.opacity = 0; s.g.appendChild(t);
     s.shapes.push({text: t});
   }
@@ -407,169 +560,184 @@
   gsap.set(PUSH, {transformOrigin: "540px 900px"});
   tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 59.550, ease: "none"}, 0);
 
-  tl.set("#cap0", {autoAlpha: 1}, 0.000);
-  tl.fromTo("#cap0 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 0.000);
-  tl.fromTo("#cap0 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 0.890);
-  tl.to("#cap0 .kt", {color: "#FFFFFF", duration: .12}, 0.890);
-  tl.set("#cap0", {autoAlpha: 0}, 2.030);
-  tl.set("#cap1", {autoAlpha: 1}, 2.030);
-  tl.fromTo("#cap1 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 2.030);
-  tl.fromTo("#cap1 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 2.719);
-  tl.to("#cap1 .kt", {color: "#FFFFFF", duration: .12}, 2.719);
-  tl.set("#cap1", {autoAlpha: 0}, 3.250);
-  tl.set("#cap2", {autoAlpha: 1}, 3.250);
-  tl.fromTo("#cap2 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 3.250);
-  tl.fromTo("#cap2 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 3.590);
-  tl.to("#cap2 .kt", {color: "#FFFFFF", duration: .12}, 3.590);
-  tl.set("#cap2", {autoAlpha: 0}, 5.004);
-  tl.set("#cap4", {autoAlpha: 1}, 6.472);
-  tl.fromTo("#cap4 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 6.472);
-  tl.fromTo("#cap4 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 7.432);
-  tl.to("#cap4 .kt", {color: "#FFFFFF", duration: .12}, 7.432);
-  tl.set("#cap4", {autoAlpha: 0}, 8.192);
-  tl.set("#cap5", {autoAlpha: 1}, 8.192);
-  tl.fromTo("#cap5 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 8.192);
-  tl.fromTo("#cap5 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 9.272);
-  tl.to("#cap5 .kt", {color: "#FFFFFF", duration: .12}, 9.272);
-  tl.set("#cap5", {autoAlpha: 0}, 10.352);
-  tl.set("#cap6", {autoAlpha: 1}, 10.352);
-  tl.fromTo("#cap6 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 10.352);
-  tl.set("#cap6", {autoAlpha: 0}, 11.232);
-  tl.set("#cap7", {autoAlpha: 1}, 11.232);
-  tl.fromTo("#cap7 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 11.232);
-  tl.fromTo("#cap7 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 11.232);
-  tl.to("#cap7 .kt", {color: "#FFFFFF", duration: .12}, 11.232);
-  tl.set("#cap7", {autoAlpha: 0}, 12.554);
-  tl.set("#cap8", {autoAlpha: 1}, 12.554);
-  tl.fromTo("#cap8 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 12.554);
-  tl.fromTo("#cap8 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 12.914);
-  tl.to("#cap8 .kt", {color: "#FFFFFF", duration: .12}, 12.914);
-  tl.set("#cap8", {autoAlpha: 0}, 14.614);
-  tl.set("#cap9", {autoAlpha: 1}, 14.614);
-  tl.fromTo("#cap9 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 14.614);
-  tl.fromTo("#cap9 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 15.834);
-  tl.to("#cap9 .kt", {color: "#FFFFFF", duration: .12}, 15.834);
-  tl.set("#cap9", {autoAlpha: 0}, 16.600);
-  tl.set("#cap10", {autoAlpha: 1}, 16.600);
-  tl.fromTo("#cap10 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 16.600);
-  tl.fromTo("#cap10 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 18.221);
-  tl.to("#cap10 .kt", {color: "#FFFFFF", duration: .12}, 18.221);
-  tl.set("#cap10", {autoAlpha: 0}, 18.821);
-  tl.set("#cap11", {autoAlpha: 1}, 18.821);
-  tl.fromTo("#cap11 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 18.821);
-  tl.fromTo("#cap11 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 19.981);
-  tl.to("#cap11 .kt", {color: "#FFFFFF", duration: .12}, 19.981);
-  tl.set("#cap11", {autoAlpha: 0}, 20.181);
-  tl.set("#cap12", {autoAlpha: 1}, 20.181);
-  tl.fromTo("#cap12 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 20.181);
-  tl.fromTo("#cap12 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 21.858);
-  tl.to("#cap12 .kt", {color: "#FFFFFF", duration: .12}, 21.858);
-  tl.set("#cap12", {autoAlpha: 0}, 22.858);
-  tl.set("#cap13", {autoAlpha: 1}, 22.858);
-  tl.fromTo("#cap13 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 22.858);
-  tl.fromTo("#cap13 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 22.998);
-  tl.to("#cap13 .kt", {color: "#FFFFFF", duration: .12}, 22.998);
-  tl.set("#cap13", {autoAlpha: 0}, 23.583);
-  tl.set("#cap14", {autoAlpha: 1}, 23.583);
-  tl.fromTo("#cap14 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 23.583);
-  tl.fromTo("#cap14 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 24.483);
-  tl.to("#cap14 .kt", {color: "#FFFFFF", duration: .12}, 24.483);
-  tl.set("#cap14", {autoAlpha: 0}, 24.923);
-  tl.set("#cap15", {autoAlpha: 1}, 24.923);
-  tl.fromTo("#cap15 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 24.923);
-  tl.fromTo("#cap15 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 24.923);
-  tl.to("#cap15 .kt", {color: "#FFFFFF", duration: .12}, 24.923);
-  tl.set("#cap15", {autoAlpha: 0}, 26.843);
-  tl.set("#cap16", {autoAlpha: 1}, 26.843);
-  tl.fromTo("#cap16 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 26.843);
-  tl.fromTo("#cap16 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 26.843);
-  tl.to("#cap16 .kt", {color: "#FFFFFF", duration: .12}, 26.843);
-  tl.set("#cap16", {autoAlpha: 0}, 28.895);
-  tl.set("#cap17", {autoAlpha: 1}, 28.895);
-  tl.fromTo("#cap17 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 28.895);
-  tl.fromTo("#cap17 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 29.715);
-  tl.to("#cap17 .kt", {color: "#FFFFFF", duration: .12}, 29.715);
-  tl.set("#cap17", {autoAlpha: 0}, 30.676);
-  tl.set("#cap18", {autoAlpha: 1}, 30.676);
-  tl.fromTo("#cap18 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 30.676);
-  tl.fromTo("#cap18 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 31.196);
-  tl.to("#cap18 .kt", {color: "#FFFFFF", duration: .12}, 31.196);
-  tl.set("#cap18", {autoAlpha: 0}, 31.816);
-  tl.set("#cap19", {autoAlpha: 1}, 31.816);
-  tl.fromTo("#cap19 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 31.816);
-  tl.fromTo("#cap19 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 32.636);
-  tl.to("#cap19 .kt", {color: "#FFFFFF", duration: .12}, 32.636);
-  tl.set("#cap19", {autoAlpha: 0}, 33.556);
-  tl.set("#cap20", {autoAlpha: 1}, 33.556);
-  tl.fromTo("#cap20 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 33.556);
-  tl.fromTo("#cap20 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 34.056);
-  tl.to("#cap20 .kt", {color: "#FFFFFF", duration: .12}, 34.056);
-  tl.set("#cap20", {autoAlpha: 0}, 34.896);
-  tl.set("#cap21", {autoAlpha: 1}, 34.896);
-  tl.fromTo("#cap21 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 34.896);
-  tl.fromTo("#cap21 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 35.954);
-  tl.to("#cap21 .kt", {color: "#FFFFFF", duration: .12}, 35.954);
-  tl.set("#cap21", {autoAlpha: 0}, 36.600);
-  tl.set("#cap22", {autoAlpha: 1}, 36.600);
-  tl.fromTo("#cap22 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 36.600);
-  tl.fromTo("#cap22 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 37.850);
-  tl.to("#cap22 .kt", {color: "#FFFFFF", duration: .12}, 37.850);
-  tl.set("#cap22", {autoAlpha: 0}, 38.370);
-  tl.set("#cap23", {autoAlpha: 1}, 38.370);
-  tl.fromTo("#cap23 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 38.370);
-  tl.fromTo("#cap23 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 40.130);
-  tl.to("#cap23 .kt", {color: "#FFFFFF", duration: .12}, 40.130);
-  tl.set("#cap23", {autoAlpha: 0}, 40.900);
-  tl.set("#cap24", {autoAlpha: 1}, 40.900);
-  tl.fromTo("#cap24 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 40.900);
-  tl.fromTo("#cap24 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 41.729);
-  tl.to("#cap24 .kt", {color: "#FFFFFF", duration: .12}, 41.729);
-  tl.set("#cap24", {autoAlpha: 0}, 42.489);
-  tl.set("#cap25", {autoAlpha: 1}, 42.489);
-  tl.fromTo("#cap25 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 42.489);
-  tl.fromTo("#cap25 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 42.689);
-  tl.to("#cap25 .kt", {color: "#FFFFFF", duration: .12}, 42.689);
-  tl.set("#cap25", {autoAlpha: 0}, 44.129);
-  tl.set("#cap26", {autoAlpha: 1}, 44.129);
-  tl.fromTo("#cap26 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 44.129);
-  tl.fromTo("#cap26 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 44.849);
-  tl.to("#cap26 .kt", {color: "#FFFFFF", duration: .12}, 44.849);
-  tl.set("#cap26", {autoAlpha: 0}, 45.639);
-  tl.set("#cap27", {autoAlpha: 1}, 45.639);
-  tl.fromTo("#cap27 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 45.639);
-  tl.fromTo("#cap27 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 46.839);
-  tl.to("#cap27 .kt", {color: "#FFFFFF", duration: .12}, 46.839);
-  tl.set("#cap27", {autoAlpha: 0}, 47.419);
-  tl.set("#cap28", {autoAlpha: 1}, 47.419);
-  tl.fromTo("#cap28 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 47.419);
-  tl.fromTo("#cap28 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 48.519);
-  tl.to("#cap28 .kt", {color: "#FFFFFF", duration: .12}, 48.519);
-  tl.set("#cap28", {autoAlpha: 0}, 49.067);
-  tl.set("#cap29", {autoAlpha: 1}, 49.067);
-  tl.fromTo("#cap29 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 49.067);
-  tl.fromTo("#cap29 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 49.512);
-  tl.to("#cap29 .kt", {color: "#FFFFFF", duration: .12}, 49.512);
-  tl.set("#cap29", {autoAlpha: 0}, 49.952);
-  tl.set("#cap30", {autoAlpha: 1}, 49.952);
-  tl.fromTo("#cap30 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 49.952);
-  tl.fromTo("#cap30 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 50.233);
-  tl.to("#cap30 .kt", {color: "#FFFFFF", duration: .12}, 50.233);
-  tl.set("#cap30", {autoAlpha: 0}, 52.167);
-  tl.set("#cap31", {autoAlpha: 1}, 52.167);
-  tl.fromTo("#cap31 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 52.167);
-  tl.fromTo("#cap31 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 53.148);
-  tl.to("#cap31 .kt", {color: "#FFFFFF", duration: .12}, 53.148);
-  tl.set("#cap31", {autoAlpha: 0}, 54.288);
-  tl.set("#cap32", {autoAlpha: 1}, 54.288);
-  tl.fromTo("#cap32 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 54.288);
-  tl.fromTo("#cap32 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 54.288);
-  tl.to("#cap32 .kt", {color: "#FFFFFF", duration: .12}, 54.288);
-  tl.set("#cap32", {autoAlpha: 0}, 55.988);
-  tl.set("#cap33", {autoAlpha: 1}, 55.988);
-  tl.fromTo("#cap33 .box", {opacity: 0, scale: .94, transformOrigin: "50% 100%"}, X({opacity: 1, scale: 1, duration: .35, ease: RISE}), 55.988);
-  tl.fromTo("#cap33 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 55.988);
-  tl.to("#cap33 .kt", {color: "#FFFFFF", duration: .12}, 55.988);
-  tl.set("#cap33", {autoAlpha: 0}, 56.888);
+  tl.set("#w0", {autoAlpha: 1}, 0.000); tl.set("#w0", {autoAlpha: 0}, 0.805);
+  tl.set("#w1", {autoAlpha: 1}, 0.890); tl.set("#w1", {autoAlpha: 0}, 1.005);
+  tl.set("#w2", {autoAlpha: 1}, 1.090); tl.set("#w2", {autoAlpha: 0}, 1.190);
+  tl.set("#w3", {autoAlpha: 1}, 1.210); tl.set("#w3", {autoAlpha: 0}, 1.525);
+  tl.set("#w4", {autoAlpha: 1}, 1.610); tl.set("#w4", {autoAlpha: 0}, 1.710);
+  tl.set("#w5", {autoAlpha: 1}, 1.750); tl.set("#w5", {autoAlpha: 0}, 1.945);
+  tl.set("#w6", {autoAlpha: 1}, 2.030); tl.set("#w6", {autoAlpha: 0}, 2.145);
+  tl.set("#w7", {autoAlpha: 1}, 2.230); tl.set("#w7", {autoAlpha: 0}, 2.330);
+  tl.set("#w8", {autoAlpha: 1}, 2.330); tl.set("#w8", {autoAlpha: 0}, 2.634);
+  tl.set("#w9", {autoAlpha: 1}, 2.719); tl.set("#w9", {autoAlpha: 0}, 3.165);
+  tl.set("#w10", {autoAlpha: 1}, 3.250); tl.set("#w10", {autoAlpha: 0}, 3.350);
+  tl.set("#w11", {autoAlpha: 1}, 3.430); tl.set("#w11", {autoAlpha: 0}, 3.530);
+  tl.set("#w12", {autoAlpha: 1}, 3.590); tl.set("#w12", {autoAlpha: 0}, 3.745);
+  tl.set("#w13", {autoAlpha: 1}, 3.830); tl.set("#w13", {autoAlpha: 0}, 3.945);
+  tl.set("#w14", {autoAlpha: 1}, 4.030); tl.set("#w14", {autoAlpha: 0}, 4.130);
+  tl.set("#w15", {autoAlpha: 1}, 4.150); tl.set("#w15", {autoAlpha: 0}, 4.250);
+  tl.set("#w16", {autoAlpha: 1}, 4.290); tl.set("#w16", {autoAlpha: 0}, 4.919);
+  tl.set("#w17", {autoAlpha: 1}, 5.004); tl.set("#w17", {autoAlpha: 0}, 5.104);
+  tl.set("#w18", {autoAlpha: 1}, 5.144); tl.set("#w18", {autoAlpha: 0}, 5.379);
+  tl.set("#w19", {autoAlpha: 1}, 5.464); tl.set("#w19", {autoAlpha: 0}, 5.619);
+  tl.set("#w21", {autoAlpha: 1}, 6.472); tl.set("#w21", {autoAlpha: 0}, 6.687);
+  tl.set("#w22", {autoAlpha: 1}, 6.772); tl.set("#w22", {autoAlpha: 0}, 7.027);
+  tl.set("#w23", {autoAlpha: 1}, 7.112); tl.set("#w23", {autoAlpha: 0}, 7.347);
+  tl.set("#w24", {autoAlpha: 1}, 7.432); tl.set("#w24", {autoAlpha: 0}, 8.107);
+  tl.set("#w25", {autoAlpha: 1}, 8.192); tl.set("#w25", {autoAlpha: 0}, 9.047);
+  tl.set("#w26", {autoAlpha: 1}, 9.132); tl.set("#w26", {autoAlpha: 0}, 9.232);
+  tl.set("#w27", {autoAlpha: 1}, 9.272); tl.set("#w27", {autoAlpha: 0}, 9.527);
+  tl.set("#w28", {autoAlpha: 1}, 9.612); tl.set("#w28", {autoAlpha: 0}, 10.267);
+  tl.set("#w29", {autoAlpha: 1}, 10.352); tl.set("#w29", {autoAlpha: 0}, 10.452);
+  tl.set("#w30", {autoAlpha: 1}, 10.532); tl.set("#w30", {autoAlpha: 0}, 10.687);
+  tl.set("#w31", {autoAlpha: 1}, 10.772); tl.set("#w31", {autoAlpha: 0}, 10.987);
+  tl.set("#w32", {autoAlpha: 1}, 11.072); tl.set("#w32", {autoAlpha: 0}, 11.172);
+  tl.set("#w33", {autoAlpha: 1}, 11.232); tl.set("#w33", {autoAlpha: 0}, 11.547);
+  tl.set("#w34", {autoAlpha: 1}, 11.632); tl.set("#w34", {autoAlpha: 0}, 11.947);
+  tl.set("#w35", {autoAlpha: 1}, 12.032); tl.set("#w35", {autoAlpha: 0}, 12.469);
+  tl.set("#w36", {autoAlpha: 1}, 12.554); tl.set("#w36", {autoAlpha: 0}, 12.829);
+  tl.set("#w37", {autoAlpha: 1}, 12.914); tl.set("#w37", {autoAlpha: 0}, 13.769);
+  tl.set("#w38", {autoAlpha: 1}, 13.854); tl.set("#w38", {autoAlpha: 0}, 13.954);
+  tl.set("#w39", {autoAlpha: 1}, 13.994); tl.set("#w39", {autoAlpha: 0}, 14.149);
+  tl.set("#w40", {autoAlpha: 1}, 14.234); tl.set("#w40", {autoAlpha: 0}, 14.529);
+  tl.set("#w41", {autoAlpha: 1}, 14.614); tl.set("#w41", {autoAlpha: 0}, 15.009);
+  tl.set("#w42", {autoAlpha: 1}, 15.094); tl.set("#w42", {autoAlpha: 0}, 15.229);
+  tl.set("#w43", {autoAlpha: 1}, 15.314); tl.set("#w43", {autoAlpha: 0}, 15.569);
+  tl.set("#w44", {autoAlpha: 1}, 15.654); tl.set("#w44", {autoAlpha: 0}, 15.754);
+  tl.set("#w45", {autoAlpha: 1}, 15.834); tl.set("#w45", {autoAlpha: 0}, 16.515);
+  tl.set("#w46", {autoAlpha: 1}, 16.600); tl.set("#w46", {autoAlpha: 0}, 16.936);
+  tl.set("#w47", {autoAlpha: 1}, 17.021); tl.set("#w47", {autoAlpha: 0}, 17.216);
+  tl.set("#w48", {autoAlpha: 1}, 17.301); tl.set("#w48", {autoAlpha: 0}, 17.536);
+  tl.set("#w49", {autoAlpha: 1}, 17.621); tl.set("#w49", {autoAlpha: 0}, 17.876);
+  tl.set("#w50", {autoAlpha: 1}, 17.961); tl.set("#w50", {autoAlpha: 0}, 18.136);
+  tl.set("#w51", {autoAlpha: 1}, 18.221); tl.set("#w51", {autoAlpha: 0}, 18.736);
+  tl.set("#w52", {autoAlpha: 1}, 18.821); tl.set("#w52", {autoAlpha: 0}, 18.921);
+  tl.set("#w53", {autoAlpha: 1}, 18.941); tl.set("#w53", {autoAlpha: 0}, 19.041);
+  tl.set("#w54", {autoAlpha: 1}, 19.121); tl.set("#w54", {autoAlpha: 0}, 19.456);
+  tl.set("#w55", {autoAlpha: 1}, 19.541); tl.set("#w55", {autoAlpha: 0}, 19.641);
+  tl.set("#w56", {autoAlpha: 1}, 19.721); tl.set("#w56", {autoAlpha: 0}, 19.896);
+  tl.set("#w57", {autoAlpha: 1}, 19.981); tl.set("#w57", {autoAlpha: 0}, 20.096);
+  tl.set("#w58", {autoAlpha: 1}, 20.181); tl.set("#w58", {autoAlpha: 0}, 20.773);
+  tl.set("#w59", {autoAlpha: 1}, 20.858); tl.set("#w59", {autoAlpha: 0}, 20.958);
+  tl.set("#w60", {autoAlpha: 1}, 20.978); tl.set("#w60", {autoAlpha: 0}, 21.173);
+  tl.set("#w61", {autoAlpha: 1}, 21.258); tl.set("#w61", {autoAlpha: 0}, 21.773);
+  tl.set("#w62", {autoAlpha: 1}, 21.858); tl.set("#w62", {autoAlpha: 0}, 22.473);
+  tl.set("#w63", {autoAlpha: 1}, 22.558); tl.set("#w63", {autoAlpha: 0}, 22.773);
+  tl.set("#w64", {autoAlpha: 1}, 22.858); tl.set("#w64", {autoAlpha: 0}, 22.958);
+  tl.set("#w65", {autoAlpha: 1}, 22.998); tl.set("#w65", {autoAlpha: 0}, 23.498);
+  tl.set("#w66", {autoAlpha: 1}, 23.583); tl.set("#w66", {autoAlpha: 0}, 23.683);
+  tl.set("#w67", {autoAlpha: 1}, 23.763); tl.set("#w67", {autoAlpha: 0}, 23.898);
+  tl.set("#w68", {autoAlpha: 1}, 23.983); tl.set("#w68", {autoAlpha: 0}, 24.158);
+  tl.set("#w69", {autoAlpha: 1}, 24.243); tl.set("#w69", {autoAlpha: 0}, 24.398);
+  tl.set("#w70", {autoAlpha: 1}, 24.483); tl.set("#w70", {autoAlpha: 0}, 24.838);
+  tl.set("#w71", {autoAlpha: 1}, 24.923); tl.set("#w71", {autoAlpha: 0}, 25.398);
+  tl.set("#w72", {autoAlpha: 1}, 25.483); tl.set("#w72", {autoAlpha: 0}, 25.958);
+  tl.set("#w73", {autoAlpha: 1}, 26.043); tl.set("#w73", {autoAlpha: 0}, 26.143);
+  tl.set("#w74", {autoAlpha: 1}, 26.183); tl.set("#w74", {autoAlpha: 0}, 26.558);
+  tl.set("#w75", {autoAlpha: 1}, 26.643); tl.set("#w75", {autoAlpha: 0}, 26.758);
+  tl.set("#w76", {autoAlpha: 1}, 26.843); tl.set("#w76", {autoAlpha: 0}, 27.178);
+  tl.set("#w77", {autoAlpha: 1}, 27.263); tl.set("#w77", {autoAlpha: 0}, 27.363);
+  tl.set("#w78", {autoAlpha: 1}, 27.383); tl.set("#w78", {autoAlpha: 0}, 27.658);
+  tl.set("#w79", {autoAlpha: 1}, 27.743); tl.set("#w79", {autoAlpha: 0}, 28.098);
+  tl.set("#w80", {autoAlpha: 1}, 28.183); tl.set("#w80", {autoAlpha: 0}, 28.358);
+  tl.set("#w81", {autoAlpha: 1}, 28.443); tl.set("#w81", {autoAlpha: 0}, 28.810);
+  tl.set("#w82", {autoAlpha: 1}, 28.895); tl.set("#w82", {autoAlpha: 0}, 28.995);
+  tl.set("#w83", {autoAlpha: 1}, 29.015); tl.set("#w83", {autoAlpha: 0}, 29.150);
+  tl.set("#w84", {autoAlpha: 1}, 29.235); tl.set("#w84", {autoAlpha: 0}, 29.430);
+  tl.set("#w85", {autoAlpha: 1}, 29.515); tl.set("#w85", {autoAlpha: 0}, 29.630);
+  tl.set("#w86", {autoAlpha: 1}, 29.715); tl.set("#w86", {autoAlpha: 0}, 29.910);
+  tl.set("#w87", {autoAlpha: 1}, 29.995); tl.set("#w87", {autoAlpha: 0}, 30.095);
+  tl.set("#w88", {autoAlpha: 1}, 30.175); tl.set("#w88", {autoAlpha: 0}, 30.591);
+  tl.set("#w89", {autoAlpha: 1}, 30.676); tl.set("#w89", {autoAlpha: 0}, 30.776);
+  tl.set("#w90", {autoAlpha: 1}, 30.836); tl.set("#w90", {autoAlpha: 0}, 30.971);
+  tl.set("#w91", {autoAlpha: 1}, 31.056); tl.set("#w91", {autoAlpha: 0}, 31.156);
+  tl.set("#w92", {autoAlpha: 1}, 31.196); tl.set("#w92", {autoAlpha: 0}, 31.731);
+  tl.set("#w93", {autoAlpha: 1}, 31.816); tl.set("#w93", {autoAlpha: 0}, 31.916);
+  tl.set("#w94", {autoAlpha: 1}, 31.976); tl.set("#w94", {autoAlpha: 0}, 32.191);
+  tl.set("#w95", {autoAlpha: 1}, 32.276); tl.set("#w95", {autoAlpha: 0}, 32.551);
+  tl.set("#w96", {autoAlpha: 1}, 32.636); tl.set("#w96", {autoAlpha: 0}, 32.911);
+  tl.set("#w97", {autoAlpha: 1}, 32.996); tl.set("#w97", {autoAlpha: 0}, 33.096);
+  tl.set("#w98", {autoAlpha: 1}, 33.136); tl.set("#w98", {autoAlpha: 0}, 33.471);
+  tl.set("#w99", {autoAlpha: 1}, 33.556); tl.set("#w99", {autoAlpha: 0}, 33.656);
+  tl.set("#w100", {autoAlpha: 1}, 33.696); tl.set("#w100", {autoAlpha: 0}, 33.831);
+  tl.set("#w101", {autoAlpha: 1}, 33.916); tl.set("#w101", {autoAlpha: 0}, 34.016);
+  tl.set("#w102", {autoAlpha: 1}, 34.056); tl.set("#w102", {autoAlpha: 0}, 34.371);
+  tl.set("#w103", {autoAlpha: 1}, 34.456); tl.set("#w103", {autoAlpha: 0}, 34.556);
+  tl.set("#w104", {autoAlpha: 1}, 34.616); tl.set("#w104", {autoAlpha: 0}, 34.811);
+  tl.set("#w105", {autoAlpha: 1}, 34.896); tl.set("#w105", {autoAlpha: 0}, 35.409);
+  tl.set("#w106", {autoAlpha: 1}, 35.494); tl.set("#w106", {autoAlpha: 0}, 35.594);
+  tl.set("#w107", {autoAlpha: 1}, 35.594); tl.set("#w107", {autoAlpha: 0}, 35.769);
+  tl.set("#w108", {autoAlpha: 1}, 35.854); tl.set("#w108", {autoAlpha: 0}, 35.954);
+  tl.set("#w109", {autoAlpha: 1}, 35.954); tl.set("#w109", {autoAlpha: 0}, 36.515);
+  tl.set("#w110", {autoAlpha: 1}, 36.600); tl.set("#w110", {autoAlpha: 0}, 36.745);
+  tl.set("#w111", {autoAlpha: 1}, 36.830); tl.set("#w111", {autoAlpha: 0}, 36.930);
+  tl.set("#w112", {autoAlpha: 1}, 36.950); tl.set("#w112", {autoAlpha: 0}, 37.050);
+  tl.set("#w113", {autoAlpha: 1}, 37.130); tl.set("#w113", {autoAlpha: 0}, 37.305);
+  tl.set("#w114", {autoAlpha: 1}, 37.390); tl.set("#w114", {autoAlpha: 0}, 37.765);
+  tl.set("#w115", {autoAlpha: 1}, 37.850); tl.set("#w115", {autoAlpha: 0}, 38.285);
+  tl.set("#w116", {autoAlpha: 1}, 38.370); tl.set("#w116", {autoAlpha: 0}, 38.705);
+  tl.set("#w117", {autoAlpha: 1}, 38.790); tl.set("#w117", {autoAlpha: 0}, 38.890);
+  tl.set("#w118", {autoAlpha: 1}, 38.950); tl.set("#w118", {autoAlpha: 0}, 39.825);
+  tl.set("#w119", {autoAlpha: 1}, 39.910); tl.set("#w119", {autoAlpha: 0}, 40.045);
+  tl.set("#w120", {autoAlpha: 1}, 40.130); tl.set("#w120", {autoAlpha: 0}, 40.815);
+  tl.set("#w121", {autoAlpha: 1}, 40.900); tl.set("#w121", {autoAlpha: 0}, 41.204);
+  tl.set("#w122", {autoAlpha: 1}, 41.289); tl.set("#w122", {autoAlpha: 0}, 41.404);
+  tl.set("#w123", {autoAlpha: 1}, 41.489); tl.set("#w123", {autoAlpha: 0}, 41.644);
+  tl.set("#w124", {autoAlpha: 1}, 41.729); tl.set("#w124", {autoAlpha: 0}, 42.004);
+  tl.set("#w125", {autoAlpha: 1}, 42.089); tl.set("#w125", {autoAlpha: 0}, 42.189);
+  tl.set("#w126", {autoAlpha: 1}, 42.249); tl.set("#w126", {autoAlpha: 0}, 42.404);
+  tl.set("#w127", {autoAlpha: 1}, 42.489); tl.set("#w127", {autoAlpha: 0}, 42.604);
+  tl.set("#w128", {autoAlpha: 1}, 42.689); tl.set("#w128", {autoAlpha: 0}, 43.264);
+  tl.set("#w129", {autoAlpha: 1}, 43.349); tl.set("#w129", {autoAlpha: 0}, 43.449);
+  tl.set("#w130", {autoAlpha: 1}, 43.489); tl.set("#w130", {autoAlpha: 0}, 44.044);
+  tl.set("#w131", {autoAlpha: 1}, 44.129); tl.set("#w131", {autoAlpha: 0}, 44.264);
+  tl.set("#w132", {autoAlpha: 1}, 44.349); tl.set("#w132", {autoAlpha: 0}, 44.449);
+  tl.set("#w133", {autoAlpha: 1}, 44.529); tl.set("#w133", {autoAlpha: 0}, 44.644);
+  tl.set("#w134", {autoAlpha: 1}, 44.729); tl.set("#w134", {autoAlpha: 0}, 44.829);
+  tl.set("#w135", {autoAlpha: 1}, 44.849); tl.set("#w135", {autoAlpha: 0}, 45.554);
+  tl.set("#w136", {autoAlpha: 1}, 45.639); tl.set("#w136", {autoAlpha: 0}, 45.739);
+  tl.set("#w137", {autoAlpha: 1}, 45.779); tl.set("#w137", {autoAlpha: 0}, 45.934);
+  tl.set("#w138", {autoAlpha: 1}, 46.019); tl.set("#w138", {autoAlpha: 0}, 46.134);
+  tl.set("#w139", {autoAlpha: 1}, 46.219); tl.set("#w139", {autoAlpha: 0}, 46.354);
+  tl.set("#w140", {autoAlpha: 1}, 46.439); tl.set("#w140", {autoAlpha: 0}, 46.754);
+  tl.set("#w141", {autoAlpha: 1}, 46.839); tl.set("#w141", {autoAlpha: 0}, 47.334);
+  tl.set("#w142", {autoAlpha: 1}, 47.419); tl.set("#w142", {autoAlpha: 0}, 47.534);
+  tl.set("#w143", {autoAlpha: 1}, 47.619); tl.set("#w143", {autoAlpha: 0}, 47.834);
+  tl.set("#w144", {autoAlpha: 1}, 47.919); tl.set("#w144", {autoAlpha: 0}, 48.434);
+  tl.set("#w145", {autoAlpha: 1}, 48.519); tl.set("#w145", {autoAlpha: 0}, 48.982);
+  tl.set("#w146", {autoAlpha: 1}, 49.067); tl.set("#w146", {autoAlpha: 0}, 49.247);
+  tl.set("#w147", {autoAlpha: 1}, 49.332); tl.set("#w147", {autoAlpha: 0}, 49.432);
+  tl.set("#w148", {autoAlpha: 1}, 49.512); tl.set("#w148", {autoAlpha: 0}, 49.867);
+  tl.set("#w149", {autoAlpha: 1}, 49.952); tl.set("#w149", {autoAlpha: 0}, 50.052);
+  tl.set("#w150", {autoAlpha: 1}, 50.052); tl.set("#w150", {autoAlpha: 0}, 50.152);
+  tl.set("#w151", {autoAlpha: 1}, 50.233); tl.set("#w151", {autoAlpha: 0}, 50.727);
+  tl.set("#w152", {autoAlpha: 1}, 50.812); tl.set("#w152", {autoAlpha: 0}, 50.912);
+  tl.set("#w153", {autoAlpha: 1}, 50.972); tl.set("#w153", {autoAlpha: 0}, 51.367);
+  tl.set("#w154", {autoAlpha: 1}, 51.452); tl.set("#w154", {autoAlpha: 0}, 51.587);
+  tl.set("#w155", {autoAlpha: 1}, 51.672); tl.set("#w155", {autoAlpha: 0}, 52.082);
+  tl.set("#w156", {autoAlpha: 1}, 52.167); tl.set("#w156", {autoAlpha: 0}, 52.563);
+  tl.set("#w157", {autoAlpha: 1}, 52.648); tl.set("#w157", {autoAlpha: 0}, 52.923);
+  tl.set("#w158", {autoAlpha: 1}, 53.008); tl.set("#w158", {autoAlpha: 0}, 53.108);
+  tl.set("#w159", {autoAlpha: 1}, 53.148); tl.set("#w159", {autoAlpha: 0}, 53.543);
+  tl.set("#w160", {autoAlpha: 1}, 53.628); tl.set("#w160", {autoAlpha: 0}, 53.903);
+  tl.set("#w161", {autoAlpha: 1}, 53.988); tl.set("#w161", {autoAlpha: 0}, 54.203);
+  tl.set("#w162", {autoAlpha: 1}, 54.288); tl.set("#w162", {autoAlpha: 0}, 54.743);
+  tl.set("#w163", {autoAlpha: 1}, 54.828); tl.set("#w163", {autoAlpha: 0}, 55.003);
+  tl.set("#w164", {autoAlpha: 1}, 55.088); tl.set("#w164", {autoAlpha: 0}, 55.523);
+  tl.set("#w165", {autoAlpha: 1}, 55.608); tl.set("#w165", {autoAlpha: 0}, 55.903);
+  tl.set("#w166", {autoAlpha: 1}, 55.988); tl.set("#w166", {autoAlpha: 0}, 56.088);
+  tl.set("#w167", {autoAlpha: 1}, 56.168); tl.set("#w167", {autoAlpha: 0}, 56.268);
+  tl.set("#w168", {autoAlpha: 1}, 56.308); tl.set("#w168", {autoAlpha: 0}, 56.803);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 59.477);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 5.454);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 5.754);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 16.750);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 23.883);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 30.776);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 36.900);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 56.638);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 59.550);
 
 
   rise("#b1", 0.590);
@@ -605,7 +773,7 @@
   draw("p2", 17.961, .45);
   sketch("p3", "skP"); ell("p3", 190, 478, 260, 310, {stroke: "#7A1424", strokeWidth: 5, seed: 35});
   draw("p3", 19.531, .5);
-  sketch("p4", "skP"); arrow("p4", 345, 478, 475, 478, {seed: 37, bend: .08});
+  sketch("p4", "skP"); arrow("p4", 332, 478, 490, 478, {seed: 37, bend: .08});
   _add(SK.p4, SK.p4.rc.path("M535 462 a30 30 0 1 0 60 0 a30 30 0 1 0 -60 0 M503 572 C503 502 627 502 627 572", opt({seed: 50}, 50)));
   _add(SK.p4, SK.p4.rc.path("M655 462 a30 30 0 1 0 60 0 a30 30 0 1 0 -60 0 M623 572 C623 502 747 502 747 572", opt({seed: 51}, 51)));
   _add(SK.p4, SK.p4.rc.path("M775 462 a30 30 0 1 0 60 0 a30 30 0 1 0 -60 0 M743 572 C743 502 867 502 867 572", opt({seed: 52}, 52)));
@@ -613,7 +781,7 @@
   label("p4", 565, 412, "?", {size: 52, color: "#7A1424"}); label("p4", 685, 412, "?", {size: 52, color: "#7A1424"});
   label("p4", 805, 412, "?", {size: 52, color: "#7A1424"}); label("p4", 925, 412, "?", {size: 52, color: "#7A1424"});
   draw("p4", 19.581, .3);
-  sketch("p5", "skP"); arrow("p5", 745, 585, 650, 664, {seed: 41, bend: -.1});
+  sketch("p5", "skP"); arrow("p5", 762, 582, 612, 664, {seed: 41, bend: -.1});
   box("p5", 250, 672, 580, 146, {seed: 43, fill: true, r: 30});
   label("p5", 540, 740, "ідеальна тема", {size: 58, color: "#7A1424"});
   label("p5", 540, 796, "для контенту", {size: 42});
@@ -634,28 +802,27 @@
   label("cl6", 590, 520, "?", {size: 72});
   ell("cl6", 560, 640, 46, 34, {seed: 63}); ell("cl6", 540, 688, 26, 20, {seed: 65});
   draw("cl6", 28.985, .45);
-  sketch("x6", "skF"); ln("x6", 390, 390, 830, 620, {stroke: "#7A1424", strokeWidth: 7, seed: 67});
-  ln("x6", 830, 380, 400, 630, {stroke: "#7A1424", strokeWidth: 7, seed: 69});
+  sketch("x6", "skF"); ln("x6", 390, 390, 830, 620, {strokeWidth: 7, seed: 67});
+  ln("x6", 830, 380, 400, 630, {strokeWidth: 7, seed: 69});
   draw("x6", 29.715, .3);
   erase("cl6", 30.711); erase("x6", 30.711);
 
 
   sketch("r1", "skP"); ell("r1", 540, 410, 400, 190, {seed: 71});
-  arrow("r1", 676, 336, 672, 488, {seed: 73, bend: .6});
   label("r1", 540, 428, "рутина", {size: 56});
   draw("r1", 30.846, .7);
   sketch("r2", "skP"); label("r2", 860, 330, "щотижня", {size: 46, color: "#7A1424"});
   under("r2", 770, 348, 950, {stroke: "#7A1424", seed: 75});
   draw("r2", 32.276, .45);
-  sketch("r3", "skP"); box("r3", 95, 640, 270, 130, {seed: 77}); label("r3", 230, 720, "мій контент", {size: 44});
-  arrow("r3", 260, 630, 380, 500, {seed: 79});
+  sketch("r3", "skP"); box("r3", 95, 680, 270, 130, {seed: 77}); label("r3", 230, 760, "мій контент", {size: 44});
+  arrow("r3", 250, 668, 400, 508, {seed: 79});
   draw("r3", 33.706, .45);
-  sketch("r4", "skP"); box("r4", 405, 640, 270, 130, {seed: 81}); label("r4", 540, 720, "конкуренти", {size: 44});
-  arrow("r4", 540, 630, 540, 520, {seed: 83, bend: 0});
+  sketch("r4", "skP"); box("r4", 405, 680, 270, 130, {seed: 81}); label("r4", 540, 760, "конкуренти", {size: 44});
+  arrow("r4", 540, 668, 540, 512, {seed: 83, bend: .08});
   draw("r4", 34.546, .45);
-  sketch("r5", "skP"); box("r5", 715, 640, 270, 130, {seed: 85, stroke: "#7A1424", strokeWidth: 5.5, fill: true});
-  label("r5", 875, 722, "дзвінки", {size: 50, color: "#7A1424"});
-  arrow("r5", 820, 630, 700, 505, {seed: 87, stroke: "#7A1424"});
+  sketch("r5", "skP"); box("r5", 715, 680, 270, 130, {seed: 85, stroke: "#7A1424", strokeWidth: 5.5, fill: true});
+  label("r5", 875, 762, "дзвінки", {size: 50, color: "#7A1424"});
+  arrow("r5", 830, 668, 680, 508, {seed: 87, stroke: "#7A1424"});
   draw("r5", 35.554, .45);
   fadein("#p7f", 36.054);
   erase("r1", 36.500); erase("r2", 36.500); erase("r3", 36.500); erase("r4", 36.500); erase("r5", 36.500);
@@ -692,7 +859,7 @@
 
   pop("#b11a", 54.188); pop("#b11b", 55.888);
   pop("#b11cta", 57.148, .6);
-  sketch("a11", "skF"); arrow("a11", 975, 700, 870, 540, {stroke: "#7A1424", strokeWidth: 6, seed: 97});
+  sketch("a11", "skF"); arrow("a11", 975, 700, 870, 540, {strokeWidth: 6, seed: 97});
   draw("a11", 57.748, .45);
   pop("#b11i", 58.317, .55);
 

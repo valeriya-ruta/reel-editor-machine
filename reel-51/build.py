@@ -213,8 +213,8 @@ js(u'''
   sink("#mp1, #mp2, #mc1, #mc2", %.3f); erase("v4", %.3f);
 ''' % (c1 + 0.1, c1 + 0.2, t_dru - 0.1, t_pom, t_per - 0.12, t_per - 0.12, t_per - 0.05, t_sht,
        t_mon, t_mon - 0.05, t_vid - 0.4, t_bud - 0.3, t_bud - 0.3))
-g.sfx("pop", c1 + 0.15); g.sfx("click-soft", t_dru); g.sfx("click-soft", t_pom); g.sfx("click-soft", t_per)
-g.sfx("pop", t_sht); g.sfx("pop", t_mon); g.sfx("whoosh-short", t_vid - 0.3)
+g.sfx("pop", c1 + 0.15); g.sfx("click-soft", t_dru); g.sfx("click-soft", t_pom)
+g.sfx("pop", t_sht); g.sfx("pop", t_mon)
 
 # 3b · ABOVE — any editing, in your style: four reels, each cut another way -----
 PERSON = blk(47, 146, 44, 44, "#DEBFBF", "50%") + blk(24, 196, 90, 70, "#DEBFBF", "45px 45px 0 0")
@@ -247,7 +247,7 @@ g.sfx("pop", t_bud); g.sfx("click-soft", t_st)
 # 4 · BEHIND — «200 €» -----------------------------------------------------------
 t_200, t_ne1 = S(u"200", 30.67), S(u"не", 32.26)
 m0, m1 = t_200 - 0.2, t_ne1 - 0.05
-B.append(u'<div id="bw1" class="big hid" style="top:500px; font-size:300px">200 €</div>')
+B.append(u'<div id="bw1" class="big hid" style="top:530px; font-size:300px">200 €</div>')
 g.matte("eur", round(m0, 3), round(m1 - m0 + 0.45, 3))
 js(u'''
   rise("#bw1", %.3f);
@@ -273,8 +273,6 @@ js(u'''
   sink("#b5, #b5r0, #b5r1, #b5r2", %.3f); erase("s0", %.3f); erase("s1", %.3f); erase("s2", %.3f);
 ''' % (t_ne1 + 0.02, t_pla, t_che, t_zal, t_mzh, t_vio, t_hv,
        E(u"хвороб.", 37.18) + 0.05, E(u"хвороб.", 37.18) + 0.05, E(u"хвороб.", 37.18) + 0.05, E(u"хвороб.", 37.18) + 0.05))
-for t in (t_pla, t_che, t_zal):
-    g.sfx("pop", t)
 for t in (t_mzh, t_vio, t_hv):
     g.sfx("click-soft", t)
 BLACKOUT.append((t_ne1 - 0.05, E(u"хвороб.", 37.18) + 0.05))      # the three struck chips say it
@@ -308,7 +306,7 @@ js(u'''
 ''' % (t_mom - 0.35, t_vid2 - 0.05, t_kl, t_20 - 0.3, t_got - 0.45, h1, h1, h1, h1, h1))
 BLACKOUT.append((t_zn - 0.05, t_zn + 0.05))                        # «зняти рілс» label
 BLACKOUT.append((S(u"отримати", 42.22) - 0.05, S(u"отримати", 42.22) + 0.05))   # «готовий результат» label
-g.sfx("click-soft", t_zn); g.sfx("pop", t_kl); g.sfx("click-soft", t_20); g.sfx("pop", t_got)
+g.sfx("click-soft", t_zn); g.sfx("pop", t_kl); g.sfx("pop", t_got)
 g.sfx("whoosh-short", h0); g.sfx("whoosh-short", h1)
 
 # 7 · ABOVE — the answer: 1 and 2 again; «≠» becomes «=» --------------------------
@@ -329,7 +327,7 @@ js(u'''
   sink("#mp1, #mp2, #mc1, #mc2", %.3f); erase("a4", %.3f);
 ''' % (t_tomu, t_tomu + 0.12, t_kaz - 0.2, t_nm, t_nm + 0.3, t_dob - 0.1, t_dob - 0.1, t_dob - 0.1,
        t_dob - 0.05, t_lim - 0.4, t_lim - 0.4))
-g.sfx("whoosh-short", t_tomu); g.sfx("click-soft", t_kaz); g.sfx("click-soft", t_nm); g.sfx("pop", t_dob)
+g.sfx("whoosh-short", t_tomu); g.sfx("click-soft", t_nm); g.sfx("pop", t_dob)
 
 # 8 · HALF — the limits: real creativity above the line, «creativity» below ------
 h2, h3 = t_lim - 0.15, S(u"Тому", 59.43) - 0.25
@@ -360,7 +358,7 @@ js(u'''
   erase("q1", %.3f); erase("q2", %.3f); erase("q3", %.3f); out("#psub, #pcap", %.3f);
 ''' % (t_lim - 0.15, t_spr - 0.3, t_kr2 - 0.3, t_cher, t_pl, h3, h3, h3, h3))
 BLACKOUT.append((t_spr - 0.05, S(u"а не", 54.34) + 0.05))          # «справжній креатив» / «креатив» boxes
-g.sfx("click-soft", t_lim); g.sfx("pop", t_spr); g.sfx("pop", t_kr2); g.sfx("pop", t_cher); g.sfx("pop", t_pl)
+g.sfx("pop", t_spr); g.sfx("pop", t_kr2); g.sfx("pop", t_pl)
 g.sfx("whoosh-short", h2); g.sfx("whoosh-short", h3)
 
 # 9 · ABOVE — CTA -----------------------------------------------------------------
@@ -403,8 +401,8 @@ F.append(u'<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080
 
 # caption phrases: where her phrasing breaks, not where 40 characters run out
 SPLITS = [1.95, 3.21, 24.81, 25.75, 34.8, 39.17, 40.22, 41.16, 42.22, 54.34, 57.57, 63.14, 64.32, 69.0]
-JOINS = [23.81, 25.95, 35.64, 37.18, 39.57, 41.56, 57.09, 63.56, 64.8, 68.17]
-KEYS = {1.55: True, 16.2: True, 18.04: True, 24.21: True, 27.55: True, 29.57: True, 30.67: True,
+JOINS = [2.17, 4.47, 23.81, 25.95, 35.64, 37.18, 39.57, 41.56, 57.09, 63.56, 64.8, 68.17]
+KEYS = {1.55: True, 3.87: True, 16.2: True, 18.04: True, 24.21: True, 27.55: True, 29.57: True, 30.67: True,
         38.59: True, 40.86: True, 41.56: True, 50.1: True, 52.28: True, 56.11: True, 57.81: True,
         62.42: True, 65.42: True, 67.33: True}
 
