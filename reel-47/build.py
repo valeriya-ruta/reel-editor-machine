@@ -58,6 +58,11 @@ FIX = {
     u"самостійно": u"самостійно,", u"обов'язково": u"обовʼязково",
 }
 CAPS = load_caps(NN, FIX)
+# «Клода, то» came out as one token; «то» starts its own caption phrase (words.json: «то» 22.6)
+for _i, _c in enumerate(CAPS):
+    if _c["w"] == u"Клода, то":
+        CAPS[_i:_i + 1] = [dict(_c, w=u"Клода,", e=0.57 + _c["s"] - 0.02), dict(_c, w=u"то", s=round(_c["s"] + 0.45, 3))]
+        break
 W = Words(CAPS)
 S, E = W.s, W.e
 
@@ -121,9 +126,7 @@ js(u'''
   sink("#b1, #b1m", %.3f);
 ''' % (t_kl - 0.25, " ".join('pop("#b1c%d", %.3f, .45);' % (i, t) for i, (_, t) in enumerate(SKILLS)),
        t_ale, t_min - 0.1, h0 - 0.3))
-g.sfx("pop", t_kl - 0.2)
-for _, t in SKILLS:
-    g.sfx("click-soft", t)
+g.sfx("pop", t_kl - 0.2); g.sfx("click-soft", t_diz); g.sfx("click-soft", t_an)
 g.sfx("pop", t_min - 0.1)
 BLACKOUT.append((t_diz - 0.05, E(u"аналізувати.", 3.49) + 0.05))      # the chips say it
 
@@ -166,7 +169,7 @@ js(u'''
 ''' % (t_pam - 0.1, t_nel, t_baza - 0.45, t_bere - 0.2, t_kont - 0.45, t_zav, t_str - 0.05, t_zm,
        t_temy - 0.05, h1))
 g.sfx("whoosh-short", h0); g.sfx("whoosh-short", h1)
-for t in (t_pam, t_baza, t_kont, t_zav, t_zm):
+for t in (t_pam, t_baza, t_kont, t_zav):
     g.sfx("click-soft", t)
 
 # 3 · BEHIND — «100%» -----------------------------------------------------------
@@ -202,9 +205,7 @@ js(u'''
   pop("#b4b", %.3f); tl.to("#b4b", {opacity: .45, duration: .3}, %.3f); pop("#b4bt", %.3f);
   sink("#b4", %.3f);
 ''' % (t_strg - 0.45, t_strg, t_neak, t_neak, t_temu, t_zakr, t_zakr, E(u"закрили.", 27.64) + 0.12))
-g.sfx("pop", t_strg - 0.4)
-for t in (t_neak, t_zakr):
-    g.sfx("click-soft", t)
+g.sfx("pop", t_strg - 0.4); g.sfx("click-soft", t_zakr)
 BLACKOUT.append((t_strg - 0.3, E(u"закрили.", 27.64) + 0.05))
 
 # 5 · ABOVE — the statuses: a heap, ringed in red -----------------------------
@@ -225,7 +226,7 @@ js(u'''
   erase("r5", %.3f);
 ''' % (" ".join('pop("#b5c%d", %.3f, .45);' % (i, t_stat - 0.1 + i * 0.13) for i in range(len(HEAP))),
        t_bez - 0.2, ", ".join("#b5c%d" % i for i in range(len(HEAP))), t_tomu - 0.4, t_tomu - 0.3))
-g.sfx("pop", t_stat - 0.1); g.sfx("click-soft", t_stat + 0.55); g.sfx("whoosh-short", t_bez - 0.2)
+g.sfx("pop", t_stat - 0.1); g.sfx("whoosh-short", t_bez - 0.2)
 
 # 6 · ABOVE — the client's system: Claude + an extra Notion she never opens ----
 t_nal, t_sys = S(u"налаштовую", 32.91), S(u"систему", 33.43)
@@ -258,8 +259,7 @@ js(u'''
   sink("#b6", %.3f);
 ''' % (t_nal - 0.3, t_sys, t_dod, t_not - 0.05, t_not - 0.05, t_kli - 0.1, t_nav2 - 0.1,
        t_kor, t_pos, S(u"Тому", 42.17) - 0.15))
-g.sfx("pop", t_nal - 0.25); g.sfx("click-soft", t_sys); g.sfx("pop", t_not - 0.05)
-g.sfx("click-soft", t_kor); g.sfx("click-soft", t_pos)
+g.sfx("pop", t_nal - 0.25); g.sfx("pop", t_not - 0.05); g.sfx("click-soft", t_pos)
 
 # 7 · FULL — the point of reference -------------------------------------------
 c0, c1 = S(u"називаю,", 43.88) - 0.15, S(u"На", 52.86) - 0.3
@@ -294,8 +294,8 @@ js(u'''
   label("c7", 670, 965, "інформація", {size: 54});
   draw("c7", %.3f);
 ''' % (c0, c1, t_poi, t_mis - 0.95, t_mis - 0.5, t_ne, t_nez, t_ty - 0.35, t_ik - 0.2, t_akt))
-g.sfx("whoosh-short", c0); g.sfx("pop", t_poi); g.sfx("click-soft", t_ne); g.sfx("click-soft", t_nez)
-g.sfx("click-soft", t_ty); g.sfx("click-soft", t_akt); g.sfx("whoosh-short", c1)
+g.sfx("whoosh-short", c0); g.sfx("pop", t_poi); g.sfx("click-soft", t_ne); g.sfx("click-soft", t_akt)
+g.sfx("whoosh-short", c1)
 BLACKOUT.append((t_poi - 0.05, E(u"reference.", 45.24) + 0.05))      # the heading says it
 
 # 8 · ABOVE — a doc for the slow things: Claude reads it, we update it --------
@@ -335,8 +335,7 @@ js(u'''
   sink("#b8, #b8d, #b8c", %.3f); erase("o8", %.3f); erase("a8", %.3f); erase("e8", %.3f);
 ''' % (t_pros - 0.2, t_doc, t_onov - 0.2, t_strat, t_kd - 0.05, t_kd + 0.2, t_onovl - 0.25,
        t_ale2 - 0.25, t_ale2 - 0.25, t_ale2 - 0.25, t_ale2 - 0.25))
-g.sfx("pop", t_pros - 0.15); g.sfx("pop", t_doc); g.sfx("whoosh-short", t_onov - 0.2)
-g.sfx("click-soft", t_strat); g.sfx("pop", t_kd - 0.05); g.sfx("click-soft", t_onovl - 0.2)
+g.sfx("pop", t_doc); g.sfx("click-soft", t_onov - 0.2); g.sfx("pop", t_kd - 0.05); g.sfx("click-soft", t_onovl - 0.2)
 
 # 9 · ABOVE — Notion for the fast things; free, simple, not for your eyes -----
 t_kp, t_id, t_zad = S(u"контент-плану,", 63.32), S(u"ідей,", 64.18), S(u"задач,", 64.66)
@@ -373,10 +372,8 @@ js(u'''
   sink("#b9", %.3f); erase("e9", %.3f); erase("s9", %.3f);
 ''' % (t_ale2 - 0.1, " ".join('rise("#b9r%d", %.3f, 30);' % (i, t - 0.1) for i, (_, t) in enumerate(ROWS)),
        t_not2 - 0.1, t_not2 - 0.05, t_bezk, t_prost, t_tobi - 0.35, t_tobi - 0.2, t_ne2, h2 - 0.3, h2 - 0.3, h2 - 0.3))
-g.sfx("pop", t_ale2 - 0.1)
-for _, t in ROWS:
-    g.sfx("click-soft", t)
-g.sfx("pop", t_not2 - 0.05); g.sfx("pop", t_bezk); g.sfx("pop", t_prost); g.sfx("click-soft", t_ne2)
+g.sfx("pop", t_ale2 - 0.1); g.sfx("click-soft", t_kp)
+g.sfx("pop", t_not2 - 0.05); g.sfx("pop", t_bezk); g.sfx("click-soft", t_ne2)
 BLACKOUT.append((t_kp - 0.3, E(u"задач,", 64.66) + 0.05))
 BLACKOUT.append((S(u"Він", 66.66) - 0.05, E(u"простий,", 67.80) + 0.05))
 
@@ -418,7 +415,7 @@ js(u'''
 ''' % (t_pid, t_teb - 0.55, t_teb + 0.05, t_kla - 0.55, t_kla + 0.05, t_etap - 0.55, t_kozh - 0.1,
        t_stare, t_nov, h3, h3))
 g.sfx("whoosh-short", h2); g.sfx("whoosh-short", h3)
-for t in (t_pid, t_teb + 0.05, t_kla + 0.05, t_etap - 0.5, t_kozh, t_stare, t_nov):
+for t in (t_teb + 0.05, t_kla + 0.05, t_etap - 0.5, t_stare):
     g.sfx("click-soft", t)
 
 # 11 · ABOVE — CTA: save money, build it yourself, the lifehack, subscribe -----
@@ -446,9 +443,8 @@ js(u'''
   sketch("a11", "skF"); arrow("a11", 880, 800, 752, 664, {stroke: "#7A1424", strokeWidth: 5, seed: 133});
   draw("a11", %.3f, .45);
 ''' % (t_zek - 0.05, t_zek, t_hro - 0.1, t_sam - 0.1, t_lh, t_obov - 0.1, t_obov + 0.3))
-g.sfx("pop", t_zek); g.sfx("kaching", t_hro); g.sfx("pop", t_sam - 0.1); g.sfx("pop", t_lh)
-g.sfx("pop", t_obov - 0.1)
-BLACKOUT.append((t_obov - 0.2, DUR))     # the pill says it
+g.sfx("pop", t_zek); g.sfx("kaching", t_hro); g.sfx("pop", t_lh); g.sfx("pop", t_obov - 0.1)
+BLACKOUT.append((S(u"і", 85.97) - 0.05, DUR))     # the pill says it
 
 # ---------------------------------------------------------------- mattes for the half screens
 for i, (a, b) in enumerate(HALF):
@@ -459,10 +455,41 @@ for i, (a, b) in enumerate(HALF):
 F.append(u'<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>')
 
 
+# caption phrases: where her phrasing breaks, not where 40 characters run out
+SPLITS = [38.66, 40.25, 50.78, 55.15, 69.30, 81.15, 82.09, 84.76, 85.97]
+JOINS = [21.73, 39.22, 41.11, 51.08, 54.48, 56.79, 70.34, 81.37, 82.93, 83.55, 86.31]
+KEYS = {u"срака": True, u"мінус": True, u"думає": True, u"даних": True, u"памʼяттю": True, u"знав": True,
+        u"етапі": True, u"тебе": True, u"лайфхаком": True, u"грошей": True}
+
+
+def rechunk(chunks):
+    near = lambda t, ts: any(abs(t - x) < 0.06 for x in ts)
+    for t in SPLITS + JOINS:
+        assert any(abs(w["s"] - t) < 0.06 for c in chunks for w in c["words"]), t
+    groups = []
+    for c in chunks:
+        for i, w in enumerate(c["words"]):
+            start = (i == 0 and not near(w["s"], JOINS)) or (i > 0 and near(w["s"], SPLITS))
+            if start or not groups:
+                groups.append([])
+            groups[-1].append(w)
+    out = []
+    for n, ch in enumerate(groups):
+        s = ch[0]["s"]
+        nxt = groups[n + 1][0]["s"] if n + 1 < len(groups) else DUR
+        pos = ("bottom", 1920 - 1520)
+        for a, b, how, y in PLACE:
+            if a <= s < b:
+                pos = (how, y if how == "top" else 1920 - y)
+        out.append({"s": round(s, 3), "e": round(min(nxt, ch[-1]["e"] + 0.6), 3), "words": ch,
+                    "key": g._key(ch, KEYS), "pos": pos})
+    return out
+
+
 def main():
     if "--words" in sys.argv:
         print(" ".join("%s/%.1f" % (c["w"], c["s"]) for c in CAPS))
-    chunks = g.chunks(CAPS, keys={u"срака": True}, place=PLACE)
+    chunks = rechunk(g.chunks(CAPS, keys=KEYS, place=PLACE))
     if "--chunks" in sys.argv:
         for c in chunks:
             print("%6.2f-%6.2f %s%s" % (c["s"], c["e"], " ".join(w["w"] for w in c["words"]),

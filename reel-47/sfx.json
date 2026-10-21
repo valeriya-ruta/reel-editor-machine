@@ -8,14 +8,6 @@
   "name": "click-soft"
  },
  {
-  "t": 2.368,
-  "name": "click-soft"
- },
- {
-  "t": 2.948,
-  "name": "click-soft"
- },
- {
   "t": 3.488,
   "name": "click-soft"
  },
@@ -44,10 +36,6 @@
   "name": "click-soft"
  },
  {
-  "t": 18.315,
-  "name": "click-soft"
- },
- {
   "t": 19.917,
   "name": "whoosh-short"
  },
@@ -60,20 +48,12 @@
   "name": "pop"
  },
  {
-  "t": 26.095,
-  "name": "click-soft"
- },
- {
   "t": 27.635,
   "name": "click-soft"
  },
  {
   "t": 28.525,
   "name": "pop"
- },
- {
-  "t": 29.175,
-  "name": "click-soft"
  },
  {
   "t": 30.205,
@@ -84,16 +64,8 @@
   "name": "pop"
  },
  {
-  "t": 33.426,
-  "name": "click-soft"
- },
- {
   "t": 36.336,
   "name": "pop"
- },
- {
-  "t": 39.415,
-  "name": "click-soft"
  },
  {
   "t": 41.353,
@@ -112,14 +84,6 @@
   "name": "click-soft"
  },
  {
-  "t": 48.392,
-  "name": "click-soft"
- },
- {
-  "t": 49.559,
-  "name": "click-soft"
- },
- {
   "t": 51.079,
   "name": "click-soft"
  },
@@ -128,19 +92,11 @@
   "name": "whoosh-short"
  },
  {
-  "t": 52.868,
-  "name": "pop"
- },
- {
   "t": 55.153,
   "name": "pop"
  },
  {
   "t": 56.593,
-  "name": "whoosh-short"
- },
- {
-  "t": 58.213,
   "name": "click-soft"
  },
  {
@@ -160,23 +116,11 @@
   "name": "click-soft"
  },
  {
-  "t": 64.179,
-  "name": "click-soft"
- },
- {
-  "t": 64.659,
-  "name": "click-soft"
- },
- {
   "t": 65.825,
   "name": "pop"
  },
  {
   "t": 66.775,
-  "name": "pop"
- },
- {
-  "t": 67.795,
   "name": "pop"
  },
  {
@@ -186,10 +130,6 @@
  {
   "t": 71.25,
   "name": "whoosh-short"
- },
- {
-  "t": 71.7,
-  "name": "click-soft"
  },
  {
   "t": 72.63,
@@ -204,15 +144,7 @@
   "name": "click-soft"
  },
  {
-  "t": 76.709,
-  "name": "click-soft"
- },
- {
   "t": 78.129,
-  "name": "click-soft"
- },
- {
-  "t": 78.729,
   "name": "click-soft"
  },
  {
@@ -226,10 +158,6 @@
  {
   "t": 81.71,
   "name": "kaching"
- },
- {
-  "t": 83.45,
-  "name": "pop"
  },
  {
   "t": 85.377,
