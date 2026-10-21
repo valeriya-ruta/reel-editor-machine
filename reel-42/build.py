@@ -94,7 +94,7 @@ HEART = (u'<svg width="40" height="40" viewBox="0 0 40 40"><path d="M20 35 C6 25
          u'C25 4 34 5 36 12 C38 18 34 25 20 35 Z" fill="#7A1424"/></svg>')
 PLAY = (u'<svg width="%d" height="%d" viewBox="0 0 72 72"><circle cx="36" cy="36" r="36" fill="#7A1424"/>'
         u'<path d="M29 22 L52 36 L29 50 Z" fill="#fff"/></svg>')
-WAVE_H = [18, 30, 46, 26, 54, 38, 22, 48, 60, 34, 20, 42, 56, 30, 16, 38, 50, 26, 44, 20, 32, 14]
+WAVE_H = [18, 30, 46, 26, 54, 38, 22, 48, 60, 34, 20, 42, 56, 30, 16]
 
 
 def tile(i, play=False):
@@ -196,7 +196,7 @@ wave = u"".join(u'<span style="height:%dpx"></span>' % h for h in WAVE_H)
 F.append(u'''
         <div id="vc" class="card hid" style="left:120px; top:320px; width:840px; height:330px;">
           <span class="lbl">Правила для сценаріїв</span>
-          <div id="vb" class="hid" style="position:absolute; left:36px; top:126px; width:430px; height:124px;
+          <div id="vb" class="hid" style="position:absolute; left:36px; top:126px; width:330px; height:124px;
                border-radius:62px; background:#FFF0F0; display:flex; align-items:center; gap:18px; padding:0 26px 0 26px;">
             %s<span class="wave" id="vw">%s</span>
           </div>
@@ -215,7 +215,7 @@ js(u'''
   rise("#vc", %.3f);
   pop("#vb", %.3f);
   tl.fromTo("#vw span", {scaleY: .15}, X({scaleY: 1, duration: .35, ease: RISE, stagger: .045}), %.3f);
-  sketch("va", "skF"); arrow("va", 596, 508, 688, 508, {stroke: "#7A1424", strokeWidth: 5, seed: 5, bend: .18});
+  sketch("va", "skF"); arrow("va", 500, 508, 682, 508, {stroke: "#7A1424", strokeWidth: 5, seed: 5, bend: .14});   // over the white card
   draw("va", %.3f, .45);
   pop("#vs", %.3f);
   pop("#vsw", %.3f, .45);
@@ -238,34 +238,34 @@ t_an, t_st, t_sk, t_pk, t_ts = (S(u"аналіз", 34.42), S(u"стилі,", 35.
                                 S(u"підключення,", 36.19), S(u"тести", 36.88))
 t_moya = S(u"моя", 37.52)
 js(u'''
-  sketch("d1", "skP"); box("d1", 96, 390, 340, 290, {seed: 3});
+  sketch("d1", "skP"); box("d1", 90, 390, 290, 290, {seed: 3});
   draw("d1", %.3f, .6);
   sketch("d1s", "skP");
-  _add(SK.d1s, SK.d1s.rc.curve([[136, 560], [180, 545], [220, 570], [270, 548], [320, 568], [390, 552]], opt({seed: 5}, 5)));
-  _add(SK.d1s, SK.d1s.rc.curve([[136, 610], [170, 596], [230, 620], [280, 598], [350, 615]], opt({seed: 7}, 7)));
+  _add(SK.d1s, SK.d1s.rc.curve([[120, 560], [160, 545], [200, 570], [250, 548], [300, 568], [350, 552]], opt({seed: 5}, 5)));
+  _add(SK.d1s, SK.d1s.rc.curve([[120, 610], [150, 596], [210, 620], [260, 598], [320, 615]], opt({seed: 7}, 7)));
   draw("d1s", %.3f, .45);
-  sketch("d1t", "skP"); label("d1t", 266, 350, "ти", {size: 64, color: "#7A1424"}); draw("d1t", %.3f);
-  sketch("d2", "skP"); label("d2", 266, 470, "про тебе", {size: 54}); label("d2", 266, 515, "ядро", {size: 36, color: "#574142"});
+  sketch("d1t", "skP"); label("d1t", 235, 350, "ти", {size: 64, color: "#7A1424"}); draw("d1t", %.3f);
+  sketch("d2", "skP"); label("d2", 235, 470, "про тебе", {size: 52}); label("d2", 235, 515, "ядро", {size: 36, color: "#574142"});
   draw("d2", %.3f);
-  sketch("d3", "skP"); under("d3", 160, 486, 372, {stroke: "#7A1424", strokeWidth: 5, seed: 9}); draw("d3", %.3f, .5);
+  sketch("d3", "skP"); under("d3", 130, 486, 340, {stroke: "#7A1424", strokeWidth: 5, seed: 9}); draw("d3", %.3f, .5);
   erase("d1s", %.3f);
   sketch("d4", "skP");
-  ln("d4", 136, 566, 396, 566, {seed: 11, roughness: 1.6}); ln("d4", 136, 612, 396, 612, {seed: 13, roughness: 1.6});
-  ln("d4", 136, 658, 330, 658, {seed: 15, roughness: 1.6});
+  ln("d4", 120, 566, 350, 566, {seed: 11}); ln("d4", 120, 612, 350, 612, {seed: 13});
+  ln("d4", 120, 658, 290, 658, {seed: 15});
   draw("d4", %.3f, .35);
-  sketch("d5", "skP"); arrow("d5", 446, 520, 528, 520, {seed: 17, bend: .2}); draw("d5", %.3f, .45);
-  sketch("d6", "skP"); box("d6", 540, 390, 450, 404, {seed: 19});
-  label("d6", 765, 440, "система", {size: 42, color: "#574142"});
-  box("d6", 576, 462, 380, 64, {seed: 21, r: 20, fill: true}); label("d6", 766, 506, "про тебе", {size: 36});
+  sketch("d5", "skP"); arrow("d5", 394, 535, 550, 535, {seed: 17, bend: .14}); draw("d5", %.3f, .45);
+  sketch("d6", "skP"); box("d6", 562, 390, 428, 404, {seed: 19});
+  label("d6", 776, 440, "система", {size: 42, color: "#574142"});
+  box("d6", 596, 462, 360, 64, {seed: 21, r: 20, fill: true}); label("d6", 776, 506, "про тебе", {size: 36});
   draw("d6", %.3f, .55);
-  sketch("d7", "skP"); label("d7", 765, 350, "я", {size: 64, color: "#7A1424"}); draw("d7", %.3f);
+  sketch("d7", "skP"); label("d7", 776, 350, "я", {size: 64, color: "#7A1424"}); draw("d7", %.3f);
   %s
-  sketch("d9", "skP"); ell("d9", 765, 330, 120, 96, {stroke: "#7A1424", strokeWidth: 5, seed: 41}); draw("d9", %.3f, .5);
+  sketch("d9", "skP"); ell("d9", 776, 330, 120, 96, {stroke: "#7A1424", strokeWidth: 5, seed: 41}); draw("d9", %.3f, .5);
   erase("d1", %.3f); erase("d1t", %.3f); erase("d2", %.3f); erase("d3", %.3f); erase("d4", %.3f);
   erase("d5", %.3f); erase("d6", %.3f); erase("d7", %.3f); erase("d9", %.3f);
 ''' % (h0 + 0.35, h0 + 0.8, t_ty, t_pro - 0.05, t_kra, t_str - 0.35, t_str - 0.25, t_mis - 0.45, t_sys - 0.6,
        t_vse,
-       u"\n  ".join(u'sketch("d8%d", "skP"); label("d8%d", 586, %d, "%s", {size: 40, anchor: "start"}); '
+       u"\n  ".join(u'sketch("d8%d", "skP"); label("d8%d", 600, %d, "%s", {size: 40, anchor: "start"}); '
                     u'draw("d8%d", %.3f);' % (i, i, 570 + 46 * i, txt, i, t)
                     for i, (txt, t) in enumerate(((u"аналіз контенту", t_an), (u"стилі", t_st), (u"скіли", t_sk),
                                                   (u"підключення", t_pk), (u"тести", t_ts)))),
@@ -321,7 +321,7 @@ F.append(u'''
 js(u'''
   pop("#ct1", %.3f);
   pop("#ct2", %.3f, .6);
-  sketch("ca", "skF"); arrow("ca", 930, 760, 836, 618, {stroke: "#7A1424", strokeWidth: 5, seed: 97});
+  sketch("ca", "skF"); arrow("ca", 930, 770, 836, 618, {strokeWidth: 5, seed: 97});
   draw("ca", %.3f, .5);
 ''' % (t_tsya - 0.05, t_stav + 0.05, t_stav + 0.5))
 g.sfx("pop", t_tsya - 0.05); g.sfx("pop", t_stav + 0.05)
@@ -337,11 +337,7 @@ for i, (a, b) in enumerate(HALF):
 def main():
     if "--words" in sys.argv:
         print(" ".join(u"%s/%.1f" % (c["w"], c["s"]) for c in CAPS))
-    # key-word pills: the noun she leans on, not whisper's merged pairs
-    keys = {S(u"треба", 2.61): True, S(u"доступи", 5.33): True, S(u"шрифти", 10.10): True, S(u"немає,", 12.12): True,
-            S(u"дизайну", 14.70): True, S(u"голосове", 20.65): True, S(u"скіли.", 24.39): True,
-            S(u"ядро", 27.63): True, S(u"аналіз", 34.42): True, S(u"знає.", 30.65): True}
-    chunks = g.chunks(CAPS, keys=keys, place=PLACE)
+    chunks = g.chunks(CAPS, place=PLACE)
     if "--chunks" in sys.argv:
         for n, c in enumerate(chunks):
             print(n, "%.2f-%.2f" % (c["s"], c["e"]), " ".join(w["w"] for w in c["words"]),

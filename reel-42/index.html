@@ -12,6 +12,8 @@
                  src: url("assets/fonts/GoogleSans-500.ttf") format("truetype"); }
     @font-face { font-family: "Google Sans"; font-weight: 700; font-display: block;
                  src: url("assets/fonts/GoogleSans-700.ttf") format("truetype"); }
+    @font-face { font-family: "ProductSans"; font-weight: 900; font-display: block;
+                 src: url("assets/fonts/ProductSans-Black.woff") format("woff"); }
     @font-face { font-family: "Pangolin"; font-weight: 400; font-display: block;
                  src: url("assets/fonts/Pangolin.ttf") format("truetype"); }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -66,7 +68,9 @@
     /* §00.3.2 behind me */
     .big { position: absolute; left: 0; width: 1080px; text-align: center;
            font-weight: 700; line-height: 0.9; letter-spacing: -0.04em;
-           color: var(--primary); white-space: nowrap; }
+           /* white, her call 2026-10-21: the red read badly over the room */
+           color: #FFFFFF; white-space: nowrap;
+           text-shadow: 0 6px 40px rgba(20,12,12,.30), 0 2px 8px rgba(20,12,12,.22); }
 
     /* §00.3.3 half screen. Its parked position (up, off frame) is set from JS
        with gsap.set: a CSS translate here would be parsed by GSAP as a px offset
@@ -81,9 +85,20 @@
     /* §00.5 sketches */
     .sk { position: absolute; left: 0; top: 0; overflow: visible; }
     .sk text, .hand { font-family: "Pangolin", cursive; fill: #1E1E1E; color: #1E1E1E; }
+    #front .sk { filter: drop-shadow(0 2px 6px rgba(20,12,12,.35)); }
     .hand { position: absolute; white-space: nowrap; }
 
-    /* §00.2 captions */
+    /* captions — exactly as before §00 (her call 2026-10-21, over the boxed
+       phrases of the spec): kit.py's rail, word by word, upper case */
+    #scrim { position: absolute; left: 20px; top: 1247px; width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png"); background-size: 100% 100%;
+             background-repeat: no-repeat; opacity: 0; visibility: hidden; pointer-events: none; }
+    .wc { position: absolute; left: 0; width: 1080px; top: 1413px; height: 118px;
+          line-height: 118px; text-align: center; color: #fff;
+          font-family: "ProductSans", system-ui, sans-serif; font-size: 90px; font-weight: 900;
+          letter-spacing: -0.015em; white-space: nowrap; opacity: 0; visibility: hidden; }
+    .wc.inv { color: #241919; }
+    /* §00.2 boxed phrase captions (spec; not in use — see .wc) */
     #caps { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
             pointer-events: none; }
     .cap { position: absolute; left: 0; width: 1080px; display: flex;
@@ -168,9 +183,9 @@
 
         <div id="vc" class="card hid" style="left:120px; top:320px; width:840px; height:330px;">
           <span class="lbl">Правила для сценаріїв</span>
-          <div id="vb" class="hid" style="position:absolute; left:36px; top:126px; width:430px; height:124px;
+          <div id="vb" class="hid" style="position:absolute; left:36px; top:126px; width:330px; height:124px;
                border-radius:62px; background:#FFF0F0; display:flex; align-items:center; gap:18px; padding:0 26px 0 26px;">
-            <svg width="76" height="76" viewBox="0 0 72 72"><circle cx="36" cy="36" r="36" fill="#7A1424"/><path d="M29 22 L52 36 L29 50 Z" fill="#fff"/></svg><span class="wave" id="vw"><span style="height:18px"></span><span style="height:30px"></span><span style="height:46px"></span><span style="height:26px"></span><span style="height:54px"></span><span style="height:38px"></span><span style="height:22px"></span><span style="height:48px"></span><span style="height:60px"></span><span style="height:34px"></span><span style="height:20px"></span><span style="height:42px"></span><span style="height:56px"></span><span style="height:30px"></span><span style="height:16px"></span><span style="height:38px"></span><span style="height:50px"></span><span style="height:26px"></span><span style="height:44px"></span><span style="height:20px"></span><span style="height:32px"></span><span style="height:14px"></span></span>
+            <svg width="76" height="76" viewBox="0 0 72 72"><circle cx="36" cy="36" r="36" fill="#7A1424"/><path d="M29 22 L52 36 L29 50 Z" fill="#fff"/></svg><span class="wave" id="vw"><span style="height:18px"></span><span style="height:30px"></span><span style="height:46px"></span><span style="height:26px"></span><span style="height:54px"></span><span style="height:38px"></span><span style="height:22px"></span><span style="height:48px"></span><span style="height:60px"></span><span style="height:34px"></span><span style="height:20px"></span><span style="height:42px"></span><span style="height:56px"></span><span style="height:30px"></span><span style="height:16px"></span></span>
           </div>
           <div id="vs" class="hid" style="position:absolute; left:576px; top:96px; width:228px; height:190px;
                border-radius:28px; border:3px solid #DEBFBF; background:#FFF8F7; padding:22px 24px;">
@@ -224,38 +239,132 @@
       <div id="cover">
 
       </div>
+      <div id="scrim"></div>
       <div id="caps">
-      <div class="cap" id="cap0" style="bottom:400px"><span class="box">Я <span class="k"><span class="kb"></span><span class="kt">налаштовую</span></span> АІ систему під ключ,</span></div>
-      <div class="cap" id="cap1" style="bottom:400px"><span class="box">і ось що мені <span class="k"><span class="kb"></span><span class="kt">треба</span></span> перед тим</span></div>
-      <div class="cap" id="cap2" style="bottom:400px"><span class="box">як почати <span class="k"><span class="kb"></span><span class="kt">працювати</span></span>.</span></div>
-      <div class="cap" id="cap3" style="bottom:400px"><span class="box">Перше це <span class="k"><span class="kb"></span><span class="kt">доступи</span></span> до акаунтів.</span></div>
-      <div class="cap" id="cap4" style="bottom:400px"><span class="box">Кілька <span class="k"><span class="kb"></span><span class="kt">блогерів</span></span>, на яких ти дивишся і</span></div>
-      <div class="cap" id="cap5" style="bottom:400px"><span class="box">які тобі <span class="k"><span class="kb"></span><span class="kt">подобаються</span></span>.</span></div>
-      <div class="cap" id="cap6" style="bottom:400px"><span class="box">Твої <span class="k"><span class="kb"></span><span class="kt">шрифти</span></span> і кольори,</span></div>
-      <div class="cap" id="cap7" style="bottom:400px"><span class="box">якщо вони вже є,</span></div>
-      <div class="cap" id="cap8" style="bottom:400px"><span class="box">а якщо <span class="k"><span class="kb"></span><span class="kt">немає</span></span>, то не страшно,</span></div>
-      <div class="cap" id="cap9" style="bottom:400px"><span class="box">ми їх <span class="k"><span class="kb"></span><span class="kt">зберемо</span></span> разом.</span></div>
-      <div class="cap" id="cap10" style="bottom:400px"><span class="box">Приклади <span class="k"><span class="kb"></span><span class="kt">дизайну</span></span> і монтажу,</span></div>
-      <div class="cap" id="cap11" style="bottom:400px"><span class="box">які тобі <span class="k"><span class="kb"></span><span class="kt">подобаються</span></span>.</span></div>
-      <div class="cap" id="cap12" style="bottom:400px"><span class="box">І якщо в тебе є свої <span class="k"><span class="kb"></span><span class="kt">правила</span></span>,</span></div>
-      <div class="cap" id="cap13" style="bottom:400px"><span class="box">як має <span class="k"><span class="kb"></span><span class="kt">писатися</span></span> сценарій,</span></div>
-      <div class="cap" id="cap14" style="bottom:400px"><span class="box">то ти просто записуєш <span class="k"><span class="kb"></span><span class="kt">голосове</span></span> і</span></div>
-      <div class="cap" id="cap15" style="bottom:400px"><span class="box"><span class="k"><span class="kb"></span><span class="kt">пояснюєш</span></span>, а я це вже додаю</span></div>
-      <div class="cap" id="cap16" style="bottom:400px"><span class="box">в потрібні <span class="k"><span class="kb"></span><span class="kt">скіли</span></span>.</span></div>
-      <div class="cap" id="cap17" style="bottom:400px"><span class="box">І єдине, що <span class="k"><span class="kb"></span><span class="kt">прописуєш</span></span> сама ти,</span></div>
-      <div class="cap" id="cap18" style="bottom:940px"><span class="box">це <span class="k"><span class="kb"></span><span class="kt">ядро</span></span> «про тебе»,</span></div>
-      <div class="cap" id="cap19" style="bottom:940px"><span class="box">тому що <span class="k"><span class="kb"></span><span class="kt">краще</span></span> за тебе ніхто</span></div>
-      <div class="cap" id="cap20" style="bottom:940px"><span class="box">цього не <span class="k"><span class="kb"></span><span class="kt">знає</span></span>.</span></div>
-      <div class="cap" id="cap21" style="bottom:940px"><span class="box">А я просто даю йому <span class="k"><span class="kb"></span><span class="kt">структуру</span></span></span></div>
-      <div class="cap" id="cap22" style="bottom:940px"><span class="box">і місце в <span class="k"><span class="kb"></span><span class="kt">системі</span></span>.</span></div>
-      <div class="cap" id="cap23" style="bottom:940px"><span class="box">Все інше — <span class="k"><span class="kb"></span><span class="kt">аналіз</span></span> твого контенту,</span></div>
-      <div class="cap" id="cap24" style="bottom:940px"><span class="box">стилі, скіли, <span class="k"><span class="kb"></span><span class="kt">підключення</span></span>,</span></div>
-      <div class="cap" id="cap25" style="bottom:940px"><span class="box">тести — це вже моя <span class="k"><span class="kb"></span><span class="kt">робота</span></span>.</span></div>
-      <div class="cap" id="cap26" style="bottom:400px"><span class="box">Тобі лишається лише <span class="k"><span class="kb"></span><span class="kt">подивитись</span></span> на</span></div>
-      <div class="cap" id="cap27" style="bottom:400px"><span class="box"><span class="k"><span class="kb"></span><span class="kt">результат</span></span> і сказати,</span></div>
-      <div class="cap" id="cap28" style="bottom:400px"><span class="box">окей чи не окей.</span></div>
-      <div class="cap" id="cap29" style="bottom:400px"><span class="box">Тому якщо ця система тебе <span class="k"><span class="kb"></span><span class="kt">цікавить</span></span>,</span></div>
-      <div class="cap" id="cap30" style="bottom:400px"><span class="box">то став плюс в <span class="k"><span class="kb"></span><span class="kt">коментарі</span></span>.</span></div>
+      <div class="wc" id="w0">Я</div>
+      <div class="wc" id="w1">НАЛАШТОВУЮ</div>
+      <div class="wc" id="w2">АІ</div>
+      <div class="wc" id="w3">СИСТЕМУ</div>
+      <div class="wc" id="w4">ПІД</div>
+      <div class="wc" id="w5">КЛЮЧ,</div>
+      <div class="wc" id="w6">І</div>
+      <div class="wc" id="w7">ОСЬ</div>
+      <div class="wc" id="w8">ЩО МЕНІ</div>
+      <div class="wc" id="w9">ТРЕБА</div>
+      <div class="wc" id="w10">ПЕРЕД</div>
+      <div class="wc" id="w11">ТИМ</div>
+      <div class="wc" id="w12">ЯК</div>
+      <div class="wc" id="w13">ПОЧАТИ</div>
+      <div class="wc" id="w14">ПРАЦЮВАТИ.</div>
+      <div class="wc" id="w15">ПЕРШЕ</div>
+      <div class="wc" id="w16">ЦЕ</div>
+      <div class="wc" id="w17">ДОСТУПИ</div>
+      <div class="wc" id="w18">ДО АКАУНТІВ.</div>
+      <div class="wc" id="w19">КІЛЬКА</div>
+      <div class="wc" id="w20">БЛОГЕРІВ,</div>
+      <div class="wc" id="w21">НА ЯКИХ</div>
+      <div class="wc" id="w22">ТИ</div>
+      <div class="wc" id="w23">ДИВИШСЯ</div>
+      <div class="wc" id="w24">І</div>
+      <div class="wc" id="w25">ЯКІ</div>
+      <div class="wc" id="w26">ТОБІ</div>
+      <div class="wc" id="w27">ПОДОБАЮТЬСЯ.</div>
+      <div class="wc" id="w28">ТВОЇ</div>
+      <div class="wc" id="w29">ШРИФТИ</div>
+      <div class="wc" id="w30">І КОЛЬОРИ,</div>
+      <div class="wc" id="w31">ЯКЩО</div>
+      <div class="wc" id="w32">ВОНИ</div>
+      <div class="wc" id="w33">ВЖЕ</div>
+      <div class="wc" id="w34">Є,</div>
+      <div class="wc" id="w35">А ЯКЩО</div>
+      <div class="wc" id="w36">НЕМАЄ,</div>
+      <div class="wc" id="w37">ТО НЕ</div>
+      <div class="wc" id="w38">СТРАШНО,</div>
+      <div class="wc" id="w39">МИ ЇХ</div>
+      <div class="wc" id="w40">ЗБЕРЕМО</div>
+      <div class="wc" id="w41">РАЗОМ.</div>
+      <div class="wc" id="w42">ПРИКЛАДИ</div>
+      <div class="wc" id="w43">ДИЗАЙНУ</div>
+      <div class="wc" id="w44">І МОНТАЖУ,</div>
+      <div class="wc" id="w45">ЯКІ ТОБІ</div>
+      <div class="wc" id="w46">ПОДОБАЮТЬСЯ.</div>
+      <div class="wc" id="w47">І</div>
+      <div class="wc" id="w48">ЯКЩО</div>
+      <div class="wc" id="w49">В ТЕБЕ</div>
+      <div class="wc" id="w50">Є</div>
+      <div class="wc" id="w51">СВОЇ</div>
+      <div class="wc" id="w52">ПРАВИЛА,</div>
+      <div class="wc" id="w53">ЯК</div>
+      <div class="wc" id="w54">МАЄ</div>
+      <div class="wc" id="w55">ПИСАТИСЯ</div>
+      <div class="wc" id="w56">СЦЕНАРІЙ,</div>
+      <div class="wc" id="w57">ТО ТИ</div>
+      <div class="wc" id="w58">ПРОСТО</div>
+      <div class="wc" id="w59">ЗАПИСУЄШ</div>
+      <div class="wc" id="w60">ГОЛОСОВЕ</div>
+      <div class="wc" id="w61">І</div>
+      <div class="wc" id="w62">ПОЯСНЮЄШ,</div>
+      <div class="wc" id="w63">А</div>
+      <div class="wc" id="w64">Я</div>
+      <div class="wc" id="w65">ЦЕ</div>
+      <div class="wc" id="w66">ВЖЕ</div>
+      <div class="wc" id="w67">ДОДАЮ</div>
+      <div class="wc" id="w68">В</div>
+      <div class="wc" id="w69">ПОТРІБНІ</div>
+      <div class="wc" id="w70">СКІЛИ.</div>
+      <div class="wc" id="w71">І</div>
+      <div class="wc" id="w72">ЄДИНЕ,</div>
+      <div class="wc" id="w73">ЩО</div>
+      <div class="wc" id="w74">ПРОПИСУЄШ</div>
+      <div class="wc" id="w75">САМА</div>
+      <div class="wc inv" id="w76" style="top:862px">ТИ,</div>
+      <div class="wc inv" id="w77" style="top:862px">ЦЕ</div>
+      <div class="wc inv" id="w78" style="top:862px">ЯДРО</div>
+      <div class="wc inv" id="w79" style="top:862px">«ПРО</div>
+      <div class="wc inv" id="w80" style="top:862px">ТЕБЕ»,</div>
+      <div class="wc inv" id="w81" style="top:862px">ТОМУ</div>
+      <div class="wc inv" id="w82" style="top:862px">ЩО</div>
+      <div class="wc inv" id="w83" style="top:862px">КРАЩЕ</div>
+      <div class="wc inv" id="w84" style="top:862px">ЗА</div>
+      <div class="wc inv" id="w85" style="top:862px">ТЕБЕ</div>
+      <div class="wc inv" id="w86" style="top:862px">НІХТО</div>
+      <div class="wc inv" id="w87" style="top:862px">ЦЬОГО</div>
+      <div class="wc inv" id="w88" style="top:862px">НЕ</div>
+      <div class="wc inv" id="w89" style="top:862px">ЗНАЄ.</div>
+      <div class="wc inv" id="w90" style="top:862px">А</div>
+      <div class="wc inv" id="w91" style="top:862px">Я</div>
+      <div class="wc inv" id="w92" style="top:862px">ПРОСТО</div>
+      <div class="wc inv" id="w93" style="top:862px">ДАЮ</div>
+      <div class="wc inv" id="w94" style="top:862px">ЙОМУ</div>
+      <div class="wc inv" id="w95" style="top:862px">СТРУКТУРУ</div>
+      <div class="wc inv" id="w96" style="top:862px">І</div>
+      <div class="wc inv" id="w97" style="top:862px">МІСЦЕ</div>
+      <div class="wc inv" id="w98" style="top:862px">В</div>
+      <div class="wc inv" id="w99" style="top:862px">СИСТЕМІ.</div>
+      <div class="wc inv" id="w100" style="top:862px">ВСЕ</div>
+      <div class="wc inv" id="w101" style="top:862px">ІНШЕ —</div>
+      <div class="wc inv" id="w102" style="top:862px">АНАЛІЗ</div>
+      <div class="wc inv" id="w103" style="top:862px">ТВОГО</div>
+      <div class="wc inv" id="w104" style="top:862px">КОНТЕНТУ,</div>
+      <div class="wc inv" id="w108" style="top:862px">ТЕСТИ —</div>
+      <div class="wc inv" id="w109" style="top:862px">ЦЕ</div>
+      <div class="wc inv" id="w110" style="top:862px">ВЖЕ</div>
+      <div class="wc inv" id="w111" style="top:862px">МОЯ</div>
+      <div class="wc inv" id="w112" style="top:862px">РОБОТА.</div>
+      <div class="wc inv" id="w113" style="top:862px">ТОБІ</div>
+      <div class="wc" id="w114">ЛИШАЄТЬСЯ</div>
+      <div class="wc" id="w115">ЛИШЕ</div>
+      <div class="wc" id="w116">ПОДИВИТИСЬ</div>
+      <div class="wc" id="w117">НА</div>
+      <div class="wc" id="w118">РЕЗУЛЬТАТ</div>
+      <div class="wc" id="w119">І</div>
+      <div class="wc" id="w120">СКАЗАТИ,</div>
+      <div class="wc" id="w125">ТОМУ</div>
+      <div class="wc" id="w126">ЯКЩО</div>
+      <div class="wc" id="w127">ЦЯ</div>
+      <div class="wc" id="w128">СИСТЕМА</div>
+      <div class="wc" id="w129">ТЕБЕ</div>
+      <div class="wc" id="w130">ЦІКАВИТЬ,</div>
       </div>
 
       <audio id="vo" src="assets/base.mp4"
@@ -314,11 +423,13 @@
   }
 
   // ---- §00.5 Excalidraw sketches (rough.js), drawn on stroke by stroke ----
-  var SKO = {roughness: 2.4, bowing: 2.5, strokeWidth: 4.5, stroke: "#1E1E1E",
+  // roughness 1 ≈ Excalidraw's own default — 2.4 was "too sloppy" (her review of 41)
+  var SKO = {roughness: 1.0, bowing: 1.0, strokeWidth: 4.5, stroke: "#1E1E1E",
              disableMultiStroke: false, preserveVertices: false};
   var HACH = {fill: "#F2C7CA", fillStyle: "hachure", hachureGap: 16, hachureAngle: -41,
               fillWeight: 2.5};
-  function opt(o, seed) { var r = {}; for (var k in SKO) r[k] = SKO[k];
+  var _ink = "#1E1E1E";
+  function opt(o, seed) { var r = {}; for (var k in SKO) r[k] = SKO[k]; r.stroke = _ink;
     for (var k2 in (o || {})) r[k2] = o[k2]; r.seed = seed; return r; }
   function hatch(o) { var r = {}; for (var k in HACH) r[k] = HACH[k];
     for (var k2 in (o || {})) r[k2] = o[k2]; return r; }
@@ -334,7 +445,10 @@
     var svg = document.getElementById(svgId);
     var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
     g.setAttribute("id", "sk-" + name); svg.appendChild(g);
-    SK[name] = {g: g, rc: rough.svg(svg), shapes: []};
+    // over her footage the ink is white (dark ink read badly over the room);
+    // on the white panel and cover it stays #1E1E1E. Explicit colours win.
+    var foot = !!(svg.closest && svg.closest("#front"));
+    SK[name] = {g: g, rc: rough.svg(svg), shapes: [], ink: foot ? "#FFFFFF" : "#1E1E1E"};
     return SK[name];
   }
   function _add(s, node, kind) {
@@ -348,19 +462,19 @@
     });
     s.shapes.push({paths: paths, kind: kind || "stroke"});
   }
-  function box(name, x, y, w, h, o) {      // rounded rough box, radius 28 (§00.5.2)
+  function box(name, x, y, w, h, o) { _ink = SK[name].ink;      // rounded rough box, radius 28 (§00.5.2)
     var s = SK[name], r = (o && o.r) || 28;
     var oo = opt(o, (o && o.seed) || 7);
     if (o && o.fill) { var f = hatch(o.fill === true ? {} : {fill: o.fill}); for (var k in f) oo[k] = f[k]; }
     _add(s, s.rc.path(rrectD(x, y, w, h, r), oo));
   }
-  function ell(name, cx, cy, w, h, o) { var s = SK[name];
+  function ell(name, cx, cy, w, h, o) { _ink = SK[name].ink; var s = SK[name];
     _add(s, s.rc.ellipse(cx, cy, w, h, opt(o, (o && o.seed) || 11))); }
-  function ln(name, x1, y1, x2, y2, o) { var s = SK[name];
+  function ln(name, x1, y1, x2, y2, o) { _ink = SK[name].ink; var s = SK[name];
     _add(s, s.rc.line(x1, y1, x2, y2, opt(o, (o && o.seed) || 13))); }
-  function under(name, x1, y, x2, o) { var s = SK[name];      // a hand underline
+  function under(name, x1, y, x2, o) { _ink = SK[name].ink; var s = SK[name];      // a hand underline
     _add(s, s.rc.curve([[x1, y + 4], [(x1 + x2) / 2, y - 6], [x2, y + 2]], opt(o, (o && o.seed) || 17))); }
-  function arrow(name, x1, y1, x2, y2, o) {
+  function arrow(name, x1, y1, x2, y2, o) { _ink = SK[name].ink;
     var s = SK[name], oo = opt(o, (o && o.seed) || 19), bend = (o && o.bend != null) ? o.bend : .12;
     var mx = (x1 + x2) / 2 + (y2 - y1) * bend, my = (y1 + y2) / 2 - (x2 - x1) * bend;
     _add(s, s.rc.curve([[x1, y1], [mx, my], [x2, y2]], oo));
@@ -373,7 +487,7 @@
     t.setAttribute("x", x); t.setAttribute("y", y);
     t.setAttribute("text-anchor", (o && o.anchor) || "middle");
     t.setAttribute("font-size", (o && o.size) || 50);
-    if (o && o.color) t.style.fill = o.color;
+    t.style.fill = (o && o.color) || s.ink;
     t.textContent = txt; t.style.opacity = 0; s.g.appendChild(t);
     s.shapes.push({text: t});
   }
@@ -400,144 +514,138 @@
   gsap.set(PUSH, {transformOrigin: "540px 900px"});
   tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 45.483, ease: "none"}, 0);
 
-  tl.set("#cap0", {autoAlpha: 1}, 0.000);
-  tl.fromTo("#cap0 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 0.000);
-  tl.fromTo("#cap0 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 0.330);
-  tl.to("#cap0 .kt", {color: "#FFFFFF", duration: .12}, 0.330);
-  tl.set("#cap0", {autoAlpha: 0}, 2.050);
-  tl.set("#cap1", {autoAlpha: 1}, 2.050);
-  tl.fromTo("#cap1 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 2.050);
-  tl.fromTo("#cap1 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 2.610);
-  tl.to("#cap1 .kt", {color: "#FFFFFF", duration: .12}, 2.610);
-  tl.set("#cap1", {autoAlpha: 0}, 3.250);
-  tl.set("#cap2", {autoAlpha: 1}, 3.250);
-  tl.fromTo("#cap2 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 3.250);
-  tl.fromTo("#cap2 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 3.870);
-  tl.to("#cap2 .kt", {color: "#FFFFFF", duration: .12}, 3.870);
-  tl.set("#cap2", {autoAlpha: 0}, 4.560);
-  tl.set("#cap3", {autoAlpha: 1}, 4.560);
-  tl.fromTo("#cap3 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 4.560);
-  tl.fromTo("#cap3 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 5.333);
-  tl.to("#cap3 .kt", {color: "#FFFFFF", duration: .12}, 5.333);
-  tl.set("#cap3", {autoAlpha: 0}, 6.734);
-  tl.set("#cap4", {autoAlpha: 1}, 6.734);
-  tl.fromTo("#cap4 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 6.734);
-  tl.fromTo("#cap4 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 7.034);
-  tl.to("#cap4 .kt", {color: "#FFFFFF", duration: .12}, 7.034);
-  tl.set("#cap4", {autoAlpha: 0}, 8.594);
-  tl.set("#cap5", {autoAlpha: 1}, 8.594);
-  tl.fromTo("#cap5 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 8.594);
-  tl.fromTo("#cap5 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 8.954);
-  tl.to("#cap5 .kt", {color: "#FFFFFF", duration: .12}, 8.954);
-  tl.set("#cap5", {autoAlpha: 0}, 9.864);
-  tl.set("#cap6", {autoAlpha: 1}, 9.864);
-  tl.fromTo("#cap6 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 9.864);
-  tl.fromTo("#cap6 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 10.104);
-  tl.to("#cap6 .kt", {color: "#FFFFFF", duration: .12}, 10.104);
-  tl.set("#cap6", {autoAlpha: 0}, 10.924);
-  tl.set("#cap7", {autoAlpha: 1}, 10.924);
-  tl.fromTo("#cap7 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 10.924);
-  tl.set("#cap7", {autoAlpha: 0}, 11.864);
-  tl.set("#cap8", {autoAlpha: 1}, 11.864);
-  tl.fromTo("#cap8 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 11.864);
-  tl.fromTo("#cap8 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 12.124);
-  tl.to("#cap8 .kt", {color: "#FFFFFF", duration: .12}, 12.124);
-  tl.set("#cap8", {autoAlpha: 0}, 13.004);
-  tl.set("#cap9", {autoAlpha: 1}, 13.004);
-  tl.fromTo("#cap9 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 13.004);
-  tl.fromTo("#cap9 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 13.224);
-  tl.to("#cap9 .kt", {color: "#FFFFFF", duration: .12}, 13.224);
-  tl.set("#cap9", {autoAlpha: 0}, 14.259);
-  tl.set("#cap10", {autoAlpha: 1}, 14.259);
-  tl.fromTo("#cap10 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 14.259);
-  tl.fromTo("#cap10 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 14.699);
-  tl.to("#cap10 .kt", {color: "#FFFFFF", duration: .12}, 14.699);
-  tl.set("#cap10", {autoAlpha: 0}, 15.719);
-  tl.set("#cap11", {autoAlpha: 1}, 15.719);
-  tl.fromTo("#cap11 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 15.719);
-  tl.fromTo("#cap11 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 16.019);
-  tl.to("#cap11 .kt", {color: "#FFFFFF", duration: .12}, 16.019);
-  tl.set("#cap11", {autoAlpha: 0}, 16.808);
-  tl.set("#cap12", {autoAlpha: 1}, 16.808);
-  tl.fromTo("#cap12 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 16.808);
-  tl.fromTo("#cap12 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 18.148);
-  tl.to("#cap12 .kt", {color: "#FFFFFF", duration: .12}, 18.148);
-  tl.set("#cap12", {autoAlpha: 0}, 18.468);
-  tl.set("#cap13", {autoAlpha: 1}, 18.468);
-  tl.fromTo("#cap13 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 18.468);
-  tl.fromTo("#cap13 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 18.708);
-  tl.to("#cap13 .kt", {color: "#FFFFFF", duration: .12}, 18.708);
-  tl.set("#cap13", {autoAlpha: 0}, 19.654);
-  tl.set("#cap14", {autoAlpha: 1}, 19.654);
-  tl.fromTo("#cap14 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 19.654);
-  tl.fromTo("#cap14 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 20.654);
-  tl.to("#cap14 .kt", {color: "#FFFFFF", duration: .12}, 20.654);
-  tl.set("#cap14", {autoAlpha: 0}, 21.254);
-  tl.set("#cap15", {autoAlpha: 1}, 21.254);
-  tl.fromTo("#cap15 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 21.254);
-  tl.fromTo("#cap15 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 21.254);
-  tl.to("#cap15 .kt", {color: "#FFFFFF", duration: .12}, 21.254);
-  tl.set("#cap15", {autoAlpha: 0}, 23.614);
-  tl.set("#cap16", {autoAlpha: 1}, 23.614);
-  tl.fromTo("#cap16 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 23.614);
-  tl.fromTo("#cap16 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 24.394);
-  tl.to("#cap16 .kt", {color: "#FFFFFF", duration: .12}, 24.394);
-  tl.set("#cap16", {autoAlpha: 0}, 24.900);
-  tl.set("#cap17", {autoAlpha: 1}, 24.900);
-  tl.fromTo("#cap17 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 24.900);
-  tl.fromTo("#cap17 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 25.803);
-  tl.to("#cap17 .kt", {color: "#FFFFFF", duration: .12}, 25.803);
-  tl.set("#cap17", {autoAlpha: 0}, 27.486);
-  tl.set("#cap18", {autoAlpha: 1}, 27.486);
-  tl.fromTo("#cap18 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 27.486);
-  tl.fromTo("#cap18 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 27.626);
-  tl.to("#cap18 .kt", {color: "#FFFFFF", duration: .12}, 27.626);
-  tl.set("#cap18", {autoAlpha: 0}, 28.806);
-  tl.set("#cap19", {autoAlpha: 1}, 28.806);
-  tl.fromTo("#cap19 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 28.806);
-  tl.fromTo("#cap19 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 29.226);
-  tl.to("#cap19 .kt", {color: "#FFFFFF", duration: .12}, 29.226);
-  tl.set("#cap19", {autoAlpha: 0}, 30.186);
-  tl.set("#cap20", {autoAlpha: 1}, 30.186);
-  tl.fromTo("#cap20 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 30.186);
-  tl.fromTo("#cap20 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 30.646);
-  tl.to("#cap20 .kt", {color: "#FFFFFF", duration: .12}, 30.646);
-  tl.set("#cap20", {autoAlpha: 0}, 31.057);
-  tl.set("#cap21", {autoAlpha: 1}, 31.057);
-  tl.fromTo("#cap21 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 31.057);
-  tl.fromTo("#cap21 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 31.937);
-  tl.to("#cap21 .kt", {color: "#FFFFFF", duration: .12}, 31.937);
-  tl.set("#cap21", {autoAlpha: 0}, 32.477);
-  tl.set("#cap22", {autoAlpha: 1}, 32.477);
-  tl.fromTo("#cap22 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 32.477);
-  tl.fromTo("#cap22 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 33.157);
-  tl.to("#cap22 .kt", {color: "#FFFFFF", duration: .12}, 33.157);
-  tl.set("#cap22", {autoAlpha: 0}, 33.805);
-  tl.set("#cap23", {autoAlpha: 1}, 33.805);
-  tl.fromTo("#cap23 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 33.805);
-  tl.fromTo("#cap23 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 34.425);
-  tl.to("#cap23 .kt", {color: "#FFFFFF", duration: .12}, 34.425);
-  tl.set("#cap23", {autoAlpha: 0}, 35.405);
-  tl.set("#cap25", {autoAlpha: 1}, 36.885);
-  tl.fromTo("#cap25 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 36.885);
-  tl.fromTo("#cap25 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 37.725);
-  tl.to("#cap25 .kt", {color: "#FFFFFF", duration: .12}, 37.725);
-  tl.set("#cap25", {autoAlpha: 0}, 38.365);
-  tl.set("#cap26", {autoAlpha: 1}, 38.365);
-  tl.fromTo("#cap26 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 38.365);
-  tl.fromTo("#cap26 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 39.265);
-  tl.to("#cap26 .kt", {color: "#FFFFFF", duration: .12}, 39.265);
-  tl.set("#cap26", {autoAlpha: 0}, 39.825);
-  tl.set("#cap27", {autoAlpha: 1}, 39.825);
-  tl.fromTo("#cap27 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 39.825);
-  tl.fromTo("#cap27 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 39.825);
-  tl.to("#cap27 .kt", {color: "#FFFFFF", duration: .12}, 39.825);
-  tl.set("#cap27", {autoAlpha: 0}, 40.865);
-  tl.set("#cap29", {autoAlpha: 1}, 41.933);
-  tl.fromTo("#cap29 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 41.933);
-  tl.fromTo("#cap29 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 43.583);
-  tl.to("#cap29 .kt", {color: "#FFFFFF", duration: .12}, 43.583);
-  tl.set("#cap29", {autoAlpha: 0}, 44.163);
+  tl.set("#w0", {autoAlpha: 1}, 0.000); tl.set("#w0", {autoAlpha: 0}, 0.245);
+  tl.set("#w1", {autoAlpha: 1}, 0.330); tl.set("#w1", {autoAlpha: 0}, 0.905);
+  tl.set("#w2", {autoAlpha: 1}, 0.990); tl.set("#w2", {autoAlpha: 0}, 1.090);
+  tl.set("#w3", {autoAlpha: 1}, 1.095); tl.set("#w3", {autoAlpha: 0}, 1.377);
+  tl.set("#w4", {autoAlpha: 1}, 1.462); tl.set("#w4", {autoAlpha: 0}, 1.562);
+  tl.set("#w5", {autoAlpha: 1}, 1.620); tl.set("#w5", {autoAlpha: 0}, 1.965);
+  tl.set("#w6", {autoAlpha: 1}, 2.050); tl.set("#w6", {autoAlpha: 0}, 2.150);
+  tl.set("#w7", {autoAlpha: 1}, 2.170); tl.set("#w7", {autoAlpha: 0}, 2.270);
+  tl.set("#w8", {autoAlpha: 1}, 2.350); tl.set("#w8", {autoAlpha: 0}, 2.525);
+  tl.set("#w9", {autoAlpha: 1}, 2.610); tl.set("#w9", {autoAlpha: 0}, 2.805);
+  tl.set("#w10", {autoAlpha: 1}, 2.890); tl.set("#w10", {autoAlpha: 0}, 3.005);
+  tl.set("#w11", {autoAlpha: 1}, 3.090); tl.set("#w11", {autoAlpha: 0}, 3.190);
+  tl.set("#w12", {autoAlpha: 1}, 3.250); tl.set("#w12", {autoAlpha: 0}, 3.385);
+  tl.set("#w13", {autoAlpha: 1}, 3.470); tl.set("#w13", {autoAlpha: 0}, 3.785);
+  tl.set("#w14", {autoAlpha: 1}, 3.870); tl.set("#w14", {autoAlpha: 0}, 4.475);
+  tl.set("#w15", {autoAlpha: 1}, 4.560); tl.set("#w15", {autoAlpha: 0}, 4.915);
+  tl.set("#w16", {autoAlpha: 1}, 5.000); tl.set("#w16", {autoAlpha: 0}, 5.248);
+  tl.set("#w17", {autoAlpha: 1}, 5.333); tl.set("#w17", {autoAlpha: 0}, 5.798);
+  tl.set("#w18", {autoAlpha: 1}, 5.883); tl.set("#w18", {autoAlpha: 0}, 6.649);
+  tl.set("#w19", {autoAlpha: 1}, 6.734); tl.set("#w19", {autoAlpha: 0}, 6.949);
+  tl.set("#w20", {autoAlpha: 1}, 7.034); tl.set("#w20", {autoAlpha: 0}, 7.569);
+  tl.set("#w21", {autoAlpha: 1}, 7.654); tl.set("#w21", {autoAlpha: 0}, 7.754);
+  tl.set("#w22", {autoAlpha: 1}, 7.774); tl.set("#w22", {autoAlpha: 0}, 7.929);
+  tl.set("#w23", {autoAlpha: 1}, 8.014); tl.set("#w23", {autoAlpha: 0}, 8.369);
+  tl.set("#w24", {autoAlpha: 1}, 8.454); tl.set("#w24", {autoAlpha: 0}, 8.554);
+  tl.set("#w25", {autoAlpha: 1}, 8.594); tl.set("#w25", {autoAlpha: 0}, 8.694);
+  tl.set("#w26", {autoAlpha: 1}, 8.734); tl.set("#w26", {autoAlpha: 0}, 8.869);
+  tl.set("#w27", {autoAlpha: 1}, 8.954); tl.set("#w27", {autoAlpha: 0}, 9.779);
+  tl.set("#w28", {autoAlpha: 1}, 9.864); tl.set("#w28", {autoAlpha: 0}, 10.019);
+  tl.set("#w29", {autoAlpha: 1}, 10.104); tl.set("#w29", {autoAlpha: 0}, 10.439);
+  tl.set("#w30", {autoAlpha: 1}, 10.524); tl.set("#w30", {autoAlpha: 0}, 10.839);
+  tl.set("#w31", {autoAlpha: 1}, 10.924); tl.set("#w31", {autoAlpha: 0}, 11.139);
+  tl.set("#w32", {autoAlpha: 1}, 11.224); tl.set("#w32", {autoAlpha: 0}, 11.324);
+  tl.set("#w33", {autoAlpha: 1}, 11.384); tl.set("#w33", {autoAlpha: 0}, 11.579);
+  tl.set("#w34", {autoAlpha: 1}, 11.664); tl.set("#w34", {autoAlpha: 0}, 11.779);
+  tl.set("#w35", {autoAlpha: 1}, 11.864); tl.set("#w35", {autoAlpha: 0}, 12.039);
+  tl.set("#w36", {autoAlpha: 1}, 12.124); tl.set("#w36", {autoAlpha: 0}, 12.379);
+  tl.set("#w37", {autoAlpha: 1}, 12.464); tl.set("#w37", {autoAlpha: 0}, 12.639);
+  tl.set("#w38", {autoAlpha: 1}, 12.724); tl.set("#w38", {autoAlpha: 0}, 12.919);
+  tl.set("#w39", {autoAlpha: 1}, 13.004); tl.set("#w39", {autoAlpha: 0}, 13.139);
+  tl.set("#w40", {autoAlpha: 1}, 13.224); tl.set("#w40", {autoAlpha: 0}, 13.539);
+  tl.set("#w41", {autoAlpha: 1}, 13.624); tl.set("#w41", {autoAlpha: 0}, 14.174);
+  tl.set("#w42", {autoAlpha: 1}, 14.259); tl.set("#w42", {autoAlpha: 0}, 14.614);
+  tl.set("#w43", {autoAlpha: 1}, 14.699); tl.set("#w43", {autoAlpha: 0}, 15.014);
+  tl.set("#w44", {autoAlpha: 1}, 15.099); tl.set("#w44", {autoAlpha: 0}, 15.634);
+  tl.set("#w45", {autoAlpha: 1}, 15.719); tl.set("#w45", {autoAlpha: 0}, 15.934);
+  tl.set("#w46", {autoAlpha: 1}, 16.019); tl.set("#w46", {autoAlpha: 0}, 16.723);
+  tl.set("#w47", {autoAlpha: 1}, 16.808); tl.set("#w47", {autoAlpha: 0}, 17.023);
+  tl.set("#w48", {autoAlpha: 1}, 17.108); tl.set("#w48", {autoAlpha: 0}, 17.243);
+  tl.set("#w49", {autoAlpha: 1}, 17.328); tl.set("#w49", {autoAlpha: 0}, 17.463);
+  tl.set("#w50", {autoAlpha: 1}, 17.548); tl.set("#w50", {autoAlpha: 0}, 17.743);
+  tl.set("#w51", {autoAlpha: 1}, 17.828); tl.set("#w51", {autoAlpha: 0}, 18.063);
+  tl.set("#w52", {autoAlpha: 1}, 18.148); tl.set("#w52", {autoAlpha: 0}, 18.383);
+  tl.set("#w53", {autoAlpha: 1}, 18.468); tl.set("#w53", {autoAlpha: 0}, 18.568);
+  tl.set("#w54", {autoAlpha: 1}, 18.568); tl.set("#w54", {autoAlpha: 0}, 18.668);
+  tl.set("#w55", {autoAlpha: 1}, 18.708); tl.set("#w55", {autoAlpha: 0}, 19.063);
+  tl.set("#w56", {autoAlpha: 1}, 19.148); tl.set("#w56", {autoAlpha: 0}, 19.569);
+  tl.set("#w57", {autoAlpha: 1}, 19.654); tl.set("#w57", {autoAlpha: 0}, 19.754);
+  tl.set("#w58", {autoAlpha: 1}, 19.814); tl.set("#w58", {autoAlpha: 0}, 20.009);
+  tl.set("#w59", {autoAlpha: 1}, 20.094); tl.set("#w59", {autoAlpha: 0}, 20.569);
+  tl.set("#w60", {autoAlpha: 1}, 20.654); tl.set("#w60", {autoAlpha: 0}, 20.989);
+  tl.set("#w61", {autoAlpha: 1}, 21.074); tl.set("#w61", {autoAlpha: 0}, 21.174);
+  tl.set("#w62", {autoAlpha: 1}, 21.254); tl.set("#w62", {autoAlpha: 0}, 22.029);
+  tl.set("#w63", {autoAlpha: 1}, 22.114); tl.set("#w63", {autoAlpha: 0}, 22.214);
+  tl.set("#w64", {autoAlpha: 1}, 22.254); tl.set("#w64", {autoAlpha: 0}, 22.354);
+  tl.set("#w65", {autoAlpha: 1}, 22.434); tl.set("#w65", {autoAlpha: 0}, 22.549);
+  tl.set("#w66", {autoAlpha: 1}, 22.634); tl.set("#w66", {autoAlpha: 0}, 22.869);
+  tl.set("#w67", {autoAlpha: 1}, 22.954); tl.set("#w67", {autoAlpha: 0}, 23.529);
+  tl.set("#w68", {autoAlpha: 1}, 23.614); tl.set("#w68", {autoAlpha: 0}, 23.949);
+  tl.set("#w69", {autoAlpha: 1}, 24.034); tl.set("#w69", {autoAlpha: 0}, 24.309);
+  tl.set("#w70", {autoAlpha: 1}, 24.394); tl.set("#w70", {autoAlpha: 0}, 24.815);
+  tl.set("#w71", {autoAlpha: 1}, 24.900); tl.set("#w71", {autoAlpha: 0}, 25.198);
+  tl.set("#w72", {autoAlpha: 1}, 25.283); tl.set("#w72", {autoAlpha: 0}, 25.618);
+  tl.set("#w73", {autoAlpha: 1}, 25.703); tl.set("#w73", {autoAlpha: 0}, 25.803);
+  tl.set("#w74", {autoAlpha: 1}, 25.803); tl.set("#w74", {autoAlpha: 0}, 26.478);
+  tl.set("#w75", {autoAlpha: 1}, 26.563); tl.set("#w75", {autoAlpha: 0}, 26.718);
+  tl.set("#w76", {autoAlpha: 1}, 26.803); tl.set("#w76", {autoAlpha: 0}, 27.401);
+  tl.set("#w77", {autoAlpha: 1}, 27.486); tl.set("#w77", {autoAlpha: 0}, 27.586);
+  tl.set("#w78", {autoAlpha: 1}, 27.626); tl.set("#w78", {autoAlpha: 0}, 27.941);
+  tl.set("#w79", {autoAlpha: 1}, 28.026); tl.set("#w79", {autoAlpha: 0}, 28.221);
+  tl.set("#w80", {autoAlpha: 1}, 28.306); tl.set("#w80", {autoAlpha: 0}, 28.721);
+  tl.set("#w81", {autoAlpha: 1}, 28.806); tl.set("#w81", {autoAlpha: 0}, 28.906);
+  tl.set("#w82", {autoAlpha: 1}, 28.966); tl.set("#w82", {autoAlpha: 0}, 29.141);
+  tl.set("#w83", {autoAlpha: 1}, 29.226); tl.set("#w83", {autoAlpha: 0}, 29.461);
+  tl.set("#w84", {autoAlpha: 1}, 29.546); tl.set("#w84", {autoAlpha: 0}, 29.646);
+  tl.set("#w85", {autoAlpha: 1}, 29.726); tl.set("#w85", {autoAlpha: 0}, 29.826);
+  tl.set("#w86", {autoAlpha: 1}, 29.886); tl.set("#w86", {autoAlpha: 0}, 30.101);
+  tl.set("#w87", {autoAlpha: 1}, 30.186); tl.set("#w87", {autoAlpha: 0}, 30.286);
+  tl.set("#w88", {autoAlpha: 1}, 30.366); tl.set("#w88", {autoAlpha: 0}, 30.561);
+  tl.set("#w89", {autoAlpha: 1}, 30.646); tl.set("#w89", {autoAlpha: 0}, 30.972);
+  tl.set("#w90", {autoAlpha: 1}, 31.057); tl.set("#w90", {autoAlpha: 0}, 31.157);
+  tl.set("#w91", {autoAlpha: 1}, 31.177); tl.set("#w91", {autoAlpha: 0}, 31.277);
+  tl.set("#w92", {autoAlpha: 1}, 31.297); tl.set("#w92", {autoAlpha: 0}, 31.452);
+  tl.set("#w93", {autoAlpha: 1}, 31.537); tl.set("#w93", {autoAlpha: 0}, 31.637);
+  tl.set("#w94", {autoAlpha: 1}, 31.717); tl.set("#w94", {autoAlpha: 0}, 31.852);
+  tl.set("#w95", {autoAlpha: 1}, 31.937); tl.set("#w95", {autoAlpha: 0}, 32.392);
+  tl.set("#w96", {autoAlpha: 1}, 32.477); tl.set("#w96", {autoAlpha: 0}, 32.592);
+  tl.set("#w97", {autoAlpha: 1}, 32.677); tl.set("#w97", {autoAlpha: 0}, 32.852);
+  tl.set("#w98", {autoAlpha: 1}, 32.937); tl.set("#w98", {autoAlpha: 0}, 33.072);
+  tl.set("#w99", {autoAlpha: 1}, 33.157); tl.set("#w99", {autoAlpha: 0}, 33.720);
+  tl.set("#w100", {autoAlpha: 1}, 33.805); tl.set("#w100", {autoAlpha: 0}, 33.940);
+  tl.set("#w101", {autoAlpha: 1}, 34.025); tl.set("#w101", {autoAlpha: 0}, 34.340);
+  tl.set("#w102", {autoAlpha: 1}, 34.425); tl.set("#w102", {autoAlpha: 0}, 34.605);
+  tl.set("#w103", {autoAlpha: 1}, 34.690); tl.set("#w103", {autoAlpha: 0}, 34.826);
+  tl.set("#w104", {autoAlpha: 1}, 34.911); tl.set("#w104", {autoAlpha: 0}, 35.320);
+  tl.set("#w108", {autoAlpha: 1}, 36.885); tl.set("#w108", {autoAlpha: 0}, 37.080);
+  tl.set("#w109", {autoAlpha: 1}, 37.165); tl.set("#w109", {autoAlpha: 0}, 37.265);
+  tl.set("#w110", {autoAlpha: 1}, 37.285); tl.set("#w110", {autoAlpha: 0}, 37.440);
+  tl.set("#w111", {autoAlpha: 1}, 37.525); tl.set("#w111", {autoAlpha: 0}, 37.640);
+  tl.set("#w112", {autoAlpha: 1}, 37.725); tl.set("#w112", {autoAlpha: 0}, 38.280);
+  tl.set("#w113", {autoAlpha: 1}, 38.365); tl.set("#w113", {autoAlpha: 0}, 38.465);
+  tl.set("#w114", {autoAlpha: 1}, 38.525); tl.set("#w114", {autoAlpha: 0}, 38.860);
+  tl.set("#w115", {autoAlpha: 1}, 38.945); tl.set("#w115", {autoAlpha: 0}, 39.180);
+  tl.set("#w116", {autoAlpha: 1}, 39.265); tl.set("#w116", {autoAlpha: 0}, 39.600);
+  tl.set("#w117", {autoAlpha: 1}, 39.685); tl.set("#w117", {autoAlpha: 0}, 39.785);
+  tl.set("#w118", {autoAlpha: 1}, 39.825); tl.set("#w118", {autoAlpha: 0}, 40.080);
+  tl.set("#w119", {autoAlpha: 1}, 40.165); tl.set("#w119", {autoAlpha: 0}, 40.300);
+  tl.set("#w120", {autoAlpha: 1}, 40.385); tl.set("#w120", {autoAlpha: 0}, 40.780);
+  tl.set("#w125", {autoAlpha: 1}, 41.933); tl.set("#w125", {autoAlpha: 0}, 42.338);
+  tl.set("#w126", {autoAlpha: 1}, 42.423); tl.set("#w126", {autoAlpha: 0}, 42.798);
+  tl.set("#w127", {autoAlpha: 1}, 42.883); tl.set("#w127", {autoAlpha: 0}, 42.983);
+  tl.set("#w128", {autoAlpha: 1}, 43.023); tl.set("#w128", {autoAlpha: 0}, 43.258);
+  tl.set("#w129", {autoAlpha: 1}, 43.343); tl.set("#w129", {autoAlpha: 0}, 43.498);
+  tl.set("#w130", {autoAlpha: 1}, 43.583); tl.set("#w130", {autoAlpha: 0}, 44.078);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 45.463);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 26.413);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 38.513);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 40.615);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 41.883);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 43.913);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 45.483);
 
 
   rise("#bw1", 1.312); rise("#bw2", 1.620);
@@ -558,40 +666,40 @@
   rise("#vc", 19.904);
   pop("#vb", 20.554);
   tl.fromTo("#vw span", {scaleY: .15}, X({scaleY: 1, duration: .35, ease: RISE, stagger: .045}), 21.154);
-  sketch("va", "skF"); arrow("va", 596, 508, 688, 508, {stroke: "#7A1424", strokeWidth: 5, seed: 5, bend: .18});
+  sketch("va", "skF"); arrow("va", 500, 508, 682, 508, {stroke: "#7A1424", strokeWidth: 5, seed: 5, bend: .14});   // over the white card
   draw("va", 22.454, .45);
   pop("#vs", 22.954);
   pop("#vsw", 24.394, .45);
   sink("#vc", 24.935); erase("va", 24.935);
 
 
-  sketch("d1", "skP"); box("d1", 96, 390, 340, 290, {seed: 3});
+  sketch("d1", "skP"); box("d1", 90, 390, 290, 290, {seed: 3});
   draw("d1", 26.513, .6);
   sketch("d1s", "skP");
-  _add(SK.d1s, SK.d1s.rc.curve([[136, 560], [180, 545], [220, 570], [270, 548], [320, 568], [390, 552]], opt({seed: 5}, 5)));
-  _add(SK.d1s, SK.d1s.rc.curve([[136, 610], [170, 596], [230, 620], [280, 598], [350, 615]], opt({seed: 7}, 7)));
+  _add(SK.d1s, SK.d1s.rc.curve([[120, 560], [160, 545], [200, 570], [250, 548], [300, 568], [350, 552]], opt({seed: 5}, 5)));
+  _add(SK.d1s, SK.d1s.rc.curve([[120, 610], [150, 596], [210, 620], [260, 598], [320, 615]], opt({seed: 7}, 7)));
   draw("d1s", 26.963, .45);
-  sketch("d1t", "skP"); label("d1t", 266, 350, "ти", {size: 64, color: "#7A1424"}); draw("d1t", 26.803);
-  sketch("d2", "skP"); label("d2", 266, 470, "про тебе", {size: 54}); label("d2", 266, 515, "ядро", {size: 36, color: "#574142"});
+  sketch("d1t", "skP"); label("d1t", 235, 350, "ти", {size: 64, color: "#7A1424"}); draw("d1t", 26.803);
+  sketch("d2", "skP"); label("d2", 235, 470, "про тебе", {size: 52}); label("d2", 235, 515, "ядро", {size: 36, color: "#574142"});
   draw("d2", 27.976);
-  sketch("d3", "skP"); under("d3", 160, 486, 372, {stroke: "#7A1424", strokeWidth: 5, seed: 9}); draw("d3", 29.226, .5);
+  sketch("d3", "skP"); under("d3", 130, 486, 340, {stroke: "#7A1424", strokeWidth: 5, seed: 9}); draw("d3", 29.226, .5);
   erase("d1s", 31.587);
   sketch("d4", "skP");
-  ln("d4", 136, 566, 396, 566, {seed: 11, roughness: 1.6}); ln("d4", 136, 612, 396, 612, {seed: 13, roughness: 1.6});
-  ln("d4", 136, 658, 330, 658, {seed: 15, roughness: 1.6});
+  ln("d4", 120, 566, 350, 566, {seed: 11}); ln("d4", 120, 612, 350, 612, {seed: 13});
+  ln("d4", 120, 658, 290, 658, {seed: 15});
   draw("d4", 31.687, .35);
-  sketch("d5", "skP"); arrow("d5", 446, 520, 528, 520, {seed: 17, bend: .2}); draw("d5", 32.227, .45);
-  sketch("d6", "skP"); box("d6", 540, 390, 450, 404, {seed: 19});
-  label("d6", 765, 440, "система", {size: 42, color: "#574142"});
-  box("d6", 576, 462, 380, 64, {seed: 21, r: 20, fill: true}); label("d6", 766, 506, "про тебе", {size: 36});
+  sketch("d5", "skP"); arrow("d5", 394, 535, 550, 535, {seed: 17, bend: .14}); draw("d5", 32.227, .45);
+  sketch("d6", "skP"); box("d6", 562, 390, 428, 404, {seed: 19});
+  label("d6", 776, 440, "система", {size: 42, color: "#574142"});
+  box("d6", 596, 462, 360, 64, {seed: 21, r: 20, fill: true}); label("d6", 776, 506, "про тебе", {size: 36});
   draw("d6", 32.557, .55);
-  sketch("d7", "skP"); label("d7", 765, 350, "я", {size: 64, color: "#7A1424"}); draw("d7", 33.805);
-  sketch("d80", "skP"); label("d80", 586, 570, "аналіз контенту", {size: 40, anchor: "start"}); draw("d80", 34.425);
-  sketch("d81", "skP"); label("d81", 586, 616, "стилі", {size: 40, anchor: "start"}); draw("d81", 35.405);
-  sketch("d82", "skP"); label("d82", 586, 662, "скіли", {size: 40, anchor: "start"}); draw("d82", 35.765);
-  sketch("d83", "skP"); label("d83", 586, 708, "підключення", {size: 40, anchor: "start"}); draw("d83", 36.185);
-  sketch("d84", "skP"); label("d84", 586, 754, "тести", {size: 40, anchor: "start"}); draw("d84", 36.885);
-  sketch("d9", "skP"); ell("d9", 765, 330, 120, 96, {stroke: "#7A1424", strokeWidth: 5, seed: 41}); draw("d9", 37.225, .5);
+  sketch("d7", "skP"); label("d7", 776, 350, "я", {size: 64, color: "#7A1424"}); draw("d7", 33.805);
+  sketch("d80", "skP"); label("d80", 600, 570, "аналіз контенту", {size: 40, anchor: "start"}); draw("d80", 34.425);
+  sketch("d81", "skP"); label("d81", 600, 616, "стилі", {size: 40, anchor: "start"}); draw("d81", 35.405);
+  sketch("d82", "skP"); label("d82", 600, 662, "скіли", {size: 40, anchor: "start"}); draw("d82", 35.765);
+  sketch("d83", "skP"); label("d83", 600, 708, "підключення", {size: 40, anchor: "start"}); draw("d83", 36.185);
+  sketch("d84", "skP"); label("d84", 600, 754, "тести", {size: 40, anchor: "start"}); draw("d84", 36.885);
+  sketch("d9", "skP"); ell("d9", 776, 330, 120, 96, {stroke: "#7A1424", strokeWidth: 5, seed: 41}); draw("d9", 37.225, .5);
   erase("d1", 38.113); erase("d1t", 38.113); erase("d2", 38.113); erase("d3", 38.113); erase("d4", 38.113);
   erase("d5", 38.113); erase("d6", 38.113); erase("d7", 38.113); erase("d9", 38.113);
 
@@ -605,7 +713,7 @@
 
   pop("#ct1", 42.833);
   pop("#ct2", 44.213, .6);
-  sketch("ca", "skF"); arrow("ca", 930, 760, 836, 618, {stroke: "#7A1424", strokeWidth: 5, seed: 97});
+  sketch("ca", "skF"); arrow("ca", 930, 770, 836, 618, {strokeWidth: 5, seed: 97});
   draw("ca", 44.663, .5);
 
   half(26.163, 38.113);
