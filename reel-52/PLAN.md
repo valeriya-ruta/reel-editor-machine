@@ -24,7 +24,7 @@ lines in **твій стиль**, then what she writes with it (сценарії
 
 | time | layer | what |
 |---|---|---|
-| 00.6–03.2 | behind (matte) | «фомо» / «на ШІ», 240 px white, top 320 / 536 |
+| 00.6–03.2 | behind (matte) | «фомо» / «на ШІ», 240 px white, top 360 / 576 (her hair runs lower here: y 712–765) |
 | 03.8–07.3 | above | course card «Курс по ШІ», cursor clicks «Купити» on «курс» |
 | 05.5–07.3 | above | Threads card, «Який курс взяти?» typed on her words |
 | 07.4–08.8 | above | white sketched stopwatch on «почекай хвилинку» |
