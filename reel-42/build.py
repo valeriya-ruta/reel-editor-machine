@@ -113,8 +113,8 @@ t_pid, t_kl = S(u"під", 1.46), S(u"ключ,", 1.62)
 t_pr = S(u"Перше", 4.56)
 b_out = t_pr - 0.45
 B.append(u'''
-        <div id="bw1" class="big hid" style="top:320px; font-size:240px">під</div>
-        <div id="bw2" class="big hid" style="top:536px; font-size:240px">ключ</div>''')
+        <div id="bw1" class="big hid" data-layout-allow-overlap style="top:320px; font-size:240px">під</div>
+        <div id="bw2" class="big hid" data-layout-allow-overlap style="top:536px; font-size:240px">ключ</div>''')
 m0, m1 = t_pid - 0.35, b_out + 0.45
 g.matte("key", round(m0, 3), round(m1 - m0, 3))
 js(u'''
@@ -231,7 +231,7 @@ g.sfx("pop", t_gol - 0.1); g.sfx("pop", t_dod); g.sfx("click-soft", t_potr - 0.1
 h0 = S(u"сама", 26.56) - 0.4
 h1 = h0 + 11.95
 HALF.append((h0, h1))
-P.append(u'<svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
+P.append(u'<svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
 t_ty = S(u"ти,", 26.80)
 t_yad, t_pro = S(u"ядро", 27.63), S(u"«про", 28.03)
 t_kra = S(u"краще", 29.23)
