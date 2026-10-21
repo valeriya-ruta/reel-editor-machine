@@ -8,10 +8,6 @@
   "name": "pop"
  },
  {
-  "t": 5.333,
-  "name": "click-soft"
- },
- {
   "t": 7.034,
   "name": "click-soft"
  },
@@ -30,10 +26,6 @@
  {
   "t": 18.148,
   "name": "click-soft"
- },
- {
-  "t": 19.604,
-  "name": "whoosh-short"
  },
  {
   "t": 20.554,
@@ -68,15 +60,7 @@
   "name": "pop"
  },
  {
-  "t": 33.805,
-  "name": "click-soft"
- },
- {
   "t": 34.425,
-  "name": "click-soft"
- },
- {
-  "t": 35.765,
   "name": "click-soft"
  },
  {
@@ -93,10 +77,6 @@
  },
  {
   "t": 40.865,
-  "name": "click-soft"
- },
- {
-  "t": 41.425,
   "name": "click-soft"
  },
  {

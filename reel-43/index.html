@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 43 — €400 чи €1300</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="assets/js/rough-4.6.6.js"></script>
+    <style>
+    @font-face { font-family: "Google Sans"; font-weight: 400; font-display: block;
+                 src: url("assets/fonts/GoogleSans-400.ttf") format("truetype"); }
+    @font-face { font-family: "Google Sans"; font-weight: 500; font-display: block;
+                 src: url("assets/fonts/GoogleSans-500.ttf") format("truetype"); }
+    @font-face { font-family: "Google Sans"; font-weight: 700; font-display: block;
+                 src: url("assets/fonts/GoogleSans-700.ttf") format("truetype"); }
+    @font-face { font-family: "Pangolin"; font-weight: 400; font-display: block;
+                 src: url("assets/fonts/Pangolin.ttf") format("truetype"); }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px; overflow: hidden;
+            background: #fff; font-family: "Google Sans", system-ui, sans-serif;
+            color: #241919;
+            --primary: #7A1424; --on-surface: #241919; --on-surface-var: #574142;
+            --outline-var: #DEBFBF; --container-low: #FFF0F0; --chip: #FFF8F7; }
+    .plate { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    .L { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+         pointer-events: none; }
+    .hid { opacity: 0; visibility: hidden; }
+
+    /* §00.3.1 above me */
+    .card { position: absolute; background: #FFFFFF; border-radius: 40px;
+            box-shadow: 0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.10);
+            padding: 36px 40px; }
+    .card .lbl { display: block; font-weight: 500; font-size: 28px;
+                 color: var(--on-surface-var); margin-bottom: 20px; }
+    .card .ttl { display: block; font-weight: 700; font-size: 56px; line-height: 1.08;
+                 letter-spacing: -0.02em; color: var(--on-surface); }
+    .chips { display: flex; flex-wrap: wrap; gap: 14px; }
+    .chip { display: inline-flex; align-items: center; gap: 12px;
+            border: 2px solid var(--outline-var); border-radius: 16px;
+            padding: 14px 24px; font-weight: 500; font-size: 36px;
+            color: var(--on-surface); background: var(--chip); }
+    .chip i { width: 16px; height: 16px; border-radius: 50%; background: var(--primary);
+              display: inline-block; flex: none; }
+    .chip.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .chip.on i { background: #fff; }
+    .pill { position: absolute; display: inline-flex; align-items: center; gap: 16px;
+            background: var(--primary); color: #fff; border-radius: 999px;
+            padding: 30px 54px; font-weight: 500; font-size: 46px; white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(36,25,25,.12), 0 10px 30px rgba(122,20,36,.22); }
+    .pill.light { background: #fff; color: var(--on-surface);
+                  box-shadow: 0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.10); }
+    .num { font-weight: 700; letter-spacing: -0.04em; color: var(--primary); line-height: 1; }
+    .row { display: flex; align-items: center; gap: 18px; }
+    .check { width: 44px; height: 44px; border-radius: 12px; flex: none;
+             border: 3px solid var(--outline-var); background: #fff; position: relative; }
+    .check.on { background: var(--primary); border-color: var(--primary); }
+    .check.on::after { content: ""; position: absolute; left: 13px; top: 5px; width: 11px;
+                       height: 22px; border: solid #fff; border-width: 0 5px 5px 0;
+                       transform: rotate(45deg); }
+    .line { display: block; height: 18px; border-radius: 9px; background: #EFE3E3; }
+    .logo { width: 64px; height: 64px; flex: none; }
+    .logo path { fill: var(--primary); }
+    .mark { display: block; }
+    .mark path { fill: currentColor; }
+
+    /* §00.3.2 behind me */
+    .big { position: absolute; left: 0; width: 1080px; text-align: center;
+           font-weight: 700; line-height: 0.9; letter-spacing: -0.04em;
+           color: var(--primary); white-space: nowrap; }
+
+    /* §00.3.3 half screen. Its parked position (up, off frame) is set from JS
+       with gsap.set: a CSS translate here would be parsed by GSAP as a px offset
+       and then stacked under yPercent, and the panel stalls a quarter of the
+       way in (reel 41's first snapshot). Same for #cover. */
+    #panel { position: absolute; left: 0; top: 0; width: 1080px; height: 1240px;
+             background: #FFFFFF; }
+    /* §00.3.4 full screen */
+    #cover { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+             background: #FFFFFF; }
+
+    /* §00.5 sketches */
+    .sk { position: absolute; left: 0; top: 0; overflow: visible; }
+    .sk text, .hand { font-family: "Pangolin", cursive; fill: #1E1E1E; color: #1E1E1E; }
+    .hand { position: absolute; white-space: nowrap; }
+
+    /* §00.2 captions */
+    #caps { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+            pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; display: flex;
+           justify-content: center; opacity: 0; visibility: hidden; }
+    .cap .box { display: inline-block; max-width: 720px; text-align: center;
+                background: rgba(255,255,255,.94); border-radius: 28px; padding: 16px 30px;
+                font-weight: 500; font-size: 54px; line-height: 1.25; letter-spacing: -0.01em;
+                color: #241919; box-shadow: 0 2px 10px rgba(36,25,25,.10);
+                text-wrap: balance; }
+    .cap .k { position: relative; display: inline-block; padding: 0 .32em; }
+    .cap .kb { position: absolute; inset: 0; border-radius: 999px; background: #7A1424;
+               opacity: 0; }
+    .cap .kt { position: relative; }
+
+    .slot { width: 160px; height: 96px; border-radius: 18px; border: 3px dashed #DEBFBF;
+            display: flex; align-items: center; justify-content: center; }
+    .th { width: 160px; height: 96px; border-radius: 18px; background: #C98A92;
+          display: flex; align-items: center; justify-content: center; margin: -3px; }
+    .page { width: 112px; height: 150px; border-radius: 16px; background: #fff; position: relative;
+            border: 3px solid #DEBFBF; overflow: hidden; flex: none; }
+    .page b { position: absolute; left: 0; top: 0; width: 100%; height: 34px; background: #7A1424; }
+    .page b::before, .page b::after { content: ""; position: absolute; top: 11px; width: 12px; height: 12px;
+            border-radius: 50%; background: #fff; }
+    .page b::before { left: 26px; } .page b::after { right: 26px; }
+    .page span { position: absolute; left: 0; width: 100%; top: 62px; text-align: center;
+                 font-weight: 700; font-size: 34px; letter-spacing: -0.02em; color: #241919; }
+    .page .ok { left: 34px; top: 66px; }
+    .col { flex: 1; }
+    .sm { font-size: 34px; font-weight: 500; color: #574142; }
+
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="62.683" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="62.683" data-media-start="0"
+             muted playsinline></video>
+      <div id="behind" class="L">
+
+        <div id="bw1" class="big hid" style="top:350px; font-size:240px">система</div>
+        <div id="bw2" class="big hid" style="top:566px; font-size:240px">€1300<span id="bwq" style="visibility:hidden">?</span></div>
+      </div>
+      <div id="panel">
+<svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
+      </div>
+      <video id="matte-sys" class="plate matte" src="assets/mattes/sys.webm"
+             data-start="15.833" data-duration="3.500" data-media-start="0"
+             muted playsinline></video>
+      <video id="matte-half1" class="plate matte" src="assets/mattes/half1.webm"
+             data-start="29.067" data-duration="13.233" data-media-start="0"
+             muted playsinline></video>
+      <div id="front" class="L">
+<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+
+        <div id="b1" class="card hid" style="left:150px; top:300px; width:780px; padding:30px 40px;">
+          <div class="row" style="justify-content:space-between">
+            <span class="lbl" style="margin:0">СММниця</span>
+            <span class="chip on hid" id="b1s" style="font-size:30px; padding:8px 20px">захворіла</span>
+          </div>
+          <div class="row" style="margin-top:8px; align-items:baseline; gap:14px">
+            <span class="num hid" id="b1n" style="font-size:104px">€400</span>
+            <span class="sm hid" id="b1m">/ місяць</span>
+            <span class="chip hid" id="b1a" style="margin-left:auto; font-size:32px; padding:10px 20px"><i></i>1 акаунт</span>
+          </div>
+          <div class="row" style="margin-top:22px; gap:20px">
+            <span class="slot"><span class="th" id="b1t0"><svg width="34" height="34" viewBox="0 0 34 34"><path d="M10 6 L28 17 L10 28 Z" fill="#fff"/></svg></span></span><span class="slot"><span class="th" id="b1t1"><svg width="34" height="34" viewBox="0 0 34 34"><path d="M10 6 L28 17 L10 28 Z" fill="#fff"/></svg></span></span><span class="slot"><span class="th" id="b1t2"><svg width="34" height="34" viewBox="0 0 34 34"><path d="M10 6 L28 17 L10 28 Z" fill="#fff"/></svg></span></span><span class="slot"><span class="th" id="b1t3"><svg width="34" height="34" viewBox="0 0 34 34"><path d="M10 6 L28 17 L10 28 Z" fill="#fff"/></svg></span></span>
+          </div>
+        </div>
+
+        <div id="b2k" class="pill light hid" style="left:270px; top:340px; padding:22px 44px; font-size:44px;"><svg width="58" height="40" viewBox="0 0 58 40"><rect x="2" y="4" width="36" height="32" rx="8" fill="#7A1424"/><path d="M41 14 L56 6 V34 L41 26 Z" fill="#7A1424"/></svg> консультація</div>
+        <div id="b2a" class="card hid" style="left:120px; top:310px; width:390px; padding:28px 34px;">
+          <span class="lbl" style="margin-bottom:8px">акаунт 1</span>
+          <div class="row" style="align-items:baseline; gap:10px"><span class="num" style="font-size:80px">€400</span><span class="sm">/ міс</span></div>
+        </div>
+        <div id="b2p" class="hid" style="position:absolute; left:510px; top:360px; width:60px; text-align:center;
+             font-weight:700; font-size:72px; color:#7A1424">+</div>
+        <div id="b2b" class="card hid" style="left:570px; top:310px; width:390px; padding:28px 34px;">
+          <span class="lbl" style="margin-bottom:8px">акаунт 2</span>
+          <div class="row" style="align-items:baseline; gap:10px"><span class="num" style="font-size:80px">€400</span><span class="sm">/ міс</span></div>
+        </div>
+        <div id="b2s" class="pill hid" style="left:250px; top:530px; padding:20px 46px; font-size:52px; font-weight:700">€800 / місяць</div>
+
+        <div id="b4" class="card hid" style="left:120px; top:310px; width:840px; padding:32px 40px;">
+          <div class="row" style="align-items:flex-start; gap:30px">
+            <div class="col"><span class="lbl">СММниця</span>
+              <div class="row" style="align-items:baseline; gap:10px"><span class="num" style="font-size:84px; color:#241919">€400</span><span class="sm">/ міс</span></div></div>
+            <div class="col"><span class="lbl">Система</span>
+              <span class="num hid" id="b4n" style="display:block; font-size:84px">€1300</span>
+              <span class="chip on hid" id="b4c" style="margin-top:18px; font-size:30px; padding:10px 20px"><i></i>одноразова інвестиція</span></div>
+          </div>
+        </div>
+
+        <div id="b5" class="card hid" style="left:120px; top:300px; width:840px; padding:30px 34px;">
+          <div class="row" style="gap:20px"><div class="page hid" id="b5p0"><b></b><span id="b5n0">1300</span><i class="check on hid ok" id="b5k0" style="position:absolute"></i></div><div class="page hid" id="b5p1"><b></b><span id="b5n1">1300</span><i class="check on hid ok" id="b5k1" style="position:absolute"></i></div><div class="page hid" id="b5p2"><b></b><span id="b5n2">1300</span><i class="check on hid ok" id="b5k2" style="position:absolute"></i></div><div class="page hid" id="b5p3"><b></b><span id="b5n3">1300</span><i class="check on hid ok" id="b5k3" style="position:absolute"></i></div><div class="page hid" id="b5p4"><b></b><span id="b5n4">1300</span><i class="check on hid ok" id="b5k4" style="position:absolute"></i></div><div class="page hid" id="b5p5"><b></b><span id="b5n5">1300</span><i class="check on hid ok" id="b5k5" style="position:absolute"></i></div></div>
+        </div>
+
+        <div id="b7" class="hid" style="position:absolute; left:120px; top:380px; width:840px;
+             display:flex; gap:30px; justify-content:center">
+          <span class="pill light hid" id="b7a" style="position:relative; padding:24px 48px">СММниця</span>
+          <span class="pill light hid" id="b7b" style="position:relative; padding:24px 48px">монтажер</span>
+        </div>
+
+        <div id="b8" class="card hid" style="left:150px; top:300px; width:780px; padding:30px 40px;">
+          <div class="row" style="justify-content:space-between; margin-bottom:16px">
+            <span class="lbl" style="margin:0">Твій процес</span>
+            <span class="chip on hid" id="b8n" style="font-size:30px; padding:8px 20px">не змінюється</span>
+          </div>
+          <div class="row hid" id="b8ra" style="margin-top:0px"><span class="check" id="b8ka"></span><span style="font-size:40px; font-weight:500">звітність</span></div><div class="row hid" id="b8rb" style="margin-top:14px"><span class="check" id="b8kb"></span><span style="font-size:40px; font-weight:500">аналітика</span></div><div class="row hid" id="b8rc" style="margin-top:14px"><span class="check" id="b8kc"></span><span style="font-size:40px; font-weight:500">опрувнути тексти</span></div><div class="row hid" id="b8rd" style="margin-top:14px"><span class="check" id="b8kd"></span><span style="font-size:40px; font-weight:500">продивитися сценарії</span></div>
+        </div>
+
+        <div id="b9" class="card hid" style="left:150px; top:300px; width:780px; padding:30px 40px;">
+          <span class="lbl" style="margin-bottom:16px">Вся робота</span>
+          <div class="row" style="margin-top:0px"><span class="check" id="b9k0"></span><span class="line" style="width:470px"></span></div><div class="row" style="margin-top:12px"><span class="check" id="b9k1"></span><span class="line" style="width:380px"></span></div><div class="row" style="margin-top:12px"><span class="check" id="b9k2"></span><span class="line" style="width:520px"></span></div>
+          <div class="row" style="margin-top:24px; gap:16px; height:68px">
+            <span class="sm">робить:</span>
+            <span style="position:relative; display:inline-block">
+              <span class="chip hid" id="b9s" style="white-space:nowrap">ненадійний СММник</span>
+              <span class="chip on hid" id="b9c" style="position:absolute; left:0; top:0; white-space:nowrap"><svg class="mark" width="34" height="34" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg> Claude</span>
+            </span>
+          </div>
+        </div>
+
+        <div id="b10a" class="pill light hid" style="left:300px; top:330px; padding:22px 46px; font-size:46px">
+          <b style="color:#7A1424; font-weight:700">€1300</b>&nbsp;· один раз</div>
+        <div id="b10b" class="pill hid" style="left:200px; top:470px; font-size:52px; padding:30px 58px">Пиши + в коментарі</div>
+      </div>
+      <div id="cover">
+
+      </div>
+      <div id="caps">
+      <div class="cap" id="cap0" style="bottom:400px"><span class="box">Ти платиш <span class="k"><span class="kb"></span><span class="kt">СММниці</span></span></span></div>
+      <div class="cap" id="cap1" style="bottom:400px"><span class="box"><span class="k"><span class="kb"></span><span class="kt">400</span></span> євро на місяць</span></div>
+      <div class="cap" id="cap2" style="bottom:400px"><span class="box">за один <span class="k"><span class="kb"></span><span class="kt">акаунт</span></span>,</span></div>
+      <div class="cap" id="cap3" style="bottom:400px"><span class="box">і якщо вона <span class="k"><span class="kb"></span><span class="kt">захворіла</span></span>,</span></div>
+      <div class="cap" id="cap4" style="bottom:400px"><span class="box">то контенту просто <span class="k"><span class="kb"></span><span class="kt">немає</span></span>.</span></div>
+      <div class="cap" id="cap5" style="bottom:400px"><span class="box">Нещодавно я проводила <span class="k"><span class="kb"></span><span class="kt">консультацію</span></span></span></div>
+      <div class="cap" id="cap6" style="bottom:400px"><span class="box">з <span class="k"><span class="kb"></span><span class="kt">дівчиною</span></span>, в якої саме так.</span></div>
+      <div class="cap" id="cap7" style="bottom:400px"><span class="box">А в неї ще і <span class="k"><span class="kb"></span><span class="kt">два акаунти</span></span>,</span></div>
+      <div class="cap" id="cap8" style="bottom:400px"><span class="box">тобто вона <span class="k"><span class="kb"></span><span class="kt">платить</span></span></span></div>
+      <div class="cap" id="cap9" style="bottom:400px"><span class="box"><span class="k"><span class="kb"></span><span class="kt">800</span></span> євро на місяць,</span></div>
+      <div class="cap" id="cap10" style="bottom:400px"><span class="box">і для неї це <span class="k"><span class="kb"></span><span class="kt">дорого</span></span>.</span></div>
+      <div class="cap" id="cap11" style="bottom:400px"><span class="box">І вона <span class="k"><span class="kb"></span><span class="kt">питає</span></span>:</span></div>
+      <div class="cap" id="cap12" style="bottom:400px"><span class="box"><span class="k"><span class="kb"></span><span class="kt">а навіщо</span></span> мені</span></div>
+      <div class="cap" id="cap13" style="bottom:400px"><span class="box">система за <span class="k"><span class="kb"></span><span class="kt">1300</span></span>,</span></div>
+      <div class="cap" id="cap14" style="bottom:400px"><span class="box">якщо це взагалі-то <span class="k"><span class="kb"></span><span class="kt">більше</span></span>?</span></div>
+      <div class="cap" id="cap15" style="bottom:400px"><span class="box">Ну, і типу, да,</span></div>
+      <div class="cap" id="cap16" style="bottom:400px"><span class="box">цифри <span class="k"><span class="kb"></span><span class="kt">більше</span></span>,</span></div>
+      <div class="cap" id="cap17" style="bottom:400px"><span class="box">але це <span class="k"><span class="kb"></span><span class="kt">одноразова</span></span> інвестиція.</span></div>
+      <div class="cap" id="cap18" style="bottom:400px"><span class="box">Тобто ти не платиш <span class="k"><span class="kb"></span><span class="kt">щомісяця</span></span> 1300,</span></div>
+      <div class="cap" id="cap19" style="bottom:400px"><span class="box">ти один раз <span class="k"><span class="kb"></span><span class="kt">налаштовуєш</span></span>,</span></div>
+      <div class="cap" id="cap20" style="bottom:400px"><span class="box">і далі воно просто <span class="k"><span class="kb"></span><span class="kt">працює</span></span></span></div>
+      <div class="cap" id="cap21" style="bottom:400px"><span class="box">в твоєму <span class="k"><span class="kb"></span><span class="kt">акаунті</span></span>.</span></div>
+      <div class="cap" id="cap22" style="bottom:400px"><span class="box">Якщо <span class="k"><span class="kb"></span><span class="kt">порахувати</span></span> на один акаунт:</span></div>
+      <div class="cap" id="cap23" style="bottom:940px"><span class="box"><span class="k"><span class="kb"></span><span class="kt">400</span></span> євро мінус підписка на Claude,</span></div>
+      <div class="cap" id="cap24" style="bottom:940px"><span class="box">бла-бла-бла, і система <span class="k"><span class="kb"></span><span class="kt">окупається</span></span></span></div>
+      <div class="cap" id="cap25" style="bottom:940px"><span class="box">десь за <span class="k"><span class="kb"></span><span class="kt">три</span></span> з половиною місяці.</span></div>
+      <div class="cap" id="cap26" style="bottom:940px"><span class="box">А якщо акаунтів <span class="k"><span class="kb"></span><span class="kt">два</span></span>,</span></div>
+      <div class="cap" id="cap27" style="bottom:940px"><span class="box">або ти ще окремо платиш <span class="k"><span class="kb"></span><span class="kt">монтажеру</span></span>,</span></div>
+      <div class="cap" id="cap28" style="bottom:940px"><span class="box">то взагалі <span class="k"><span class="kb"></span><span class="kt">менше</span></span> ніж за два місяці.</span></div>
+      <div class="cap" id="cap29" style="bottom:400px"><span class="box">І ти більше ні від кого не <span class="k"><span class="kb"></span><span class="kt">залежиш</span></span>.</span></div>
+      <div class="cap" id="cap30" style="bottom:400px"><span class="box">А <span class="k"><span class="kb"></span><span class="kt">найцікавіше</span></span> для мене,</span></div>
+      <div class="cap" id="cap31" style="bottom:400px"><span class="box">що твій <span class="k"><span class="kb"></span><span class="kt">процес</span></span> ніяк не змінюється.</span></div>
+      <div class="cap" id="cap32" style="bottom:400px"><span class="box">Ти так само дивишся <span class="k"><span class="kb"></span><span class="kt">звітність</span></span>,</span></div>
+      <div class="cap" id="cap33" style="bottom:400px"><span class="box">дивишся <span class="k"><span class="kb"></span><span class="kt">аналітику</span></span>.</span></div>
+      <div class="cap" id="cap34" style="bottom:400px"><span class="box">Тобі треба все одно <span class="k"><span class="kb"></span><span class="kt">опрувнути</span></span> тексти,</span></div>
+      <div class="cap" id="cap35" style="bottom:400px"><span class="box">продивитися <span class="k"><span class="kb"></span><span class="kt">сценарії</span></span>.</span></div>
+      <div class="cap" id="cap36" style="bottom:400px"><span class="box">А вся та <span class="k"><span class="kb"></span><span class="kt">робота</span></span>, яку виконував</span></div>
+      <div class="cap" id="cap37" style="bottom:400px"><span class="box">до цього ненадійний <span class="k"><span class="kb"></span><span class="kt">СММник</span></span>,</span></div>
+      <div class="cap" id="cap38" style="bottom:400px"><span class="box">вибачте, <span class="k"><span class="kb"></span><span class="kt">СММники</span></span>,</span></div>
+      <div class="cap" id="cap39" style="bottom:400px"><span class="box">то виконає твій <span class="k"><span class="kb"></span><span class="kt">Claude</span></span>.</span></div>
+      <div class="cap" id="cap40" style="bottom:400px"><span class="box">Тому якщо ти готовий <span class="k"><span class="kb"></span><span class="kt">інвестувати</span></span></span></div>
+      <div class="cap" id="cap41" style="bottom:400px"><span class="box">в таку <span class="k"><span class="kb"></span><span class="kt">систему</span></span>,</span></div>
+      <div class="cap" id="cap42" style="bottom:400px"><span class="box">то пиши плюс в <span class="k"><span class="kb"></span><span class="kt">коментарі</span></span>.</span></div>
+      </div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="62.683" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  function bez(x1, y1, x2, y2) {
+    function a(p1, p2) { return 1 - 3 * p2 + 3 * p1; }
+    function b(p1, p2) { return 3 * p2 - 6 * p1; }
+    function c(p1) { return 3 * p1; }
+    function at(t, p1, p2) { return ((a(p1, p2) * t + b(p1, p2)) * t + c(p1)) * t; }
+    function slope(t, p1, p2) { return 3 * a(p1, p2) * t * t + 2 * b(p1, p2) * t + c(p1); }
+    return function (x) {
+      if (x <= 0) return 0; if (x >= 1) return 1;
+      var t = x;
+      for (var i = 0; i < 8; i++) {
+        var s = slope(t, x1, x2); if (Math.abs(s) < 1e-6) break;
+        t -= (at(t, x1, x2) - x) / s;
+      }
+      t = Math.min(1, Math.max(0, t));
+      return at(t, y1, y2);
+    };
+  }
+  var POP = bez(.34, 1.56, .64, 1), RISE = bez(.2, .9, .25, 1), SLIDE = bez(.65, 0, .25, 1);
+  var PUSH = "#vid, .matte";
+  gsap.set("#panel", {yPercent: -101}); gsap.set("#cover", {yPercent: 101});
+  var NO = {immediateRender: false};
+  function X(o) { for (var k in NO) o[k] = NO[k]; return o; }
+
+  // arrivals (§00.7): pops 0.5-0.6 s, rise-ins 0.7 s; exits quicker, easing in
+  function pop(sel, t, d) {
+    tl.fromTo(sel, {autoAlpha: 0, scale: .6}, X({autoAlpha: 1, scale: 1, duration: d || .55, ease: POP}), t);
+  }
+  function rise(sel, t, dy) {
+    tl.fromTo(sel, {autoAlpha: 0, y: dy || 60}, X({autoAlpha: 1, y: 0, duration: .7, ease: RISE}), t);
+  }
+  function fadein(sel, t, d) { tl.fromTo(sel, {autoAlpha: 0}, X({autoAlpha: 1, duration: d || .4}), t); }
+  function out(sel, t) { tl.to(sel, {autoAlpha: 0, scale: .9, duration: .3, ease: "power2.in"}, t); }
+  function sink(sel, t) { tl.to(sel, {autoAlpha: 0, y: 40, duration: .35, ease: "power2.in"}, t); }
+
+  // §00.3.3 half screen: the panel comes down as the video goes down
+  function half(t0, t1) {
+    tl.fromTo("#panel", {yPercent: -101}, X({yPercent: 0, duration: .85, ease: SLIDE}), t0);
+    tl.fromTo(PUSH, {y: 0}, X({y: 330, duration: .85, ease: SLIDE}), t0);
+    tl.to("#panel", {yPercent: -101, duration: .85, ease: SLIDE}, t1);
+    tl.to(PUSH, {y: 0, duration: .85, ease: SLIDE}, t1);
+  }
+  // §00.3.4 full screen: white up from the bottom over everything
+  function full(t0, t1) {
+    tl.fromTo("#cover", {yPercent: 101}, X({yPercent: 0, duration: .85, ease: SLIDE}), t0);
+    tl.to("#cover", {yPercent: 101, duration: .85, ease: SLIDE}, t1);
+  }
+
+  // ---- §00.5 Excalidraw sketches (rough.js), drawn on stroke by stroke ----
+  var SKO = {roughness: 2.4, bowing: 2.5, strokeWidth: 4.5, stroke: "#1E1E1E",
+             disableMultiStroke: false, preserveVertices: false};
+  var HACH = {fill: "#F2C7CA", fillStyle: "hachure", hachureGap: 16, hachureAngle: -41,
+              fillWeight: 2.5};
+  function opt(o, seed) { var r = {}; for (var k in SKO) r[k] = SKO[k];
+    for (var k2 in (o || {})) r[k2] = o[k2]; r.seed = seed; return r; }
+  function hatch(o) { var r = {}; for (var k in HACH) r[k] = HACH[k];
+    for (var k2 in (o || {})) r[k2] = o[k2]; return r; }
+  function rrectD(x, y, w, h, r) {
+    return "M" + (x + r) + " " + y + " H" + (x + w - r) + " A" + r + " " + r + " 0 0 1 " + (x + w) + " " + (y + r) +
+           " V" + (y + h - r) + " A" + r + " " + r + " 0 0 1 " + (x + w - r) + " " + (y + h) +
+           " H" + (x + r) + " A" + r + " " + r + " 0 0 1 " + x + " " + (y + h - r) +
+           " V" + (y + r) + " A" + r + " " + r + " 0 0 1 " + (x + r) + " " + y + " Z";
+  }
+  var SK = {};
+  // a sketch is a named group of rough shapes inside one <svg class="sk">
+  function sketch(name, svgId) {
+    var svg = document.getElementById(svgId);
+    var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("id", "sk-" + name); svg.appendChild(g);
+    SK[name] = {g: g, rc: rough.svg(svg), shapes: []};
+    return SK[name];
+  }
+  function _add(s, node, kind) {
+    s.g.appendChild(node);
+    var paths = [].slice.call(node.querySelectorAll ? node.querySelectorAll("path") : []);
+    if (node.tagName === "path") paths = [node];
+    paths.forEach(function (p) {
+      var L = 0; try { L = p.getTotalLength(); } catch (e) {}
+      p.style.strokeDasharray = L + " " + (L + 2); p.style.strokeDashoffset = L + 1;
+      p.style.strokeLinecap = "round"; p.style.strokeLinejoin = "round";
+    });
+    s.shapes.push({paths: paths, kind: kind || "stroke"});
+  }
+  function box(name, x, y, w, h, o) {      // rounded rough box, radius 28 (§00.5.2)
+    var s = SK[name], r = (o && o.r) || 28;
+    var oo = opt(o, (o && o.seed) || 7);
+    if (o && o.fill) { var f = hatch(o.fill === true ? {} : {fill: o.fill}); for (var k in f) oo[k] = f[k]; }
+    _add(s, s.rc.path(rrectD(x, y, w, h, r), oo));
+  }
+  function ell(name, cx, cy, w, h, o) { var s = SK[name];
+    _add(s, s.rc.ellipse(cx, cy, w, h, opt(o, (o && o.seed) || 11))); }
+  function ln(name, x1, y1, x2, y2, o) { var s = SK[name];
+    _add(s, s.rc.line(x1, y1, x2, y2, opt(o, (o && o.seed) || 13))); }
+  function under(name, x1, y, x2, o) { var s = SK[name];      // a hand underline
+    _add(s, s.rc.curve([[x1, y + 4], [(x1 + x2) / 2, y - 6], [x2, y + 2]], opt(o, (o && o.seed) || 17))); }
+  function arrow(name, x1, y1, x2, y2, o) {
+    var s = SK[name], oo = opt(o, (o && o.seed) || 19), bend = (o && o.bend != null) ? o.bend : .12;
+    var mx = (x1 + x2) / 2 + (y2 - y1) * bend, my = (y1 + y2) / 2 - (x2 - x1) * bend;
+    _add(s, s.rc.curve([[x1, y1], [mx, my], [x2, y2]], oo));
+    var ang = Math.atan2(y2 - my, x2 - mx), L = 38, sp = .5;
+    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang - sp), y2 - L * Math.sin(ang - sp), oo), "head");
+    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang + sp), y2 - L * Math.sin(ang + sp), oo), "head");
+  }
+  function label(name, x, y, txt, o) {   // Pangolin, fades in after its shapes
+    var s = SK[name], t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    t.setAttribute("x", x); t.setAttribute("y", y);
+    t.setAttribute("text-anchor", (o && o.anchor) || "middle");
+    t.setAttribute("font-size", (o && o.size) || 50);
+    if (o && o.color) t.style.fill = o.color;
+    t.textContent = txt; t.style.opacity = 0; s.g.appendChild(t);
+    s.shapes.push({text: t});
+  }
+  // draw a sketch on from time t: each stroke 0.7 s, in sequence (the next one
+  // starts as the last is two-thirds done); a label fades in after its box.
+  function draw(name, t, per) {
+    var s = SK[name], at = t; per = per || .7;
+    s.shapes.forEach(function (sh) {
+      if (sh.text) { tl.to(sh.text, {opacity: 1, duration: .35}, at + .05); return; }
+      // an arrowhead is a flick, not a stroke: the arrow reads as one gesture
+      if (sh.kind === "head") {
+        sh.paths.forEach(function (p) { tl.to(p, {strokeDashoffset: 0, duration: .18, ease: "power1.out"}, at); });
+        at += .12; return;
+      }
+      sh.paths.forEach(function (p, i) {
+        tl.to(p, {strokeDashoffset: 0, duration: per, ease: "power1.inOut"}, at + i * .12);
+      });
+      at += per * .66 + (sh.paths.length - 1) * .12;
+    });
+    return at;
+  }
+  function erase(name, t) { tl.to("#sk-" + name, {autoAlpha: 0, duration: .3, ease: "power2.in"}, t); }
+
+  gsap.set(PUSH, {transformOrigin: "540px 900px"});
+  tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 62.683, ease: "none"}, 0);
+
+  tl.set("#cap0", {autoAlpha: 1}, 0.000);
+  tl.fromTo("#cap0 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 0.000);
+  tl.fromTo("#cap0 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 0.750);
+  tl.to("#cap0 .kt", {color: "#FFFFFF", duration: .12}, 0.750);
+  tl.set("#cap0", {autoAlpha: 0}, 1.393);
+  tl.set("#cap3", {autoAlpha: 1}, 3.573);
+  tl.fromTo("#cap3 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 3.573);
+  tl.fromTo("#cap3 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 4.073);
+  tl.to("#cap3 .kt", {color: "#FFFFFF", duration: .12}, 4.073);
+  tl.set("#cap3", {autoAlpha: 0}, 4.653);
+  tl.set("#cap4", {autoAlpha: 1}, 4.653);
+  tl.fromTo("#cap4 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 4.653);
+  tl.fromTo("#cap4 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 5.933);
+  tl.to("#cap4 .kt", {color: "#FFFFFF", duration: .12}, 5.933);
+  tl.set("#cap4", {autoAlpha: 0}, 7.180);
+  tl.set("#cap5", {autoAlpha: 1}, 7.180);
+  tl.fromTo("#cap5 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 7.180);
+  tl.fromTo("#cap5 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 8.000);
+  tl.to("#cap5 .kt", {color: "#FFFFFF", duration: .12}, 8.000);
+  tl.set("#cap5", {autoAlpha: 0}, 8.620);
+  tl.set("#cap6", {autoAlpha: 1}, 8.620);
+  tl.fromTo("#cap6 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 8.620);
+  tl.fromTo("#cap6 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 8.720);
+  tl.to("#cap6 .kt", {color: "#FFFFFF", duration: .12}, 8.720);
+  tl.set("#cap6", {autoAlpha: 0}, 10.270);
+  tl.set("#cap7", {autoAlpha: 1}, 10.270);
+  tl.fromTo("#cap7 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 10.270);
+  tl.fromTo("#cap7 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 10.790);
+  tl.to("#cap7 .kt", {color: "#FFFFFF", duration: .12}, 10.790);
+  tl.set("#cap7", {autoAlpha: 0}, 11.230);
+  tl.set("#cap8", {autoAlpha: 1}, 11.230);
+  tl.fromTo("#cap8 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 11.230);
+  tl.fromTo("#cap8 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 11.650);
+  tl.to("#cap8 .kt", {color: "#FFFFFF", duration: .12}, 11.650);
+  tl.set("#cap8", {autoAlpha: 0}, 12.010);
+  tl.set("#cap10", {autoAlpha: 1}, 13.230);
+  tl.fromTo("#cap10 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 13.230);
+  tl.fromTo("#cap10 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 13.870);
+  tl.to("#cap10 .kt", {color: "#FFFFFF", duration: .12}, 13.870);
+  tl.set("#cap10", {autoAlpha: 0}, 14.547);
+  tl.set("#cap11", {autoAlpha: 1}, 14.547);
+  tl.fromTo("#cap11 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 14.547);
+  tl.fromTo("#cap11 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 14.807);
+  tl.to("#cap11 .kt", {color: "#FFFFFF", duration: .12}, 14.807);
+  tl.set("#cap11", {autoAlpha: 0}, 15.267);
+  tl.set("#cap12", {autoAlpha: 1}, 15.267);
+  tl.fromTo("#cap12 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 15.267);
+  tl.fromTo("#cap12 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 15.267);
+  tl.to("#cap12 .kt", {color: "#FFFFFF", duration: .12}, 15.267);
+  tl.set("#cap12", {autoAlpha: 0}, 16.007);
+  tl.set("#cap14", {autoAlpha: 1}, 17.387);
+  tl.fromTo("#cap14 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 17.387);
+  tl.fromTo("#cap14 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 18.407);
+  tl.to("#cap14 .kt", {color: "#FFFFFF", duration: .12}, 18.407);
+  tl.set("#cap14", {autoAlpha: 0}, 18.900);
+  tl.set("#cap15", {autoAlpha: 1}, 18.900);
+  tl.fromTo("#cap15 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 18.900);
+  tl.set("#cap15", {autoAlpha: 0}, 20.330);
+  tl.set("#cap16", {autoAlpha: 1}, 20.330);
+  tl.fromTo("#cap16 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 20.330);
+  tl.fromTo("#cap16 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 20.650);
+  tl.to("#cap16 .kt", {color: "#FFFFFF", duration: .12}, 20.650);
+  tl.set("#cap16", {autoAlpha: 0}, 21.150);
+  tl.set("#cap17", {autoAlpha: 1}, 21.150);
+  tl.fromTo("#cap17 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 21.150);
+  tl.fromTo("#cap17 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 21.550);
+  tl.to("#cap17 .kt", {color: "#FFFFFF", duration: .12}, 21.550);
+  tl.set("#cap17", {autoAlpha: 0}, 23.153);
+  tl.set("#cap18", {autoAlpha: 1}, 23.153);
+  tl.fromTo("#cap18 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 23.153);
+  tl.fromTo("#cap18 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 24.033);
+  tl.to("#cap18 .kt", {color: "#FFFFFF", duration: .12}, 24.033);
+  tl.set("#cap18", {autoAlpha: 0}, 25.333);
+  tl.set("#cap19", {autoAlpha: 1}, 25.333);
+  tl.fromTo("#cap19 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 25.333);
+  tl.fromTo("#cap19 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 26.127);
+  tl.to("#cap19 .kt", {color: "#FFFFFF", duration: .12}, 26.127);
+  tl.set("#cap19", {autoAlpha: 0}, 26.767);
+  tl.set("#cap20", {autoAlpha: 1}, 26.767);
+  tl.fromTo("#cap20 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 26.767);
+  tl.fromTo("#cap20 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 27.667);
+  tl.to("#cap20 .kt", {color: "#FFFFFF", duration: .12}, 27.667);
+  tl.set("#cap20", {autoAlpha: 0}, 28.047);
+  tl.set("#cap21", {autoAlpha: 1}, 28.047);
+  tl.fromTo("#cap21 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 28.047);
+  tl.fromTo("#cap21 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 28.507);
+  tl.to("#cap21 .kt", {color: "#FFFFFF", duration: .12}, 28.507);
+  tl.set("#cap21", {autoAlpha: 0}, 29.277);
+  tl.set("#cap22", {autoAlpha: 1}, 29.277);
+  tl.fromTo("#cap22 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 29.277);
+  tl.fromTo("#cap22 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 29.457);
+  tl.to("#cap22 .kt", {color: "#FFFFFF", duration: .12}, 29.457);
+  tl.set("#cap22", {autoAlpha: 0}, 30.737);
+  tl.set("#cap23", {autoAlpha: 1}, 30.737);
+  tl.fromTo("#cap23 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 30.737);
+  tl.fromTo("#cap23 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 30.737);
+  tl.to("#cap23 .kt", {color: "#FFFFFF", duration: .12}, 30.737);
+  tl.set("#cap23", {autoAlpha: 0}, 32.633);
+  tl.set("#cap24", {autoAlpha: 1}, 32.633);
+  tl.fromTo("#cap24 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 32.633);
+  tl.fromTo("#cap24 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 33.713);
+  tl.to("#cap24 .kt", {color: "#FFFFFF", duration: .12}, 33.713);
+  tl.set("#cap24", {autoAlpha: 0}, 34.293);
+  tl.set("#cap25", {autoAlpha: 1}, 34.293);
+  tl.fromTo("#cap25 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 34.293);
+  tl.fromTo("#cap25 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 34.950);
+  tl.to("#cap25 .kt", {color: "#FFFFFF", duration: .12}, 34.950);
+  tl.set("#cap25", {autoAlpha: 0}, 36.633);
+  tl.set("#cap26", {autoAlpha: 1}, 36.633);
+  tl.fromTo("#cap26 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 36.633);
+  tl.fromTo("#cap26 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 37.739);
+  tl.to("#cap26 .kt", {color: "#FFFFFF", duration: .12}, 37.739);
+  tl.set("#cap26", {autoAlpha: 0}, 37.979);
+  tl.set("#cap27", {autoAlpha: 1}, 37.979);
+  tl.fromTo("#cap27 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 37.979);
+  tl.fromTo("#cap27 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 39.179);
+  tl.to("#cap27 .kt", {color: "#FFFFFF", duration: .12}, 39.179);
+  tl.set("#cap27", {autoAlpha: 0}, 39.859);
+  tl.set("#cap28", {autoAlpha: 1}, 39.859);
+  tl.fromTo("#cap28 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 39.859);
+  tl.fromTo("#cap28 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 40.239);
+  tl.to("#cap28 .kt", {color: "#FFFFFF", duration: .12}, 40.239);
+  tl.set("#cap28", {autoAlpha: 0}, 41.632);
+  tl.set("#cap29", {autoAlpha: 1}, 41.632);
+  tl.fromTo("#cap29 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 41.632);
+  tl.fromTo("#cap29 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 43.440);
+  tl.to("#cap29 .kt", {color: "#FFFFFF", duration: .12}, 43.440);
+  tl.set("#cap29", {autoAlpha: 0}, 44.000);
+  tl.set("#cap30", {autoAlpha: 1}, 44.000);
+  tl.fromTo("#cap30 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 44.000);
+  tl.fromTo("#cap30 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 44.221);
+  tl.to("#cap30 .kt", {color: "#FFFFFF", duration: .12}, 44.221);
+  tl.set("#cap30", {autoAlpha: 0}, 45.281);
+  tl.set("#cap31", {autoAlpha: 1}, 45.281);
+  tl.fromTo("#cap31 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 45.281);
+  tl.fromTo("#cap31 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 45.701);
+  tl.to("#cap31 .kt", {color: "#FFFFFF", duration: .12}, 45.701);
+  tl.set("#cap31", {autoAlpha: 0}, 46.981);
+  tl.set("#cap32", {autoAlpha: 1}, 46.981);
+  tl.fromTo("#cap32 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 46.981);
+  tl.fromTo("#cap32 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 47.881);
+  tl.to("#cap32 .kt", {color: "#FFFFFF", duration: .12}, 47.881);
+  tl.set("#cap32", {autoAlpha: 0}, 48.592);
+  tl.set("#cap33", {autoAlpha: 1}, 48.592);
+  tl.fromTo("#cap33 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 48.592);
+  tl.fromTo("#cap33 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 48.892);
+  tl.to("#cap33 .kt", {color: "#FFFFFF", duration: .12}, 48.892);
+  tl.set("#cap33", {autoAlpha: 0}, 49.672);
+  tl.set("#cap34", {autoAlpha: 1}, 49.672);
+  tl.fromTo("#cap34 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 49.672);
+  tl.fromTo("#cap34 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 50.492);
+  tl.to("#cap34 .kt", {color: "#FFFFFF", duration: .12}, 50.492);
+  tl.set("#cap34", {autoAlpha: 0}, 51.684);
+  tl.set("#cap35", {autoAlpha: 1}, 51.684);
+  tl.fromTo("#cap35 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 51.684);
+  tl.fromTo("#cap35 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 52.284);
+  tl.to("#cap35 .kt", {color: "#FFFFFF", duration: .12}, 52.284);
+  tl.set("#cap35", {autoAlpha: 0}, 52.948);
+  tl.set("#cap36", {autoAlpha: 1}, 52.948);
+  tl.fromTo("#cap36 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 52.948);
+  tl.fromTo("#cap36 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 53.588);
+  tl.to("#cap36 .kt", {color: "#FFFFFF", duration: .12}, 53.588);
+  tl.set("#cap36", {autoAlpha: 0}, 54.568);
+  tl.set("#cap37", {autoAlpha: 1}, 54.568);
+  tl.fromTo("#cap37 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 54.568);
+  tl.fromTo("#cap37 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 55.814);
+  tl.to("#cap37 .kt", {color: "#FFFFFF", duration: .12}, 55.814);
+  tl.set("#cap37", {autoAlpha: 0}, 56.494);
+  tl.set("#cap38", {autoAlpha: 1}, 56.494);
+  tl.fromTo("#cap38 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 56.494);
+  tl.fromTo("#cap38 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 56.994);
+  tl.to("#cap38 .kt", {color: "#FFFFFF", duration: .12}, 56.994);
+  tl.set("#cap38", {autoAlpha: 0}, 57.633);
+  tl.set("#cap39", {autoAlpha: 1}, 57.633);
+  tl.fromTo("#cap39 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 57.633);
+  tl.fromTo("#cap39 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 58.550);
+  tl.to("#cap39 .kt", {color: "#FFFFFF", duration: .12}, 58.550);
+  tl.set("#cap39", {autoAlpha: 0}, 58.867);
+  tl.set("#cap40", {autoAlpha: 1}, 58.867);
+  tl.fromTo("#cap40 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 58.867);
+  tl.fromTo("#cap40 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 59.847);
+  tl.to("#cap40 .kt", {color: "#FFFFFF", duration: .12}, 59.847);
+  tl.set("#cap40", {autoAlpha: 0}, 60.447);
+  tl.set("#cap41", {autoAlpha: 1}, 60.447);
+  tl.fromTo("#cap41 .box", {opacity: 0, y: 18, scale: .96}, X({opacity: 1, y: 0, scale: 1, duration: .35, ease: RISE}), 60.447);
+  tl.fromTo("#cap41 .kb", {opacity: 0, scale: .6}, X({opacity: 1, scale: 1, duration: .5, ease: POP}), 60.787);
+  tl.to("#cap41 .kt", {color: "#FFFFFF", duration: .12}, 60.787);
+  tl.set("#cap41", {autoAlpha: 0}, 61.307);
+
+
+  rise("#b1", 0.050);
+  pop("#b1n", 1.393); fadein("#b1m", 2.393); pop("#b1a", 2.853);
+  pop("#b1s", 4.073);
+  tl.to("#b1t0, #b1t1, #b1t2, #b1t3", {autoAlpha: 0, scale: .3, duration: .35, ease: "power2.in", stagger: .18}, 4.753);
+  sketch("x1", "skF"); ln("x1", 190, 560, 890, 640, {stroke: "#7A1424", strokeWidth: 6, seed: 3});
+  draw("x1", 5.833, .45);
+  sink("#b1", 6.450); erase("x1", 6.450);
+
+
+  pop("#b2k", 8.000);
+  sink("#b2k", 9.060);
+  rise("#b2a", 9.410);
+  pop("#b2p", 10.690, .45); rise("#b2b", 10.790);
+  pop("#b2s", 12.010, .6);
+  sketch("d2", "skF"); label("d2", 812, 600, "дорого!", {size: 56, color: "#7A1424", anchor: "start"});
+  under("d2", 806, 618, 990, {stroke: "#7A1424", seed: 9});
+  draw("d2", 13.770, .45);
+  sink("#b2a, #b2p, #b2b, #b2s", 14.297); erase("d2", 14.297);
+
+
+  rise("#bw1", 15.907); rise("#bw2", 16.667);
+  tl.fromTo("#bwq", {autoAlpha: 0, y: -40}, X({autoAlpha: 1, y: 0, duration: .5, ease: POP}), 18.407);
+  sink("#bw1, #bw2", 18.880);
+
+
+  rise("#b4", 20.130); pop("#b4n", 20.650); pop("#b4c", 21.550);
+  sink("#b4", 22.853);
+
+
+  rise("#b5", 23.003);
+  pop("#b5p0", 23.203, .45); pop("#b5p1", 23.363, .45); pop("#b5p2", 23.523, .45); pop("#b5p3", 23.683, .45); pop("#b5p4", 23.843, .45); pop("#b5p5", 24.003, .45);
+  sketch("s5", "skF"); ln("s5", 290, 405, 935, 410, {stroke: "#7A1424", strokeWidth: 7, seed: 31});
+  draw("s5", 24.653, .45);
+  sketch("o5", "skF"); ell("o5", 220, 405, 170, 210, {stroke: "#7A1424", strokeWidth: 5, seed: 33});
+  draw("o5", 25.637, .5);
+  erase("s5", 26.877);
+  tl.to("#b5n1, #b5n2, #b5n3, #b5n4, #b5n5", {autoAlpha: 0, duration: .25}, 26.877);
+  pop("#b5k1", 27.027, .4); pop("#b5k2", 27.167, .4); pop("#b5k3", 27.307, .4); pop("#b5k4", 27.447, .4); pop("#b5k5", 27.587, .4);
+  sketch("w5", "skF"); label("w5", 540, 560, "далі просто працює", {size: 50, color: "#7A1424"});
+  draw("w5", 27.667);
+  sink("#b5", 28.850); erase("o5", 28.850); erase("w5", 28.850);
+
+
+  sketch("h1", "skP"); box("h1", 110, 400, 200, 340, {seed: 41, fill: true});
+  label("h1", 210, 585, "1300", {size: 64}); label("h1", 210, 800, "система", {size: 46});
+  draw("h1", 29.357, .7);
+  sketch("h2", "skP"); label("h2", 510, 372, "1 акаунт", {size: 46}); draw("h2", 30.087);
+  sketch("h3", "skP"); box("h3", 400, 642.9, 220, 97.1, {seed: 43, r: 18});
+  label("h3", 510, 708.4, "400", {size: 48}); draw("h3", 30.637, .55);
+  sketch("h4", "skP"); label("h4", 634, 708.4, "− Claude", {size: 42, color: "#7A1424", anchor: "start"});
+  ln("h4", 404, 654.9, 616, 654.9, {stroke: "#7A1424", strokeWidth: 5, seed: 45});
+  draw("h4", 31.613, .4);
+  sketch("h5", "skP"); ln("h5", 312, 400, 990, 400, {stroke: "#7A1424", strokeWidth: 4, seed: 47});
+  draw("h5", 33.613, .6);
+  sketch("h6", "skP"); box("h6", 400, 545.7, 220, 97.1, {seed: 49, r: 18}); draw("h6", 33.843, .45);
+  sketch("h7", "skP"); box("h7", 400, 448.6, 220, 97.1, {seed: 51, r: 18}); draw("h7", 34.193, .45);
+  sketch("h8", "skP"); box("h8", 400, 400, 220, 48.6, {seed: 53, r: 14, fill: true}); draw("h8", 34.800, .45);
+  sketch("h9", "skP"); label("h9", 510, 800, "~3,5 міс", {size: 52, color: "#7A1424"});
+  under("h9", 420, 818, 600, {stroke: "#7A1424", seed: 55}); draw("h9", 35.530, .45);
+  erase("h4", 36.510);
+  sketch("r1", "skP"); label("r1", 830, 322, "2 акаунти", {size: 44}); box("r1", 720, 545.7, 220, 194.3, {seed: 57, r: 18});
+  label("r1", 830, 660.9, "800", {size: 52}); draw("r1", 37.159, .55);
+  sketch("r2", "skP"); label("r2", 830, 372, "або монтажер", {size: 40, color: "#574142"}); draw("r2", 38.879);
+  sketch("r3", "skP"); box("r3", 720, 400, 220, 145.7, {seed: 59, r: 18, fill: true}); draw("r3", 40.139, .45);
+  sketch("r4", "skP"); label("r4", 830, 800, "< 2 міс", {size: 52, color: "#7A1424"});
+  under("r4", 745, 818, 915, {stroke: "#7A1424", seed: 61}); draw("r4", 40.759, .45);
+  erase("h1", 42.080); erase("h2", 42.080); erase("h3", 42.080); erase("h5", 42.080);
+  erase("h6", 42.080); erase("h7", 42.080); erase("h8", 42.080); erase("h9", 42.080);
+  erase("r1", 42.080); erase("r2", 42.080); erase("r3", 42.080); erase("r4", 42.080);
+
+
+  fadein("#b7", 41.732, .01); pop("#b7a", 41.732); pop("#b7b", 42.052);
+  sketch("x7", "skF"); ln("x7", 225, 432, 515, 445, {stroke: "#7A1424", strokeWidth: 7, seed: 71});
+  ln("x7", 565, 445, 860, 432, {stroke: "#7A1424", strokeWidth: 7, seed: 73});
+  draw("x7", 42.432, .35);
+  sink("#b7", 43.900); erase("x7", 43.900);
+
+
+  rise("#b8", 45.451); pop("#b8n", 46.021);
+  rise("#b8ra", 47.731, 24); tl.set("#b8ka", {className: "check on"}, 48.081); pop("#b8ka", 48.081, .45); rise("#b8rb", 48.742, 24); tl.set("#b8kb", {className: "check on"}, 49.092); pop("#b8kb", 49.092, .45); rise("#b8rc", 50.342, 24); tl.set("#b8kc", {className: "check on"}, 50.692); pop("#b8kc", 50.692, .45); rise("#b8rd", 52.134, 24); tl.set("#b8kd", {className: "check on"}, 52.484); pop("#b8kd", 52.484, .45);
+  sink("#b8", 52.798);
+
+
+  rise("#b9", 52.968);
+  pop("#b9s", 55.174);
+  sketch("x9", "skF"); ln("x9", 385, 597, 760, 592, {stroke: "#7A1424", strokeWidth: 7, seed: 91});
+  draw("x9", 57.633, .35);
+  tl.to("#b9s", {autoAlpha: 0, duration: .25}, 58.273); erase("x9", 58.273);
+  pop("#b9c", 58.400);
+  tl.set("#b9k0", {className: "check on"}, 58.650); pop("#b9k0", 58.650, .4); tl.set("#b9k1", {className: "check on"}, 58.770); pop("#b9k1", 58.770, .4); tl.set("#b9k2", {className: "check on"}, 58.890); pop("#b9k2", 58.890, .4);
+  sink("#b9", 59.307);
+
+
+  pop("#b10a", 59.847);
+  pop("#b10b", 61.287, .6);
+  sketch("a10", "skF"); arrow("a10", 905, 620, 960, 820, {stroke: "#7A1424", strokeWidth: 5, seed: 97, bend: -.25});
+  draw("a10", 61.837, .5);
+
+  half(29.177, 41.180);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>

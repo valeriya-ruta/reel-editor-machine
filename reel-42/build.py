@@ -40,7 +40,8 @@ g = G(dur=DUR, reel=NN)
 # whisper's spelling of what she plainly said -> her word (checked on the plate)
 FIX = {
     u"працювати": u"працювати.", u"Доступы": u"доступи", u"зберемо.": u"зберемо",
-    u"Єдине,": u"єдине,", u"то встав": u"то став",
+    u"Єдине,": u"єдине,", u"то встав": u"то став", (u"є", 11.7): u"є,", u"інше": u"інше —",
+    u"тести": u"тести —",
 }
 CAPS = load_caps(NN, FIX)
 W = Words(CAPS)
@@ -132,7 +133,7 @@ ROWS = [
     (u"доступи до акаунтів", 290,
      u'%s<span class="hid" id="v1a">%s</span><span class="hid" id="v1b">%s</span><span class="hid" id="v1c">%s</span>'
      % (u'<span class="hid" id="v1k">%s</span>' % KEY, mark("instagram", 36), mark("threads", 36), mark("telegram", 36))),
-    (u"блогерки, які подобаються", 380,
+    (u"блогери, які подобаються", 380,
      u'<span class="row" style="gap:0">%s</span><span class="hid" id="v2h">%s</span>'
      % (u"".join(u'<span class="hid" id="v2a%d">%s</span>' % (i, AVA) for i in range(3)), HEART)),
     (u"шрифти і кольори", 260,
@@ -184,7 +185,7 @@ js(u'''
        item(4, t_prav), t_sc - 0.1, tick(4, t_sc + 0.2),
        ck_out))
 g.sfx("pop", t_pr - 0.2)
-for t in (t_dos, t_bl, t_shr, t_pry, t_prav):
+for t in (t_bl, t_shr, t_pry, t_prav):
     g.sfx("click-soft", t)
 g.sfx("pop", t_zb)
 
@@ -220,7 +221,7 @@ js(u'''
   pop("#vsw", %.3f, .45);
   sink("#vc", %.3f); erase("va", %.3f);
 ''' % (ck_out + 0.2, t_gol - 0.1, t_poya - 0.1, t_dod - 0.5, t_dod, t_skil, v_out, v_out))
-g.sfx("whoosh-short", ck_out + 0.15); g.sfx("pop", t_gol - 0.1); g.sfx("pop", t_dod); g.sfx("click-soft", t_skil)
+g.sfx("pop", t_gol - 0.1); g.sfx("pop", t_dod); g.sfx("click-soft", t_skil)
 
 # 4 · HALF — ти: the core; я: everything else in the system ---------------------
 h0 = S(u"сама", 26.56) - 0.4
@@ -272,9 +273,10 @@ js(u'''
        h1, h1, h1, h1, h1, h1, h1, h1, h1))
 js(u"  " + u" ".join(u'erase("d8%d", %.3f);' % (i, h1) for i in range(5)))
 g.sfx("whoosh-short", h0); g.sfx("whoosh-short", h1)
-for t in (t_ty, t_pro, t_str, t_vse, t_an, t_sk, t_ts):
+for t in (t_ty, t_pro, t_str, t_an, t_ts):
     g.sfx("click-soft", t)
 g.sfx("pop", t_sys - 0.1)
+BLACKOUT.append((t_st - 0.05, t_ts - 0.05))         # the system's own labels say it
 
 # 5 · ABOVE — the result, and the client's two buttons -------------------------
 t_pod3, t_rez = S(u"подивитись", 39.27), S(u"результат", 39.83)
@@ -306,7 +308,8 @@ js(u'''
   pop("#rok", %.3f); pop("#rno", %.3f);
   sink("#rc", %.3f);
 ''' % (t_pod3 - 0.25, t_rez - 0.1, t_rez + 0.05, t_rez + 0.2, t_rez + 0.35, t_ok - 0.05, t_ne - 0.05, r_out))
-g.sfx("pop", t_pod3 - 0.25); g.sfx("click-soft", t_ok); g.sfx("click-soft", t_ne)
+g.sfx("pop", t_pod3 - 0.25); g.sfx("click-soft", t_ok)
+BLACKOUT.append((t_ok - 0.05, t_tomu - 0.05))      # the buttons say it
 
 # 6 · ABOVE — CTA ---------------------------------------------------------------
 t_tsya, t_stav = S(u"ця", 42.88), S(u"то став", 44.16)
@@ -322,6 +325,7 @@ js(u'''
   draw("ca", %.3f, .5);
 ''' % (t_tsya - 0.05, t_stav + 0.05, t_stav + 0.5))
 g.sfx("pop", t_tsya - 0.05); g.sfx("pop", t_stav + 0.05)
+BLACKOUT.append((t_stav - 0.05, DUR))               # the pill says it
 
 # ---------------------------------------------------------------- mattes for the half screens
 for i, (a, b) in enumerate(HALF):
@@ -333,7 +337,11 @@ for i, (a, b) in enumerate(HALF):
 def main():
     if "--words" in sys.argv:
         print(" ".join(u"%s/%.1f" % (c["w"], c["s"]) for c in CAPS))
-    chunks = g.chunks(CAPS, place=PLACE)
+    # key-word pills: the noun she leans on, not whisper's merged pairs
+    keys = {S(u"треба", 2.61): True, S(u"доступи", 5.33): True, S(u"шрифти", 10.10): True, S(u"немає,", 12.12): True,
+            S(u"дизайну", 14.70): True, S(u"голосове", 20.65): True, S(u"скіли.", 24.39): True,
+            S(u"ядро", 27.63): True, S(u"аналіз", 34.42): True, S(u"знає.", 30.65): True}
+    chunks = g.chunks(CAPS, keys=keys, place=PLACE)
     if "--chunks" in sys.argv:
         for n, c in enumerate(chunks):
             print(n, "%.2f-%.2f" % (c["s"], c["e"]), " ".join(w["w"] for w in c["words"]),
