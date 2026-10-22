@@ -4,7 +4,7 @@ Cut from the raw recording `20261022_164346.mp4`. Every line is words you actual
 
 Lengths are the sum of the kept spans, measured from word-level timings: within a few seconds of the cut.
 
-## Part 1. How we met, and the words we know · about 2:23
+## Part 1. How we met, and the words we know · about 2:19
 
 `0:26` **Ruta:** Привіт-привіт, ви мене знаєте як технічну продюсерку, але ви ніколи не бачили мого чоловіка. Але сьогодні ми 5 років разом, тому я відповім на ваші питання, які ви мені задали в Threads, про наші відносини. Хто не знає: чистокровний індієць, прям 100%, 24 на 7, народився в Індії, прожив в Індії.  
 
@@ -22,7 +22,8 @@ Lengths are the sum of the kept spans, measured from word-level timings: within 
 `1:58` **Him:** You're the best.  
 
 `2:02` **Ruta:** Considering that we come from very different backgrounds, what brings us together?  
-**Him:** Actually, we are from different backgrounds, but as human beings we are very similar. Like, extremely similar. Like, we got together in like a week or so. We have to be similar. We moved in in six months.  
+
+`2:11` **Him:** We are from different backgrounds, but as human beings we are very similar. Like, extremely similar. Like, we got together in like a week or so. We have to be similar. We moved in in six months.  
 
 `6:00` **Ruta:** Which language do we speak?  
 **Him:** English.  

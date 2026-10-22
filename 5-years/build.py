@@ -48,6 +48,11 @@ OVR = {25.9: (25.9, "індії"), 79.6: ("where", None), 371.9: (None, "words")
        1042.5: (None, "delicious"), 782.7: ("in", 807.0), 811.4: (None, "months"),
        1082.5: ("say", 1083.4)}
 
+# Edges she has set by ear, applied after the silence search: (start, end),
+# None keeps the computed one. 130.85: start right on «we», after his
+# «okay, uh, actually» (her note: "he's thinking, it's useless").
+FIXED = {130.85: (130.80, None)}
+
 THR = -32.0       # dBFS; her noise floor sits near -40, speech near -19
 QUIET = 8         # 80 ms under THR counts as a pause, not a stop consonant
 LEAD = 0.22       # silence kept before the first word
@@ -131,11 +136,14 @@ def edges(s, e):
     lo, hi = le - 0.10, min(le + 1.2, next_s + 0.10)
     runs = _runs(lo, hi)
     b = min(runs[0][0] + TAIL, runs[0][1]) if runs else _dip(lo, next_s + 0.15) + 0.08
-    return round(a, 3), round(b, 3)
+    fa, fb = FIXED.get(s, (None, None))
+    return round(fa if fa is not None else a, 3), round(fb if fb is not None else b, 3)
 
 
-def word_clip(token, t):
+def word_clip(token, t, fixed=None):
     """One word on its own, for the cold open: tight, never into a neighbour."""
+    if fixed:
+        return fixed
     i = _near(token, t)
     w, prev_e, next_s = WORDS[i], WORDS[i - 1]["e"], WORDS[i + 1]["s"]
     lo, hi = max(prev_e - 0.10, w["s"] - 0.6), w["s"] + 0.08
@@ -164,7 +172,7 @@ PART = {1: dict(
         (93.0, "Тож так, Барселона."), (94.3, "Воно було того варте?"), (95.0, "Варте. Мабуть."),
         (102.2, "О боже, складне питання."), (104.0, "Мені подобається в тобі все."),
         (112.5, "Ти добра, ти дбаєш про мене,"), (115.4, "ти мене любиш."), (117.7, "Ти найкраща."),
-        (128.9, "Ну, взагалі ми з різних культур,"), (132.5, "але як люди ми дуже схожі."),
+        (130.9, "Ми з різних культур,"), (132.5, "але як люди ми дуже схожі."),
         (135.2, "Прям надзвичайно схожі."), (138.5, "Ми зійшлися десь за тиждень,"),
         (140.6, "тож ми мусимо бути схожі."), (142.3, "З'їхались через пів року."),
         (362.0, "Англійською."), (365.8, "Іншої спільної мови в нас немає."),
@@ -197,7 +205,10 @@ PART = {1: dict(
     ],
     end=("Далі ще 2 частини", "підпишись, щоб не пропустити"),
     # cold open: his «Господи», her «арре яар», then a flash into the intro
-    cold=[("hospadé", 469.1, "«Господи»!"), ("areyar", 421.1, "«Арре яар»!")],
+    # «арре яар» is really 421.50-421.95 (Whisper starts it 0.4 s early); keep
+    # its tail to 422.35, before his «from me» at 422.55 (her note: cut off)
+    cold=[("hospadé", 469.1, "«Господи»!", None),
+          ("areyar", 421.1, "«Арре яар»!", (421.30, 422.35))],
     # name tabs while she introduces them: (source time, name, x over the head, s)
     tabs=[(26.6, "Рута", 724, 2.4), (29.3, "Кундж", 292, 2.4)],
     # the one close-up: her face after «5 років разом», chest up
@@ -335,12 +346,12 @@ def build(n, dress_only=False):
     spans = json.load(open(os.path.join(WORK, "spans.json")))[n - 1]["spans"]
     cfg = PART[n]
     cuts = [edges(s, e) for s, e in spans]
-    cold = [word_clip(tok, t) for tok, t, _ in cfg.get("cold", [])]
+    cold = [word_clip(tok, t, fx) for tok, t, _, fx in cfg.get("cold", [])]
     json.dump({"cold": cold, "cuts": cuts}, open(os.path.join(WORK, f"part{n}-cuts.json"), "w"), indent=1)
     shots = plan(cuts, [q[0] for q in cfg["stickers"] if q[3]], cfg.get("close", []), cold)
     out, marks, dur = timeline(shots)
     t, cold_caps = 0.0, []
-    for sh, (_, _, text) in zip(shots, cfg.get("cold", [])):
+    for sh, (_, _, text, _) in zip(shots, cfg.get("cold", [])):
         cold_caps.append((t, t + sh["n"] / FPS, text))
         t += sh["n"] / FPS
     tmp = os.path.join(WORK, f"p{n}")
