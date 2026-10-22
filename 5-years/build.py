@@ -51,7 +51,7 @@ OVR = {25.9: (25.9, "індії"), 79.6: ("where", None), 371.9: (None, "words")
 THR = -32.0       # dBFS; her noise floor sits near -40, speech near -19
 QUIET = 8         # 80 ms under THR counts as a pause, not a stop consonant
 LEAD = 0.22       # silence kept before the first word
-TAIL = 0.30       # silence kept after the last word
+TAIL = 0.35       # silence kept after the last word
 
 
 def envelope():
@@ -124,12 +124,27 @@ def edges(s, e):
 
     lo, hi = max(prev_e - 0.15, fs - 1.0), fs + 0.10
     runs = [r for r in _runs(lo, hi) if r[1] <= hi]
-    a = max(runs[-1][1] - LEAD, runs[-1][0]) if runs else _dip(lo, hi) - 0.02
+    a = max(runs[-1][1] - LEAD, runs[-1][0]) if runs else _dip(lo, hi) - 0.06
 
-    lo, hi = le - 0.10, min(le + 1.2, next_s + 0.15)
+    # no pause before the next word: cut in the dip between the two, late
+    # rather than early (her note: a few word ends still sounded clipped)
+    lo, hi = le - 0.10, min(le + 1.2, next_s + 0.10)
     runs = _runs(lo, hi)
-    b = min(runs[0][0] + TAIL, runs[0][1]) if runs else _dip(lo, hi) + 0.03
+    b = min(runs[0][0] + TAIL, runs[0][1]) if runs else _dip(lo, next_s + 0.15) + 0.08
     return round(a, 3), round(b, 3)
+
+
+def word_clip(token, t):
+    """One word on its own, for the cold open: tight, never into a neighbour."""
+    i = _near(token, t)
+    w, prev_e, next_s = WORDS[i], WORDS[i - 1]["e"], WORDS[i + 1]["s"]
+    lo, hi = max(prev_e - 0.10, w["s"] - 0.6), w["s"] + 0.08
+    runs = [r for r in _runs(lo, hi) if r[1] <= hi]
+    a = max(runs[-1][1] - 0.10, runs[-1][0]) if runs else _dip(lo, hi) - 0.02
+    lo, hi = w["e"] - 0.10, min(w["e"] + 0.8, next_s + 0.05)
+    runs = _runs(lo, hi)
+    b = min(runs[0][0] + 0.20, runs[0][1]) if runs else _dip(lo, hi) + 0.04
+    return round(a, 3), round(min(b, next_s - 0.02), 3)
 
 
 # ------------------------------------------------------------------ the parts
@@ -181,11 +196,16 @@ PART = {1: dict(
         (453.0, "А які слова знаєш ти?", "What words do you know?", False, 3.2),
     ],
     end=("Далі ще 2 частини", "підпишись, щоб не пропустити"),
+    # cold open: his «Господи», her «арре яар», then a flash into the intro
+    cold=[("hospadé", 469.1, "«Господи»!"), ("areyar", 421.1, "«Арре яар»!")],
+    # name tabs while she introduces them: (source time, name, x over the head, s)
+    tabs=[(26.6, "Рута", 724, 2.4), (29.3, "Кундж", 292, 2.4)],
+    # the one close-up: her face after «5 років разом», chest up
+    close=[(33.45, 34.55, 2.3, (0.66, 0.48))],
 )}
 
-ZOOM_CLOSE = 1.3
-CENTRE = (0.47, 0.47)        # between their faces, measured off four frames
-SPLIT_OVER = 8.0             # a take longer than this gets a punch-in mid-way
+# Her note on the first dressed preview: no punch-ins, they crop us and make
+# no sense. The only close-up is the one PART[n]["close"] names.
 FLASH_OUT, FLASH_IN = 0.10, 0.22
 END_HOLD = 5.0
 
@@ -194,23 +214,23 @@ def frames(t):
     return max(1, round(t * FPS))
 
 
-def plan(cuts, flash_at):
-    """Cuts -> shots: (src_a, n_frames, zoom, flash_in, flash_out)."""
-    shots = []
+def plan(cuts, flash_at, close=(), cold=()):
+    """Cuts -> shots (source start, frames, zoom, flashes). Cold-open clips go
+    first and flash into the rest; a close-up splits the cut it falls in."""
+    shots = [dict(a=a, n=frames(b - a), zoom=1.0, centre=None, cold=True, flash_in=False)
+             for a, b in cold]
     for a, b in cuts:
-        pieces = [(a, b)]
-        if b - a > SPLIT_OVER:
-            inner = [w for w in WORDS if a + 0.35 * (b - a) < w["s"] < a + 0.65 * (b - a)]
-            gaps = [(inner[k + 1]["s"] - inner[k]["e"], (inner[k]["e"] + inner[k + 1]["s"]) / 2)
-                    for k in range(len(inner) - 1)]
-            if gaps:
-                m = max(gaps)[1]
-                pieces = [(a, m), (m, b)]
-        for k, (pa, pb) in enumerate(pieces):
-            shots.append(dict(a=pa, n=frames(pb - pa),
+        pieces = [(a, b, 1.0, None)]
+        for ca, cb, z, c in close:
+            if a < ca < b:
+                pieces = [(a, ca, 1.0, None), (ca, min(cb, b), z, c)] + \
+                         ([(cb, b, 1.0, None)] if cb < b else [])
+        for k, (pa, pb, z, c) in enumerate(pieces):
+            shots.append(dict(a=pa, n=frames(pb - pa), zoom=z, centre=c, cold=False,
                               flash_in=(k == 0 and any(abs(a - q) < 1.0 for q in flash_at))))
+    if cold:
+        shots[len(cold)]["flash_in"] = True
     for i, sh in enumerate(shots):
-        sh["zoom"] = 1.0 if i % 2 == 0 else ZOOM_CLOSE
         sh["flash_out"] = i + 1 < len(shots) and shots[i + 1]["flash_in"]
     return shots
 
@@ -220,7 +240,8 @@ def timeline(shots):
     marks, t = [], 0.0
     for sh in shots:
         d = sh["n"] / FPS
-        marks.append((sh["a"], sh["a"] + d, t))
+        if not sh["cold"]:          # the cold open repeats words said later
+            marks.append((sh["a"], sh["a"] + d, t))
         t += d
     def out(src):
         for a, b, o in marks:
@@ -234,11 +255,11 @@ def run(cmd):
     subprocess.run(cmd, check=True)
 
 
-def vf_shot(zoom, flash_in, flash_out, n):
+def vf_shot(zoom, centre, flash_in, flash_out, n):
     f = []
     if zoom != 1.0:
         cw, ch = f"iw/{zoom}", f"ih/{zoom}"
-        f.append(f"crop={cw}:{ch}:iw*{CENTRE[0]}-{cw}/2:ih*{CENTRE[1]}-{ch}/2")
+        f.append(f"crop={cw}:{ch}:iw*{centre[0]}-{cw}/2:ih*{centre[1]}-{ch}/2")
     f += [f"scale={OW}:{OH}", f"fps={FPS_N}/{FPS_D}", "format=yuv420p"]
     if flash_in:
         f.append(f"fade=t=in:st=0:d={FLASH_IN}:color=white")
@@ -256,33 +277,57 @@ def ass_time(t):
     return f"{cs // 360000}:{cs // 6000 % 60:02d}:{cs // 100 % 60:02d}.{cs % 100:02d}"
 
 
-def write_ass(path, subs, cuts, out):
+MAXC = 24      # one line, a few words: her note on the first dressed preview
+
+
+def chunks(text, a, b):
+    """Split a subtitle into one-line pieces of a few words, timed by length."""
+    words = text.split()
+    k = -(-len(text) // MAXC)
+    target, lines, cur = len(text) / k, [], ""
+    for w in words:
+        if cur and (len(cur) + 1 + len(w) > MAXC or len(cur) >= target):
+            lines.append(cur)
+            cur = w
+        else:
+            cur = f"{cur} {w}".strip()
+    lines.append(cur)
+    total, t, outl = sum(len(x) for x in lines), a, []
+    for x in lines:
+        d = (b - a) * len(x) / total
+        outl.append((t, t + d, x))
+        t += d
+    return outl
+
+
+def write_ass(path, subs, cuts, out, extra=()):
     # Her captions are Google Sans 700 at 90px, centred on y 1472 (STYLE.md
     # §2b). These are half that, as she asked. libass sizes by line height, so
-    # 56 here lands near a 45px em. A soft shadow, no stroke: the band sits on
-    # two white t-shirts.
+    # 56 here lands near a 45px em. No shadow, no stroke: the caption band
+    # (assets/caption-band.png) under them carries the contrast.
     head = """[Script Info]
 ScriptType: v4.00+
 PlayResX: 1080
 PlayResY: 1920
-WrapStyle: 0
+WrapStyle: 2
 ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Sub,Product Sans,56,&H00FFFFFF,&H00FFFFFF,&H00000000,&H8C000000,-1,0,0,0,100,100,0,0,1,0,2.5,5,90,90,0,1
+Style: Sub,Product Sans,56,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,5,40,40,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
-    lines = []
+    timed = list(extra)
     for k, (t, text) in enumerate(subs):
         cut_end = next(b for a, b in cuts if a - 0.3 <= t <= b)
         nxt = subs[k + 1][0] if k + 1 < len(subs) else 1e9
         end = min(nxt, cut_end)
         a, b = out(max(t, next(a for a, b in cuts if a - 0.3 <= t <= b))), out(end)
-        lines.append(f"Dialogue: 0,{ass_time(a)},{ass_time(b)},Sub,,0,0,0,,"
-                     f"{{\\an5\\pos(540,1472)}}{text}")
+        timed += chunks(text, a, b)
+    lines = [f"Dialogue: 0,{ass_time(a)},{ass_time(b)},Sub,,0,0,0,,"
+             f"{{\\an5\\pos(540,1472)}}{text}" for a, b, text in timed]
     open(path, "w", encoding="utf-8").write(head + "\n".join(lines) + "\n")
 
 
@@ -290,9 +335,14 @@ def build(n, dress_only=False):
     spans = json.load(open(os.path.join(WORK, "spans.json")))[n - 1]["spans"]
     cfg = PART[n]
     cuts = [edges(s, e) for s, e in spans]
-    json.dump(cuts, open(os.path.join(WORK, f"part{n}-cuts.json"), "w"), indent=1)
-    shots = plan(cuts, [q[0] for q in cfg["stickers"] if q[3]])
+    cold = [word_clip(tok, t) for tok, t, _ in cfg.get("cold", [])]
+    json.dump({"cold": cold, "cuts": cuts}, open(os.path.join(WORK, f"part{n}-cuts.json"), "w"), indent=1)
+    shots = plan(cuts, [q[0] for q in cfg["stickers"] if q[3]], cfg.get("close", []), cold)
     out, marks, dur = timeline(shots)
+    t, cold_caps = 0.0, []
+    for sh, (_, _, text) in zip(shots, cfg.get("cold", [])):
+        cold_caps.append((t, t + sh["n"] / FPS, text))
+        t += sh["n"] / FPS
     tmp = os.path.join(WORK, f"p{n}")
     os.makedirs(os.path.join(tmp, "seg"), exist_ok=True)
 
@@ -300,7 +350,7 @@ def build(n, dress_only=False):
     total = dur + frames(END_HOLD) / FPS
     if not (dress_only and os.path.exists(joined)):
         cut_and_join(cfg, cuts, shots, tmp, joined)
-    dress(n, cfg, cuts, out, tmp, joined, total)
+    dress(n, cfg, cuts, out, tmp, joined, total, cold_caps)
     print(f"part {n}: {len(cuts)} cuts, {len(shots)} shots, {dur:.1f}s + {END_HOLD:.0f}s card")
 
 
@@ -311,7 +361,7 @@ def cut_and_join(cfg, cuts, shots, tmp, joined):
         d = sh["n"] / FPS
         seg = os.path.join(tmp, "seg", f"{k:02d}.mp4")
         run(["ffmpeg", "-v", "error", "-y", "-ss", f"{sh['a']:.3f}", "-i", RAW,
-             "-vf", vf_shot(sh["zoom"], sh["flash_in"], sh["flash_out"], sh["n"]),
+             "-vf", vf_shot(sh["zoom"], sh["centre"], sh["flash_in"], sh["flash_out"], sh["n"]),
              "-af", f"atrim=0:{d:.4f},afade=t=in:d=0.008,afade=t=out:st={d - 0.008:.4f}:d=0.008",
              "-frames:v", str(sh["n"]), *ENC, seg])
         listing.append(seg)
@@ -334,20 +384,36 @@ def cut_and_join(cfg, cuts, shots, tmp, joined):
     run(["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", joined])
 
 
-def dress(n, cfg, cuts, out, tmp, joined, total):
-    """Subtitles and stickers over the joined cut."""
+def dress(n, cfg, cuts, out, tmp, joined, total, cold_caps=()):
+    """Caption band, subtitles, name tabs and question stickers over the cut."""
     ass = os.path.join(tmp, "subs.ass")
-    write_ass(ass, cfg["subs"], cuts, out)
-    inputs, graph, last = ["-i", joined], [f"[0:v]subtitles={ass}:fontsdir={FONTS}[v0]"], "v0"
-    for k, (t, uk, en, flash, hold) in enumerate(cfg["stickers"]):
-        png = cards.render(os.path.join(tmp, f"q{k}.png"), uk, en, seed=3 + k,
-                           tilt=-2.0 if k % 2 == 0 else 1.6)
+    write_ass(ass, cfg["subs"], cuts, out, cold_caps)
+    talk_end = total - frames(END_HOLD) / FPS
+    loop = ["-loop", "1", "-framerate", f"{FPS_N}/{FPS_D}", "-t", f"{total:.3f}"]
+    # her usual blurred underlay, stretched and thin, on for the whole talk
+    band_h = round(260 * OH / 1920 / 2) * 2
+    inputs = ["-i", joined, *loop, "-i", os.path.join(ROOT, "assets", "caption-band.png")]
+    graph = [f"[1:v]scale={OW}:{band_h}[band]",
+             f"[0:v][band]overlay=x=0:y={round(1472 * OH / 1920 - band_h / 2)}"
+             f":enable='lte(t,{talk_end:.3f})'[b0]",
+             f"[b0]subtitles={ass}:fontsdir={FONTS}[v0]"]
+    last, k = "v0", 0
+    over = []
+    for j, (t, name, cx, hold) in enumerate(cfg.get("tabs", [])):
+        png = cards.tab(os.path.join(tmp, f"tab{j}.png"), name, cx, 470,
+                        tilt=2.5 if j % 2 == 0 else -3.0, seed=11 + j)
+        over.append((png, out(t), hold))
+    for j, (t, uk, en, flash, hold) in enumerate(cfg["stickers"]):
+        png = cards.render(os.path.join(tmp, f"q{j}.png"), uk, en, seed=3 + j,
+                           tilt=-2.0 if j % 2 == 0 else 1.6)
+        over.append((png, out(t), hold))
+    for png, a, hold in over:
         # a still has one frame; looped, overlay has it for every frame of the cut
-        inputs += ["-loop", "1", "-framerate", f"{FPS_N}/{FPS_D}", "-t", f"{total:.3f}", "-i", png]
-        a = out(t)
-        graph.append(f"[{k + 1}:v]scale={OW}:{OH}[q{k}];"
-                     f"[{last}][q{k}]overlay=enable='between(t,{a:.3f},{a + hold:.3f})'[v{k + 1}]")
-        last = f"v{k + 1}"
+        inputs += [*loop, "-i", png]
+        idx = 2 + k
+        graph.append(f"[{idx}:v]scale={OW}:{OH}[o{k}];"
+                     f"[{last}][o{k}]overlay=enable='between(t,{a:.3f},{a + hold:.3f})'[v{k + 1}]")
+        last, k = f"v{k + 1}", k + 1
     dst_dir = os.path.join(WORK, "out")
     os.makedirs(dst_dir, exist_ok=True)
     dst = os.path.join(dst_dir, f"5-years-part-{n}-preview.mp4")
