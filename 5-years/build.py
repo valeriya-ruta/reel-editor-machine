@@ -286,7 +286,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     open(path, "w", encoding="utf-8").write(head + "\n".join(lines) + "\n")
 
 
-def build(n):
+def build(n, dress_only=False):
     spans = json.load(open(os.path.join(WORK, "spans.json")))[n - 1]["spans"]
     cfg = PART[n]
     cuts = [edges(s, e) for s, e in spans]
@@ -296,6 +296,15 @@ def build(n):
     tmp = os.path.join(WORK, f"p{n}")
     os.makedirs(os.path.join(tmp, "seg"), exist_ok=True)
 
+    joined = os.path.join(tmp, "joined.mp4")
+    total = dur + frames(END_HOLD) / FPS
+    if not (dress_only and os.path.exists(joined)):
+        cut_and_join(cfg, cuts, shots, tmp, joined)
+    dress(n, cfg, cuts, out, tmp, joined, total)
+    print(f"part {n}: {len(cuts)} cuts, {len(shots)} shots, {dur:.1f}s + {END_HOLD:.0f}s card")
+
+
+def cut_and_join(cfg, cuts, shots, tmp, joined):
     # shots
     listing = []
     for k, sh in enumerate(shots):
@@ -322,17 +331,19 @@ def build(n):
 
     lst = os.path.join(tmp, "list.txt")
     open(lst, "w").write("".join(f"file '{p}'\n" for p in listing))
-    joined = os.path.join(tmp, "joined.mp4")
     run(["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", joined])
 
-    # subtitles and stickers over the joined cut
+
+def dress(n, cfg, cuts, out, tmp, joined, total):
+    """Subtitles and stickers over the joined cut."""
     ass = os.path.join(tmp, "subs.ass")
     write_ass(ass, cfg["subs"], cuts, out)
     inputs, graph, last = ["-i", joined], [f"[0:v]subtitles={ass}:fontsdir={FONTS}[v0]"], "v0"
     for k, (t, uk, en, flash, hold) in enumerate(cfg["stickers"]):
         png = cards.render(os.path.join(tmp, f"q{k}.png"), uk, en, seed=3 + k,
                            tilt=-2.0 if k % 2 == 0 else 1.6)
-        inputs += ["-i", png]
+        # a still has one frame; looped, overlay has it for every frame of the cut
+        inputs += ["-loop", "1", "-framerate", f"{FPS_N}/{FPS_D}", "-t", f"{total:.3f}", "-i", png]
         a = out(t)
         graph.append(f"[{k + 1}:v]scale={OW}:{OH}[q{k}];"
                      f"[{last}][q{k}]overlay=enable='between(t,{a:.3f},{a + hold:.3f})'[v{k + 1}]")
@@ -340,11 +351,18 @@ def build(n):
     dst_dir = os.path.join(WORK, "out")
     os.makedirs(dst_dir, exist_ok=True)
     dst = os.path.join(dst_dir, f"5-years-part-{n}-preview.mp4")
+    # the looped stills tick at their own clock; pin the output to the cut's
+    # frame rate and frame count so the picture can't outrun the sound
+    graph.append(f"[{last}]fps={FPS_N}/{FPS_D}[vout]")
+    nframes = int(subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-count_packets",
+                                  "-show_entries", "stream=nb_read_packets", "-of", "csv=p=0", joined],
+                                 capture_output=True, text=True, check=True).stdout.strip())
     run(["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", ";".join(graph),
-         "-map", f"[{last}]", "-map", "0:a", "-c:v", "libx264", "-preset", "veryfast",
+         "-map", "[vout]", "-map", "0:a", "-frames:v", str(nframes), "-c:v", "libx264", "-preset", "veryfast",
          "-crf", "28", "-c:a", "copy", "-movflags", "+faststart", dst])
-    print(f"part {n}: {len(cuts)} cuts, {len(shots)} shots, {dur:.1f}s + {END_HOLD:.0f}s card -> {dst}")
+    print(dst)
 
 
 if __name__ == "__main__":
-    build(int(sys.argv[1]))
+    # --dress: keep the cut already joined, redo only subtitles and stickers
+    build(int(sys.argv[1]), dress_only="--dress" in sys.argv)
