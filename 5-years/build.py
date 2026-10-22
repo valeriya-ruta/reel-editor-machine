@@ -55,8 +55,11 @@ FIXED = {130.85: (130.80, None)}
 
 THR = -32.0       # dBFS; her noise floor sits near -40, speech near -19
 QUIET = 8         # 80 ms under THR counts as a pause, not a stop consonant
-LEAD = 0.22       # silence kept before the first word
-TAIL = 0.35       # silence kept after the last word
+# Her standing rule: when unsure, keep more; she trims by hand. So the air
+# around each cut is on the long side, and where words run together the cut
+# lands well into the next word's onset rather than risk eating this one.
+LEAD = 0.30       # silence kept before the first word
+TAIL = 0.45       # silence kept after the last word
 
 
 def envelope():
@@ -129,13 +132,13 @@ def edges(s, e):
 
     lo, hi = max(prev_e - 0.15, fs - 1.0), fs + 0.10
     runs = [r for r in _runs(lo, hi) if r[1] <= hi]
-    a = max(runs[-1][1] - LEAD, runs[-1][0]) if runs else _dip(lo, hi) - 0.06
+    a = max(runs[-1][1] - LEAD, runs[-1][0]) if runs else _dip(lo, hi) - 0.10
 
     # no pause before the next word: cut in the dip between the two, late
     # rather than early (her note: a few word ends still sounded clipped)
     lo, hi = le - 0.10, min(le + 1.2, next_s + 0.10)
     runs = _runs(lo, hi)
-    b = min(runs[0][0] + TAIL, runs[0][1]) if runs else _dip(lo, next_s + 0.15) + 0.08
+    b = min(runs[0][0] + TAIL, runs[0][1]) if runs else _dip(lo, next_s + 0.20) + 0.15
     fa, fb = FIXED.get(s, (None, None))
     return round(fa if fa is not None else a, 3), round(fb if fb is not None else b, 3)
 
@@ -175,6 +178,14 @@ PART = {1: dict(
         (130.9, "Ми з різних культур,"), (132.5, "але як люди ми дуже схожі."),
         (135.2, "Прям надзвичайно схожі."), (138.5, "Ми зійшлися десь за тиждень,"),
         (140.6, "тож ми мусимо бути схожі."), (142.3, "З'їхались через пів року."),
+        (143.9, "Але, думаю, люди вважають,"), (145.6, "що раз ти індієць, а я українка,"),
+        (147.7, "то ми дуже різні."),
+        (150.2, "Думаю, я не типовий індієць,"), (153.6, "в якомусь сенсі."),
+        (154.5, "Я індієць, я люблю Індію,"), (156.2, "але мої звички — не те,"),
+        (158.3, "що вважають типово індійським."), (160.4, "А ти українка,"),
+        (161.5, "але ти не така…"), (163.4, "Думаю, ти теж відкритіша."),
+        (184.1, "І якби ми не були схожі,"), (186.5, "не було б жодних стосунків."),
+        (187.9, "Так, ми дуже схожі."), (189.3, "У цьому вся суть."),
         (362.0, "Англійською."), (365.8, "Іншої спільної мови в нас немає."),
         (371.8, "Іноді ми переходимо на свою мову,"), (374.5, "щось посередині,"),
         (375.3, "де кожен вставляє свої слова."),
@@ -203,7 +214,8 @@ PART = {1: dict(
         (360.0, "Якою мовою ми говоримо?", "Which language do we speak?", True, 3.5),
         (453.0, "А які слова знаєш ти?", "What words do you know?", False, 3.2),
     ],
-    end=("Далі ще 2 частини", "підпишись, щоб не пропустити"),
+    # her note: the follow has to be more aggressive -- «follow» big
+    end=("ПІДПИШИСЬ!", "щоб не пропустити наступні 2 частини"),
     # cold open: his «Господи», her «арре яар», then a flash into the intro
     # «арре яар» is really 421.50-421.95 (Whisper starts it 0.4 s early); keep
     # its tail to 422.35, before his «from me» at 422.55 (her note: cut off)
@@ -379,7 +391,7 @@ def cut_and_join(cfg, cuts, shots, tmp, joined):
 
     # the follow card: the take runs on, muted, blurred, hazed
     endpng = cards.render(os.path.join(tmp, "end.png"), cfg["end"][0], cfg["end"][1],
-                          top=760, tilt=-1.5, uk_px=112, en_px=60, seed=7)
+                          top=700, tilt=-3.0, uk_px=136, en_px=60, seed=7)
     seg = os.path.join(tmp, "seg", "end.mp4")
     nend = frames(END_HOLD)
     run(["ffmpeg", "-v", "error", "-y", "-ss", f"{cuts[-1][1]:.3f}", "-i", RAW, "-i", endpng,

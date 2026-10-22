@@ -4,7 +4,7 @@ Cut from the raw recording `20261022_164346.mp4`. Every line is words you actual
 
 Lengths are the sum of the kept spans, measured from word-level timings: within a few seconds of the cut.
 
-## Part 1. How we met, and the words we know · about 2:19
+## Part 1. How we met, and the words we know · about 2:46
 
 `0:26` **Ruta:** Привіт-привіт, ви мене знаєте як технічну продюсерку, але ви ніколи не бачили мого чоловіка. Але сьогодні ми 5 років разом, тому я відповім на ваші питання, які ви мені задали в Threads, про наші відносини. Хто не знає: чистокровний індієць, прям 100%, 24 на 7, народився в Індії, прожив в Індії.  
 
@@ -24,6 +24,12 @@ Lengths are the sum of the kept spans, measured from word-level timings: within 
 `2:02` **Ruta:** Considering that we come from very different backgrounds, what brings us together?  
 
 `2:11` **Him:** We are from different backgrounds, but as human beings we are very similar. Like, extremely similar. Like, we got together in like a week or so. We have to be similar. We moved in in six months.  
+**Ruta:** So… but I think people think that because you're Indian and I'm Ukrainian, yeah, it's like so, so different.  
+
+`2:30` **Him:** I think I'm not a stereotypical Indian, in a way. Like, I'm Indian, I love India, but my habits are not what you would consider stereotypical Indian. And you're Ukrainian, but you are not like… I think you're more open as well.  
+
+`3:04` **Ruta:** Also, if we were not similar, there's no relationship.  
+**Him:** Yeah, yeah. Very similar. That's the whole point.  
 
 `6:00` **Ruta:** Which language do we speak?  
 **Him:** English.  
