@@ -35,7 +35,7 @@ Lengths are the sum of the kept spans, measured from word-level timings: within 
 
 `6:53` **Ruta:** I know some words in Indian, in Gujarati specifically.  
 
-`6:60` **Ruta:** The most common words we say: arre yaar.  
+`7:00` **Ruta:** The most common words we say: arre yaar.  
 **Him:** From me.  
 **Ruta:** I love it. It just rolls off the tongue.  
 
