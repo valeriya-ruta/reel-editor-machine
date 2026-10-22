@@ -40,7 +40,7 @@ Lengths are the sum of the kept spans, measured from word-level timings: within 
 **Ruta:** I love it. It just rolls off the tongue.  
 
 `7:14` **Him:** Hey, you know a lot of curse words.  
-**Ruta:** I know a lot of curse words. I know household words like chamchi. Chamchi is spoon, by the way. Yeah, what else do I know? I know a lot of… gandari.  
+**Ruta:** I know a lot of curse words. I know household words like chamchi. Chamchi is spoon. Gandari. Yeah, what else do I know? I know a lot of…  
 **Him:** You know, like, a lot of curse words. Yeah, she's gandari. Very gandari.  
 
 `7:33` **Ruta:** What words do you know?  

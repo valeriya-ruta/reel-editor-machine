@@ -52,3 +52,8 @@ work/media/
 covers/*/.vercel/
 covers/*/out/
 covers/deploy.log
+
+# 5-years series: per-part render scratch and preview output
+work/5y/p*/
+work/5y/out/
+work/5y/cards/
