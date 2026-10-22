@@ -4,7 +4,7 @@ Cut from the raw recording `20261022_164346.mp4`. Every line is words you actual
 
 Lengths are the sum of the kept spans, measured from word-level timings: within a few seconds of the cut.
 
-## Part 1. How we met, and the words we know · about 2:17
+## Part 1. How we met, and the words we know · about 2:23
 
 `0:26` **Ruta:** Привіт-привіт, ви мене знаєте як технічну продюсерку, але ви ніколи не бачили мого чоловіка. Але сьогодні ми 5 років разом, тому я відповім на ваші питання, які ви мені задали в Threads, про наші відносини. Хто не знає: чистокровний індієць, прям 100%, 24 на 7, народився в Індії, прожив в Індії.  
 
@@ -13,7 +13,7 @@ Lengths are the sum of the kept spans, measured from word-level timings: within 
 **Ruta:** Worth it?  
 **Him:** Worth it. Maybe.  
 
-`1:38` **Ruta:** Okay, so what do you like about me?  
+`1:38` **Ruta:** So what do you like about me?  
 
 `1:42` **Him:** Oh my God, that's a different question. I like everything about you.  
 
@@ -40,9 +40,8 @@ Lengths are the sum of the kept spans, measured from word-level timings: within 
 **Ruta:** I love it. It just rolls off the tongue.  
 
 `7:14` **Him:** Hey, you know a lot of curse words.  
-**Ruta:** I know a lot of curse words. I know household words like chamchi. Chamchi is spoon.  
-
-`7:27` **Him:** Yeah, she's gandi [?]. Very gandi.  
+**Ruta:** I know a lot of curse words. I know household words like chamchi. Chamchi is spoon, by the way. Yeah, what else do I know? I know a lot of… gandari.  
+**Him:** You know, like, a lot of curse words. Yeah, she's gandari. Very gandari.  
 
 `7:33` **Ruta:** What words do you know?  
 **Him:** I know a few. Blyat is one. I know pizda. They're all bad words. Then I know yob tvoyu mat.  
@@ -54,9 +53,9 @@ Lengths are the sum of the kept spans, measured from word-level timings: within 
 `7:56` **Him:** Actually, I know some French words as well.  
 **Ruta:** What was the French word your dad called?  
 **Him:** Connasse.  
-**Ruta:** Connasse. I love it. I think that's my favourite foreign word.  
+**Ruta:** Connasse. I love it. I think that's my favourite foreign word. Connasse.  
 
-## Part 2. His parents, and our weird habits · about 2:16
+## Part 2. His parents, and our weird habits · about 2:18
 
 `3:58` **Ruta:** How did your family accept me?  
 
@@ -70,7 +69,7 @@ Lengths are the sum of the kept spans, measured from word-level timings: within 
 
 `4:52` **Ruta:** There was a question: did I go to India? I did go to India. I lived there for a year, in their house, with their family, fully.  
 
-`5:17` **Ruta:** And they were so nice to me. Because, FYI, I cannot have spicy at all. Like, not even mustard.  
+`5:17` **Ruta:** They were so nice to me. Because, FYI, I cannot have spicy at all. Like, not even mustard.  
 **Him:** Not even pepper.  
 **Ruta:** Not even European spicy.  
 
@@ -83,30 +82,27 @@ Lengths are the sum of the kept spans, measured from word-level timings: within 
 
 `10:47` **Ruta:** What interesting habits does he have that seem strange to us?  
 
-`10:55` **Ruta:** But the weirdest for me is that we cannot cuddle. He doesn't like cuddling in his sleep because he feels…  
+`10:55` **Ruta:** The weirdest for me is that we cannot cuddle. He doesn't like cuddling in his sleep because he feels…  
 **Him:** Claustrophobic. I have claustrophobia. Big one.  
 
 `11:20` **Him:** Once I'm asleep, you can do that. But for me to be able to sleep, I need freedom.  
 
-`11:27` **Ruta:** And I'm the complete opposite. I love to be as close as possible, as cuddled as possible. So we are finding compromises.  
+`11:27` **Ruta:** I'm the complete opposite. I love to be as close as possible, as cuddled as possible. So we are finding compromises.  
 
-`11:56` **Him:** So she has some weird habits as well.  
+`11:56` **Him:** She has some weird habits as well.  
 
 `12:11` **Him:** If you want to see where she has been in the house, you just have to see: okay, this is there, this is there, this is there.  
 
-`12:21` **Him:** There is no place. There is no such thing as a place. Wherever she keeps it is the place.  
-
-`12:26` **Him:** Also, she eats yogurt, and she eats pasta with yogurt. Who the hell eats that?  
+`12:21` **Him:** There is no place. There is no such thing as a place. Wherever she keeps it is the place. Also, she eats yogurt, and she eats pasta with yogurt. Who the hell eats that?  
 
 `12:34` **Him:** I lived with some Italians when I was in Barcelona. If they knew her, she would be crucified.  
 
-`12:50` **Ruta:** Sour cream is the best thing ever and it goes on everything.  
-
-`12:54` **Him:** It is good, but who the hell eats it with pasta?  
+`12:49` **Ruta:** Sour cream is the best thing ever and it goes on everything. It is good. Галичина, sponsor me.  
+**Him:** It is good, but who the hell eats it with pasta?  
 
 `13:00` **Him:** That's a crime. I think that's a crime.  
 
-## Part 3. Food, and five years · about 2:17
+## Part 3. Food, and five years · about 2:20
 
 `13:41` **Ruta:** Am I vegetarian now? Because he has been vegetarian from birth, all his life, never tried meat. And I was raised on sausage as young as I can remember, and a little dabble of beer and wine from like 10 years old. You know, the normal European stuff.  
 **Him:** Alcoholics from childhood.  
@@ -139,15 +135,18 @@ Lengths are the sum of the kept spans, measured from word-level timings: within 
 
 `16:28` **Ruta:** You don't like anything from Ukrainian cuisine?  
 
-`16:31` **Him:** I actually like… I like varenyky.  
+`16:31` **Him:** I actually like, I like, uh, varenyky.  
+**Ruta:** True.  
+**Him:** I like varenyky.  
 
 `16:35` **Him:** I like the buckwheat thing your mom made.  
 **Ruta:** Oh yeah, hrechka. And I made you borscht without meat.  
 **Him:** Borscht is fantastic. Without meat, I don't know how authentic it is, but it is fantastic.  
 
-`17:22` **Him:** Like, I used to live on varenyky in Ukraine. I could eat it every day.  
+`17:22` **Him:** Like, I used to live on varenyky in Ukraine. I could eat it every day. It was delicious.  
 
-`17:43` **Ruta:** Yes, varenyky. And that video went viral, and I got so hated on in the comments.  
+`17:41` **Him:** Also the bread chips.  
+**Ruta:** Yes, грінки. And that video went viral, and I got so hated on in the comments.  
 **Him:** Racism.  
 **Ruta:** So many bots, so many… I had to close the comments.  
 
@@ -160,4 +159,4 @@ Lengths are the sum of the kept spans, measured from word-level timings: within 
 `13:31` **Ruta:** And not just travelled. We actually lived there, like a month or two months.  
 
 `18:02` **Ruta:** Say bye-bye.  
-**Him:** Bye.  
+**Him:** Bye-bye.  
