@@ -301,8 +301,10 @@ ENC = (["-c:v", "libx264", "-preset", "medium", "-crf", "12", "-g", "60",
         "-c:a", "aac", "-b:a", "256k", "-ac", "2", "-ar", "48000"] if FULL else
        ["-c:v", "libx264", "-preset", "veryfast", "-crf", "28", "-g", "60",
         "-c:a", "aac", "-b:a", "96k", "-ac", "1", "-ar", "48000"])
-FINAL = (["-c:v", "libx264", "-preset", "slow", "-crf", "18", "-profile:v", "high",
-          "-pix_fmt", "yuv420p"] if FULL else
+# Capped so a 3-minute part stays under HeyGen's 200 MB asset limit (the
+# public URL Buffer posts from); Instagram re-encodes to well under this.
+FINAL = (["-c:v", "libx264", "-preset", "slow", "-crf", "18", "-maxrate", "7500k",
+          "-bufsize", "15000k", "-profile:v", "high", "-pix_fmt", "yuv420p"] if FULL else
          ["-c:v", "libx264", "-preset", "veryfast", "-crf", "28"])
 
 
