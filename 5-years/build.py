@@ -27,7 +27,10 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WORK = os.path.join(ROOT, "work", "5y")
 RAW, WAV = os.path.join(WORK, "raw.mp4"), os.path.join(WORK, "audio.wav")
 FONTS = os.path.join(ROOT, "assets", "fonts")
-OW, OH = 540, 960                       # preview; 1080x1920 for the final
+# --full is the deliverable; without it, a light preview for her to check
+FULL = "--full" in sys.argv
+OW, OH = (1080, 1920) if FULL else (540, 960)
+TAG = "" if FULL else "-preview"
 FPS_N, FPS_D = 30000, 1001
 FPS = FPS_N / FPS_D
 WORDS = json.load(open(os.path.join(WORK, "words.json"), encoding="utf-8"))["words"]
@@ -292,8 +295,15 @@ def vf_shot(zoom, centre, flash_in, flash_out, n):
     return ",".join(f)
 
 
-ENC = ["-c:v", "libx264", "-preset", "veryfast", "-crf", "28", "-g", "60",
-       "-c:a", "aac", "-b:a", "96k", "-ac", "1", "-ar", "48000"]
+# Shots are an intermediate (they get re-encoded once more under the
+# overlays), so the full build keeps them near-lossless.
+ENC = (["-c:v", "libx264", "-preset", "medium", "-crf", "12", "-g", "60",
+        "-c:a", "aac", "-b:a", "256k", "-ac", "2", "-ar", "48000"] if FULL else
+       ["-c:v", "libx264", "-preset", "veryfast", "-crf", "28", "-g", "60",
+        "-c:a", "aac", "-b:a", "96k", "-ac", "1", "-ar", "48000"])
+FINAL = (["-c:v", "libx264", "-preset", "slow", "-crf", "18", "-profile:v", "high",
+          "-pix_fmt", "yuv420p"] if FULL else
+         ["-c:v", "libx264", "-preset", "veryfast", "-crf", "28"])
 
 
 def ass_time(t):
@@ -367,7 +377,7 @@ def build(n, dress_only=False):
     for sh, (_, _, text, _) in zip(shots, cfg.get("cold", [])):
         cold_caps.append((t, t + sh["n"] / FPS, text))
         t += sh["n"] / FPS
-    tmp = os.path.join(WORK, f"p{n}")
+    tmp = os.path.join(WORK, f"p{n}" + ("-full" if FULL else ""))
     os.makedirs(os.path.join(tmp, "seg"), exist_ok=True)
 
     joined = os.path.join(tmp, "joined.mp4")
@@ -440,7 +450,7 @@ def dress(n, cfg, cuts, out, tmp, joined, total, cold_caps=()):
         last, k = f"v{k + 1}", k + 1
     dst_dir = os.path.join(WORK, "out")
     os.makedirs(dst_dir, exist_ok=True)
-    dst = os.path.join(dst_dir, f"5-years-part-{n}-preview.mp4")
+    dst = os.path.join(dst_dir, f"5-years-part-{n}{TAG}.mp4")
     # the looped stills tick at their own clock; pin the output to the cut's
     # frame rate and frame count so the picture can't outrun the sound
     graph.append(f"[{last}]fps={FPS_N}/{FPS_D}[vout]")
@@ -448,8 +458,8 @@ def dress(n, cfg, cuts, out, tmp, joined, total, cold_caps=()):
                                   "-show_entries", "stream=nb_read_packets", "-of", "csv=p=0", joined],
                                  capture_output=True, text=True, check=True).stdout.strip())
     run(["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", ";".join(graph),
-         "-map", "[vout]", "-map", "0:a", "-frames:v", str(nframes), "-c:v", "libx264", "-preset", "veryfast",
-         "-crf", "28", "-c:a", "copy", "-movflags", "+faststart", dst])
+         "-map", "[vout]", "-map", "0:a", "-frames:v", str(nframes), *FINAL,
+         "-c:a", "copy", "-movflags", "+faststart", dst])
     print(dst)
 
 
