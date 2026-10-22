@@ -221,8 +221,9 @@ PART = {1: dict(
     # its tail to 422.35, before his «from me» at 422.55 (her note: cut off)
     cold=[("hospadé", 469.1, "«Господи»!", None),
           ("areyar", 421.1, "«Арре яар»!", (421.30, 422.35))],
-    # name tabs while she introduces them: (source time, name, x over the head, s)
-    tabs=[(26.6, "Рута", 724, 2.4), (29.3, "Кундж", 292, 2.4)],
+    # name tabs while she introduces them: (source time, name, x over the
+    # head, seconds, small line under the name or None). His is hers for him.
+    tabs=[(26.6, "Рута", 724, 2.4, None), (29.3, "Кундж", 292, 2.4, "Кунжут")],
     # the one close-up: her face after «5 років разом», chest up
     close=[(33.45, 34.55, 2.3, (0.66, 0.48))],
 )}
@@ -422,9 +423,9 @@ def dress(n, cfg, cuts, out, tmp, joined, total, cold_caps=()):
              f"[b0]subtitles={ass}:fontsdir={FONTS}[v0]"]
     last, k = "v0", 0
     over = []
-    for j, (t, name, cx, hold) in enumerate(cfg.get("tabs", [])):
-        png = cards.tab(os.path.join(tmp, f"tab{j}.png"), name, cx, 470,
-                        tilt=2.5 if j % 2 == 0 else -3.0, seed=11 + j)
+    for j, (t, name, cx, hold, sub) in enumerate(cfg.get("tabs", [])):
+        png = cards.tab(os.path.join(tmp, f"tab{j}.png"), name, cx, 440 if sub else 470,
+                        tilt=2.5 if j % 2 == 0 else -3.0, seed=11 + j, sub=sub, heart=bool(sub))
         over.append((png, out(t), hold))
     for j, (t, uk, en, flash, hold) in enumerate(cfg["stickers"]):
         png = cards.render(os.path.join(tmp, f"q{j}.png"), uk, en, seed=3 + j,

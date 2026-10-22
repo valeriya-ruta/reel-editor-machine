@@ -77,7 +77,10 @@ html, body {{ margin: 0; width: 1080px; height: 1920px; background: transparent;
        padding: 10px 34px 14px; font-family: Doodle, cursive; font-weight: 700; font-size: {px}px;
        line-height: 1; color: {ink}; white-space: nowrap; }}
 .tab svg {{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }}
-.tab span {{ position: relative; }}
+.tab span, .tab .sub {{ position: relative; display: block; text-align: center; }}
+.tab .sub {{ font-size: {sub_px}px; margin-top: 2px; }}
+.tab .sub svg {{ position: relative; display: inline-block; inset: auto; width: {heart}px; height: {heart}px;
+                 vertical-align: -0.08em; margin-left: 6px; }}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute">
   <filter id="wob" x="-10%" y="-10%" width="120%" height="140%">
@@ -91,7 +94,7 @@ html, body {{ margin: 0; width: 1080px; height: 1920px; background: transparent;
     <rect x="0" y="0" width="100%" height="100%" rx="22" fill="{paper}" filter="url(#wob)"/>
     <rect x="0" y="0" width="100%" height="100%" rx="22" fill="none" stroke="{ink}" stroke-width="4.5" filter="url(#wob)"/>
   </svg>
-  <span>{text}</span>
+  <span>{text}</span>{sub_html}
 </div>
 <svg style="position:absolute; left:{ax}px; top:{ay}px; overflow:visible" width="40" height="70">
   <g filter="url(#wob)" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -102,10 +105,22 @@ html, body {{ margin: 0; width: 1080px; height: 1920px; background: transparent;
 </body></html>"""
 
 
-def tab(path_png, text, cx, top, px=70, tilt=-3.0, seed=11):
-    """A name tab over one person's head, with a doodled arrow down to them."""
+HEART = ('<svg viewBox="0 0 24 22"><path d="M12 20.5 C 5 15, 1.5 11, 2.5 6.8 C 3.4 3.2, 8.2 2.2, 12 6.6'
+         ' C 15.8 2.2, 20.6 3.2, 21.5 6.8 C 22.5 11, 19 15, 12 20.5 Z" fill="#e5484d"'
+         ' stroke="{ink}" stroke-width="2" stroke-linejoin="round" filter="url(#wob)"/></svg>')
+
+
+def tab(path_png, text, cx, top, px=70, tilt=-3.0, seed=11, sub=None, heart=False):
+    """A name tab over one person's head, with a doodled arrow down to them.
+    `sub` is a smaller line under the name; `heart` ends it with a doodled heart."""
+    sub_px = round(px * 0.55)
+    sub_html = ""
+    if sub:
+        sub_html = f'<div class="sub">{html.escape(sub)}{HEART.format(ink=INK) if heart else ""}</div>'
+    tall = px + (round(sub_px * 1.1) if sub else 0)
     page = TAB.format(fonts=FONTS, cx=cx, top=top, tilt=tilt, px=px, ink=INK, paper=PAPER,
-                      seed=seed, text=html.escape(text), ax=cx - 20, ay=top + px + 30)
+                      seed=seed, text=html.escape(text), sub_html=sub_html, sub_px=sub_px,
+                      heart=round(sub_px * 0.8), ax=cx - 20, ay=top + tall + 30)
     return _shoot(path_png, page)
 
 
