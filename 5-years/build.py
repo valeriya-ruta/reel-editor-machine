@@ -283,7 +283,15 @@ PART = {1: dict(
         (646.4, "Які в нього дивні звички?", "What weird habits does he have?", True, 3.5),
     ],
     end=("ПІДПИШИСЬ!", "щоб не пропустити останню частину"),
-    cold=[], tabs=[], close=[],
+    # cold open: her «Галичина, sponsor me» for hype (her note). The word
+    # runs straight on from «it is good», so the clip starts in the small dip
+    # at 772.54 and ends in the silence before his «It is good».
+    cold=[("галичина", 772.6, "Галичино, спонсоруй мене!", (772.54, 774.04))],
+    tabs=[], close=[],
+    # the product on a photo card in the middle, both times she names it:
+    # (source time or ("cold", k), image, seconds; None = to the end of its cut)
+    images=[(("cold", 0), "assets/galychyna-smetana.png", None),
+            (772.6, "assets/galychyna-smetana.png", None)],
 )}
 
 # Her note on the first dressed preview: no punch-ins, they crop us and make
@@ -497,6 +505,16 @@ def dress(n, cfg, cuts, out, tmp, joined, total, cold_caps=()):
         png = cards.tab(os.path.join(tmp, f"tab{j}.png"), name, cx, 440 if sub else 470,
                         tilt=2.5 if j % 2 == 0 else -3.0, seed=11 + j, sub=sub, heart=bool(sub))
         over.append((png, out(t), hold))
+    cold_spans = [(a, b) for a, b, _ in cold_caps]
+    for j, (when, img, hold) in enumerate(cfg.get("images", [])):
+        png = cards.photo(os.path.join(tmp, f"img{j}.png"), os.path.join(ROOT, img),
+                          cx=520, cy=1120, size=420, tilt=-5.0 if j % 2 == 0 else 4.0, seed=21 + j)
+        if isinstance(when, tuple):                       # a cold-open clip, whole
+            a, b = cold_spans[when[1]]
+        else:
+            a = out(when)
+            b = out(next(e for s, e in cuts if s - 0.3 <= when <= e)) if hold is None else a + hold
+        over.append((png, a, b - a))
     for j, (t, uk, en, flash, hold) in enumerate(cfg["stickers"]):
         png = cards.render(os.path.join(tmp, f"q{j}.png"), uk, en, seed=3 + j,
                            tilt=-2.0 if j % 2 == 0 else 1.6)

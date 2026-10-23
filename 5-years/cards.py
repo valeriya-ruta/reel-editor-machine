@@ -135,3 +135,35 @@ def _shoot(path_png, page):
                     f"--screenshot={path_png}", "file://" + path_html],
                    check=True, capture_output=True)
     return path_png
+
+
+PHOTO = """<!doctype html><html><head><meta charset="utf-8"><style>
+html, body {{ margin: 0; width: 1080px; height: 1920px; background: transparent; overflow: hidden; }}
+.ph {{ position: absolute; left: {cx}px; top: {cy}px; width: {size}px; height: {size}px; padding: 18px;
+      transform: translate(-50%, -50%) rotate({tilt}deg); }}
+.ph svg {{ position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }}
+.ph img {{ position: relative; display: block; width: 100%; height: 100%; object-fit: contain;
+          border-radius: 18px; }}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute">
+  <filter id="wob" x="-10%" y="-10%" width="120%" height="120%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="{seed}"/>
+    <feDisplacementMap in="SourceGraphic" scale="7"/>
+  </filter>
+</svg>
+<div class="ph">
+  <svg preserveAspectRatio="none">
+    <rect x="10" y="13" width="100%" height="100%" rx="30" fill="{ink}" fill-opacity="0.18" filter="url(#wob)"/>
+    <rect x="0" y="0" width="100%" height="100%" rx="30" fill="#ffffff" filter="url(#wob)"/>
+    <rect x="0" y="0" width="100%" height="100%" rx="30" fill="none" stroke="{ink}" stroke-width="5" filter="url(#wob)"/>
+  </svg>
+  <img src="file://{img}">
+</div>
+</body></html>"""
+
+
+def photo(path_png, img, cx=540, cy=960, size=440, tilt=-5.0, seed=21):
+    """A picture on a doodled paper card, for the moment something is named."""
+    page = PHOTO.format(cx=cx, cy=cy, size=size, tilt=tilt, seed=seed, ink=INK,
+                        img=os.path.abspath(img))
+    return _shoot(path_png, page)
