@@ -62,7 +62,7 @@ Lengths are the sum of the kept spans, measured from word-level timings: within 
 **Him:** Connasse.  
 **Ruta:** Connasse. I love it. I think that's my favourite foreign word. Connasse.  
 
-## Part 2. His parents, and our weird habits · about 2:18
+## Part 2. His parents, and our weird habits · about 2:28
 
 `3:58` **Ruta:** How did your family accept me?  
 
@@ -72,9 +72,9 @@ Lengths are the sum of the kept spans, measured from word-level timings: within 
 
 `4:21` **Him:** My parents in general are very liberal compared to any Indian parent. And I think they like her way more than they like me. I think at this point I'm the adopted child and she's the original child.  
 
-`4:40` **Ruta:** I have to give them props. Because considering that India is still pretty traditional, to let a complete foreigner, white as snow, into their home, live with them.  
-
 `4:52` **Ruta:** There was a question: did I go to India? I did go to India. I lived there for a year, in their house, with their family, fully.  
+
+`4:40` **Ruta:** I have to give them props. Because considering that India is still pretty traditional, to let a complete foreigner, white as snow, into their home, live with them.  
 
 `5:17` **Ruta:** They were so nice to me. Because, FYI, I cannot have spicy at all. Like, not even mustard.  
 **Him:** Not even pepper.  
@@ -83,31 +83,25 @@ Lengths are the sum of the kept spans, measured from word-level timings: within 
 `5:32` **Ruta:** They cooked for me separately. Every single Indian food was cooked for me separately, with no chili, no spice, nothing. And that was an insane amount of work.  
 
 `5:44` **Ruta:** And I love Indian food without spice. Indian food, not spicy: it's delicious.  
-**Him:** I disagree.  
-
-`5:54` **Him:** It's not Indian food. It's Valeria food [?].  
+**Him:** I disagree. But, I mean…  
+**Ruta:** Favourite food ever.  
+**Him:** It's not Indian food. It's Valeria food [?].  
 
 `10:47` **Ruta:** What interesting habits does he have that seem strange to us?  
 
 `10:55` **Ruta:** The weirdest for me is that we cannot cuddle. He doesn't like cuddling in his sleep because he feels…  
 **Him:** Claustrophobic. I have claustrophobia. Big one.  
 
-`11:20` **Him:** Once I'm asleep, you can do that. But for me to be able to sleep, I need freedom.  
+`11:20` **Him:** Once I'm asleep, you can do that. But for me to be able to sleep, I need freedom. I don't know.  
+**Ruta:** And I'm the complete opposite. I love to be as close as possible, as cuddled as possible. So we are finding compromises.  
 
-`11:27` **Ruta:** I'm the complete opposite. I love to be as close as possible, as cuddled as possible. So we are finding compromises.  
-
-`11:56` **Him:** She has some weird habits as well.  
-
-`12:11` **Him:** If you want to see where she has been in the house, you just have to see: okay, this is there, this is there, this is there.  
+`11:56` **Him:** She has some weird habits as well. First of all, she thinks that you can take something and keep it at whatever place you can. So if you go in the house, you know, with a dog, you can see the trail of the dog, right? If you want to see where she has been in the house, you just have to see: okay, this is there, this is there, this is there.  
 
 `12:21` **Him:** There is no place. There is no such thing as a place. Wherever she keeps it is the place. Also, she eats yogurt, and she eats pasta with yogurt. Who the hell eats that?  
 
 `12:34` **Him:** I lived with some Italians when I was in Barcelona. If they knew her, she would be crucified.  
 
 `12:49` **Ruta:** Sour cream is the best thing ever and it goes on everything. It is good. Галичина, sponsor me.  
-**Him:** It is good, but who the hell eats it with pasta?  
-
-`13:00` **Him:** That's a crime. I think that's a crime.  
 
 ## Part 3. Food, and five years · about 2:20
 
