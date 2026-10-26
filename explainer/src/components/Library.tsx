@@ -40,19 +40,40 @@ const ITEMS: Item[] = [
   {o: {id: 'offer', type: 'paper', x: 280, y: 1600, scale: 0.55, props: {title: 'Оффер', sub: 'чернетка', bars: 6, w: 420, h: 520}}},
 ];
 
-export const Library: React.FC = () => {
+const ITEMS_2: Item[] = [
+  {o: {id: 'reels', type: 'reels', x: 280, y: 330, scale: 0.75}, s: {shown: 12, marks: {4: {kind: 'star', p: 1}, 7: {kind: 'q', p: 1}}}},
+  {o: {id: 'sheet', type: 'sheet', x: 790, y: 260, scale: 0.7}, s: {fill: 0.7}},
+  {o: {id: 'cal', type: 'calendar', x: 790, y: 560, scale: 0.6}, s: {mondays: {0: 'done', 1: 'miss'}}},
+  {o: {id: 'phone1', type: 'phone', x: 120, y: 980, scale: 1.4, props: {screen: 'camera'}}, s: {recP: 1, postP: 1}},
+  {o: {id: 'phone2', type: 'phone', x: 330, y: 980, scale: 1.4, props: {screen: 'feed'}}, s: {feedY: 0.4}},
+  {o: {id: 'timeline', type: 'timeline', x: 790, y: 860, scale: 0.6}, s: {cut: 0.4, subs: 0.6, flag: 1}},
+  {o: {id: 'clock', type: 'clock', x: 160, y: 1230, scale: 0.6, props: {label: '2 години'}}, s: {hours: 1.6, labelP: 1}},
+  {o: {id: 'price', type: 'price', x: 430, y: 1200, scale: 0.6}},
+  {o: {id: 'cloud', type: 'cloud', x: 800, y: 1160, scale: 0.6}, s: {up: 0.6}},
+  {o: {id: 'slides', type: 'slides', x: 300, y: 1480, scale: 0.6, props: {titles: ['5 ідей', 'Ідея 1', 'Ідея 2', 'Ідея 3', 'Підсумок']}}, s: {shown: 5, mode: 'mine', prevMode: 'mine', textP: 1}},
+  {o: {id: 'ugly', type: 'slides', x: 790, y: 1440, scale: 0.5, props: {titles: ['5 ідей', 'Ідея 1', 'Ідея 2', 'Ідея 3', 'Підсумок']}}, s: {shown: 5, mode: 'ugly', prevMode: 'ugly', textP: 1}},
+  {o: {id: 'ds', type: 'dscard', x: 260, y: 1760, scale: 0.6}},
+  {o: {id: 'pile', type: 'notespile', x: 620, y: 1730, scale: 0.5}, s: {count: 18, bury: 0.6}},
+  {o: {id: 'ig', type: 'app', x: 860, y: 1700, scale: 0.4, props: {app: 'instagram', label: 'Instagram'}}},
+  {o: {id: 'notes', type: 'app', x: 980, y: 1700, scale: 0.4, props: {app: 'notes', label: 'Сценарії'}}},
+  {o: {id: 'canva', type: 'app', x: 860, y: 1850, scale: 0.4, props: {app: 'canva', label: 'Canva'}}},
+  {o: {id: 'ai', type: 'app', x: 980, y: 1850, scale: 0.4, props: {glyph: 'sparkle', bg: '#6B7CFF', label: 'AI-монтаж'}}},
+  {o: {id: 'report', type: 'paper', x: 560, y: 1200, scale: 0.4, props: {title: 'Звіт тижня', items: ['+ розбори дзвінків', '+ рілси з чібі', '- тренди без змісту'], w: 460, h: 420}}},
+];
+
+const Sheet: React.FC<{items: Item[]}> = ({items}) => {
   useFonts();
   const t = useCurrentFrame() / 30;
   const states: Record<string, State> = {};
   const objects: Record<string, SceneObject> = {};
-  for (const {o, s} of ITEMS) {
+  for (const {o, s} of items) {
     objects[o.id] = o;
     states[o.id] = {...initialState(o), ...(s ?? {})};
   }
   const world: World = {t, states, objects, boundsOf: (id, anchor) => (objects[id] ? localBounds(objects[id], states[id], anchor) : null)};
   return (
     <AbsoluteFill style={{background: 'radial-gradient(120% 70% at 50% 35%,#FFFFFF 0,#F7F8FA 70%,#EEF0F4 100%)'}}>
-      {ITEMS.map(({o}) => {
+      {items.map(({o}) => {
         const def = OBJECTS[o.type];
         const R = def.Render;
         if (def.raw) return <R key={o.id} o={o} s={states[o.id]} t={t} world={world} />;
@@ -68,3 +89,6 @@ export const Library: React.FC = () => {
     </AbsoluteFill>
   );
 };
+
+export const Library: React.FC = () => <Sheet items={ITEMS} />;
+export const Library2: React.FC = () => <Sheet items={ITEMS_2} />;

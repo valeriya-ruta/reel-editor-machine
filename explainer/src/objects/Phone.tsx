@@ -2,9 +2,10 @@
 // chat bubbles. The prototype's phone ×3; `phone_dive` fills the frame with it.
 
 import React from 'react';
-import {clamp, outBack, outCubic} from '../engine/ease';
+import {Img} from 'remotion';
+import {clamp, inOut, outBack, outCubic} from '../engine/ease';
 import type {ObjectDef, RenderProps} from './core';
-import {C, contactShadow, FONT, SERIF} from './style';
+import {asset, C, contactShadow, FONT, SERIF} from './style';
 import {Bars, Caret, Dots, Spark} from './ui';
 
 const W = 120;
@@ -27,6 +28,70 @@ const Ripple: React.FC<{p: number; side: 'left' | 'right'}> = ({p, side}) =>
       }}
     />
   ) : null;
+
+const FEED: [string, string][] = [
+  ['#FFD6E2', '#F6A9C0'],
+  ['#D5E6FF', '#9DBEF2'],
+  ['#FFF1C7', '#F7CF5A'],
+  ['#D9F3E6', '#8FD9B4'],
+  ['#E9DFFF', '#B9A2F2'],
+];
+
+/** Front camera, recording her: the "film it on your phone" screen. */
+const CameraScreen: React.FC<{s: RenderProps['s']; t: number}> = ({s, t}) => {
+  const rec = s.recP > 0;
+  const sec = rec ? Math.floor((t - s.recT0) * 1) + 3 : 0;
+  const post = clamp(s.postP);
+  return (
+    <div style={{position: 'absolute', inset: 0, background: 'linear-gradient(#F3D9C8,#D9A88E)', overflow: 'hidden'}}>
+      <Img src={asset('chibi/neutral.png')} style={{position: 'absolute', left: -18, top: 22, width: 146}} />
+      {[0, 1, 2, 3].map((k) => (
+        <i key={k} style={{position: 'absolute', [k % 2 ? 'right' : 'left']: 8, [k < 2 ? 'top' : 'bottom']: k < 2 ? 22 : 48, width: 12, height: 12, borderStyle: 'solid', borderColor: 'rgba(255,255,255,.9)', borderWidth: `${k < 2 ? 2 : 0}px ${k % 2 ? 2 : 0}px ${k < 2 ? 0 : 2}px ${k % 2 ? 0 : 2}px`}} />
+      ))}
+      {rec ? (
+        <div style={{position: 'absolute', left: 0, right: 0, top: 18, display: 'flex', justifyContent: 'center'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: 3, padding: '1.5px 6px', borderRadius: 6, background: '#EA4335', color: '#fff', fontSize: 7.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums'}}>
+            00:{String(sec % 60).padStart(2, '0')}
+          </div>
+        </div>
+      ) : null}
+      <div style={{position: 'absolute', left: '50%', bottom: 12, width: 30, height: 30, marginLeft: -15, borderRadius: '50%', border: '3px solid #fff', boxSizing: 'border-box', display: 'grid', placeItems: 'center'}}>
+        <i style={{display: 'block', width: rec ? 11 : 21, height: rec ? 11 : 21, borderRadius: rec ? 3 : '50%', background: '#EA4335'}} />
+      </div>
+      {post > 0 ? (
+        <div style={{position: 'absolute', left: 8, right: 8, top: 16, transform: `translateY(${(1 - outBack(post)) * -40}px)`, display: 'flex', alignItems: 'center', gap: 4, padding: '4px 6px', borderRadius: 8, background: '#fff', boxShadow: '0 3px 8px rgba(0,0,0,.2)', fontSize: 7.5, fontWeight: 700, color: C.claudeText}}>
+          <i style={{display: 'grid', placeItems: 'center', width: 11, height: 11, borderRadius: '50%', background: '#2DB47A', color: '#fff', fontSize: 7, fontStyle: 'normal'}}>✓</i>
+          Опубліковано
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
+/** A reels feed being flicked past: nobody stays. */
+const FeedScreen: React.FC<{s: RenderProps['s']}> = ({s}) => {
+  const y: number = s.feedY;
+  const first = Math.floor(y) - 1;
+  return (
+    <div style={{position: 'absolute', inset: 0, background: '#111', overflow: 'hidden'}}>
+      {[0, 1, 2, 3].map((k) => {
+        const idx = first + k;
+        const [a, b] = FEED[((idx % FEED.length) + FEED.length) % FEED.length];
+        return (
+          <div key={idx} style={{position: 'absolute', left: 0, right: 0, top: `${(idx - y) * 100}%`, height: '100%', background: `linear-gradient(160deg,${a},${b})`}}>
+            <div style={{position: 'absolute', left: '50%', top: '30%', width: 40, height: 40, marginLeft: -20, borderRadius: '50%', background: 'rgba(255,255,255,.55)'}} />
+            <div style={{position: 'absolute', left: '50%', top: '50%', width: 64, height: 60, marginLeft: -32, borderRadius: '30px 30px 8px 8px', background: 'rgba(255,255,255,.45)'}} />
+            {[0, 1, 2].map((r) => (
+              <i key={r} style={{position: 'absolute', right: 6, bottom: 40 + r * 18, width: 11, height: 11, borderRadius: '50%', background: 'rgba(255,255,255,.85)'}} />
+            ))}
+            <i style={{position: 'absolute', left: 8, bottom: 28, width: 50, height: 5, borderRadius: 3, background: 'rgba(255,255,255,.9)'}} />
+            <i style={{position: 'absolute', left: 8, bottom: 19, width: 70, height: 4, borderRadius: 3, background: 'rgba(255,255,255,.7)'}} />
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 const Render: React.FC<RenderProps> = ({s, t}) => {
   const chat = s.chatP > 0;
@@ -85,6 +150,9 @@ const Render: React.FC<RenderProps> = ({s, t}) => {
               <p style={{position: 'absolute', left: 0, right: 0, top: 76.5, margin: 0, textAlign: 'center', fontSize: 8.1, color: '#8A847C'}}>{s.sheetSub}</p>
             </div>
           ) : null}
+          {s.screen === 'camera' ? <CameraScreen s={s} t={t} /> : null}
+          {s.screen === 'feed' ? <FeedScreen s={s} /> : null}
+          {s.screen !== 'claude' ? <div style={{position: 'absolute', left: 42.6, top: 6, width: 24, height: 7.2, borderRadius: 6, background: '#0B0B0C'}} /> : null}
         </div>
       </div>
     </div>
@@ -93,8 +161,43 @@ const Render: React.FC<RenderProps> = ({s, t}) => {
 
 export const Phone: ObjectDef = {
   size: () => ({w: W, h: H}),
-  init: () => ({typed: '', chatUser: '', chatP: 0, replyP: 0, replyTitle: '', tapP: 0, tapAt: 'send', sheetP: 0, sheetTitle: '', sheetBody: '', sheetSub: ''}),
+  init: (o) => ({
+    screen: str(o.props?.screen, 'claude'),
+    typed: '',
+    chatUser: '',
+    chatP: 0,
+    replyP: 0,
+    replyTitle: '',
+    tapP: 0,
+    tapAt: 'send',
+    sheetP: 0,
+    sheetTitle: '',
+    sheetBody: '',
+    sheetSub: '',
+    recP: 0,
+    recT0: 0,
+    postP: 0,
+    feedY: 0,
+  }),
   verbs: {
+    screen: {
+      dur: 0.05,
+      required: ['name'],
+      check: (a) => (['claude', 'camera', 'feed'].includes(str(a.name)) ? null : 'name is claude, camera or feed'),
+      apply: (s, a) => ({...s, screen: str(a.name)}),
+    },
+    record: {dur: 0.3, apply: (s, _a, c) => ({...s, screen: 'camera', recP: c.p, recT0: c.t0, postP: 0})},
+    post: {dur: 0.6, apply: (s, _a, c) => ({...s, postP: c.p, recP: 0})},
+    /** Flick through n reels; each flick eases on its own. */
+    swipe: {
+      dur: (a) => 0.3 * (typeof a.n === 'number' ? a.n : 3),
+      apply: (s, a, c) => {
+        const n = typeof a.n === 'number' ? a.n : 3;
+        const x = c.p * n;
+        const k = Math.min(Math.floor(x), n - 1);
+        return {...s, screen: 'feed', feedY: s.feedY + k + inOut(Math.min(1, x - k))};
+      },
+    },
     type: {
       dur: (a) => clamp(str(a.text).length * 0.055, 0.4, 1.6),
       required: ['text'],

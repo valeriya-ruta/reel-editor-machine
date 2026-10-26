@@ -14,17 +14,43 @@ const num = (v: unknown, d: number) => (typeof v === 'number' ? v : d);
 
 const paperSize = (o: {props?: Record<string, unknown>}) => ({w: num(o.props?.w, 360), h: num(o.props?.h, 228)});
 
-const PaperFace: React.FC<{text: string; title: string; sub: string; bars: number; w: number; h: number; top: number}> = ({text, title, sub, bars, w, h, top}) => (
+/** "+ text" gets a green check, "- text" a red cross. */
+const ItemLine: React.FC<{line: string}> = ({line}) => {
+  const good = line.startsWith('+');
+  const bad = line.startsWith('-') || line.startsWith('−');
+  const text = good || bad ? line.slice(1).trim() : line;
+  return (
+    <div style={{display: 'flex', alignItems: 'center', gap: 12, fontWeight: 700, fontSize: 26, lineHeight: 1.2}}>
+      {good || bad ? (
+        <svg width={30} height={30} viewBox="0 0 24 24" style={{flex: 'none'}}>
+          <circle cx="12" cy="12" r="11" fill={good ? '#2DB47A' : '#FF5A5A'} />
+          <path d={good ? 'M6.5 12.5l3.5 3.5 7.5-8' : 'M8 8l8 8M16 8l-8 8'} stroke="#fff" strokeWidth={2.8} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      ) : null}
+      {text}
+    </div>
+  );
+};
+
+const PaperFace: React.FC<{text: string; title: string; sub: string; bars: number; items: string[]; w: number; h: number; top: number}> = ({text, title, sub, bars, items, w, h, top}) => (
   <div style={{position: 'absolute', left: 0, top, width: w, height: h, padding: '26px 28px', boxSizing: 'border-box', color: C.paperText, fontFamily: FONT}}>
     {title ? (
       <>
         <div style={{fontWeight: 800, fontSize: 44, letterSpacing: -1}}>{title}</div>
         {sub ? <div style={{fontWeight: 600, fontSize: 24, opacity: 0.7, marginTop: 2}}>{sub}</div> : null}
-        <div style={{marginTop: 22, display: 'flex', flexDirection: 'column', gap: 16}}>
-          {Array.from({length: bars}).map((_, i) => (
-            <div key={i} style={{height: 13, borderRadius: 7, width: `${[100, 88, 94, 70, 96, 62, 84][i % 7]}%`, background: 'rgba(120,40,70,.18)'}} />
-          ))}
-        </div>
+        {items.length ? (
+          <div style={{marginTop: 22, display: 'flex', flexDirection: 'column', gap: 16}}>
+            {items.map((line, i) => (
+              <ItemLine key={i} line={line} />
+            ))}
+          </div>
+        ) : (
+          <div style={{marginTop: 22, display: 'flex', flexDirection: 'column', gap: 16}}>
+            {Array.from({length: bars}).map((_, i) => (
+              <div key={i} style={{height: 13, borderRadius: 7, width: `${[100, 88, 94, 70, 96, 62, 84][i % 7]}%`, background: 'rgba(120,40,70,.18)'}} />
+            ))}
+          </div>
+        )}
       </>
     ) : (
       <div style={{fontWeight: 600, fontSize: 26, lineHeight: 1.32}}>{text}</div>
@@ -32,7 +58,7 @@ const PaperFace: React.FC<{text: string; title: string; sub: string; bars: numbe
   </div>
 );
 
-const PaperRender: React.FC<RenderProps> = ({o, s}) => {
+const PaperRender: React.FC<RenderProps> = ({o, s, t}) => {
   const {w, h} = paperSize(o);
   const half = h / 2;
   const fold = clamp(s.fold); // 0 flat, 1 bottom half folded up behind the top
@@ -40,14 +66,27 @@ const PaperRender: React.FC<RenderProps> = ({o, s}) => {
   const title = str(o.props?.title);
   const sub = str(o.props?.sub);
   const bars = num(o.props?.bars, 5);
+  const items = Array.isArray(o.props?.items) ? (o.props?.items as unknown[]).map(String) : [];
+  if (o.props?.blank) {
+    // a blank white page with a blinking cursor: nothing comes
+    return (
+      <div style={{position: 'absolute', inset: 0, borderRadius: 16, background: 'linear-gradient(#FFFFFF,#FAF8F3)', boxShadow: '0 34px 64px rgba(30,40,80,.24), 0 0 0 2px rgba(30,40,80,.06)', overflow: 'hidden'}}>
+        {Array.from({length: 9}).map((_, i) => (
+          <div key={i} style={{position: 'absolute', left: 0, right: 0, top: 110 + i * 46, height: 2, background: '#E3E9F3'}} />
+        ))}
+        <div style={{position: 'absolute', left: 64, top: 0, bottom: 0, width: 2, background: '#F4C3CC'}} />
+        <div style={{position: 'absolute', left: 84, top: 58, width: 6, height: 50, borderRadius: 3, background: C.ink, opacity: Math.floor(t * 2) % 2 ? 0 : 1}} />
+      </div>
+    );
+  }
   return (
     <div style={{position: 'absolute', inset: 0, perspective: 1260, filter: 'drop-shadow(0 18px 24px rgba(150,50,85,.28))'}}>
       <div style={{position: 'absolute', left: 0, top: 0, width: w, height: half, overflow: 'hidden', borderRadius: '9px 9px 0 0', background: `linear-gradient(${C.paper[0]},${C.paper[1]})`}}>
-        <PaperFace text={text} title={title} sub={sub} bars={bars} w={w} h={h} top={0} />
+        <PaperFace text={text} title={title} sub={sub} bars={bars} items={items} w={w} h={h} top={0} />
       </div>
       <div style={{position: 'absolute', left: 0, top: half, width: w, height: half, transformStyle: 'preserve-3d', transformOrigin: '50% 0%', transform: `rotateX(${fold * 180}deg)`}}>
         <div style={{position: 'absolute', inset: 0, overflow: 'hidden', backfaceVisibility: 'hidden', borderRadius: '0 0 9px 9px', background: `linear-gradient(${C.paper[1]},${C.paper[2]})`}}>
-          <PaperFace text={text} title={title} sub={sub} bars={bars} w={w} h={h} top={-half} />
+          <PaperFace text={text} title={title} sub={sub} bars={bars} items={items} w={w} h={h} top={-half} />
           <div style={{position: 'absolute', left: 0, right: 0, top: 0, height: 9, background: 'linear-gradient(rgba(140,40,80,.18),rgba(140,40,80,0))'}} />
         </div>
         <div style={{position: 'absolute', inset: 0, backfaceVisibility: 'hidden', transform: 'rotateX(180deg)', borderRadius: '9px 9px 0 0', background: `linear-gradient(${C.paperBack[0]},${C.paperBack[1]})`}} />

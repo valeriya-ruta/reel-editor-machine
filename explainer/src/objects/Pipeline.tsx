@@ -16,22 +16,80 @@ const num = (v: unknown, d: number) => (typeof v === 'number' ? v : d);
 
 const T = 240;
 /** Logos that are a full app icon (cover the tile) vs. a mark on a plate. */
-const LOGOS: Record<string, {src?: string; bg: string; mark?: 'claude'}> = {
+const LOGOS: Record<string, {src?: string; bg: string; mark?: string}> = {
   fathom: {src: 'logos/fathom.jpg', bg: '#000'},
   clickup: {src: 'logos/clickup.jpg', bg: '#fff'},
+  canva: {src: 'logos/canva.jpg', bg: '#fff'},
   claude: {bg: C.terracotta, mark: 'claude'},
+  instagram: {bg: 'radial-gradient(circle at 30% 107%,#FDF497 0,#FDF497 5%,#FD5949 45%,#D6249F 60%,#285AEB 90%)', mark: 'instagram'},
+  notes: {bg: 'linear-gradient(#FFFFFF,#F2F2F2)', mark: 'notes'},
+};
+
+/** Simple marks for tiles that aren't a real app: a person, scissors, an AI sparkle, a chart. */
+const GLYPHS: Record<string, React.ReactNode> = {
+  scissors: (
+    <g fill="none" stroke="#fff" strokeWidth={2} strokeLinecap="round">
+      <circle cx="6" cy="6" r="3" />
+      <circle cx="6" cy="18" r="3" />
+      <path d="M8.5 7.5 20 18M8.5 16.5 20 6" />
+    </g>
+  ),
+  sparkle: <path d="M12 2 14.4 9.6 22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z" fill="#fff" />,
+  person: (
+    <g fill="#fff">
+      <circle cx="12" cy="8" r="4.2" />
+      <path d="M3.5 21c.8-4.6 4.2-7 8.5-7s7.7 2.4 8.5 7z" />
+    </g>
+  ),
+  chart: (
+    <g fill="#fff">
+      <rect x="3" y="12" width="4" height="9" rx="1.2" />
+      <rect x="10" y="7" width="4" height="14" rx="1.2" />
+      <rect x="17" y="3" width="4" height="18" rx="1.2" />
+    </g>
+  ),
+};
+
+const Mark: React.FC<{mark: string}> = ({mark}) => {
+  if (mark === 'claude') return <Spark size={128} color="#FFF6EE" stroke={3.3} />;
+  if (mark === 'instagram')
+    return (
+      <div style={{width: 130, height: 130, borderRadius: 38, border: '13px solid #fff', boxSizing: 'border-box', position: 'relative'}}>
+        <div style={{position: 'absolute', left: 25, top: 25, width: 54, height: 54, borderRadius: '50%', border: '12px solid #fff', boxSizing: 'border-box'}} />
+        <div style={{position: 'absolute', right: 12, top: 12, width: 14, height: 14, borderRadius: '50%', background: '#fff'}} />
+      </div>
+    );
+  if (mark === 'notes')
+    return (
+      <div style={{position: 'absolute', inset: 0}}>
+        <div style={{position: 'absolute', left: 0, right: 0, top: 0, height: 64, background: 'linear-gradient(#FFD84D,#F7BF22)'}} />
+        {[0, 1, 2, 3].map((k) => (
+          <i key={k} style={{position: 'absolute', left: 30, right: 30, top: 96 + k * 32, height: 4, borderRadius: 2, background: '#D7D7D7'}} />
+        ))}
+      </div>
+    );
+  return null;
 };
 
 const TileRender: React.FC<RenderProps> = ({o}) => {
   const app = str(o.props?.app);
-  const logo = LOGOS[app] ?? {src: `logos/${app}.png`, bg: '#fff'};
+  const glyph = str(o.props?.glyph);
+  // a glyph tile is coloured by props.bg; a known app by its own logo
+  const logo = glyph ? {bg: str(o.props?.bg, '#8E7CF0')} : (LOGOS[app] ?? {src: `logos/${app}.png`, bg: '#fff'});
   return (
     <div style={{position: 'absolute', inset: 0}}>
       <div style={{position: 'absolute', left: 0, top: 0, width: T, height: T, borderRadius: 60, overflow: 'hidden', background: logo.bg, boxShadow: '0 22px 40px rgba(20,30,60,.24), 0 4px 10px rgba(20,30,60,.12)'}}>
         {logo.src ? <Img src={asset(logo.src)} style={{position: 'absolute', inset: 0, width: T, height: T, objectFit: 'cover'}} /> : null}
-        {logo.mark === 'claude' ? (
+        {logo.mark ? (
           <div style={{position: 'absolute', inset: 0, display: 'grid', placeItems: 'center'}}>
-            <Spark size={128} color="#FFF6EE" stroke={3.3} />
+            <Mark mark={logo.mark} />
+          </div>
+        ) : null}
+        {glyph ? (
+          <div style={{position: 'absolute', inset: 0, display: 'grid', placeItems: 'center'}}>
+            <svg width={124} height={124} viewBox="0 0 24 24">
+              {GLYPHS[glyph]}
+            </svg>
           </div>
         ) : null}
         <div style={{position: 'absolute', inset: 0, borderRadius: 60, background: 'linear-gradient(160deg,rgba(255,255,255,.38) 0,rgba(255,255,255,0) 46%)', boxShadow: 'inset 0 3px 0 rgba(255,255,255,.45), inset 0 -6px 12px rgba(0,0,0,.12)'}} />
@@ -43,9 +101,16 @@ const TileRender: React.FC<RenderProps> = ({o}) => {
   );
 };
 
+export const APP_NAMES = Object.keys(LOGOS);
+export const GLYPH_NAMES = Object.keys(GLYPHS);
+
 export const AppTile: ObjectDef = {
   size: () => ({w: T, h: T + 66, ax: 0.5, ay: 0.4}),
   verbs: {},
+  assets: (o) => {
+    const app = str(o.props?.app);
+    return o.props?.glyph || LOGOS[app] ? [] : [`logos/${app}.png`];
+  },
   anchors: () => ({tile: {x: 0, y: 0, w: T, h: T}}),
   Render: TileRender,
 };

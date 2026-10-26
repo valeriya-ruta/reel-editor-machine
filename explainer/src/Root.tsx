@@ -4,7 +4,7 @@ import {Episode} from './components/Episode';
 import {FRAME_H, FRAME_W} from './engine/camera';
 import {compile, FPS} from './engine/compile';
 import {EPISODES} from './episodes';
-import {Library} from './components/Library';
+import {Library, Library2} from './components/Library';
 
 export const Root: React.FC = () => (
   <>
@@ -21,5 +21,6 @@ export const Root: React.FC = () => (
       />
     ))}
     <Composition id="library" component={Library} durationInFrames={90} fps={FPS} width={FRAME_W} height={FRAME_H} />
+    <Composition id="library-2" component={Library2} durationInFrames={90} fps={FPS} width={FRAME_W} height={FRAME_H} />
   </>
 );

@@ -70,21 +70,32 @@ spoken words.
 
 | type | verbs |
 |---|---|
-| `laptop` | `window` (claude · call · player), `type`, `select`, `clear`, `send`, `ask`, `reply`, `call`, `speak`, `face`, `rec`, `hangup`, `scrub` — parts: `screen` `window` `input` `caret` `chat` `rec` `tiles` `client` `me` `timeline` |
-| `phone` | `type`, `tap`, `send`, `reply`, `sheet`, `closeSheet` |
+| `laptop` | `window` (claude · call · player · render), `type`, `select`, `clear`, `send`, `ask`, `reply`, `newchat`, `call`, `speak`, `face`, `rec`, `hangup`, `scrub`, `render`, `overheat`, `cool` — parts: `screen` `window` `input` `caret` `chat` `rec` `tiles` `client` `me` `timeline` |
+| `phone` | `screen` (claude · camera · feed), `record`, `post`, `swipe`, `type`, `tap`, `send`, `reply`, `sheet`, `closeSheet` |
 | `chibi` | `pose` — squash-and-stretch on change, idle bob, shakes when furious/panicked |
-| `paper` | `fold`, `unfold` (+ generic `fly`) — a prompt note, or a doc via `title`/`bars` |
+| `paper` | `fold`, `unfold` (+ generic `fly`) — a prompt note, a doc via `title`/`bars`, a report via `items` (`+ …` ✓, `- …` ✗), or a `blank` page |
 | `folder` | `open`, `close`, `gulp`, `empty` |
 | `skill` | `stamp` (the «/» slam, with camera micro-shake) |
 | `notepad` | `scribble`, `lose` (question stickies fly off) |
 | `chips` | `pop`, `forget` (blur away into "?") |
-| `app` | — a glossy app tile with a label (`fathom`, `claude`, `clickup`, …) |
+| `app` | — a glossy app tile with a label: `fathom`, `claude`, `clickup`, `canva`, `instagram`, `notes`, or `glyph` (`person`, `scissors`, `sparkle`, `chart`) on a `bg` colour |
 | `cable` | `plug`, `unplug` between two objects |
 | `tasks` | `add`, `type` (slow, by hand), `check` |
+| `reels` | `fill`, `scroll`, `mark` (star · q · x · check), `dim` — part: `grid` |
+| `sheet` | `fill`, `blur` — part: `grid` |
+| `calendar` | `flip` (weeks pass; `mark` Mondays done/miss) |
+| `slides` | `build`, `text`, `style` (blank · template · ugly · mine), `shuffle` — part: `front` |
+| `dscard` | — the design-system card |
+| `notespile` | `grow`, `bury` (the notes graveyard) |
+| `timeline` | `cut` (pauses close up), `subs`, `flag` (repeated takes) — part: `tracks` |
+| `clock` | `spin` (hours) |
+| `price` | — a swinging price tag |
+| `cloud` | `upload`, `done` |
 
-Episodes 1–4 will add a reel grid, spreadsheet, slide stack, video timeline
-with cuts, cloud upload, price tag and design-system card the same way: one
-`ObjectDef` in `src/objects/`, registered in `registry.ts`.
+Numbers on screen are shape-only (bars, not view counts), per STYLE.md's
+"no invented stats". A new object is one `ObjectDef` in `src/objects/`,
+registered in `registry.ts`; the `library` and `library-2` compositions show
+every object in Studio.
 
 ## Chibi Ruta
 
@@ -102,7 +113,8 @@ python scripts/cutout.py <raw.png> public/chibi/<pose>.png
 ```
 
 Have: neutral, confused, scribbling, panicked, exhausted, furious, ecstatic,
-coffee.
+coffee, phone, frustrated, thinking, waterworks, smug, sad, bored. (Shocked
+failed the piercing check twice; panicked covers those beats.)
 
 ## Layout
 

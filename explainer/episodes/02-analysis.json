@@ -1,0 +1,136 @@
+{
+  "id": "ep02-analysis",
+  "title": "Аналіз контенту: від здогадок до звіту щопонеділка",
+  "status": "TODO-TOV",
+  "scene": {
+    "floorY": 1300,
+    "rooms": {
+      "default": [60, 720, 1420, 1340],
+      "tiles": [0, 230, 1000, 900],
+      "final": [0, 260, 1420, 1340]
+    },
+    "objects": [
+      {"id": "ruta", "type": "chibi", "x": 1120, "y": 1300, "scale": 1.05, "layer": "back", "props": {"pose": "neutral"}},
+      {"id": "laptop", "type": "laptop", "x": 520, "y": 1300, "scale": 0.92, "props": {"window": "claude"}},
+      {"id": "reels", "type": "reels", "x": 320, "y": 600, "scale": 0.75, "layer": "air", "props": {"title": "Мої рілси", "count": 12, "filled": true}},
+      {"id": "sheet", "type": "sheet", "x": 540, "y": 560, "scale": 0.9, "layer": "air", "hidden": true, "props": {"title": "Статистика рілсів"}},
+      {"id": "clock", "type": "clock", "x": 990, "y": 540, "scale": 0.8, "layer": "air", "hidden": true, "props": {"label": "година"}},
+      {"id": "chips", "type": "chips", "x": 540, "y": 580, "layer": "air", "hidden": true,
+        "props": {"items": ["№3 — про що?", "№7 — про що?", "№11 — ?", "№2 — ?"]}},
+      {"id": "ig", "type": "app", "x": 200, "y": 400, "layer": "air", "hidden": true, "props": {"app": "instagram", "label": "Instagram"}},
+      {"id": "scripts", "type": "app", "x": 200, "y": 720, "layer": "air", "hidden": true, "props": {"app": "notes", "label": "Сценарії"}},
+      {"id": "claude", "type": "app", "x": 780, "y": 560, "layer": "air", "hidden": true, "props": {"app": "claude", "label": "Claude"}},
+      {"id": "cable1", "type": "cable", "x": 0, "y": 0, "layer": "air", "props": {"from": "ig", "to": "claude"}},
+      {"id": "cable2", "type": "cable", "x": 0, "y": 0, "layer": "air", "props": {"from": "scripts", "to": "claude"}},
+      {"id": "skill", "type": "skill", "x": 520, "y": 1050, "layer": "air", "hidden": true, "props": {"name": "/аналіз", "sub": "скіл · звіт по рілсах"}},
+      {"id": "calendar", "type": "calendar", "x": 300, "y": 580, "scale": 0.85, "layer": "air", "hidden": true, "props": {"title": "Понеділки"}},
+      {"id": "report", "type": "paper", "x": 780, "y": 600, "rot": 4, "scale": 0.85, "layer": "air", "hidden": true,
+        "props": {"title": "Звіт тижня", "sub": "демо", "items": ["+ розбори кейсів", "+ відповіді на питання", "- тренди без змісту"], "w": 460, "h": 440, "folded": true}}
+    ]
+  },
+  "steps": [
+    {
+      "caption": "*Вгадуєш*, що спрацювало",
+      "vo": "Гортаєш свої рілси й намагаєшся вгадати, що саме спрацювало.",
+      "beats": [
+        {"action": "reels.scroll", "args": {"rows": 1, "dur": 1.4}, "shot": "object_punch:reels"},
+        {"action": "ruta.pose", "args": {"pose": "thinking"}, "shot": "whip>character_close"},
+        {"action": "reels.mark", "args": {"index": 7, "kind": "star"}, "shot": "whip>object_punch:reels#grid"}
+      ],
+      "minus": {
+        "caption": "Але *пам’ять* бреше",
+        "vo": "Але пам’ять бреше: здається, залетів один, а насправді зовсім інший.",
+        "beats": [
+          {"action": "reels.mark", "args": {"index": 7, "kind": "x"}, "shot": "punch>object_punch:reels#grid*1.25"},
+          {"action": "reels.mark", "args": {"index": 11, "kind": "q"}, "shot": "whip>object_punch:reels#grid"},
+          {"action": "ruta.pose", "args": {"pose": "confused"}, "shot": "whip>character_close"}
+        ]
+      }
+    },
+    {
+      "caption": "Переносиш цифри в *таблицю*",
+      "vo": "Тоді переносиш перегляди, збереження й репости в таблицю.",
+      "beats": [
+        {"action": "sheet.show", "shot": "whip>object_punch:sheet", "also": [{"action": "reels.hide"}, {"action": "sheet.fill", "args": {"to": 0.3}, "at": 0.2}]},
+        {"action": "sheet.fill", "args": {"to": 0.65}, "shot": "punch>object_punch:sheet#grid"},
+        {"action": "ruta.pose", "args": {"pose": "bored"}, "shot": "whip>character_close"}
+      ],
+      "minus": {
+        "caption": "Цифри *без контексту*",
+        "vo": "Година роботи, а цифри без контексту нічого не пояснюють.",
+        "beats": [
+          {"action": "clock.show", "shot": "whip>object_punch:clock", "also": [{"action": "clock.spin", "args": {"hours": 1}, "at": 0.15}]},
+          {"action": "sheet.fill", "args": {"to": 1, "dur": 0.6}, "shot": "whip>object_punch:sheet", "also": [{"action": "sheet.blur", "at": 0.5}]},
+          {"action": "ruta.pose", "args": {"pose": "exhausted"}, "shot": "whip>character_close"}
+        ]
+      }
+    },
+    {
+      "caption": "Вставляєш таблицю в *Claude*",
+      "vo": "Вставляєш цю таблицю в Claude і просиш висновки.",
+      "beats": [
+        {"action": "laptop.ask", "args": {"text": "Ось статистика. Які висновки?"}, "shot": "whip>screen", "also": [{"action": "sheet.hide"}, {"action": "clock.hide"}]},
+        {"action": "laptop.reply", "args": {"title": "№7 — лідер. А про що він?"}, "shot": "punch>object_punch:laptop#chat"},
+        {"action": "ruta.pose", "args": {"pose": "smug"}, "shot": "whip>character_close"}
+      ],
+      "minus": {
+        "caption": "Не знає, *про що* рілс",
+        "vo": "Але він не знає, про що був кожен рілс.",
+        "beats": [
+          {"action": "chips.show", "shot": "whip>object_punch:chips", "also": [{"action": "chips.pop", "at": 0.1}]},
+          {"action": "ruta.pose", "args": {"pose": "frustrated"}, "shot": "whip>character_close"},
+          {"action": "chips.forget", "shot": "punch>object_punch:chips"}
+        ]
+      }
+    },
+    {
+      "caption": "Підключаєш *конектори*",
+      "vo": "Підключаєш через конектори статистику Instagram і свої сценарії.",
+      "beats": [
+        {"action": "ig.show", "shot": "pull_back>room:tiles",
+          "also": [{"action": "chips.hide"}, {"action": "scripts.show", "at": 0.15}, {"action": "claude.show", "at": 0.3}]},
+        {"action": "cable1.plug", "shot": "follow>object_punch:cable1"},
+        {"action": "cable2.plug", "shot": "follow>object_punch:cable2"}
+      ],
+      "minus": {
+        "caption": "Але питати — *щоразу*",
+        "vo": "Але щоразу треба пам’ятати, що саме і як питати.",
+        "beats": [
+          {"action": "laptop.newchat", "shot": "whip>screen",
+            "also": [{"action": "ig.hide"}, {"action": "scripts.hide"}, {"action": "claude.hide"}, {"action": "cable1.hide"}, {"action": "cable2.hide"},
+              {"action": "laptop.type", "args": {"text": "Проаналізуй рілси за тиждень: охоплення, збереження"}, "at": 0.35}]},
+          {"action": "ruta.pose", "args": {"pose": "bored"}, "shot": "whip>character_close"},
+          {"action": "laptop.clear", "shot": "whip>input_close", "also": [{"action": "laptop.type", "args": {"text": "Проаналізуй рілси за тиждень…"}, "at": 0.3}]}
+        ]
+      }
+    },
+    {
+      "caption": "Робиш скіл */аналіз*",
+      "vo": "Тож збираєш усе в скіл «аналіз».",
+      "beats": [
+        {"action": "skill.show", "shot": "whip>object_punch:skill", "also": [{"action": "laptop.clear"}]},
+        {"action": "skill.stamp", "shot": "punch>object_punch:skill*1.15", "also": [{"action": "ruta.pose", "args": {"pose": "smug"}}]}
+      ],
+      "minus": {
+        "caption": "Але *забуваєш* запустити",
+        "vo": "Але сама забуваєш його запускати.",
+        "beats": [
+          {"action": "calendar.show", "shot": "whip>object_punch:calendar",
+            "also": [{"action": "skill.hide"}, {"action": "calendar.flip", "args": {"weeks": 2, "mark": "miss"}, "at": 0.15}]},
+          {"action": "ruta.pose", "args": {"pose": "panicked"}, "shot": "whip>character_close"}
+        ]
+      }
+    },
+    {
+      "caption": "Тепер це *рутина*",
+      "vo": "Тепер це рутина: щопонеділка приходить звіт — що повторити, а що прибрати. А ти просто п’єш каву.",
+      "beats": [
+        {"action": "calendar.flip", "args": {"weeks": 2, "mark": "done"}, "shot": "punch>object_punch:calendar", "also": [{"action": "ruta.pose", "args": {"pose": "neutral"}}]},
+        {"action": "report.show", "shot": "whip>object_punch:report", "caption": "Щопонеділка — *звіт*", "also": [{"action": "report.unfold", "at": 0.25}]},
+        {"action": "report.pulse", "shot": "punch>object_punch:report*1.2", "caption": "Що *повторити*, а що *прибрати*"},
+        {"action": "ruta.pose", "args": {"pose": "coffee"}, "shot": "pull_back>room:final", "caption": "А ти *п’єш каву*"},
+        {"action": "ruta.pulse", "shot": "punch>character_close"}
+      ]
+    }
+  ]
+}

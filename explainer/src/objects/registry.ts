@@ -6,6 +6,8 @@ import {Chibi} from './Chibi';
 import type {ObjectDef, Verb} from './core';
 import {GENERIC} from './core';
 import {Laptop} from './Laptop';
+import {Calendar, DsCard, NotesPile, Reels, Sheet, Slides} from './Content';
+import {Clock, Cloud, Price, Timeline} from './Media';
 import {Chips, Notepad} from './Notes';
 import {Folder, Paper, SkillCard} from './Paper';
 import {Phone} from './Phone';
@@ -22,6 +24,16 @@ export const OBJECTS: Record<string, ObjectDef> = {
   app: AppTile,
   cable: Cable,
   tasks: TaskList,
+  reels: Reels,
+  sheet: Sheet,
+  calendar: Calendar,
+  slides: Slides,
+  dscard: DsCard,
+  notespile: NotesPile,
+  timeline: Timeline,
+  clock: Clock,
+  price: Price,
+  cloud: Cloud,
 };
 
 export const verbFor = (type: string, verb: string): Verb | undefined => OBJECTS[type]?.verbs[verb] ?? GENERIC[verb];

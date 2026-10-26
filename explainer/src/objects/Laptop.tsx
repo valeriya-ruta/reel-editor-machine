@@ -220,12 +220,28 @@ const PlayerWindow: React.FC<{s: State; t: number}> = ({s}) => {
   );
 };
 
-const WINDOWS: Record<string, React.FC<{s: State; t: number}>> = {claude: ClaudeWindow, call: CallWindow, player: PlayerWindow};
-const TITLES: Record<string, string> = {claude: 'Claude', call: '', player: ''};
+/** A local render crawling along on an old laptop. */
+const RenderWindow: React.FC<{s: State; t: number}> = ({s, t}) => {
+  const p: number = s.renderP;
+  return (
+    <div style={{position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, fontFamily: FONT, paddingTop: 36}}>
+      <div style={{width: 54, height: 54, borderRadius: '50%', border: '7px solid #E7E2D9', borderTopColor: C.terracotta, transform: `rotate(${t * 240}deg)`}} />
+      <div style={{fontSize: 24, fontWeight: 700, color: C.claudeText}}>Рендер відео…</div>
+      <div style={{width: 440, height: 16, borderRadius: 8, background: '#ECE7DF', overflow: 'hidden'}}>
+        <div style={{width: `${p * 100}%`, height: '100%', borderRadius: 8, background: C.terracotta}} />
+      </div>
+      <div style={{fontSize: 19, fontWeight: 600, color: C.claudeMuted}}>{Math.round(p * 100)}% · залишилось ~4 год</div>
+    </div>
+  );
+};
+
+const WINDOWS: Record<string, React.FC<{s: State; t: number}>> = {claude: ClaudeWindow, call: CallWindow, player: PlayerWindow, render: RenderWindow};
+const TITLES: Record<string, string> = {claude: 'Claude', call: '', player: '', render: 'Рендер'};
+const LIGHT = new Set(['claude', 'render']);
 
 const Window: React.FC<{name: string; s: State; t: number; style: React.CSSProperties}> = ({name, s, t, style}) => {
   const Body = WINDOWS[name] ?? ClaudeWindow;
-  const light = name === 'claude';
+  const light = LIGHT.has(name);
   return (
     <div style={{position: 'absolute', left: 18, top: 18, width: WW, height: WH, borderRadius: 21, overflow: 'hidden', background: light ? C.cream : '#202124', boxShadow: '0 6px 24px rgba(30,40,70,.18)', transformOrigin: '50% 100%', ...style}}>
       {light ? (
@@ -249,8 +265,17 @@ const Render: React.FC<RenderProps> = ({s, t}) => {
   return (
     <div style={{position: 'absolute', inset: 0}}>
       <div style={{position: 'absolute', left: -60, top: 466, width: 1020, height: 66, borderRadius: '50%', background: contactShadow()}} />
+      {/* smoke when the render cooks it */}
+      {s.heat > 0
+        ? [0, 1, 2, 3, 4, 5].map((k) => {
+            const cyc = ((t * 0.9 + k * 0.37) % 1.6) / 1.6;
+            return (
+              <div key={k} style={{position: 'absolute', left: 160 + k * 110 + Math.sin(t * 2 + k) * 20, top: -40 - cyc * 260, width: 90 + cyc * 120, height: 90 + cyc * 120, marginLeft: -(45 + cyc * 60), borderRadius: '50%', background: 'radial-gradient(closest-side,rgba(120,120,130,.55),rgba(120,120,130,0))', opacity: s.heat * (1 - cyc)}} />
+            );
+          })
+        : null}
       {/* lid */}
-      <div style={{position: 'absolute', left: 90, top: 0, width: 720, height: 468, borderRadius: '33px 33px 12px 12px', background: C.deviceDark, boxShadow: 'inset 0 0 0 3px rgba(255,255,255,.07), 0 24px 54px rgba(0,0,0,.16)'}}>
+      <div style={{position: 'absolute', left: 90, top: 0, width: 720, height: 468, borderRadius: '33px 33px 12px 12px', background: C.deviceDark, boxShadow: `inset 0 0 0 3px rgba(255,255,255,.07), 0 24px 54px rgba(0,0,0,.16)${s.heat > 0 ? `, 0 0 ${90 * s.heat}px ${20 * s.heat}px rgba(255,70,30,${0.55 * s.heat})` : ''}`}}>
         <div style={{position: 'absolute', left: 354, top: 8, width: 12, height: 12, borderRadius: '50%', background: '#0B0B0C', boxShadow: 'inset 0 0 3px rgba(120,160,255,.6)'}} />
       </div>
       {/* screen */}
@@ -269,6 +294,7 @@ const Render: React.FC<RenderProps> = ({s, t}) => {
             <i key={i} style={{display: 'block', width: 15, height: 15, borderRadius: 4.5, background: c}} />
           ))}
         </div>
+        {s.heat > 0 ? <div style={{position: 'absolute', inset: 0, background: `rgba(255,60,20,${0.18 * s.heat * (0.7 + 0.3 * Math.sin(t * 9))})`}} /> : null}
         <div style={{position: 'absolute', inset: 0, background: 'linear-gradient(115deg,rgba(255,255,255,.22) 0,rgba(255,255,255,0) 38%)', pointerEvents: 'none'}} />
       </div>
       {/* base */}
@@ -301,6 +327,8 @@ export const Laptop: ObjectDef = {
     speaking: null,
     meFace: 'neutral',
     scrubP: 0,
+    renderP: 0,
+    heat: 0,
   }),
   verbs: {
     window: {
@@ -333,6 +361,11 @@ export const Laptop: ObjectDef = {
       required: ['text'],
       apply: (s, a, c) => ({...s, chatUser: str(a.text), chatP: c.p, replyP: 0}),
     },
+    /** A fresh chat: the conversation clears and the greeting comes back. */
+    newchat: {
+      dur: 0.35,
+      apply: (s, _a, c) => (c.p >= 1 ? {...s, chatP: 0, chatUser: '', replyP: 0, typed: '', sel: false} : {...s, chatP: s.chatP * (1 - c.p)}),
+    },
     reply: {
       dur: 1.1,
       required: ['title'],
@@ -357,6 +390,10 @@ export const Laptop: ObjectDef = {
     hangup: {dur: 0.5, apply: (s, _a, c) => ({...s, ended: c.p})},
     speak: {dur: 0.05, apply: (s, a) => ({...s, speaking: a.who ?? null})},
     face: {dur: 0.05, required: ['pose'], apply: (s, a) => ({...s, meFace: a.pose})},
+    render: {dur: 1.2, apply: (s, a, c) => ({...s, renderP: lerp(num(a.from, s.renderP), num(a.to, 0.03), outCubic(c.p))})},
+    /** The old laptop cooks: red glow and smoke (pair it with laptop.shake). */
+    overheat: {dur: 0.8, apply: (s, _a, c) => ({...s, heat: Math.max(s.heat, c.p)})},
+    cool: {dur: 0.5, apply: (s, _a, c) => ({...s, heat: s.heat * (1 - c.p)})},
     scrub: {
       dur: 1.2,
       apply: (s, a, c) => ({...s, scrubP: lerp(num(a.from, s.scrubP), num(a.to, 0.1), c.p)}),
