@@ -1,0 +1,28 @@
+{
+  "name": "ruta-explainer",
+  "private": true,
+  "version": "0.1.0",
+  "description": "AI-evolution explainer reels for Ruta — rendered from episode spec files",
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "validate": "tsx scripts/validate.ts",
+    "stills": "tsx scripts/stills.ts",
+    "episode": "tsx scripts/episode.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.538",
+    "@remotion/renderer": "4.0.538",
+    "@remotion/bundler": "4.0.538",
+    "remotion": "4.0.538",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.3",
+    "@types/react": "19.1.2",
+    "tsx": "4.19.4",
+    "typescript": "5.8.3"
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "id": "ep05-calls",
+  "title": "Дзвінки: від «що ми домовились?» до скіла",
+  "status": "TODO-TOV",
+  "scene": {
+    "floorY": 1300,
+    "rooms": {
+      "default": [60, 720, 1420, 1340],
+      "call": [100, 420, 960, 1320],
+      "tiles": [100, 360, 960, 1000],
+      "final": [0, 280, 1420, 1340]
+    },
+    "objects": [
+      {"id": "ruta", "type": "chibi", "x": 1120, "y": 1300, "scale": 1.05, "layer": "back", "props": {"pose": "neutral"}},
+      {"id": "laptop", "type": "laptop", "x": 520, "y": 1300, "scale": 0.92, "props": {"window": "call", "client": "Олена"}},
+      {"id": "chips", "type": "chips", "x": 520, "y": 600, "layer": "air", "hidden": true,
+        "props": {"items": ["дедлайн — п’ятниця", "3 рілси", "ціна?", "бриф", "що далі?"]}},
+      {"id": "notepad", "type": "notepad", "x": 300, "y": 540, "rot": -5, "layer": "air", "hidden": true},
+      {"id": "fathom", "type": "app", "x": 270, "y": 520, "layer": "air", "hidden": true, "props": {"app": "fathom", "label": "Fathom"}},
+      {"id": "claude", "type": "app", "x": 770, "y": 520, "layer": "air", "hidden": true, "props": {"app": "claude", "label": "Claude"}},
+      {"id": "cable1", "type": "cable", "x": 0, "y": 0, "layer": "air", "props": {"from": "fathom", "to": "claude"}},
+      {"id": "tasks", "type": "tasks", "x": 540, "y": 520, "scale": 0.85, "layer": "air", "hidden": true,
+        "props": {"title": "ClickUp · Олена", "logo": "clickup", "items": [
+          {"text": "Бриф для Олени", "due": "пт"},
+          {"text": "3 сценарії рілсів", "due": "04.11"},
+          {"text": "Оффер: пакет «Старт»", "due": "сьогодні"},
+          {"text": "Дзвінок-фоловап", "due": "11.11"}
+        ]}},
+      {"id": "skill", "type": "skill", "x": 520, "y": 1050, "layer": "air", "hidden": true, "props": {"name": "/дзвінок", "sub": "скіл · після кожного дзвінка"}},
+      {"id": "offer", "type": "paper", "x": 180, "y": 610, "rot": -6, "scale": 0.8, "layer": "air", "hidden": true,
+        "props": {"title": "Оффер", "sub": "чернетка · для Олени", "bars": 8, "w": 420, "h": 500, "folded": true}}
+    ]
+  },
+  "steps": [
+    {
+      "caption": "Годинний *дзвінок* з клієнткою",
+      "vo": "Годинний дзвінок з клієнткою. Домовились про дедлайни, ціну і що робиш далі.",
+      "beats": [
+        {"action": "laptop.speak", "args": {"who": "client"}, "shot": "object_punch:laptop#client"},
+        {"action": "laptop.speak", "args": {"who": "me"}, "shot": "whip>object_punch:laptop#me"},
+        {"action": "chips.show", "shot": "pull_back>room:call", "also": [{"action": "chips.pop", "at": 0.1}]},
+        {"action": "ruta.pulse", "shot": "whip>character_close", "w": 0.8}
+      ],
+      "minus": {
+        "caption": "Ввечері вже *не пам’ятаєш*",
+        "vo": "А ввечері вже не пам’ятаєш, що саме обіцяла і до якого числа.",
+        "beats": [
+          {"action": "laptop.hangup", "shot": "whip>object_punch:laptop#tiles"},
+          {"action": "chips.forget", "shot": "punch>object_punch:chips"},
+          {"action": "ruta.pose", "args": {"pose": "confused"}, "shot": "whip>character_close"},
+          {"action": "chips.hide", "shot": "pull_back>room", "w": 0.8}
+        ]
+      }
+    },
+    {
+      "caption": "Пишеш *нотатки* під час дзвінка",
+      "vo": "Тоді пишеш нотатки прямо під час розмови.",
+      "beats": [
+        {"action": "notepad.show", "shot": "whip>object_punch:notepad",
+          "also": [{"action": "notepad.scribble", "args": {"to": 0.55}, "at": 0.2}, {"action": "laptop.call"}, {"action": "laptop.speak", "args": {"who": "client"}}]},
+        {"action": "ruta.pose", "args": {"pose": "scribbling"}, "shot": "whip>character_close",
+          "also": [{"action": "laptop.face", "args": {"pose": "scribbling"}}, {"action": "notepad.scribble", "args": {"to": 1, "dur": 2.4}}]}
+      ],
+      "minus": {
+        "caption": "Але губиш *фокус*",
+        "vo": "Але дивишся в блокнот, а не на людину, і забуваєш свої ж питання.",
+        "beats": [
+          {"action": "laptop.speak", "args": {"who": "client"}, "shot": "whip>object_punch:laptop#tiles"},
+          {"action": "notepad.lose", "shot": "whip>object_punch:notepad"},
+          {"action": "ruta.pose", "args": {"pose": "panicked"}, "shot": "whip>character_close"},
+          {"action": "notepad.shake", "shot": "pull_back>room", "w": 0.8}
+        ]
+      }
+    },
+    {
+      "caption": "Вмикаєш *запис*",
+      "vo": "Окей, вмикаєш запис дзвінка.",
+      "beats": [
+        {"action": "notepad.hide", "shot": "whip>screen",
+          "also": [{"action": "laptop.face", "args": {"pose": "neutral"}}, {"action": "ruta.pose", "args": {"pose": "neutral"}}]},
+        {"action": "laptop.rec", "shot": "punch>object_punch:laptop#rec"}
+      ],
+      "minus": {
+        "caption": "І передивляєшся *всю годину*",
+        "vo": "Але щоб знайти одну домовленість, передивляєшся всю годину запису.",
+        "beats": [
+          {"action": "laptop.window", "args": {"name": "player"}, "shot": "whip>screen",
+            "also": [{"action": "laptop.scrub", "args": {"from": 0.01, "to": 0.04, "dur": 1.6}, "at": 0.3}]},
+          {"action": "ruta.pose", "args": {"pose": "exhausted"}, "shot": "whip>character_close"},
+          {"action": "laptop.scrub", "args": {"from": 0.04, "to": 0.07, "dur": 1.6}, "shot": "whip>object_punch:laptop#timeline"}
+        ]
+      }
+    },
+    {
+      "caption": "Підключаєш *Fathom* до Claude",
+      "vo": "Підключаєш Fathom до Claude. Він сам розшифровує дзвінок і пише саммарі.",
+      "beats": [
+        {"action": "fathom.show", "shot": "pull_back>room:tiles", "also": [{"action": "claude.show", "at": 0.18}]},
+        {"action": "cable1.plug", "shot": "follow>object_punch:cable1"},
+        {"action": "laptop.window", "args": {"name": "claude"}, "shot": "whip>screen",
+          "also": [{"action": "laptop.ask", "args": {"text": "Fathom: дзвінок з Оленою"}, "at": 0.3}, {"action": "laptop.reply", "args": {"title": "Саммарі дзвінка з Оленою"}, "at": 0.6}]},
+        {"action": "ruta.pose", "args": {"pose": "ecstatic"}, "shot": "whip>character_close", "w": 0.8}
+      ],
+      "minus": {
+        "caption": "Але задачі й оффер — *руками*",
+        "vo": "Але задачі в ClickUp і оффер однаково пишеш руками.",
+        "beats": [
+          {"action": "tasks.show", "shot": "whip>object_punch:tasks#last", "also": [{"action": "tasks.type", "args": {"index": 0}, "at": 0.15}, {"action": "fathom.hide"}, {"action": "claude.hide"}, {"action": "cable1.hide"}]},
+          {"action": "ruta.pose", "args": {"pose": "furious"}, "shot": "whip>character_close"},
+          {"action": "tasks.type", "args": {"index": 1}, "shot": "whip>object_punch:tasks#last"}
+        ]
+      }
+    },
+    {
+      "caption": "Тож робиш *скіл*",
+      "vo": "Тож робиш скіл. Дзвінок закінчився — задачі вже в ClickUp з дедлайнами, а чернетка оффера чекає в чаті. А ти п’єш каву.",
+      "beats": [
+        {"action": "skill.show", "shot": "whip>object_punch:skill",
+          "also": [{"action": "tasks.hide"}, {"action": "ruta.pose", "args": {"pose": "neutral"}}]},
+        {"action": "skill.stamp", "shot": "punch>object_punch:skill*1.15", "w": 0.8},
+        {"action": "skill.fly", "args": {"x": 520, "y": 1225, "scale": 0.08, "arc": 40}, "shot": "whip>screen",
+          "also": [{"action": "skill.hide", "at": 0.55}, {"action": "laptop.ask", "args": {"text": "/дзвінок"}, "at": 0.35}, {"action": "laptop.reply", "args": {"title": "Готово: 4 задачі + оффер"}, "at": 0.6}]},
+        {"action": "tasks.show", "shot": "whip>object_punch:tasks", "caption": "Задачі вже в *ClickUp*",
+          "also": [{"action": "tasks.add", "at": 0.15}]},
+        {"action": "offer.show", "shot": "whip>object_punch:offer", "caption": "*Оффер* — уже чернетка",
+          "also": [{"action": "offer.unfold", "at": 0.25}]},
+        {"action": "ruta.pose", "args": {"pose": "coffee"}, "shot": "pull_back>room:final", "caption": "А ти *п’єш каву*"},
+        {"action": "ruta.pulse", "shot": "punch>character_close"}
+      ]
+    }
+  ]
+}
