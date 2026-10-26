@@ -54,6 +54,7 @@ const main = async () => {
     codec: 'h264',
     crf: 18,
     pixelFormat: 'yuv420p',
+    colorSpace: 'bt709',
     imageFormat: 'jpeg',
     jpegQuality: 92,
     outputLocation: out,

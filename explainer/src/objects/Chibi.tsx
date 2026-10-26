@@ -1,7 +1,7 @@
 // Chibi Ruta: an actor, never a speaker. Swaps pose PNGs from public/chibi/
 // with a squash-and-stretch pop, bobs gently at idle, and shakes when the pose
 // is an agitated one. She stands behind the desk, so the floor hides her below
-// the hips; (x, y) is her hip point on the desk line.
+// the hips; (x, y) is the point of her that sits on the desk line.
 
 import React from 'react';
 import {Img} from 'remotion';
@@ -11,7 +11,9 @@ import {asset} from './style';
 
 const W = 510;
 const H = 765; // the pose canvas is 2:3, head-top to knees
-const HIP = 0.62;
+// Where the desk line cuts her. Low enough that hands held at the waist (the
+// coffee mug, the notepad) stay above the desk.
+const HIP = 0.74;
 
 /** Poses that shake, and how hard (px, Hz). */
 const AGITATED: Record<string, [number, number]> = {
@@ -69,7 +71,7 @@ export const Chibi: ObjectDef = {
     },
   },
   anchors: () => ({
-    upper: {x: 20, y: 0, w: 470, h: 480},
+    upper: {x: 20, y: 0, w: 470, h: 560},
     head: {x: 95, y: 10, w: 320, h: 310},
   }),
   assets: (o) => [`chibi/${str(o.props?.pose, 'neutral')}.png`],
