@@ -57,7 +57,11 @@ The recurring object is **the content line**: Ідеї → Сценарій → 
 | twoaday | right | the week, two reels a day |
 | cta | right | «Кнопка під відео» |
 
-Her stats screenshots go in as screenshots (cropped, highlighted, never retyped)
-on the month of silence («Custom» period: 10,379 views, −7 followers, the flat
-stretch) and on «до і після» (30 days: 67,946 views, +177) once the files are
-in Drive.
+Her stats go in as her own screenshots (cropped, ringed, never retyped). The
+files are in `work/media/r41/`, which is gitignored:
+
+| beat | where | what |
+|---|---|---|
+| proof1 | right | «перестали набирати перегляди»: the «Custom» period (Aug 20 – Sep 10), the flat stretch ringed, then −7 net followers |
+| proof2 | both sides | «до і після»: Custom (10,379 / −7) left, 30 days (67,946 / +177) right, both rings on views and followers |
+| proof3 | both sides | «незалежно від того, як я себе відчуваю»: Sep 27 – Oct 26 (67.9K views, 217 new followers) and one reel (5,492 views) |

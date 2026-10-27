@@ -359,50 +359,77 @@ b.js = js("""
 # ===========================================================================
 # ===========================================================================
 # PROOF · her own Instagram screenshots, as screenshots (STYLE.md §4a): cropped,
-# one number ringed, never retyped. Only built once the files are in
-# work/media/r41/ (custom.jpg = the month of silence, d30.jpg = the last 30 days).
+# the number that matters ringed, never retyped. Files live in work/media/r41/
+# (gitignored): custom.jpg = the month of silence (Aug 20 – Sep 10),
+# d30.jpg = the last 30 days, summary.jpg = Sep 27 – Oct 26, reel_5492.jpg =
+# one reel's summary. Coordinates below are in the screenshots' own 1080-wide pixels.
 SHOT_CUSTOM = os.path.join(SHOTS, "custom.jpg")
 SHOT_30 = os.path.join(SHOTS, "d30.jpg")
+SHOT_SUM = os.path.join(SHOTS, "summary.jpg")
+SHOT_REEL = os.path.join(SHOTS, "reel_5492.jpg")
+OVERVIEW = (20, 440, 1060, 1060)              # header, the two cards, the chart, the dates
+R_VIEWS, R_FOLLOW = (44, 560, 430, 236), (500, 560, 436, 236)
+R_FLAT = (552, 1356, 336, 96)                 # the flat stretch, Aug 31 – Sep 7
 
 
 def shot(sid, path, x, y, w, crop, hl=()):
     """crop = (cx, cy, cw, ch) in the screenshot's own pixels; shown at width w.
     hl = rings in the same pixel space."""
+    from PIL import Image
+    nat = Image.open(path).size[0]
     cx, cy, cw, ch = crop
     k = w / float(cw)
     rings = "".join('<div class="hl hide" id="%s" style="left:%dpx;top:%dpx;width:%dpx;height:%dpx"></div>'
                     % (hid, (hx - cx) * k, (hy - cy) * k, hw * k, hh * k) for hid, (hx, hy, hw, hh) in hl)
     return ('<div class="shot hide" id="%s" style="left:%dpx;top:%dpx;width:%dpx;height:%dpx">'
             '<img src="assets/%s" style="left:%dpx;top:%dpx;width:%dpx"></div>%s'
-            % (sid, x, y, w, ch * k, os.path.basename(path), -cx * k, -cy * k, 923 * k,
+            % (sid, x, y, w, ch * k, os.path.basename(path), -cx * k, -cy * k, nat * k,
                '<div class="abs" style="left:%dpx;top:%dpx">%s</div>' % (x, y, rings)))
 
 
+def ring(ids, t):
+    return ('  tl.fromTo(%s, {autoAlpha: 0, scale: 1.25}, {autoAlpha: 1, scale: 1, duration: 0.4, ease: POP}, %s);\n'
+            % (json.dumps(ids), t))
+
+
 if os.path.exists(SHOT_CUSTOM):
-    T.update(postyty=S("постити,", 43.9), perehl=S("перегляди.", 48.9), bachyly=S("бачили,", 50.9),
-             tomu2=S("тому", 51.65))
-    b = beat("proof1", 42.8, 56.3)
+    # the month of silence: the views flatline, followers go negative
+    T.update(postyty=S("постити,", 44.92), perehl=E("набирати", 49.3), bachyly=S("бачили,", 51.98),
+             misiats2=E("місяць.", 56.54))
+    b = beat("proof1", 42.8, 57.2)
     b.assets = [SHOT_CUSTOM]
-    b.html = shot("p1", SHOT_CUSTOM, 1270, 90, 560, (20, 470, 900, 820),
-                  hl=[("p1v", (40, 480, 365, 200)), ("p1f", (430, 480, 365, 200)), ("p1c", (470, 1150, 280, 80))])
+    b.html = shot("p1", SHOT_CUSTOM, 1270, 70, 560, OVERVIEW, hl=[("p1c", R_FLAT), ("p1f", R_FOLLOW)])
     b.js = js("""
-  arr("#p1", @postyty, {s: 0.8, y: 40, d: 0.8});
-  tl.fromTo("#p1c", {autoAlpha: 0, scale: 1.3}, {autoAlpha: 1, scale: 1, duration: 0.4, ease: POP}, @perehl-0.2);
-  tl.fromTo("#p1f", {autoAlpha: 0, scale: 1.3}, {autoAlpha: 1, scale: 1, duration: 0.4, ease: POP}, @bachyly-0.4);
-  bout(["#p1", "#p1c", "#p1f"], @tomu2+2.6, 10, 0.32);""")
+  arr("#p1", @postyty-0.2, {s: 0.8, y: 40, d: 0.8});""") + ring(["#p1c"], js("@perehl-0.3")) + ring(["#p1f"], js("@bachyly-0.4")) + js("""
+  bout(["#p1", "#p1c", "#p1f"], @misiats2-0.2, 10, 0.32);""")
 
 if os.path.exists(SHOT_CUSTOM) and os.path.exists(SHOT_30):
-    T.update(do=S("до", 243.06), pislia=S("після.", 243.56), tomu3=S("Тому", 244.1))
-    b = beat("proof2", 240.6, 245.8)
+    # «до і після»: the same screen, the month of silence vs the last 30 days
+    T.update(zhyttia=S("життя", 241.3), pislia=S("після.", 243.56), dvi2=S("дві", 246.54))
+    b = beat("proof2", 240.6, 246.4)
     b.assets = [SHOT_CUSTOM, SHOT_30]
-    b.html = (shot("p2a", SHOT_CUSTOM, 90, 110, 520, (20, 470, 900, 820), hl=[("p2av", (40, 480, 365, 200))])
-              + shot("p2b", SHOT_30, 1310, 110, 520, (20, 470, 900, 820), hl=[("p2bv", (40, 480, 365, 200)), ("p2bf", (430, 480, 365, 200))]))
+    b.html = (shot("p2a", SHOT_CUSTOM, 90, 70, 520, OVERVIEW, hl=[("p2av", R_VIEWS), ("p2af", R_FOLLOW)])
+              + shot("p2b", SHOT_30, 1310, 70, 520, OVERVIEW, hl=[("p2bv", R_VIEWS), ("p2bf", R_FOLLOW)]))
     b.js = js("""
-  arr("#p2a", @do-0.15, {s: 0.8, x: 40, y: 20, d: 0.7});
-  arr("#p2b", @pislia-0.1, {s: 0.8, x: -40, y: 20, d: 0.7});
-  tl.fromTo(["#p2bv", "#p2bf"], {autoAlpha: 0, scale: 1.3}, {autoAlpha: 1, scale: 1, duration: 0.4, ease: POP}, @pislia+0.4);
-  bout(["#p2a", "#p2b", "#p2av", "#p2bv", "#p2bf"], @tomu3+1.4, 10, 0.32);""")
-    tl_ = [x for x in BEATS if x.name == "twohours"]
+  arr("#p2a", @zhyttia-0.2, {s: 0.8, x: 40, y: 20, d: 0.7});
+  arr("#p2b", @pislia-0.15, {s: 0.8, x: -40, y: 20, d: 0.7});""") \
+        + ring(["#p2av", "#p2af"], js("@pislia+0.15")) + ring(["#p2bv", "#p2bf"], js("@pislia+0.45")) + js("""
+  bout(["#p2a", "#p2b", "#p2av", "#p2af", "#p2bv", "#p2bf"], @dvi2-0.5, 10, 0.32);""")
+
+if os.path.exists(SHOT_SUM) and os.path.exists(SHOT_REEL):
+    # «два рілси … незалежно від того, як я себе відчуваю»: what that has done
+    T.update(nezal2=S("Незалежно", 432.46), dali=E("далі.", 436.44))
+    b = beat("proof3", 432.3, 437.9)
+    b.assets = [SHOT_SUM, SHOT_REEL]
+    b.html = (shot("p3a", SHOT_SUM, 1250, 110, 600, (0, 0, 1080, 798),
+                   hl=[("p3v", (760, 400, 310, 110)), ("p3f", (760, 535, 310, 110))])
+              + shot("p3b", SHOT_REEL, 110, 150, 480, (0, 0, 1080, 1033),
+                     hl=[("p3r", (40, 508, 488, 236))]))
+    b.js = js("""
+  arr("#p3a", @nezal2-0.1, {s: 0.8, x: -30, y: 20, d: 0.7});
+  arr("#p3b", @nezal2+0.5, {s: 0.8, x: 30, y: 20, d: 0.7});""") \
+        + ring(["#p3v", "#p3f"], js("@nezal2+0.9")) + ring(["#p3r"], js("@nezal2+1.3")) + js("""
+  bout(["#p3a", "#p3b", "#p3v", "#p3f", "#p3r"], @dali-0.1, 10, 0.32);""")
 
 # ===========================================================================
 # the content line (reused): Ідеї -> Сценарій -> Зйомка -> Монтаж

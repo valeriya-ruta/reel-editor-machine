@@ -15,9 +15,9 @@
   "frames": 191
  },
  {
-  "name": "line1",
-  "f0": 1692,
-  "frames": 111
+  "name": "proof1+line1",
+  "f0": 1261,
+  "frames": 542
  },
  {
   "name": "script",
@@ -45,9 +45,9 @@
   "frames": 301
  },
  {
-  "name": "twohours",
-  "f0": 4750,
-  "frames": 139
+  "name": "proof2+twohours",
+  "f0": 4591,
+  "frames": 298
  },
  {
   "name": "claude",
@@ -100,9 +100,9 @@
   "frames": 105
  },
  {
-  "name": "twoaday",
+  "name": "twoaday+proof3",
   "f0": 10123,
-  "frames": 167
+  "frames": 300
  },
  {
   "name": "cta",
