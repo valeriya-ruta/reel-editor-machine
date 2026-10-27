@@ -1,0 +1,316 @@
+{
+  "_direction": "Her call, 2026-10-27: these screenshots are animated as a smooth live demo in the second half of the reel, synced to what she says. Very smooth ease in/out between screens, a BIG cursor so it is obvious where she clicks, every unnecessary/personal detail blurred, and the button being pressed ringed/circled in a hand-drawn Excalidraw-style stroke.",
+  "_note": "Click targets (x,y,w,h for the hand-drawn ring) and blur rects (x,y,w,h) in each screenshot's own pixels. Order of use follows her voiceover; set once the video is in.",
+  "claude-home.png": {
+    "blur": [
+      [
+        8,
+        262,
+        245,
+        112
+      ],
+      [
+        8,
+        400,
+        245,
+        340
+      ]
+    ],
+    "targets": {
+      "customize": [
+        12,
+        192,
+        104,
+        24
+      ],
+      "scheduled": [
+        12,
+        144,
+        100,
+        24
+      ]
+    }
+  },
+  "claude-connectors.png": {
+    "blur": [
+      [
+        8,
+        262,
+        245,
+        112
+      ],
+      [
+        8,
+        400,
+        245,
+        340
+      ]
+    ],
+    "targets": {
+      "connectors-tab": [
+        356,
+        136,
+        94,
+        28
+      ],
+      "search": [
+        818,
+        134,
+        234,
+        30
+      ]
+    }
+  },
+  "claude-connectors-metricool.png": {
+    "blur": [
+      [
+        8,
+        262,
+        245,
+        112
+      ],
+      [
+        8,
+        400,
+        245,
+        340
+      ]
+    ],
+    "targets": {
+      "metricool-row": [
+        302,
+        198,
+        540,
+        44
+      ],
+      "add": [
+        1114,
+        202,
+        34,
+        34
+      ]
+    }
+  },
+  "claude-scheduled-tasks.png": {
+    "blur": [
+      [
+        8,
+        262,
+        245,
+        112
+      ],
+      [
+        8,
+        400,
+        245,
+        340
+      ],
+      [
+        314,
+        228,
+        410,
+        70
+      ],
+      [
+        764,
+        228,
+        410,
+        70
+      ],
+      [
+        314,
+        356,
+        410,
+        70
+      ],
+      [
+        764,
+        356,
+        410,
+        70
+      ],
+      [
+        314,
+        486,
+        410,
+        70
+      ],
+      [
+        764,
+        486,
+        410,
+        70
+      ],
+      [
+        314,
+        616,
+        410,
+        70
+      ],
+      [
+        764,
+        616,
+        410,
+        70
+      ],
+      [
+        314,
+        744,
+        410,
+        28
+      ],
+      [
+        764,
+        744,
+        410,
+        28
+      ]
+    ],
+    "targets": {
+      "new-task": [
+        1084,
+        135,
+        98,
+        28
+      ]
+    }
+  },
+  "claude-new-task.png": {
+    "blur": [
+      [
+        8,
+        262,
+        245,
+        112
+      ],
+      [
+        8,
+        400,
+        245,
+        340
+      ],
+      [
+        262,
+        180,
+        73,
+        590
+      ],
+      [
+        900,
+        180,
+        334,
+        590
+      ],
+      [
+        262,
+        712,
+        640,
+        60
+      ]
+    ],
+    "targets": {
+      "name": [
+        356,
+        160,
+        522,
+        30
+      ],
+      "instructions": [
+        356,
+        212,
+        522,
+        126
+      ],
+      "schedule": [
+        430,
+        490,
+        102,
+        26
+      ],
+      "daily": [
+        540,
+        490,
+        66,
+        26
+      ],
+      "time": [
+        614,
+        490,
+        94,
+        26
+      ],
+      "advanced": [
+        356,
+        541,
+        522,
+        50
+      ],
+      "create": [
+        815,
+        662,
+        63,
+        27
+      ]
+    }
+  },
+  "claude-new-task-notifications.png": {
+    "blur": [
+      [
+        8,
+        262,
+        245,
+        112
+      ],
+      [
+        8,
+        400,
+        245,
+        340
+      ],
+      [
+        262,
+        180,
+        73,
+        590
+      ],
+      [
+        900,
+        180,
+        334,
+        590
+      ],
+      [
+        262,
+        712,
+        640,
+        60
+      ]
+    ],
+    "targets": {
+      "notifications-tab": [
+        525,
+        496,
+        97,
+        26
+      ],
+      "notify-toggle": [
+        820,
+        533,
+        35,
+        22
+      ],
+      "push": [
+        370,
+        610,
+        132,
+        22
+      ],
+      "create": [
+        815,
+        662,
+        63,
+        27
+      ]
+    }
+  }
+}
