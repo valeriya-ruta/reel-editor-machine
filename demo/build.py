@@ -404,17 +404,36 @@ if os.path.exists(SHOT_CUSTOM):
   bout(["#p1", "#p1c", "#p1f"], @misiats2-0.2, 10, 0.32);""")
 
 if os.path.exists(SHOT_CUSTOM) and os.path.exists(SHOT_30):
-    # «до і після»: the same screen, the month of silence vs the last 30 days
-    T.update(zhyttia=S("життя", 241.3), pislia=S("після.", 243.56), dvi2=S("дві", 246.54))
-    b = beat("proof2", 240.6, 246.4)
-    b.assets = [SHOT_CUSTOM, SHOT_30]
-    b.html = (shot("p2a", SHOT_CUSTOM, 90, 70, 520, OVERVIEW, hl=[("p2av", R_VIEWS), ("p2af", R_FOLLOW)])
-              + shot("p2b", SHOT_30, 1310, 70, 520, OVERVIEW, hl=[("p2bv", R_VIEWS), ("p2bf", R_FOLLOW)]))
-    b.js = js("""
-  arr("#p2a", @zhyttia-0.2, {s: 0.8, x: 40, y: 20, d: 0.7});
-  arr("#p2b", @pislia-0.15, {s: 0.8, x: -40, y: 20, d: 0.7});""") \
-        + ring(["#p2av", "#p2af"], js("@pislia+0.15")) + ring(["#p2bv", "#p2bf"], js("@pislia+0.45")) + js("""
-  bout(["#p2a", "#p2b", "#p2av", "#p2af", "#p2bv", "#p2bf"], @dvi2-0.5, 10, 0.32);""")
+    # «до і після» (her note on v3: no graphics at all, only the screenshots,
+    # and every good one on this line): the month of silence on «до», then all
+    # the good screens land one by one on «після» and stay through «дві години»
+    D30_INT = os.path.join(SHOTS, "d30_int.jpg")
+    REELS = [os.path.join(SHOTS, f) for f in ("reel_5492.jpg", "reel_2594.jpg", "reel_1427.jpg")]
+    T.update(do=S("до", 243.06), pislia=S("після.", 243.56), vse2=E("все.", 249.82))
+    b = beat("proof2", 242.5, 250.5)
+    b.assets = [SHOT_CUSTOM, SHOT_30, D30_INT, SHOT_SUM] + REELS
+    R_REEL = (40, 506, 490, 238)
+    goods = [  # (id, file, x, y, w, crop, rings)
+        ("g1", SHOT_30, 590, 60, 430, OVERVIEW, [("g1v", R_VIEWS), ("g1f", R_FOLLOW)]),
+        ("g2", D30_INT, 590, 520, 430, (20, 1520, 1060, 480), [("g2a", (24, 1612, 1036, 168)), ("g2b", (24, 1786, 1036, 168))]),
+        ("g3", SHOT_SUM, 1060, 60, 520, (0, 0, 1080, 798), [("g3v", (760, 400, 310, 110)), ("g3f", (760, 535, 310, 110))]),
+    ] + [("g%d" % (4 + i), f, 1060 + i * 272, 480, 256, (0, 0, 1080, 1030), [("g%dv" % (4 + i), R_REEL)])
+         for i, f in enumerate(REELS)]
+    html = shot("p2a", SHOT_CUSTOM, 70, 60, 470, OVERVIEW, hl=[("p2av", R_VIEWS), ("p2af", R_FOLLOW)])
+    for gid, f, x, y, w, crop, hl in goods:
+        html += shot(gid, f, x, y, w, crop, hl=hl)
+    b.html = html
+    jsb = js("""
+  arr("#p2a", @do-0.25, {s: 0.8, x: 40, y: 20, d: 0.7});""") + ring(["#p2av", "#p2af"], js("@do+0.25"))
+    allids = ["#p2a", "#p2av", "#p2af"]
+    for i, (gid, f, x, y, w, crop, hl) in enumerate(goods):
+        t0 = T["pislia"] - 0.1 + i * 0.42
+        jsb += '  arr("#%s", %.3f, {s: 0.75, y: 40, d: 0.7});\n' % (gid, t0)
+        jsb += ring(["#" + h[0] for h in hl], "%.3f" % (t0 + 0.45))
+        allids += ["#" + gid] + ["#" + h[0] for h in hl]
+    jsb += js("""
+  bout(%s, @vse2+0.05, 10, 0.32);""" % json.dumps(allids))
+    b.js = jsb
 
 if os.path.exists(SHOT_SUM) and os.path.exists(SHOT_REEL):
     # «два рілси … незалежно від того, як я себе відчуваю»: what that has done
@@ -882,6 +901,12 @@ def window_doc(b, dur, plate_rel):
        "defs": g.defs(), "html": b.html, "motion": g.js(), "head": HEAD_JS, "body": body}
 
 
+# her note on v3 (2026-10-27): "i dont think we need graphics at all. keep subtitles
+# and cuts and zoom ins, remove all the graphics, keep only the screenshots".
+# The other beats stay defined above for the record but are not built.
+KEEP = ("proof1", "proof2")
+
+
 def main():
     if MISS:
         sys.exit("words off their expected time: %r" % MISS)
@@ -891,7 +916,7 @@ def main():
     # each beat's span: from t0 to after its last tween, whatever the re-cut did
     # to t1 (the last time literal in its JS + the longest exit, ~0.7 s)
     spans = []
-    for b in sorted(BEATS, key=lambda x: x.t0):
+    for b in sorted((x for x in BEATS if x.name in KEEP), key=lambda x: x.t0):
         last = max(float(x) for x in re.findall(r"(?<![\w.#\-])\d+\.\d{3}(?![\w])", b.js) if float(x) > 5.0)
         spans.append([b, b.t0, max(b.t1 or 0.0, last + 0.7)])
     # beats that hand off inside each other's span share one window

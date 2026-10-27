@@ -1,112 +1,12 @@
 [
  {
-  "name": "month",
-  "f0": 429,
-  "frames": 294
- },
- {
-  "name": "expert",
-  "f0": 729,
-  "frames": 241
- },
- {
-  "name": "drop",
-  "f0": 981,
-  "frames": 191
- },
- {
-  "name": "proof1+line1",
+  "name": "proof1",
   "f0": 1261,
-  "frames": 542
+  "frames": 443
  },
  {
-  "name": "script",
-  "f0": 2137,
-  "frames": 532
- },
- {
-  "name": "daily",
-  "f0": 2805,
-  "frames": 112
- },
- {
-  "name": "week+line2",
-  "f0": 2985,
-  "frames": 398
- },
- {
-  "name": "cost",
-  "f0": 3462,
-  "frames": 653
- },
- {
-  "name": "thirty",
-  "f0": 4143,
-  "frames": 301
- },
- {
-  "name": "proof2+twohours",
-  "f0": 4591,
-  "frames": 298
- },
- {
-  "name": "claude",
-  "f0": 4925,
-  "frames": 347
- },
- {
-  "name": "notif",
-  "f0": 5277,
-  "frames": 183
- },
- {
-  "name": "ideas",
-  "f0": 6072,
-  "frames": 330
- },
- {
-  "name": "strategy",
-  "f0": 6525,
-  "frames": 319
- },
- {
-  "name": "voice1",
-  "f0": 7141,
-  "frames": 156
- },
- {
-  "name": "voice2",
-  "f0": 7628,
-  "frames": 357
- },
- {
-  "name": "script2",
-  "f0": 8159,
-  "frames": 157
- },
- {
-  "name": "prompter",
-  "f0": 8349,
-  "frames": 374
- },
- {
-  "name": "videos",
-  "f0": 9232,
-  "frames": 112
- },
- {
-  "name": "buffer",
-  "f0": 9448,
-  "frames": 105
- },
- {
-  "name": "twoaday+proof3",
-  "f0": 10123,
-  "frames": 300
- },
- {
-  "name": "cta",
-  "f0": 11342,
-  "frames": 93
+  "name": "proof2",
+  "f0": 4648,
+  "frames": 241
  }
 ]
