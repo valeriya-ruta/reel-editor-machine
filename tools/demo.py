@@ -2,7 +2,7 @@
 """Screen demo, tutorial style: her screenshots play as a smooth live demo while
 she talks, and she sits in a rounded box beside them.
 
-    python tools/demo.py <spec.json> <plate.mp4> <out.mp4>
+    python tools/demo.py <spec.json> <plate.mp4> <out.mp4> [first_frame last_frame]
 
 Her direction, 2026-10-27 (STYLE.md "Screen demos are tutorial style"):
 smooth ease in and out, a BIG cursor so it is obvious where she clicks, every
@@ -221,7 +221,10 @@ def main():
     catalog = json.load(open(os.path.join(SHOTS, "claude-demo.json"), encoding="utf-8"))
     shots = [Shot(d, catalog) for d in spec["shots"]]
     t0, t1 = spec["t0"], spec["t1"]
-    n = int(round((t1 - t0) * FPS))
+    # optional sub-range (frame indices into the span) so chunks render in parallel
+    f_lo = int(sys.argv[4]) if len(sys.argv) > 4 else 0
+    f_hi = int(sys.argv[5]) if len(sys.argv) > 5 else int(round((t1 - t0) * FPS))
+    n = f_hi - f_lo
 
     bg = background()
     cx, cy, cw, ch = CARD
@@ -248,8 +251,8 @@ def main():
                             "-s", "%dx%d" % (W, H), "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-crf", "17",
                             "-preset", "medium", "-pix_fmt", "yuv420p", out], stdin=subprocess.PIPE)
 
-    for f, her in enumerate(plate_frames(plate, t0, n)):
-        t = t0 + f / FPS
+    for f, her in enumerate(plate_frames(plate, t0 + f_lo / FPS, n)):
+        t = t0 + (f_lo + f) / FPS
         k_in = ease((t - t0) / INTRO)
         k_out = ease((t1 - t) / OUTRO)
         k = min(k_in, k_out)                           # 0 = her full frame, 1 = the demo layout
@@ -290,6 +293,21 @@ def main():
                     m = max(2, int(len(pts) * pp))
                     if pp > 0:
                         d.line(pts[:m], fill=col, width=max(4, int(5.5 * min(sc, 1.6))), joint="curve")
+            # a checkbox she switches on gets its tick, in the app's own blue
+            for at, sj, st in steps:
+                if sj != si or "check" not in st or t < at + 0.06:
+                    continue
+                bx, by, bw, bh = shots[sj].targets[st["check"]]
+                u = ease_out((t - at - 0.06) / 0.18)
+                x0b, y0b = (bx - x0) * sc, (by - y0) * sc
+                s_ = bw * sc
+                pad = s_ * (1 - u) / 2
+                d.rounded_rectangle((x0b + pad, y0b + pad, x0b + s_ - pad, y0b + s_ - pad),
+                                    radius=max(1, s_ * 0.22), fill=(42, 120, 214, 255))
+                if u > 0.6:
+                    d.line([(x0b + s_ * 0.24, y0b + s_ * 0.52), (x0b + s_ * 0.43, y0b + s_ * 0.71),
+                            (x0b + s_ * 0.77, y0b + s_ * 0.31)], fill=(255, 255, 255, 255),
+                           width=max(2, int(s_ * 0.14)), joint="curve")
             # cursor: travels to each target, presses on the click
             pos = None
             for at, sj, st in steps:
