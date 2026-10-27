@@ -17,11 +17,15 @@ if [ ! -f $W/demo.mp4 ]; then
   ffmpeg -nostdin -v error -y -f concat -safe 0 -i $W/demo_list.txt -c copy $W/demo.mp4
 fi
 
-# picture: plate before the demo, the demo, plate after it; sound: the plate throughout
-ffmpeg -nostdin -v error -stats -y -i $W/plate.mp4 -i $W/demo.mp4 -filter_complex "
+# picture: plate before the demo, the demo, plate after it; sound: the plate throughout.
+# Each segment opens the plate on its own input: splitting one input into two
+# trims makes ffmpeg buffer every frame up to the second trim (~20k raw 1080p
+# frames) and the container runs out of memory.
+T1S=$(python3 -c "print('%.6f' % ($F1/30))")
+ffmpeg -nostdin -v error -stats -y -i $W/plate.mp4 -i $W/demo.mp4 -ss $T1S -i $W/plate.mp4 -filter_complex "
  [0:v]trim=start_frame=0:end_frame=$F0,setpts=PTS-STARTPTS[a];
  [1:v]setpts=PTS-STARTPTS[b];
- [0:v]trim=start_frame=$F1,setpts=PTS-STARTPTS[c];
+ [2:v]setpts=PTS-STARTPTS[c];
  [a][b][c]concat=n=3:v=1:a=0,ass=$W/subs.ass:fontsdir=assets/fonts[v]" \
  -map "[v]" -map 0:a -c:v libx264 -crf 18 -preset fast -pix_fmt yuv420p -r 30 \
  -c:a aac -b:a 192k -movflags +faststart $W/UDC-tutorial.mp4
