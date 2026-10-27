@@ -95,16 +95,17 @@ def shadow(w, h, r, blur=34, alpha=95, spread=6):
 
 
 def background():
-    """A calm warm ground — her off-white with a breath of pink at the corners."""
+    """A clean near-white ground with only a breath of pink in two corners —
+    her note on the first cut: "a little bit whiter, not as pink"."""
     y, x = np.mgrid[0:H, 0:W].astype(np.float32)
-    base = np.array([242, 240, 241], np.float32)
-    pink = np.array([255, 214, 226], np.float32)
-    d1 = np.exp(-(((x - 1820) / 900) ** 2 + ((y - 60) / 600) ** 2))
-    d2 = np.exp(-(((x - 120) / 800) ** 2 + ((y - 1060) / 520) ** 2)) * 0.7
-    k = np.clip(d1 + d2, 0, 1)[..., None]
+    base = np.array([250, 250, 250], np.float32)
+    pink = np.array([255, 238, 243], np.float32)
+    d1 = np.exp(-(((x - 1840) / 760) ** 2 + ((y - 40) / 480) ** 2))
+    d2 = np.exp(-(((x - 80) / 640) ** 2 + ((y - 1080) / 420) ** 2)) * 0.6
+    k = (np.clip(d1 + d2, 0, 1) * 0.6)[..., None]
     img = base * (1 - k) + pink * k
     rng = np.random.default_rng(7)
-    img += rng.normal(0, 1.6, (H, W, 1))
+    img += rng.normal(0, 0.9, (H, W, 1))
     return Image.fromarray(np.clip(img, 0, 255).astype(np.uint8))
 
 
@@ -128,27 +129,50 @@ def cursor_sprite(h=78):
 
 
 def rough_ring(cx, cy, rx, ry, seed):
-    """Two loose passes round the target, like a marker ring in Excalidraw:
-    not closed, a little overshoot, a little wobble."""
+    """A thin marker loop round the target, Excalidraw-style but delicate (her
+    note on the first cut: the thick rings were "not pretty at all" — thinner,
+    cuter, closer to the clean Google + doodle look): one loop that overshoots
+    its start, and a faint second lap that only goes part of the way."""
     rnd = random.Random(seed)
     passes = []
-    for p in range(2):
-        a0 = rnd.uniform(-2.6, -1.9)
-        span = 2 * math.pi + rnd.uniform(0.25, 0.5)
-        ox, oy = rnd.uniform(-4, 4), rnd.uniform(-3, 3)
-        sx, sy = 1 + rnd.uniform(-0.05, 0.07), 1 + rnd.uniform(-0.06, 0.08)
-        ph1, ph2 = rnd.uniform(0, 6.28), rnd.uniform(0, 6.28)
+    for p, (span_lo, span_hi) in enumerate(((2 * math.pi + 0.35, 2 * math.pi + 0.6), (2.4, 3.4))):
+        a0 = rnd.uniform(-2.5, -2.0) + (0.5 if p else 0)
+        span = rnd.uniform(span_lo, span_hi)
+        ox, oy = rnd.uniform(-2, 2), rnd.uniform(-1.5, 1.5)
+        sx, sy = 1 + rnd.uniform(-0.02, 0.05), 1 + rnd.uniform(-0.03, 0.06)
+        ph = rnd.uniform(0, 6.28)
         pts = []
-        n = 90
+        n = 120
         for i in range(n + 1):
             u = i / n
             a = a0 + span * u
-            wob = 1 + 0.035 * math.sin(3 * a + ph1) + 0.02 * math.sin(5 * a + ph2)
-            r_grow = 1 + 0.06 * u                       # the second lap drifts out a touch
-            pts.append((cx + ox + rx * sx * wob * r_grow * math.cos(a),
-                        cy + oy + ry * sy * wob * r_grow * math.sin(a)))
+            wob = 1 + 0.014 * math.sin(3 * a + ph)
+            grow = 1 + (0.05 if p else 0.035) * u
+            pts.append((cx + ox + rx * sx * wob * grow * math.cos(a),
+                        cy + oy + ry * sy * wob * grow * math.sin(a)))
         passes.append(pts)
     return passes
+
+
+def draw_stroke(layer, pts, rgba, width, ss=4):
+    """An anti-aliased polyline: drawn 4x on a small canvas, scaled down."""
+    xs = [p[0] for p in pts]
+    ys = [p[1] for p in pts]
+    pad = width * 2 + 2
+    x0, y0 = int(min(xs) - pad), int(min(ys) - pad)
+    w, h = int(max(xs) + pad) - x0, int(max(ys) + pad) - y0
+    if w <= 0 or h <= 0:
+        return
+    c = Image.new("RGBA", (w * ss, h * ss), (0, 0, 0, 0))
+    d = ImageDraw.Draw(c)
+    P = [((x - x0) * ss, (y - y0) * ss) for x, y in pts]
+    lw = max(1, int(round(width * ss)))
+    d.line(P, fill=rgba, width=lw, joint="curve")
+    r = lw / 2
+    for q in (P[0], P[-1]):                      # round caps
+        d.ellipse((q[0] - r, q[1] - r, q[0] + r, q[1] + r), fill=rgba)
+    c = c.resize((w, h), Image.LANCZOS)
+    layer.alpha_composite(c, (x0, y0))
 
 
 # ---------------------------------------------------------------- the camera
@@ -215,8 +239,29 @@ def plate_frames(plate, t0, n):
     p.wait()
 
 
+def to_plate(spec, clips):
+    """The spec is written in her raw take's seconds, so a re-cut never moves a
+    step off its word. Map every time onto the plate; a time inside a removed
+    stretch lands on the start of the next kept clip."""
+    def m(t):
+        for c in clips:
+            if c["src_in"] - 1e-6 <= t < c["src_in"] + c["dur"]:
+                return round(c["tl"] + t - c["src_in"], 3)
+        nxt = [c for c in clips if c["src_in"] > t]
+        return nxt[0]["tl"] if nxt else clips[-1]["tl"] + clips[-1]["dur"]
+    out = dict(spec, t0=m(spec["t0"]), t1=m(spec["t1"]))
+    out["shots"] = []
+    for sh in spec["shots"]:
+        sh = dict(sh, at=m(sh["at"]))
+        sh["steps"] = [dict(st, **{k: m(st[k]) for k in ("at", "release", "ring_end") if k in st}) for st in sh["steps"]]
+        out["shots"].append(sh)
+    return out
+
+
 def main():
     spec = json.load(open(sys.argv[1], encoding="utf-8"))
+    if spec.get("clock") == "raw":
+        spec = to_plate(spec, json.load(open(spec["cut"], encoding="utf-8"))["clips"])
     plate, out = sys.argv[2], sys.argv[3]
     catalog = json.load(open(os.path.join(SHOTS, "claude-demo.json"), encoding="utf-8"))
     shots = [Shot(d, catalog) for d in spec["shots"]]
@@ -270,7 +315,7 @@ def main():
             a = int(255 * k)
             cm = card_mask if a == 255 else card_mask.point(lambda v: v * a // 255)
             shm = card_sh if a == 255 else card_sh.point(lambda v: v * a // 255)
-            frame.paste((60, 20, 32), (cx - card_pad, cy - card_pad + off), shm)
+            frame.paste((28, 28, 36), (cx - card_pad, cy - card_pad + off), shm)
             # the ring and the cursor are drawn on the card, so they ride the camera
             layer = view.convert("RGBA")
             d = ImageDraw.Draw(layer)
@@ -281,18 +326,18 @@ def main():
                 if not st.get("ring", True) or t > end + 0.35:
                     continue
                 tx, ty, tw, th = shots[sj].targets[st["target"]]
-                rx = (tw / 2 + 14) * sc
-                ry = (th / 2 + 12) * sc
+                rx = (tw / 2 + 16) * sc
+                ry = (th / 2 + 13) * sc
                 ccx = (tx + tw / 2 - x0) * sc
                 ccy = (ty + th / 2 - y0) * sc
                 prog = ease_out((t - at + 0.05) / 0.55)
                 fade = 1 - ease((t - end) / 0.35)
-                col = RING + (int(255 * fade),)
-                for pi, pts in enumerate(rough_ring(ccx, ccy, rx, ry, hash(st["target"]) & 0xffff)):
+                for pi, pts in enumerate(rough_ring(ccx, ccy, rx, ry, sum(map(ord, st["target"])))):
                     pp = min(max(prog * 1.6 - pi * 0.6, 0), 1)
                     m = max(2, int(len(pts) * pp))
                     if pp > 0:
-                        d.line(pts[:m], fill=col, width=max(4, int(5.5 * min(sc, 1.6))), joint="curve")
+                        a_ = int(255 * fade * (1.0 if pi == 0 else 0.55))
+                        draw_stroke(layer, pts[:m], RING + (a_,), 3.2 if pi == 0 else 2.2)
             # a checkbox she switches on gets its tick, in the app's own blue
             for at, sj, st in steps:
                 if sj != si or "check" not in st or t < at + 0.06:
@@ -331,7 +376,7 @@ def main():
                         rr = 10 + 46 * ease_out((t - at) / 0.28)
                         sx, sy = (pos[0] - x0) * sc, (pos[1] - y0) * sc
                         d.ellipse((sx - rr, sy - rr, sx + rr, sy + rr),
-                                  outline=RING + (int(200 * (1 - (t - at) / 0.28)),), width=5)
+                                  outline=RING + (int(170 * (1 - (t - at) / 0.28)),), width=3)
                 cs = cur if press == 1.0 else cur.resize((int(cur.width * press), int(cur.height * press)), Image.LANCZOS)
                 sx, sy = (pos[0] - x0) * sc - hot[0] * press, (pos[1] - y0) * sc - hot[1] * press
                 layer.alpha_composite(cs, (int(sx), int(sy)))
@@ -352,7 +397,7 @@ def main():
             m = rounded_mask(dw, dh, max(r, 1), ss=2) if r > 0 else None
             if k > 0.05:
                 sh2, pad2 = shadow(dw, dh, max(r, 1), blur=24, alpha=int(110 * k))
-                frame.paste((40, 10, 20), (int(dst[0]) - pad2, int(dst[1]) - pad2), sh2)
+                frame.paste((28, 28, 36), (int(dst[0]) - pad2, int(dst[1]) - pad2), sh2)
             frame.paste(hb, (int(dst[0]), int(dst[1])), m)
             if k > 0.5:                                 # a thin white rim, like a window
                 rim = Image.new("L", (dw, dh), 0)

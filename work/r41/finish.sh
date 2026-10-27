@@ -3,7 +3,11 @@
 # Run from the repo root. Spans and frame numbers come from work/r41/demo.json.
 set -e
 W=work/r41
-read T0 T1 <<<"$(python3 -c "import json;d=json.load(open('$W/demo.json'));print(d['t0'],d['t1'])")"
+read T0 T1 <<<"$(python3 -c "
+import json, sys; sys.path.insert(0, 'tools'); from demo import to_plate
+d = json.load(open('$W/demo.json'))
+if d.get('clock') == 'raw': d = to_plate(d, json.load(open(d['cut']))['clips'])
+print(d['t0'], d['t1'])")"
 F0=$(python3 -c "print(round($T0*30))"); F1=$(python3 -c "print(round($T1*30))")
 N=$((F1 - F0)); C=$(( (N + 3) / 4 ))
 

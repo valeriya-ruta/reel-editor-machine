@@ -35,10 +35,23 @@ GAP_MAX = 0.28           # a pause inside a thought
 SENT_GAP = 0.42          # after a full stop / question
 PAD_IN, PAD_OUT = 0.08, 0.14
 SPLIT_OVER = 14.0
+QUIET_MAX = 0.55         # a silence inside a clip longer than this ...
+QUIET_KEEP = 0.26        # ... shrinks to this
 
 
 def load(wd):
     segs = [json.loads(l) for l in open(os.path.join(wd, "segs.jsonl"), encoding="utf-8")]
+    # Over a long segment whisper swallows repeated attempts, so the fumbles
+    # she flagged were re-heard burst by burst (work dir burst_asr.py). Inside
+    # those windows the burst words replace the long-pass words.
+    bp = os.path.join(wd, "bursts.json")
+    if os.path.exists(bp):
+        for key, bursts in json.load(open(bp, encoding="utf-8")).items():
+            a, b = (float(x) for x in key.split(","))
+            for sg in segs:
+                sg["words"] = [w for w in sg["words"] if not (a <= w["s"] < b)]
+            segs.extend(bursts)
+        segs.sort(key=lambda sg: sg["a"])
     W = []
     for si, s in enumerate(segs):
         for x in s["words"]:
@@ -129,11 +142,15 @@ def plan(wd):
             second["text"] = " ".join(w["w"] for w in second["words"])
             todo[0:0] = [first, second]
 
+    out = desilence(out, env, hop)
+
     # framing: alternate on every join; output timeline
     t, name = 0.0, "base"
     res = []
     for i, c in enumerate(out):
-        if i:
+        # a sliver left by a silence cut keeps the framing: two zoom flips
+        # inside a second read as a glitch, not an edit
+        if i and (c["b"] - c["a"]) >= 1.0 and (out[i - 1]["b"] - out[i - 1]["a"]) >= 1.0:
             name = "in" if name == "base" else "base"
         n = max(1, int(round((c["b"] - c["a"]) * FPS)))
         res.append({"i": i, "src_in": c["a"], "frames": n, "dur": round(n / FPS, 4), "tl": round(t, 4),
@@ -147,6 +164,47 @@ def plan(wd):
             words.append({"w": w["w"], "s": round(r["tl"] + max(w["s"], c["a"]) - c["a"], 3),
                           "e": round(r["tl"] + min(w["e"], c["a"] + r["dur"]) - c["a"], 3), "raw": w["s"]})
     return res, round(t, 4), words
+
+
+def desilence(clips, env, hop):
+    """Whisper stretches a word over a pause, so a gap between word timings is
+    not the only dead air: her "awkward pause" notes (7:40, 12:25) sat inside
+    single words. Any quiet stretch longer than QUIET_MAX inside a clip is cut
+    down to QUIET_KEEP, judged on the audio itself."""
+    thr = max(0.012, float(np.percentile(env, 30)) * 2.5)
+    out = []
+    for c in clips:
+        i0, i1 = int(c["a"] / hop), int(c["b"] / hop)
+        quiet, k = [], i0
+        while k < i1:
+            if env[k] < thr:
+                j = k
+                while j < i1 and env[j] < thr:
+                    j += 1
+                if (j - k) * hop >= QUIET_MAX and k > i0 and j < i1:
+                    quiet.append((k * hop + QUIET_KEEP * 0.45, j * hop - QUIET_KEEP * 0.55))
+                k = j
+            else:
+                k += 1
+        if not quiet:
+            out.append(c)
+            continue
+        edges = [c["a"]]
+        for qa, qb in quiet:
+            edges += [round(qa, 3), round(qb, 3)]
+        edges.append(c["b"])
+        pieces = [(edges[i], edges[i + 1]) for i in range(0, len(edges), 2)]
+        # every word goes to the piece nearest its middle — a word whisper
+        # stretched across the removed silence must not vanish from the subtitles
+        groups = [[] for _ in pieces]
+        for w in c["words"]:
+            mid = (w["s"] + w["e"]) / 2
+            k = min(range(len(pieces)), key=lambda q: 0 if pieces[q][0] <= mid < pieces[q][1]
+                    else min(abs(mid - pieces[q][0]), abs(mid - pieces[q][1])))
+            groups[k].append(w)
+        for (pa, pb), ws in zip(pieces, groups):
+            out.append(dict(c, a=pa, b=pb, words=ws, text=" ".join(w["w"] for w in ws)))
+    return out
 
 
 def crop(name):
