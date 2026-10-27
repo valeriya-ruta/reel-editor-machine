@@ -1,0 +1,1 @@
+{"bw": false, "frame": "in", "kind": "a", "n": 60, "speed": 1.0, "src": "M", "src_in": 584.2846666666667}
