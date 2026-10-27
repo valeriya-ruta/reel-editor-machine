@@ -52,3 +52,8 @@ work/media/
 covers/*/.vercel/
 covers/*/out/
 covers/deploy.log
+
+# Long-form cut intermediates (tools/cutlong.py, work/rNN/finish.sh)
+work/r*/segs/
+work/r*/*.log
+work/r*/demo_list.txt
