@@ -1,5 +1,5 @@
 {
-  "_direction": "Her call, 2026-10-27: these screenshots are animated as a smooth live demo in the second half of the reel, synced to what she says. Very smooth ease in/out between screens, a BIG cursor so it is obvious where she clicks, every unnecessary/personal detail blurred, and the button being pressed ringed/circled in a hand-drawn Excalidraw-style stroke.",
+  "_direction": "Her call, 2026-10-27: these screenshots are animated as a smooth live demo in the second half of the reel, synced to what she says. Very smooth ease in/out between screens, a BIG cursor so it is obvious where she clicks, every unnecessary/personal detail blurred, and the button being pressed ringed/circled in a hand-drawn Excalidraw-style stroke. She sits in a rounded tutorial-style rectangle (picture-in-picture) while the screen shows: framed wide, head and shoulders with headroom, never cropped at the top, not too close.",
   "_note": "Click targets (x,y,w,h for the hand-drawn ring) and blur rects (x,y,w,h) in each screenshot's own pixels. Order of use follows her voiceover; set once the video is in.",
   "claude-home.png": {
     "blur": [
