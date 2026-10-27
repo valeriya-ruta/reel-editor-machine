@@ -18,14 +18,17 @@ if [ ! -f $W/demo.mp4 ]; then
 fi
 
 # picture: plate before the demo, the demo, plate after it; sound: the plate throughout.
-# Each segment opens the plate on its own input: splitting one input into two
-# trims makes ffmpeg buffer every frame up to the second trim (~20k raw 1080p
-# frames) and the container runs out of memory.
-T1S=$(python3 -c "print('%.6f' % ($F1/30))")
-ffmpeg -nostdin -v error -stats -y -i $W/plate.mp4 -i $W/demo.mp4 -ss $T1S -i $W/plate.mp4 -filter_complex "
- [0:v]trim=start_frame=0:end_frame=$F0,setpts=PTS-STARTPTS[a];
- [1:v]setpts=PTS-STARTPTS[b];
- [2:v]setpts=PTS-STARTPTS[c];
- [a][b][c]concat=n=3:v=1:a=0,ass=$W/subs.ass:fontsdir=assets/fonts[v]" \
- -map "[v]" -map 0:a -c:v libx264 -crf 18 -preset fast -pix_fmt yuv420p -r 30 \
- -c:a aac -b:a 192k -movflags +faststart $W/UDC-tutorial.mp4
+# Each piece is encoded on its own with the subtitles burned at its real
+# timeline offset, then the pieces are joined without re-encoding. (One
+# filter graph with concat decodes all inputs at once and buffers the idle
+# ones until the container runs out of memory — twice, at ~9 min.)
+T0S=$(python3 -c "print('%.6f' % ($F0/30))"); T1S=$(python3 -c "print('%.6f' % ($F1/30))")
+X="-c:v libx264 -crf 18 -preset fast -pix_fmt yuv420p -fps_mode passthrough -an"
+SUB="ass=$W/subs.ass:fontsdir=assets/fonts"
+ffmpeg -nostdin -v error -y -i $W/plate.mp4 -frames:v $F0 -vf "$SUB" $X $W/p_a.mp4 &
+ffmpeg -nostdin -v error -y -i $W/demo.mp4 -vf "setpts=PTS-STARTPTS+$T0S/TB,$SUB,setpts=PTS-STARTPTS" $X $W/p_b.mp4 &
+ffmpeg -nostdin -v error -y -ss $T1S -i $W/plate.mp4 -vf "setpts=PTS-STARTPTS+$T1S/TB,$SUB,setpts=PTS-STARTPTS" $X $W/p_c.mp4 &
+wait
+printf "file '%s'\n" "$PWD/$W/p_a.mp4" "$PWD/$W/p_b.mp4" "$PWD/$W/p_c.mp4" > $W/final_list.txt
+ffmpeg -nostdin -v error -y -f concat -safe 0 -i $W/final_list.txt -i $W/plate.mp4 -map 0:v -map 1:a \
+ -c:v copy -c:a aac -b:a 192k -movflags +faststart $W/UDC-tutorial.mp4
