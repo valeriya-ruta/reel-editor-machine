@@ -9,6 +9,8 @@ the YT line" — the line sits MARGIN_V px above the bottom, clear of YouTube's
 progress bar and controls.
 
 Words come from cutlong.py's words.json (output timeline). Whisper's spelling
+sits in a soft dark translucent box (BorderStyle 3), so it reads on her room
+and on the light screen-demo background alike. Whisper's spelling
 is corrected by the FIX list in the work dir (fix.json: [[wrong, right], ...],
 applied to each line as plain substring replacements, longest first).
 """
@@ -21,7 +23,7 @@ MAX_CH = 46          # one line, comfortably readable at 1080p
 MAX_DUR = 4.2
 GAP_BREAK = 0.55
 MARGIN_V = 132
-FONT, SIZE = "Product Sans", 50
+FONT, SIZE = "Product Sans", 52
 
 
 def merge_words(words, merges):
@@ -124,7 +126,7 @@ def main():
             "[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, "
             "BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, "
             "Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n"
-            "Style: S,%s,%d,&H00FFFFFF,&H00FFFFFF,&H00201418,&H78000000,0,0,0,0,100,100,0,0,1,2.6,1.6,2,120,120,%d,1\n\n"
+            "Style: S,%s,%d,&H00FFFFFF,&H00FFFFFF,&H5A140F12,&H00000000,0,0,0,0,100,100,0,0,3,12,0,2,120,120,%d,1\n\n"
             "[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
             % (FONT, SIZE, MARGIN_V))
     with open(os.path.join(wd, "subs.ass"), "w", encoding="utf-8") as f:

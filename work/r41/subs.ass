@@ -6,7 +6,7 @@ WrapStyle: 2
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: S,Product Sans,50,&H00FFFFFF,&H00FFFFFF,&H00201418,&H78000000,0,0,0,0,100,100,0,0,1,2.6,1.6,2,120,120,132,1
+Style: S,Product Sans,52,&H00FFFFFF,&H00FFFFFF,&H5A140F12,&H00000000,0,0,0,0,100,100,0,0,3,12,0,2,120,120,132,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
