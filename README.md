@@ -61,8 +61,8 @@ she records + cuts + grades        (her laptop, 5-10 min)
 | `SCRIPTS.md` | all six scripts as written and read. The spelling authority |
 | `ANIMATION-PROCESS.html` | the design playbook — how a beat is specified |
 | `tools/align.py` | binds script spelling to ASR timing; separates whisper's mangling from her improvisation |
-| `tools/glass.py` | **the look** (STYLE.md §0): refined-glass materials, tile family, spring motion |
-| `style-test/` | the approved test pass the look was locked from |
+| `tools/gstyle.py` | **the look** (STYLE.md §00): Google style + Excalidraw — layers, captions, sketches, motion |
+| `archive/STYLE-refined-glass.md` | the archived refined-glass look (reels 12–40); `tools/glass.py` and `style-test/` belong to it |
 | `tools/squircle.py` | continuous-curvature corners as a `clip-path` (STYLE.md §5a.1) |
 | `tools/asr.py` | whisper wrapper, word-level timestamps |
 | `reel-03/` | reel 3 — «дизайн без Фігми». `build.py` generates `index.html` |

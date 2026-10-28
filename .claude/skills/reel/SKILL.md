@@ -62,9 +62,13 @@ cd reel-0N && python build.py && ../hf check
 
 `tools/kit.py` holds the shared surfaces, tokens and squircles — build beats out
 of it rather than hand-rolling CSS, and it keeps STYLE.md §5a satisfied for free.
-**`tools/glass.py` is the look since 2026-09-28 (STYLE.md §0)** — the refined-glass
-materials, the monochrome tile family and the spring motion helpers. Every new
-reel builds its beats from it; `style-test/build.py` is the worked example.
+**`tools/gstyle.py` is the look (STYLE.md §00, the default since 2026-10-28)** —
+Google style + Excalidraw sketches: white cards and chips above her, big white
+words behind her, the white half-screen panel (the video pushes down 330 px),
+the white full-screen cover, rough.js sketches, Google Sans, white and
+`#7A1424` only. `reel-54/build.py` is the latest worked example. The refined-glass
+look (`tools/glass.py`, burgundy ground, iris takeovers) is **archived** —
+`archive/STYLE-refined-glass.md` — and never used for a new reel unless she asks.
 `tools/matte.py` cuts her out of a span so a **big** graphic can sit behind her
 (§1) — per beat only, ~3.3 s/frame on CPU.
 

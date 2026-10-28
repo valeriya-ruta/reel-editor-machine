@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Refined glass — the house look, locked 2026-09-28 (STYLE.md §0).
+"""ARCHIVED 2026-10-28 — kept so reels 12–40 still rebuild. New reels use
+tools/gstyle.py (STYLE.md §00); see archive/STYLE-refined-glass.md.
+
+Refined glass — the house look, locked 2026-09-28.
 
 Her verdict on the test pass (`style-test/`): *"this is fucking amazing.
 delicious. just YES"*. This module is that test's materials and motion, lifted
