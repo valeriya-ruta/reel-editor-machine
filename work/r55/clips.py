@@ -5,6 +5,7 @@ SRC = "work/r55/src/screen.mp4"
 CHAT = (230, 0, 1460, 1080)      # the Claude chat column + input box
 APP = (445, 90, 1336, 990)       # RUTA web app, below her bookmarks bar, sidebar off
 CLIPS = [   # durations = the slot each one fills on the cut timeline (build.py SLOTS)
+    ("c0_home",      2.5,    3.5,  4.40, CHAT),
     ("c1_skill",     1.0,   11.0,  2.90, CHAT),
     ("c2_tools",    11.0,   55.0, 10.36, CHAT),
     ("c3_hypo",    128.0,  178.0,  8.20, CHAT),
@@ -14,7 +15,7 @@ CLIPS = [   # durations = the slot each one fills on the cut timeline (build.py 
     ("c5_ideas",    14.0,   50.0,  7.96, CHAT),
     ("c6_list",    362.0,  420.0,  6.24, CHAT),
     ("c7_pick",    465.0,  515.0,  2.01, CHAT),
-    ("c8_14",      661.0,  669.0,  1.50, CHAT),
+    ("c8_14",      664.8,  670.0,  1.50, CHAT),
     ("c9_ruta",    635.0,  660.0,  2.38, CHAT),
     ("c10_app",   1650.0, 1745.0, 12.85, APP),
     ("c11_done",  1745.0, 1790.0,  4.92, APP),

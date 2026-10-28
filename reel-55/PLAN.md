@@ -1,40 +1,23 @@
-# Reel 41 — «Plan with me» (how the AI content system plans a week)
+# Reel 55 — «Plan with me»
 
-168.75 s plate (5063 frames), cut by me from the «better» of two takes (work/r41/cutplan.py).
-Freestyle, no RUTA script: captions are whisper timing with its mishearings fixed (work/r41/captions.py).
-`build.py` is the source of truth.
+HER cut (Drive `VID_20261028_052210_749_bsl.mp4`, 4769 frames, DUR 158.95) — her rule:
+*"dont do closeups and dont change the cuts just animations and subtitles"*. Look: STYLE §00.
+Captions: per-utterance whisper timing (work/r55/v3), her words spelled right (work/r55/v3/captions.py).
 
-## What came out of her take
-Carousels (4:25–4:56), the second «зверху буде екран» + the pause, the early «все працює в хмарі»
-(she says it better later), «Мій Клод знає, що я люблю сценарії як відповіді…», the second ideas
-example, «хвилина на сценарій», «вже завтра» ×2, «я пошу по два рази на тиждень» (contradicts 2/day),
-and three restarts.
+Half screen: white panel to y 860, video pushed 280 (not 1240/330): her hair is at y ≈ 620 on this plate,
+so her face stays clear with no matte. Two spans: 3.7–95.8 (her insights, then her real screen recording
+in a window, 14 sped-up clips, work/r55/clips.py) and 107.8–119.3 (computer / phone / «курси» struck / cloud).
 
-## Layout
-Full frame for the hook, the proof and the CTA. SPLIT 40.4–114.3: her real 36-min desktop recording
-(work/r41/clips.py, 13 sped-up clips, 3–18×) in one glass window on top; she slides down 330 px under
-it on a burgundy ground, captions follow (+110 px). Zooms land on what she names; a clock runs on the
-recording's own elapsed time during the analysis.
-
-| time | where | beat |
+| time | layer | what |
 |---|---|---|
-| 0–4.6 | NEAR | week strip ПН–НД fills with reels; Claude tile on «AI-продюсеру» |
-| 11–22.6 | NEAR | Claude + an orbit; АНАЛІЗ / ІДЕЇ / МОНТАЖ / ДИЗАЙН / ПОСТИНГ land on their words; «по колу» |
-| 27–29 | NEAR | АГЕНТ? СКІЛ? |
-| 33.5–39.9 | NEAR | +300 counts up (her number); three DM notifications stack |
-| 40.4 | SPLIT | `/content-plan` typed → tool calls ticking (RUTA, Buffer) with clock → «минулий тиждень (19–25 жовтня)» → hypotheses |
-| 62 | SPLIT | her: «так але + це мій основний дохід, мені треба ліди» |
-| 64–76 | SPLIT | Fathom tool calls (Fathom tile), the idea list's «(Threads)» tags (Threads tile) |
-| 76–84 | SPLIT | her typing her own ideas |
-| 84–96.5 | SPLIT | the 30-idea list → her numbers → «та чекай, 11 мало, треба ж 14 нам» → RUTA tool call (RUTA tile) |
-| 96.5–114.3 | SPLIT | RUTA app: braindump → mic → «Зробити рілс» → the script; ✓ on «вуаля» |
-| 117–130 | NEAR | 14 reels → Google Drive → link → Claude Code → edit progress bar |
-| 130.5–137.8 | NEAR | laptop ✕ on «Не треба» → cloud ✓ on «хмарі» |
-| 138–145.8 | NEAR | evening schedule: 2 reels/day, «+1 год», Instagram + TikTok |
-| 146–151 | NEAR | checklist: СУБТИТРИ / АНІМАЦІЇ / ВСЕ ЯК ТРЕБА |
-| 151.5–155.5 | NEAR | the week strip returns, every day ✓ |
-| 156–163.5 | NEAR | Консультація або Під ключ |
-| 166–end | NEAR | comment box, «+» typed and sent |
-
-Blackouts only where a graphic says her word (the five jobs, агент/скил, +300, «з годиною між кожним»,
-the checklist, консультація, під ключ, плюс).
+| 0.6–3.9 | above | week card ПН–НД fills red; «AI-продюсер» pill with Claude mark |
+| 3.7–15 | half | her Instagram insights (Sep 27–Oct 26) → 30-day views chart, spike circled; «+ купа запитів у директ» |
+| 15–96 | half | the screen: «Afternoon, Ruta» on «зверху буде екран» → /content-plan → tool calls with her recording's clock → «минулий тиждень» underlined → hypotheses → her «так але + …ліди» → Fathom → Threads → her typing → the list → her picks → «та чекай, 11 мало, треба ж 14 нам» circled → RUTA → the app, mic → the script, boxed on «вуаля» |
+| 96–99 | above | fourteen reel sketches |
+| 101–108 | above | Google Диск → посилання → Claude Code chips; Claude Code card, progress bar on «монтувати» |
+| 108–119 | half | комп'ютер / телефон sketches; «курси: комп'ютер має бути відкритий» struck on «Не треба»; хмара → «працює сам» |
+| 123–126 | above | evening card, two dots a day; Instagram, TikTok |
+| 133–138 | above | checklist субтитри / анімації / все як треба; «постить сам» |
+| 139–143 | above | the week card again, every day ticked |
+| 145–154 | above | Консультація · Під ключ (готово вже завтра) |
+| 157–159 | above | «Пиши «+» в коментарі» + a long arrow down the right side |
