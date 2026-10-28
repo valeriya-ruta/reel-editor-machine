@@ -1,0 +1,13 @@
+{
+ "keep": [
+  [
+   26.9,
+   32.0
+  ],
+  [
+   90.9,
+   95.7
+  ]
+ ],
+ "note": "utt.jsonl patched (resolo.py): whisper's zero-length «Дякуємо за підтримку!» after k8 removed; k31 «Дякуємо!» (108.5-109.1) is a breath — alone it reads no_speech 0.83 — so it is emptied; the packed pass had also lost «Тому якщо» from the CTA, the solo pass over 109.1-114.5 restores «Тому якщо ти планувала зекономити собі…». keep: «І якщо покласти…» whole (its «І» was dropped, clipping the start) and «тобі туди навіть не треба дивитися» (cut after «не»). The «Але для всього швидкого…» retake is the detector's own call, correct. «безпросвєтна срака» is hers — kept."
+}

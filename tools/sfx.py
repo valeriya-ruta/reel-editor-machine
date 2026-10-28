@@ -26,7 +26,9 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KIT = os.path.join(ROOT, "assets", "sfx")
-CACHE = "E:/reels-work/sfxcache"
+# heavy intermediates off her C: drive; the cloud container sets REELS_SCRATCH
+SCRATCH = os.environ.get("REELS_SCRATCH", "E:/reels-work")
+CACHE = os.path.join(SCRATCH, "sfxcache")
 SR = 48000
 
 # peak of the effect, in dB below the peak of her voice
@@ -103,7 +105,7 @@ def mix(nn):
     reel = os.path.join(ROOT, "reel-" + nn)
     voice = os.path.join(reel, "assets", "voice.mp4")
     cues = json.load(open(os.path.join(reel, "sfx.json"), encoding="utf-8"))
-    tmp = os.path.join("E:/reels-work", "r" + nn)
+    tmp = os.path.join(SCRATCH, "r" + nn)
     os.makedirs(tmp, exist_ok=True)
     vw = os.path.join(tmp, "voice-mix-in.wav")
     subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-i", voice, "-vn", "-ac", "2",

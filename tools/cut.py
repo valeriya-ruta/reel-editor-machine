@@ -472,6 +472,12 @@ def main():
 
     W, kept, dropped, flags, script = plan_takes(utts, script_text, fix)
     segs = build_segments(utts, kept, env, hop, None)
+    # "hold" spans (raw seconds) are silences she left on purpose — room for a
+    # beat, like the two reels reel 51 asks the viewer to compare. No words, so
+    # nothing above would keep them.
+    for a, b in fix.get("hold", []):
+        segs.append({"k": -1, "a": a, "b": b, "text": "", "mid_in": False, "mid_out": False})
+    segs.sort(key=lambda s: s["a"])
     punch_spans = [tuple(p) for p in fix.get("punch", [])]
     segs = split_for_punch(segs, punch_spans, env, hop)
     motion_log = []

@@ -83,6 +83,13 @@ Non-negotiable, and cheap:
 Her Desktop, then `SendUserFile` both files. Once rclone has write scope, also
 `rclone copy` to `gdrive:Reels inbox/Done`. Commit the reel and push.
 
+**The full-quality 1080p file is what she posts, so it always reaches her.**
+A review page (artifact) can only hold ~15 MB per file, so it carries 720p
+previews: every label, button and download filename on it says *preview, not
+for posting* (`REEL-NN-PREVIEW-720p.mp4`), and the full files go to her in the
+same message via `SendUserFile`. On 2026-10-21 she posted the 720p copies from
+the 41–52 page because the page only said "review copies" in small print.
+
 One closing message: it's done, here it is, and anything that changed about
 *her* side — a line she improvised, a beat that needed a different treatment.
 Not what broke internally.

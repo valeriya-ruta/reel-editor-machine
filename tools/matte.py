@@ -19,6 +19,23 @@ base plate at the *same* time, so a one-frame slip shows as a shimmering ghost
 along her edge. That is why the cut is made with a frame-index trim rather than
 a timestamp seek — `-ss` lands on whatever the decoder decides is closest, and
 "closest" is not good enough here.
+
+Colour is the other thing (her catch, 2026-10-21: "my colors change to slightly
+more orange" on every behind-me word and half screen of reels 41–52). The
+remove-background output was ~9 levels short of blue against the plate, for
+three stacked reasons: it encodes RGB->YUV with the BT.601 matrix but tags the
+file BT.709; HyperFrames extracts alpha video as PNGs that carry that BT.709
+curve as a cICP chunk, which Chrome then colour-manages; and the plate takes a
+different road (JPEG frames) whose own 601/709 mix-up cancels against the
+render's final encode, where the cut-out's does not. So we keep only the
+*shape* from remove-background and repaint it with the plate's own YUV,
+untouched, tagged the way the plate's road ends up decoded (BT.601 matrix, no
+transfer or primaries, so no PNG colour chunk). Measured on reel 48 at 1:12,
+same frame rendered with and without the matte: old -4/-6/-9 RGB levels,
+repainted -1/-1/-1 (compression noise). `--repaint` redoes an existing matte
+without running background removal again:
+
+    python3 tools/matte.py reel-48 69.733 72.0 hours --repaint
 """
 import io
 import json
@@ -28,6 +45,8 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 NPX = os.path.join(os.environ.get("APPDATA", ""), "npm", "npx.cmd")
+if not os.path.exists(NPX):        # the cloud container (Linux): npx on PATH
+    NPX = "npx"
 
 
 def run(cmd, **kw):
@@ -47,12 +66,36 @@ def probe(path):
     return float(num) / float(den), int(s["width"]), int(s["height"])
 
 
+def count_frames(path):
+    return int(subprocess.check_output([
+        "ffprobe", "-v", "error", "-select_streams", "v:0", "-count_frames",
+        "-show_entries", "stream=nb_read_frames", "-of",
+        "default=nw=1:nk=1", path], cwd=ROOT).strip())
+
+
+def repaint(base, f0, f1, shape, webm):
+    """Her own plate pixels, the matte's alpha: the cut-out is the same picture
+    as the frame around it. YUV goes straight through (alphamerge, no RGB
+    round trip); see the docstring for why the tags say BT.601 and nothing else."""
+    run(["ffmpeg", "-v", "error", "-i", base, "-c:v", "libvpx-vp9", "-i", shape,
+         "-filter_complex",
+         "[0:v]trim=start_frame=%d:end_frame=%d,setpts=PTS-STARTPTS[p];"
+         "[1:v]alphaextract[a];[p][a]alphamerge,format=yuva420p" % (f0, f1),
+         "-an", "-c:v", "libvpx-vp9", "-pix_fmt", "yuva420p", "-crf", "16", "-b:v", "0",
+         "-auto-alt-ref", "0", "-row-mt", "1",
+         "-colorspace", "smpte170m", "-color_primaries", "unknown", "-color_trc", "unknown",
+         "-color_range", "tv", "-y", webm])
+
+
 def main():
     if len(sys.argv) < 5:
         sys.exit(__doc__)
     reel, start, end, name = sys.argv[1], float(sys.argv[2]), float(sys.argv[3]), sys.argv[4]
+    only_repaint = "--repaint" in sys.argv[5:]
 
     base = os.path.join(reel, "assets", "base.mp4")
+    if not os.path.exists(os.path.join(ROOT, base)):     # before the sfx mix: same frames
+        base = os.path.join(reel, "assets", "voice.mp4")
     if not os.path.exists(os.path.join(ROOT, base)):
         sys.exit("no such plate: " + base)
     fps, w, h = probe(base)
@@ -67,7 +110,20 @@ def main():
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)
     span = os.path.join(out_dir, "_%s_span.mp4" % name)
+    shape = os.path.join(out_dir, "_%s_shape.webm" % name)
     webm = os.path.join(out_dir, "%s.webm" % name)
+
+    if only_repaint:
+        # The start is a composition time already on the frame grid (k.matte
+        # snaps it), so round it — int() would land 69.733 s on frame 2091.
+        # The length is whatever the existing matte has.
+        f0 = int(round(start * fps))
+        n = count_frames(webm)
+        os.replace(webm, shape)
+        repaint(base, f0, f0 + n, shape, webm)
+        os.remove(shape)
+        print("%s  repainted from the plate, frames %d-%d" % (name, f0, f0 + n))
+        return
 
     print("%s  frames %d-%d (%d @ %.3f fps, %dx%d)" % (name, f0, f1, n, fps, w, h))
     print("  about %.1f min on the CPU" % mins)
@@ -79,11 +135,7 @@ def main():
          "-an", "-c:v", "libx264", "-crf", "16", "-preset", "veryfast",
          "-y", span])
 
-    got = probe(span)
-    cut_frames = int(subprocess.check_output([
-        "ffprobe", "-v", "error", "-select_streams", "v:0", "-count_frames",
-        "-show_entries", "stream=nb_read_frames", "-of",
-        "default=nw=1:nk=1", span], cwd=ROOT).strip())
+    cut_frames = count_frames(span)
     if cut_frames != n:
         print("  ! asked for %d frames, cut %d — check the beat bounds" % (n, cut_frames))
         n = cut_frames
@@ -95,8 +147,10 @@ def main():
     # 2026-09-28, which moved onnxruntime-node to an optional install that
     # fails on this machine; 0.8.33 bundles it and is already cached.
     run([NPX, "--yes", "hyperframes@0.8.33", "remove-background", span,
-         "-o", webm, "--quality", "best"])
+         "-o", shape, "--quality", "best"])
     os.remove(span)
+    repaint(base, f0, f0 + n, shape, webm)
+    os.remove(shape)
 
     rel = "assets/mattes/%s.webm" % name
     print("\n  %s" % rel)
