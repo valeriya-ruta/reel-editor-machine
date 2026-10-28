@@ -34,6 +34,10 @@ for i, w in enumerate(W):
     if out and (txt.startswith("-") or txt.startswith("'")) and s - out[-1]["e"] < 0.4:
         out[-1]["w"] += txt; out[-1]["e"] = e; continue
     out.append({"w": txt, "s": round(s, 3), "e": round(e, 3)})
+# whisper sometimes gives two words one start: space them so each shows
+for a, b in zip(out, out[1:]):
+    if b["s"] < a["s"] + 0.12:
+        b["s"] = round(a["s"] + 0.12, 3)
 for a, b in zip(out, out[1:]):
     a["e"] = round(min(max(a["s"] + 0.12, min(a["e"], b["s"] - 0.085)), b["s"] - 0.02), 3)
 json.dump({"words": out}, open("captions.json", "w"), ensure_ascii=False, indent=0)
