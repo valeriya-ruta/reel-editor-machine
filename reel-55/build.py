@@ -34,7 +34,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 from kit import Kit  # noqa: E402
 from glass import Glass  # noqa: E402
 
-W41 = os.path.join(ROOT, "work", "r41")
+W41 = os.path.join(ROOT, "work", "r55")
 DUR = 168.750          # (5063 plate frames - 0.5) / 30
 FPS = 30
 k = Kit(width=1080, height=1920, fps=FPS, duration=DUR)
@@ -707,7 +707,7 @@ def main():
             'gsap.set("#vid", {transformOrigin: "540px 900px"});',
             'tl.fromTo("#vid", {scale: 1}, {scale: 1.045, duration: %.3f, ease: "none"}, 0);' % DUR]
     doc = k.document(
-        title=u"Reel 41 — plan with me",
+        title=u"Reel 55 — plan with me",
         plate="assets/base.mp4",
         gfx_html=g.defs() + "\n" + "\n".join(L),
         gfx_js="\n".join(head + J),
