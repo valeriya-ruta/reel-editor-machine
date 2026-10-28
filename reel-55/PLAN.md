@@ -21,3 +21,9 @@ in a window, 14 sped-up clips, work/r55/clips.py) and 107.8–119.3 (computer / 
 | 139–143 | above | the week card again, every day ticked |
 | 145–154 | above | Консультація · Під ключ (готово вже завтра) |
 | 157–159 | above | «Пиши «+» в коментарі» + a long arrow down the right side |
+
+## Posted (2026-10-28, her call: «write the caption for it and post»)
+Through Buffer, share now, from the HeyGen asset URL (resource2.heygen.ai/video/bf552c5a…/original.mp4 —
+Buffer can't read the render's signed S3 link). Instagram reel (shared to feed) `6ae1f4551c05bb5ebc8d4893`,
+TikTok `6ae1f460c5d58d36138ef869`. Same caption, last line per platform (her rule): IG «Відправ подрузі-блогерці…»,
+TikTok «Підпишись…». CTA = the reel's own: «Пиши + в коментарі і я тобі напишу».
