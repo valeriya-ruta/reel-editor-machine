@@ -34,9 +34,16 @@ segs = []
 for a, b, _ in KEEP:
     s = W[a]["s"]
     for i in range(a, b):
-        if W[i+1]["s"] - W[i]["e"] > GAP:
-            segs.append((s - PRE, W[i]["e"] + POST)); s = W[i+1]["s"]
-    segs.append((s - PRE, W[b]["e"] + POST))
+        # whisper stretches a word's end over the pause after it, so a long
+        # start-to-start gap is a pause too: end the word by its own length
+        end = W[i]["e"]
+        if W[i+1]["s"] - W[i]["s"] > 1.5:
+            end = min(end, W[i]["s"] + min(0.09 * len(W[i]["w"]) + 0.15, 0.9))
+        if W[i+1]["s"] - end > GAP:
+            segs.append((s - PRE, end + POST)); s = W[i+1]["s"]
+    nxt = max(W[b+1]["s"] - 0.04, W[b]["s"] + 0.25) if b + 1 < len(W) else W[b]["e"] + POST
+    prv = min(W[a-1]["e"] + 0.02, W[a]["s"] - 0.03) if a > 0 else 0
+    segs.append((max(s - PRE, prv), min(W[b]["e"] + POST, nxt)))
 segs = [(max(0, round(x, 3)), round(y, 3)) for x, y in segs]
 # merge overlaps
 out = [list(segs[0])]
@@ -44,5 +51,6 @@ for x, y in segs[1:]:
     if x <= out[-1][1]: out[-1][1] = max(out[-1][1], y)
     else: out.append([x, y])
 json.dump(out, open("cut.json", "w"), indent=0)
+json.dump([i for a, b, _ in KEEP for i in range(a, b + 1)], open("keep_idx.json", "w"))
 tot = sum(y - x for x, y in out)
 print("segments", len(out), "plate %.1f s" % tot)
