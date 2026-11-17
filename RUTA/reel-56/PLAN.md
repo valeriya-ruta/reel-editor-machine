@@ -1,49 +1,48 @@
 # Reel 56 — «Презентація з Клодом за 5 хвилин»
 
 Drive folder «Presentation with Claude» (`18Lffz8he73KV5u0GHXzh4NvNvnbbgRkZ`), four phone
-clips from 2026-11-17, portrait HEVC ~30 fps. Her brief: *"simple editing today, minimal
-animations, just cutting+subtitles"*. The story: open a new chat → a base prompt so he starts
-working → meanwhile record a voice note explaining what I want → give it to him → go away for
-5 min → a ready, editable presentation → voila.
+clips and her voiceover from 2026-11-17. Her brief: *"simple editing today, minimal
+animations, just cutting+subtitles"*. The first build in `RUTA/` (Ruta's pipeline moved there
+today, beside `Nika/`).
 
-The first build to go in `RUTA/` (Ruta's pipeline moved there today, beside `Nika/`).
+## v2 (shipped) — her voiceover over everything but the intro and outro
 
-| clip | what | voice |
-|---|---|---|
-| `20261117_132849` | her to camera: the intro and the outro | yes |
-| `20261117_132924` | Claude → New → the base prompt pasted and sent (no voice 4.3–18.4) → her dictating into earphones | partly |
-| `20261117_134447` | the base deck, «Ось він мені вже приготував основу…», «Я відправляю йому свої голосові. І все.» | yes |
-| `20261117_135042` | the finished deck, a slide edited in place | **none** (whisper hallucinated English over room noise) |
+Her note on v1: *"the part where I'm talking in the headphones … just speed that whole part up,
+remove completely the text or the sounds … I'm gonna record everything that's not the
+beginning, the intro or the outro."* She recorded it in her own words as one continuous take
+(`Pptx w claude.m4a`, 19.6 s) rather than the six scripted lines, so it plays as one track
+from the end of the intro and each section of footage is cut on her timing
+(`work/r56/vo.py` → `mkplate.py` → `captions.py`). DUR 33.133 (994 frames).
 
-## The cut (`work/r56/mkplate.py`, 1431 frames, DUR 47.7)
+| plate | section | her words | footage |
+|---|---|---|---|
+| 0.00–11.07 | A | «Сьогодні ввечері в мене вебінар… ведення Threads з AI… з моїм Клодом. Погнали!» (to camera, her own sound) | `132849` 1.60–12.65 |
+| 11.07–12.97 | S1 | «Відкриваємо Клод, натискаємо на New,» | `132924` sidebar → New, 1.8x |
+| 12.97–18.40 | S2 | «і тепер я даю йому тему презентації та прошу підготувати основу дизайну, щоб далі все пішло набагато швидше.» | `132924` prompt pasted → sent, 2.4x |
+| 18.40–24.47 | S3 | «Поки він це все робить, я голосовим записую, що я хочу сказати, деякі схеми мають бути, взагалі всі свої ідеї.» | `132924` her in headphones, 7x, its own sound and words gone |
+| 24.47–27.07 | S5 | «Відправляємо, і через буквально 5 хвилин» | `134447` the voice notes in the chat, 1.4x |
+| 27.07–30.57 | S6 | «маю готову презентацію, яку я можу далі редагувати.» + 1 s hold | `135042` title slide → «Що обрати?» edited with the text toolbar, 1.4x |
+| 30.57–33.13 | G | «Якщо було корисно, то обов'язково підпишись.» (to camera) | `132849` 13.45–16.00 |
 
-| plate | piece | what |
-|---|---|---|
-| 0.0–11.1 | A | «Сьогодні ввечері в мене вебінар… ведення Threads з AI, але в моїй презентації ще не валявся кінь… з моїм Клодом. Погнали!» |
-| 11.1–13.8 | B1 B2 | «Відкриваємо Клод. Натискаємо на New.» (the pause between trimmed) |
-| 13.8–21.6 | C | the prompt on screen, sent at the end · **VO 1 + 2** |
-| 21.6–29.3 | D1 D2 D3 | her dictating: «Я вважаю, що Клод трошки кращий, мені з ним простіше працювати.» · «Далі, у нас є рівні контексту…три основні рівні контексту.» (her self-correction and 18 s in between cut) |
-| 29.3–36.6 | E1–E4 | «Ось він мені вже приготував основу для моєї презентації. Я відправляю йому свої голосові. І все.» («власне» and the pauses cut) |
-| 36.6–45.1 | F1 F2 | the finished deck: title slide, «02», then «Що обрати?» edited with the text toolbar · **VO 3** |
-| 45.1–47.7 | G | «Якщо було корисно, то обов'язково підпишись.» |
+The base-deck shot (`134447` 0–8 s, «Ось він мені вже приготував основу») is out: her take goes
+from «Відправляємо» straight to the finished deck. The cut lands on «маю готову».
 
-No graphics, no sound cues, no push on the plate. Captions: the word rail (STYLE §00, her
-review of reel 41), spelled from her speech (`work/r56/captions.py`): whisper's «введення 3D за
-яй» is «ведення Threads з AI» (re-decoded with a vocabulary prompt, `work/r56/redo2.py`),
-«особні» → «основні», «колодом» → «Клодом».
+Captions: the word rail (STYLE §00, her review of reel 41), her words as she said them;
+whisper's «код» → «Клод». Intro: «ведення Threads з AI» (whisper heard «введення 3D за яй»;
+re-decoded with a vocabulary prompt, `work/r56/redo2.py`). Voiceover levelled to her intro to
+camera. No graphics, no sound cues, no push on the plate.
 
-## Voiceover (her offer: "if you need me to record on top ill record just give me a script")
+## v1 (superseded)
 
-1. «Даю йому базовий промт — і він уже починає працювати.» (C)
-2. «А поки він працює, я записую голосове: пояснюю, що хочу бачити в презентації.» (C)
-3. «Йду на п'ять хвилин. Повертаюсь — презентація готова, і її можна редагувати. Вуаля!» (F)
+Her original clips cut in order: her on-camera lines, 9 s of her dictating with its own sound,
+and the two silent stretches (the base prompt, the finished deck) carrying three scripted lines
+as caption text. In git history at `15f2914`.
 
-Until she records them, v1 runs them as caption text at a reading pace over the silent
-stretches. When her recording lands:
+## Re-doing the voiceover
 
 ```bash
-python3 work/r56/vo.py <her recording>     # finds the lines, last take wins -> work/r56/vo.json
-python3 work/r56/mkplate.py                # C / F grow if her lines are longer; VO levelled to her intro
-python3 work/r56/captions.py               # her lines on her timing, later words shifted
+python3 work/r56/vo.py <her recording>     # SPLIT in vo.py: the words that open each section
+python3 work/r56/mkplate.py
+python3 work/r56/captions.py
 cd reel-56 && python3 build.py && sh ../hf check && cd .. && python3 tools/hfrender.py reel-56
 ```
