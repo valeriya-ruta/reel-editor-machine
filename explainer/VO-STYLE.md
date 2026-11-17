@@ -32,13 +32,14 @@ and they win where the two differ.
 ## Length and pace
 
 - 95–115 words for the whole episode, which is 40–50 seconds at 2.5 words a second.
-- One step (attempt plus minus) is one or two short sentences, about 15–20 words.
-- One idea per sentence. A sentence over ~12 words gets split.
+- One step (attempt plus minus) is one or two sentences, about 15–25 words; her
+  sentences run 6–19 words.
 - Every sentence has to be something we can show: an action, an object, a face.
 
 ## Voice
 
-- «Ти», present tense, spoken Ukrainian: how she talks on camera, not how a post reads.
+- «Ти» to a woman, spoken Ukrainian: how she talks on camera, not how a post reads.
+  The story moves in the present («Тоді ти…»), after an opening that can be past («Ти записала…»).
 - Plain words. No канцелярит: «задля», «здійснювати», «наразі», «у рамках».
 - Honest about limits, the way she is: "80%, not 100%", "you still check it with
   your own eyes". No hype: «магія», «революція», «в один клік».
