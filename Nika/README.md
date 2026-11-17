@@ -48,13 +48,45 @@ modern and gen-Z, and it should be clearly about the platform.
 - **Like a normal app promo.** Smooth zoom-ins and angled 3D mockups.
 - **Clear, not fancy.** One idea per shot and one move per shot. The editing
   should never be the thing you notice.
-- **Show the actual platform.** Site: `https://unlockexpertise.online/uk`. Its
-  product mockups (course editor, payments, sales page, analytics, the «100»
-  card) are captured at 3× into `Nika/work/site/uk/`.
+- **Show the actual platform.** The UI comes from the site,
+  `https://unlockexpertise.online/uk`. It draws its product "screenshots" in
+  HTML: home, course editor, payments, sales page, analytics, the Telegram
+  phone, and the «Оплату отримано» toast. `tools/capture_site.js` clones each one
+  onto a blank page and shoots it at 4× as a transparent PNG. The real app can't
+  stand in yet: the test account is empty, with no plan and no products
+  (2026-11-17).
 - **Sound design, as on Ruta's reels:** click on captions, whoosh on cuts, pop
   when a card lands, ka-ching on money. Always under her voice. The kit is
-  synthesised into `Nika/assets/sfx/`, because Ruta's kit is on her laptop
-  only.
+  synthesised by `tools/sfx.py synth` into `Nika/assets/sfx/` (gitignored, so
+  run it once per machine), because Ruta's kit is on her laptop only.
+
+## As built (r01 look test)
+
+`r01-test/build.py` is the worked example; copy from it.
+
+- **Text:** Montserrat Black, lowercase except names, 64 px. Pink `#F9B5CA` with
+  a raspberry ring outline `#B4195B` and a 3-step drop `#93104A`, all as text
+  shadows. It sits on a torn scrap of grid paper: a white blurred fibre layer
+  under a grid layer, each with its own seeded ragged `clip-path`. One short
+  phrase at a time, centred at y 1262. Each scrap lands with a small tilt and
+  is replaced, not faded. Where the stage itself says the words, the captions
+  drop.
+- **Her:** full frame, a slow push-in on each of her shots (1.0 → 1.04), framed
+  a little tighter after each product shot.
+- **Stage:** UNLOCK's own white → `#EFEBFF` with two drifting brand glows
+  (`#8F31EA`, `#3F58E8`) and a faint 72 px grid, an echo of her paper. It opens
+  from her as a rounded rectangle growing out of the centre (0.5 s), and closes
+  the same way.
+- **Screens:** each one is a card in a 2300 px-perspective scene, at rest at
+  rotY −21°, rotX 13°, rotZ 2°. It enters from the right out of depth
+  (`expo.out`, 0.62 s), pushes in slowly while it is the shot, and leaves left
+  (`power2.in`). There is one screen per thing she names. A cursor clicks the
+  real buttons, and the money toast lands with the ka-ching. «все в одному
+  місці» pulls back to all of them at once around the dashboard.
+- **Logo:** rebuilt in HTML from the site's SVG: the brand gradient
+  `#2D43D2 → #8F31EA` tile with the white padlock, and «unlock» in Geist 700.
+- **Render:** locally, `npx hyperframes@0.8.33 render <dir> -q high --fps 30`.
+  `tools/stills.js` previews stills without a render.
 
 ## Reels
 
