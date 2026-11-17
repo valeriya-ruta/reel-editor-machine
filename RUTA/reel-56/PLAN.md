@@ -48,3 +48,14 @@ python3 work/r56/mkplate.py
 python3 work/r56/captions.py
 cd reel-56 && python3 build.py && sh ../hf check && cd .. && python3 tools/hfrender.py reel-56
 ```
+
+## Posted (2026-11-17, her call: «post it directly to my Instagram … something very simple … sharing is better»)
+
+Instagram only, as a reel shared to feed, through Buffer, share now (post `6afc269754b9dc9e0726b28a`). Buffer
+can't read the render's signed S3 link, so the final file went to HeyGen's asset store first
+(`tools/hfasset.py` → `resource2.heygen.ai/video/b8fe2a1411bb4ee8a09aeac60ada06f3/original.mp4`).
+Caption:
+
+> Презентація до вебінару за 5 хвилин з Клодом 🫠
+>
+> Відправ подрузі-блогерці, яка досі робить презентації вручну
