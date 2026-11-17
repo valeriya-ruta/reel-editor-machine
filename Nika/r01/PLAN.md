@@ -29,21 +29,33 @@ where she says «перших 100 експертів» and «побачимос�
 - UI source: the site's own product mockups (`unlockexpertise.online/uk`),
   captured at 3× so zooms stay sharp.
 
-## Beats
+## Cuts and grade (as built)
+
+- **Spans kept** (source seconds): 0.52–14.92, 15.52–20.00, 20.42–45.05,
+  45.85–55.00, 55.36–68.40 and 68.66–72.10. That makes 69.1 s from 72.2 s.
+  Pauses over 0.5 s are tightened to about 0.3 s, and the lead-in is trimmed.
+  - Three cuts land under the stage, so they can't be seen.
+  - The two cuts on her (before «А якщо…» and before «Пиши…») hide behind a
+    step to a closer frame.
+- **Grade:** `tools/plate.py` GRADE. It takes out the orange cast of her camera
+  filter, adds a touch of contrast and a light sharpen. Approved on a still.
+- **Voice:** −33 LUFS in, −14 LUFS out.
+
+## Beats (as built; source times)
 
 | time | line | on screen |
 |---|---|---|
-| 0.0–7.7 | Привіт! Я шукаю 25 експертів… без команди | Her. A slow push-in starts on «25 експертів» |
-| 8.1–14.7 | Раніше… сайт, телеграм-бот, платіжна система, купа інтеграцій, і ще хтось… | Her, with grey tool chips stacking in the lower half, one per item, slightly messy |
-| 15.9–19.8 | А тепер достатньо лише двох речей — твоєї експертизи та Unlock | The chips get swept off. Clean stage: «твоя експертиза» + the Unlock logo |
-| 20.6–22.5 | Мене звати Ніка, і я працюю над Unlock | Her, with a name plaque: «Ніка · Unlock» |
-| 22.5–27.9 | платформою, де ти можеш створювати мінікурси, приймати оплати та продавати свої знання | Product, angled: course editor → payment setup (WayForPay picked) → sales page «Купити курс» |
-| 27.9–30.0 | І все в одному місці | Pull back to the analytics dashboard |
-| 30.0–34.5 | І зараз я хочу особисто познайомитися з нашими першими користувачами | Her |
-| 34.6–38.5 | Тому запрошую тебе на 20-хвилинну демозустріч зі мною | Her, with an invite card landing in the lower half: «Демо з Нікою · 20 хв» |
-| 38.5–41.0 | де я покажу платформу | Product: «Мої продукти», angled push-in |
-| 41.0–44.9 | відповім на запитання… як Unlock може допомогти саме тобі | Her |
-| 46.3–54.8 | А якщо після зустрічі ти приєднаєшся… цілий рік Unlock за ціною одного місяця | Product: «12 місяців за ціною одного» card. Ka-ching on «одного місяця» |
-| 55.5–58.3 | Пропозиція діє тільки для перших ста експертів | The site's big «100» (dark founding-experts card) |
-| 58.3–68.2 | Психологи, коучі, викладачі… монетизувати свої знання | Her, with niche chips popping in one per word |
-| 69.0–72.2 | Пиши Unlock у коментарях, і побачимося на демо | Her, with an Instagram-style comment bubble typing «UNLOCK» |
+| 0.5–8.7 | Привіт! Я шукаю 25 експертів… без команди. Раніше для цього | Her. A snap zoom on «25 експертів» |
+| 8.7–14.9 | потрібні були сайт, телеграм-бот, платіжна система, купа інтеграцій і ще хтось… | Stage, greyed: the old way. One tile per thing she lists, piling up; they fall away on the cut |
+| 15.5–18.0 | А тепер достатньо лише двох речей | Her |
+| 18.0–20.0 | твоєї експертизи та Unlock | Stage: «твоя експертиза» scrap + the Unlock logo |
+| 20.4–23.0 | Мене звати Ніка, і я працюю над Unlock | Her |
+| 23.0–29.8 | над платформою… мінікурси, приймати оплати, продавати… і все в одному місці | Product, approved in the look test: home + click → editor → payments + ka-ching → sales page + click → pull back to everything |
+| 29.8–35.7 | І зараз я хочу особисто познайомитися… Тому запрошую тебе | Her |
+| 35.7–41.3 | на 20-хвилинну демозустріч зі мною, де я покажу платформу, відповім на запитання | Stage: an invite card («Демозустріч з Нікою · 20 хвилин · онлайн»), then a call window screen-sharing the dashboard, with a «?» and a typing reply |
+| 41.3–50.3 | і ми разом подивимося… саме тобі. А якщо після зустрічі… цього тижня | Her |
+| 50.3–55.0 | то ти отримаєш цілий рік Unlock за ціною одного місяця | Stage: 12 month tiles; all but «1» dim, «ціна 1 місяця» lands with the ka-ching |
+| 55.4–59.0 | Пропозиція діє тільки для перших ста експертів | Stage: a count up to a big gradient «100», «перших експертів» |
+| 59.0–66.0 | Психологи, коучі, викладачі мов… і всі-всі-всі | Her. Her words as chips in the site's style, one per word; then the site's 12 fields burst in around her |
+| 66.0–68.4 | хто хоче монетизувати свої знання | Her |
+| 68.7–72.1 | Пиши Unlock у коментарях, і побачимося на демо | Her, with a comment box typing «Unlock», then sent and a heart |
