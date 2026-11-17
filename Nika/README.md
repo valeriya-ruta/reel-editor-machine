@@ -92,7 +92,7 @@ modern and gen-Z, and it should be clearly about the platform.
 
 | reel | source | length | status |
 |---|---|---|---|
-| r01 | `IMG_7332.MOV`: one continuous take, 1080×1920 HEVC 30 fps, warm beige wall | 72.2 s | transcribed, beats planned (`r01/PLAN.md`) |
+| r01 | `IMG_7332.MOV`: one continuous take, 1080×1920 HEVC 30 fps, warm beige wall | 72.2 s | transcribed, beats planned (`r01/PLAN.md`); look test 15.4–34.8 s rendered (`r01-test/`), awaiting approval |
 
 `IMG_7335.MOV` is the same script already cropped into a circle (720p). It is
 not used.
