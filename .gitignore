@@ -52,3 +52,13 @@ work/media/
 covers/*/.vercel/
 covers/*/out/
 covers/deploy.log
+
+# Git's ignore rules are case-sensitive on Linux: iPhone footage arrives as .MOV
+*.MOV
+*.MP4
+*.M4A
+*.WAV
+# Nika: her source footage and intermediates (frames, stills) stay out of history
+Nika/work/src/
+Nika/work/**/*.jpg
+Nika/work/**/*.png
