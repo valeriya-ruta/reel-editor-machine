@@ -1,25 +1,43 @@
 # Voiceover style — "AI evolution" explainers
 
-How the voiceover and captions for these reels are written. Draft: to be tuned
-against Ruta's example reel. Each episode's text goes into the `caption` / `vo`
-/ `minus` fields of its file in `episodes/`.
+How the voiceover and captions for these reels are written, tuned against the
+reel Ruta picked as the closest style: @dee.ugctips, the pool explainer, its
+first 25 seconds. Each episode's text goes into the `caption` / `vo` / `minus`
+fields of its file in `episodes/`. The current scripts: [`VO-SCRIPTS.md`](VO-SCRIPTS.md).
 
-## The shape: a chain, not a list
+## The shape (from the reference reel)
 
-Every step happens *because* the step before it failed.
+The reference, word for word:
 
-1. **Open on the want, in the viewer's words, and the obvious first move.** One
-   breath: what she's trying to do, and what she does about it. No intro, no
-   greeting, no "сьогодні розкажу". Tool names don't open a reel: her
-   «Дзвінок → ідеї» reel opened with tools and lost 67% of viewers in the first
-   seconds, and she switched to opening with the real question.
-2. **The minus**, starting with «Але…». Concrete and felt: lost hours, money,
-   forgetting, embarrassment, chaos. It has to be the reason for the next step.
-3. **The next move**, starting with «Тоді…», «Тож…» or «Окей,…». It fixes the
-   last minus and brings its own.
-4. **The last step is the AI setup she actually uses.** No minus. It ends on the
-   result and a calm payoff: the work happened while she did something else.
-   No call to action, no outro (the brief: the reel ends on the final state).
+> If you dig a hole in your yard and fill it with a hose, you have a pool. But the
+> dirt walls crumble and the water turns to mud. So you build a cage of steel bars
+> and spray concrete over it. This is shotcrete. But concrete is rough and it cracks
+> when the ground moves. So you coat it in smooth plaster with a band of tiles at
+> the waterline. But leaves blow in and the water turns green. So you add a…
+
+What makes it work, and what we copy:
+
+1. **It opens on the naive version already "working".** «Якщо [найпростіший крок],
+   у тебе є [результат].» Deadpan and confident, a little funny, because it's
+   obviously not enough.
+2. **Then two beats, over and over, never varied.** «Але [що ламається].» /
+   «Тож ти [конкретна дія].» The repetition is the rhythm, so no «Тоді» or
+   «Окей» for variety.
+3. **Every «Але» is physical and visible:** the cause and what you see, in one
+   sentence (the walls crumble *and* the water turns to mud). No feelings words;
+   the chibi plays the feelings.
+4. **Every «Тож ти» builds on what's already there** ("coat *it*"), so one thing
+   grows step by step.
+5. **One term reveal per episode, two words:** «Це — скіл.» right after the
+   viewer has seen what it does, the way "This is shotcrete." lands.
+6. **Pace:** about 3.3 words a second in English; sentences of 8–15 words, with a
+   very short one now and then for punch.
+7. **The ending is ours.** The reference cuts off mid-sentence because it turns
+   into an ad. Our episodes end on the last setup working, and the payoff.
+
+As in the brief, the last step is the AI setup she actually uses: no «Але», no
+call to action, no outro. Tool names don't open a reel: her «Дзвінок → ідеї»
+reel opened with tools and lost 67% of viewers in the first seconds.
 
 ## Length and pace
 
@@ -36,7 +54,7 @@ Every step happens *because* the step before it failed.
   your own eyes". No hype: «магія», «революція», «в один клік».
 - Everyday comparisons are hers: skills are muscle memory, connectors are hands,
   a routine is like brushing your teeth.
-- No exclamation marks and no rhetorical questions, except the opening want.
+- No exclamation marks, no rhetorical questions.
 
 ## Truth
 
@@ -83,17 +101,3 @@ minus:
   caption: …
   vo:      «Але…», as it is spoken
 ```
-
-## Worked example: episode 5 (calls), 96 words
-
-| caption | vo |
-|---|---|
-| Оффер — *одразу* після дзвінка | Хочеш одразу після дзвінка надіслати клієнтці оффер, поки все свіже. |
-| Але *не пам’ятаєш*, про що домовились | Але вже за годину не пам'ятаєш, про що саме домовились. |
-| Пишеш *нотатки* на дзвінку | Тож пишеш нотатки прямо під час розмови. |
-| Але губиш *фокус* | Але дивишся в блокнот, а не на людину, і забуваєш свої ж питання. |
-| Вмикаєш *запис* | Окей, вмикаєш запис дзвінка. |
-| І перемотуєш *всю годину* | Але щоб знайти одну домовленість, передивляєшся годину запису на перемотці. |
-| *Fathom* + Claude | Тоді підключаєш до Клода безкоштовний Фатом, і він сам розшифровує дзвінок. |
-| Задачі й оффер — *руками* | Але задачі й оффер однаково переписуєш руками. |
-| Робиш *скіл* → Задачі вже в *ClickUp* → *Оффер* — чернетка → Лишається *перечитати* | Тож робиш скіл. Дзвінок закінчився — задачі вже стоять у Клікапі з дедлайнами, а чернетка оффера чекає в чаті. Тобі лишається перечитати її і надіслати. |
