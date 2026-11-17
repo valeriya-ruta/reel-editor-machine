@@ -57,7 +57,8 @@ she records + cuts + grades        (her laptop, 5-10 min)
 
 | path | what |
 |---|---|
-| `STYLE.md` | **the contract.** Delivery model, captions, geometry, animation rule, surfaces |
+| `STYLE.md` | **the contract** for Ruta's reels. Delivery model, captions, geometry, animation rule, surfaces |
+| `Nika/` | **a separate client and style**: Nika's UNLOCK ads. Own contract in `Nika/README.md`; nothing in `STYLE.md` applies there |
 | `SCRIPTS.md` | all six scripts as written and read. The spelling authority |
 | `ANIMATION-PROCESS.html` | the design playbook — how a beat is specified |
 | `tools/align.py` | binds script spelling to ASR timing; separates whisper's mangling from her improvisation |

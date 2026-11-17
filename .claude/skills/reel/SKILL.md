@@ -5,6 +5,11 @@ description: Build one of Ruta's Instagram reels end to end, from her delivered 
 
 # Reel
 
+**Whose reel?** This skill and `STYLE.md` are Ruta's. If the footage, the
+request or the path says Nika (anything under `Nika/`, UNLOCK ads), drop this
+skill's look and work from `Nika/README.md`. If nothing says whose it is, ask
+one line before touching anything. That counts as *her input alone* below.
+
 She records, cuts and colour-grades. This builds everything on top — animations,
 word-by-word captions, the render — and hands her back a finished file.
 
