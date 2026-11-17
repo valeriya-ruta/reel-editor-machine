@@ -5,6 +5,8 @@ Short vertical explainers (Ukrainian, 1080×1920, 30 fps, 40–50 s, never over
 Y → so you do the next thing, ending on the modern AI setup. Remotion project,
 separate from the HyperFrames reel pipeline in the repo root.
 
+How the voiceover and captions are written: [`VO-STYLE.md`](VO-STYLE.md).
+
 The brief is [`explainer-series-prompt.md`](explainer-series-prompt.md); the
 approved GSAP prototype it was rebuilt from is
 [`reference/prompt-to-skill.html`](reference/prompt-to-skill.html).
