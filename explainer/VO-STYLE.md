@@ -1,43 +1,33 @@
 # Voiceover style — "AI evolution" explainers
 
-How the voiceover and captions for these reels are written, tuned against the
-reel Ruta picked as the closest style: @dee.ugctips, the pool explainer, its
-first 25 seconds. Each episode's text goes into the `caption` / `vo` / `minus`
-fields of its file in `episodes/`. The current scripts: [`VO-SCRIPTS.md`](VO-SCRIPTS.md).
+How the voiceover and captions for these reels are written. Each episode's text
+goes into the `caption` / `vo` / `minus` fields of its file in `episodes/`. The
+current scripts: [`VO-SCRIPTS.md`](VO-SCRIPTS.md).
 
-## The shape (from the reference reel)
+## The shape (from Ruta's own drafts of episodes 1 and 2)
 
-The reference, word for word:
+The reference reel she picked (a pool explainer: "If you dig a hole… you have a
+pool. But… So you…") gave the chain. Her drafts show how it sounds in her voice,
+and they win where the two differ.
 
-> If you dig a hole in your yard and fill it with a hose, you have a pool. But the
-> dirt walls crumble and the water turns to mud. So you build a cage of steel bars
-> and spray concrete over it. This is shotcrete. But concrete is rough and it cracks
-> when the ground moves. So you coat it in smooth plaster with a band of tiles at
-> the waterline. But leaves blow in and the water turns green. So you add a…
-
-What makes it work, and what we copy:
-
-1. **It opens on the naive version already "working".** «Якщо [найпростіший крок],
-   у тебе є [результат].» Deadpan and confident, a little funny, because it's
-   obviously not enough.
-2. **Then two beats, over and over, never varied.** «Але [що ламається].» /
-   «Тож ти [конкретна дія].» The repetition is the rhythm, so no «Тоді» or
-   «Окей» for variety.
-3. **Every «Але» is physical and visible:** the cause and what you see, in one
-   sentence (the walls crumble *and* the water turns to mud). No feelings words;
-   the chibi plays the feelings.
-4. **Every «Тож ти» builds on what's already there** ("coat *it*"), so one thing
-   grows step by step.
-5. **One term reveal per episode, two words:** «Це — скіл.» right after the
-   viewer has seen what it does, the way "This is shotcrete." lands.
-6. **Pace:** about 3.3 words a second in English; sentences of 8–15 words, with a
-   very short one now and then for punch.
-7. **The ending is ours.** The reference cuts off mid-sentence because it turns
-   into an ad. Our episodes end on the last setup working, and the payoff.
-
-As in the brief, the last step is the AI setup she actually uses: no «Але», no
-call to action, no outro. Tool names don't open a reel: her «Дзвінок → ідеї»
-reel opened with tools and lost 67% of viewers in the first seconds.
+1. **Open on what she already does, as a little story.** «Ти записала відео та
+   виклала його в інстаграм.» / «Ти постиш контент кожного дня, але один рілс
+   залітає, а інший — ні.» Talking to a woman («записала», «виклала»), not a
+   deadpan "якщо…, у тебе є…".
+2. **«Тоді ти…, але…».** The attempt and its catch are often one sentence. The
+   connector is «Тоді», not «Тож».
+3. **The catch is what it costs her:** nobody watches, you burn out, you go into
+   the red, you don't understand a thing, you have to do it yourself every week.
+   Not things physically breaking.
+4. **The AI step gets credit first, then its limit.** «Він монтує самостійно, але
+   лише на комп'ютері.» «Він усе проаналізував, але…»
+5. **The steps are her real path and her real tools:** Claude with reel examples
+   and skills, the cloud, the phone; screenshots, Buffer, Notion, a skill and a
+   routine. Not a generic ladder: a step from the brief can go if it isn't hers.
+6. **Loose and spoken:** «улітаєш в мінус», «мільйон скріншотів», «залітає».
+   Sentences of 6–19 words, no forced symmetry, no term reveal, no punchline.
+7. **«Тепер…» marks the new state,** and the ending is what she gets: editing from
+   her phone whenever she likes; a full report with new ideas every Sunday.
 
 ## Length and pace
 
@@ -78,6 +68,8 @@ should sound:
 | ClickUp | Клікап |
 | Canva | Канва |
 | Instagram | інстаграм |
+| Buffer | Баффер |
+| Notion | Ноушн |
 
 - Numbers as words: «тридцять євро», not «30 €».
 - No abbreviations, no slashes, no emoji.
