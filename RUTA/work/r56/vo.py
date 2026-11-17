@@ -40,10 +40,30 @@ def main():
     pcm = subprocess.run(["ffmpeg", "-v", "error", "-i", src, "-ac", "1", "-ar", "16000", "-f", "s16le", "-"],
                          capture_output=True, check=True).stdout
     audio = np.frombuffer(pcm, np.int16).astype(np.float32) / 32768
+    # one whisper pass per utterance: over the whole file whisper drops a repeated
+    # take (seen on the synthetic test), and its times drift (reel 55)
+    hop = 320
+    n = len(audio) // hop
+    db = 20 * np.log10(np.sqrt((audio[:n * hop].reshape(n, hop) ** 2).mean(1)) + 1e-9)
+    on = db > np.percentile(db, 10) + 12
+    utts, s0 = [], None
+    for k, v in enumerate(list(on) + [False]):
+        if v and s0 is None:
+            s0 = k
+        if not v and s0 is not None:
+            if utts and (s0 - utts[-1][1]) * 0.02 < 0.45:
+                utts[-1][1] = k
+            else:
+                utts.append([s0, k])
+            s0 = None
+    utts = [(max(0.0, a * 0.02 - 0.15), min(len(audio) / 16000.0, b * 0.02 + 0.2))
+            for a, b in utts if (b - a) * 0.02 > 0.25]
     m = WhisperModel("large-v3", device="cpu", compute_type="int8")
-    segs, _ = m.transcribe(audio, language="uk", word_timestamps=True, beam_size=5,
-                           initial_prompt=" ".join(LINES))
-    W = [{"w": x.word.strip(), "s": x.start, "e": x.end} for s in segs for x in (s.words or [])]
+    W = []
+    for a, b in utts:
+        segs, _ = m.transcribe(audio[int(a * 16000):int(b * 16000)], language="uk", word_timestamps=True,
+                               beam_size=5, vad_filter=False)
+        W += [{"w": x.word.strip(), "s": a + x.start, "e": a + x.end} for s in segs for x in (s.words or [])]
     heard = [norm(w["w"]) for w in W]
     takes = []
     for li, line in enumerate(LINES):
@@ -51,16 +71,27 @@ def main():
         wins = []
         for i in range(len(W)):
             for j in range(i + max(1, len(want) - 3), min(len(W), i + len(want) + 4) + 1):
+                if any(W[q + 1]["s"] - W[q]["e"] > 1.5 for q in range(i, j - 1)):
+                    break               # a long pause ends a take: no window spans two
                 wins.append((difflib.SequenceMatcher(None, want, heard[i:j]).ratio(), i, j))
         top = max(wins)[0] if wins else 0
         ok = [w for w in wins if w[0] >= max(0.6, top - 0.15)]
         if not ok:
             sys.exit("line %d not found in the recording: %s" % (li + 1, line))
         last = max(w[1] for w in ok)                        # the last take wins
-        r, i, j = max(w for w in ok if w[1] >= last - 2)    # its best-fitting window
-        best = (i, j, r)
-        i, j, r = best
-        takes.append({"line": li, "a": max(0.0, W[i]["s"] - 0.08), "b": W[j - 1]["e"] + 0.12, "ratio": round(r, 2)})
+        r, i, j = max(w for w in ok if last - len(want) // 2 <= w[1] <= last)   # its best window
+        # out to the take's own edges: a word whisper missed at either end is still hers,
+        # but never past the neighbouring take (the previous / next word) or its utterance
+        ua = max(u[0] for u in utts if u[0] <= W[i]["s"] + 0.01)
+        ub = min(u[1] for u in utts if u[1] >= W[j - 1]["e"] - 0.01)
+        a = max(ua, W[i - 1]["e"] + 0.05 if i > 0 else 0.0, W[i]["s"] - 0.6)
+        k = j           # words in the same breath right after the window are the take's tail
+        while k < len(W) and k < j + 3 and W[k]["s"] - W[k - 1]["e"] < 0.6:
+            k += 1
+        b = min(ub, W[k]["s"] - 0.05 if k < len(W) else ub)
+        b = max(b, W[k - 1]["e"] + 0.12)
+        takes.append({"line": li, "a": round(min(a, W[i]["s"] - 0.08), 3), "b": round(max(b, W[j - 1]["e"] + 0.12), 3),
+                      "ratio": round(r, 2)})
     d = [t["b"] - t["a"] for t in takes]
     grow_c = max(0.0, LEAD + d[0] + GAP + d[1] + TAIL - (C1 - C0))
     grow_f = max(0.0, LEAD + d[2] + TAIL - (F1 - F0))
