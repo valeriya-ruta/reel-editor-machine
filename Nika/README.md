@@ -1,15 +1,15 @@
 # Nika — UNLOCK ad reels
 
 **A different person and a different style from the rest of this repo.** Nothing
-in the root `STYLE.md`, `tools/glass.py`, `SCRIPTS.md` or the `/reel` skill's
+in `RUTA/STYLE.md`, `RUTA/tools/glass.py`, `RUTA/SCRIPTS.md` or the `/reel` skill's
 look applies here: no refined glass, no burgundy, no Product Sans, no Ruta
 captions.
 
 **Everything for her lives under `Nika/`**: her brief, her reels, her tools
 (`Nika/tools/`), her sound kit and her intermediates (`Nika/work/`, footage
-gitignored). Nothing of hers goes in the root folders, and nothing here imports
-from the root `tools/`. The path is what marks a reel as hers.
-Ruta's reels are the `reel-NN/` folders at the root. If a session can't tell
+gitignored). Nothing of hers goes in `RUTA/`, and nothing here imports
+from `RUTA/tools/`. The path is what marks a reel as hers.
+Ruta's reels are the `RUTA/reel-NN/` folders. If a session can't tell
 whose reel it is, it asks before doing anything.
 
 ## Who and what

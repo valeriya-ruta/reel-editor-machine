@@ -1,6 +1,6 @@
 # Ruta — reel animation spec
 
-> **Ruta's reels only** (the `reel-NN/` folders). Anything under `Nika/` is
+> **Ruta's reels only** (everything under `RUTA/`). Anything under `Nika/` is
 > another person with her own contract: read `Nika/README.md` and nothing here.
 > If you can't tell whose reel it is, ask before building.
 

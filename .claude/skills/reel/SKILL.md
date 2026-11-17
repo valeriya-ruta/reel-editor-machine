@@ -5,7 +5,8 @@ description: Build one of Ruta's Instagram reels end to end, from her delivered 
 
 # Reel
 
-**Whose reel?** This skill and `STYLE.md` are Ruta's. If the footage, the
+**Whose reel?** This skill and `RUTA/STYLE.md` are Ruta's, and everything of
+hers lives under `RUTA/`: run every path below from inside it. If the footage, the
 request or the path says Nika (anything under `Nika/`, UNLOCK ads), drop this
 skill's look and work from `Nika/README.md`. If nothing says whose it is, ask
 one line before touching anything. That counts as *her input alone* below.
@@ -13,7 +14,7 @@ one line before touching anything. That counts as *her input alone* below.
 She records, cuts and colour-grades. This builds everything on top — animations,
 word-by-word captions, the render — and hands her back a finished file.
 
-**Read [`STYLE.md`](../../../STYLE.md) before authoring anything.** It is the
+**Read [`RUTA/STYLE.md`](../../../RUTA/STYLE.md) before authoring anything.** It is the
 design contract and it wins over instinct every time. This skill is the *run*;
 STYLE.md is the *look*.
 
@@ -43,7 +44,7 @@ A design question is not her input. Pick the answer STYLE.md implies.
 
 ## The run
 
-Reel N lives in `reel-0N/`, its intermediates in `work/rN/`.
+Reel N lives in `RUTA/reel-0N/`, its intermediates in `RUTA/work/rN/`.
 
 ```bash
 export PATH="/c/Users/Ruta/AppData/Roaming/npm:$PATH"   # or use ./hf
