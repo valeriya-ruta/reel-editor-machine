@@ -47,9 +47,11 @@ Every step happens *because* the step before it failed.
 - Her real workflow wins over a generic one. For example: the free Fathom
   records her calls, Claude writes the offer, and she always reads it before it goes out.
 
-## Written for the voice (ElevenLabs)
+## Written for the voice (ElevenLabs Matilda, via OpenRouter)
 
-The `vo` text is what the voice reads, so spell it the way it should sound:
+The voiceover is ElevenLabs' stock voice Matilda, generated through OpenRouter:
+no clone, no recording. The `vo` text is what she reads, so spell it the way it
+should sound:
 
 | caption (on screen) | vo (spoken) |
 |---|---|
