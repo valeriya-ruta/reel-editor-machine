@@ -38,7 +38,9 @@ SECTIONS = [
     {"id": "S3", "src": C2, "spans": [(18.45, 60.60)]},                           # her in headphones
     {"id": "S4", "src": C3, "spans": [(0.80, 3.55), (6.78, 7.98)]},               # the base deck (unused: her take skips it)
     {"id": "S5", "src": C3, "spans": [(8.70, 12.40)]},                            # the voice notes in the chat
-    {"id": "S6", "src": C4, "spans": [(7.00, 8.30), (13.40, 16.90)]},             # finished deck → edited
+    # finished deck: the clean title slide, then her clicking through the slides (her note on
+    # v2: "I want to show the slides … if the editing part … doesn't fit, cut that out")
+    {"id": "S6", "src": C4, "spans": [(7.30, 8.30), (C3, 2.00, 7.70)]},
 ]
 
 
@@ -65,13 +67,14 @@ def section(s, dur, f):
     """the section's spans back to back, retimed to dur, silent"""
     raw = os.path.join(SEG, s["id"] + "-raw.mp4")
     ins, chain = [], []
-    for k, (a, b) in enumerate(s["spans"]):
-        ins += ["-ss", "%.3f" % a, "-t", "%.3f" % (b - a), "-i", os.path.join(SRC, s["src"])]
+    spans = [x if len(x) == 3 else (s["src"],) + tuple(x) for x in s["spans"]]   # a span may name its clip
+    for k, (clip, a, b) in enumerate(spans):
+        ins += ["-ss", "%.3f" % a, "-t", "%.3f" % (b - a), "-i", os.path.join(SRC, clip)]
         chain.append("[%d:v]scale=1080:1920:flags=lanczos,fps=%d,setsar=1,setpts=PTS-STARTPTS[v%d]" % (k, FPS, k))
     chain.append("".join("[v%d]" % k for k in range(len(s["spans"]))) +
                  "concat=n=%d:v=1:a=0[v]" % len(s["spans"]))
     ff(*ins, "-filter_complex", ";".join(chain), "-map", "[v]", *enc_v(), "-an", raw)
-    src_len = sum(b - a for a, b in s["spans"])
+    src_len = sum(b - a for _, a, b in spans)
     n = int(round(dur * FPS))
     speed = src_len / (n / float(FPS))
     # retime, then pad by holding the last frame if rounding left it a frame short

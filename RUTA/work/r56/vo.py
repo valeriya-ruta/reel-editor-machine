@@ -26,7 +26,7 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 # section -> the words that open it in her take (the first section opens the take)
 SPLIT = [("S1", None), ("S2", u"і тепер"), ("S3", u"поки"), ("S5", u"відправляємо"), ("S6", u"маю готову")]
-HOLD = 1.0          # the finished deck stays on screen this long after her last word
+HOLD = 2.4          # the slides keep flipping this long after her last word (her v2 note: show the slides)
 FIX = {u"код,": u"Клод,", u"код": u"Клод"}     # whisper's mishearing -> her word
 
 

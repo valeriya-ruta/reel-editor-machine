@@ -12,7 +12,7 @@ remove completely the text or the sounds … I'm gonna record everything that's 
 beginning, the intro or the outro."* She recorded it in her own words as one continuous take
 (`Pptx w claude.m4a`, 19.6 s) rather than the six scripted lines, so it plays as one track
 from the end of the intro and each section of footage is cut on her timing
-(`work/r56/vo.py` → `mkplate.py` → `captions.py`). DUR 33.133 (994 frames).
+(`work/r56/vo.py` → `mkplate.py` → `captions.py`). DUR 34.533 (1036 frames).
 
 | plate | section | her words | footage |
 |---|---|---|---|
@@ -21,11 +21,13 @@ from the end of the intro and each section of footage is cut on her timing
 | 12.97–18.40 | S2 | «і тепер я даю йому тему презентації та прошу підготувати основу дизайну, щоб далі все пішло набагато швидше.» | `132924` prompt pasted → sent, 2.4x |
 | 18.40–24.47 | S3 | «Поки він це все робить, я голосовим записую, що я хочу сказати, деякі схеми мають бути, взагалі всі свої ідеї.» | `132924` her in headphones, 7x, its own sound and words gone |
 | 24.47–27.07 | S5 | «Відправляємо, і через буквально 5 хвилин» | `134447` the voice notes in the chat, 1.4x |
-| 27.07–30.57 | S6 | «маю готову презентацію, яку я можу далі редагувати.» + 1 s hold | `135042` title slide → «Що обрати?» edited with the text toolbar, 1.4x |
-| 30.57–33.13 | G | «Якщо було корисно, то обов'язково підпишись.» (to camera) | `132849` 13.45–16.00 |
+| 27.07–31.97 | S6 | «маю готову презентацію, яку я можу далі редагувати.» + 2.4 s of slides | `135042` the clean title slide, then `134447` 2.0–7.7: her clicking through «Що сьогодні робимо» → «Яку модель обрати» → 02 → 03 → 04 → the prompt slide, 1.4x |
+| 31.97–34.53 | G | «Якщо було корисно, то обов'язково підпишись.» (to camera) | `132849` 13.45–16.00 |
 
-The base-deck shot (`134447` 0–8 s, «Ось він мені вже приготував основу») is out: her take goes
-from «Відправляємо» straight to the finished deck. The cut lands on «маю готову».
+Her note on v2 (*"perfect"*, then): show the slides — *"I want to show how nicely it looks"* —
+and cut the «Що обрати?» edit if it doesn't fit. So S6 is the slide flip from `134447` (the
+moment she said «Ось він мені вже приготував основу» on camera), opened by the clean title slide
+from `135042`, and holds 2.4 s past her last word; the edit is out. The cut lands on «маю готову».
 
 Captions: the word rail (STYLE §00, her review of reel 41), her words as she said them;
 whisper's «код» → «Клод». Intro: «ведення Threads з AI» (whisper heard «введення 3D за яй»;
