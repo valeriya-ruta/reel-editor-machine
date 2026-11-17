@@ -51,7 +51,11 @@ cd reel-56 && python3 build.py && sh ../hf check && cd .. && python3 tools/hfren
 
 ## Posted (2026-11-17, her call: «post it directly to my Instagram … something very simple … sharing is better»)
 
-Instagram only, as a reel shared to feed, through Buffer, share now (post `6afc269754b9dc9e0726b28a`). Buffer
+Instagram only, as a reel shared to feed, through Buffer, share now (post `6afc269754b9dc9e0726b28a`) →
+https://www.instagram.com/reel/Df1rY65CFyq/. Buffer reported the first send as failed («unknown error») while it
+had in fact gone out; the retry published again at 10:07Z, so a duplicate may be on her grid — keep the
+`Df1rY65CFyq` one (Buffer's record, which insights follow). **Next time a Buffer IG post errors, check her
+grid before retrying.** Buffer
 can't read the render's signed S3 link, so the final file went to HeyGen's asset store first
 (`tools/hfasset.py` → `resource2.heygen.ai/video/b8fe2a1411bb4ee8a09aeac60ada06f3/original.mp4`).
 Caption:
