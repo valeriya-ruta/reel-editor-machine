@@ -150,8 +150,8 @@ function build() {
   tl.fromTo("#cap16",{autoAlpha:0,scale:0.8,y:18,rotation:-7.34},{autoAlpha:1,scale:1,y:0,rotation:-2.34,duration:0.24,ease:"back.out(2.2)"},18.22);
   tl.set("#cap16",{autoAlpha:0},19.423);
   tl.set("#stage",{visibility:"visible"},2.6);
-  tl.fromTo("#stage",{clipPath:"inset(46% 30% 46% 30% round 90px)"},{clipPath:"inset(0% 0% 0% 0% round 0px)",duration:0.5,ease:"power3.inOut"},2.6);
-  tl.fromTo("#bExp",{autoAlpha:0,scale:0.6,rotation:-12},{autoAlpha:1,scale:1,rotation:-3,duration:0.5,ease:"back.out(1.9)"},2.66);
+  tl.fromTo("#stage",{clipPath:"inset(46% 30% 46% 30% round 90px)"},{clipPath:"inset(0% 0% 0% 0% round 0px)",duration:0.4,ease:"power3.inOut"},2.6);
+  tl.fromTo("#bExp",{autoAlpha:0,scale:0.6,rotation:-12},{autoAlpha:1,scale:1,rotation:-3,duration:0.5,ease:"back.out(1.9)"},2.9);
   tl.fromTo("#plus",{autoAlpha:0,scale:0.3,rotation:-90},{autoAlpha:1,scale:1,rotation:0,duration:0.4,ease:"back.out(2.5)"},3.84);
   tl.set("#lock",{autoAlpha:1},4.0);
   tl.fromTo("#mark",{scale:0,rotation:-25},{scale:1,rotation:0,duration:0.55,ease:"back.out(2)"},4.0);
@@ -161,7 +161,7 @@ function build() {
   tl.set("#stage",{visibility:"hidden"},5.45);
   tl.set(["#bExp","#plus","#lock"],{autoAlpha:0},5.46);
   tl.set("#stage",{visibility:"visible"},7.6);
-  tl.fromTo("#stage",{clipPath:"inset(46% 30% 46% 30% round 90px)"},{clipPath:"inset(0% 0% 0% 0% round 0px)",duration:0.5,ease:"power3.inOut"},7.6);
+  tl.fromTo("#stage",{clipPath:"inset(46% 30% 46% 30% round 90px)"},{clipPath:"inset(0% 0% 0% 0% round 0px)",duration:0.4,ease:"power3.inOut"},7.6);
   tl.fromTo("#cP",{x:860,y:40,z:-260,rotationY:-48,rotationX:12,rotationZ:4,scale:1,autoAlpha:0},Object.assign({x:0,y:0,z:0,rotationY:-21,rotationX:13,rotationZ:2,scale:1,autoAlpha:1},{duration:0.62,ease:"expo.out"}),7.66);
   tl.to("#cP",{z:150,rotationY:-14,rotationX:10,duration:1.12,ease:"sine.inOut"},8.28);
   tl.fromTo("#k1",{autoAlpha:0,x:150,y:190},{autoAlpha:1,x:0,y:0,duration:0.46,ease:"power3.out"},8.5);
@@ -187,7 +187,7 @@ function build() {
   tl.fromTo("#cP",{autoAlpha:0,x:-560,y:-460,z:-200,rotationY:-34,rotationX:13,rotationZ:2,scale:0.55},{autoAlpha:1,x:-240,y:-440,z:60,rotationY:-21,duration:0.75,ease:"expo.out"},12.65);
   tl.fromTo("#cPh",{autoAlpha:0,x:620,y:120,z:-100,rotationY:-34,rotationX:13,rotationZ:2,scale:1},{autoAlpha:1,x:330,y:40,z:200,rotationY:-18,duration:0.75,ease:"expo.out"},12.72);
   tl.fromTo("#tPay",{autoAlpha:0,x:560,y:-470,z:120,rotationY:-21,rotationX:13,rotationZ:2,scale:0.8},{autoAlpha:1,x:270,y:-430,z:240,scale:0.9,duration:0.6,ease:"back.out(1.8)"},12.85);
-  tl.fromTo("#world",{scale:1.1},{scale:0.94,duration:1.9,ease:"sine.inOut"},12.5);
+  tl.fromTo("#world",{scale:1.1,y:0},{scale:0.94,y:-70,duration:1.9,ease:"sine.inOut"},12.5);
   tl.fromTo("#world",{rotationY:0},{rotationY:-5,duration:1.9,ease:"sine.inOut"},12.5);
   tl.to("#stage",{clipPath:"inset(46% 30% 46% 30% round 90px)",duration:0.4,ease:"power3.in"},14.4);
   tl.set("#stage",{visibility:"hidden"},14.8);

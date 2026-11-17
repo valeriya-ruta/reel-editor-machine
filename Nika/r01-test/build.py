@@ -249,7 +249,7 @@ def card_out(cid, t, dur=0.42):
 def stage_in(t):
     js(f'tl.set("#stage",{{visibility:"visible"}},{t});')
     js(f'tl.fromTo("#stage",{{clipPath:"inset(46% 30% 46% 30% round 90px)"}},'
-       f'{{clipPath:"inset(0% 0% 0% 0% round 0px)",duration:0.5,ease:"power3.inOut"}},{t});')
+       f'{{clipPath:"inset(0% 0% 0% 0% round 0px)",duration:0.4,ease:"power3.inOut"}},{t});')
     sfx(t - 0.05, "whoosh")
 
 
@@ -295,8 +295,8 @@ def build_motion():
     # ---- stage B, 18.00–20.45: «твоєї експертизи та Unlock»
     stage_in(a)
     js(f'tl.fromTo("#bExp",{{autoAlpha:0,scale:0.6,rotation:-12}},{{autoAlpha:1,scale:1,rotation:-3,'
-       f'duration:0.5,ease:"back.out(1.9)"}},{T(18.06)});')
-    sfx(T(18.06), "pop")
+       f'duration:0.5,ease:"back.out(1.9)"}},{T(18.30)});')
+    sfx(T(18.30), "pop")
     js(f'tl.fromTo("#plus",{{autoAlpha:0,scale:0.3,rotation:-90}},{{autoAlpha:1,scale:1,rotation:0,'
        f'duration:0.4,ease:"back.out(2.5)"}},{T(19.24)});')
     sfx(T(19.24), "pop", -5)
@@ -353,7 +353,7 @@ def build_motion():
     js(f'tl.fromTo("#tPay",{{autoAlpha:0,x:560,y:-470,z:120,rotationY:-21,rotationX:13,rotationZ:2,scale:0.8}},'
        f'{{autoAlpha:1,x:270,y:-430,z:240,scale:0.9,duration:0.6,ease:"back.out(1.8)"}},{round(e + 0.35, 3)});')
     sfx(e + 0.35, "pop", -6)
-    js(f'tl.fromTo("#world",{{scale:1.1}},{{scale:0.94,duration:{round(T(29.80) - e, 3)},'
+    js(f'tl.fromTo("#world",{{scale:1.1,y:0}},{{scale:0.94,y:-70,duration:{round(T(29.80) - e, 3)},'
        f'ease:"sine.inOut"}},{e});')
     js(f'tl.fromTo("#world",{{rotationY:0}},{{rotationY:-5,duration:{round(T(29.80) - e, 3)},'
        f'ease:"sine.inOut"}},{e});')
