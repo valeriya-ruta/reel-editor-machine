@@ -27,7 +27,10 @@ import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-NPX = os.path.join(os.environ.get("APPDATA", ""), "npm", "npx.cmd")
+# Ruta's laptop: the working user-level npx (her C:\Program Files\nodejs one is
+# broken). Anywhere else (the cloud machine): plain npx on PATH.
+NPX = (os.path.join(os.environ["APPDATA"], "npm", "npx.cmd")
+       if os.name == "nt" and os.environ.get("APPDATA") else "npx")
 
 
 def run(cmd, **kw):
@@ -52,7 +55,12 @@ def main():
         sys.exit(__doc__)
     reel, start, end, name = sys.argv[1], float(sys.argv[2]), float(sys.argv[3]), sys.argv[4]
 
-    base = os.path.join(reel, "assets", "base.mp4")
+    # The plate as cut: voice.mp4 holds the same video stream as base.mp4
+    # (sfx.py copies it), but base.mp4 may already have half-screens baked
+    # into it (tools/halfscreen.py), and a matte must come from her own frame.
+    base = os.path.join(reel, "assets", "voice.mp4")
+    if not os.path.exists(os.path.join(ROOT, base)):
+        base = os.path.join(reel, "assets", "base.mp4")
     if not os.path.exists(os.path.join(ROOT, base)):
         sys.exit("no such plate: " + base)
     fps, w, h = probe(base)

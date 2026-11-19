@@ -241,6 +241,34 @@ def quietest(env, hop, lo, hi):
 
 # ---------------------------------------------------------------- segments
 
+SPEECH_DB = -26.0   # RMS dBFS that counts as her voice, not wind (IMG_0861: floor ~-40, voice -10..-20)
+
+
+def speech_in(env, hop, a, b, need=0.05):
+    """Is there voice between a and b? The transcript split below trusts
+    whisper's word times, and in wind those drift: on IMG_0861 «не» was
+    stretched over 63.35-64.21 and the split cut through «не думаю», which
+    flips the sentence. A gap only counts as a pause if the audio agrees."""
+    if b - a < hop:
+        return False
+    seg = env[max(0, int(a / hop)):int(b / hop)]
+    return float((20 * np.log10(seg / 32768.0 + 1e-9) > SPEECH_DB).sum()) * hop >= need
+
+
+def first_voice(env, hop, a, b):
+    """First voice-level moment in [a, b), or None."""
+    i0, i1 = max(0, int(a / hop)), int(b / hop)
+    hot = np.nonzero(20 * np.log10(env[i0:i1] / 32768.0 + 1e-9) > SPEECH_DB)[0]
+    return None if not len(hot) else (i0 + int(hot[0])) * hop
+
+
+def last_voice(env, hop, a, b):
+    """Last voice-level moment in [a, b), or None."""
+    i0, i1 = max(0, int(a / hop)), int(b / hop)
+    hot = np.nonzero(20 * np.log10(env[i0:i1] / 32768.0 + 1e-9) > SPEECH_DB)[0]
+    return None if not len(hot) else (i0 + int(hot[-1]) + 1) * hop
+
+
 def word_est(w):
     """How long she takes to say a word, roughly: her read is ~6 letters/s
     plus an attack. Generous on purpose — this only trims what is clearly not
@@ -278,7 +306,7 @@ def build_segments(utts, kept, env, hop, punch_words):
                     start1 = x["s"]
                     if x["e"] - x["s"] > word_est(x["w"]) + 0.22:
                         start1 = x["e"] - word_est(x["w"])
-                    if start1 - end0 > SENT_GAP:
+                    if start1 - end0 > SENT_GAP and not speech_in(env, hop, end0 + 0.04, start1 - 0.04):
                         cur[-1] = dict(p, e=round(end0, 3))
                         runs.append((u["k"], cur))
                         cur = [dict(x, s=round(start1, 3))]
@@ -305,7 +333,11 @@ def build_segments(utts, kept, env, hop, punch_words):
             est = word_est(w0["w"])
             if w0["e"] - w0["s"] > est + 0.22:
                 onset = w0["e"] - est
-                a = max(a, quietest(env, hop, onset - 0.14, onset + 0.02) - 0.03)
+                a2 = max(a, quietest(env, hop, onset - 0.14, onset + 0.02) - 0.03)
+                # ... unless the audio says the word starts earlier than the
+                # estimate (IMG_0861: «не», «вже», «Штучний» were trimmed away)
+                v = first_voice(env, hop, a, a2)
+                a = a2 if v is None else max(a, v - PAD_IN)
         else:
             a = quietest(env, hop, ws[0]["s"] - 0.16, ws[0]["s"] + 0.02) - 0.02
         if whole_end:
@@ -313,7 +345,9 @@ def build_segments(utts, kept, env, hop, punch_words):
             w1 = ws[-1]
             est = word_est(w1["w"])
             if w1["e"] - w1["s"] > est + 0.30:          # the same, after the last word
-                b = min(b, quietest(env, hop, w1["s"] + est, w1["s"] + est + 0.16) + 0.06)
+                b2 = min(b, quietest(env, hop, w1["s"] + est, w1["s"] + est + 0.16) + 0.06)
+                v = last_voice(env, hop, b2, b)
+                b = b2 if v is None else min(b, v + PAD_OUT)
         else:
             b = quietest(env, hop, ws[-1]["e"] - 0.02, ws[-1]["e"] + 0.16) + 0.02
         segs.append({"k": k, "a": a, "b": b, "text": " ".join(x["w"] for x in ws),
@@ -382,15 +416,22 @@ def split_for_punch(segs, punch_spans, env, hop):
     return out
 
 
-def frame_plan(segs, punch_spans):
+def frame_plan(segs, punch_spans, wide_spans=()):
+    """`wide_spans` (raw seconds, cut-fix.json "wide"): clips a graphic sits on
+    stay at the base framing. Ruta, 2026-11-17: "Don't zoom in and then put
+    things somewhere where they can go on her face." Zoom steps happen only
+    where nothing is drawn over her."""
     clips, t, ci, last = [], 0.0, 0, None
     for i, s in enumerate(segs):
         n = max(1, int(round((s["b"] - s["a"]) * FPS)))
         dur = n / FPS
         ov = sum(max(0.0, min(s["b"], b) - max(s["a"], a)) for a, b in punch_spans)
         punch = ov >= 0.5 * (s["b"] - s["a"])
+        wide = any(min(s["b"], b) - max(s["a"], a) > 0.05 for a, b in wide_spans)
         if punch:
             name = "punch"
+        elif wide:
+            name = "base"
         else:
             gap = s["a"] - segs[i - 1]["b"] if i else 0.0
             ci += 3 if gap >= 1.8 else 1
@@ -517,7 +558,7 @@ def main():
     motion_log = []
     if os.environ.get("CUT_MOTION"):                    # the cloud runner only
         segs, motion_log = settle_edges(segs, kept, motion_track(src))
-    clips, total = frame_plan(segs, punch_spans)
+    clips, total = frame_plan(segs, punch_spans, [tuple(w) for w in fix.get("wide", [])])
 
     if "--dry" in sys.argv:
         old = json.load(open(os.path.join(wd, "cut.json"), encoding="utf-8"))
@@ -587,7 +628,7 @@ def main():
     lst = []
     for c in clips:
         # keyed by what the clip IS, so a re-plan never reuses a stale clip
-        p = os.path.join(segdir, "c_%.3f_%d_%s_%s.mp4" % (c["src_in"], c["frames"], c["frame"],
+        p = os.path.join(segdir, "c_%.3f_%d_%s_%s_g30.mp4" % (c["src_in"], c["frames"], c["frame"],
                                                          "%.2f-%.2f" % tuple(face)))
         lst.append(p)
         if os.path.exists(p):
@@ -595,7 +636,8 @@ def main():
         subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-ss", "%.4f" % c["src_in"],
                         "-i", src, "-an", "-vf", crop_filter(c["frame"], face) + ",fps=30",
                         "-frames:v", str(c["frames"]), "-c:v", "libx264", "-crf", "17",
-                        "-preset", "fast", "-pix_fmt", "yuv420p", "-r", "30", p + ".tmp.mp4"],
+                        "-preset", "fast", "-g", "30", "-keyint_min", "30",   # a keyframe a second: the renderer seeks
+                        "-pix_fmt", "yuv420p", "-r", "30", p + ".tmp.mp4"],
                        check=True)
         os.replace(p + ".tmp.mp4", p)
     with open(os.path.join(segdir, "list.txt"), "w") as f:

@@ -1,41 +1,50 @@
 # Reel editing base — the rules
 
-**BASE LAYER: the same for every client.** This file is Ruta's STYLE.md from
-`reel-editor-machine` with the look taken out: how pauses and bad takes are
-found and cut, how text is sourced, the caption machinery, takeovers, safe
-zones, the animation rule, what Ruta flags in review, build and render, sound.
-Every rule here is copied from her repo or from her answers while building
-Marina's editor (2026-11-05). **Nothing here is invented, and nothing here
-changes per client.**
+**BASE LAYER: the same for every client, and it has no design in it.** This
+file is the STYLE.md of Ruta's Marina editor (latest version, 2026-11-17),
+which started as Ruta's own STYLE.md from `reel-editor-machine`, with every
+design choice taken out: no fonts, no colours, no type sizes, no stroke
+weights, no element styling, no motion style, no rhythm numbers. What is left
+is how a reel is cut, captioned, placed, checked, rendered and delivered.
 
-The client's look (palette, fonts, caption style, materials, rhythm, where
-her refs put things) is in `LOOK.md` + `tools/look.py`. Where the two
-disagree, `LOOK.md` wins only on the look, and only for what it names.
+Every rule here is copied from Ruta's repo or from what Ruta said while
+building Marina's editor (2026-11-05 and 2026-11-17). **Nothing here is
+invented, and nothing here changes per client.** The quotes are Ruta's.
 
-The run never stops to ask: it decides from these two files, the transcript
-and the refs, and reports its calls at the end.
+The client's look lives in `LOOK.md` + `tools/look.py` + `assets/fonts/`:
+palette, fonts, caption style and size, type tiers, materials (how each real
+element is drawn), stroke weights, motion style, timing lead, rhythm, and
+where her own refs put things. `LOOK.md` decides only those things. It never
+loosens a rule in this file.
 
-**Cutting rule (Ruta, 2026-11-05):** the reel stays **under 3 minutes**. Cut
-**only pauses and bad takes**, following Ruta's instructions and the
-transcript. **Never cut content.** No length targets.
+The run does not stop mid-way to ask (Ruta, 2026-11-05): it decides from these
+two files, the transcript and the refs, and lists its calls and anything
+missing at the end. *(The 17 Nov Marina file still carried the older line
+"anything not settled is asked, not decided"; the 5 Nov rule is kept here.
+Flagged for Ruta.)*
 
 **Transcription:** local whisper (`tools/utt.py`), OpenRouter whisper as the
 fallback. **Never ElevenLabs**, and not the video-use skill.
 
+Section numbers match the client's `LOOK.md`.
+
 ---
 
-## 1. The delivery model and the cut (Ruta's repo, as is)
+## 1. The delivery model and the cut
 
 Ruta drops the client's **raw take** into `raw/`. This folder cuts it, captions
 it, animates it and renders it, with Ruta's raw-take pipeline from
 `reel-editor-machine` (reels 21–40): `tools/utt.py` → `tools/cut.py` →
-`tools/align.py` → `build.py` → cloud check → cloud render → verify.
+`tools/gapcheck.py` → `tools/align.py` → `build.py` → checks → render →
+verify.
 
 **Cutting rule (Ruta, 2026-11-05):** the reel stays **under 3 minutes**. Cut
 **only pauses and bad takes**, following Ruta's instructions and the
-transcript. **Never cut content.**
+transcript. **Never cut content.** No length targets. If pauses and bad takes
+alone leave it over 3:00, say so with the numbers and let Ruta name the
+content cuts (recorded in `work/rNN/cut-fix.json`).
 
-How the cut finds them (Ruta's `tools/cut.py`, as is):
+How the cut finds them (Ruta's `tools/cut.py`, plus the voice guard):
 
 - **Pauses — from the audio and from the transcript** (Ruta, 2026-11-05:
   "both audio and transcript, because if there's wind there might not
@@ -43,10 +52,15 @@ How the cut finds them (Ruta's `tools/cut.py`, as is):
   `silencedetect` (−30 dB, 0.18 s) and transcribes each spoken span on its
   own. Inside a span, `cut.py` also splits wherever the transcript shows a gap
   between two words longer than 0.30 s, so a pause full of wind still goes.
-  Whisper stretches a word over a pause; a word much longer than she takes to
-  say it is trimmed the same way the clip edges are. Every utterance keeps
+  Whisper stretches a word over a pause; a word much longer than it takes to
+  say is trimmed the same way the clip edges are. Every utterance keeps
   0.07 s before / 0.10 s after, and a removed pause leaves 0.16 s of air
   (0.30 s after a full stop).
+- **...but only where the audio agrees.** In wind, Whisper's word times
+  drift (on Marina's reel 01 a transcript gap cut through a sentence). A
+  transcript gap or a stretched-word trim is cut only if the audio there is
+  below voice level (RMS −26 dBFS). `tools/gapcheck.py NN` must report 0
+  before `--render`.
 - **Bad takes — the transcript is the script** (Ruta, 2026-11-05). Last take
   wins (Ruta's rule, 2026-10-05): when a line is fumbled and said again, every
   earlier attempt goes. `tools/takes.py NN` lists every place she starts the
@@ -55,40 +69,69 @@ How the cut finds them (Ruta's `tools/cut.py`, as is):
   the transcript with the fumbled earlier attempts deleted. `cut.py` aligns
   every word to it with a Viterbi pass that may jump back; a backward jump is
   a restart and the earlier attempt is dropped. A restart that would drop more
-  than 40 words is flagged in `cut.txt`, not cut.
+  than 40 words is flagged in `cut.txt`, not cut. In wind one utterance can
+  hold a whole fumble; then the drop goes in `cut-fix.json`.
 - **Manual calls:** `work/rNN/cut-fix.json` — `drops` / `keeps` (raw seconds),
-  `punch` (a closeup), `face`. Ruta's instructions go here.
-- **Framing:** never the same crop twice across a cut, pure scale steps
-  centred on her (base 1.00 / in 1.10), a clip over 5.5 s gets a zoom cut
-  inside, `punch` 1.50 for a joke.
-  Punch spans become `no_paint`: captions only.
+  `punch` (a closeup), `face`, `wide`. Ruta's instructions go here.
+- **Framing:** pure scale steps centred on her (base 1.00 / in 1.10), never
+  the same crop twice across a cut. A clip over 5.5 s gets a zoom cut inside.
+- **...but never zoomed in under a graphic** (Ruta, 2026-11-17: *"Don't zoom in
+  and then put things somewhere where they can go on her face. Zoom out, it's
+  okay"*). Zooming in pushes her chin down into the band where the graphics
+  live. Every clip a graphic sits on stays at base framing: `cut-fix.json`
+  `"wide"` lists those clips (raw seconds) and `cut.py` frames them base.
+- **The big punch-in is only for a reaction, an aside or a joke.** Use
+  `punch` at 1.50. Punch spans become `no_paint`: captions only.
 
-**Matte her per beat, never per reel** (Ruta's repo, as is): `tools/matte.py`
-for a big object behind her, one beat at a time.
+**Matte her per beat, never per reel** (Ruta's repo): `tools/matte.py` for a
+big object behind her, one beat at a time. On this machine a matte costs
+about 0.6 s a frame (a 10 s half-screen: 3 min).
+
+**A cut-out never goes over her in the browser; it is baked into the plate**
+(Ruta, 2026-11-17: *"on the cutout, the color of the face changes into a more
+warm orange one ... there is a clear difference where it's natural and then
+there's more yellow"*). The renderer converts a transparent video's colours
+differently from the plate's (measured on skin: red +5, blue −14), so a
+cut-out laid over her own frame comes out warmer than she is.
+`tools/halfscreen.py` composes the half-screens in ffmpeg instead: her head is
+her own plate pixels, the matte is used only as a mask, so nothing can differ.
+The page adds only the panel's content.
 
 ---
 
-## 2. Text: where it comes from (Ruta's repo, as is)
+## 2. Text: where it comes from (Ruta's repo)
 
 **Spelling** comes from her transcript / script in `work/rNN/script.txt`,
-never from speech recognition alone. **Captions are what the client said,
-verbatim**, her surzhyk kept. Whisper supplies timing; its mishearings are
-fixed through a `FIX` dict in `build.py`, as in Ruta's reels.
+never from speech recognition alone. **Captions are what she said,
+verbatim**, in her own language and words. Whisper supplies timing; its
+mishearings are fixed in `build.py` (a `FIX_AT` list keyed by plate time).
 
 ---
 
-## 2b. Captions: the machinery (Ruta's repo, as is)
+## 2b. Captions: the machinery
 
-How a caption *looks* (font, size, height, case, one word / a phrase / typing
-on) is the client's, in `LOOK.md` §2b and `tools/look.py`. How captions are
-timed, dropped and inverted is the base, below, and the same for everyone.
+How a caption looks (font, size, colour, case, height, chunk length, how it
+appears) is the client's: `LOOK.md §2b`, `tools/look.py` `CAPTION_CSS` and
+`LOOK`. The machinery is the same for everyone. `Kit.captions()` groups the
+aligned words into blocks in one of three modes (`LOOK["caption_mode"]`):
+`phrase` (a phrase to its comma), `type` (each block types on letter by
+letter with a cursor) or `word` (word by word).
 
-Known caption bugs to guard against (Ruta's repo, as is): a word straddling a clip start gets clipped (clamp it), `%` splits off its number (merge), a leading apostrophe breaks «інтерв'ю» (merge), a leading hyphen survives into the token (`lstrip("-")`), and consecutive blocks superimpose for ~1.5 frames (clamp `end = next.start − 0.085`).
+Known caption bugs to guard against (Ruta's repo):
+- a word straddling a clip start gets clipped (clamp it);
+- `%` splits off its number (merge);
+- a leading apostrophe breaks «інтерв'ю» (merge);
+- a leading hyphen survives into the token (`lstrip("-")`);
+- consecutive blocks superimpose for ~1.5 frames (clamp
+  `end = next.start − 0.085`). Two short blocks can still overlap; merge a
+  block under 0.30 s into its neighbour (`MERGE_PREV` / `MERGE_NEXT`).
 
-### 2b.1 When captions drop, and when they invert (Ruta's repo, as is)
+**When a graphic needs the subtitle's place**, move the subtitle out of its
+way for that span rather than stacking type on type.
 
-Her rule, 2026-09-15, after the first five-reel batch came back as *"technically
-right, but all very typical and homogenous"*:
+### 2b.1 When captions drop, and when they invert (Ruta's repo)
+
+Ruta's rule, 2026-09-15:
 
 > *"when there's no text on the animation — the subtitles should still be there,
 > basically the no subtitles only affects animations that have text, so that its
@@ -97,136 +140,190 @@ right, but all very typical and homogenous"*:
 So the test is **redundancy, not takeover**. A full-screen graphic does not earn
 a blackout by being full-screen; it earns one by *saying the word she is saying*.
 
-- **Blackout** the span where a graphic's own text repeats her words. In reel 9
-  that is three spans out of five takeovers: the prompt bar typing «зроби
-  презентацію на таку тему» while she reads it, the margin notes writing
-  «картинка» / «графік» on those two words, and the brandbook page whose header
-  says ДИЗАЙН-СИСТЕМА while she says «дизайн-систему».
+- **Blackout** the span where a graphic's own text repeats her words. A
+  graphic that carries the whole phrase *replaces* the subtitle for that
+  phrase.
 - **Keep them everywhere else**, including over a takeover with no text in it.
-- **Invert to ink** for the whole of any light takeover — `.cap.inv`, via the
-  `invert=` argument. White captions on a white page are invisible, which is
-  how reel 9's flat-white skeleton beat nearly shipped.
+- **Invert** for the whole of any light takeover — `.cap.inv`, via the
+  `invert=` argument. Light captions on a light page are invisible.
 
 Two mechanical traps, both hit:
 
 1. The scrim's off-spans must be **merged into a union** before emitting. One
    off/on pair per span looks right and is not: a blackout nested inside an
-   invert span restores the underlay at its own end, and the dark scrim sits
-   behind ink captions for the rest of the takeover as a grey cloud.
-2. `blackout` has existed in `kit.py` since the matte commit. Across reels 7–11
-   it was passed **zero times**, so every graphic had to survive being stacked
-   on a permanent caption rail — which is why every graphic was small, low and
-   out of the way. If the reels look samey, check this first.
+   invert span restores the underlay at its own end, and the scrim sits
+   behind inverted captions for the rest of the takeover as a grey cloud.
+2. `blackout` has existed in `kit.py` since the matte commit. Across Ruta's
+   reels 7–11 it was passed **zero times**, so every graphic had to survive
+   being stacked on a permanent caption rail — which is why every graphic was
+   small, low and out of the way. If the reels look samey, check this first.
 
 ---
 
+## 2c. Takeovers and half-screens: the mechanics
 
-## 2c. Takeovers (Ruta's repo, as is; the grounds are the client's)
+**The graphic owns the frame or it is not there** (Ruta's repo). A takeover is
+a `.g.full` whose first child is an opaque ground (`.tk.<name>`, the grounds
+are the client's: `LOOK.md §5a`). The plate is gone, so none of the
+over-footage rules apply. How long a takeover lasts, how it is built and what
+its grounds are come from the client's refs (`LOOK.md §2c`).
 
-Her four reference reels (`Examples/`) all make the same structural argument,
-and it is not about polish: **the graphic owns the frame or it is not there.**
-None of them float a card over footage. They alternate — footage with a short
-phrase on it, then no footage at all.
-
-What a takeover is, mechanically: a `.g.full` whose first child is an opaque
-ground (`.tk.*`, the client's grounds from `LOOK.md` §5a). The plate is gone, so **none of the over-footage rules apply** —
-no glow budget, no band discipline, ink type on a light ground, and the
-heavy-overlay element ceiling does not bite.
-
-Rules learned building reel 9's five:
+Rules learned building Ruta's reel 9 (Ruta's repo):
 
 - **Bleed off at least two edges.** A takeover composed inside the frame with
-  margins reads as a slide, not a takeover. Mark the elements
-  `data-layout-allow-overflow` so the layout checker stops flagging them.
+  margins reads as a slide, not a takeover. Decoration may bleed; readable
+  text stays in the safe area (§3a). Mark bleeding elements
+  `data-layout-allow-overflow`.
 - **The ground belongs to the beat that starts first and must outlive every
-  other part of the takeover.** Reel 9's paper lived on the wrapper carrying
-  the Canva/Slides marks; fading that wrapper when the marks had said their
-  piece put her footage back behind the wall for the whole push-in. Fade the
-  *children*, keep the ground.
+  other part of the takeover.** Fade the *children*, keep the ground.
 - **Transforms only.** `width`, `height` and `margin` are layout properties:
   the linter rejects them and they snap to integer device pixels mid-tween. A
   typing reveal is `clipPath: inset(...)`; a band that fills the frame sits at
-  its *resting* size and scales **up**, so a 26px radius stays 26px instead of
-  stretching into a 260px ellipse.
+  its *resting* size and scales **up**.
 - **Solve push-ins, don't eyeball them.** To bring point `p` to centre `c` at
   scale `k`, the wrapper offset is `c - (c + (p - c)k)`.
-- **Use the whole frame when captions are blacked out.** TK4's brandbook first
-  sat in the top half with 800px of dead paper under it, because it had been
-  laid out around a caption band that was not going to be there.
+- **Use the whole frame when captions are blacked out.**
 
+**The half-screen** (Ruta's mockup, 2026-11-17, `refs/mockups/half-screen.jpg`
+in Marina's editor). Use it for a list or a how-to that needs reading time,
+and for anything that does not fit under her chin (§3b):
 
-
-## 3. Safe zones: where nothing goes (Ruta's rules, as is)
-
-Collected from Ruta's repo and the client builds. These hold for every client;
-the client's `LOOK.md` §3 only adds where *her* refs put things.
-
-- **Never on her face.** Ruta: *"lets not do it as much on my face, you can
-  put it lower"*. Text and graphics never cover her face or hands; when a
-  graphic will not fit above her head, drop it **low over her chest** instead.
-  The band rule loses to her face every time. Her head position is measured
-  on the first cut (`cut.json` `face`), never assumed.
-- **Behind her head, with a matte**, for a big object (§1, `tools/matte.py`),
-  one beat at a time.
-- **Never in a corner.** Every graphic is horizontally centred and wide,
-  600–900 px (*"I want them to be centered… and wider, more rectangle"*).
-- **Instagram's own UI.** The like/comment/share rail on the right and the
-  caption block at the bottom eat whatever sits there (*"eated by the buttons
-  from ig interface"*). Greenscreen cutouts: keep her ~60–70 % big, face above
-  y ≈ 1500 and left of x ≈ 880.
-- **Captions sit on her chest**, off her face and hands, at the height the
-  client's refs use (`LOOK.md` §2b).
-- **A takeover owns the whole frame**, so none of the over-footage zones
-  apply to it (§2c).
-- **Her editing is not filler**: closeups / pull-outs are `NO_PAINT`,
-  captions only (§4a).
+- **She goes down to make space on top.** Her video slides down in 5 frames,
+  ease-out, and comes back up the same way when the beat ends, on the jump
+  cut. How far is measured: far enough that the top of her hair, at its
+  highest over the beat (`face_flat.json`), clears the panel's content by
+  40 px, and never less than 480 px.
+- **The panel fills the top**, a flat ground from y 0 down to y 1080. It comes
+  down with her move. (The ground is the client's.)
+- **Her head is cut out** and sits in *front* of the panel's bottom edge, so
+  the edge meets her hair and never crosses her face. Baked, not overlaid
+  (§1): the build writes `reel-NN/halves.json`, then `tools/matte.py` (one
+  per half-screen, the build prints the commands) and
+  `tools/halfscreen.py NN`.
+- **Content goes in the top**, inside the safe area and above her hair
+  (from y 262): a real element (§4). Its content appears once she has moved
+  and goes before she moves back.
+- **No subtitles under it.** Her mouth now sits where the subtitle would.
+  The build stands the subtitles down for the span (a block that started
+  before it is cut short, one that runs past it starts late).
+- **A panel over her never covers her face** (Ruta, 2026-11-17: *"rn its
+  covering her face until the eyes, thats stupid"*): never a straight edge
+  across her chin, mouth or nose. That is what the half-screen is for.
 
 ---
 
-## 4. The animation rule (Ruta's repo, as is)
+## 3. Frame geometry
 
-**Where a client's refs differ, the client's `LOOK.md` §4 says so.** For
-Marina, Ruta's answer (2026-11-05) was "Marina's refs win": words allowed in
-graphics, something new every ~2–4 s. A client's LOOK.md §4 may only override
-this section with what Ruta or the client said, or what the client's own refs
-measurably do; otherwise everything below stands as Ruta wrote it.
+Ruta's placement rules: **never put a graphic in a corner**; **under her
+chin or behind her head, never on it** (§3b); a big object can go **behind
+her head** on a half-screen (§2c); a takeover owns the whole frame.
 
-**«Не кажи — покажи» — never say, always show.** A graphic contains **no words
-at all**. Exceptions: a **number** (a quantity, not a word), and text **inside a
-depicted interface** (a comment box being typed into shows an action).
+**Nothing on her head, ever: not text, not a shape, not a card** (Ruta,
+2026-11-17: *"make sure that nothing is going on her face ... a lot of things
+are going over her lips and her chin, and that's not okay. They should always
+go under her chin or behind her head"*).
 
-Test: mute it and hide the subtitles. If you can't tell what the beat is about,
-it isn't finished.
+| Zone | |
+|---|---|
+| **Eyes to chin** | nothing, ever |
+| **Under her chin**, down to the subtitle | measured per frame (§3b) |
+| **Behind her head** | only on a half-screen, baked (§2c) |
+| **Above / beside her head** | only where the plate has room, inside the safe area |
 
-- **Pacing: a visual event every 3–5 seconds.** Her delivery is slow and expert;
-  the cuts alone deliver no new information. A 51s reel takes 10–17 beats.
-- **Write the verb before the noun.** Not "a chart of the cost" — "the cost falls
-  to zero". No verb means you have a label, and labels are the subtitle's job.
-- **Reuse objects.** Reel 2 uses one task stack for three beats and one diagram
-  for two. A returning object costs nothing to read and lands harder.
-- **Land it and leave it.** Nothing loops, drifts or breathes — except where the
-  loop *is* the meaning (the spinner at 15.3s that never completes).
-  (Since §0.8 the plate may push in slowly and the burgundy ground's light
-  pools may drift; graphics still land and stay put.)
-- **Put every element on its word.** Uneven spacing is correct; even spacing
-  reads as automated.
-- **Thick.** Strokes ≥12px, wires ≥15px, rules ≥16px. Thin reads as amateur.
-- **A graphic must not outlive its sentence.** v3's task stack landed at 9.0s and
-  then sat unchanged until 15.3s while she talked about something else. Her note:
-  *"it stays there for a very long time… which could have used a different
-  animation or, like, remove that animation while I'm saying that."* Either give
-  the next sentence its own beat or clear the frame.
-- **Match the length of the moment to the length of the word.** v3's stall
-  spinner ran 3.2s, but «зависає» is 0.74s long and she is onto the fix by 16.12.
-  It now runs ~1.0s and stutters to a dead stop. Her note: *"it's too slow, and
-  it's a little bit not as dynamic."*
-- **Reach for the obvious literal image when there is one.** She asked for the
-  **Ukrainian flag** on «українською мовою» — the one sanctioned departure from
-  the red/pink palette, because it is a flag and it has to be its own colours.
+What goes in each zone for this client is in `LOOK.md §3` (from her refs).
+Measure every new client's plates first: where her chin moves and how much
+headroom there is decides how much goes under the chin and how much on
+half-screens.
+
+### 3a. Instagram safe area (Ruta, 2026-11-17)
+
+```
+canvas      1080 x 1920
+avoid       top 220-250 px      (username, top icons)
+            bottom 320-450 px   (caption, audio, like/comment/share rail)
+            sides 60-130 px     (left and right)
+safe area   about 840 x 1350 in the centre
+rule        x 130-950, y 250-1470 for anything readable
+```
+
+**"Some stickers or elements can go out of the safe zones, but anything
+readable has to be inside."** Decoration (stickers, photos, shapes, grounds,
+cards' edges) may bleed out and off the frame. Every readable word, number
+and subtitle stays inside. So a readable line is at most 820 px wide: size it
+to fit, or break it onto two lines. Where a client's refs bleed type off the
+frame, Ruta's rule wins.
+
+`node tools/safezone.js reel-NN` loads the composition, steps the timeline
+and measures every visible text run by its ink (the glyphs' own ascent and
+descent, not the font's line box). It must report nothing before a render; a
+text run caught only while it slides in or out is fine.
+
+### 3b. Under her chin, measured (Ruta, 2026-11-17)
+
+Headlines placed at fixed heights from one measurement of her chin sat on her
+lips once she leaned in. So:
+
+1. `python tools/facemap.py NN --flat` finds her face on every frame of the
+   plate as cut (OpenCV YuNet at 10 fps) and writes `work/rNN/face_flat.json`:
+   face box, eye line, mouth, chin, top of hair.
+2. The build places every beat with `under(t_in, t_out)`: the lowest her chin
+   goes while the beat is on screen, plus 30 px. Nothing is placed by eye.
+3. The band ends at the top of the subtitle or, where the graphic has taken
+   the subtitle's words (§2b.1), at the safe area's bottom (y 1470). The build
+   checks every beat against the subtitle blocks on screen with it and prints
+   any that run into one (`fit:`).
+4. What does not fit: shrink to the client's smallest display size, split the
+   subtitle so the graphic takes one word (`split_cap`), drop the line the
+   subtitle already carries, or move the beat to a half-screen.
+5. After the bake, `python tools/facemap.py NN` maps the plate as rendered and
+   `node tools/safezone.js reel-NN` tests every visible graphic against her
+   head (face box raised to the top of her hair) at every step, and against
+   every visible subtitle. It must report nothing.
+
+**Greenscreen cutouts stay big** (Ruta, 2026-09-29): when she is cut out over
+a screen recording, keep her at ~60–70 % on the left, face above y ≈ 1500 and
+left of x ≈ 880 — at 45 % in the bottom-right corner she was *"eated by the
+buttons from ig interface"*.
 
 ---
 
-## 4a. What she flags in review (Ruta's repo, as is)
+## 4. What to show (Ruta's repo + Ruta, 2026-11-17)
+
+Whether words are allowed in graphics, and how graphics move, are the
+client's (`LOOK.md §4`, from her refs). What applies to every client:
+
+- **No graphic repeats a whole subtitle**, and a graphic that says the word
+  she is saying replaces the caption for that span (§2b.1).
+- **The literal thing, shown as itself:** the app she opens as its real
+  screen recording, her follower count as her real profile, her views as her
+  real Insights card. When the real asset is missing, don't draw a stand-in:
+  list it at the end for Ruta.
+- **Every element is a real element** (Ruta, 2026-11-17: *"I don't like the
+  style of these um, like message button icons or the sort of sending line.
+  Everything is always, according to our design system ... a real element. So
+  it could be a real Google-esque kind of search bar. It could be some other
+  stylized messages, but it cannot be just this. It has to have some kind of
+  real life texture to it"*). An object is drawn as the interface people
+  actually use, with its real proportions and real behaviour (a caret that
+  types, a check that fills, a bubble with its tail). Never an icon standing in
+  for it: no circle with an arrow for "send", no three dots for "message".
+  The kinds built so far: to-do card, struck list, search box, messages,
+  chips, chart card, spreadsheet, viewfinder. How each is drawn (colours,
+  type, line weights) is the client's (`LOOK.md §5a`). No invented content in
+  them: her words, or empty and skeleton states.
+- **Write the verb before the noun.** Not "a chart of the cost" — "the cost
+  falls to zero". No verb means you have a label, and labels are the
+  subtitle's job.
+- **Reuse objects.** A returning object costs nothing to read and lands
+  harder.
+- **A graphic must not outlive its sentence; match the length of the moment
+  to the length of the word; reach for the obvious literal image when there
+  is one.**
+- **Memes and reaction stills** only real ones Ruta provides.
+
+---
+
+## 4a. What she flags in review (Ruta's repo)
 
 Her first full pass, on reel 7 (2026-09-14). Every note reduced to one of five
 rules, and all five outrank instinct the same way the rest of this file does.
@@ -235,120 +332,92 @@ rules, and all five outrank instinct the same way the rest of this file does.
 Cal.com→Calendar sync finished about half a second into the *next* sentence and
 her note was *"waaaay too late, i would have put it like 3 secs earlier to match
 the text"*. Budget the whole beat — arrival, movement, exit — inside the phrase
-it illustrates, and clear it before the next phrase starts. §4 already says put
-every element on its word; this says the *end* is on the word too.
+it illustrates, and clear it before the next phrase starts.
 
 **2 · When the image is not instantly legible, use the word.**
 
 > *"shitty icon, either do properly or write CRM"*
 > *"the points could have been written out properly"*
 
-A drawn database glyph read as nothing, and six blank pills standing in for CRM
-fields read as nothing. Both became type: `CRM` as a wordmark, and the fields
-written out (ХТО / ЗВІДКИ / ЧИМ ЗАЙМАЄТЬСЯ / ЩО ХОТІЛА / ЩО ЗРОБЛЕНО /
-НАСТУПНИЙ КРОК). This does **not** contradict §4 — a wordmark *is* the logo
-when no icon exists (§5b already ships Fathom and Gamma that way), and field
-names are text inside a depicted interface, which §4 exempts by name. A CRM
-with no field names is not a depicted CRM.
+A drawn glyph that reads as nothing becomes type: a wordmark *is* the logo when
+no icon exists, and field names are text inside a depicted interface.
 
 **3 · A graphic must not outstay its sentence — and she can see four seconds.**
-Both directions, in the same review: *"took too long too"* (a waveform held 4 s
-across two sentences it had nothing to do with) and *"literally one second wtf"*
-(a tile that flashed and left). The fix is never to stretch one object across a
-section; it is more, shorter events on the actual phrases.
+Both directions: *"took too long too"* (held 4 s across two sentences) and
+*"literally one second wtf"* (a tile that flashed and left). The fix is never
+to stretch one object across a section; it is more, shorter events on the
+actual phrases.
 
-**4 · Every object has to be nameable.** *"whats that little glowing dot?"* — a
-dot travelling a wire to mean a booking is not an object, it is a dot. It became
-a small event card with a header bar and a body line, which reads as an
-appointment at 90 px. If a viewer would ask *what is that*, it is not finished.
+**4 · Every object has to be nameable.** *"whats that little glowing dot?"* If
+a viewer would ask *what is that*, it is not finished.
 
-**5 · A blank plaque says nothing.** §5a.9 likes an empty frosted slot before
-the filled state, and that is still true *once the viewer knows what the slot
-is for*. Six empty slots opening a reel got *"this is not really
-understandable, at least add some logos/icons in"*. They now carry greyed-out
-ghosts of the marks that will land in them: the board is readable from the
-first frame and the reveal still happens, grey to lit.
-
-**Greenscreen cutouts stay big.** Her call, 2026-09-29, on reel 18: when she is
-cut out over a screen recording, keep her at ~60–70 % on the left, face above
-y ≈ 1500 and left of x ≈ 880 — at 45 % in the bottom-right corner she was
-*"eated by the buttons from ig interface"* (the like/comment/share rail and the
-caption block).
+**5 · A blank plaque says nothing.** An empty slot is readable only once the
+viewer knows what it is for; give it ghosts of what will land in it.
 
 **Proof is a screenshot.** Her call, 2026-09-29: Instagram stats, DMs, comments,
 reviews go on screen as her real screenshots (cropped, blurred where personal),
-never redesigned as glass cards — *"then people trust it more and dont think
-that we came up with the numbers"*. Animate around the screenshot, don't retype it.
+never redesigned as cards — *"then people trust it more and dont think that we
+came up with the numbers"*. Animate around the screenshot, don't retype it.
 
-**No invented stats.** A view count, follower number or sum shown as *hers* must
-be hers (from her screenshots or her words). Reel 20 shipped «1,2M» views on a
-hype curve and on three reel cards; they were made up and would have read as her
-real numbers, so they came out before delivery. Shape-only charts, or a clearly
-labelled demo card (CRM, report), are fine.
+**No invented stats.** A view count, follower number or sum shown as *hers*
+must be hers. Shape-only charts, or a clearly labelled demo card, are fine.
 
-And one literal, which is the kind of note she gives and means exactly: *"tasks
-are always checks and lines like a checklist"* — a checkbox and a rule, never
-three coloured bars.
+And one literal: *"tasks are always checks and lines like a checklist"* — a
+checkbox and a rule, never three coloured bars.
 
 ### Her editing is not filler
 
 > *"when you see some funny editing (extra closeup, extra far away) those are
 > funny bits and dont paint over them"*
-> *"i made it funne with editing there"*
 
-A shot change in her delivered cut is an instruction. Those spans get captions
-and nothing else. Two detectors run before authoring, because the two kinds look
-nothing alike in the file:
-
-| | |
-|---|---|
-| `tools/shots.py` | hard cuts, by scene detection, plus a contact sheet of one frame per shot. Her comedy inserts are the short ones — on reel 7, five gags of 0.6–1.5 s against a 4–44 s baseline |
-| `tools/pullouts.py` | *zooms*, which scene detection cannot see at all. When she pushes the plate back, black appears at the frame edge, so border luminance against the reel's own median finds them |
-
-The second exists because reel 7 had a 3.75 s pull-out at 11.0–14.7 s with a
-beat sitting on top of it. Put every span in the build's `NO_PAINT` list, and
-**delete** the beats that fall inside rather than nudging them — the words those
-beats illustrated are inside the gag too.
+A shot change in her delivered cut is an instruction. `tools/shots.py` finds
+hard cuts, `tools/pullouts.py` finds zooms; every such span goes in the
+build's `NO_PAINT` list, and beats that fall inside are **deleted**, not
+nudged.
 
 ---
 
-
-## 7. Build and render (Ruta's repo, as is)
+## 7. Build and render
 
 ```bash
-npx hyperframes check                 # must pass before rendering
+python build.py                         # prints fit: and the matte commands for each half-screen
+python ../tools/sfx.py mix NN           # base.mp4 = the plate as cut + sfx
+python ../tools/matte.py reel-NN ...    # one per half-screen, from build.py's output
+python ../tools/halfscreen.py NN        # bakes the half-screens into base.mp4
+python ../tools/facemap.py NN           # her face on the plate as rendered
+python ../tools/review.py reel-NN       # timeline: holds, flashes, gaps, drift
+node ../tools/safezone.js reel-NN       # safe area, nothing on her head, nothing on a subtitle
+node ../tools/frames.js reel-NN --beats # a still per beat over the real plate, + contact sheets
+npx hyperframes check                   # must pass before rendering
 npx hyperframes snapshot --at <times> --no-end -o study/snap
-npx hyperframes cloud render          # the wallet; ~4-7 min
+npx hyperframes render                  # on the machine (below)
 ```
 
-**Render in the cloud, on the API wallet.** The free HeyGen pool is 5 renders a
-calendar month and it ran out on 2026-09-14 (HTTP 402 `insufficient_credit`).
-Her call: *"why are we not using cloud? i put money in API"* — so the wallet is
-the default path now, not a fallback. A render costs **$0.23-0.47** and takes
-4-7 min against ~17 min locally. The CLI prefers an `oauth` block over the
-stored `api_key`, which is why it was billing the free plan; park that block
-under another name in `~/.heygen/credentials` and `auth status` reports
-`Billing: wallet`. Local `render --low-memory-mode` is only for an empty wallet
-or no network.
+**Render on the machine, not HeyGen** (Ruta, 2026-11-17: "can you use the
+machine, no heygen pls"). Render with `npx hyperframes render` in the cloud
+session. `tools/hfrender.py` stays for when she asks for HeyGen again.
 
-Always snapshot before rendering — a render is ~17 minutes and a snapshot pass is
-under one. Verify the first frame, each beat's proof pose, and the exact final
-frame.
+Always snapshot before rendering — a render takes many minutes and a snapshot
+pass is under one. Verify the first frame, each beat's proof pose, and the
+exact final frame: frames = DUR×30, no black tail, audio present.
 
-**Machine limits** — Ryzen 7 3700U, no usable GPU, 15 GB RAM, disk usually near
-full:
-- `--low-memory-mode` is **mandatory**; default disk capture wants ~25 GB of temp
-  frames and fails outright.
-- Whisper `medium` is cached and handles Ukrainian well (~15 min per 2.5 min).
-  `large-v3` is not cached and there is no disk for it.
-- Never run heavy jobs in parallel — RAM pressure makes throughput worse than
-  sequential.
-- ffmpeg in this environment has **no glob support**; use numbered inputs.
+**Deliver** (2026-11-17): the render is checked (frames = DUR×30, audio, no
+black tail), then two copies go out:
+- an 8 Mbps Instagram copy (`REEL-NN_vN_instagram.mp4`), sent to Ruta in chat;
+- a copy under 100 MB for Cloudinary, which refuses anything larger on this
+  plan ("Maximum is 104857600"). Two-pass at 4.2 Mbps with 160k audio comes
+  to ~96 MB for a 2:56 reel. It goes in the `reels` folder as
+  `IMG_<raw>_reel_vN`, tagged with the raw name, `reel` and the version.
+  Upload it signed (Cloudinary `sign-upload`), in 20 MB chunks
+  (`Content-Range` + `X-Unique-Upload-Id`).
+
+Machine notes (Ruta's repo): never run heavy jobs in parallel; ffmpeg here has
+no glob support, use numbered inputs; Whisper `medium` handles Ukrainian
+well.
 
 ---
 
-
-## 8. How she gives feedback (Ruta's repo, as is)
+## 8. How she gives feedback (Ruta's repo)
 
 Fast, specific and blunt — take it literally. She spots real bugs (a
 mispositioned currency symbol, a hand that reads as detaching, a graphic that
@@ -357,18 +426,21 @@ early; snapshots beat a long silent build.
 
 ---
 
-## 9. B-roll and sound (Ruta's rules, as is)
+## 9. B-roll and sound
 
-**B-roll** (Ruta, 2026-11-05): the client's b-roll (usually her Google Drive)
-is catalogued once, in `broll/CATALOG.md` (what each clip shows, where it
-is, length, orientation), so a reel run picks from the catalogue instead of
-sorting footage every time. How the client's refs use b-roll is in `LOOK.md` §9.
-Only her real footage and photos; if nothing fits, the beat is type, not b-roll.
+**B-roll** (Ruta, 2026-11-05): the client's b-roll is catalogued once, in
+`broll/CATALOG.md` (what each clip shows, where it is, length, orientation),
+so a reel run picks from the catalogue instead of sorting footage every time.
+Only her real footage and photos; if nothing fits, list it for Ruta. How her
+refs use b-roll is in `LOOK.md §9`.
+
+**Music: none for now** (Ruta, 2026-11-17). Voice plus sound effects only.
 
 **Sound effects** (Ruta, 2026-11-05: "basic sound effects should be
 included (typing, whooshing etc)"): the kit is in `assets/sfx/`
 (`tools/sfxkit.py` made it: click-soft, click, key-press, typing, pop,
 whoosh-short, whoosh, ping, notification, sparkle, kaching). Cues and levels
-are Ruta's (`tools/sfx.py`, her batch brief): quiet, on the event, never on a
-closeup, about 0.5 cues a second at most. A recorded file with the same name
-dropped into `assets/sfx/` replaces the synthesised one.
+are Ruta's (`tools/sfx.py`): quiet, on the event, never on a closeup, about
+0.5 cues a second at most. Put the cue on the frame the graphic appears. A
+recorded file with the same name dropped into `assets/sfx/` replaces the
+synthesised one.

@@ -30,11 +30,12 @@ SURFACES = """
     .tk { position: absolute; inset: 0; }
 """
 
-# %(w)d, %(capTop)d, %(capSize)d are filled in by kit.py
+# %(w)d, %(capTop)d, %(capBottom)d, %(capSize)d are filled in by kit.py.
+# Anchor the caption by its bottom (one line sits at cap_y, two grow upward).
 CAPTION_CSS = """
     #scrim { position: absolute; left: 0; top: 0; width: 0; height: 0;
              opacity: 0; visibility: hidden; pointer-events: none; }
-    .cap { position: absolute; left: 140px; width: 800px; top: %(capTop)dpx;
+    .cap { position: absolute; left: 140px; width: 800px; bottom: %(capBottom)dpx;
            text-align: center; color: var(--white); font-family: var(--sans);
            font-size: %(capSize)dpx; font-weight: 600; line-height: 1.1;
            opacity: 0; visibility: hidden; }
@@ -48,4 +49,7 @@ LOOK = {
     "caption_mode": "phrase",   # "phrase" | "type" | "word"
     "max_chars": 34, "gap_break": 0.30, "lowercase": True,
     "lang": "uk",
+    "lead": 0.10,           # a graphic's first frame this long before its word (her refs)
+    "gap_max": 5.50,        # review.py warns on a caption-only rest longer than this (her refs)
+    "type_max": 0.35,       # caption_mode "type": longest time one word takes to type on
 }

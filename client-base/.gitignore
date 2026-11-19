@@ -55,3 +55,4 @@ covers/deploy.log
 
 # the sound-effects kit is small and part of the system
 !assets/sfx/*.wav
+work/*/frames/

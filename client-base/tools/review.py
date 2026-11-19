@@ -42,7 +42,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 HOLD_MAX = 3.60     # how long one graphic may sit unchanged
 FLASH_MIN = 0.80    # shorter than this reads as a glitch
-GAP_MAX = 5.50      # dead air with her still talking
+try:                # the client's rest length, from her refs (tools/look.py LOOK["gap_max"])
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from look import LOOK as _LOOK
+    GAP_MAX = float(_LOOK.get("gap_max", 5.50))
+except Exception:
+    GAP_MAX = 5.50  # Ruta's repo: dead air with her still talking
 DRIFT_MAX = 0.45    # how far a beat may open from the nearest spoken word
 TAIL = 2.0          # ignore a gap this close to the end
 

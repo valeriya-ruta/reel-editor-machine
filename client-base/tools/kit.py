@@ -81,6 +81,52 @@ class Kit(object):
             'data-media-start="0"\n'
             '             muted playsinline></video>' % (name, name, start, dur))
 
+    # -- motion (RULES.md §4.1) -----------------------------------------------
+    # The refs cut graphics on and off. When something animates, it is short
+    # and mechanical: no bounce, no overshoot, no spring, nothing moving while
+    # it is held. These are the only motions; each returns one line of GSAP.
+    @staticmethod
+    def on(sel, t):
+        """Cut on at t (hidden before t, from the first frame)."""
+        return ('tl.fromTo("%s", {autoAlpha: 0}, {autoAlpha: 1, duration: 0.001, '
+                'immediateRender: true}, %.3f);' % (sel, t))
+
+    @staticmethod
+    def off(sel, t):
+        """Cut off at t."""
+        return 'tl.set("%s", {autoAlpha: 0}, %.3f);' % (sel, t)
+
+    @staticmethod
+    def type_on(sel, t, chars, cps=24):
+        """Type-on, left to right, one step per character (15-35 chars/s)."""
+        n = max(1, int(chars))
+        return ('tl.fromTo("%s", {autoAlpha: 1, clipPath: "inset(0%% 100%% 0%% 0%%)"}, '
+                '{clipPath: "inset(0%% 0%% 0%% 0%%)", duration: %.3f, ease: "steps(%d)", '
+                'immediateRender: true}, %.3f);' % (sel, n / float(cps), n, t))
+
+    @staticmethod
+    def count_up(sel, t, end, frm=0, dur=0.6, fmt="{}"):
+        """A number counting up, landing on `end` at t + dur (put t + dur on
+        the moment she finishes saying the number). `fmt` wraps the figure."""
+        pre, post = fmt.split("{}")
+        return ('(function(){var o={v:%s};tl.to(o,{v:%s,duration:%.3f,ease:"none",'
+                'onUpdate:function(){document.querySelector("%s").textContent="%s"+'
+                'Math.round(o.v).toLocaleString("uk-UA")+"%s";}},%.3f);})();'
+                % (frm, end, dur, sel, pre, post, t))
+
+    @staticmethod
+    def slide_in(sel, t, dx=0, dy=60, frames=4, fps=30):
+        """Slide in from its own edge in 3-4 frames, ease-out, no overshoot."""
+        return ('tl.fromTo("%s", {x: %d, y: %d, autoAlpha: 0}, {x: 0, y: 0, autoAlpha: 1, '
+                'duration: %.3f, ease: "power2.out", immediateRender: true}, %.3f);'
+                % (sel, dx, dy, frames / float(fps), t))
+
+    @staticmethod
+    def fade_in(sel, t, frames=4, fps=30):
+        """Fade in over 3-5 frames: photos and GIFs only."""
+        return ('tl.fromTo("%s", {autoAlpha: 0}, {autoAlpha: 1, duration: %.3f, '
+                'ease: "none", immediateRender: true}, %.3f);' % (sel, frames / float(fps), t))
+
     # -- emoji ---------------------------------------------------------------
     @staticmethod
     def emoji(name, cls="", eid=""):
@@ -241,12 +287,14 @@ class Kit(object):
     .g.full { top: 0; height: %(h)dpx; }
 %(surfaces)s""" % {
             "w": self.w, "h": self.h, "tokens": TOKENS,
-            "capTop": self.cap_y - self.cap_size // 2, "capSize": self.cap_size,
+            "capBottom": self.h - (self.cap_y + self.cap_size // 2), "capSize": self.cap_size,
             "gfxTop": self.gfx_top, "gfxH": self.gfx_bot - self.gfx_top,
             "surfaces": SURFACES,
             "capcss": CAPTION_CSS % {
-                "w": self.w, "capTop": self.cap_y - self.cap_size // 2,
-                "capSize": self.cap_size},
+                "w": self.w, "capSize": self.cap_size,
+                "capTop": self.cap_y - self.cap_size // 2,
+                # bottom-anchored: one line sits at cap_y, two lines grow upward
+                "capBottom": self.h - (self.cap_y + self.cap_size // 2)},
         }
 
     def document(self, title, plate, gfx_html, gfx_js, caps,
