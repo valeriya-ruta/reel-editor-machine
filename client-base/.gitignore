@@ -1,0 +1,57 @@
+# Video and audio never go in the repo. Git stores every version of a binary
+# forever, so one 580 MB recording would bloat the clone permanently for no
+# benefit. Footage moves separately; the repo carries the system that edits it.
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.wav
+*.m4a
+*.mp3
+
+# Footage pulled from Drive arrives without a file extension, so the *.mp4
+# rules above do not catch it. Ignore the whole landing folder.
+work/incoming/
+
+# Rendered output
+renders/
+REEL-*.mp4
+
+# Generated during a build — reproducible from the source
+study/
+work/r*/*.jpg
+work/r*/*.png
+work/r*/stills/
+work/r*/ex/
+work/r*/mob/
+work/r*/band/
+work/r*/verify/
+work/ref/thumbs/
+
+# Superseded: the loose-overlay-clip model, kept on disk but not in the system
+# (STYLE.md §6)
+ANIMATIONS/
+
+# Other creators' reels, kept locally as reference only
+Examples/
+reference reel/
+
+__pycache__/
+*.pyc
+node_modules/
+.DS_Store
+Thumbs.db
+assets/emoji/*.png
+
+# Client carousels used as footage in reels 13/19 — client work, kept out of history
+work/carousels/
+# Her media for upcoming reels (screenshots, recordings, product photos) - not for history
+work/media/
+
+# Covers: Vercel link state and snapshot scratch
+covers/*/.vercel/
+covers/*/out/
+covers/deploy.log
+
+# the sound-effects kit is small and part of the system
+!assets/sfx/*.wav

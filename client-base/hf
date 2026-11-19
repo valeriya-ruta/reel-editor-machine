@@ -1,0 +1,5 @@
+#!/bin/sh
+# npm/npx in C:\Program Files\nodejs is broken (its node_modules dir is missing).
+# Prepend the working user-level npm so hyperframes' internal `npx` calls resolve.
+export PATH="/c/Users/Ruta/AppData/Roaming/npm:$PATH"
+exec npx --yes hyperframes@0.8.33 "$@"
