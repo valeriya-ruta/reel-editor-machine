@@ -73,6 +73,35 @@ def count_frames(path):
         "default=nw=1:nk=1", path], cwd=ROOT).strip())
 
 
+def rembg_shape(span, shape, w, h):
+    """The cloud container's path (MATTE_REMBG=1): hyperframes' remove-background
+    needs onnxruntime-node, whose installer cannot download there. Same model
+    family (u2net_human_seg) through python rembg; only the alpha is used, the
+    colour is repainted from the plate by repaint() anyway."""
+    import numpy as np
+    from rembg import new_session, remove
+    from PIL import Image
+    sess = new_session("u2net_human_seg")
+    dec = subprocess.Popen(["ffmpeg", "-v", "error", "-i", span, "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
+                           stdout=subprocess.PIPE)
+    enc = subprocess.Popen(["ffmpeg", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgba", "-s", "%dx%d" % (w, h),
+                            "-r", "30", "-i", "-", "-c:v", "libvpx-vp9", "-pix_fmt", "yuva420p", "-crf", "20",
+                            "-b:v", "0", "-auto-alt-ref", "0", "-row-mt", "1", "-y", shape], stdin=subprocess.PIPE)
+    fb = w * h * 3
+    while True:
+        buf = dec.stdout.read(fb)
+        if len(buf) < fb:
+            break
+        img = Image.frombytes("RGB", (w, h), buf)
+        # matte at half size (4x faster), alpha scaled back up — the edge is
+        # repainted from the plate, so only the shape's accuracy matters
+        small = img.resize((w // 2, h // 2))
+        m = remove(small, session=sess, only_mask=True).resize((w, h), Image.BILINEAR)
+        rgba = np.dstack([np.asarray(img), np.asarray(m)])
+        enc.stdin.write(rgba.astype(np.uint8).tobytes())
+    enc.stdin.close(); enc.wait(); dec.wait()
+
+
 def repaint(base, f0, f1, shape, webm):
     """Her own plate pixels, the matte's alpha: the cut-out is the same picture
     as the frame around it. YUV goes straight through (alphamerge, no RGB
@@ -146,8 +175,11 @@ def main():
     # Pinned to the version ./hf uses. Unpinned, npx pulled 0.8.82 on
     # 2026-09-28, which moved onnxruntime-node to an optional install that
     # fails on this machine; 0.8.33 bundles it and is already cached.
-    run([NPX, "--yes", "hyperframes@0.8.33", "remove-background", span,
-         "-o", shape, "--quality", "best"])
+    if os.environ.get("MATTE_REMBG"):
+        rembg_shape(span, shape, w, h)
+    else:
+        run([NPX, "--yes", "hyperframes@0.8.33", "remove-background", span,
+             "-o", shape, "--quality", "best"])
     os.remove(span)
     repaint(base, f0, f0 + n, shape, webm)
     os.remove(shape)

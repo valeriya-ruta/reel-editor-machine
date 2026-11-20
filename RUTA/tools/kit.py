@@ -329,7 +329,8 @@ class Kit(object):
              object-fit: cover; }
     /* the plate's own frame: moved as a whole (move-down, halfscreen —
        STYLE.md §0c) while #vid inside it keeps its slow push */
-    #platebox { position: absolute; inset: 0; transform-origin: 540px 0; }
+    #platebox, #mattebox { position: absolute; inset: 0; transform-origin: 540px 0;
+                           pointer-events: none; }
     #scrim { position: absolute; left: 20px; top: %(scrim)dpx;
              width: 1040px; height: 450px;
              background-image: url("assets/underlay.png");
@@ -375,7 +376,9 @@ class Kit(object):
              muted playsinline></video>
       </div>
 %(gfx)s
+      <div id="mattebox">
 %(mattes)s
+      </div>
       <div id="scrim"></div>
       %(caps)s
 

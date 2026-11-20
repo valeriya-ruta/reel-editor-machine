@@ -122,6 +122,11 @@ T = {
 }
 
 
+# the half screen's span, snapped to frames: her cut-out covers it with slack
+HALF0 = round(int((T["koly"] - 0.25) * FPS) / FPS, 3)
+HALF1 = round(int((T["instruktsii2"] + 0.25 + 0.95) * FPS) / FPS, 3)
+
+
 def js(src):
     """`@name`, `@name+0.12`, `@name-0.1` -> one literal time."""
     def rep(m):
@@ -240,50 +245,48 @@ def b_one():
 
 
 # ---------------------------------------------------------------- 3 OVER: the agent panel on the board
-GX, GY = 540, 315          # the note's centre: the board opens out of it
+
 L.append(
     '<div class="g full" id="bd">'
-    # a scheme -> halfscreen: the whiteboard sheet takes the top 930 px (STYLE.md §0c)
-    '<div class="sheet board-bg hide" id="bdS" style="height:930px">'
-    '<div id="cam" style="position:absolute;inset:0;transform-origin:540px 0;transform:scale(0.72)">'
-    '<div class="lbl hide" id="bdL" style="left:110px;top:170px">SendPulse · AI-агент</div>'
-    '<div class="hand hide" id="bdT" style="left:108px;top:214px;position:absolute;font-size:78px">Налаштування</div>'
-    + sk.svg(1080, 1300, sk.underline(110, 318, 470, stroke="blue"), sid="bdU") +
-    # the instruction field (Material outlined text field), then the hand fills it
-    '<div class="field hide" id="fI" style="left:110px;top:400px;width:860px;height:300px"><span class="fl">Інструкції</span></div>'
-    + sk.svg(1080, 1300,
-             sk.line([(150, 470), (420, 466), (700, 474), (900, 468)], stroke="#3c4043", sw=5, double=False) +
-             sk.line([(150, 530), (360, 534), (620, 526), (840, 532)], stroke="#3c4043", sw=5, double=False) +
-             sk.line([(150, 590), (330, 586), (560, 594)], stroke="#3c4043", sw=5, double=False) +
-             sk.line([(150, 650), (300, 646), (480, 652), (700, 648)], stroke="#3c4043", sw=5, double=False),
+    # a scheme -> halfscreen, her §00.3.3 geometry: the whiteboard comes down to
+    # y 1240, she drops 330 px, her cut-out keeps her head in front of it.
+    # Content: y 290 (top no-go) to ~940 across, and beside her head to 1240.
+    '<div class="sheet board-bg hide" id="bdS" style="height:1240px">'
+    '<div id="cam" style="position:absolute;inset:0">'
+    '<div class="lbl hide" id="bdL" style="left:110px;top:300px">SendPulse · AI-агент</div>'
+    '<div class="hand hide" id="bdT" style="left:108px;top:336px;position:absolute;font-size:70px">Налаштування</div>'
+    + sk.svg(1080, 1240, sk.underline(110, 428, 430, stroke="blue"), sid="bdU") +
+    '<div class="field hide" id="fI" style="left:110px;top:480px;width:860px;height:220px"><span class="fl">Інструкції</span></div>'
+    + sk.svg(1080, 1240,
+             sk.line([(150, 535), (420, 531), (700, 539), (900, 533)], stroke="#3c4043", sw=5, double=False) +
+             sk.line([(150, 590), (360, 594), (620, 586), (840, 592)], stroke="#3c4043", sw=5, double=False) +
+             sk.line([(150, 645), (330, 641), (560, 649)], stroke="#3c4043", sw=5, double=False),
              sid="fIS") +
-    '<div class="ab hide" id="chS" style="left:720px;top:620px"><span class="chip cy">скрипти</span></div>'
-    # the web toggle row
-    '<div class="row hide" id="rW" style="left:110px;top:770px;width:860px;height:120px">'
+    '<div class="ab hide" id="chS" style="left:720px;top:618px"><span class="chip cy">скрипти</span></div>'
+    '<div class="row hide" id="rW" style="left:110px;top:730px;width:860px;height:90px">'
     '<div class="gs" style="font-size:44px;font-weight:700">Веб</div>'
     '<div class="gs" style="font-size:30px;color:#5f6368;flex:1">користування веб-сайтами</div></div>'
-    '<div class="tgl hide" id="tW" style="left:866px;top:798px"><b></b></div>'
-    # the agent, the world, the arrows between
-    + sk.svg(1080, 1300,
-             sk.ellipse(250, 1050, 105, 105, stroke="blue", fill="blue", style="hachure"), sid="agO") +
-    '<div class="gs hide" id="agT" style="position:absolute;left:150px;top:1028px;width:200px;text-align:center;font-size:40px;font-weight:700;color:#0b57d0">агент</div>'
-    + sk.svg(1080, 1300,
-             sk.ellipse(830, 1050, 115, 115, stroke="ink") +
-             sk.ellipse(830, 1050, 50, 115, stroke="ink", sw=3.5) +
-             sk.line([(718, 1010), (942, 1010)], sw=3.5, double=False) +
-             sk.line([(718, 1092), (942, 1092)], sw=3.5, double=False), sid="glO") +
-    '<div class="hand hide" id="glT" style="position:absolute;left:740px;top:1175px;width:180px;text-align:center;font-size:44px">інтернет</div>'
-    + sk.svg(1080, 1300, sk.arrow([(370, 1010), (540, 960), (700, 1000)], stroke="blue"), sid="arO")
-    + sk.svg(1080, 1300, sk.arrow([(700, 1110), (540, 1150), (370, 1100)], stroke="blue"), sid="arI")
-    + sk.svg(1080, 1300, sk.check(760, 860, 70), sid="okC")
-    # risk: a bar that fills red, and a nonsense bubble
-    + '<div class="ab hide" id="rk" style="left:410px;top:1215px;width:300px;height:30px;border-radius:15px;background:#f1f3f4">'
-      '<div id="rkF" style="height:100%;width:100%;border-radius:15px;background:#EA4335;transform-origin:0 50%"></div></div>'
-    + '<div class="hand hide" id="rkT" style="position:absolute;left:410px;top:1150px;font-size:40px;color:#EA4335">шанс помилки</div>'
-    + sk.svg(1080, 1300, sk.scribble(722, 960, 216, 170, sw=8), sid="glX")
-    # the fence: agent + instructions, nothing gets out
-    + sk.svg(1080, 1300, sk.rect(80, 380, 920, 820, stroke="green", sw=7), sid="fence")
+    '<div class="tgl hide" id="tW" style="left:866px;top:743px"><b></b></div>'
+    # agent left of her head, the internet right of it, arrows arcing over her
+    + sk.svg(1080, 1240, sk.ellipse(170, 1080, 92, 92, stroke="blue", fill="blue", style="hachure"), sid="agO") +
+    '<div class="gs hide" id="agT" style="position:absolute;left:70px;top:1058px;width:200px;text-align:center;font-size:38px;font-weight:700;color:#0b57d0">агент</div>'
+    + sk.svg(1080, 1240,
+             sk.ellipse(910, 1080, 95, 95, stroke="ink") +
+             sk.ellipse(910, 1080, 42, 95, stroke="ink", sw=3.5) +
+             sk.line([(818, 1045), (1002, 1045)], sw=3.5, double=False) +
+             sk.line([(818, 1115), (1002, 1115)], sw=3.5, double=False), sid="glO") +
+    '<div class="hand hide" id="glT" style="position:absolute;left:820px;top:1180px;width:180px;text-align:center;font-size:40px">інтернет</div>'
+    + sk.svg(1080, 1240, sk.arrow([(235, 1000), (540, 870), (845, 1000)], stroke="blue"), sid="arO")
+    + sk.svg(1080, 1240, sk.arrow([(840, 1035), (540, 950), (240, 1035)], stroke="blue"), sid="arI")
+    + sk.svg(1080, 1240, sk.check(960, 930, 60), sid="okC")
+    + '<div class="ab hide" id="rk" style="left:40px;top:1214px;width:260px;height:22px;border-radius:11px;background:#f1f3f4">'
+      '<div id="rkF" style="height:100%;width:100%;border-radius:11px;background:#EA4335;transform-origin:0 50%"></div></div>'
+    + '<div class="hand hide" id="rkT" style="position:absolute;left:40px;top:1168px;font-size:36px;color:#EA4335">шанс помилки</div>'
+    + sk.svg(1080, 1240, sk.scribble(815, 990, 190, 180, sw=8), sid="glX")
+    # the fence: instructions + the (off) web row — nothing gets out
+    + sk.svg(1080, 1240, sk.rect(60, 462, 960, 378, stroke="green", sw=7), sid="fence")
     + '</div></div></div>')
+k.matte("half1", HALF0, round(HALF1 - HALF0, 3))
 
 
 @beat
@@ -305,7 +308,7 @@ def b_board():
     return js("""
   tl.to("#oneP", {scale: 1.25, duration: 0.35, ease: "power2.in"}, @koly-0.15);
   h.show("#bd", @koly-0.15);
-  h.sheetIn("#bdS", @koly-0.15, 930);
+  h.halfIn("#bdS", @koly-0.15);
   tl.set("#one", {autoAlpha: 0}, @koly+0.6);
   h.write("#bdL", @koly+0.25, 0.35);
   h.write("#bdT", @koly+0.45, 0.6);
@@ -339,7 +342,7 @@ def b_board():
   h.bump("#fI", @propysaty);
   h.bump("#chS", @skrypty2);
   h.draw("#fence", @nikoly-0.1, 0.9);
-  h.sheetOut("#bdS", @instruktsii2+0.25, 930);
+  h.halfOut("#bdS", @instruktsii2+0.25);
 """)
 
 
@@ -462,8 +465,8 @@ def main():
         for c in SFX:
             assert not (a <= c["t"] < b), ("sfx in no_paint", c)
     head = [SKETCH_JS, "  var h = sketchHelpers(tl);",
-            '  gsap.set("#vid", {transformOrigin: "540px 900px"});',
-            '  tl.fromTo("#vid", {scale: 1}, {scale: 1.045, duration: %.3f, ease: "none"}, 0);' % DUR]
+            '  gsap.set("#vid, .plate.matte", {transformOrigin: "540px 900px"});',
+            '  tl.fromTo("#vid, .plate.matte", {scale: 1}, {scale: 1.045, duration: %.3f, ease: "none"}, 0);' % DUR]
     doc = k.document(
         title=u"Reel 61 — агент нічого не вигадує",
         plate="assets/base.mp4",

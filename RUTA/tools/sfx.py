@@ -154,6 +154,5 @@ if __name__ == "__main__":
     if sys.argv[1] == "synth":
         os.makedirs(KIT, exist_ok=True)
         synth_kaching()
-        synth_kit()
     elif sys.argv[1] == "mix":
         mix(sys.argv[2])

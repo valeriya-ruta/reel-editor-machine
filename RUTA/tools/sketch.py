@@ -444,10 +444,10 @@ function sketchHelpers(tl) {
   // §0c — her plate moves. plateDown: push her down by d px (spring), so a
   // panel/card above her never sits on her head. plateUp: back to full frame.
   function plateDown(t, d, dur) {
-    tl.to("#platebox", {y: d, duration: dur || 0.75, ease: SP}, t);
+    tl.to("#platebox, #mattebox", {y: d, duration: dur || 0.75, ease: SP}, t);
   }
   function plateUp(t, dur) {
-    tl.to("#platebox", {y: 0, duration: dur || 0.6, ease: "power3.inOut"}, t);
+    tl.to("#platebox, #mattebox", {y: 0, duration: dur || 0.6, ease: "power3.inOut"}, t);
   }
   // halfscreen / mockup sheet: the panel drops in from the top edge while she
   // is pushed down by the same move; out = the panel rolls back up and she
@@ -465,7 +465,21 @@ function sketchHelpers(tl) {
     tl.set(sel, {autoAlpha: 0}, t + dur + 0.02);
     plateUp(t + 0.05, dur + 0.1);
   }
-  return {plateDown: plateDown, plateUp: plateUp, sheetIn: sheetIn, sheetOut: sheetOut,
+  // halfscreen — her §00.3.3 geometry: the panel down to y 1240, her video
+  // down 330 px, both in 0.85 s on the slide curve; her cut-out (k.matte over
+  // the span) keeps her head in front of the panel's lower edge.
+  var SLIDE_E = "cubic-bezier(.65,0,.25,1)";
+  function halfIn(sel, t) {
+    tl.set(sel, {autoAlpha: 1}, t);
+    tl.fromTo(sel, {y: -1300}, {y: 0, duration: 0.85, ease: "power3.inOut", immediateRender: false}, t);
+    tl.to("#platebox, #mattebox", {y: 330, duration: 0.85, ease: "power3.inOut"}, t);
+  }
+  function halfOut(sel, t) {
+    tl.to(sel, {y: -1300, duration: 0.85, ease: "power3.inOut"}, t);
+    tl.set(sel, {autoAlpha: 0}, t + 0.87);
+    tl.to("#platebox, #mattebox", {y: 0, duration: 0.85, ease: "power3.inOut"}, t);
+  }
+  return {halfIn: halfIn, halfOut: halfOut, plateDown: plateDown, plateUp: plateUp, sheetIn: sheetIn, sheetOut: sheetOut,
           draw: draw, undraw: undraw, write: write, pop: pop, show: show, out: out, fadeOut: fadeOut,
           bump: bump, wiggle: wiggle, think: think, toggle: toggle, type: type, count: count,
           boardIn: boardIn, boardOut: boardOut, pan: pan};
