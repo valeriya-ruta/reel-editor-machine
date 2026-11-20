@@ -1,0 +1,327 @@
+[
+ {
+  "t": 0.15,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 0.9,
+  "name": "pencil",
+  "db": -4
+ },
+ {
+  "t": 2.211,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 3.188,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 4.642,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 6.422,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 7.183,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 7.683,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 9.943,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 11.139,
+  "name": "pencil",
+  "db": -4
+ },
+ {
+  "t": 12.517,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 12.967,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 14.457,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 15.597,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 18.657,
+  "name": "pencil",
+  "db": -4
+ },
+ {
+  "t": 20.05,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 21.07,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 22.373,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 24.023,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 24.55,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 26.37,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 27.57,
+  "name": "key-press",
+  "db": 0
+ },
+ {
+  "t": 30.27,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 33.806,
+  "name": "kaching",
+  "db": 0
+ },
+ {
+  "t": 34.863,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 35.903,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 36.803,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 38.47,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 40.689,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 41.389,
+  "name": "pencil",
+  "db": -4
+ },
+ {
+  "t": 44.577,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 46.017,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 48.117,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 49.524,
+  "name": "whoosh-short",
+  "db": -3
+ },
+ {
+  "t": 51.304,
+  "name": "pencil",
+  "db": -4
+ },
+ {
+  "t": 53.617,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 56.521,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 57.0,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 57.35,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 59.515,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 60.917,
+  "name": "ping",
+  "db": 0
+ },
+ {
+  "t": 62.857,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 65.338,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 69.867,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 72.27,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 74.21,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 77.083,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 79.563,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 81.009,
+  "name": "ping",
+  "db": 0
+ },
+ {
+  "t": 82.814,
+  "name": "pencil",
+  "db": -4
+ },
+ {
+  "t": 84.014,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 84.583,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 87.623,
+  "name": "typing",
+  "db": -4
+ },
+ {
+  "t": 89.853,
+  "name": "typing",
+  "db": -4
+ },
+ {
+  "t": 90.573,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 94.5,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 97.751,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 100.663,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 102.723,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 103.652,
+  "name": "notification",
+  "db": 0
+ },
+ {
+  "t": 104.202,
+  "name": "ping",
+  "db": -3
+ },
+ {
+  "t": 107.63,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 109.133,
+  "name": "whoosh-short",
+  "db": -2
+ },
+ {
+  "t": 109.433,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 110.333,
+  "name": "key-press",
+  "db": 0
+ }
+]

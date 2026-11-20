@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 44 — скільки коштує монтаж з Клодом</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+    @font-face {
+      font-family: "ProductSans";
+      src: url("assets/fonts/ProductSans-Bold.ttf");
+      font-weight: 900; font-style: normal; font-display: block;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px;
+            overflow: hidden; background: #000;
+            font-family: "ProductSans", system-ui, sans-serif;
+      --surface:        #fffcfd;
+      --container:      #fbeef2;
+      --container-high: #f4dfe5;
+      --graphite:       rgba(23,20,28,0.13);
+      --accent:         #b4122f;
+      --accent-deep:    #8d0d24;
+      --pink:           #ff6e9c;
+      --ink:            #17141c;
+
+      --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
+      --lit-blush:  linear-gradient(115deg, #ffffff 0%, #fff7fa 100%);
+      --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
+      --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
+      --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
+
+      --rim: inset 0 1.5px 0 rgba(255,255,255,0.92),
+             inset 0 -1.5px 0 rgba(255,255,255,0.14),
+             inset 0 0 0 1px rgba(255,255,255,0.28);
+      --rim-dark: inset 0 1.5px 0 rgba(255,255,255,0.16),
+                  inset 0 0 0 1px rgba(255,255,255,0.08);
+      --rim-glass: inset 0 2px 0 rgba(255,255,255,0.70),
+                   inset 0 -2px 0 rgba(255,255,255,0.10),
+                   inset 0 0 0 1.5px rgba(255,255,255,0.30);
+
+      /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
+         Light coming off the object, not the object sitting on a surface. */
+      --glow: drop-shadow(0 0 10px rgba(255,196,218,0.95))
+              drop-shadow(0 0 26px rgba(255,110,156,0.85))
+              drop-shadow(0 0 64px rgba(255,110,156,0.55))
+              drop-shadow(0 0 120px rgba(255,110,156,0.32));
+      --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
+                   drop-shadow(0 0 60px rgba(255,110,156,0.30));
+
+      --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
+              drop-shadow(0 24px 48px rgba(26,30,39,0.14));
+      --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))
+                 drop-shadow(0 12px 24px rgba(26,30,39,0.12));
+ }
+    .plate { position: absolute; inset: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    #scrim { position: absolute; left: 20px; top: 1247px;
+             width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png");
+             background-size: 100% 100%; background-repeat: no-repeat;
+             opacity: 0; visibility: hidden; pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; top: 1413px;
+           height: 118px; line-height: 118px; text-align: center;
+           color: #fff; font-size: 90px; font-weight: 900;
+           letter-spacing: -0.015em; white-space: nowrap;
+           opacity: 0; visibility: hidden; }
+    .cap.inv { color: var(--ink); }
+    .g { position: absolute; left: 0; top: 40px; width: 1080px;
+         height: 600px; opacity: 0; visibility: hidden; }
+    .g.full { top: 0; height: 1920px; }
+
+    /* §5a.9 — glass over her footage is the house look. Panels only; an
+       edge-to-edge frosted ground blurs her out of her own reel. */
+    .glass { background: rgba(255,255,255,0.15);
+             -webkit-backdrop-filter: blur(24px) saturate(1.4);
+             backdrop-filter: blur(24px) saturate(1.4);
+             box-shadow: var(--rim); filter: var(--cast); }
+
+    /* A takeover: a tinted pane laid ON the footage, with a real margin so it
+       reads as an object rather than a blur applied to the video. */
+    /* The inset pane is a *pane*: 44/64 margin so the footage shows past it,
+       and corners, because a full-bleed hard-cornered rectangle is a bug she
+       has reported. base_css() squircles it; this radius is the fallback. */
+    .ground { position: absolute; left: 44px; top: 64px;
+              width: 992px; height: 1792px; border-radius: 68px;
+              background: linear-gradient(158deg, rgba(196,20,52,0.62) 0%,
+                          rgba(141,13,36,0.70) 100%);
+              -webkit-backdrop-filter: blur(30px) saturate(1.5);
+              backdrop-filter: blur(30px) saturate(1.5);
+              box-shadow: var(--rim-glass); filter: var(--cast); }
+
+    .card { position: absolute; background: var(--lit-blush);
+            filter: var(--cast); box-shadow: var(--rim); }
+    .card.ink { background: var(--lit-ink); box-shadow: var(--rim-dark); }
+    .card.accent { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+
+    .tile { position: absolute; display: grid; place-items: center;
+            background: var(--lit-blush); filter: var(--cast);
+            box-shadow: var(--rim); }
+
+    /* §5a.3 — bar rhythm. One thick heading, then ragged body. Uniform bars
+       read as a loading state; ragged ones read as an abstracted screen. */
+    .ph { display: block; height: 66px; border-radius: 18px;
+          background: var(--lit-accent); margin-bottom: 26px;
+          box-shadow: var(--rim-dark); }
+    .pr { display: block; height: 40px; border-radius: 12px;
+          background: var(--graphite); margin-bottom: 18px; }
+    .pr:nth-of-type(2) { width: 94%; }
+    .pr:nth-of-type(3) { width: 71%; }
+    .pr:nth-of-type(4) { width: 43%; }
+
+    .phone { position: absolute; background: var(--lit-blush);
+             overflow: hidden; filter: var(--cast); box-shadow: var(--rim); }
+    .phone video, .phone img { width: 100%; height: 100%; object-fit: cover;
+                               display: block; }
+
+    /* a value in its own card — her reference's "big number" pattern, minus
+       the label, because a graphic here carries no words */
+    .valcard { position: absolute; background: rgba(255,255,255,0.16);
+               -webkit-backdrop-filter: blur(16px) saturate(1.3);
+               backdrop-filter: blur(16px) saturate(1.3);
+               box-shadow: var(--rim-dark);
+               display: grid; place-items: center; }
+    .valcard span { color: #fff; font-weight: 900; letter-spacing: -0.04em; }
+
+    .wire { fill: none; stroke-width: 20; stroke-linecap: round;
+            filter: drop-shadow(0 8px 18px rgba(26,30,39,0.22)); }
+    .node { fill: #fdf6f6; stroke: #b4122f; stroke-width: 16;
+            filter: drop-shadow(0 10px 22px rgba(26,30,39,0.24)); }
+    .node.hub { fill: #b4122f; stroke: #fff; }
+
+    /* §5a.10 — the glow rides a WRAPPER, never the clipped element itself.
+       clip-path is applied *after* filter, so a drop-shadow declared on the
+       same element as the clip is cut away with everything else outside the
+       silhouette and the object ends up with no light at all. Put the clip on
+       the shape and the filter on its parent: the parent filters the already
+       clipped bitmap, so the light traces the squircle and survives. */
+    .lit { position: absolute; inset: 0; pointer-events: none;
+           filter: var(--glow); }
+    .lit.soft { filter: var(--glow-soft); }
+
+    /* Emoji are images, never glyphs. The render runs on someone else's
+       Chrome, so a literal 💩 in the HTML comes out in whatever emoji font
+       that machine has — Noto on the cloud renderer, Segoe on hers, Apple on
+       nobody's. She wants the Apple set, so the artwork ships in assets/emoji
+       and the glyph never appears in a composition. */
+    .emoji { display: block; width: auto; image-rendering: auto; }
+
+    .halo { position: absolute; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(255,110,156,0.5) 0%,
+                        rgba(255,110,156,0) 70%); }
+    .ring { position: absolute; border-radius: 50%; pointer-events: none;
+            border: 18px solid rgba(255,110,156,0.92);
+            filter: drop-shadow(0 0 40px rgba(255,110,156,0.55)); }
+
+    /* ---- takeovers (STYLE.md 2c) ----
+       The graphic owns the frame: the plate is gone, so none of the
+       over-footage rules apply — no glow budget, no band discipline, ink type
+       on a light ground. Lives here rather than per-reel because every reel
+       from 9 onwards needs it. A takeover that does not bleed off at least
+       two edges reads as a slide, not a takeover. */
+    .tk { position: absolute; inset: 0; }
+    .tk.paper { background: var(--surface); }
+    .tk.white { background: #ffffff; }
+    .tk.blush { background: linear-gradient(150deg,#ffffff 0%,#fffafc 55%,
+                                            #fdf4f8 100%); }
+    /* graph paper — the texture the reference takeovers all have. 60px cells
+       at 5.8% ink: visible, never a pattern you read. */
+    .gp { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px),
+            repeating-linear-gradient(90deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px); }
+    /* horizontal rules only — a transcript or a list is ruled paper, not
+       graph paper, and the difference is what makes it read as an export. */
+    .gl { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.05) 0 1px,
+                                      transparent 1px 175px); }
+
+    /* the finished artefact, in her system — one class at any aspect ratio */
+    .dk { position: absolute; overflow: hidden; border-radius: 28px;
+          background: var(--lit-blush); box-shadow: var(--rim);
+          filter: var(--cast); }
+    .dk i { position: absolute; display: block; }
+    .dk .hb { left: 30px; top: 30px; height: 20px; border-radius: 6px;
+              background: var(--lit-accent); }
+    .dk .rr { left: 30px; height: 9px; border-radius: 4px;
+              background: rgba(23,20,28,0.22); }
+    .dk .pb { border-radius: 16px; background: var(--lit-pink);
+              box-shadow: var(--rim-dark); }
+
+    @font-face { font-family: "Hand"; src: url("assets/fonts/Excalifont.ttf") format("truetype");
+                 font-display: block; }
+    @font-face { font-family: "Cap"; src: url("assets/fonts/ProductSans-Bold.ttf") format("truetype");
+                 font-weight: 900; font-display: block; }
+    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-cyrillic-ext.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-cyrillic.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-symbols.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0001-000C, U+000E-001F, U+007F-009F, U+20DD-20E0, U+20E2-20E4, U+2150-218F, U+2190, U+2192, U+2194-2199, U+21AF, U+21E6-21F0, U+21F3, U+2218-2219, U+2299, U+22C4-22C6, U+2300-243F, U+2440-244A, U+2460-24FF, U+25A0-27BF, U+2800-28FF, U+2921-2922, U+2981, U+29BF, U+29EB, U+2B00-2BFF, U+4DC0-4DFF, U+FFF9-FFFB, U+10140-1018E, U+10190-1019C, U+101A0, U+101D0-101FD, U+102E0-102FB, U+10E60-10E7E, U+1D2C0-1D2D3, U+1D2E0-1D37F, U+1F000-1F0FF, U+1F100-1F1AE, U+1F1E6-1F1FF, U+1F30D-1F30F, U+1F315, U+1F31C, U+1F31E, U+1F320-1F32C, U+1F336, U+1F378, U+1F37D, U+1F382, U+1F393-1F39F, U+1F3A7-1F3A8, U+1F3AC-1F3AF, U+1F3C2, U+1F3C4-1F3C6, U+1F3CA-1F3CE, U+1F3D4-1F3E0, U+1F3ED, U+1F3F1-1F3F3, U+1F3F5-1F3F7, U+1F408, U+1F415, U+1F41F, U+1F426, U+1F43F, U+1F441-1F442, U+1F444, U+1F446-1F449, U+1F44C-1F44E, U+1F453, U+1F46A, U+1F47D, U+1F4A3, U+1F4B0, U+1F4B3, U+1F4B9, U+1F4BB, U+1F4BF, U+1F4C8-1F4CB, U+1F4D6, U+1F4DA, U+1F4DF, U+1F4E3-1F4E6, U+1F4EA-1F4ED, U+1F4F7, U+1F4F9-1F4FB, U+1F4FD-1F4FE, U+1F503, U+1F507-1F50B, U+1F50D, U+1F512-1F513, U+1F53E-1F54A, U+1F54F-1F5FA, U+1F610, U+1F650-1F67F, U+1F687, U+1F68D, U+1F691, U+1F694, U+1F698, U+1F6AD, U+1F6B2, U+1F6B9-1F6BA, U+1F6BC, U+1F6C6-1F6CF, U+1F6D3-1F6D7, U+1F6E0-1F6EA, U+1F6F0-1F6F3, U+1F6F7-1F6FC, U+1F700-1F80B, U+1F810-1F847, U+1F850-1F859, U+1F860-1F887, U+1F890-1F8AD, U+1F8B0-1F8BB, U+1F8C0-1F8C1, U+1F8D0-1F8D8, U+1F900-1F90B, U+1F93B, U+1F946, U+1F984, U+1F996, U+1F9E9, U+1FA00-1FA6F, U+1FA70-1FA7C, U+1FA80-1FAC6, U+1FAC8, U+1FACC-1FADD, U+1FADF-1FAEB, U+1FAEF-1FAFA, U+1FB00-1FBFF; }
+    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-latin-ext.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-latin.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    
+    #root { --ink: #1e1e1e; --gb: #4285F4; --gr: #EA4335; --gy: #FBBC04; --gg: #34A853;
+            --pb: #a5d8ff; --pr: #ffc9c9; --py: #ffec99; --pg: #b2f2bb;
+            --paper: #ffffff; --line: #dadce0; --sub: #5f6368;
+            --e1: 0 1px 2px rgba(60,64,67,.30), 0 1px 3px 1px rgba(60,64,67,.15);
+            --e3: 0 4px 8px 3px rgba(60,64,67,.15), 0 1px 3px rgba(60,64,67,.30);
+            --e5: 0 8px 12px 6px rgba(60,64,67,.15), 0 4px 4px rgba(60,64,67,.30); }
+    .cap { font-family: "Cap", system-ui, sans-serif !important; }
+    .hand { font-family: "Hand", "Cap", sans-serif; color: var(--ink); line-height: 1.12;
+            letter-spacing: 0; }
+    .gs { font-family: "GSans", "Cap", sans-serif; color: #202124; letter-spacing: -0.01em; }
+    .sk { position: absolute; left: 0; top: 0; overflow: visible; }
+    .sk .dr { stroke-dasharray: 1 2; stroke-dashoffset: 1.05; }
+    .sk .dr.dash { stroke-dasharray: 0.03 0.025; stroke-dashoffset: 0; }
+
+    /* a Material card: white, 28px corners, elevation shadow — Google's side */
+    .gcard { position: absolute; background: #fff; border-radius: 28px; box-shadow: var(--e3); }
+    .gcard.flat { box-shadow: var(--e1); }
+    /* paper: the Excalidraw side — a white sheet with a hand-drawn edge (draw the
+       edge with sk.rect inside it), a whisker of tilt, a soft cast shadow */
+    .paper { position: absolute; background: #fff; border-radius: 22px;
+             box-shadow: 0 18px 40px rgba(0,0,0,.22), 0 2px 6px rgba(0,0,0,.12); }
+    .pill { position: absolute; display: flex; align-items: center; gap: 18px;
+            background: #fff; border-radius: 999px; box-shadow: var(--e3);
+            font-family: "GSans", sans-serif; color: #202124; }
+    .chip { display: inline-flex; align-items: center; gap: 12px; padding: 0 30px;
+            height: 72px; border-radius: 20px; border: 2px solid var(--line); background: #fff;
+            font-family: "GSans", sans-serif; font-weight: 500; font-size: 34px; color: #3c4043; }
+    .chip.on { background: #d3e3fd; border-color: #d3e3fd; color: #041e49; }
+    .chip.cg { background: #c4eed0; border-color: #c4eed0; color: #072711; }
+    .chip.cr { background: #ffdad6; border-color: #ffdad6; color: #410002; }
+    .chip.cy { background: #ffefc2; border-color: #ffefc2; color: #3d2e00; }
+    /* the four-dot loader, Google's "thinking" */
+    .dots { position: absolute; display: flex; gap: 18px; }
+    .dots i { display: block; width: 30px; height: 30px; border-radius: 50%; }
+    .dots i:nth-child(1) { background: var(--gb); } .dots i:nth-child(2) { background: var(--gr); }
+    .dots i:nth-child(3) { background: var(--gy); } .dots i:nth-child(4) { background: var(--gg); }
+    /* Material toggle */
+    .tgl { position: absolute; width: 104px; height: 64px; border-radius: 32px; background: #e1e3e1;
+           border: 4px solid #747775; }
+    .tgl b { position: absolute; left: 10px; top: 10px; width: 36px; height: 36px; border-radius: 50%;
+             background: #747775; }
+    /* whiteboard: Excalidraw's canvas — white with a faint dot grid */
+    .board { position: absolute; inset: 0; background-color: #fff;
+             background-image: radial-gradient(circle, rgba(30,30,30,.16) 2px, transparent 2.6px);
+             background-size: 44px 44px; background-position: 11px 11px; }
+    /* free strokes over her footage need to survive a busy background */
+    .over-plate .dr, .over-plate .hand { filter: drop-shadow(0 2px 5px rgba(0,0,0,.35)); }
+    .wbox { position: absolute; }
+    .num { font-family: "GSans", sans-serif; font-weight: 700; letter-spacing: -0.04em; color: #202124; }
+
+
+.hide { opacity: 0; visibility: hidden; }
+.sk .sf, .sk .mk { opacity: 0; visibility: hidden; }
+.ab { position: absolute; }
+.bub { position: absolute; padding: 22px 30px; border-radius: 30px; font-family: "GSans", sans-serif;
+       font-size: 36px; font-weight: 500; line-height: 1.25; max-width: 560px; }
+.bub.in { background: #f1f3f4; color: #202124; border-bottom-left-radius: 8px; }
+.bub.me { background: #d3e3fd; color: #041e49; border-bottom-right-radius: 8px; }
+.av { position: absolute; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
+      font-family: "GSans", sans-serif; font-weight: 700; font-size: 30px; color: #fff; }
+.lbl { font-family: "GSans", sans-serif; font-size: 26px; font-weight: 700; letter-spacing: .14em;
+       color: #5f6368; text-transform: uppercase; position: absolute; }
+.row { position: absolute; display: flex; align-items: center; gap: 26px; font-family: "GSans", sans-serif; }
+.track { position: absolute; height: 34px; border-radius: 17px; background: #e8eaed; overflow: hidden; }
+.track i { display: block; height: 100%; width: 100%; border-radius: 17px; transform-origin: 0 50%; }
+.wrap { position: absolute; display: flex; flex-wrap: wrap; gap: 16px; }
+
+    .ground { clip-path: path('M 883.2 0 c 36.293 0 54.439 0 70.765 8.318 a 68 68 0 0 1 29.717 29.717 c 8.318 16.325 8.318 34.472 8.318 70.765 L 992 1683.2 c 0 36.293 0 54.439 -8.318 70.765 a 68 68 0 0 1 -29.717 29.717 c -16.325 8.318 -34.472 8.318 -70.765 8.318 L 108.8 1792 c -36.293 0 -54.439 0 -70.765 -8.318 a 68 68 0 0 1 -29.717 -29.717 c -8.318 -16.325 -8.318 -34.472 -8.318 -70.765 L 0 108.8 c 0 -36.293 0 -54.439 8.318 -70.765 a 68 68 0 0 1 29.717 -29.717 c 16.325 -8.318 34.472 -8.318 70.765 -8.318 Z'); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="87.550" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="87.550" data-media-start="0"
+             muted playsinline></video>
+<div class="g" id="q" style="top:0;height:700px"><div class="gcard" id="qC" style="left:90px;top:90px;width:900px;height:500px"><div class="lbl hide" id="qL" style="left:50px;top:44px">Монтаж з Клодом</div><div class="gs hide" id="qT" style="position:absolute;left:48px;top:84px;font-size:64px;font-weight:700">за місяць</div><div class="hand hide" id="qQ" style="position:absolute;left:700px;top:20px;font-size:190px;color:#EA4335">?</div><div class="hand hide" id="qF" style="position:absolute;left:50px;top:200px;font-size:58px">рілси &#215; юсадж = ?</div><svg class="sk" id="qX" viewBox="0 0 900 500" width="900" height="500"><path class="dr" pathLength="1" d="M41.4 208.1 C45.7 218.7 58.6 271.0 67.0 271.7 C75.5 272.5 83.1 213.1 91.9 212.6 C100.8 212.0 111.0 269.6 119.9 268.7 C128.9 267.8 137.0 207.7 145.7 207.1 C154.5 206.4 163.4 264.7 172.6 264.9 C181.7 265.0 191.5 207.9 200.5 207.9 C209.5 207.9 217.6 264.7 226.5 264.7 C235.4 264.7 245.0 207.1 254.0 208.0 C263.0 208.8 271.5 268.5 280.5 269.6 C289.4 270.7 298.8 214.0 307.7 214.3 C316.5 214.7 325.0 272.6 333.6 271.7 C342.2 270.8 350.2 209.2 359.2 208.9 C368.2 208.6 378.6 269.2 387.5 269.8 C396.5 270.4 404.0 212.9 412.9 212.5 C421.8 212.1 432.2 268.4 441.0 267.2 C449.8 266.1 457.2 204.7 465.6 205.8 C474.1 206.8 482.7 272.6 491.9 273.5 C501.0 274.4 511.1 212.2 520.4 211.1 C529.8 209.9 539.5 267.4 548.2 266.5 C556.8 265.5 563.9 205.2 572.4 205.4 C581.0 205.6 595.0 257.4 599.5 267.8" fill="none" stroke="#EA4335" stroke-width="8.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="qG" viewBox="0 0 900 500" width="900" height="500"><path class="dr" pathLength="1" d="M60.3 298.8 C60.2 325.4 -33.5 432.0 59.8 458.7 C153.2 485.4 526.9 458.9 620.3 458.9" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M69.1 430.4 C82.7 417.1 129.2 352.0 150.9 350.3 C172.7 348.7 179.7 425.7 199.4 420.4 C219.2 415.1 247.7 315.3 269.4 318.6 C291.0 322.0 307.5 438.8 329.4 440.5 C351.2 442.3 380.1 335.7 400.4 329.1 C420.6 322.5 431.1 403.9 451.0 400.9 C470.8 398.0 494.7 315.0 519.4 311.3 C544.1 307.6 586.0 367.5 599.3 378.8" fill="none" stroke="#4285F4" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="qGL" style="position:absolute;left:650px;top:360px;font-size:56px;color:#4285F4">юсадж</div></div></div>
+<div class="g" id="tk" style="top:0;height:700px"><div class="gcard hide" id="tA" style="left:90px;top:110px;width:420px;height:470px"><div class="gs" style="position:absolute;left:40px;top:36px;font-size:44px;font-weight:700">Задача</div><svg class="sk" id="tAB" viewBox="0 0 420 470" width="420" height="470"><path class="dr" pathLength="1" d="M40.3 120.1 C52.9 119.7 67.0 121.3 76.0 119.4 M77.3 120.5 C76.8 130.2 75.2 139.2 74.8 155.8 M76.1 156.9 C67.0 154.5 56.9 155.5 39.3 156.6 M39.3 155.2 C39.2 141.5 39.7 129.2 40.3 120.1" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M41.3 120.5 C55.1 120.3 68.1 119.5 76.9 119.7 M76.7 118.6 C75.4 131.1 75.3 143.0 75.5 156.1 M76.0 156.4 C67.2 156.7 56.5 156.9 39.4 154.9 M39.5 156.4 C40.7 143.4 38.5 131.8 40.9 118.6" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M101.3 141.9 C200.6 137.6 302.6 136.8 360.5 134.4" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M39.1 184.9 C49.3 185.7 58.0 185.1 77.1 184.9 M76.9 184.4 C76.0 195.9 75.2 204.7 75.1 222.0 M74.7 220.3 C64.3 222.1 54.8 220.3 41.3 220.8 M39.5 221.6 C40.1 207.6 40.4 196.4 41.1 184.5" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M39.5 185.5 C53.5 185.1 66.6 183.9 77.3 184.0 M75.3 186.1 C77.4 192.1 74.7 202.5 76.1 220.6 M76.0 222.3 C63.9 221.0 48.3 219.5 39.5 220.2 M40.4 219.9 C40.0 208.8 39.4 196.6 40.9 185.8" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M99.8 205.1 C190.4 206.4 282.0 204.9 330.3 203.7" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M38.8 250.0 C50.2 248.9 62.7 250.0 76.6 248.6 M75.1 250.2 C75.9 257.7 75.9 268.3 75.8 285.8 M75.0 284.7 C65.0 287.3 52.6 286.6 40.8 286.6 M41.2 285.9 C39.8 273.7 41.1 263.5 40.3 251.4" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M38.6 248.8 C50.0 249.1 59.3 250.4 77.4 250.2 M77.2 250.2 C75.1 261.9 75.8 271.1 75.0 287.2 M74.8 284.7 C65.7 284.6 56.0 286.4 38.8 287.2 M39.6 287.3 C40.1 272.6 39.9 259.3 38.6 249.0" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M100.5 268.5 C146.9 266.1 193.9 267.2 301.1 269.7" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="tAP" viewBox="0 0 420 470" width="420" height="470"><path class="dr" pathLength="1" d="M330.3 59.2 C327.5 48.9 328.6 45.2 329.6 42.5 C330.5 39.8 331.6 37.5 333.5 35.6 C335.3 33.6 338.1 32.0 340.5 30.9 C342.8 29.7 344.8 28.7 347.5 28.5 C350.1 28.3 353.8 29.0 356.4 29.7 C359.0 30.4 361.0 31.2 363.1 32.8 C365.3 34.4 368.1 36.9 369.6 39.4 C371.0 42.0 371.5 45.3 371.7 48.3 C371.8 51.3 371.3 54.7 370.4 57.4 C369.5 60.1 367.9 62.7 366.4 64.6 C364.8 66.5 363.4 67.6 361.1 68.7 C358.8 69.8 355.7 71.0 352.7 71.2 C349.7 71.5 345.9 71.0 343.2 70.2 C340.6 69.4 338.9 68.2 336.7 66.4 C334.6 64.6 331.8 61.7 330.3 59.2 C328.8 56.8 327.8 54.5 327.7 51.7 C327.5 48.9 328.6 45.2 329.6 42.5" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M329.1 44.9 C333.9 31.7 338.0 30.1 340.5 28.9 C343.0 27.7 344.4 27.3 346.9 27.3 C349.3 27.2 352.4 27.3 355.0 28.5 C357.6 29.7 360.2 33.0 362.7 34.6 C365.1 36.3 367.9 36.2 369.6 38.3 C371.2 40.4 372.3 44.4 372.8 47.2 C373.2 50.0 373.5 52.3 372.3 55.1 C371.1 57.8 367.4 61.1 365.6 63.7 C363.7 66.4 363.2 69.8 361.2 71.0 C359.2 72.2 356.5 70.7 353.4 70.9 C350.4 71.1 345.7 72.6 342.9 72.2 C340.2 71.7 339.2 70.6 336.9 68.3 C334.6 66.0 330.6 61.1 329.1 58.6 C327.5 56.0 327.7 55.3 327.8 53.0 C327.8 50.8 328.4 48.0 329.1 44.9 C329.8 41.8 330.1 37.1 332.0 34.4 C333.9 31.7 338.0 30.1 340.5 28.9" fill="none" stroke="#1e1e1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M312.5 99.8 C314.2 96.4 316.1 84.2 322.5 79.8 C328.9 75.5 341.6 73.5 350.9 73.4 C360.3 73.3 372.5 74.7 378.7 79.0 C384.9 83.4 386.7 96.1 388.3 99.5" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="lbl" style="left:40px;top:340px">токени</div><div class="track" style="left:40px;top:390px;width:340px"><i id="tAF" style="background:#34A853"></i></div></div><div class="gcard hide" id="tB" style="left:570px;top:110px;width:420px;height:470px"><div class="gs" style="position:absolute;left:40px;top:36px;font-size:44px;font-weight:700">Задача</div><svg class="sk" id="tBB" viewBox="0 0 420 470" width="420" height="470"><path class="dr" pathLength="1" d="M38.7 118.8 C49.6 119.7 58.5 120.7 76.5 120.5 M76.7 120.9 C74.8 130.9 75.8 140.7 77.0 156.5 M74.8 156.8 C66.0 155.6 59.1 154.7 40.5 154.6 M40.4 155.3 C40.7 146.7 38.9 135.5 39.2 119.0" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M41.2 121.4 C47.9 121.2 57.9 118.9 76.9 119.0 M75.3 118.7 C75.7 129.8 77.1 139.3 76.6 154.7 M76.3 156.9 C67.3 156.9 60.3 156.6 40.7 156.7 M38.7 154.6 C41.0 143.5 39.5 129.9 39.4 119.6" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M99.5 142.4 C194.3 141.8 290.1 139.6 359.1 136.7" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M40.5 185.6 C50.0 184.9 56.7 184.1 76.5 184.0 M76.0 185.7 C77.7 193.6 77.4 202.6 76.6 222.4 M76.2 221.7 C62.8 219.8 48.2 221.6 40.9 222.2 M39.1 221.9 C38.9 208.3 38.9 195.3 41.4 184.9" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M41.2 184.6 C50.6 184.1 59.4 185.0 76.9 184.4 M74.9 184.9 C75.6 197.2 76.5 210.4 77.0 222.4 M74.8 219.6 C66.9 221.6 57.8 220.9 39.8 219.7 M39.5 221.3 C41.5 207.1 40.6 193.1 39.0 185.5" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M100.2 204.2 C172.9 204.6 240.4 203.2 328.1 201.3" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M40.7 249.3 C49.5 249.3 55.5 250.2 76.5 250.1 M75.9 249.0 C76.8 257.8 76.3 265.9 77.4 286.2 M76.5 285.5 C66.9 286.5 56.7 287.4 41.2 285.4 M39.5 286.1 C40.7 271.7 40.5 257.1 39.0 250.8" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M40.6 248.8 C51.3 249.7 62.1 249.4 75.3 249.4 M74.6 250.0 C76.7 259.5 75.8 269.0 75.9 285.7 M75.7 286.8 C62.9 286.7 50.6 285.1 41.0 286.0 M39.6 286.6 C38.3 274.3 39.6 259.0 40.0 250.3" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M99.7 269.7 C146.7 269.0 192.6 269.2 300.2 267.0" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="tBP" viewBox="0 0 420 470" width="420" height="470"><path class="dr" pathLength="1" d="M332.2 38.3 C340.2 29.9 343.2 29.5 345.9 28.9 C348.6 28.2 351.1 27.0 354.0 27.4 C356.9 27.8 360.6 29.3 363.1 31.2 C365.7 33.1 368.0 36.3 369.2 38.8 C370.4 41.4 370.3 43.9 370.6 46.6 C371.0 49.3 371.5 52.5 371.3 55.1 C371.0 57.6 370.3 59.7 368.9 61.7 C367.5 63.8 365.1 65.8 362.9 67.4 C360.6 69.1 357.8 71.1 355.2 71.8 C352.5 72.4 349.6 72.2 346.7 71.5 C343.9 70.9 340.8 69.6 338.2 67.9 C335.6 66.1 332.8 63.3 331.2 61.3 C329.7 59.2 329.4 58.0 328.9 55.3 C328.4 52.6 327.7 47.6 328.2 44.8 C328.8 41.9 330.6 40.5 332.2 38.3 C333.8 36.0 335.6 33.0 337.9 31.5 C340.2 29.9 343.2 29.5 345.9 28.9" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M344.3 27.4 C358.1 28.7 359.8 31.5 362.1 32.9 C364.4 34.3 367.1 34.0 368.9 36.2 C370.7 38.5 372.8 43.6 373.0 46.3 C373.3 49.1 371.0 50.2 370.4 52.7 C369.9 55.3 371.0 59.0 369.6 61.4 C368.2 63.9 364.7 65.9 362.3 67.6 C359.9 69.2 357.8 70.4 355.1 71.3 C352.5 72.2 349.4 73.5 346.3 73.0 C343.2 72.4 338.8 69.5 336.5 67.9 C334.2 66.3 333.6 65.7 332.5 63.4 C331.4 61.0 330.2 56.8 329.6 53.9 C329.1 51.0 328.5 48.8 329.0 46.0 C329.6 43.1 331.7 39.2 332.9 36.7 C334.1 34.1 334.4 32.1 336.3 30.6 C338.2 29.1 341.2 27.9 344.3 27.4 C347.4 26.9 352.1 26.8 355.1 27.7 C358.1 28.7 359.8 31.5 362.1 32.9" fill="none" stroke="#1e1e1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M311.5 100.6 C313.3 97.1 316.1 83.9 322.3 79.4 C328.5 74.9 339.2 73.8 348.7 73.7 C358.2 73.6 372.6 74.5 379.3 78.8 C386.1 83.2 387.5 96.2 389.1 99.7" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="lbl" style="left:40px;top:340px">токени</div><div class="track" style="left:40px;top:390px;width:340px"><i id="tBF" style="background:#EA4335"></i></div></div><div class="hand hide" id="tQ" style="position:absolute;left:250px;top:440px;font-size:70px;color:#EA4335">?</div><div class="hand hide" id="tEq" style="position:absolute;left:512px;top:250px;font-size:80px">=</div></div>
+<div class="g" id="or" style="top:0;height:700px"><div class="pill hide" id="orP" style="left:330px;top:250px;height:110px;padding:0 44px 0 34px;font-size:52px;font-weight:700"><span style="display:inline-block;width:40px;height:40px;border-radius:50%;background:#34A853"></span>орієнтир</div></div>
+<div class="g full" id="bd"><div class="board"></div><div class="lbl hide" id="bL" style="left:100px;top:150px">Підписка Клода</div><div class="num hide" id="b20" style="position:absolute;left:92px;top:180px;font-size:150px">$20</div><div class="gs hide" id="bLim" style="position:absolute;left:520px;top:200px;font-size:36px;font-weight:700">Ліміт на 5 годин</div><div class="track hide" id="bTr" style="left:520px;top:270px;width:460px"><i id="bF" style="background:#4285F4"></i></div><svg class="sk" id="bDiv" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M540.3 449.6 C541.5 508.1 547.6 679.1 547.3 800.9 C546.9 922.6 539.9 1116.8 538.5 1180.0" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="wrap" style="left:80px;top:440px;width:450px"><span class="chip on hide" id="cE">експертні</span><span class="chip on hide" id="cK">на камеру</span><span class="chip on hide" id="cS">суфлер</span><span class="chip cg hide" id="c23">2-3 хв</span></div><div class="wrap" style="left:570px;top:440px;width:450px"><span class="chip cy hide" id="cD">довші</span><span class="chip cr hide" id="c56">5-6 хв</span><span class="chip cy hide" id="cV">багато вставок</span><span class="chip cy hide" id="cP">помилки</span></div><svg class="sk" id="lt0" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="sf" d="M192.7 719.1 C203.9 725.2 204.9 726.4 206.3 728.7 C207.7 731.0 209.1 724.1 210.0 737.7 C210.9 751.3 211.6 786.4 211.6 810.3 C211.5 834.2 210.6 867.4 209.9 881.1 C209.1 894.8 208.4 889.5 207.0 892.4 C205.6 895.3 203.8 897.0 201.6 898.4 C199.4 899.9 207.5 900.8 193.7 901.3 C180.0 901.8 132.8 902.0 118.8 901.5 C104.9 901.0 112.9 900.2 110.1 898.3 C107.4 896.3 103.9 892.4 102.4 889.7 C101.0 887.1 101.9 895.7 101.4 882.3 C100.9 869.0 99.5 833.5 99.4 809.6 C99.3 785.6 100.4 752.1 100.8 738.5 C101.2 724.8 100.4 730.6 101.7 727.7 C103.0 724.8 105.8 722.3 108.5 721.2 C111.2 720.1 103.9 721.5 117.9 721.1 C132.0 720.8 178.7 718.7 192.7 719.1 C206.6 719.6 199.3 722.1 201.6 723.6 C203.9 725.2 204.9 726.4 206.3 728.7" fill="#a5d8ff" stroke="none"/><path class="dr" pathLength="1" d="M192.7 719.1 C203.9 725.2 204.9 726.4 206.3 728.7 C207.7 731.0 209.1 724.1 210.0 737.7 C210.9 751.3 211.6 786.4 211.6 810.3 C211.5 834.2 210.6 867.4 209.9 881.1 C209.1 894.8 208.4 889.5 207.0 892.4 C205.6 895.3 203.8 897.0 201.6 898.4 C199.4 899.9 207.5 900.8 193.7 901.3 C180.0 901.8 132.8 902.0 118.8 901.5 C104.9 901.0 112.9 900.2 110.1 898.3 C107.4 896.3 103.9 892.4 102.4 889.7 C101.0 887.1 101.9 895.7 101.4 882.3 C100.9 869.0 99.5 833.5 99.4 809.6 C99.3 785.6 100.4 752.1 100.8 738.5 C101.2 724.8 100.4 730.6 101.7 727.7 C103.0 724.8 105.8 722.3 108.5 721.2 C111.2 720.1 103.9 721.5 117.9 721.1 C132.0 720.8 178.7 718.7 192.7 719.1 C206.6 719.6 199.3 722.1 201.6 723.6 C203.9 725.2 204.9 726.4 206.3 728.7" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M209.5 735.8 C212.1 832.8 209.0 868.8 208.4 882.5 C207.7 896.2 210.1 888.1 208.6 890.4 C207.0 892.8 201.6 894.6 199.2 896.6 C196.8 898.6 208.2 901.7 194.4 902.5 C180.5 903.2 130.3 901.5 116.3 901.0 C102.3 900.5 113.0 901.4 110.3 899.3 C107.6 897.3 101.9 891.5 99.8 888.8 C97.7 886.0 98.1 895.5 97.8 882.7 C97.6 870.0 98.3 836.4 98.5 812.2 C98.6 787.9 98.3 750.9 98.7 737.3 C99.0 723.8 99.0 733.6 100.5 730.9 C101.9 728.2 104.7 723.2 107.4 721.2 C110.0 719.1 102.8 718.4 116.6 718.5 C130.4 718.5 176.5 721.1 190.2 721.6 C204.0 722.0 196.6 720.1 199.1 721.3 C201.6 722.6 203.4 726.7 205.2 729.1 C206.9 731.5 208.3 722.6 209.5 735.8 C210.7 749.0 212.5 783.9 212.3 808.3 C212.1 832.8 209.0 868.8 208.4 882.5" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M141.8 789.2 C147.5 792.9 175.9 804.2 175.7 811.3 C175.5 818.3 146.2 835.3 140.8 831.6 C135.3 827.9 142.6 796.1 143.0 789.0" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="lt1" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="sf" d="M328.7 719.0 C337.3 723.6 340.7 726.4 342.1 729.1 C343.5 731.8 343.3 724.5 343.5 737.9 C343.8 751.2 343.1 785.5 343.4 809.4 C343.7 833.4 345.2 867.9 345.2 881.6 C345.1 895.4 344.8 889.4 343.3 892.0 C341.9 894.6 339.3 896.1 336.6 897.5 C333.9 898.8 340.9 899.4 327.1 900.0 C313.3 900.7 267.7 901.8 253.7 901.6 C239.6 901.4 245.5 900.5 242.9 898.8 C240.3 897.1 239.5 893.9 238.2 891.3 C236.8 888.7 235.1 896.8 234.8 883.3 C234.6 869.7 236.8 834.3 236.5 810.1 C236.3 785.8 233.5 751.7 233.5 737.9 C233.5 724.2 234.6 730.3 236.4 727.6 C238.2 724.8 241.2 722.9 244.1 721.6 C246.9 720.3 239.4 720.1 253.5 719.7 C267.6 719.2 315.1 718.6 328.7 719.0 C342.3 719.3 332.8 720.2 335.1 721.9 C337.3 723.6 340.7 726.4 342.1 729.1" fill="#a5d8ff" stroke="none"/><path class="dr" pathLength="1" d="M328.7 719.0 C337.3 723.6 340.7 726.4 342.1 729.1 C343.5 731.8 343.3 724.5 343.5 737.9 C343.8 751.2 343.1 785.5 343.4 809.4 C343.7 833.4 345.2 867.9 345.2 881.6 C345.1 895.4 344.8 889.4 343.3 892.0 C341.9 894.6 339.3 896.1 336.6 897.5 C333.9 898.8 340.9 899.4 327.1 900.0 C313.3 900.7 267.7 901.8 253.7 901.6 C239.6 901.4 245.5 900.5 242.9 898.8 C240.3 897.1 239.5 893.9 238.2 891.3 C236.8 888.7 235.1 896.8 234.8 883.3 C234.6 869.7 236.8 834.3 236.5 810.1 C236.3 785.8 233.5 751.7 233.5 737.9 C233.5 724.2 234.6 730.3 236.4 727.6 C238.2 724.8 241.2 722.9 244.1 721.6 C246.9 720.3 239.4 720.1 253.5 719.7 C267.6 719.2 315.1 718.6 328.7 719.0 C342.3 719.3 332.8 720.2 335.1 721.9 C337.3 723.6 340.7 726.4 342.1 729.1" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M346.9 735.3 C346.7 835.3 343.0 867.6 342.6 881.2 C342.2 894.9 346.3 889.8 344.9 892.8 C343.4 895.8 336.9 898.0 333.9 899.2 C330.9 900.3 340.3 899.8 327.0 899.7 C313.7 899.5 267.9 898.7 254.2 898.2 C240.4 897.7 247.0 897.4 244.5 896.6 C242.0 895.8 240.4 896.1 239.2 893.4 C238.0 890.8 238.3 894.7 237.2 880.8 C236.2 866.8 233.5 833.8 232.8 809.7 C232.1 785.6 232.3 749.4 233.1 736.2 C233.9 722.9 235.7 732.0 237.6 730.1 C239.4 728.3 241.5 726.2 244.2 725.0 C246.9 723.7 239.9 723.4 253.9 722.4 C267.9 721.5 313.9 719.2 328.0 719.3 C342.1 719.4 336.0 721.5 338.6 722.8 C341.1 724.1 341.9 724.9 343.3 727.0 C344.7 729.0 346.2 721.3 346.9 735.3 C347.6 749.3 348.1 786.6 347.4 811.0 C346.7 835.3 343.0 867.6 342.6 881.2" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M275.7 786.6 C281.5 790.4 310.8 801.7 311.0 809.4 C311.1 817.0 282.2 836.2 276.4 832.6 C270.7 829.0 276.5 795.1 276.5 787.6" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="lt2" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="sf" d="M462.2 720.3 C474.7 725.3 475.5 726.1 476.8 728.5 C478.0 730.8 479.3 724.6 479.7 738.0 C480.2 751.5 479.3 785.0 479.5 809.0 C479.8 833.0 481.5 868.1 481.3 881.9 C481.1 895.6 480.4 889.2 478.4 891.7 C476.5 894.2 472.4 895.4 469.7 896.9 C467.1 898.4 476.0 900.4 462.5 900.8 C449.1 901.1 403.3 899.4 389.1 899.1 C374.9 898.7 380.0 900.2 377.4 898.7 C374.8 897.1 375.0 892.8 373.7 889.9 C372.4 887.1 370.4 895.0 369.7 881.6 C368.9 868.1 369.3 833.5 369.3 809.5 C369.3 785.5 369.4 750.9 369.8 737.3 C370.1 723.8 370.0 730.6 371.6 728.1 C373.1 725.5 376.4 723.8 379.1 722.3 C381.7 720.7 373.7 719.2 387.6 718.9 C401.4 718.6 448.1 719.4 462.2 720.3 C476.3 721.1 469.9 722.5 472.3 723.9 C474.7 725.3 475.5 726.1 476.8 728.5" fill="#a5d8ff" stroke="none"/><path class="dr" pathLength="1" d="M462.2 720.3 C474.7 725.3 475.5 726.1 476.8 728.5 C478.0 730.8 479.3 724.6 479.7 738.0 C480.2 751.5 479.3 785.0 479.5 809.0 C479.8 833.0 481.5 868.1 481.3 881.9 C481.1 895.6 480.4 889.2 478.4 891.7 C476.5 894.2 472.4 895.4 469.7 896.9 C467.1 898.4 476.0 900.4 462.5 900.8 C449.1 901.1 403.3 899.4 389.1 899.1 C374.9 898.7 380.0 900.2 377.4 898.7 C374.8 897.1 375.0 892.8 373.7 889.9 C372.4 887.1 370.4 895.0 369.7 881.6 C368.9 868.1 369.3 833.5 369.3 809.5 C369.3 785.5 369.4 750.9 369.8 737.3 C370.1 723.8 370.0 730.6 371.6 728.1 C373.1 725.5 376.4 723.8 379.1 722.3 C381.7 720.7 373.7 719.2 387.6 718.9 C401.4 718.6 448.1 719.4 462.2 720.3 C476.3 721.1 469.9 722.5 472.3 723.9 C474.7 725.3 475.5 726.1 476.8 728.5" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M479.9 739.3 C478.5 831.8 480.0 867.1 479.7 880.7 C479.3 894.3 477.3 887.0 476.3 890.0 C475.2 892.9 475.9 896.7 473.5 898.5 C471.2 900.2 476.4 900.1 462.1 900.5 C447.7 900.8 401.1 901.2 387.3 900.6 C373.6 899.9 382.2 897.7 379.6 896.6 C376.9 895.5 372.8 896.1 371.4 893.8 C370.1 891.4 371.5 896.7 371.4 882.6 C371.3 868.4 371.4 832.9 370.9 809.0 C370.4 785.1 368.3 752.5 368.4 739.1 C368.5 725.8 369.4 731.6 371.4 728.9 C373.5 726.2 378.0 724.4 380.7 723.0 C383.4 721.5 374.2 720.5 387.7 720.2 C401.1 719.9 447.6 720.8 461.3 721.4 C475.1 721.9 467.2 722.2 470.2 723.6 C473.1 725.0 477.5 727.0 479.1 729.6 C480.7 732.2 480.0 726.2 479.9 739.3 C479.8 752.4 478.6 784.6 478.6 808.2 C478.5 831.8 480.0 867.1 479.7 880.7" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M412.2 787.0 C418.2 790.8 448.1 802.4 448.2 809.9 C448.4 817.3 419.0 835.5 413.0 831.8 C407.1 828.1 412.8 795.0 412.8 787.6" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="lt3" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="sf" d="M192.1 929.3 C204.6 933.8 205.5 935.0 207.0 937.2 C208.5 939.5 210.7 932.3 211.2 946.0 C211.6 959.7 209.6 995.0 209.5 1019.2 C209.5 1043.5 210.8 1077.6 210.7 1091.4 C210.5 1105.3 210.2 1099.5 208.6 1102.3 C207.0 1105.0 203.9 1106.7 201.2 1108.0 C198.6 1109.3 206.5 1110.0 192.5 1110.1 C178.6 1110.3 131.6 1109.2 117.4 1108.8 C103.2 1108.5 110.2 1109.1 107.5 1107.9 C104.7 1106.7 102.3 1104.2 101.1 1101.7 C99.9 1099.3 100.7 1107.1 100.5 1093.5 C100.2 1079.8 100.0 1044.0 99.8 1019.7 C99.6 995.4 98.9 960.8 99.4 947.5 C100.0 934.3 101.5 942.3 102.9 940.0 C104.4 937.6 105.3 935.1 107.9 933.4 C110.6 931.8 104.8 930.7 118.8 930.0 C132.9 929.3 178.2 928.9 192.1 929.3 C206.0 929.8 199.6 931.2 202.1 932.5 C204.6 933.8 205.5 935.0 207.0 937.2" fill="#a5d8ff" stroke="none"/><path class="dr" pathLength="1" d="M192.1 929.3 C204.6 933.8 205.5 935.0 207.0 937.2 C208.5 939.5 210.7 932.3 211.2 946.0 C211.6 959.7 209.6 995.0 209.5 1019.2 C209.5 1043.5 210.8 1077.6 210.7 1091.4 C210.5 1105.3 210.2 1099.5 208.6 1102.3 C207.0 1105.0 203.9 1106.7 201.2 1108.0 C198.6 1109.3 206.5 1110.0 192.5 1110.1 C178.6 1110.3 131.6 1109.2 117.4 1108.8 C103.2 1108.5 110.2 1109.1 107.5 1107.9 C104.7 1106.7 102.3 1104.2 101.1 1101.7 C99.9 1099.3 100.7 1107.1 100.5 1093.5 C100.2 1079.8 100.0 1044.0 99.8 1019.7 C99.6 995.4 98.9 960.8 99.4 947.5 C100.0 934.3 101.5 942.3 102.9 940.0 C104.4 937.6 105.3 935.1 107.9 933.4 C110.6 931.8 104.8 930.7 118.8 930.0 C132.9 929.3 178.2 928.9 192.1 929.3 C206.0 929.8 199.6 931.2 202.1 932.5 C204.6 933.8 205.5 935.0 207.0 937.2" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M210.2 949.8 C210.7 1041.9 212.6 1077.8 211.8 1091.8 C211.1 1105.9 207.9 1099.5 206.0 1102.5 C204.1 1105.5 202.8 1108.8 200.4 1109.9 C198.1 1110.9 205.9 1108.7 191.8 1108.9 C177.8 1109.2 130.1 1111.9 116.0 1111.4 C101.9 1110.9 109.7 1107.4 107.4 1105.9 C105.0 1104.3 102.5 1104.1 101.7 1102.3 C101.0 1100.5 102.6 1108.4 102.6 1095.0 C102.5 1081.5 101.8 1046.3 101.4 1021.8 C101.0 997.2 100.3 960.9 100.3 947.5 C100.2 934.1 99.7 944.1 101.4 941.2 C103.1 938.2 108.0 931.3 110.4 929.8 C112.8 928.3 101.8 931.7 115.8 932.2 C129.8 932.7 180.4 932.6 194.5 932.6 C208.5 932.6 197.6 931.5 200.1 932.3 C202.6 933.1 207.6 934.5 209.3 937.4 C210.9 940.4 210.0 936.4 210.2 949.8 C210.3 963.3 210.1 994.6 210.4 1018.3 C210.7 1041.9 212.6 1077.8 211.8 1091.8" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M141.9 996.9 C147.6 1000.7 175.9 1012.4 176.0 1019.7 C176.1 1027.0 148.2 1044.5 142.5 1040.6 C136.7 1036.8 141.9 1004.1 141.7 996.8" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="lt4" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="sf" d="M326.6 931.3 C340.3 932.2 340.7 935.2 341.8 937.8 C342.9 940.4 343.9 933.2 344.2 947.0 C344.5 960.7 343.6 996.0 343.7 1020.3 C343.7 1044.6 344.7 1079.1 344.7 1092.9 C344.7 1106.6 345.0 1100.5 343.8 1102.7 C342.6 1104.9 340.0 1105.2 337.5 1106.2 C334.9 1107.2 342.7 1108.0 328.6 1108.7 C314.5 1109.5 267.1 1110.8 252.9 1110.7 C238.7 1110.7 246.0 1109.9 243.4 1108.6 C240.9 1107.2 239.2 1105.3 237.7 1102.6 C236.1 1099.9 234.7 1106.4 234.3 1092.5 C233.9 1078.6 234.8 1043.1 235.0 1019.2 C235.2 995.3 235.2 962.4 235.7 949.0 C236.2 935.6 236.8 941.6 238.1 938.7 C239.4 935.8 240.8 932.9 243.5 931.7 C246.1 930.4 240.3 931.2 254.1 931.1 C268.0 931.1 312.7 931.3 326.6 931.3 C340.6 931.2 335.3 930.0 337.8 931.1 C340.3 932.2 340.7 935.2 341.8 937.8" fill="#a5d8ff" stroke="none"/><path class="dr" pathLength="1" d="M326.6 931.3 C340.3 932.2 340.7 935.2 341.8 937.8 C342.9 940.4 343.9 933.2 344.2 947.0 C344.5 960.7 343.6 996.0 343.7 1020.3 C343.7 1044.6 344.7 1079.1 344.7 1092.9 C344.7 1106.6 345.0 1100.5 343.8 1102.7 C342.6 1104.9 340.0 1105.2 337.5 1106.2 C334.9 1107.2 342.7 1108.0 328.6 1108.7 C314.5 1109.5 267.1 1110.8 252.9 1110.7 C238.7 1110.7 246.0 1109.9 243.4 1108.6 C240.9 1107.2 239.2 1105.3 237.7 1102.6 C236.1 1099.9 234.7 1106.4 234.3 1092.5 C233.9 1078.6 234.8 1043.1 235.0 1019.2 C235.2 995.3 235.2 962.4 235.7 949.0 C236.2 935.6 236.8 941.6 238.1 938.7 C239.4 935.8 240.8 932.9 243.5 931.7 C246.1 930.4 240.3 931.2 254.1 931.1 C268.0 931.1 312.7 931.3 326.6 931.3 C340.6 931.2 335.3 930.0 337.8 931.1 C340.3 932.2 340.7 935.2 341.8 937.8" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M343.2 945.1 C344.7 1046.9 343.6 1080.6 343.5 1093.6 C343.5 1106.6 345.7 1097.9 344.6 1100.3 C343.4 1102.8 340.1 1106.6 336.9 1108.4 C333.7 1110.1 339.6 1111.2 325.3 1111.0 C311.1 1110.9 265.2 1107.7 251.4 1107.5 C237.6 1107.3 245.2 1111.3 242.5 1110.0 C239.8 1108.7 236.3 1102.9 235.1 1099.7 C234.0 1096.5 235.5 1103.8 235.6 1090.8 C235.7 1077.7 235.8 1045.0 235.7 1021.3 C235.6 997.6 234.6 962.1 235.0 948.5 C235.5 934.9 236.6 942.6 238.5 939.7 C240.4 936.8 244.3 932.8 246.3 931.0 C248.2 929.2 236.3 929.1 250.2 928.9 C264.2 928.7 315.5 928.9 329.9 929.6 C344.2 930.2 333.9 931.8 336.2 932.9 C338.5 934.0 342.3 934.2 343.5 936.2 C344.7 938.3 343.0 930.8 343.2 945.1 C343.4 959.4 344.6 997.4 344.6 1022.1 C344.7 1046.9 343.6 1080.6 343.5 1093.6" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M276.9 996.7 C282.7 1000.4 312.2 1011.1 312.0 1018.6 C311.8 1026.2 281.6 1045.8 275.7 1042.2 C269.9 1038.6 276.5 1004.7 276.7 997.3" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="lMore" style="position:absolute;left:372px;top:965px;font-size:52px;color:#4285F4">+ ще</div><svg class="sk" id="lDash" viewBox="0 0 1080 1300" width="1080" height="1300" style="opacity:.45"><path class="dr" pathLength="1" d="M463.4 929.0 C472.3 933.0 475.3 936.2 477.2 938.7 C479.0 941.3 480.6 933.3 481.2 946.9 C481.8 960.6 481.0 996.6 480.8 1020.7 C480.7 1044.7 481.0 1077.8 480.3 1091.5 C479.6 1105.1 478.2 1099.7 476.7 1102.5 C475.1 1105.3 473.5 1107.1 470.9 1108.5 C468.3 1110.0 475.3 1111.3 461.2 1111.4 C447.1 1111.5 400.0 1109.8 386.3 1109.3 C372.6 1108.9 381.1 1110.3 379.0 1108.7 C376.9 1107.2 375.6 1102.9 373.8 1100.0 C372.1 1097.2 369.2 1105.1 368.6 1091.8 C368.0 1078.6 369.7 1044.2 370.1 1020.4 C370.5 996.5 370.6 962.1 371.1 948.8 C371.6 935.4 371.5 943.2 373.0 940.2 C374.5 937.3 377.6 932.9 379.9 930.9 C382.3 929.0 373.2 928.9 387.1 928.5 C401.0 928.2 449.6 928.6 463.4 929.0 C477.2 929.5 467.7 929.8 470.0 931.4 C472.3 933.0 475.3 936.2 477.2 938.7" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M478.7 947.7 C480.5 1045.7 482.3 1080.0 481.9 1092.9 C481.5 1105.8 479.5 1096.2 477.5 1099.0 C475.5 1101.8 471.9 1107.7 469.8 1109.8 C467.7 1112.0 478.2 1111.5 464.7 1111.8 C451.3 1112.0 403.8 1112.1 389.2 1111.4 C374.5 1110.7 380.1 1108.9 376.9 1107.4 C373.7 1106.0 370.7 1105.0 369.8 1102.8 C368.9 1100.6 371.4 1108.1 371.5 1094.1 C371.7 1080.1 371.0 1043.7 370.7 1018.9 C370.4 994.1 369.5 958.2 369.6 945.0 C369.6 931.9 369.6 942.3 371.1 939.9 C372.6 937.5 375.4 932.4 378.5 930.7 C381.5 929.0 375.5 930.0 389.4 929.6 C403.4 929.2 448.6 927.4 462.2 928.3 C475.8 929.2 468.3 933.4 470.8 934.9 C473.3 936.3 475.8 934.9 477.1 937.1 C478.4 939.2 478.2 933.6 478.7 947.7 C479.2 961.8 479.4 997.3 480.0 1021.5 C480.5 1045.7 482.3 1080.0 481.9 1092.9" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="lN" style="position:absolute;left:100px;top:1130px;font-size:56px">5 рілсів</div><svg class="sk" id="rt0" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="sf" d="M693.7 720.7 C702.0 722.1 705.2 725.9 707.1 728.5 C708.9 731.1 710.4 722.6 711.0 736.2 C711.6 749.7 711.1 785.7 710.7 809.8 C710.4 834.0 709.6 867.8 709.1 881.2 C708.5 894.5 709.1 887.1 707.5 890.1 C706.0 893.1 702.1 897.5 699.8 899.2 C697.4 901.0 706.7 900.7 693.1 900.6 C679.6 900.6 632.4 899.4 618.5 898.7 C604.6 898.1 612.3 898.1 609.7 896.8 C607.0 895.6 604.4 893.3 602.5 891.2 C600.7 889.0 599.0 897.2 598.7 883.7 C598.5 870.3 600.9 835.1 601.1 810.5 C601.3 786.0 599.9 750.2 600.0 736.4 C600.0 722.5 599.5 729.4 601.2 727.3 C602.8 725.2 607.1 725.1 609.9 723.8 C612.8 722.4 604.4 719.7 618.4 719.2 C632.3 718.7 680.1 720.4 693.7 720.7 C707.2 721.0 697.5 719.5 699.7 720.8 C702.0 722.1 705.2 725.9 707.1 728.5" fill="#ffec99" stroke="none"/><path class="dr" pathLength="1" d="M693.7 720.7 C702.0 722.1 705.2 725.9 707.1 728.5 C708.9 731.1 710.4 722.6 711.0 736.2 C711.6 749.7 711.1 785.7 710.7 809.8 C710.4 834.0 709.6 867.8 709.1 881.2 C708.5 894.5 709.1 887.1 707.5 890.1 C706.0 893.1 702.1 897.5 699.8 899.2 C697.4 901.0 706.7 900.7 693.1 900.6 C679.6 900.6 632.4 899.4 618.5 898.7 C604.6 898.1 612.3 898.1 609.7 896.8 C607.0 895.6 604.4 893.3 602.5 891.2 C600.7 889.0 599.0 897.2 598.7 883.7 C598.5 870.3 600.9 835.1 601.1 810.5 C601.3 786.0 599.9 750.2 600.0 736.4 C600.0 722.5 599.5 729.4 601.2 727.3 C602.8 725.2 607.1 725.1 609.9 723.8 C612.8 722.4 604.4 719.7 618.4 719.2 C632.3 718.7 680.1 720.4 693.7 720.7 C707.2 721.0 697.5 719.5 699.7 720.8 C702.0 722.1 705.2 725.9 707.1 728.5" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M711.8 740.2 C707.1 834.2 708.7 868.7 708.4 882.2 C708.0 895.8 706.6 889.3 705.6 892.0 C704.6 894.7 704.5 897.2 702.3 898.5 C700.0 899.9 706.4 899.5 691.9 900.2 C677.5 900.8 629.3 902.7 615.6 902.3 C601.9 901.9 611.8 899.2 609.7 897.7 C607.7 896.3 605.2 896.1 603.3 893.4 C601.4 890.7 599.2 895.7 598.4 881.6 C597.6 867.6 598.1 832.9 598.6 808.9 C599.2 785.0 601.5 751.1 601.9 737.7 C602.2 724.3 599.6 730.8 600.7 728.6 C601.8 726.4 605.3 725.8 608.5 724.6 C611.7 723.4 606.2 721.8 619.9 721.3 C633.5 720.9 676.7 721.8 690.6 721.9 C704.5 722.1 700.7 721.1 703.3 722.2 C705.9 723.2 704.6 725.5 706.0 728.5 C707.4 731.5 711.5 726.5 711.8 740.2 C712.0 753.8 708.2 786.8 707.7 810.5 C707.1 834.2 708.7 868.7 708.4 882.2" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M642.3 788.8 C647.9 792.5 676.0 803.9 675.8 811.1 C675.6 818.3 646.6 835.4 640.8 831.7 C635.1 828.1 641.0 796.4 641.0 789.4" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="rt1" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="sf" d="M827.3 719.0 C837.4 722.6 840.0 726.7 841.4 729.7 C842.9 732.6 843.0 725.2 843.8 738.6 C844.5 752.0 845.7 786.2 846.0 810.0 C846.2 833.8 845.7 867.8 845.3 881.4 C844.9 895.1 845.0 889.2 843.5 891.9 C842.0 894.6 839.0 896.5 836.3 897.7 C833.5 898.8 840.7 898.3 826.7 898.9 C812.7 899.5 765.9 901.6 752.1 901.5 C738.4 901.3 746.7 899.7 744.0 898.2 C741.4 896.7 737.6 895.2 736.1 892.5 C734.6 889.8 735.6 896.1 735.2 882.1 C734.8 868.1 734.0 832.6 733.9 808.5 C733.9 784.3 734.1 750.1 734.8 737.1 C735.5 724.0 736.7 732.3 738.2 730.1 C739.8 727.9 741.8 725.2 744.0 723.8 C746.2 722.3 737.3 722.1 751.2 721.3 C765.1 720.5 813.4 719.1 827.3 719.0 C841.3 718.9 832.7 719.0 835.1 720.8 C837.4 722.6 840.0 726.7 841.4 729.7" fill="#ffec99" stroke="none"/><path class="dr" pathLength="1" d="M827.3 719.0 C837.4 722.6 840.0 726.7 841.4 729.7 C842.9 732.6 843.0 725.2 843.8 738.6 C844.5 752.0 845.7 786.2 846.0 810.0 C846.2 833.8 845.7 867.8 845.3 881.4 C844.9 895.1 845.0 889.2 843.5 891.9 C842.0 894.6 839.0 896.5 836.3 897.7 C833.5 898.8 840.7 898.3 826.7 898.9 C812.7 899.5 765.9 901.6 752.1 901.5 C738.4 901.3 746.7 899.7 744.0 898.2 C741.4 896.7 737.6 895.2 736.1 892.5 C734.6 889.8 735.6 896.1 735.2 882.1 C734.8 868.1 734.0 832.6 733.9 808.5 C733.9 784.3 734.1 750.1 734.8 737.1 C735.5 724.0 736.7 732.3 738.2 730.1 C739.8 727.9 741.8 725.2 744.0 723.8 C746.2 722.3 737.3 722.1 751.2 721.3 C765.1 720.5 813.4 719.1 827.3 719.0 C841.3 718.9 832.7 719.0 835.1 720.8 C837.4 722.6 840.0 726.7 841.4 729.7" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M845.1 740.1 C847.1 833.4 847.0 867.1 846.0 881.0 C845.1 894.8 842.7 890.3 841.1 893.0 C839.5 895.7 838.3 896.3 836.4 897.2 C834.5 898.1 844.2 897.8 829.8 898.2 C815.5 898.6 764.6 899.5 750.2 899.7 C735.8 900.0 745.6 901.4 743.5 899.7 C741.5 897.9 739.3 892.3 738.1 889.4 C736.8 886.5 736.3 895.8 736.2 882.4 C736.1 868.9 737.9 833.1 737.4 808.7 C736.9 784.4 733.5 749.4 733.2 736.1 C732.9 722.9 734.0 731.4 735.7 729.1 C737.4 726.8 740.5 723.6 743.3 722.3 C746.1 721.1 738.4 722.2 752.4 721.4 C766.4 720.6 813.4 717.7 827.0 717.6 C840.6 717.5 831.5 718.4 834.0 720.6 C836.4 722.8 840.0 727.6 841.9 730.9 C843.7 734.1 844.2 726.9 845.1 740.1 C845.9 753.2 846.8 786.4 846.9 809.9 C847.1 833.4 847.0 867.1 846.0 881.0" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M776.7 787.8 C782.5 791.3 811.4 801.5 811.2 808.7 C811.0 816.0 781.3 834.6 775.5 831.3 C769.7 827.9 776.1 795.7 776.3 788.6" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="rt2" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="sf" d="M963.4 719.7 C974.8 723.1 977.5 725.6 978.6 728.5 C979.7 731.3 978.5 725.4 979.0 738.9 C979.5 752.4 981.3 785.7 981.5 809.6 C981.8 833.6 981.3 869.1 980.6 882.6 C979.8 896.1 978.8 888.0 977.0 890.5 C975.2 892.9 972.3 895.8 969.9 897.2 C967.5 898.7 976.2 898.9 962.6 899.1 C949.1 899.4 902.7 899.0 888.8 898.8 C874.9 898.5 881.8 898.8 879.1 897.6 C876.4 896.3 874.5 893.9 872.7 891.2 C870.9 888.6 868.7 894.9 868.4 881.6 C868.1 868.3 870.8 835.2 871.0 811.5 C871.2 787.7 869.3 752.6 869.3 739.0 C869.4 725.3 870.1 732.6 871.5 729.7 C872.9 726.7 875.0 723.1 877.8 721.5 C880.6 720.0 873.9 720.7 888.2 720.4 C902.4 720.0 949.4 719.4 963.4 719.7 C977.4 719.9 969.7 720.2 972.3 721.6 C974.8 723.1 977.5 725.6 978.6 728.5" fill="#ffec99" stroke="none"/><path class="dr" pathLength="1" d="M963.4 719.7 C974.8 723.1 977.5 725.6 978.6 728.5 C979.7 731.3 978.5 725.4 979.0 738.9 C979.5 752.4 981.3 785.7 981.5 809.6 C981.8 833.6 981.3 869.1 980.6 882.6 C979.8 896.1 978.8 888.0 977.0 890.5 C975.2 892.9 972.3 895.8 969.9 897.2 C967.5 898.7 976.2 898.9 962.6 899.1 C949.1 899.4 902.7 899.0 888.8 898.8 C874.9 898.5 881.8 898.8 879.1 897.6 C876.4 896.3 874.5 893.9 872.7 891.2 C870.9 888.6 868.7 894.9 868.4 881.6 C868.1 868.3 870.8 835.2 871.0 811.5 C871.2 787.7 869.3 752.6 869.3 739.0 C869.4 725.3 870.1 732.6 871.5 729.7 C872.9 726.7 875.0 723.1 877.8 721.5 C880.6 720.0 873.9 720.7 888.2 720.4 C902.4 720.0 949.4 719.4 963.4 719.7 C977.4 719.9 969.7 720.2 972.3 721.6 C974.8 723.1 977.5 725.6 978.6 728.5" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M980.9 737.7 C979.1 835.4 980.9 867.7 980.5 881.1 C980.0 894.4 978.3 888.5 976.5 891.6 C974.6 894.7 972.0 897.9 969.5 899.6 C967.1 901.3 975.4 901.8 961.7 901.7 C948.1 901.7 901.9 899.5 887.8 899.2 C873.7 899.0 880.2 901.4 877.4 900.1 C874.5 898.9 871.9 894.2 870.8 891.7 C869.6 889.1 870.5 898.7 870.3 884.9 C870.1 871.0 869.7 833.0 869.6 808.5 C869.5 783.9 869.5 750.7 869.8 737.5 C870.0 724.3 870.1 732.2 871.2 729.3 C872.3 726.3 873.6 721.0 876.4 719.8 C879.1 718.5 872.9 721.9 887.6 721.8 C902.3 721.8 950.5 719.5 964.6 719.5 C978.7 719.5 970.2 719.8 972.1 721.7 C973.9 723.5 974.2 727.6 975.7 730.3 C977.2 733.0 980.3 724.2 980.9 737.7 C981.5 751.2 979.3 787.6 979.2 811.5 C979.1 835.4 980.9 867.7 980.5 881.1" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M911.7 789.2 C917.5 792.7 946.8 802.9 946.9 810.0 C947.0 817.1 918.1 835.0 912.3 831.6 C906.5 828.1 912.0 796.3 911.9 789.2" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="rN" style="position:absolute;left:600px;top:925px;font-size:56px">3 рілси</div><svg class="sk" id="lLoop" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M64.7 482.0 C69.7 477.8 82.6 464.3 95.0 456.5 C107.4 448.6 122.6 441.7 139.1 435.0 C155.7 428.3 175.2 421.5 194.3 416.3 C213.5 411.2 232.5 406.5 254.0 404.2 C275.5 401.9 301.5 401.4 323.4 402.6 C345.2 403.9 364.9 408.4 385.1 411.8 C405.4 415.2 426.4 417.3 444.9 422.9 C463.5 428.5 481.8 436.7 496.5 445.4 C511.1 454.2 523.8 466.3 532.8 475.6 C541.7 484.9 546.3 490.9 550.3 501.3 C554.2 511.6 557.6 526.5 556.3 537.5 C554.9 548.6 550.2 558.0 542.4 567.5 C534.6 577.1 521.9 586.1 509.3 595.0 C496.7 603.9 483.4 613.8 466.8 620.9 C450.3 628.1 430.5 633.0 410.1 637.7 C389.6 642.4 366.2 647.4 344.1 649.1 C322.0 650.9 300.0 649.6 277.5 648.2 C255.0 646.7 230.2 644.0 209.3 640.5 C188.4 637.1 170.6 633.0 152.0 627.3 C133.4 621.7 113.1 614.5 97.7 606.6 C82.2 598.8 69.3 590.4 59.3 580.3 C49.4 570.2 41.8 556.7 37.9 546.0 C34.0 535.3 33.5 527.3 35.7 516.3 C37.9 505.3 43.0 490.6 51.2 480.0 C59.4 469.5 72.4 461.4 84.9 452.9 C97.4 444.5 119.5 433.4 126.4 429.4" fill="none" stroke="#EA4335" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="rLoop" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M554.4 483.5 C559.7 479.2 573.8 466.5 586.2 457.7 C598.7 448.9 613.2 437.7 629.3 430.7 C645.3 423.7 663.1 419.7 682.6 415.6 C702.2 411.6 725.1 408.4 746.4 406.6 C767.6 404.8 788.1 404.8 810.2 405.1 C832.3 405.4 858.2 405.3 879.0 408.5 C899.8 411.7 917.2 417.7 934.9 424.1 C952.6 430.6 970.9 439.3 985.0 447.1 C999.0 454.8 1010.0 461.8 1019.4 470.9 C1028.8 480.0 1036.5 490.7 1041.4 501.6 C1046.2 512.5 1050.3 524.9 1048.3 536.2 C1046.4 547.5 1037.3 559.6 1029.8 569.3 C1022.3 578.9 1015.4 586.3 1003.4 594.4 C991.4 602.5 975.1 610.2 957.6 617.8 C940.0 625.4 918.1 635.0 898.1 640.0 C878.1 645.0 859.0 646.2 837.5 647.7 C816.1 649.3 792.3 650.0 769.4 649.3 C746.5 648.6 722.2 647.1 700.2 643.3 C678.2 639.6 656.3 633.4 637.4 626.8 C618.6 620.2 601.0 611.9 587.0 603.5 C572.9 595.2 562.7 585.7 553.2 576.5 C543.8 567.3 534.6 558.6 530.4 548.3 C526.2 538.1 525.9 526.2 528.1 515.1 C530.2 503.9 535.8 491.6 543.0 481.4 C550.3 471.2 559.3 463.1 571.6 453.9 C583.9 444.7 609.1 430.9 616.6 426.3" fill="none" stroke="#EA4335" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<div class="g" id="sys" style="top:0;height:700px"><div class="gcard" id="sysC" style="left:90px;top:110px;width:900px;height:420px"><div class="lbl" style="left:50px;top:44px">Система для клієнтки</div><div class="row" style="left:50px;top:110px;width:800px;height:120px"><div class="gs" style="font-size:46px;font-weight:700;flex:1">Оптимізація токенів</div></div><div class="tgl" id="sysT" style="left:746px;top:138px"><b></b></div><div class="lbl" style="left:50px;top:270px">токени на рілс</div><div class="track" style="left:50px;top:320px;width:800px"><i id="sysF" style="background:#FBBC04"></i></div></div></div>
+<div class="g full" id="bd2"><div class="board"></div><div class="hand hide" id="b2T" style="position:absolute;left:110px;top:150px;font-size:80px">шаблони анімації</div><svg class="sk" id="b2U" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M108.7 261.7 C159.2 262.0 311.4 263.4 411.5 263.1 C511.7 262.8 659.9 260.4 709.6 259.9" fill="none" stroke="#4285F4" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="tp1" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M342.6 329.4 C361.4 336.4 365.5 340.4 367.5 344.6 C369.5 348.8 368.9 344.4 369.3 358.9 C369.7 373.3 369.4 407.2 369.7 431.2 C370.0 455.1 371.7 488.5 371.2 502.6 C370.8 516.6 369.6 511.5 366.9 515.5 C364.1 519.6 358.9 524.4 354.7 527.0 C350.6 529.7 361.1 530.7 341.8 531.3 C322.6 532.0 273.1 531.2 239.2 530.8 C205.2 530.3 157.5 529.6 138.1 528.6 C118.6 527.7 126.7 527.4 122.6 525.3 C118.5 523.2 115.8 519.7 113.5 515.8 C111.2 512.0 109.2 516.2 108.8 502.1 C108.5 488.1 111.1 455.4 111.4 431.4 C111.6 407.3 109.9 372.4 110.6 357.6 C111.2 342.8 112.7 346.5 115.1 342.6 C117.6 338.7 121.7 336.3 125.4 334.3 C129.2 332.3 118.6 331.0 137.6 330.3 C156.6 329.7 205.5 330.7 239.7 330.6 C273.9 330.4 323.0 328.9 342.6 329.4 C362.2 330.0 353.2 331.3 357.3 333.8 C361.4 336.4 365.5 340.4 367.5 344.6" fill="none" stroke="#1e1e1e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M368.3 356.8 C368.2 454.8 367.9 486.7 367.5 501.3 C367.2 515.9 368.1 514.5 366.6 518.2 C365.0 522.0 362.3 522.1 358.3 523.8 C354.2 525.4 361.6 526.8 342.2 528.2 C322.8 529.7 275.9 531.7 241.9 532.4 C207.8 533.2 157.3 533.9 137.9 532.5 C118.5 531.0 129.3 526.5 125.5 523.8 C121.7 521.1 117.9 519.4 115.2 516.1 C112.5 512.8 109.8 518.6 109.3 503.9 C108.8 489.2 112.2 452.0 112.2 428.0 C112.1 404.0 108.7 373.9 108.9 359.8 C109.1 345.7 110.7 347.5 113.5 343.3 C116.3 339.2 121.2 337.1 125.7 335.0 C130.2 332.9 120.9 331.4 140.4 330.8 C159.8 330.3 208.4 331.9 242.3 331.8 C276.3 331.7 324.7 330.0 344.0 330.1 C363.3 330.2 353.9 329.9 358.0 332.3 C362.1 334.7 367.0 340.3 368.8 344.4 C370.5 348.4 368.4 342.4 368.3 356.8 C368.3 371.2 368.5 406.7 368.4 430.8 C368.2 454.8 367.9 486.7 367.5 501.3" fill="none" stroke="#1e1e1e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path class="sf" d="M312.4 371.3 C322.9 374.4 325.2 377.7 326.7 380.1 C328.2 382.4 328.6 373.3 329.3 387.2 C330.0 401.1 331.4 449.6 331.1 463.4 C330.8 477.2 329.4 467.8 327.6 470.1 C325.7 472.5 322.3 476.0 319.9 477.6 C317.6 479.1 327.1 479.2 313.6 479.4 C300.0 479.6 263.0 478.8 238.8 478.7 C214.6 478.6 181.8 479.1 168.3 478.8 C154.9 478.4 161.0 477.7 158.1 476.5 C155.3 475.3 152.4 473.9 151.2 471.7 C150.1 469.6 151.1 477.8 151.0 463.9 C151.0 450.0 150.8 402.7 151.0 388.3 C151.3 373.9 151.4 380.1 152.6 377.4 C153.8 374.7 155.5 373.4 158.0 372.1 C160.5 370.7 153.7 369.8 167.4 369.4 C181.0 369.1 215.6 369.6 239.7 369.9 C263.9 370.2 298.9 370.7 312.4 371.3 C325.9 371.8 318.2 371.5 320.6 373.0 C322.9 374.4 325.2 377.7 326.7 380.1" fill="#a5d8ff" stroke="none"/><path class="dr" pathLength="1" d="M312.4 371.3 C322.9 374.4 325.2 377.7 326.7 380.1 C328.2 382.4 328.6 373.3 329.3 387.2 C330.0 401.1 331.4 449.6 331.1 463.4 C330.8 477.2 329.4 467.8 327.6 470.1 C325.7 472.5 322.3 476.0 319.9 477.6 C317.6 479.1 327.1 479.2 313.6 479.4 C300.0 479.6 263.0 478.8 238.8 478.7 C214.6 478.6 181.8 479.1 168.3 478.8 C154.9 478.4 161.0 477.7 158.1 476.5 C155.3 475.3 152.4 473.9 151.2 471.7 C150.1 469.6 151.1 477.8 151.0 463.9 C151.0 450.0 150.8 402.7 151.0 388.3 C151.3 373.9 151.4 380.1 152.6 377.4 C153.8 374.7 155.5 373.4 158.0 372.1 C160.5 370.7 153.7 369.8 167.4 369.4 C181.0 369.1 215.6 369.6 239.7 369.9 C263.9 370.2 298.9 370.7 312.4 371.3 C325.9 371.8 318.2 371.5 320.6 373.0 C322.9 374.4 325.2 377.7 326.7 380.1" fill="none" stroke="#4285F4" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M329.5 387.4 C330.3 478.1 328.4 470.4 327.2 472.9 C326.0 475.4 326.0 478.1 323.6 478.9 C321.3 479.7 326.9 477.5 313.0 477.7 C299.1 477.8 264.2 479.7 240.1 480.0 C216.0 480.4 182.4 480.0 168.7 479.8 C154.9 479.6 160.5 480.3 157.6 478.9 C154.8 477.5 152.6 473.9 151.5 471.2 C150.5 468.6 152.1 476.8 151.6 463.1 C151.1 449.5 148.3 403.2 148.5 389.4 C148.7 375.6 151.5 382.9 153.0 380.3 C154.6 377.8 155.7 375.4 158.0 374.1 C160.3 372.8 153.5 373.3 166.8 372.5 C180.1 371.7 213.6 370.0 237.8 369.5 C262.0 369.0 297.8 368.6 312.0 369.3 C326.3 370.0 320.5 372.3 323.4 373.7 C326.3 375.2 328.6 375.7 329.6 377.9 C330.6 380.2 329.3 373.1 329.5 387.4 C329.7 401.7 331.0 449.6 330.7 463.8 C330.3 478.1 328.4 470.4 327.2 472.9" fill="none" stroke="#4285F4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M170.9 400.2 C217.2 400.7 265.0 400.9 289.7 398.5" fill="none" stroke="#1e1e1e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M168.8 434.5 C189.8 434.4 207.5 435.7 250.9 432.6" fill="none" stroke="#1e1e1e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="gs hide" id="tp1L" style="position:absolute;left:110px;top:542px;width:260px;text-align:center;font-size:30px;color:#5f6368;font-weight:500">картка</div><svg class="sk" id="tp2" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M643.6 330.7 C659.5 336.2 665.4 339.7 667.6 343.6 C669.7 347.4 668.2 342.8 668.5 357.2 C668.7 371.7 668.8 406.0 669.2 430.1 C669.5 454.2 670.9 487.4 670.5 501.7 C670.1 515.9 669.2 511.4 666.8 515.5 C664.3 519.5 660.3 523.5 656.0 526.1 C651.7 528.6 660.1 529.8 641.0 530.7 C621.8 531.6 574.7 531.9 541.0 531.5 C507.3 531.2 458.6 529.7 438.9 528.6 C419.1 527.5 427.1 527.2 422.7 525.1 C418.3 523.0 414.3 520.1 412.3 516.2 C410.2 512.2 410.6 515.8 410.4 501.5 C410.2 487.2 410.9 454.3 411.1 430.2 C411.2 406.2 410.5 371.7 411.2 357.4 C411.9 343.0 412.7 348.2 415.0 344.1 C417.3 340.0 421.3 335.5 425.2 332.9 C429.2 330.4 419.7 329.4 438.8 328.7 C457.9 327.9 505.7 328.3 539.8 328.6 C573.9 329.0 624.3 329.8 643.6 330.7 C662.9 331.6 651.5 331.9 655.5 334.1 C659.5 336.2 665.4 339.7 667.6 343.6" fill="none" stroke="#1e1e1e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M667.9 359.8 C671.7 455.2 671.3 486.5 670.2 500.3 C669.1 514.2 667.0 510.5 664.7 514.7 C662.4 518.8 659.8 522.6 656.3 525.2 C652.8 527.8 663.0 529.5 643.9 530.3 C624.8 531.1 575.8 530.4 541.5 529.9 C507.2 529.4 457.4 527.7 438.2 527.4 C419.0 527.1 430.1 530.1 426.1 528.2 C422.2 526.2 417.3 519.8 414.4 515.9 C411.6 511.9 410.0 519.0 409.3 504.4 C408.6 489.8 409.8 453.0 410.0 428.2 C410.2 403.5 409.6 370.1 410.5 356.0 C411.4 342.0 413.3 348.3 415.1 344.2 C417.0 340.2 417.4 334.1 421.6 331.7 C425.8 329.3 420.2 330.3 440.3 329.7 C460.4 329.2 508.5 328.9 542.2 328.6 C576.0 328.2 623.8 326.7 643.0 327.7 C662.1 328.6 653.2 331.8 656.9 334.4 C660.6 337.0 663.4 339.0 665.3 343.3 C667.1 347.5 666.9 345.0 667.9 359.8 C668.9 374.5 671.0 408.4 671.3 431.8 C671.7 455.2 671.3 486.5 670.2 500.3" fill="none" stroke="#1e1e1e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M448.9 471.1 C462.6 456.1 500.8 392.9 531.0 381.1 C561.2 369.3 613.6 397.1 630.1 400.3" fill="none" stroke="#EA4335" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M629.5 399.2 C622.2 401.6 614.1 404.3 601.0 407.9 M629.3 399.7 C621.9 393.6 613.0 386.7 607.2 381.9" fill="none" stroke="#EA4335" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="gs hide" id="tp2L" style="position:absolute;left:410px;top:542px;width:260px;text-align:center;font-size:30px;color:#5f6368;font-weight:500">стрілка</div><svg class="sk" id="tp3" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M940.7 330.9 C961.7 335.0 965.4 338.7 967.5 342.6 C969.7 346.6 969.5 342.0 970.2 356.7 C970.8 371.3 971.1 406.3 971.2 430.7 C971.4 455.1 972.3 488.9 971.3 503.1 C970.3 517.4 968.0 512.2 965.3 516.2 C962.6 520.1 959.0 524.4 955.2 526.8 C951.3 529.3 961.0 530.7 941.9 531.0 C922.8 531.3 874.4 529.2 840.4 528.8 C806.4 528.4 757.1 528.8 737.8 528.5 C718.6 528.1 729.2 528.9 725.0 526.8 C720.8 524.6 715.0 519.2 712.6 515.3 C710.2 511.4 711.0 517.3 710.5 503.2 C710.0 489.1 709.7 455.1 709.7 430.7 C709.6 406.3 709.3 371.1 710.0 356.7 C710.7 342.3 711.5 348.0 713.8 344.1 C716.1 340.3 719.8 335.9 724.0 333.4 C728.2 330.9 719.8 330.1 739.0 329.4 C758.2 328.7 805.7 329.2 839.3 329.4 C873.0 329.7 921.1 330.3 940.7 330.9 C960.4 331.5 952.8 331.1 957.3 333.0 C961.7 335.0 965.4 338.7 967.5 342.6" fill="none" stroke="#1e1e1e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M969.5 360.0 C967.4 451.3 969.2 486.2 969.0 501.1 C968.8 516.0 968.1 512.8 966.3 517.3 C964.5 521.8 962.0 526.4 958.0 528.1 C954.0 529.9 962.1 527.0 942.2 527.7 C922.3 528.3 872.4 531.9 838.6 532.1 C804.7 532.3 758.1 529.8 739.1 529.0 C720.1 528.2 729.2 529.5 724.5 527.3 C719.8 525.1 713.8 519.7 711.2 515.8 C708.6 511.9 709.3 518.4 709.1 503.8 C709.0 489.3 710.3 453.0 710.3 428.8 C710.2 404.5 708.1 372.7 708.6 358.2 C709.1 343.6 710.9 345.8 713.2 341.5 C715.4 337.1 718.2 333.9 722.0 332.1 C725.9 330.3 716.7 331.0 736.0 330.6 C755.4 330.1 804.0 329.8 838.1 329.5 C872.2 329.1 921.4 327.3 940.7 328.3 C960.0 329.2 949.3 332.9 953.7 335.3 C958.1 337.7 964.3 338.3 967.0 342.4 C969.6 346.6 969.4 345.8 969.5 360.0 C969.5 374.2 967.5 404.3 967.4 427.8 C967.4 451.3 969.2 486.2 969.0 501.1" fill="none" stroke="#1e1e1e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path class="sf" d="M745.0 420.0 L785.0 420.0 L785.0 490.0 L745.0 490.0 Z" fill="#b2f2bb" stroke="none"/><path class="dr" pathLength="1" d="M745.2 420.4 C761.1 419.0 776.3 419.4 785.9 420.2 M786.6 421.5 C785.1 442.2 786.4 464.4 785.6 491.3 M786.4 490.2 C777.5 490.3 769.5 490.7 746.1 490.6 M744.5 489.1 C746.3 475.1 743.6 454.1 743.7 420.9" fill="none" stroke="#1e1e1e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M745.9 420.0 C757.3 420.0 770.5 420.0 785.2 419.0 M786.7 420.9 C787.1 442.4 785.9 462.5 787.3 491.7 M786.6 489.5 C769.8 488.8 755.6 491.2 746.1 490.5 M744.7 488.3 C743.0 469.2 745.8 442.1 743.1 420.0" fill="none" stroke="#1e1e1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path class="sf" d="M805.0 390.0 L845.0 390.0 L845.0 490.0 L805.0 490.0 Z" fill="#ffec99" stroke="none"/><path class="dr" pathLength="1" d="M804.3 391.0 C817.9 390.0 830.2 391.2 844.3 388.4 M844.6 388.1 C844.4 419.7 848.4 452.9 843.4 488.9 M844.0 490.5 C828.9 491.6 815.0 489.2 805.2 490.4 M803.8 492.0 C803.8 467.4 803.4 445.4 806.0 387.8" fill="none" stroke="#1e1e1e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M804.2 391.1 C818.7 388.7 832.9 388.9 843.4 389.9 M845.2 392.3 C844.0 426.4 846.5 459.0 842.7 491.3 M846.1 489.4 C835.3 490.4 825.2 491.4 806.1 488.7 M806.9 489.8 C805.5 454.3 805.5 423.7 803.4 390.1" fill="none" stroke="#1e1e1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path class="sf" d="M865.0 360.0 L905.0 360.0 L905.0 490.0 L865.0 490.0 Z" fill="#a5d8ff" stroke="none"/><path class="dr" pathLength="1" d="M865.6 361.4 C876.2 358.9 888.9 360.3 904.7 359.0 M905.2 361.3 C906.8 403.3 903.2 443.2 904.0 492.4 M905.7 488.8 C895.2 489.7 882.8 491.6 864.8 488.4 M863.7 492.3 C864.0 447.6 866.3 407.0 866.1 362.2" fill="none" stroke="#1e1e1e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M865.7 361.0 C877.8 361.5 892.5 358.7 904.4 359.2 M907.3 360.4 C902.6 394.4 902.8 430.5 905.6 488.8 M905.8 489.5 C890.5 489.7 877.5 489.5 865.6 488.7 M867.4 487.8 C865.0 464.1 865.2 437.0 863.2 359.6" fill="none" stroke="#1e1e1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="gs hide" id="tp3L" style="position:absolute;left:710px;top:542px;width:260px;text-align:center;font-size:30px;color:#5f6368;font-weight:500">графік</div><svg class="sk" id="code" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M503.3 700.1 C520.5 706.4 522.3 710.1 524.7 714.3 C527.0 718.6 530.1 710.3 531.0 729.5 C531.9 748.6 530.2 795.6 530.1 829.1 C530.0 862.6 530.5 896.9 530.3 930.4 C530.1 964.0 529.4 1011.4 529.0 1030.5 C528.5 1049.6 529.8 1040.9 527.6 1045.0 C525.3 1049.1 519.4 1052.7 515.3 1055.1 C511.3 1057.5 525.7 1058.8 503.1 1059.6 C480.5 1060.5 420.7 1060.4 379.8 1060.3 C339.0 1060.3 298.3 1059.6 257.9 1059.4 C217.5 1059.3 159.7 1060.1 137.3 1059.6 C114.9 1059.0 127.9 1058.2 123.7 1056.1 C119.5 1053.9 114.8 1050.7 112.2 1046.7 C109.7 1042.7 109.2 1051.6 108.5 1032.3 C107.9 1013.0 108.1 964.6 108.5 930.8 C109.0 897.0 110.9 863.4 111.2 829.3 C111.5 795.3 110.1 746.0 110.4 726.7 C110.8 707.4 111.1 717.3 113.5 713.5 C115.9 709.7 121.0 706.0 125.0 703.9 C128.9 701.8 114.8 701.2 137.3 700.7 C159.8 700.2 219.2 701.1 259.9 700.9 C300.6 700.6 341.2 699.2 381.7 699.1 C422.3 699.0 480.7 699.2 503.3 700.1 C525.8 700.9 513.4 701.6 517.0 704.0 C520.5 706.4 522.3 710.1 524.7 714.3" fill="none" stroke="#1e1e1e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M530.4 730.6 C529.0 863.6 531.5 895.8 532.1 929.1 C532.6 962.5 532.7 1011.3 532.0 1030.4 C531.3 1049.5 531.2 1039.9 528.1 1043.8 C525.0 1047.8 518.1 1051.3 513.5 1054.1 C508.8 1057.0 522.5 1060.4 500.2 1061.2 C478.0 1061.9 420.2 1059.3 379.9 1058.6 C339.6 1058.0 298.9 1056.8 258.7 1057.4 C218.4 1058.1 161.2 1063.0 138.3 1062.4 C115.5 1061.8 125.5 1056.4 121.7 1053.9 C118.0 1051.5 118.1 1051.7 115.7 1047.6 C113.4 1043.6 108.5 1049.0 107.6 1029.7 C106.6 1010.3 109.4 964.6 110.1 931.6 C110.8 898.6 111.1 865.8 111.5 831.8 C111.9 797.7 112.5 747.3 112.5 727.4 C112.4 707.6 109.1 717.0 111.3 712.7 C113.5 708.4 121.3 704.0 125.6 701.8 C129.8 699.6 114.8 699.8 136.8 699.4 C158.8 699.1 216.8 699.5 257.6 699.8 C298.3 700.2 340.1 701.1 381.2 701.6 C422.2 702.0 481.5 701.8 503.8 702.6 C526.1 703.3 511.2 704.1 514.9 706.2 C518.6 708.3 523.5 711.1 526.1 715.2 C528.7 719.2 530.0 711.3 530.4 730.6 C530.8 749.8 528.4 797.4 528.7 830.5 C529.0 863.6 531.5 895.8 532.1 929.1" fill="none" stroke="#1e1e1e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M148.7 760.7 C223.4 759.1 297.4 761.0 447.7 761.5" fill="none" stroke="#5f6368" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M152.0 798.6 C204.0 797.5 256.0 797.1 390.1 801.3" fill="none" stroke="#5f6368" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M148.4 841.7 C257.8 838.4 364.4 840.7 481.4 842.2" fill="none" stroke="#5f6368" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M149.7 881.8 C205.4 882.5 262.5 881.6 352.5 881.5" fill="none" stroke="#5f6368" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M150.3 917.5 C260.7 922.9 372.3 923.4 428.7 923.6" fill="none" stroke="#5f6368" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M151.7 959.8 C246.7 957.4 344.4 959.5 471.3 962.8" fill="none" stroke="#5f6368" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M149.6 998.9 C220.4 1000.1 291.6 1001.6 329.6 1003.8" fill="none" stroke="#5f6368" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="codeL" style="position:absolute;left:120px;top:1075px;font-size:54px">з нуля</div><svg class="sk" id="codeX" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M200.7 760.3 C263.3 820.9 324.4 881.9 440.5 999.1 M440.8 760.4 C363.1 839.2 285.7 913.3 200.4 1000.7" fill="none" stroke="#EA4335" stroke-width="12.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="ph" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M910.7 660.9 C928.8 666.4 932.1 670.1 934.8 673.8 C937.4 677.6 939.6 664.4 940.7 686.7 C941.8 709.1 941.6 767.0 941.3 807.9 C940.9 848.7 938.8 891.0 938.5 931.8 C938.2 972.5 940.3 1030.2 939.7 1052.4 C939.2 1074.7 937.3 1061.5 935.0 1065.3 C932.8 1069.0 929.9 1072.5 926.1 1074.8 C922.4 1077.1 930.0 1078.0 912.4 1078.9 C894.8 1079.8 851.4 1080.2 820.5 1080.1 C789.6 1080.0 744.4 1079.3 726.7 1078.4 C709.1 1077.5 718.1 1076.6 714.4 1074.8 C710.7 1073.0 707.1 1071.5 704.7 1067.5 C702.4 1063.5 701.0 1073.7 700.3 1050.8 C699.5 1027.8 700.6 970.2 700.3 929.7 C700.0 889.2 698.4 848.1 698.5 807.8 C698.6 767.5 699.8 710.4 700.9 687.9 C702.0 665.5 702.7 677.4 705.1 673.1 C707.5 668.8 711.5 664.6 715.3 662.2 C719.1 659.8 710.7 659.0 727.9 658.7 C745.1 658.3 788.1 659.9 818.6 660.2 C849.1 660.6 893.0 660.2 910.7 660.9 C928.4 661.6 920.8 662.1 924.8 664.2 C928.8 666.4 932.1 670.1 934.8 673.8" fill="none" stroke="#1e1e1e" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M940.9 687.3 C939.9 849.5 938.2 888.0 937.8 928.7 C937.4 969.3 938.3 1030.7 938.1 1053.2 C937.8 1075.7 938.4 1060.0 936.1 1063.9 C933.8 1067.8 928.0 1073.7 924.1 1076.6 C920.3 1079.6 930.5 1080.9 913.0 1081.5 C895.6 1082.1 850.0 1080.2 819.4 1080.3 C788.8 1080.4 747.1 1082.6 729.4 1081.9 C711.8 1081.2 717.5 1078.8 713.4 1076.3 C709.4 1073.7 707.7 1070.5 705.2 1066.5 C702.7 1062.4 699.4 1074.6 698.4 1051.8 C697.4 1029.1 699.1 970.4 699.4 930.0 C699.6 889.5 699.8 849.1 700.0 809.1 C700.2 769.1 699.7 712.8 700.7 690.0 C701.7 667.2 703.7 676.5 706.0 672.3 C708.4 668.1 710.7 666.6 714.6 664.8 C718.5 663.0 711.7 662.5 729.5 661.4 C747.3 660.4 791.1 658.8 821.3 658.6 C851.5 658.4 893.3 659.2 910.7 660.3 C928.0 661.3 920.6 662.5 925.3 664.9 C929.9 667.3 936.1 671.1 938.7 674.8 C941.3 678.5 940.6 664.9 940.9 687.3 C941.2 709.7 940.9 769.1 940.4 809.3 C939.9 849.5 938.2 888.0 937.8 928.7" fill="none" stroke="#1e1e1e" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M780.2 688.9 C800.8 688.5 820.0 689.0 858.9 689.9" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="gs hide" id="phL" style="position:absolute;left:700px;top:1095px;width:240px;text-align:center;font-size:34px;font-weight:700">рілс</div><div class="ab hide" id="mv" style="left:410px;top:330px;width:260px;height:200px;border-radius:22px;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.2)"><svg class="sk" id="mvS" viewBox="0 0 260 200" width="260" height="200" style="left:0;top:0"><path class="dr" pathLength="1" d="M229.3 2.9 C247.1 10.0 251.4 14.1 253.3 18.3 C255.2 22.5 253.9 7.8 254.5 32.7 C255.1 57.6 257.7 142.9 257.1 167.9 C256.5 193.0 253.1 179.1 250.7 182.9 C248.3 186.7 246.6 188.8 242.7 190.7 C238.7 192.7 245.8 193.6 227.1 194.5 C208.3 195.5 162.5 196.4 130.0 196.5 C97.5 196.5 50.9 195.9 32.3 195.0 C13.6 194.0 22.2 192.8 18.1 190.9 C14.0 189.0 10.1 187.3 7.6 183.5 C5.0 179.8 3.8 193.3 3.0 168.2 C2.2 143.1 1.9 57.8 2.9 32.9 C3.8 7.9 6.2 22.7 8.7 18.4 C11.2 14.2 13.8 10.0 17.8 7.4 C21.7 4.8 14.1 3.8 32.6 3.0 C51.1 2.2 96.0 2.4 128.8 2.4 C161.5 2.4 210.2 2.1 229.3 2.9 C248.3 3.8 239.1 4.9 243.1 7.5 C247.1 10.0 251.4 14.1 253.3 18.3" fill="none" stroke="#1e1e1e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M257.3 33.5 C257.0 195.3 255.0 179.3 252.6 182.6 C250.3 185.9 247.3 187.6 243.6 190.2 C239.8 192.8 249.3 197.0 230.1 197.9 C211.0 198.9 161.5 196.5 128.7 195.9 C95.9 195.2 52.2 194.7 33.4 193.9 C14.6 193.1 20.3 192.7 15.8 191.0 C11.2 189.3 7.8 187.8 6.0 183.8 C4.3 179.7 5.3 191.9 5.1 166.9 C4.9 141.8 4.3 57.9 4.9 33.4 C5.6 8.9 7.1 24.5 8.9 20.0 C10.7 15.6 11.8 9.5 15.8 6.9 C19.8 4.4 14.3 5.7 32.9 4.9 C51.5 4.2 94.8 2.7 127.4 2.3 C160.0 1.9 209.7 1.8 228.4 2.5 C247.2 3.2 236.3 4.4 240.0 6.6 C243.7 8.8 247.7 11.2 250.6 15.6 C253.5 20.1 256.1 7.7 257.3 33.5 C258.5 59.3 258.5 145.6 257.8 170.5 C257.0 195.3 255.0 179.3 252.6 182.6" fill="none" stroke="#1e1e1e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M39.1 139.3 C52.4 124.4 88.6 61.3 118.8 49.7 C149.1 38.1 203.5 66.3 220.4 69.7" fill="none" stroke="#EA4335" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M220.8 69.5 C212.9 71.5 204.9 75.1 190.6 77.8 M219.4 70.8 C212.9 64.0 206.9 59.8 197.0 51.5" fill="none" stroke="#EA4335" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div><svg class="sk" id="phOK" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M959.4 925.6 C965.1 931.1 978.1 966.0 993.2 958.6 C1008.4 951.2 1040.9 894.1 1050.5 881.2" fill="none" stroke="#34A853" stroke-width="8.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<div class="g" id="pl" style="top:0;height:700px"><div class="gcard" id="plC" style="left:90px;top:80px;width:900px;height:560px;overflow:hidden"><div class="lbl" style="left:50px;top:40px">Мій тариф</div><div class="num hide" id="pl100" style="position:absolute;left:44px;top:66px;font-size:130px">&#8364;100</div><div class="ab hide" id="plK" style="left:600px;top:96px"><span class="chip on" style="font-size:40px;height:84px">Клод</span></div><svg class="sk" id="pt0" viewBox="0 0 900 560" width="900" height="560"><path class="sf" d="M116.2 249.7 C125.5 251.5 126.4 255.4 127.6 257.3 C128.7 259.2 130.0 243.1 130.3 261.6 C130.5 280.1 129.2 349.5 129.0 368.3 C128.8 387.1 130.2 372.5 129.0 374.4 C127.9 376.3 124.0 378.7 122.2 379.8 C120.4 380.8 128.1 380.6 118.0 380.5 C107.9 380.4 71.9 379.8 61.5 379.3 C51.1 378.8 57.4 378.5 55.6 377.4 C53.9 376.4 51.8 374.8 50.9 373.3 C50.0 371.7 50.1 386.8 50.1 368.2 C50.0 349.5 50.4 280.1 50.5 261.3 C50.7 242.5 50.1 257.1 51.0 255.5 C51.9 253.8 53.9 252.2 56.1 251.5 C58.3 250.8 54.0 251.7 64.0 251.4 C74.0 251.1 106.3 249.9 116.2 249.7 C126.2 249.5 121.7 249.0 123.6 250.3 C125.5 251.5 126.4 255.4 127.6 257.3" fill="#a5d8ff" stroke="none"/><path class="dr" pathLength="1" d="M116.2 249.7 C125.5 251.5 126.4 255.4 127.6 257.3 C128.7 259.2 130.0 243.1 130.3 261.6 C130.5 280.1 129.2 349.5 129.0 368.3 C128.8 387.1 130.2 372.5 129.0 374.4 C127.9 376.3 124.0 378.7 122.2 379.8 C120.4 380.8 128.1 380.6 118.0 380.5 C107.9 380.4 71.9 379.8 61.5 379.3 C51.1 378.8 57.4 378.5 55.6 377.4 C53.9 376.4 51.8 374.8 50.9 373.3 C50.0 371.7 50.1 386.8 50.1 368.2 C50.0 349.5 50.4 280.1 50.5 261.3 C50.7 242.5 50.1 257.1 51.0 255.5 C51.9 253.8 53.9 252.2 56.1 251.5 C58.3 250.8 54.0 251.7 64.0 251.4 C74.0 251.1 106.3 249.9 116.2 249.7 C126.2 249.5 121.7 249.0 123.6 250.3 C125.5 251.5 126.4 255.4 127.6 257.3" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M131.8 260.5 C127.6 383.9 128.1 372.3 127.7 374.2 C127.2 376.1 127.0 375.3 125.6 376.1 C124.1 377.0 129.8 378.7 119.2 379.2 C108.6 379.8 72.7 379.8 61.9 379.4 C51.1 379.0 56.7 377.8 54.5 376.8 C52.4 375.7 49.7 374.9 49.1 373.0 C48.5 371.1 51.1 383.4 51.0 365.2 C50.9 347.0 48.5 282.1 48.8 263.9 C49.2 245.7 51.4 258.0 53.1 256.0 C54.7 254.0 56.8 253.2 58.6 252.0 C60.5 250.8 54.5 249.2 64.1 248.7 C73.6 248.3 106.1 248.9 115.7 249.6 C125.3 250.3 119.3 251.9 121.7 252.9 C124.1 253.9 128.2 254.5 129.8 255.7 C131.5 257.0 132.1 242.3 131.8 260.5 C131.6 278.7 129.0 346.0 128.3 364.9 C127.6 383.9 128.1 372.3 127.7 374.2" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M80.8 300.1 C85.0 302.5 106.3 309.7 106.0 314.7 C105.7 319.7 83.2 332.5 79.0 330.0 C74.8 327.4 80.7 304.4 81.0 299.3" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="pt1" viewBox="0 0 900 560" width="900" height="560"><path class="sf" d="M216.3 249.5 C224.1 253.0 227.8 253.1 229.1 254.8 C230.3 256.6 229.3 243.9 229.7 262.7 C230.0 281.5 231.2 349.2 230.9 367.7 C230.6 386.3 229.1 372.2 227.8 373.9 C226.6 375.6 225.1 377.0 223.3 377.9 C221.4 378.9 226.8 379.0 216.8 379.3 C206.7 379.7 172.9 380.6 162.9 380.1 C153.0 379.7 159.1 377.9 157.1 376.7 C155.1 375.6 152.3 375.1 150.9 373.3 C149.6 371.5 149.0 384.1 149.1 365.9 C149.2 347.8 150.7 282.7 151.4 264.2 C152.1 245.7 152.3 257.2 153.3 255.1 C154.4 253.0 156.3 252.5 157.7 251.8 C159.1 251.1 152.0 251.2 161.8 250.8 C171.6 250.5 206.3 249.3 216.3 249.5 C226.4 249.7 219.9 251.2 222.0 252.1 C224.1 253.0 227.8 253.1 229.1 254.8" fill="#ffec99" stroke="none"/><path class="dr" pathLength="1" d="M216.3 249.5 C224.1 253.0 227.8 253.1 229.1 254.8 C230.3 256.6 229.3 243.9 229.7 262.7 C230.0 281.5 231.2 349.2 230.9 367.7 C230.6 386.3 229.1 372.2 227.8 373.9 C226.6 375.6 225.1 377.0 223.3 377.9 C221.4 378.9 226.8 379.0 216.8 379.3 C206.7 379.7 172.9 380.6 162.9 380.1 C153.0 379.7 159.1 377.9 157.1 376.7 C155.1 375.6 152.3 375.1 150.9 373.3 C149.6 371.5 149.0 384.1 149.1 365.9 C149.2 347.8 150.7 282.7 151.4 264.2 C152.1 245.7 152.3 257.2 153.3 255.1 C154.4 253.0 156.3 252.5 157.7 251.8 C159.1 251.1 152.0 251.2 161.8 250.8 C171.6 250.5 206.3 249.3 216.3 249.5 C226.4 249.7 219.9 251.2 222.0 252.1 C224.1 253.0 227.8 253.1 229.1 254.8" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M229.9 260.5 C228.5 384.5 229.9 369.7 229.2 371.3 C228.6 373.0 226.7 374.6 224.7 376.1 C222.7 377.6 227.6 379.6 217.2 380.3 C206.9 381.0 172.7 380.2 162.8 380.1 C152.8 380.0 159.4 380.7 157.4 379.8 C155.4 378.9 152.3 376.3 150.8 374.6 C149.3 372.8 148.4 387.9 148.4 369.4 C148.4 351.0 149.9 282.4 150.7 263.9 C151.6 245.5 152.5 260.5 153.5 258.8 C154.5 257.1 155.0 255.1 156.8 253.8 C158.6 252.5 154.2 251.3 164.1 250.9 C174.1 250.5 206.9 250.8 216.5 251.4 C226.1 252.0 220.1 253.9 221.9 254.3 C223.6 254.7 225.7 252.9 227.1 253.9 C228.4 255.0 229.7 241.8 229.9 260.5 C230.2 279.2 228.7 347.6 228.6 366.1 C228.5 384.5 229.9 369.7 229.2 371.3" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M179.7 298.9 C184.0 301.6 205.2 309.8 205.2 315.1 C205.3 320.5 184.0 333.5 180.0 331.0 C176.1 328.5 181.3 305.4 181.6 300.2" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="pt2" viewBox="0 0 900 560" width="900" height="560"><path class="sf" d="M317.9 251.1 C325.8 253.5 326.8 255.8 327.5 257.8 C328.2 259.8 328.0 246.3 328.5 264.3 C328.9 282.3 330.1 347.5 330.1 365.7 C330.0 384.0 329.3 371.4 328.0 373.7 C326.8 376.0 324.3 378.4 322.4 379.5 C320.4 380.6 326.3 380.0 316.3 380.1 C306.3 380.1 272.7 380.2 262.4 380.0 C252.2 379.8 257.0 380.4 254.9 379.1 C252.9 377.8 251.1 374.1 250.3 372.3 C249.5 370.6 250.0 387.0 250.1 368.6 C250.1 350.3 250.3 280.8 250.6 262.1 C250.9 243.3 251.1 258.0 252.0 256.1 C253.0 254.2 254.5 251.9 256.3 250.6 C258.2 249.4 252.7 248.6 262.9 248.7 C273.2 248.8 307.7 250.5 317.9 251.1 C328.2 251.7 322.7 251.3 324.2 252.4 C325.8 253.5 326.8 255.8 327.5 257.8" fill="#b2f2bb" stroke="none"/><path class="dr" pathLength="1" d="M317.9 251.1 C325.8 253.5 326.8 255.8 327.5 257.8 C328.2 259.8 328.0 246.3 328.5 264.3 C328.9 282.3 330.1 347.5 330.1 365.7 C330.0 384.0 329.3 371.4 328.0 373.7 C326.8 376.0 324.3 378.4 322.4 379.5 C320.4 380.6 326.3 380.0 316.3 380.1 C306.3 380.1 272.7 380.2 262.4 380.0 C252.2 379.8 257.0 380.4 254.9 379.1 C252.9 377.8 251.1 374.1 250.3 372.3 C249.5 370.6 250.0 387.0 250.1 368.6 C250.1 350.3 250.3 280.8 250.6 262.1 C250.9 243.3 251.1 258.0 252.0 256.1 C253.0 254.2 254.5 251.9 256.3 250.6 C258.2 249.4 252.7 248.6 262.9 248.7 C273.2 248.8 307.7 250.5 317.9 251.1 C328.2 251.7 322.7 251.3 324.2 252.4 C325.8 253.5 326.8 255.8 327.5 257.8" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M331.9 260.5 C332.0 388.2 331.2 371.9 329.6 373.4 C328.1 375.0 325.6 377.1 323.2 378.4 C320.8 379.8 325.1 380.7 315.2 381.3 C305.3 382.0 273.7 383.1 263.7 382.3 C253.8 381.5 257.2 377.4 255.3 376.4 C253.3 375.4 252.6 378.0 251.9 376.1 C251.2 374.2 251.1 384.0 251.1 365.1 C251.1 346.2 251.4 280.7 251.9 262.9 C252.4 245.1 253.1 260.2 254.3 258.1 C255.5 256.1 257.2 251.8 259.0 250.8 C260.7 249.8 255.7 252.4 265.0 252.2 C274.4 251.9 305.7 249.8 315.1 249.4 C324.6 248.9 319.2 248.9 321.5 249.7 C323.7 250.5 326.9 252.3 328.6 254.1 C330.4 255.9 331.3 241.3 331.9 260.5 C332.5 279.7 332.8 350.5 332.4 369.4 C332.0 388.2 331.2 371.9 329.6 373.4" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M280.9 298.4 C285.3 301.0 307.6 308.4 307.3 313.9 C307.0 319.4 283.7 333.8 279.2 331.1 C274.7 328.5 280.2 303.7 280.4 298.2" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="pt3" viewBox="0 0 900 560" width="900" height="560"><path class="sf" d="M417.8 250.8 C424.3 252.4 426.2 255.5 427.5 257.3 C428.8 259.1 430.1 243.9 430.7 262.2 C431.3 280.4 431.4 348.0 431.2 366.7 C431.1 385.5 430.7 372.6 429.7 374.5 C428.6 376.5 426.6 377.4 424.7 378.2 C422.8 379.0 428.7 378.7 418.2 379.2 C407.7 379.8 372.2 381.5 361.8 381.6 C351.5 381.6 358.0 381.0 356.1 379.6 C354.3 378.2 351.6 375.0 350.8 373.0 C350.1 371.0 351.5 386.0 351.4 367.5 C351.4 349.0 350.4 280.2 350.3 261.9 C350.2 243.5 349.8 259.5 350.9 257.6 C351.9 255.7 354.5 251.9 356.3 250.5 C358.2 249.0 351.5 248.7 361.8 248.8 C372.0 248.8 407.6 250.4 417.8 250.8 C427.9 251.2 421.0 250.2 422.6 251.3 C424.3 252.4 426.2 255.5 427.5 257.3" fill="#ffc9c9" stroke="none"/><path class="dr" pathLength="1" d="M417.8 250.8 C424.3 252.4 426.2 255.5 427.5 257.3 C428.8 259.1 430.1 243.9 430.7 262.2 C431.3 280.4 431.4 348.0 431.2 366.7 C431.1 385.5 430.7 372.6 429.7 374.5 C428.6 376.5 426.6 377.4 424.7 378.2 C422.8 379.0 428.7 378.7 418.2 379.2 C407.7 379.8 372.2 381.5 361.8 381.6 C351.5 381.6 358.0 381.0 356.1 379.6 C354.3 378.2 351.6 375.0 350.8 373.0 C350.1 371.0 351.5 386.0 351.4 367.5 C351.4 349.0 350.4 280.2 350.3 261.9 C350.2 243.5 349.8 259.5 350.9 257.6 C351.9 255.7 354.5 251.9 356.3 250.5 C358.2 249.0 351.5 248.7 361.8 248.8 C372.0 248.8 407.6 250.4 417.8 250.8 C427.9 251.2 421.0 250.2 422.6 251.3 C424.3 252.4 426.2 255.5 427.5 257.3" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M430.5 260.7 C429.2 386.4 428.8 371.2 427.9 373.0 C427.0 374.8 426.3 377.0 424.2 378.5 C422.1 379.9 426.0 381.7 415.4 381.7 C404.7 381.8 370.1 379.0 360.4 378.8 C350.7 378.6 358.4 381.6 357.1 380.5 C355.7 379.4 353.6 374.3 352.3 372.4 C351.0 370.6 350.0 387.2 349.3 369.3 C348.6 351.5 348.0 284.3 348.0 265.3 C348.1 246.2 347.8 257.4 349.6 254.9 C351.5 252.4 356.7 251.1 358.9 250.3 C361.2 249.5 353.5 250.4 363.0 250.2 C372.5 250.1 406.1 248.6 415.8 249.2 C425.6 249.8 419.4 252.7 421.6 254.0 C423.8 255.2 427.6 255.7 429.1 256.8 C430.6 257.9 430.4 242.2 430.5 260.7 C430.6 279.2 430.1 349.0 429.7 367.7 C429.2 386.4 428.8 371.2 427.9 373.0" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M379.2 300.2 C383.6 302.6 405.1 309.4 405.4 314.5 C405.7 319.6 385.3 333.6 380.9 330.8 C376.6 328.0 379.5 303.3 379.3 297.8" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="pt4" viewBox="0 0 900 560" width="900" height="560"><path class="sf" d="M516.7 250.8 C525.4 251.5 528.5 253.2 529.4 255.3 C530.3 257.4 528.6 244.5 528.7 263.1 C528.7 281.7 529.8 348.4 529.6 366.9 C529.5 385.4 528.7 372.2 527.7 374.2 C526.6 376.1 525.1 377.5 523.5 378.4 C521.8 379.4 528.1 379.9 517.7 380.0 C507.4 380.2 471.3 380.0 461.3 379.5 C451.2 379.0 459.0 378.2 457.4 377.1 C455.8 376.0 452.8 374.8 451.5 372.9 C450.3 371.0 450.1 384.3 449.8 365.8 C449.5 347.2 449.5 279.9 449.7 261.8 C450.0 243.7 450.1 259.2 451.2 257.4 C452.3 255.5 454.3 251.6 456.4 250.6 C458.4 249.6 453.4 251.2 463.4 251.3 C473.5 251.3 506.8 250.9 516.7 250.8 C526.7 250.7 521.2 250.0 523.3 250.7 C525.4 251.5 528.5 253.2 529.4 255.3" fill="#a5d8ff" stroke="none"/><path class="dr" pathLength="1" d="M516.7 250.8 C525.4 251.5 528.5 253.2 529.4 255.3 C530.3 257.4 528.6 244.5 528.7 263.1 C528.7 281.7 529.8 348.4 529.6 366.9 C529.5 385.4 528.7 372.2 527.7 374.2 C526.6 376.1 525.1 377.5 523.5 378.4 C521.8 379.4 528.1 379.9 517.7 380.0 C507.4 380.2 471.3 380.0 461.3 379.5 C451.2 379.0 459.0 378.2 457.4 377.1 C455.8 376.0 452.8 374.8 451.5 372.9 C450.3 371.0 450.1 384.3 449.8 365.8 C449.5 347.2 449.5 279.9 449.7 261.8 C450.0 243.7 450.1 259.2 451.2 257.4 C452.3 255.5 454.3 251.6 456.4 250.6 C458.4 249.6 453.4 251.2 463.4 251.3 C473.5 251.3 506.8 250.9 516.7 250.8 C526.7 250.7 521.2 250.0 523.3 250.7 C525.4 251.5 528.5 253.2 529.4 255.3" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M528.3 264.8 C532.0 386.8 528.7 374.2 527.6 376.2 C526.5 378.1 527.3 379.3 525.5 379.8 C523.6 380.4 527.0 379.0 516.5 379.3 C505.9 379.6 471.9 381.2 462.2 381.5 C452.5 381.7 459.7 382.2 458.2 380.8 C456.7 379.4 454.8 375.5 453.1 373.0 C451.4 370.4 448.7 384.0 448.1 365.5 C447.6 347.1 448.9 281.0 449.8 262.5 C450.7 244.0 453.0 256.2 453.7 254.4 C454.3 252.7 452.7 252.3 453.8 251.8 C455.0 251.3 450.1 252.1 460.5 251.5 C470.9 250.9 506.1 248.5 516.4 248.3 C526.6 248.0 520.2 248.8 522.2 249.9 C524.2 251.0 527.4 252.5 528.5 255.0 C529.5 257.5 527.7 245.9 528.3 264.8 C528.9 283.7 532.3 349.7 532.2 368.3 C532.0 386.8 528.7 374.2 527.6 376.2" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M479.8 298.8 C484.3 301.3 507.2 308.3 507.3 313.7 C507.4 319.0 484.8 333.5 480.4 331.0 C476.0 328.4 480.7 303.7 480.8 298.3" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="pt5" viewBox="0 0 900 560" width="900" height="560"><path class="sf" d="M616.6 249.1 C625.8 252.5 625.9 253.4 627.2 255.4 C628.4 257.4 631.0 244.8 631.4 263.4 C631.8 282.0 630.0 348.9 629.4 367.0 C628.9 385.2 629.1 370.4 628.3 372.1 C627.5 373.8 626.7 375.6 624.6 377.1 C622.5 378.6 625.9 380.7 615.9 381.0 C605.8 381.3 574.0 379.2 564.3 378.7 C554.6 378.3 559.9 379.1 557.6 378.4 C555.3 377.6 551.7 375.8 550.6 374.1 C549.4 372.3 550.7 386.3 550.6 367.9 C550.5 349.6 550.1 282.6 550.1 263.9 C550.0 245.3 549.3 257.9 550.3 255.8 C551.3 253.7 554.3 252.6 556.2 251.6 C558.1 250.5 551.7 249.9 561.8 249.5 C571.8 249.1 606.2 248.7 616.6 249.1 C627.0 249.4 622.3 250.3 624.0 251.4 C625.8 252.5 625.9 253.4 627.2 255.4" fill="#ffec99" stroke="none"/><path class="dr" pathLength="1" d="M616.6 249.1 C625.8 252.5 625.9 253.4 627.2 255.4 C628.4 257.4 631.0 244.8 631.4 263.4 C631.8 282.0 630.0 348.9 629.4 367.0 C628.9 385.2 629.1 370.4 628.3 372.1 C627.5 373.8 626.7 375.6 624.6 377.1 C622.5 378.6 625.9 380.7 615.9 381.0 C605.8 381.3 574.0 379.2 564.3 378.7 C554.6 378.3 559.9 379.1 557.6 378.4 C555.3 377.6 551.7 375.8 550.6 374.1 C549.4 372.3 550.7 386.3 550.6 367.9 C550.5 349.6 550.1 282.6 550.1 263.9 C550.0 245.3 549.3 257.9 550.3 255.8 C551.3 253.7 554.3 252.6 556.2 251.6 C558.1 250.5 551.7 249.9 561.8 249.5 C571.8 249.1 606.2 248.7 616.6 249.1 C627.0 249.4 622.3 250.3 624.0 251.4 C625.8 252.5 625.9 253.4 627.2 255.4" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M630.4 262.4 C629.8 384.1 628.8 371.8 627.5 374.0 C626.3 376.1 624.7 377.3 622.8 378.6 C620.9 379.9 626.2 381.1 616.3 381.7 C606.4 382.4 573.7 383.1 563.5 382.4 C553.3 381.8 557.1 379.4 555.4 378.0 C553.6 376.6 554.1 376.1 553.2 373.9 C552.3 371.8 550.0 383.2 549.8 365.0 C549.5 346.8 551.5 283.0 551.8 264.7 C552.2 246.4 551.5 257.4 551.9 255.2 C552.2 252.9 552.1 252.3 554.2 251.4 C556.2 250.4 553.5 249.8 564.0 249.3 C574.6 248.7 607.5 247.9 617.3 248.2 C627.2 248.4 621.7 249.0 623.3 250.7 C624.9 252.5 625.9 256.7 627.1 258.6 C628.3 260.5 629.8 244.6 630.4 262.4 C630.9 280.2 630.7 346.9 630.2 365.5 C629.8 384.1 628.8 371.8 627.5 374.0" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M580.0 299.5 C584.6 301.8 607.4 308.3 607.3 313.6 C607.1 318.9 583.7 333.9 579.1 331.4 C574.5 328.9 579.4 304.0 579.4 298.5" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="pt6" viewBox="0 0 900 560" width="900" height="560"><path class="sf" d="M717.3 251.3 C724.5 253.9 726.4 254.9 727.4 256.5 C728.4 258.2 728.5 244.2 728.9 262.9 C729.4 281.6 730.2 350.2 730.3 368.5 C730.3 386.8 730.0 370.8 729.1 372.6 C728.1 374.4 726.2 377.9 724.4 379.2 C722.5 380.5 728.2 380.2 718.0 380.4 C707.7 380.7 672.9 380.8 662.8 380.6 C652.6 380.4 658.8 380.4 656.9 379.2 C655.0 378.1 652.6 375.8 651.5 374.0 C650.5 372.1 650.9 386.3 650.5 367.9 C650.2 349.4 648.8 282.0 649.2 263.3 C649.6 244.6 651.9 257.4 652.9 255.6 C653.9 253.9 653.8 254.0 655.5 252.8 C657.2 251.6 652.6 248.8 662.9 248.5 C673.2 248.3 707.3 250.5 717.3 251.3 C727.3 252.0 721.2 252.1 722.8 253.0 C724.5 253.9 726.4 254.9 727.4 256.5" fill="#b2f2bb" stroke="none"/><path class="dr" pathLength="1" d="M717.3 251.3 C724.5 253.9 726.4 254.9 727.4 256.5 C728.4 258.2 728.5 244.2 728.9 262.9 C729.4 281.6 730.2 350.2 730.3 368.5 C730.3 386.8 730.0 370.8 729.1 372.6 C728.1 374.4 726.2 377.9 724.4 379.2 C722.5 380.5 728.2 380.2 718.0 380.4 C707.7 380.7 672.9 380.8 662.8 380.6 C652.6 380.4 658.8 380.4 656.9 379.2 C655.0 378.1 652.6 375.8 651.5 374.0 C650.5 372.1 650.9 386.3 650.5 367.9 C650.2 349.4 648.8 282.0 649.2 263.3 C649.6 244.6 651.9 257.4 652.9 255.6 C653.9 253.9 653.8 254.0 655.5 252.8 C657.2 251.6 652.6 248.8 662.9 248.5 C673.2 248.3 707.3 250.5 717.3 251.3 C727.3 252.0 721.2 252.1 722.8 253.0 C724.5 253.9 726.4 254.9 727.4 256.5" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M728.1 263.6 C728.7 386.1 731.2 369.2 730.4 371.1 C729.5 373.0 725.5 377.9 723.1 379.7 C720.6 381.5 725.8 381.5 715.6 382.0 C705.4 382.5 671.6 383.1 661.7 382.5 C651.8 381.9 657.9 379.8 656.4 378.2 C654.8 376.7 653.1 375.5 652.4 373.5 C651.7 371.4 652.8 384.1 652.1 366.1 C651.4 348.1 648.4 283.6 648.4 265.4 C648.3 247.2 650.3 258.8 651.8 257.0 C653.3 255.1 655.4 255.6 657.6 254.1 C659.8 252.5 655.1 247.9 664.8 247.6 C674.6 247.4 706.4 252.0 716.2 252.4 C726.0 252.9 721.7 249.5 723.7 250.2 C725.7 250.8 727.5 254.2 728.2 256.4 C729.0 258.6 728.1 245.0 728.1 263.6 C728.1 282.2 727.9 350.3 728.3 368.2 C728.7 386.1 731.2 369.2 730.4 371.1" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M679.3 300.3 C683.8 302.6 706.0 308.5 706.0 313.7 C706.1 318.9 683.9 334.2 679.8 331.5 C675.7 328.9 681.3 303.5 681.6 297.9" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="pt7" viewBox="0 0 900 560" width="900" height="560"><path class="sf" d="M818.3 248.9 C825.6 252.3 826.5 254.2 827.4 256.0 C828.3 257.8 829.2 243.1 829.5 261.9 C829.9 280.6 829.4 350.0 829.4 368.4 C829.4 386.8 830.5 370.5 829.4 372.0 C828.2 373.5 824.5 375.8 822.6 377.4 C820.7 379.0 827.7 381.0 817.8 381.4 C807.9 381.9 773.2 380.7 763.2 380.0 C753.3 379.2 759.7 378.1 758.0 377.1 C756.3 376.0 754.4 375.0 752.9 373.5 C751.4 372.0 749.6 386.3 748.9 367.8 C748.3 349.3 748.5 280.9 748.9 262.4 C749.2 243.8 749.6 258.6 751.0 256.6 C752.5 254.6 756.0 251.5 757.7 250.4 C759.3 249.3 751.1 250.3 761.2 250.0 C771.3 249.8 807.8 248.7 818.3 248.9 C828.8 249.1 822.6 249.9 824.1 251.1 C825.6 252.3 826.5 254.2 827.4 256.0" fill="#ffc9c9" stroke="none"/><path class="dr" pathLength="1" d="M818.3 248.9 C825.6 252.3 826.5 254.2 827.4 256.0 C828.3 257.8 829.2 243.1 829.5 261.9 C829.9 280.6 829.4 350.0 829.4 368.4 C829.4 386.8 830.5 370.5 829.4 372.0 C828.2 373.5 824.5 375.8 822.6 377.4 C820.7 379.0 827.7 381.0 817.8 381.4 C807.9 381.9 773.2 380.7 763.2 380.0 C753.3 379.2 759.7 378.1 758.0 377.1 C756.3 376.0 754.4 375.0 752.9 373.5 C751.4 372.0 749.6 386.3 748.9 367.8 C748.3 349.3 748.5 280.9 748.9 262.4 C749.2 243.8 749.6 258.6 751.0 256.6 C752.5 254.6 756.0 251.5 757.7 250.4 C759.3 249.3 751.1 250.3 761.2 250.0 C771.3 249.8 807.8 248.7 818.3 248.9 C828.8 249.1 822.6 249.9 824.1 251.1 C825.6 252.3 826.5 254.2 827.4 256.0" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M831.1 265.3 C829.5 385.2 827.6 370.1 826.9 371.9 C826.2 373.6 827.4 376.5 825.9 377.8 C824.4 379.2 828.0 379.0 817.8 379.7 C807.5 380.4 774.4 382.5 764.4 381.9 C754.5 381.3 760.0 377.1 758.0 375.9 C756.0 374.8 753.3 376.2 752.3 374.9 C751.3 373.7 752.3 387.3 751.9 368.5 C751.5 349.7 749.9 280.8 750.0 261.9 C750.1 243.1 751.4 257.0 752.4 255.3 C753.4 253.7 754.1 252.6 756.0 252.0 C757.9 251.4 753.4 251.9 763.6 251.9 C773.8 251.9 807.1 252.1 817.2 252.0 C827.4 251.9 822.5 250.3 824.5 251.3 C826.6 252.3 828.2 255.5 829.3 257.8 C830.4 260.2 831.0 247.1 831.1 265.3 C831.2 283.6 830.9 349.6 830.2 367.4 C829.5 385.2 827.6 370.1 826.9 371.9" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M780.6 300.3 C784.9 302.6 806.4 308.4 806.4 313.7 C806.5 319.0 785.4 334.7 781.2 332.2 C777.0 329.6 781.2 304.0 781.2 298.4" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="pt8" viewBox="0 0 900 560" width="900" height="560"><path class="sf" d="M916.9 251.3 C925.2 253.3 926.9 254.0 927.8 255.8 C928.8 257.7 928.8 244.9 928.9 263.6 C929.1 282.3 929.0 349.8 928.7 368.0 C928.3 386.3 927.5 371.5 926.9 373.2 C926.2 375.0 926.2 377.4 924.8 378.6 C923.3 379.8 928.5 380.5 918.2 380.6 C907.9 380.6 873.2 379.0 862.9 378.7 C852.6 378.3 858.4 379.2 856.4 378.4 C854.4 377.6 851.7 375.8 850.8 374.1 C849.9 372.3 851.5 386.7 851.1 368.0 C850.7 349.3 848.4 280.3 848.6 261.9 C848.7 243.4 850.9 259.0 852.1 257.4 C853.2 255.8 853.6 253.3 855.5 252.3 C857.3 251.2 852.8 251.4 863.0 251.3 C873.3 251.1 906.9 251.1 916.9 251.3 C927.0 251.5 921.6 251.8 923.4 252.5 C925.2 253.3 926.9 254.0 927.8 255.8" fill="#a5d8ff" stroke="none"/><path class="dr" pathLength="1" d="M916.9 251.3 C925.2 253.3 926.9 254.0 927.8 255.8 C928.8 257.7 928.8 244.9 928.9 263.6 C929.1 282.3 929.0 349.8 928.7 368.0 C928.3 386.3 927.5 371.5 926.9 373.2 C926.2 375.0 926.2 377.4 924.8 378.6 C923.3 379.8 928.5 380.5 918.2 380.6 C907.9 380.6 873.2 379.0 862.9 378.7 C852.6 378.3 858.4 379.2 856.4 378.4 C854.4 377.6 851.7 375.8 850.8 374.1 C849.9 372.3 851.5 386.7 851.1 368.0 C850.7 349.3 848.4 280.3 848.6 261.9 C848.7 243.4 850.9 259.0 852.1 257.4 C853.2 255.8 853.6 253.3 855.5 252.3 C857.3 251.2 852.8 251.4 863.0 251.3 C873.3 251.1 906.9 251.1 916.9 251.3 C927.0 251.5 921.6 251.8 923.4 252.5 C925.2 253.3 926.9 254.0 927.8 255.8" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M930.9 264.4 C929.9 386.7 931.1 370.4 929.8 371.7 C928.6 372.9 924.6 374.9 922.4 376.2 C920.1 377.5 926.0 378.8 916.4 379.6 C906.9 380.4 875.1 381.4 865.1 380.8 C855.0 380.3 858.5 377.6 856.2 376.2 C853.9 374.9 852.2 373.7 851.5 372.6 C850.7 371.5 851.5 387.7 851.5 369.6 C851.5 351.5 850.9 283.5 851.4 264.3 C851.9 245.1 853.4 256.8 854.3 254.4 C855.2 252.0 854.9 250.9 856.5 249.7 C858.2 248.6 853.7 247.4 864.0 247.5 C874.4 247.6 908.5 250.2 918.5 250.5 C928.5 250.8 922.2 248.3 924.0 249.3 C925.8 250.3 928.1 253.9 929.2 256.4 C930.4 258.9 930.8 245.6 930.9 264.4 C931.1 283.1 930.3 351.0 930.1 368.8 C929.9 386.7 931.1 370.4 929.8 371.7" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M879.5 300.3 C884.1 302.9 906.5 310.8 906.8 315.9 C907.2 321.0 885.8 333.6 881.6 330.9 C877.3 328.3 881.2 305.1 881.2 300.0" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="pt9" viewBox="0 0 900 560" width="900" height="560"><path class="sf" d="M1016.2 249.4 C1024.6 251.6 1027.3 253.5 1028.6 255.6 C1029.9 257.6 1030.0 244.3 1030.2 262.9 C1030.5 281.5 1030.3 348.3 1030.0 366.9 C1029.8 385.4 1030.0 372.3 1028.9 374.3 C1027.9 376.2 1025.6 377.7 1023.7 378.4 C1021.8 379.1 1027.8 378.1 1017.6 378.5 C1007.3 378.8 972.5 380.8 962.2 380.6 C951.9 380.4 957.6 378.2 955.8 377.2 C953.9 376.3 951.8 376.5 951.1 374.9 C950.3 373.3 951.2 386.8 951.1 367.8 C951.1 348.9 950.5 279.7 950.6 261.3 C950.7 242.8 950.8 258.8 951.7 257.3 C952.5 255.7 953.9 253.2 955.8 251.9 C957.8 250.6 953.5 249.8 963.5 249.4 C973.6 249.0 1006.4 249.2 1016.2 249.4 C1026.1 249.6 1020.5 249.5 1022.5 250.6 C1024.6 251.6 1027.3 253.5 1028.6 255.6" fill="#ffec99" stroke="none"/><path class="dr" pathLength="1" d="M1016.2 249.4 C1024.6 251.6 1027.3 253.5 1028.6 255.6 C1029.9 257.6 1030.0 244.3 1030.2 262.9 C1030.5 281.5 1030.3 348.3 1030.0 366.9 C1029.8 385.4 1030.0 372.3 1028.9 374.3 C1027.9 376.2 1025.6 377.7 1023.7 378.4 C1021.8 379.1 1027.8 378.1 1017.6 378.5 C1007.3 378.8 972.5 380.8 962.2 380.6 C951.9 380.4 957.6 378.2 955.8 377.2 C953.9 376.3 951.8 376.5 951.1 374.9 C950.3 373.3 951.2 386.8 951.1 367.8 C951.1 348.9 950.5 279.7 950.6 261.3 C950.7 242.8 950.8 258.8 951.7 257.3 C952.5 255.7 953.9 253.2 955.8 251.9 C957.8 250.6 953.5 249.8 963.5 249.4 C973.6 249.0 1006.4 249.2 1016.2 249.4 C1026.1 249.6 1020.5 249.5 1022.5 250.6 C1024.6 251.6 1027.3 253.5 1028.6 255.6" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M1031.4 261.2 C1028.4 384.7 1030.9 370.6 1029.8 372.9 C1028.8 375.2 1024.2 378.7 1022.3 379.9 C1020.5 381.1 1028.7 380.4 1018.8 380.0 C1008.9 379.6 973.3 377.7 963.0 377.5 C952.6 377.2 958.7 378.9 956.7 378.4 C954.8 378.0 952.7 377.1 951.4 374.8 C950.1 372.6 949.0 383.8 948.7 365.2 C948.4 346.5 949.6 281.4 949.7 262.9 C949.8 244.5 948.8 256.6 949.5 254.4 C950.2 252.2 951.4 250.8 954.0 249.8 C956.5 248.9 953.8 248.8 964.8 248.7 C975.7 248.6 1010.2 248.8 1019.7 249.0 C1029.1 249.1 1019.6 248.5 1021.5 249.5 C1023.3 250.4 1029.1 252.7 1030.7 254.6 C1032.4 256.6 1031.7 242.6 1031.4 261.2 C1031.1 279.7 1028.9 347.4 1028.7 366.0 C1028.4 384.7 1030.9 370.6 1029.8 372.9" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M980.5 300.1 C984.6 302.4 1004.8 308.6 1004.9 313.7 C1005.0 318.8 985.0 333.0 981.1 330.6 C977.1 328.2 981.2 304.5 981.3 299.3" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div style="position:absolute;right:0;top:240px;width:160px;height:160px;background:linear-gradient(90deg,rgba(255,255,255,0),#fff)"></div><div class="hand hide" id="plN" style="position:absolute;left:50px;top:392px;font-size:52px">10-15 рілсів за раз</div><div class="lbl" style="left:50px;top:470px">Ліміт</div><div class="track" style="left:180px;top:466px;width:520px"><i id="plF" style="background:#4285F4"></i></div><svg class="sk" id="plM" viewBox="0 0 900 560" width="900" height="560"><path class="dr" pathLength="1" d="M219.2 524.3 C197.6 527.3 191.1 527.7 185.5 525.8 C180.0 524.0 174.4 519.7 169.7 516.0 C165.1 512.2 160.3 508.8 157.5 503.4 C154.7 498.1 153.1 489.9 152.9 484.0 C152.7 478.1 154.0 473.1 156.2 467.8 C158.5 462.5 162.4 456.7 166.3 452.3 C170.3 447.8 174.9 444.1 180.1 441.2 C185.4 438.3 192.1 435.4 197.9 434.7 C203.6 434.1 209.2 435.5 214.4 437.5 C219.7 439.5 224.9 442.7 229.4 446.9 C233.9 451.2 238.6 457.6 241.4 462.9 C244.3 468.1 245.9 472.8 246.4 478.4 C246.9 484.1 246.3 491.1 244.4 496.6 C242.4 502.1 239.0 506.8 234.8 511.5 C230.6 516.1 224.4 521.7 219.2 524.3 C213.9 526.9 208.8 526.8 203.2 527.0 C197.6 527.3 191.1 527.7 185.5 525.8" fill="none" stroke="#1e1e1e" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M184.3 526.2 C167.2 513.9 162.5 508.1 159.4 502.8 C156.4 497.4 153.3 491.3 152.9 485.5 C152.6 479.7 155.8 474.1 157.6 468.2 C159.4 462.2 160.3 454.7 163.7 449.8 C167.2 445.0 172.8 441.0 178.2 439.0 C183.6 437.1 190.1 438.2 195.9 438.0 C201.8 437.7 207.3 435.9 213.3 437.6 C219.3 439.2 227.6 444.0 232.0 448.0 C236.4 452.0 237.3 456.4 239.7 461.7 C242.1 467.0 245.8 473.8 246.4 479.7 C246.9 485.7 245.4 491.7 243.1 497.3 C240.8 502.8 236.1 508.7 232.6 512.8 C229.2 516.9 227.7 519.1 222.5 521.9 C217.4 524.7 208.1 528.9 201.7 529.6 C195.3 530.3 189.3 528.2 184.3 526.2 C179.2 524.3 175.5 521.7 171.4 517.8 C167.2 513.9 162.5 508.1 159.4 502.8" fill="none" stroke="#1e1e1e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M233.6 515.2 C247.1 528.1 258.3 536.2 281.2 555.9" fill="none" stroke="#1e1e1e" stroke-width="8.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+<div class="g" id="dbt" style="top:0;height:700px"><div class="gcard" id="dbC" style="left:90px;top:110px;width:900px;height:420px"><div class="lbl" style="left:50px;top:44px">Система для себе</div><div class="gs" style="position:absolute;left:48px;top:88px;font-size:52px;font-weight:700">Клод змонтує?</div><div class="hand hide" id="dbQ" style="position:absolute;left:720px;top:40px;font-size:200px;color:#EA4335">?</div><div class="ab" style="left:50px;top:250px;display:flex;gap:20px"><span class="chip cy hide" id="dbR">на твоєму рівні?</span><span class="chip cy hide" id="dbS">так швидко?</span></div></div></div>
+<div class="g" id="cm" style="top:0;height:700px"><div class="pill hide" id="cmP" style="left:140px;top:270px;width:800px;height:110px;padding:0 40px;font-size:36px"><span style="color:#5f6368">Коментар:</span><span id="cmT" data-text="ТЕСТ" style="font-weight:700;font-size:50px"></span></div></div>
+<div class="g" id="cm2" style="top:0;height:700px"><div class="pill hide" id="cm2P" style="left:140px;top:270px;width:800px;height:110px;padding:0 40px;font-size:36px"><span style="color:#5f6368">Коментар:</span><span id="cm2T" data-text="ТЕСТ" style="font-weight:700;font-size:50px"></span></div></div>
+<div class="g" id="dm" style="top:0;height:700px"><div class="gcard" id="dmC" style="left:90px;top:60px;width:900px;height:590px"><div class="av" style="left:36px;top:30px;background:#4285F4">Р</div><div class="gs" style="position:absolute;left:122px;top:34px;font-size:34px;font-weight:700">Рута</div><div class="gs" style="position:absolute;left:122px;top:76px;font-size:24px;color:#5f6368">Direct</div><div style="position:absolute;left:0;right:0;top:124px;height:2px;background:#e8eaed"></div><div class="bub in hide" id="dm1" style="left:36px;top:150px">Привіт! Скинь одне сире відео</div><div class="bub me hide" id="dm2" style="right:36px;top:250px">сире відео.mp4</div><div class="ab hide" id="dmK" style="left:36px;top:372px"><span class="chip on">Клод</span></div><div class="dots hide" id="dmD" style="left:220px;top:394px"><i></i><i></i><i></i><i></i></div><div class="bub in hide" id="dm3" style="left:36px;top:470px">Готово, ось результат</div><svg class="sk" id="dmOK" viewBox="0 0 900 590" width="900" height="590"><path class="dr" pathLength="1" d="M449.9 506.3 C454.0 510.5 462.8 537.6 474.3 531.4 C485.7 525.3 511.4 479.5 518.9 469.1" fill="none" stroke="#34A853" stroke-width="8.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+
+      <div id="scrim"></div>
+      <div class="cap" id="cap0">СКІЛЬКИ</div>
+      <div class="cap" id="cap1">НАСПРАВДІ</div>
+      <div class="cap" id="cap2">КОШТУЄ</div>
+      <div class="cap" id="cap3">МОНТАЖ</div>
+      <div class="cap" id="cap4">З КЛОДОМ</div>
+      <div class="cap" id="cap5">НА</div>
+      <div class="cap" id="cap6">МІСЯЦЬ?</div>
+      <div class="cap" id="cap7">ЯКЩО</div>
+      <div class="cap" id="cap8">ЧЕСНО,</div>
+      <div class="cap" id="cap9">ТО ПОРАХУВАТИ</div>
+      <div class="cap" id="cap10">ЦЕ</div>
+      <div class="cap" id="cap11">ТОЧНО</div>
+      <div class="cap" id="cap12">МАЙЖЕ</div>
+      <div class="cap" id="cap13">НЕМОЖЛИВО,</div>
+      <div class="cap" id="cap14">ТОМУ</div>
+      <div class="cap" id="cap15">ЩО</div>
+      <div class="cap" id="cap16">ЮСАДЖ</div>
+      <div class="cap" id="cap17">ЦЕ ШТУКА</div>
+      <div class="cap" id="cap18">НЕПЕРЕДБАЧУВАНА,</div>
+      <div class="cap" id="cap19">І</div>
+      <div class="cap" id="cap20">НАПЕРЕД</div>
+      <div class="cap" id="cap21">НЕ</div>
+      <div class="cap" id="cap22">ВГАДАЄШ,</div>
+      <div class="cap" id="cap23">СКІЛЬКИ</div>
+      <div class="cap" id="cap24">ЙОГО</div>
+      <div class="cap" id="cap25">ПІДЕ</div>
+      <div class="cap" id="cap26">НА</div>
+      <div class="cap" id="cap27">ЯКУСЬ</div>
+      <div class="cap" id="cap28">ТУ</div>
+      <div class="cap" id="cap29">ЧИ</div>
+      <div class="cap" id="cap30">ІНШУ</div>
+      <div class="cap" id="cap31">ЗАДАЧУ.</div>
+      <div class="cap" id="cap32">НАВІТЬ</div>
+      <div class="cap" id="cap33">ДВІ</div>
+      <div class="cap" id="cap34">ОДНАКОВІ</div>
+      <div class="cap" id="cap35">ЗАДАЧІ</div>
+      <div class="cap" id="cap36">В РІЗНИХ</div>
+      <div class="cap" id="cap37">ЛЮДЕЙ</div>
+      <div class="cap" id="cap38">МОЖУТЬ</div>
+      <div class="cap" id="cap39">ВИТРАЧАТИ</div>
+      <div class="cap" id="cap40">АБСОЛЮТНО</div>
+      <div class="cap" id="cap41">РІЗНУ</div>
+      <div class="cap" id="cap42">КІЛЬКІСТЬ</div>
+      <div class="cap" id="cap43">ТОКЕНІВ.</div>
+      <div class="cap" id="cap44">АЛЕ</div>
+      <div class="cap" id="cap45">Є ОРІЄНТИР.</div>
+      <div class="cap" id="cap46">НА</div>
+      <div class="cap inv" id="cap47">ПІДПИСЦІ</div>
+      <div class="cap inv" id="cap48">ЗА</div>
+      <div class="cap inv" id="cap52">ОДИН</div>
+      <div class="cap inv" id="cap53">ПʼЯТИГОДИННИЙ</div>
+      <div class="cap inv" id="cap54">ЛІМІТ</div>
+      <div class="cap inv" id="cap55">ТИ</div>
+      <div class="cap inv" id="cap56">МАЙЖЕ</div>
+      <div class="cap inv" id="cap57">ГАРАНТОВАНО</div>
+      <div class="cap inv" id="cap58">ЗМОНТУЄШ</div>
+      <div class="cap inv" id="cap59">ПʼЯТЬ</div>
+      <div class="cap inv" id="cap60">РІЛСІВ.</div>
+      <div class="cap inv" id="cap61">ЯКЩО</div>
+      <div class="cap inv" id="cap62">ЦЕ</div>
+      <div class="cap inv" id="cap63">ЗВИЧАЙНІ</div>
+      <div class="cap inv" id="cap64">ЕКСПЕРТНІ</div>
+      <div class="cap inv" id="cap65">ВІДЕО,</div>
+      <div class="cap inv" id="cap66">ДЕ ТИ</div>
+      <div class="cap inv" id="cap67">ПРОСТО</div>
+      <div class="cap inv" id="cap68">ГОВОРИШ</div>
+      <div class="cap inv" id="cap69">НА</div>
+      <div class="cap inv" id="cap70">КАМЕРУ</div>
+      <div class="cap inv" id="cap71">З</div>
+      <div class="cap inv" id="cap72">СУФЛЕРА,</div>
+      <div class="cap inv" id="cap73">І</div>
+      <div class="cap inv" id="cap74">ВОНИ</div>
+      <div class="cap inv" id="cap75">ДЕСЬ</div>
+      <div class="cap inv" id="cap76">ПО</div>
+      <div class="cap inv" id="cap77">ДВІ-ТРИ</div>
+      <div class="cap inv" id="cap78">ХВИЛИНИ,</div>
+      <div class="cap inv" id="cap79">ТОДІ</div>
+      <div class="cap inv" id="cap80">МОЖНА</div>
+      <div class="cap inv" id="cap81">НАВІТЬ</div>
+      <div class="cap inv" id="cap82">І</div>
+      <div class="cap inv" id="cap83">БІЛЬШЕ,</div>
+      <div class="cap inv" id="cap84">НІЖ</div>
+      <div class="cap inv" id="cap85">ПʼЯТЬ.</div>
+      <div class="cap inv" id="cap86">ЯКЩО</div>
+      <div class="cap inv" id="cap87">ВІДЕО</div>
+      <div class="cap inv" id="cap88">ДОВШЕ,</div>
+      <div class="cap inv" id="cap89">ХВИЛИН</div>
+      <div class="cap inv" id="cap90">НА</div>
+      <div class="cap inv" id="cap91">5-6,</div>
+      <div class="cap inv" id="cap92">І ТАМ</div>
+      <div class="cap inv" id="cap93">БАГАТО</div>
+      <div class="cap inv" id="cap94">ВСТАВОК</div>
+      <div class="cap inv" id="cap95">АБО</div>
+      <div class="cap inv" id="cap96">ЯКИХОСЬ</div>
+      <div class="cap inv" id="cap97">ПОМИЛОК.</div>
+      <div class="cap inv" id="cap98">ТОДІ</div>
+      <div class="cap inv" id="cap99">ДЕСЬ</div>
+      <div class="cap inv" id="cap100">ТРИ</div>
+      <div class="cap inv" id="cap101">РІЛСИ</div>
+      <div class="cap inv" id="cap102">ЗА</div>
+      <div class="cap inv" id="cap103">ПʼЯТИГОДИННИЙ</div>
+      <div class="cap inv" id="cap104">ЛІМІТ.</div>
+      <div class="cap inv" id="cap105">ТОБТО</div>
+      <div class="cap inv" id="cap106">ДАЛІ</div>
+      <div class="cap inv" id="cap107">ВСЕ</div>
+      <div class="cap inv" id="cap108">ВПИРАЄТЬСЯ</div>
+      <div class="cap inv" id="cap109">В</div>
+      <div class="cap inv" id="cap110">ТЕ,</div>
+      <div class="cap inv" id="cap111">ЯКІ</div>
+      <div class="cap inv" id="cap112">САМІ</div>
+      <div class="cap inv" id="cap113">В</div>
+      <div class="cap inv" id="cap114">ТЕБЕ</div>
+      <div class="cap inv" id="cap115">ВІДЕО.</div>
+      <div class="cap inv" id="cap116">ЗВИЧАЙНО,</div>
+      <div class="cap" id="cap117">ЩО</div>
+      <div class="cap" id="cap118">КОЛИ</div>
+      <div class="cap" id="cap119">Я</div>
+      <div class="cap" id="cap120">НАЛАШТОВУЮ</div>
+      <div class="cap" id="cap121">ТАКУ</div>
+      <div class="cap" id="cap122">СИСТЕМУ</div>
+      <div class="cap" id="cap123">СВОЇМ</div>
+      <div class="cap" id="cap124">КЛІЄНТКАМ,</div>
+      <div class="cap" id="cap125">ТО Я</div>
+      <div class="cap" id="cap126">ЗАВЖДИ</div>
+      <div class="cap" id="cap127">МАКСИМАЛЬНО</div>
+      <div class="cap" id="cap128">ОПТИМІЗУЮ</div>
+      <div class="cap" id="cap129">ВИТРАТУ</div>
+      <div class="cap" id="cap130">ТОКЕНІВ.</div>
+      <div class="cap" id="cap131">НАПРИКЛАД,</div>
+      <div class="cap inv" id="cap132">ТАМ Є</div>
+      <div class="cap inv" id="cap133">ШАБЛОНИ</div>
+      <div class="cap inv" id="cap134">САМОЇ</div>
+      <div class="cap inv" id="cap135">АНІМАЦІЇ,</div>
+      <div class="cap inv" id="cap136">ЩОБ НЕ</div>
+      <div class="cap inv" id="cap137">ТРЕБА</div>
+      <div class="cap inv" id="cap138">БУЛО</div>
+      <div class="cap inv" id="cap139">КОЖЕН</div>
+      <div class="cap inv" id="cap140">РАЗ ПИСАТИ</div>
+      <div class="cap inv" id="cap141">ЇЇ</div>
+      <div class="cap inv" id="cap142">З</div>
+      <div class="cap inv" id="cap143">НУЛЯ,</div>
+      <div class="cap inv" id="cap144">І</div>
+      <div class="cap inv" id="cap145">МОЖНА</div>
+      <div class="cap inv" id="cap146">БУЛО</div>
+      <div class="cap inv" id="cap147">ПРОСТО</div>
+      <div class="cap inv" id="cap148">ВЗЯТИ</div>
+      <div class="cap inv" id="cap149">І</div>
+      <div class="cap inv" id="cap150">ВСТАВИТИ.</div>
+      <div class="cap inv" id="cap151">НУ</div>
+      <div class="cap inv" id="cap152">І</div>
+      <div class="cap" id="cap153">ДЛЯ</div>
+      <div class="cap" id="cap154">ТОГО,</div>
+      <div class="cap" id="cap155">ЩОБ ВИ</div>
+      <div class="cap" id="cap156">ЗАГАЛОМ</div>
+      <div class="cap" id="cap157">РОЗУМІЛИ,</div>
+      <div class="cap" id="cap158">В МЕНЕ</div>
+      <div class="cap" id="cap159">КЛОД</div>
+      <div class="cap" id="cap160">ЗА</div>
+      <div class="cap" id="cap164">МОНТУЮ</div>
+      <div class="cap" id="cap165">ДЕСЬ</div>
+      <div class="cap" id="cap166">ПО</div>
+      <div class="cap" id="cap167">10-15</div>
+      <div class="cap" id="cap168">РІЛСІВ</div>
+      <div class="cap" id="cap169">ЗА</div>
+      <div class="cap" id="cap170">РАЗ</div>
+      <div class="cap" id="cap171">І</div>
+      <div class="cap" id="cap172">Я</div>
+      <div class="cap" id="cap173">ВЗАГАЛІ</div>
+      <div class="cap" id="cap174">НЕ</div>
+      <div class="cap" id="cap175">БАЧУ,</div>
+      <div class="cap" id="cap176">ЩОБ</div>
+      <div class="cap" id="cap177">ЩОСЬ</div>
+      <div class="cap" id="cap178">ТАМ</div>
+      <div class="cap" id="cap179">ВИТРАЧАЛОСЬ.</div>
+      <div class="cap" id="cap180">ТОМУ</div>
+      <div class="cap" id="cap181">ЯКЩО</div>
+      <div class="cap" id="cap182">ТИ</div>
+      <div class="cap" id="cap183">ДУМАЄШ</div>
+      <div class="cap" id="cap184">ПРО ТАКУ</div>
+      <div class="cap" id="cap185">СИСТЕМУ</div>
+      <div class="cap" id="cap186">ДЛЯ</div>
+      <div class="cap" id="cap187">СЕБЕ,</div>
+      <div class="cap" id="cap188">АЛЕ НЕ</div>
+      <div class="cap" id="cap189">ВПЕВНЕНА,</div>
+      <div class="cap" id="cap190">ЩО</div>
+      <div class="cap" id="cap191">КЛОД</div>
+      <div class="cap" id="cap192">ЗМОНТУЄ</div>
+      <div class="cap" id="cap193">НА</div>
+      <div class="cap" id="cap194">ТВОЄМУ</div>
+      <div class="cap" id="cap195">РІВНІ</div>
+      <div class="cap" id="cap196">І</div>
+      <div class="cap" id="cap197">ТАК</div>
+      <div class="cap" id="cap198">ШВИДКО,</div>
+      <div class="cap" id="cap199">ЯК ТИ</div>
+      <div class="cap" id="cap200">ХОЧЕШ...</div>
+      <div class="cap" id="cap201">ТО ПИШИ</div>
+      <div class="cap" id="cap204">КОМЕНТАРЯХ.</div>
+      <div class="cap" id="cap205">Я</div>
+      <div class="cap" id="cap206">НАПИШУ</div>
+      <div class="cap" id="cap207">ТОБІ,</div>
+      <div class="cap" id="cap208">МИ</div>
+      <div class="cap" id="cap209">ПОСПІЛКУЄМОСЬ.</div>
+      <div class="cap" id="cap210">ТИ</div>
+      <div class="cap" id="cap211">ДАСИ</div>
+      <div class="cap" id="cap212">МЕНІ</div>
+      <div class="cap" id="cap213">ОДНЕ</div>
+      <div class="cap" id="cap214">СВОЄ</div>
+      <div class="cap" id="cap215">СИРЕ</div>
+      <div class="cap" id="cap216">ВІДЕО,</div>
+      <div class="cap" id="cap217">І</div>
+      <div class="cap" id="cap218">Я</div>
+      <div class="cap" id="cap219">ЗМОНТУЮ</div>
+      <div class="cap" id="cap220">ЙОГО</div>
+      <div class="cap" id="cap221">ЧЕРЕЗ</div>
+      <div class="cap" id="cap222">КЛОДА,</div>
+      <div class="cap" id="cap223">ЩОБ ТИ</div>
+      <div class="cap" id="cap224">ПОБАЧИЛА</div>
+      <div class="cap" id="cap225">РЕЗУЛЬТАТ</div>
+      <div class="cap" id="cap226">НА</div>
+      <div class="cap" id="cap227">СВОЄМУ</div>
+      <div class="cap" id="cap228">Ж</div>
+      <div class="cap" id="cap229">МАТЕРІАЛІ.</div>
+      <div class="cap" id="cap230">ПИШИ</div>
+      <div class="cap" id="cap233">КОМЕНТАРІ.</div>
+      <div class="cap" id="cap234">ПОБАЧИМОСЯ</div>
+      <div class="cap" id="cap235">В ДИРЕКТІ!</div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="87.550" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  tl.set("#cap0", {autoAlpha: 1}, 0.000);
+  tl.set("#cap0", {autoAlpha: 0}, 0.685);
+  tl.set("#cap1", {autoAlpha: 1}, 0.770);
+  tl.set("#cap1", {autoAlpha: 0}, 1.365);
+  tl.set("#cap2", {autoAlpha: 1}, 1.450);
+  tl.set("#cap2", {autoAlpha: 0}, 1.805);
+  tl.set("#cap3", {autoAlpha: 1}, 1.890);
+  tl.set("#cap3", {autoAlpha: 0}, 2.165);
+  tl.set("#cap4", {autoAlpha: 1}, 2.250);
+  tl.set("#cap4", {autoAlpha: 0}, 2.645);
+  tl.set("#cap5", {autoAlpha: 1}, 2.730);
+  tl.set("#cap5", {autoAlpha: 0}, 2.845);
+  tl.set("#cap6", {autoAlpha: 1}, 2.930);
+  tl.set("#cap6", {autoAlpha: 0}, 3.415);
+  tl.set("#cap7", {autoAlpha: 1}, 3.500);
+  tl.set("#cap7", {autoAlpha: 0}, 3.865);
+  tl.set("#cap8", {autoAlpha: 1}, 3.950);
+  tl.set("#cap8", {autoAlpha: 0}, 4.245);
+  tl.set("#cap9", {autoAlpha: 1}, 4.330);
+  tl.set("#cap9", {autoAlpha: 0}, 4.765);
+  tl.set("#cap10", {autoAlpha: 1}, 4.850);
+  tl.set("#cap10", {autoAlpha: 0}, 4.985);
+  tl.set("#cap11", {autoAlpha: 1}, 5.070);
+  tl.set("#cap11", {autoAlpha: 0}, 5.345);
+  tl.set("#cap12", {autoAlpha: 1}, 5.430);
+  tl.set("#cap12", {autoAlpha: 0}, 5.705);
+  tl.set("#cap13", {autoAlpha: 1}, 5.790);
+  tl.set("#cap13", {autoAlpha: 0}, 6.305);
+  tl.set("#cap14", {autoAlpha: 1}, 6.390);
+  tl.set("#cap14", {autoAlpha: 0}, 6.490);
+  tl.set("#cap15", {autoAlpha: 1}, 6.550);
+  tl.set("#cap15", {autoAlpha: 0}, 6.685);
+  tl.set("#cap16", {autoAlpha: 1}, 6.770);
+  tl.set("#cap16", {autoAlpha: 0}, 7.465);
+  tl.set("#cap17", {autoAlpha: 1}, 7.550);
+  tl.set("#cap17", {autoAlpha: 0}, 7.785);
+  tl.set("#cap18", {autoAlpha: 1}, 7.870);
+  tl.set("#cap18", {autoAlpha: 0}, 8.748);
+  tl.set("#cap19", {autoAlpha: 1}, 8.833);
+  tl.set("#cap19", {autoAlpha: 0}, 9.058);
+  tl.set("#cap20", {autoAlpha: 1}, 9.143);
+  tl.set("#cap20", {autoAlpha: 0}, 9.418);
+  tl.set("#cap21", {autoAlpha: 1}, 9.503);
+  tl.set("#cap21", {autoAlpha: 0}, 9.638);
+  tl.set("#cap22", {autoAlpha: 1}, 9.723);
+  tl.set("#cap22", {autoAlpha: 0}, 10.088);
+  tl.set("#cap23", {autoAlpha: 1}, 10.173);
+  tl.set("#cap23", {autoAlpha: 0}, 10.538);
+  tl.set("#cap24", {autoAlpha: 1}, 10.623);
+  tl.set("#cap24", {autoAlpha: 0}, 10.838);
+  tl.set("#cap25", {autoAlpha: 1}, 10.923);
+  tl.set("#cap25", {autoAlpha: 0}, 11.278);
+  tl.set("#cap26", {autoAlpha: 1}, 11.363);
+  tl.set("#cap26", {autoAlpha: 0}, 11.518);
+  tl.set("#cap27", {autoAlpha: 1}, 11.603);
+  tl.set("#cap27", {autoAlpha: 0}, 11.958);
+  tl.set("#cap28", {autoAlpha: 1}, 12.043);
+  tl.set("#cap28", {autoAlpha: 0}, 12.143);
+  tl.set("#cap29", {autoAlpha: 1}, 12.143);
+  tl.set("#cap29", {autoAlpha: 0}, 12.243);
+  tl.set("#cap30", {autoAlpha: 1}, 12.283);
+  tl.set("#cap30", {autoAlpha: 0}, 12.438);
+  tl.set("#cap31", {autoAlpha: 1}, 12.523);
+  tl.set("#cap31", {autoAlpha: 0}, 12.982);
+  tl.set("#cap32", {autoAlpha: 1}, 13.067);
+  tl.set("#cap32", {autoAlpha: 0}, 13.393);
+  tl.set("#cap33", {autoAlpha: 1}, 13.478);
+  tl.set("#cap33", {autoAlpha: 0}, 13.813);
+  tl.set("#cap34", {autoAlpha: 1}, 13.898);
+  tl.set("#cap34", {autoAlpha: 0}, 14.392);
+  tl.set("#cap35", {autoAlpha: 1}, 14.477);
+  tl.set("#cap35", {autoAlpha: 0}, 14.853);
+  tl.set("#cap36", {autoAlpha: 1}, 14.938);
+  tl.set("#cap36", {autoAlpha: 0}, 15.233);
+  tl.set("#cap37", {autoAlpha: 1}, 15.318);
+  tl.set("#cap37", {autoAlpha: 0}, 15.648);
+  tl.set("#cap38", {autoAlpha: 1}, 15.733);
+  tl.set("#cap38", {autoAlpha: 0}, 16.038);
+  tl.set("#cap39", {autoAlpha: 1}, 16.123);
+  tl.set("#cap39", {autoAlpha: 0}, 16.578);
+  tl.set("#cap40", {autoAlpha: 1}, 16.663);
+  tl.set("#cap40", {autoAlpha: 0}, 17.438);
+  tl.set("#cap41", {autoAlpha: 1}, 17.523);
+  tl.set("#cap41", {autoAlpha: 0}, 17.858);
+  tl.set("#cap42", {autoAlpha: 1}, 17.943);
+  tl.set("#cap42", {autoAlpha: 0}, 18.278);
+  tl.set("#cap43", {autoAlpha: 1}, 18.363);
+  tl.set("#cap43", {autoAlpha: 0}, 18.815);
+  tl.set("#cap44", {autoAlpha: 1}, 18.900);
+  tl.set("#cap44", {autoAlpha: 0}, 19.125);
+  tl.set("#cap45", {autoAlpha: 1}, 19.210);
+  tl.set("#cap45", {autoAlpha: 0}, 19.915);
+  tl.set("#cap46", {autoAlpha: 1}, 20.000);
+  tl.set("#cap46", {autoAlpha: 0}, 20.265);
+  tl.set("#cap47", {autoAlpha: 1}, 20.350);
+  tl.set("#cap47", {autoAlpha: 0}, 20.825);
+  tl.set("#cap48", {autoAlpha: 1}, 20.910);
+  tl.set("#cap48", {autoAlpha: 0}, 21.010);
+  tl.set("#cap52", {autoAlpha: 1}, 22.090);
+  tl.set("#cap52", {autoAlpha: 0}, 22.285);
+  tl.set("#cap53", {autoAlpha: 1}, 22.370);
+  tl.set("#cap53", {autoAlpha: 0}, 22.965);
+  tl.set("#cap54", {autoAlpha: 1}, 23.050);
+  tl.set("#cap54", {autoAlpha: 0}, 23.282);
+  tl.set("#cap55", {autoAlpha: 1}, 23.367);
+  tl.set("#cap55", {autoAlpha: 0}, 23.652);
+  tl.set("#cap56", {autoAlpha: 1}, 23.737);
+  tl.set("#cap56", {autoAlpha: 0}, 24.112);
+  tl.set("#cap57", {autoAlpha: 1}, 24.197);
+  tl.set("#cap57", {autoAlpha: 0}, 24.632);
+  tl.set("#cap58", {autoAlpha: 1}, 24.717);
+  tl.set("#cap58", {autoAlpha: 0}, 25.212);
+  tl.set("#cap59", {autoAlpha: 1}, 25.297);
+  tl.set("#cap59", {autoAlpha: 0}, 25.492);
+  tl.set("#cap60", {autoAlpha: 1}, 25.577);
+  tl.set("#cap60", {autoAlpha: 0}, 26.082);
+  tl.set("#cap61", {autoAlpha: 1}, 26.167);
+  tl.set("#cap61", {autoAlpha: 0}, 26.412);
+  tl.set("#cap62", {autoAlpha: 1}, 26.497);
+  tl.set("#cap62", {autoAlpha: 0}, 26.597);
+  tl.set("#cap63", {autoAlpha: 1}, 26.637);
+  tl.set("#cap63", {autoAlpha: 0}, 26.972);
+  tl.set("#cap64", {autoAlpha: 1}, 27.057);
+  tl.set("#cap64", {autoAlpha: 0}, 27.432);
+  tl.set("#cap65", {autoAlpha: 1}, 27.517);
+  tl.set("#cap65", {autoAlpha: 0}, 27.832);
+  tl.set("#cap66", {autoAlpha: 1}, 27.917);
+  tl.set("#cap66", {autoAlpha: 0}, 28.017);
+  tl.set("#cap67", {autoAlpha: 1}, 28.077);
+  tl.set("#cap67", {autoAlpha: 0}, 28.212);
+  tl.set("#cap68", {autoAlpha: 1}, 28.297);
+  tl.set("#cap68", {autoAlpha: 0}, 28.652);
+  tl.set("#cap69", {autoAlpha: 1}, 28.737);
+  tl.set("#cap69", {autoAlpha: 0}, 28.837);
+  tl.set("#cap70", {autoAlpha: 1}, 28.857);
+  tl.set("#cap70", {autoAlpha: 0}, 29.152);
+  tl.set("#cap71", {autoAlpha: 1}, 29.237);
+  tl.set("#cap71", {autoAlpha: 0}, 29.337);
+  tl.set("#cap72", {autoAlpha: 1}, 29.337);
+  tl.set("#cap72", {autoAlpha: 0}, 29.715);
+  tl.set("#cap73", {autoAlpha: 1}, 29.800);
+  tl.set("#cap73", {autoAlpha: 0}, 29.945);
+  tl.set("#cap74", {autoAlpha: 1}, 30.030);
+  tl.set("#cap74", {autoAlpha: 0}, 30.325);
+  tl.set("#cap75", {autoAlpha: 1}, 30.410);
+  tl.set("#cap75", {autoAlpha: 0}, 30.510);
+  tl.set("#cap76", {autoAlpha: 1}, 30.570);
+  tl.set("#cap76", {autoAlpha: 0}, 30.705);
+  tl.set("#cap77", {autoAlpha: 1}, 30.790);
+  tl.set("#cap77", {autoAlpha: 0}, 31.045);
+  tl.set("#cap78", {autoAlpha: 1}, 31.130);
+  tl.set("#cap78", {autoAlpha: 0}, 31.548);
+  tl.set("#cap79", {autoAlpha: 1}, 31.633);
+  tl.set("#cap79", {autoAlpha: 0}, 31.918);
+  tl.set("#cap80", {autoAlpha: 1}, 32.003);
+  tl.set("#cap80", {autoAlpha: 0}, 32.258);
+  tl.set("#cap81", {autoAlpha: 1}, 32.343);
+  tl.set("#cap81", {autoAlpha: 0}, 32.518);
+  tl.set("#cap82", {autoAlpha: 1}, 32.603);
+  tl.set("#cap82", {autoAlpha: 0}, 32.703);
+  tl.set("#cap83", {autoAlpha: 1}, 32.783);
+  tl.set("#cap83", {autoAlpha: 0}, 33.018);
+  tl.set("#cap84", {autoAlpha: 1}, 33.103);
+  tl.set("#cap84", {autoAlpha: 0}, 33.258);
+  tl.set("#cap85", {autoAlpha: 1}, 33.343);
+  tl.set("#cap85", {autoAlpha: 0}, 33.715);
+  tl.set("#cap86", {autoAlpha: 1}, 33.800);
+  tl.set("#cap86", {autoAlpha: 0}, 34.085);
+  tl.set("#cap87", {autoAlpha: 1}, 34.170);
+  tl.set("#cap87", {autoAlpha: 0}, 34.445);
+  tl.set("#cap88", {autoAlpha: 1}, 34.530);
+  tl.set("#cap88", {autoAlpha: 0}, 34.945);
+  tl.set("#cap89", {autoAlpha: 1}, 35.030);
+  tl.set("#cap89", {autoAlpha: 0}, 35.205);
+  tl.set("#cap90", {autoAlpha: 1}, 35.290);
+  tl.set("#cap90", {autoAlpha: 0}, 35.390);
+  tl.set("#cap91", {autoAlpha: 1}, 35.470);
+  tl.set("#cap91", {autoAlpha: 0}, 36.005);
+  tl.set("#cap92", {autoAlpha: 1}, 36.090);
+  tl.set("#cap92", {autoAlpha: 0}, 36.205);
+  tl.set("#cap93", {autoAlpha: 1}, 36.290);
+  tl.set("#cap93", {autoAlpha: 0}, 36.525);
+  tl.set("#cap94", {autoAlpha: 1}, 36.610);
+  tl.set("#cap94", {autoAlpha: 0}, 37.065);
+  tl.set("#cap95", {autoAlpha: 1}, 37.150);
+  tl.set("#cap95", {autoAlpha: 0}, 37.265);
+  tl.set("#cap96", {autoAlpha: 1}, 37.350);
+  tl.set("#cap96", {autoAlpha: 0}, 37.605);
+  tl.set("#cap97", {autoAlpha: 1}, 37.690);
+  tl.set("#cap97", {autoAlpha: 0}, 38.248);
+  tl.set("#cap98", {autoAlpha: 1}, 38.333);
+  tl.set("#cap98", {autoAlpha: 0}, 38.658);
+  tl.set("#cap99", {autoAlpha: 1}, 38.743);
+  tl.set("#cap99", {autoAlpha: 0}, 38.891);
+  tl.set("#cap100", {autoAlpha: 1}, 38.976);
+  tl.set("#cap100", {autoAlpha: 0}, 39.611);
+  tl.set("#cap101", {autoAlpha: 1}, 39.696);
+  tl.set("#cap101", {autoAlpha: 0}, 39.891);
+  tl.set("#cap102", {autoAlpha: 1}, 39.976);
+  tl.set("#cap102", {autoAlpha: 0}, 40.076);
+  tl.set("#cap103", {autoAlpha: 1}, 40.136);
+  tl.set("#cap103", {autoAlpha: 0}, 40.631);
+  tl.set("#cap104", {autoAlpha: 1}, 40.716);
+  tl.set("#cap104", {autoAlpha: 0}, 41.048);
+  tl.set("#cap105", {autoAlpha: 1}, 41.133);
+  tl.set("#cap105", {autoAlpha: 0}, 41.458);
+  tl.set("#cap106", {autoAlpha: 1}, 41.543);
+  tl.set("#cap106", {autoAlpha: 0}, 41.778);
+  tl.set("#cap107", {autoAlpha: 1}, 41.863);
+  tl.set("#cap107", {autoAlpha: 0}, 41.978);
+  tl.set("#cap108", {autoAlpha: 1}, 42.063);
+  tl.set("#cap108", {autoAlpha: 0}, 42.638);
+  tl.set("#cap109", {autoAlpha: 1}, 42.723);
+  tl.set("#cap109", {autoAlpha: 0}, 42.823);
+  tl.set("#cap110", {autoAlpha: 1}, 42.843);
+  tl.set("#cap110", {autoAlpha: 0}, 43.098);
+  tl.set("#cap111", {autoAlpha: 1}, 43.183);
+  tl.set("#cap111", {autoAlpha: 0}, 43.878);
+  tl.set("#cap112", {autoAlpha: 1}, 43.963);
+  tl.set("#cap112", {autoAlpha: 0}, 44.238);
+  tl.set("#cap113", {autoAlpha: 1}, 44.323);
+  tl.set("#cap113", {autoAlpha: 0}, 44.423);
+  tl.set("#cap114", {autoAlpha: 1}, 44.443);
+  tl.set("#cap114", {autoAlpha: 0}, 44.543);
+  tl.set("#cap115", {autoAlpha: 1}, 44.623);
+  tl.set("#cap115", {autoAlpha: 0}, 45.115);
+  tl.set("#cap116", {autoAlpha: 1}, 45.200);
+  tl.set("#cap116", {autoAlpha: 0}, 45.959);
+  tl.set("#cap117", {autoAlpha: 1}, 46.044);
+  tl.set("#cap117", {autoAlpha: 0}, 46.144);
+  tl.set("#cap118", {autoAlpha: 1}, 46.164);
+  tl.set("#cap118", {autoAlpha: 0}, 46.264);
+  tl.set("#cap119", {autoAlpha: 1}, 46.304);
+  tl.set("#cap119", {autoAlpha: 0}, 46.404);
+  tl.set("#cap120", {autoAlpha: 1}, 46.444);
+  tl.set("#cap120", {autoAlpha: 0}, 46.819);
+  tl.set("#cap121", {autoAlpha: 1}, 46.904);
+  tl.set("#cap121", {autoAlpha: 0}, 47.019);
+  tl.set("#cap122", {autoAlpha: 1}, 47.104);
+  tl.set("#cap122", {autoAlpha: 0}, 47.459);
+  tl.set("#cap123", {autoAlpha: 1}, 47.544);
+  tl.set("#cap123", {autoAlpha: 0}, 47.699);
+  tl.set("#cap124", {autoAlpha: 1}, 47.784);
+  tl.set("#cap124", {autoAlpha: 0}, 48.166);
+  tl.set("#cap125", {autoAlpha: 1}, 48.251);
+  tl.set("#cap125", {autoAlpha: 0}, 48.406);
+  tl.set("#cap126", {autoAlpha: 1}, 48.491);
+  tl.set("#cap126", {autoAlpha: 0}, 48.666);
+  tl.set("#cap127", {autoAlpha: 1}, 48.751);
+  tl.set("#cap127", {autoAlpha: 0}, 49.426);
+  tl.set("#cap128", {autoAlpha: 1}, 49.511);
+  tl.set("#cap128", {autoAlpha: 0}, 50.006);
+  tl.set("#cap129", {autoAlpha: 1}, 50.091);
+  tl.set("#cap129", {autoAlpha: 0}, 50.446);
+  tl.set("#cap130", {autoAlpha: 1}, 50.531);
+  tl.set("#cap130", {autoAlpha: 0}, 51.048);
+  tl.set("#cap131", {autoAlpha: 1}, 51.133);
+  tl.set("#cap131", {autoAlpha: 0}, 51.688);
+  tl.set("#cap132", {autoAlpha: 1}, 51.773);
+  tl.set("#cap132", {autoAlpha: 0}, 51.988);
+  tl.set("#cap133", {autoAlpha: 1}, 52.073);
+  tl.set("#cap133", {autoAlpha: 0}, 53.068);
+  tl.set("#cap134", {autoAlpha: 1}, 53.153);
+  tl.set("#cap134", {autoAlpha: 0}, 53.448);
+  tl.set("#cap135", {autoAlpha: 1}, 53.533);
+  tl.set("#cap135", {autoAlpha: 0}, 53.923);
+  tl.set("#cap136", {autoAlpha: 1}, 54.008);
+  tl.set("#cap136", {autoAlpha: 0}, 54.143);
+  tl.set("#cap137", {autoAlpha: 1}, 54.228);
+  tl.set("#cap137", {autoAlpha: 0}, 54.328);
+  tl.set("#cap138", {autoAlpha: 1}, 54.408);
+  tl.set("#cap138", {autoAlpha: 0}, 54.543);
+  tl.set("#cap139", {autoAlpha: 1}, 54.628);
+  tl.set("#cap139", {autoAlpha: 0}, 54.863);
+  tl.set("#cap140", {autoAlpha: 1}, 54.948);
+  tl.set("#cap140", {autoAlpha: 0}, 55.343);
+  tl.set("#cap141", {autoAlpha: 1}, 55.428);
+  tl.set("#cap141", {autoAlpha: 0}, 55.528);
+  tl.set("#cap142", {autoAlpha: 1}, 55.568);
+  tl.set("#cap142", {autoAlpha: 0}, 55.668);
+  tl.set("#cap143", {autoAlpha: 1}, 55.668);
+  tl.set("#cap143", {autoAlpha: 0}, 55.919);
+  tl.set("#cap144", {autoAlpha: 1}, 56.004);
+  tl.set("#cap144", {autoAlpha: 0}, 56.179);
+  tl.set("#cap145", {autoAlpha: 1}, 56.264);
+  tl.set("#cap145", {autoAlpha: 0}, 56.364);
+  tl.set("#cap146", {autoAlpha: 1}, 56.404);
+  tl.set("#cap146", {autoAlpha: 0}, 56.519);
+  tl.set("#cap147", {autoAlpha: 1}, 56.604);
+  tl.set("#cap147", {autoAlpha: 0}, 57.019);
+  tl.set("#cap148", {autoAlpha: 1}, 57.104);
+  tl.set("#cap148", {autoAlpha: 0}, 57.339);
+  tl.set("#cap149", {autoAlpha: 1}, 57.424);
+  tl.set("#cap149", {autoAlpha: 0}, 57.524);
+  tl.set("#cap150", {autoAlpha: 1}, 57.584);
+  tl.set("#cap150", {autoAlpha: 0}, 58.182);
+  tl.set("#cap151", {autoAlpha: 1}, 58.267);
+  tl.set("#cap151", {autoAlpha: 0}, 58.412);
+  tl.set("#cap152", {autoAlpha: 1}, 58.497);
+  tl.set("#cap152", {autoAlpha: 0}, 58.597);
+  tl.set("#cap153", {autoAlpha: 1}, 58.617);
+  tl.set("#cap153", {autoAlpha: 0}, 58.717);
+  tl.set("#cap154", {autoAlpha: 1}, 58.717);
+  tl.set("#cap154", {autoAlpha: 0}, 58.912);
+  tl.set("#cap155", {autoAlpha: 1}, 58.997);
+  tl.set("#cap155", {autoAlpha: 0}, 59.152);
+  tl.set("#cap156", {autoAlpha: 1}, 59.237);
+  tl.set("#cap156", {autoAlpha: 0}, 59.512);
+  tl.set("#cap157", {autoAlpha: 1}, 59.597);
+  tl.set("#cap157", {autoAlpha: 0}, 60.292);
+  tl.set("#cap158", {autoAlpha: 1}, 60.377);
+  tl.set("#cap158", {autoAlpha: 0}, 60.572);
+  tl.set("#cap159", {autoAlpha: 1}, 60.657);
+  tl.set("#cap159", {autoAlpha: 0}, 60.872);
+  tl.set("#cap160", {autoAlpha: 1}, 60.957);
+  tl.set("#cap160", {autoAlpha: 0}, 61.212);
+  tl.set("#cap164", {autoAlpha: 1}, 62.458);
+  tl.set("#cap164", {autoAlpha: 0}, 62.773);
+  tl.set("#cap165", {autoAlpha: 1}, 62.858);
+  tl.set("#cap165", {autoAlpha: 0}, 63.033);
+  tl.set("#cap166", {autoAlpha: 1}, 63.118);
+  tl.set("#cap166", {autoAlpha: 0}, 63.353);
+  tl.set("#cap167", {autoAlpha: 1}, 63.438);
+  tl.set("#cap167", {autoAlpha: 0}, 64.133);
+  tl.set("#cap168", {autoAlpha: 1}, 64.218);
+  tl.set("#cap168", {autoAlpha: 0}, 64.613);
+  tl.set("#cap169", {autoAlpha: 1}, 64.698);
+  tl.set("#cap169", {autoAlpha: 0}, 64.798);
+  tl.set("#cap170", {autoAlpha: 1}, 64.878);
+  tl.set("#cap170", {autoAlpha: 0}, 64.978);
+  tl.set("#cap171", {autoAlpha: 1}, 64.998);
+  tl.set("#cap171", {autoAlpha: 0}, 65.213);
+  tl.set("#cap172", {autoAlpha: 1}, 65.298);
+  tl.set("#cap172", {autoAlpha: 0}, 65.413);
+  tl.set("#cap173", {autoAlpha: 1}, 65.498);
+  tl.set("#cap173", {autoAlpha: 0}, 65.913);
+  tl.set("#cap174", {autoAlpha: 1}, 65.998);
+  tl.set("#cap174", {autoAlpha: 0}, 66.098);
+  tl.set("#cap175", {autoAlpha: 1}, 66.178);
+  tl.set("#cap175", {autoAlpha: 0}, 66.453);
+  tl.set("#cap176", {autoAlpha: 1}, 66.538);
+  tl.set("#cap176", {autoAlpha: 0}, 66.638);
+  tl.set("#cap177", {autoAlpha: 1}, 66.718);
+  tl.set("#cap177", {autoAlpha: 0}, 66.933);
+  tl.set("#cap178", {autoAlpha: 1}, 67.018);
+  tl.set("#cap178", {autoAlpha: 0}, 67.118);
+  tl.set("#cap179", {autoAlpha: 1}, 67.158);
+  tl.set("#cap179", {autoAlpha: 0}, 68.015);
+  tl.set("#cap180", {autoAlpha: 1}, 68.100);
+  tl.set("#cap180", {autoAlpha: 0}, 68.265);
+  tl.set("#cap181", {autoAlpha: 1}, 68.350);
+  tl.set("#cap181", {autoAlpha: 0}, 68.525);
+  tl.set("#cap182", {autoAlpha: 1}, 68.610);
+  tl.set("#cap182", {autoAlpha: 0}, 68.710);
+  tl.set("#cap183", {autoAlpha: 1}, 68.730);
+  tl.set("#cap183", {autoAlpha: 0}, 68.985);
+  tl.set("#cap184", {autoAlpha: 1}, 69.070);
+  tl.set("#cap184", {autoAlpha: 0}, 69.465);
+  tl.set("#cap185", {autoAlpha: 1}, 69.550);
+  tl.set("#cap185", {autoAlpha: 0}, 69.685);
+  tl.set("#cap186", {autoAlpha: 1}, 69.770);
+  tl.set("#cap186", {autoAlpha: 0}, 69.885);
+  tl.set("#cap187", {autoAlpha: 1}, 69.970);
+  tl.set("#cap187", {autoAlpha: 0}, 70.345);
+  tl.set("#cap188", {autoAlpha: 1}, 70.430);
+  tl.set("#cap188", {autoAlpha: 0}, 70.565);
+  tl.set("#cap189", {autoAlpha: 1}, 70.650);
+  tl.set("#cap189", {autoAlpha: 0}, 71.015);
+  tl.set("#cap190", {autoAlpha: 1}, 71.100);
+  tl.set("#cap190", {autoAlpha: 0}, 71.200);
+  tl.set("#cap191", {autoAlpha: 1}, 71.238);
+  tl.set("#cap191", {autoAlpha: 0}, 71.453);
+  tl.set("#cap192", {autoAlpha: 1}, 71.538);
+  tl.set("#cap192", {autoAlpha: 0}, 71.693);
+  tl.set("#cap193", {autoAlpha: 1}, 71.778);
+  tl.set("#cap193", {autoAlpha: 0}, 71.953);
+  tl.set("#cap194", {autoAlpha: 1}, 72.038);
+  tl.set("#cap194", {autoAlpha: 0}, 72.353);
+  tl.set("#cap195", {autoAlpha: 1}, 72.438);
+  tl.set("#cap195", {autoAlpha: 0}, 72.633);
+  tl.set("#cap196", {autoAlpha: 1}, 72.718);
+  tl.set("#cap196", {autoAlpha: 0}, 72.818);
+  tl.set("#cap197", {autoAlpha: 1}, 72.898);
+  tl.set("#cap197", {autoAlpha: 0}, 72.998);
+  tl.set("#cap198", {autoAlpha: 1}, 73.018);
+  tl.set("#cap198", {autoAlpha: 0}, 73.373);
+  tl.set("#cap199", {autoAlpha: 1}, 73.458);
+  tl.set("#cap199", {autoAlpha: 0}, 73.593);
+  tl.set("#cap200", {autoAlpha: 1}, 73.678);
+  tl.set("#cap200", {autoAlpha: 0}, 74.082);
+  tl.set("#cap201", {autoAlpha: 1}, 74.167);
+  tl.set("#cap201", {autoAlpha: 0}, 74.492);
+  tl.set("#cap204", {autoAlpha: 1}, 75.017);
+  tl.set("#cap204", {autoAlpha: 0}, 75.518);
+  tl.set("#cap205", {autoAlpha: 1}, 75.603);
+  tl.set("#cap205", {autoAlpha: 0}, 75.858);
+  tl.set("#cap206", {autoAlpha: 1}, 75.943);
+  tl.set("#cap206", {autoAlpha: 0}, 76.278);
+  tl.set("#cap207", {autoAlpha: 1}, 76.363);
+  tl.set("#cap207", {autoAlpha: 0}, 76.518);
+  tl.set("#cap208", {autoAlpha: 1}, 76.603);
+  tl.set("#cap208", {autoAlpha: 0}, 76.703);
+  tl.set("#cap209", {autoAlpha: 1}, 76.703);
+  tl.set("#cap209", {autoAlpha: 0}, 77.446);
+  tl.set("#cap210", {autoAlpha: 1}, 77.531);
+  tl.set("#cap210", {autoAlpha: 0}, 77.631);
+  tl.set("#cap211", {autoAlpha: 1}, 77.651);
+  tl.set("#cap211", {autoAlpha: 0}, 77.986);
+  tl.set("#cap212", {autoAlpha: 1}, 78.071);
+  tl.set("#cap212", {autoAlpha: 0}, 78.406);
+  tl.set("#cap213", {autoAlpha: 1}, 78.491);
+  tl.set("#cap213", {autoAlpha: 0}, 78.746);
+  tl.set("#cap214", {autoAlpha: 1}, 78.831);
+  tl.set("#cap214", {autoAlpha: 0}, 79.146);
+  tl.set("#cap215", {autoAlpha: 1}, 79.231);
+  tl.set("#cap215", {autoAlpha: 0}, 79.566);
+  tl.set("#cap216", {autoAlpha: 1}, 79.651);
+  tl.set("#cap216", {autoAlpha: 0}, 79.982);
+  tl.set("#cap217", {autoAlpha: 1}, 80.067);
+  tl.set("#cap217", {autoAlpha: 0}, 80.352);
+  tl.set("#cap218", {autoAlpha: 1}, 80.437);
+  tl.set("#cap218", {autoAlpha: 0}, 80.612);
+  tl.set("#cap219", {autoAlpha: 1}, 80.697);
+  tl.set("#cap219", {autoAlpha: 0}, 81.032);
+  tl.set("#cap220", {autoAlpha: 1}, 81.117);
+  tl.set("#cap220", {autoAlpha: 0}, 81.292);
+  tl.set("#cap221", {autoAlpha: 1}, 81.377);
+  tl.set("#cap221", {autoAlpha: 0}, 81.612);
+  tl.set("#cap222", {autoAlpha: 1}, 81.697);
+  tl.set("#cap222", {autoAlpha: 0}, 82.032);
+  tl.set("#cap223", {autoAlpha: 1}, 82.117);
+  tl.set("#cap223", {autoAlpha: 0}, 82.352);
+  tl.set("#cap224", {autoAlpha: 1}, 82.437);
+  tl.set("#cap224", {autoAlpha: 0}, 82.812);
+  tl.set("#cap225", {autoAlpha: 1}, 82.897);
+  tl.set("#cap225", {autoAlpha: 0}, 83.252);
+  tl.set("#cap226", {autoAlpha: 1}, 83.337);
+  tl.set("#cap226", {autoAlpha: 0}, 83.652);
+  tl.set("#cap227", {autoAlpha: 1}, 83.737);
+  tl.set("#cap227", {autoAlpha: 0}, 84.132);
+  tl.set("#cap228", {autoAlpha: 1}, 84.217);
+  tl.set("#cap228", {autoAlpha: 0}, 84.317);
+  tl.set("#cap229", {autoAlpha: 1}, 84.337);
+  tl.set("#cap229", {autoAlpha: 0}, 84.915);
+  tl.set("#cap230", {autoAlpha: 1}, 85.000);
+  tl.set("#cap230", {autoAlpha: 0}, 85.305);
+  tl.set("#cap233", {autoAlpha: 1}, 85.690);
+  tl.set("#cap233", {autoAlpha: 0}, 86.282);
+  tl.set("#cap234", {autoAlpha: 1}, 86.367);
+  tl.set("#cap234", {autoAlpha: 0}, 86.892);
+  tl.set("#cap235", {autoAlpha: 1}, 86.977);
+  tl.set("#cap235", {autoAlpha: 0}, 87.317);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 87.417);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 20.100);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 45.323);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 51.233);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 58.534);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 61.097);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 62.258);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 74.377);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 75.017);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 85.190);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 85.640);
+
+
+function spring(z, w) {
+  var wd = w * Math.sqrt(1 - z * z);
+  function f(t) { return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + (z * w / wd) * Math.sin(wd * t)); }
+  var e = f(1);
+  return function (t) { return t >= 1 ? 1 : f(t) / e; };
+}
+var SP = spring(0.62, 13), POP = spring(0.46, 14), SOFT = spring(0.84, 11);
+
+function sketchHelpers(tl) {
+  var Q = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+  // draw every stroke inside sel in document order — a hand drawing it.
+  // d is the total time; hachure strokes go faster than outlines.
+  function draw(sel, t, d) {
+    var ps = Q(sel + " .dr").filter(function (p) { return !p.classList.contains("dash"); });
+    if (!ps.length && document.querySelector(sel) && document.querySelector(sel).classList.contains("dr")) ps = Q(sel);
+    var w = ps.map(function (p) { return p.classList.contains("hz") ? 0.6 : (p.classList.contains("ah") ? 0.25 : 1); });
+    var sum = w.reduce(function (a, b) { return a + b; }, 0) || 1, at = t;
+    d = d || 0.7;
+    ps.forEach(function (p, i) {
+      var dd = d * w[i] / sum;
+      tl.fromTo(p, {strokeDashoffset: 1.05}, {strokeDashoffset: 0, duration: dd, ease: "power1.inOut", immediateRender: false}, at);
+      at += dd;
+    });
+    Q(sel + " .dr.dash").forEach(function (p) { tl.fromTo(p, {autoAlpha: 0}, {autoAlpha: 1, duration: 0.25, immediateRender: false}, t); });
+    Q(sel + " .sf, " + sel + " .mk").forEach(function (p) {
+      tl.fromTo(p, {autoAlpha: 0}, {autoAlpha: 1, duration: 0.3, ease: "power1.out", immediateRender: false}, t + d * 0.5);
+    });
+    return at;
+  }
+  // erase: the strokes un-draw backwards, fast
+  function undraw(sel, t, d) {
+    var ps = Q(sel + " .dr").reverse(); d = d || 0.35;
+    ps.forEach(function (p, i) { tl.to(p, {strokeDashoffset: 1.05, duration: d, ease: "power1.in"}, t); });
+    Q(sel + " .sf, " + sel + " .mk").forEach(function (p) { tl.to(p, {autoAlpha: 0, duration: d}, t); });
+  }
+  // handwriting: the text is revealed left to right, like ink going down
+  function write(sel, t, d) {
+    tl.set(sel, {autoAlpha: 1}, t);
+    tl.fromTo(sel, {clipPath: "inset(-20% 100% -20% 0%)"},
+              {clipPath: "inset(-20% -2% -20% 0%)", duration: d || 0.55, ease: "power1.inOut", immediateRender: false}, t);
+  }
+  // a Material object lands: scale with a spring, a whisker of tilt that settles
+  function pop(sel, t, o) {
+    o = o || {};
+    tl.fromTo(sel, {autoAlpha: 0, scale: o.s == null ? 0.6 : o.s, rotation: o.r == null ? -4 : o.r, y: o.y == null ? 24 : o.y},
+              {autoAlpha: 1, scale: 1, rotation: o.to || 0, y: 0, duration: o.d || 0.7, ease: o.ease || POP, immediateRender: true}, t);
+  }
+  function show(sel, t) { tl.set(sel, {autoAlpha: 1}, t); }
+  function out(sel, t, d) { tl.to(sel, {autoAlpha: 0, scale: 0.92, duration: d || 0.25, ease: "power2.in"}, t); }
+  function fadeOut(sel, t, d) { tl.to(sel, {autoAlpha: 0, duration: d || 0.25, ease: "power1.in"}, t); }
+  function bump(sel, t) {
+    tl.to(sel, {scale: 1.08, duration: 0.1, ease: "power2.out"}, t);
+    tl.to(sel, {scale: 1, duration: 0.45, ease: SP}, t + 0.1);
+  }
+  function wiggle(sel, t) { tl.to(sel, {keyframes: {rotation: [0, -5, 4, -2.5, 1, 0]}, duration: 0.5, ease: "none"}, t); }
+  // the four Google dots bounce in sequence while something "thinks"
+  function think(sel, t, d) {
+    var dots = Q(sel + " i"), n = Math.max(1, Math.floor((d || 1.2) / 0.6));
+    dots.forEach(function (el, i) {
+      for (var k = 0; k < n; k++)
+        tl.to(el, {keyframes: {y: [0, -22, 0]}, duration: 0.42, ease: "sine.inOut"}, t + k * 0.6 + i * 0.09);
+    });
+  }
+  function toggle(sel, t, color) {
+    tl.to(sel, {backgroundColor: color || "#0b57d0", borderColor: color || "#0b57d0", duration: 0.18}, t);
+    tl.to(sel + " b", {x: 40, scale: 1.18, backgroundColor: "#fff", duration: 0.45, ease: SP}, t);
+  }
+  // typing into a Google search pill / input: chars appear one by one
+  function type(sel, t, cps) {
+    var el = document.querySelector(sel), txt = el.getAttribute("data-text") || "", o = {n: 0};
+    cps = cps || 22;
+    tl.fromTo(o, {n: 0}, {n: txt.length, duration: txt.length / cps, ease: "none", immediateRender: true,
+      onUpdate: function () { el.textContent = txt.slice(0, Math.round(o.n)); }}, t);
+  }
+  function count(sel, t, to, d, fmt) {
+    var o = {v: 0}, el = document.querySelector(sel);
+    tl.fromTo(o, {v: 0}, {v: to, duration: d || 1.0, ease: "power2.out", immediateRender: false,
+              onUpdate: function () { el.textContent = fmt ? fmt(o.v) : Math.round(o.v); }}, t);
+  }
+  // the whiteboard takes over: it is wiped in by a marker sweep from a point
+  function boardIn(sel, t, x, y, d) {
+    tl.set(sel, {autoAlpha: 1}, t);
+    tl.fromTo(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)"},
+              {clipPath: "circle(2300px at " + x + "px " + y + "px)", duration: d || 0.75, ease: "power3.inOut", immediateRender: false}, t);
+  }
+  function boardOut(sel, t, x, y, d) {
+    tl.to(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)", duration: d || 0.55, ease: "power3.inOut"}, t);
+    tl.set(sel, {autoAlpha: 0}, t + (d || 0.55) + 0.02);
+  }
+  // infinite canvas: pan/zoom the board's camera layer to frame the next idea
+  function pan(sel, t, x, y, s, d) {
+    tl.to(sel, {x: x, y: y, scale: s == null ? 1 : s, duration: d || 0.8, ease: "power3.inOut"}, t);
+  }
+  return {draw: draw, undraw: undraw, write: write, pop: pop, show: show, out: out, fadeOut: fadeOut,
+          bump: bump, wiggle: wiggle, think: think, toggle: toggle, type: type, count: count,
+          boardIn: boardIn, boardOut: boardOut, pan: pan};
+}
+
+  var h = sketchHelpers(tl);
+  gsap.set("#vid", {transformOrigin: "540px 900px"});
+  tl.fromTo("#vid", {scale: 1}, {scale: 1.045, duration: 87.550, ease: "none"}, 0);
+  /* b_q */
+
+  h.pop("#q", 0.100, {s: 1, r: 0, y: 0, d: 0.2});
+  h.pop("#qC", 0.100, {s: 0.7, r: -3});
+  h.write("#qL", 1.790, 0.4);
+  h.write("#qT", 2.630, 0.45);
+  h.write("#qQ", 2.930, 0.35);
+  h.wiggle("#qQ", 3.380);
+  h.write("#qF", 4.230, 0.9);
+  h.draw("#qX", 5.790, 0.35);
+  h.draw("#qG", 6.670, 0.9);
+  h.write("#qGL", 7.070, 0.4);
+  h.wiggle("#qG", 7.870);
+  tl.to("#qC", {scale: 0.47, x: -240, y: -10, autoAlpha: 0, duration: 0.4, ease: "power3.in"}, 8.793);
+  tl.set("#q", {autoAlpha: 0}, 9.243);
+  /* b_tk */
+
+  h.show("#tk", 8.893);
+  h.pop("#tA", 8.893, {s: 0.6, r: -3});
+  h.draw("#tAB", 9.293, 0.9);
+  tl.set("#tAF", {scaleX: 0}, 0);
+  tl.set("#tBF", {scaleX: 0}, 0);
+  h.write("#tQ", 10.173, 0.3);
+  h.wiggle("#tQ", 12.523);
+  h.pop("#tB", 13.378, {s: 0.6, r: 3});
+  h.draw("#tBB", 13.578, 0.6);
+  h.write("#tEq", 13.898, 0.3);
+  h.draw("#tAP", 14.938, 0.4);
+  h.draw("#tBP", 15.318, 0.4);
+  h.fadeOut("#tQ", 17.223, 0.2);
+  tl.to("#tAF", {scaleX: 0.22, duration: 0.7, ease: "power2.out"}, 17.423);
+  tl.to("#tBF", {scaleX: 0.92, duration: 1.1, ease: "power2.out"}, 17.423);
+  h.bump("#tB", 18.363);
+  h.out("#tA", 18.860, 0.25);
+  h.out("#tB", 18.860, 0.25);
+  h.fadeOut("#tEq", 18.860, 0.2);
+  tl.set("#tk", {autoAlpha: 0}, 19.210);
+  /* b_board */
+
+  h.show("#or", 19.110);
+  h.pop("#orP", 19.110, {s: 0.5, r: -4});
+  h.boardIn("#bd", 19.850, 540, 305, 0.75);
+  tl.set("#or", {autoAlpha: 0}, 20.600);
+  h.write("#bL", 20.300, 0.4);
+  h.pop("#b20", 21.020, {s: 0.5, r: -5});
+  h.write("#bLim", 22.090, 0.5);
+  h.pop("#bTr", 22.190, {s: 0.9, r: 0, y: 0});
+  tl.set("#bF", {scaleX: 0}, 0);
+  tl.to("#bF", {scaleX: 0.9, duration: 1.6, ease: "power1.inOut"}, 25.097);
+  h.draw("#lt0", 25.197+0.00, 0.32);
+  h.draw("#lt1", 25.197+0.22, 0.32);
+  h.draw("#lt2", 25.197+0.44, 0.32);
+  h.draw("#lt3", 25.197+0.66, 0.32);
+  h.draw("#lt4", 25.197+0.88, 0.32);
+  h.write("#lN", 25.897, 0.45);
+  h.draw("#bDiv", 26.757, 0.5);
+  h.pop("#cE", 26.957, {s: 0.5, r: -4});
+  h.pop("#cK", 28.707, {s: 0.5, r: 4});
+  h.pop("#cS", 29.237, {s: 0.5, r: -4});
+  h.pop("#c23", 30.690, {s: 0.5, r: 4});
+  h.draw("#lDash", 32.683, 0.4);
+  h.write("#lMore", 32.883, 0.4);
+  /* the same limit, longer videos */
+  tl.to("#bF", {scaleX: 0, duration: 0.35, ease: "power2.in"}, 33.800);
+  h.pop("#cD", 34.430, {s: 0.5, r: -4});
+  h.pop("#c56", 35.370, {s: 0.5, r: 4});
+  h.pop("#cV", 36.460, {s: 0.5, r: -4});
+  h.pop("#cP", 37.590, {s: 0.5, r: 4});
+  tl.to("#bF", {scaleX: 0.9, duration: 1.2, ease: "power1.inOut"}, 38.776);
+  h.draw("#rt0", 38.876+0.00, 0.32);
+  h.draw("#rt1", 38.876+0.25, 0.32);
+  h.draw("#rt2", 38.876+0.50, 0.32);
+  h.write("#rN", 39.676, 0.45);
+  h.draw("#lLoop", 41.963, 0.5);
+  h.draw("#rLoop", 42.463, 0.5);
+  h.boardOut("#bd", 44.923, 540, 700, 0.55);
+  /* b_sys */
+
+  h.show("#sys", 46.294);
+  h.pop("#sysC", 46.294, {s: 0.7, r: 3});
+  tl.set("#sysF", {scaleX: 0.85}, 0);
+  h.toggle("#sysT", 49.511, "#0b57d0");
+  tl.to("#sysF", {scaleX: 0.3, duration: 0.9, ease: "power2.inOut"}, 50.091);
+  h.bump("#sysT", 50.731);
+  /* b_board2 */
+
+  tl.to("#sysC", {scale: 1.06, duration: 0.3, ease: "power2.in"}, 50.833);
+  h.boardIn("#bd2", 50.933, 790, 280, 0.75);
+  tl.set("#sys", {autoAlpha: 0}, 51.733);
+  h.write("#b2T", 51.433, 0.7);
+  h.draw("#b2U", 51.873, 0.35);
+  h.draw("#tp1", 52.073, 0.5);
+  h.write("#tp1L", 52.373, 0.3);
+  h.draw("#tp2", 52.573, 0.5);
+  h.write("#tp2L", 52.873, 0.3);
+  h.draw("#tp3", 53.073, 0.5);
+  h.write("#tp3L", 53.373, 0.3);
+  h.draw("#ph", 53.633, 0.5);
+  h.write("#phL", 53.933, 0.3);
+  h.draw("#code", 54.348, 0.9);
+  h.write("#codeL", 55.048, 0.4);
+  h.draw("#codeX", 55.668, 0.35);
+  tl.set("#mv", {autoAlpha: 1}, 56.604);
+  h.draw("#mvS", 56.594, 0.01);
+  tl.fromTo("#mv", {x: 0, y: 0, scale: 1, rotation: 0}, {x: 280, y: 440, scale: 0.8, rotation: -4, duration: 0.7, ease: SP, immediateRender: false}, 57.104);
+  h.draw("#phOK", 57.684, 0.3);
+  h.boardOut("#bd2", 58.134, 820, 870, 0.55);
+  /* b_pl */
+
+  h.show("#pl", 60.507);
+  h.pop("#plC", 60.507, {s: 0.7, r: -3});
+  h.pop("#plK", 60.707, {s: 0.5, r: 4});
+  h.pop("#pl100", 61.247, {s: 0.5, r: -5});
+  tl.set("#plF", {scaleX: 0.03}, 0);
+  h.draw("#pt0", 62.458, 0.25);
+  h.draw("#pt1", 62.618, 0.25);
+  h.draw("#pt2", 62.778, 0.25);
+  h.draw("#pt3", 62.938, 0.25);
+  h.draw("#pt4", 63.098, 0.25);
+  h.draw("#pt5", 63.258, 0.25);
+  h.draw("#pt6", 63.418, 0.25);
+  h.draw("#pt7", 63.578, 0.25);
+  h.draw("#pt8", 63.738, 0.25);
+  h.draw("#pt9", 63.898, 0.25);
+  h.write("#plN", 63.438, 0.6);
+  h.draw("#plM", 65.978, 0.5);
+  h.bump("#plM", 67.158);
+  tl.to("#plC", {y: -30, autoAlpha: 0, duration: 0.3, ease: "power2.in"}, 67.750);
+  tl.set("#pl", {autoAlpha: 0}, 68.100);
+  /* b_cta */
+
+  h.show("#dbt", 69.350);
+  h.pop("#dbC", 69.350, {s: 0.7, r: 3});
+  h.write("#dbQ", 70.650, 0.35);
+  h.wiggle("#dbQ", 71.050);
+  h.pop("#dbR", 72.338, {s: 0.5, r: -4});
+  h.pop("#dbS", 72.918, {s: 0.5, r: 4});
+  tl.to("#dbC", {y: -30, autoAlpha: 0, duration: 0.25, ease: "power2.in"}, 73.867);
+  tl.set("#dbt", {autoAlpha: 0}, 74.167);
+  h.show("#cm", 74.067);
+  h.pop("#cmP", 74.067, {s: 0.8, r: 0, y: 20});
+  h.type("#cmT", 74.577, 8);
+  h.bump("#cmP", 75.017);
+  tl.to("#cmP", {y: -40, autoAlpha: 0, duration: 0.25, ease: "power2.in"}, 75.643);
+  tl.set("#cm", {autoAlpha: 0}, 75.943);
+  h.show("#dm", 75.793);
+  h.pop("#dmC", 75.793, {s: 0.75, r: -2});
+  h.pop("#dm1", 76.043, {s: 0.5, r: 0});
+  h.pop("#dm2", 79.131, {s: 0.5, r: 0});
+  h.pop("#dmK", 80.597, {s: 0.5, r: -4});
+  h.pop("#dmD", 80.697, {s: 0.5, r: 0});
+  h.think("#dmD", 80.797, 1.9);
+  h.bump("#dmK", 81.697);
+  h.out("#dmD", 82.697, 0.15);
+  h.pop("#dm3", 82.797, {s: 0.6, r: 2});
+  h.draw("#dmOK", 83.197, 0.35);
+  tl.to("#dmC", {y: -30, autoAlpha: 0, duration: 0.3, ease: "power2.in"}, 84.700);
+  tl.set("#dm", {autoAlpha: 0}, 85.000);
+  h.show("#cm2", 84.900);
+  h.pop("#cm2P", 84.900, {s: 0.8, r: 0, y: 20});
+  h.type("#cm2T", 85.390, 8);
+  h.bump("#cm2P", 86.367);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>

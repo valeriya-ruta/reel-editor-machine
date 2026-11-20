@@ -1,0 +1,212 @@
+[
+ {
+  "t": 0.1,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 4.33,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 5.79,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 6.67,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 8.943,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 13.478,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 17.423,
+  "name": "whoosh-short",
+  "db": -4
+ },
+ {
+  "t": 19.16,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 19.9,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 21.07,
+  "name": "kaching",
+  "db": 0
+ },
+ {
+  "t": 22.09,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 25.197,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 27.057,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 30.79,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 34.53,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 36.61,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 38.876,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 42.063,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 44.923,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 46.344,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 49.511,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 50.091,
+  "name": "whoosh-short",
+  "db": -4
+ },
+ {
+  "t": 51.133,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 52.073,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 54.448,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 55.668,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 57.104,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 57.834,
+  "name": "ping",
+  "db": -3
+ },
+ {
+  "t": 58.084,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 60.557,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 61.297,
+  "name": "kaching",
+  "db": 0
+ },
+ {
+  "t": 65.978,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 69.35,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 70.65,
+  "name": "pencil",
+  "db": -4
+ },
+ {
+  "t": 73.018,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 74.067,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 74.577,
+  "name": "key-press",
+  "db": 0
+ },
+ {
+  "t": 75.943,
+  "name": "notification",
+  "db": 0
+ },
+ {
+  "t": 79.231,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 82.897,
+  "name": "ping",
+  "db": 0
+ },
+ {
+  "t": 85.0,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 85.39,
+  "name": "key-press",
+  "db": 0
+ }
+]

@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 46 — налаштування агента SendPulse</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+    @font-face {
+      font-family: "ProductSans";
+      src: url("assets/fonts/ProductSans-Bold.ttf");
+      font-weight: 900; font-style: normal; font-display: block;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px;
+            overflow: hidden; background: #000;
+            font-family: "ProductSans", system-ui, sans-serif;
+      --surface:        #fffcfd;
+      --container:      #fbeef2;
+      --container-high: #f4dfe5;
+      --graphite:       rgba(23,20,28,0.13);
+      --accent:         #b4122f;
+      --accent-deep:    #8d0d24;
+      --pink:           #ff6e9c;
+      --ink:            #17141c;
+
+      --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
+      --lit-blush:  linear-gradient(115deg, #ffffff 0%, #fff7fa 100%);
+      --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
+      --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
+      --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
+
+      --rim: inset 0 1.5px 0 rgba(255,255,255,0.92),
+             inset 0 -1.5px 0 rgba(255,255,255,0.14),
+             inset 0 0 0 1px rgba(255,255,255,0.28);
+      --rim-dark: inset 0 1.5px 0 rgba(255,255,255,0.16),
+                  inset 0 0 0 1px rgba(255,255,255,0.08);
+      --rim-glass: inset 0 2px 0 rgba(255,255,255,0.70),
+                   inset 0 -2px 0 rgba(255,255,255,0.10),
+                   inset 0 0 0 1.5px rgba(255,255,255,0.30);
+
+      /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
+         Light coming off the object, not the object sitting on a surface. */
+      --glow: drop-shadow(0 0 10px rgba(255,196,218,0.95))
+              drop-shadow(0 0 26px rgba(255,110,156,0.85))
+              drop-shadow(0 0 64px rgba(255,110,156,0.55))
+              drop-shadow(0 0 120px rgba(255,110,156,0.32));
+      --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
+                   drop-shadow(0 0 60px rgba(255,110,156,0.30));
+
+      --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
+              drop-shadow(0 24px 48px rgba(26,30,39,0.14));
+      --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))
+                 drop-shadow(0 12px 24px rgba(26,30,39,0.12));
+ }
+    .plate { position: absolute; inset: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    #scrim { position: absolute; left: 20px; top: 1247px;
+             width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png");
+             background-size: 100% 100%; background-repeat: no-repeat;
+             opacity: 0; visibility: hidden; pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; top: 1413px;
+           height: 118px; line-height: 118px; text-align: center;
+           color: #fff; font-size: 90px; font-weight: 900;
+           letter-spacing: -0.015em; white-space: nowrap;
+           opacity: 0; visibility: hidden; }
+    .cap.inv { color: var(--ink); }
+    .g { position: absolute; left: 0; top: 40px; width: 1080px;
+         height: 600px; opacity: 0; visibility: hidden; }
+    .g.full { top: 0; height: 1920px; }
+
+    /* §5a.9 — glass over her footage is the house look. Panels only; an
+       edge-to-edge frosted ground blurs her out of her own reel. */
+    .glass { background: rgba(255,255,255,0.15);
+             -webkit-backdrop-filter: blur(24px) saturate(1.4);
+             backdrop-filter: blur(24px) saturate(1.4);
+             box-shadow: var(--rim); filter: var(--cast); }
+
+    /* A takeover: a tinted pane laid ON the footage, with a real margin so it
+       reads as an object rather than a blur applied to the video. */
+    /* The inset pane is a *pane*: 44/64 margin so the footage shows past it,
+       and corners, because a full-bleed hard-cornered rectangle is a bug she
+       has reported. base_css() squircles it; this radius is the fallback. */
+    .ground { position: absolute; left: 44px; top: 64px;
+              width: 992px; height: 1792px; border-radius: 68px;
+              background: linear-gradient(158deg, rgba(196,20,52,0.62) 0%,
+                          rgba(141,13,36,0.70) 100%);
+              -webkit-backdrop-filter: blur(30px) saturate(1.5);
+              backdrop-filter: blur(30px) saturate(1.5);
+              box-shadow: var(--rim-glass); filter: var(--cast); }
+
+    .card { position: absolute; background: var(--lit-blush);
+            filter: var(--cast); box-shadow: var(--rim); }
+    .card.ink { background: var(--lit-ink); box-shadow: var(--rim-dark); }
+    .card.accent { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+
+    .tile { position: absolute; display: grid; place-items: center;
+            background: var(--lit-blush); filter: var(--cast);
+            box-shadow: var(--rim); }
+
+    /* §5a.3 — bar rhythm. One thick heading, then ragged body. Uniform bars
+       read as a loading state; ragged ones read as an abstracted screen. */
+    .ph { display: block; height: 66px; border-radius: 18px;
+          background: var(--lit-accent); margin-bottom: 26px;
+          box-shadow: var(--rim-dark); }
+    .pr { display: block; height: 40px; border-radius: 12px;
+          background: var(--graphite); margin-bottom: 18px; }
+    .pr:nth-of-type(2) { width: 94%; }
+    .pr:nth-of-type(3) { width: 71%; }
+    .pr:nth-of-type(4) { width: 43%; }
+
+    .phone { position: absolute; background: var(--lit-blush);
+             overflow: hidden; filter: var(--cast); box-shadow: var(--rim); }
+    .phone video, .phone img { width: 100%; height: 100%; object-fit: cover;
+                               display: block; }
+
+    /* a value in its own card — her reference's "big number" pattern, minus
+       the label, because a graphic here carries no words */
+    .valcard { position: absolute; background: rgba(255,255,255,0.16);
+               -webkit-backdrop-filter: blur(16px) saturate(1.3);
+               backdrop-filter: blur(16px) saturate(1.3);
+               box-shadow: var(--rim-dark);
+               display: grid; place-items: center; }
+    .valcard span { color: #fff; font-weight: 900; letter-spacing: -0.04em; }
+
+    .wire { fill: none; stroke-width: 20; stroke-linecap: round;
+            filter: drop-shadow(0 8px 18px rgba(26,30,39,0.22)); }
+    .node { fill: #fdf6f6; stroke: #b4122f; stroke-width: 16;
+            filter: drop-shadow(0 10px 22px rgba(26,30,39,0.24)); }
+    .node.hub { fill: #b4122f; stroke: #fff; }
+
+    /* §5a.10 — the glow rides a WRAPPER, never the clipped element itself.
+       clip-path is applied *after* filter, so a drop-shadow declared on the
+       same element as the clip is cut away with everything else outside the
+       silhouette and the object ends up with no light at all. Put the clip on
+       the shape and the filter on its parent: the parent filters the already
+       clipped bitmap, so the light traces the squircle and survives. */
+    .lit { position: absolute; inset: 0; pointer-events: none;
+           filter: var(--glow); }
+    .lit.soft { filter: var(--glow-soft); }
+
+    /* Emoji are images, never glyphs. The render runs on someone else's
+       Chrome, so a literal 💩 in the HTML comes out in whatever emoji font
+       that machine has — Noto on the cloud renderer, Segoe on hers, Apple on
+       nobody's. She wants the Apple set, so the artwork ships in assets/emoji
+       and the glyph never appears in a composition. */
+    .emoji { display: block; width: auto; image-rendering: auto; }
+
+    .halo { position: absolute; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(255,110,156,0.5) 0%,
+                        rgba(255,110,156,0) 70%); }
+    .ring { position: absolute; border-radius: 50%; pointer-events: none;
+            border: 18px solid rgba(255,110,156,0.92);
+            filter: drop-shadow(0 0 40px rgba(255,110,156,0.55)); }
+
+    /* ---- takeovers (STYLE.md 2c) ----
+       The graphic owns the frame: the plate is gone, so none of the
+       over-footage rules apply — no glow budget, no band discipline, ink type
+       on a light ground. Lives here rather than per-reel because every reel
+       from 9 onwards needs it. A takeover that does not bleed off at least
+       two edges reads as a slide, not a takeover. */
+    .tk { position: absolute; inset: 0; }
+    .tk.paper { background: var(--surface); }
+    .tk.white { background: #ffffff; }
+    .tk.blush { background: linear-gradient(150deg,#ffffff 0%,#fffafc 55%,
+                                            #fdf4f8 100%); }
+    /* graph paper — the texture the reference takeovers all have. 60px cells
+       at 5.8% ink: visible, never a pattern you read. */
+    .gp { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px),
+            repeating-linear-gradient(90deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px); }
+    /* horizontal rules only — a transcript or a list is ruled paper, not
+       graph paper, and the difference is what makes it read as an export. */
+    .gl { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.05) 0 1px,
+                                      transparent 1px 175px); }
+
+    /* the finished artefact, in her system — one class at any aspect ratio */
+    .dk { position: absolute; overflow: hidden; border-radius: 28px;
+          background: var(--lit-blush); box-shadow: var(--rim);
+          filter: var(--cast); }
+    .dk i { position: absolute; display: block; }
+    .dk .hb { left: 30px; top: 30px; height: 20px; border-radius: 6px;
+              background: var(--lit-accent); }
+    .dk .rr { left: 30px; height: 9px; border-radius: 4px;
+              background: rgba(23,20,28,0.22); }
+    .dk .pb { border-radius: 16px; background: var(--lit-pink);
+              box-shadow: var(--rim-dark); }
+
+    @font-face { font-family: "Hand"; src: url("assets/fonts/Excalifont.ttf") format("truetype");
+                 font-display: block; }
+    @font-face { font-family: "Cap"; src: url("assets/fonts/ProductSans-Bold.ttf") format("truetype");
+                 font-weight: 900; font-display: block; }
+    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-cyrillic-ext.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-cyrillic.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-symbols.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0001-000C, U+000E-001F, U+007F-009F, U+20DD-20E0, U+20E2-20E4, U+2150-218F, U+2190, U+2192, U+2194-2199, U+21AF, U+21E6-21F0, U+21F3, U+2218-2219, U+2299, U+22C4-22C6, U+2300-243F, U+2440-244A, U+2460-24FF, U+25A0-27BF, U+2800-28FF, U+2921-2922, U+2981, U+29BF, U+29EB, U+2B00-2BFF, U+4DC0-4DFF, U+FFF9-FFFB, U+10140-1018E, U+10190-1019C, U+101A0, U+101D0-101FD, U+102E0-102FB, U+10E60-10E7E, U+1D2C0-1D2D3, U+1D2E0-1D37F, U+1F000-1F0FF, U+1F100-1F1AE, U+1F1E6-1F1FF, U+1F30D-1F30F, U+1F315, U+1F31C, U+1F31E, U+1F320-1F32C, U+1F336, U+1F378, U+1F37D, U+1F382, U+1F393-1F39F, U+1F3A7-1F3A8, U+1F3AC-1F3AF, U+1F3C2, U+1F3C4-1F3C6, U+1F3CA-1F3CE, U+1F3D4-1F3E0, U+1F3ED, U+1F3F1-1F3F3, U+1F3F5-1F3F7, U+1F408, U+1F415, U+1F41F, U+1F426, U+1F43F, U+1F441-1F442, U+1F444, U+1F446-1F449, U+1F44C-1F44E, U+1F453, U+1F46A, U+1F47D, U+1F4A3, U+1F4B0, U+1F4B3, U+1F4B9, U+1F4BB, U+1F4BF, U+1F4C8-1F4CB, U+1F4D6, U+1F4DA, U+1F4DF, U+1F4E3-1F4E6, U+1F4EA-1F4ED, U+1F4F7, U+1F4F9-1F4FB, U+1F4FD-1F4FE, U+1F503, U+1F507-1F50B, U+1F50D, U+1F512-1F513, U+1F53E-1F54A, U+1F54F-1F5FA, U+1F610, U+1F650-1F67F, U+1F687, U+1F68D, U+1F691, U+1F694, U+1F698, U+1F6AD, U+1F6B2, U+1F6B9-1F6BA, U+1F6BC, U+1F6C6-1F6CF, U+1F6D3-1F6D7, U+1F6E0-1F6EA, U+1F6F0-1F6F3, U+1F6F7-1F6FC, U+1F700-1F80B, U+1F810-1F847, U+1F850-1F859, U+1F860-1F887, U+1F890-1F8AD, U+1F8B0-1F8BB, U+1F8C0-1F8C1, U+1F8D0-1F8D8, U+1F900-1F90B, U+1F93B, U+1F946, U+1F984, U+1F996, U+1F9E9, U+1FA00-1FA6F, U+1FA70-1FA7C, U+1FA80-1FAC6, U+1FAC8, U+1FACC-1FADD, U+1FADF-1FAEB, U+1FAEF-1FAFA, U+1FB00-1FBFF; }
+    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-latin-ext.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-latin.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    
+    #root { --ink: #1e1e1e; --gb: #4285F4; --gr: #EA4335; --gy: #FBBC04; --gg: #34A853;
+            --pb: #a5d8ff; --pr: #ffc9c9; --py: #ffec99; --pg: #b2f2bb;
+            --paper: #ffffff; --line: #dadce0; --sub: #5f6368;
+            --e1: 0 1px 2px rgba(60,64,67,.30), 0 1px 3px 1px rgba(60,64,67,.15);
+            --e3: 0 4px 8px 3px rgba(60,64,67,.15), 0 1px 3px rgba(60,64,67,.30);
+            --e5: 0 8px 12px 6px rgba(60,64,67,.15), 0 4px 4px rgba(60,64,67,.30); }
+    .cap { font-family: "Cap", system-ui, sans-serif !important; }
+    .hand { font-family: "Hand", "Cap", sans-serif; color: var(--ink); line-height: 1.12;
+            letter-spacing: 0; }
+    .gs { font-family: "GSans", "Cap", sans-serif; color: #202124; letter-spacing: -0.01em; }
+    .sk { position: absolute; left: 0; top: 0; overflow: visible; }
+    .sk .dr { stroke-dasharray: 1 2; stroke-dashoffset: 1.05; }
+    .sk .dr.dash { stroke-dasharray: 0.03 0.025; stroke-dashoffset: 0; }
+
+    /* a Material card: white, 28px corners, elevation shadow — Google's side */
+    .gcard { position: absolute; background: #fff; border-radius: 28px; box-shadow: var(--e3); }
+    .gcard.flat { box-shadow: var(--e1); }
+    /* paper: the Excalidraw side — a white sheet with a hand-drawn edge (draw the
+       edge with sk.rect inside it), a whisker of tilt, a soft cast shadow */
+    .paper { position: absolute; background: #fff; border-radius: 22px;
+             box-shadow: 0 18px 40px rgba(0,0,0,.22), 0 2px 6px rgba(0,0,0,.12); }
+    .pill { position: absolute; display: flex; align-items: center; gap: 18px;
+            background: #fff; border-radius: 999px; box-shadow: var(--e3);
+            font-family: "GSans", sans-serif; color: #202124; }
+    .chip { display: inline-flex; align-items: center; gap: 12px; padding: 0 30px;
+            height: 72px; border-radius: 20px; border: 2px solid var(--line); background: #fff;
+            font-family: "GSans", sans-serif; font-weight: 500; font-size: 34px; color: #3c4043; }
+    .chip.on { background: #d3e3fd; border-color: #d3e3fd; color: #041e49; }
+    .chip.cg { background: #c4eed0; border-color: #c4eed0; color: #072711; }
+    .chip.cr { background: #ffdad6; border-color: #ffdad6; color: #410002; }
+    .chip.cy { background: #ffefc2; border-color: #ffefc2; color: #3d2e00; }
+    /* the four-dot loader, Google's "thinking" */
+    .dots { position: absolute; display: flex; gap: 18px; }
+    .dots i { display: block; width: 30px; height: 30px; border-radius: 50%; }
+    .dots i:nth-child(1) { background: var(--gb); } .dots i:nth-child(2) { background: var(--gr); }
+    .dots i:nth-child(3) { background: var(--gy); } .dots i:nth-child(4) { background: var(--gg); }
+    /* Material toggle */
+    .tgl { position: absolute; width: 104px; height: 64px; border-radius: 32px; background: #e1e3e1;
+           border: 4px solid #747775; }
+    .tgl b { position: absolute; left: 10px; top: 10px; width: 36px; height: 36px; border-radius: 50%;
+             background: #747775; }
+    /* whiteboard: Excalidraw's canvas — white with a faint dot grid */
+    .board { position: absolute; inset: 0; background-color: #fff;
+             background-image: radial-gradient(circle, rgba(30,30,30,.16) 2px, transparent 2.6px);
+             background-size: 44px 44px; background-position: 11px 11px; }
+    /* free strokes over her footage need to survive a busy background */
+    .over-plate .dr, .over-plate .hand { filter: drop-shadow(0 2px 5px rgba(0,0,0,.35)); }
+    .wbox { position: absolute; }
+    .num { font-family: "GSans", sans-serif; font-weight: 700; letter-spacing: -0.04em; color: #202124; }
+
+
+.hide { opacity: 0; visibility: hidden; }
+.ab { position: absolute; }
+.bub { position: absolute; padding: 22px 30px; border-radius: 30px; font-family: "GSans", sans-serif;
+       font-size: 36px; font-weight: 500; line-height: 1.25; max-width: 560px; }
+.bub.in { background: #f1f3f4; color: #202124; border-bottom-left-radius: 8px; }
+.bub.me { background: #d3e3fd; color: #041e49; border-bottom-right-radius: 8px; }
+.av { position: absolute; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
+      font-family: "GSans", sans-serif; font-weight: 700; font-size: 30px; color: #fff; }
+.lbl { font-family: "GSans", sans-serif; font-size: 26px; font-weight: 700; letter-spacing: .14em;
+       color: #5f6368; text-transform: uppercase; position: absolute; }
+.field { position: absolute; border-radius: 16px; border: 2px solid #747775; background: #fff; }
+.field .fl { position: absolute; left: 22px; top: -20px; background: #fff; padding: 0 10px;
+             font-family: "GSans", sans-serif; font-size: 28px; color: #0b57d0; font-weight: 500; }
+.row { position: absolute; display: flex; align-items: center; gap: 26px; font-family: "GSans", sans-serif; }
+.srow { position: absolute; left: 40px; width: 800px; height: 84px; display: flex; align-items: center;
+        justify-content: space-between; border-bottom: 2px solid #e8eaed; font-family: "GSans", sans-serif;
+        font-size: 40px; font-weight: 500; color: #202124; }
+.srow i { font-style: normal; font-size: 30px; color: #5f6368; }
+.ntf { position: absolute; left: 0; width: 880px; height: 84px; border-radius: 22px; background: #fff;
+       box-shadow: var(--e1); display: flex; align-items: center; gap: 22px; padding: 0 26px;
+       box-sizing: border-box; font-family: "GSans", sans-serif; font-size: 32px; color: #202124; }
+.ntf .av { position: static; width: 56px; height: 56px; font-size: 26px; }
+.ntf b { font-weight: 700; } .ntf span { color: #5f6368; flex: 1; }
+.ntf em { font-style: normal; font-size: 24px; color: #0b57d0; font-weight: 700; }
+.ty { font-family: "GSans", sans-serif; font-size: 40px; font-weight: 500; color: #202124; position: absolute;
+      white-space: nowrap; }
+
+    .ground { clip-path: path('M 883.2 0 c 36.293 0 54.439 0 70.765 8.318 a 68 68 0 0 1 29.717 29.717 c 8.318 16.325 8.318 34.472 8.318 70.765 L 992 1683.2 c 0 36.293 0 54.439 -8.318 70.765 a 68 68 0 0 1 -29.717 29.717 c -16.325 8.318 -34.472 8.318 -70.765 8.318 L 108.8 1792 c -36.293 0 -54.439 0 -70.765 -8.318 a 68 68 0 0 1 -29.717 -29.717 c -8.318 -16.325 -8.318 -34.472 -8.318 -70.765 L 0 108.8 c 0 -36.293 0 -54.439 8.318 -70.765 a 68 68 0 0 1 29.717 -29.717 c 16.325 -8.318 34.472 -8.318 70.765 -8.318 Z'); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="115.550" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="115.550" data-media-start="0"
+             muted playsinline></video>
+<div class="g" id="ag" style="top:0;height:700px"><div class="gcard" id="agC" style="left:100px;top:70px;width:880px;height:560px"><div class="row" style="left:36px;top:30px;height:70px"><span id="spDot" style="display:inline-block;width:44px;height:44px;border-radius:50%;background:#4285F4"></span><span class="gs" id="spW" style="font-size:42px;font-weight:700">SendPulse</span><span class="lbl" style="position:static">AI-агент</span></div><div style="position:absolute;left:0;right:0;top:120px;height:2px;background:#e8eaed"></div><svg class="sk" id="jag" viewBox="0 0 880 560" width="880" height="560"><path class="dr hz" pathLength="1" d="M72.5 283.2 C95.4 265.1 115.6 247.9 133.6 232.6 M63.9 310.5 C84.7 290.9 107.7 271.4 161.1 226.4 M62.8 332.2 C100.9 299.3 138.3 268.2 183.1 227.5 M64.4 349.2 C108.9 311.3 152.8 269.6 198.0 231.5 M65.1 365.6 C120.2 318.2 172.6 272.4 215.0 235.1 M71.5 379.2 C110.4 344.0 151.0 309.5 227.8 243.6 M77.9 389.8 C141.7 334.9 203.1 279.2 237.9 252.9 M85.3 402.6 C126.1 371.1 163.2 341.6 247.3 263.1 M94.6 412.5 C155.2 364.2 211.9 314.3 257.5 271.7 M108.2 423.4 C151.9 386.4 191.2 352.1 265.8 283.1 M120.6 431.3 C150.4 402.3 180.4 372.9 270.6 297.6 M131.5 437.4 C167.4 403.5 205.0 373.6 275.0 313.0 M150.4 440.4 C190.4 407.9 226.6 375.3 278.4 328.5 M169.3 444.3 C206.6 405.4 248.5 371.9 276.4 347.3 M191.2 440.2 C217.7 418.2 245.6 392.6 273.3 370.5 M230.4 425.9 C238.4 419.1 247.9 410.1 254.0 407.5" fill="none" stroke="#4285F4" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M253.6 264.3 C271.7 287.7 273.0 296.3 275.3 303.2 C277.5 310.1 281.0 315.5 281.4 322.7 C281.8 329.9 278.4 338.3 277.5 346.2 C276.6 354.1 278.3 362.7 276.1 370.2 C273.9 377.6 268.1 384.4 264.2 390.9 C260.4 397.4 257.3 404.3 253.1 409.2 C248.8 414.2 244.1 416.6 238.5 420.8 C233.0 424.9 226.9 430.6 219.7 434.0 C212.5 437.5 203.1 439.6 195.3 441.5 C187.5 443.5 180.1 445.9 173.0 446.0 C165.9 446.0 159.9 443.3 152.7 441.9 C145.6 440.6 136.6 440.4 129.9 437.9 C123.1 435.4 118.6 431.0 112.3 427.0 C106.0 422.9 97.8 418.6 92.0 413.6 C86.1 408.5 81.1 402.7 77.4 396.5 C73.8 390.3 72.9 382.8 70.2 376.3 C67.5 369.8 63.2 364.8 61.3 357.5 C59.3 350.2 58.7 340.1 58.7 332.6 C58.8 325.1 59.5 319.4 61.3 312.5 C63.2 305.7 67.3 298.6 70.1 291.6 C73.0 284.6 74.5 276.7 78.3 270.6 C82.2 264.5 87.6 259.7 93.2 255.0 C98.8 250.3 105.3 246.1 111.9 242.3 C118.5 238.4 126.0 234.6 132.8 231.9 C139.7 229.3 145.8 227.7 152.8 226.3 C159.7 224.9 166.7 223.3 174.5 223.5 C182.4 223.7 192.8 225.0 199.9 227.3 C207.0 229.7 210.9 234.1 217.1 237.5 C223.2 240.9 230.6 243.2 236.6 247.7 C242.7 252.1 248.3 258.8 253.6 264.3 C258.8 269.9 264.5 274.7 268.1 281.2 C271.7 287.7 273.0 296.3 275.3 303.2 C277.5 310.1 281.0 315.5 281.4 322.7" fill="none" stroke="#4285F4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M275.7 306.0 C276.1 332.9 276.4 342.3 276.0 348.9 C275.6 355.6 275.6 358.8 273.7 365.7 C271.9 372.6 268.9 383.4 265.0 390.2 C261.1 397.0 254.7 400.6 250.3 406.4 C245.9 412.2 243.9 420.2 238.7 424.8 C233.6 429.4 226.1 431.5 219.4 433.9 C212.6 436.3 205.8 437.5 198.3 439.1 C190.7 440.8 182.0 443.3 173.9 443.5 C165.9 443.7 157.6 440.7 149.9 440.3 C142.2 439.9 134.4 443.6 127.8 441.3 C121.2 439.0 115.7 430.9 110.2 426.6 C104.7 422.4 99.4 420.2 94.8 415.8 C90.1 411.4 87.0 406.8 82.1 400.2 C77.2 393.5 68.9 383.3 65.4 375.8 C61.9 368.3 62.1 362.2 61.3 354.9 C60.5 347.7 59.7 339.7 60.4 332.3 C61.1 325.0 63.4 317.2 65.3 310.8 C67.3 304.4 69.4 300.8 72.1 294.0 C74.8 287.1 78.1 275.8 81.3 269.8 C84.6 263.9 85.9 263.1 91.6 258.3 C97.3 253.5 109.3 245.3 115.6 241.1 C121.9 237.0 123.2 236.0 129.4 233.5 C135.6 230.9 144.2 226.6 152.6 225.7 C161.1 224.8 171.8 228.2 179.9 228.2 C187.9 228.2 194.1 224.1 200.9 225.6 C207.6 227.2 213.8 234.1 220.3 237.4 C226.7 240.6 233.4 241.0 239.5 245.0 C245.7 249.0 253.1 255.2 257.0 261.6 C260.9 268.0 259.8 276.1 263.0 283.5 C266.1 290.9 273.6 299.0 275.7 306.0 C277.9 313.1 276.0 318.6 276.1 325.8 C276.1 332.9 276.4 342.3 276.0 348.9" fill="none" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="gs hide" id="jagT" style="position:absolute;left:60px;top:310px;width:220px;text-align:center;font-size:42px;font-weight:700;color:#0b57d0">агент</div><div class="ab hide" id="j1" style="left:440px;top:165px"><span class="chip on">кваліфікує</span></div><div class="ab hide" id="j2" style="left:440px;top:300px"><span class="chip cy">спілкується</span></div><div class="ab hide" id="j3" style="left:440px;top:435px"><span class="chip cg">продаж</span></div><svg class="sk" id="ja0" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M290.5 290.9 C300.5 280.9 328.3 245.2 350.6 231.1 C372.8 217.0 411.9 210.3 424.2 206.2" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M425.1 205.7 C420.1 209.2 417.5 214.3 410.3 221.0 M424.9 205.2 C420.5 203.9 416.4 203.7 404.2 202.2" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="ja1" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M294.0 337.9 C305.1 337.2 338.4 333.7 360.3 333.8 C382.1 333.9 414.4 337.9 425.2 338.7" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M424.3 338.9 C418.6 341.6 411.5 343.8 405.6 347.1 M424.4 338.8 C418.2 333.2 409.5 328.4 405.6 326.2" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="ja2" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M289.9 384.1 C300.1 394.2 328.7 430.6 351.1 445.0 C373.6 459.4 412.4 466.3 424.6 470.5" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M426.0 470.3 C419.9 470.3 414.6 471.9 403.0 474.6 M425.7 469.3 C420.9 466.5 417.1 462.8 410.3 454.0" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="srow hide" id="sr0" style="top:150px"><span>Інструкції</span><i>текст</i></div><div class="srow hide" id="sr1" style="top:250px"><span>Модель</span><i>Haiku</i></div><div class="srow hide" id="sr2" style="top:350px"><span>Завантаження файлів</span><i>вимк.</i></div><div class="srow hide" id="sr3" style="top:450px"><span>Макс. токенів</span><i>—</i></div><svg class="sk" id="lp1" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M33.2 175.8 C36.7 174.4 44.7 170.7 53.9 167.2 C63.1 163.7 76.0 157.3 88.3 154.7 C100.6 152.1 114.5 153.0 127.8 151.6 C141.0 150.1 153.0 146.8 167.7 146.1 C182.4 145.4 200.7 147.0 215.9 147.6 C231.1 148.1 244.8 148.9 259.1 149.6 C273.4 150.3 288.9 149.8 301.7 151.5 C314.5 153.3 325.3 156.5 335.7 160.2 C346.1 164.0 357.6 169.6 364.1 174.0 C370.6 178.3 372.0 182.2 374.7 186.1 C377.4 190.1 381.0 193.6 380.4 197.5 C379.8 201.5 375.9 206.2 370.9 209.8 C365.8 213.5 358.8 215.8 350.1 219.3 C341.4 222.8 330.6 228.3 318.7 230.8 C306.8 233.3 292.8 232.8 278.6 234.2 C264.4 235.7 249.3 238.1 233.5 239.3 C217.7 240.6 200.0 242.1 183.7 241.7 C167.3 241.3 150.6 238.4 135.6 237.0 C120.6 235.6 105.8 235.5 93.5 233.4 C81.2 231.2 71.6 227.6 61.7 224.3 C51.8 220.9 41.4 217.0 34.1 213.0 C26.8 209.1 20.7 204.4 17.7 200.5 C14.8 196.6 15.5 194.0 16.5 189.8 C17.5 185.6 18.9 179.9 23.8 175.4 C28.7 170.8 36.1 166.0 45.8 162.6 C55.5 159.3 75.9 156.7 81.9 155.5" fill="none" stroke="#34A853" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="lp2" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M33.6 477.1 C37.0 474.8 45.0 466.5 54.2 463.2 C63.4 459.9 76.8 459.2 88.7 457.4 C100.6 455.5 112.0 454.1 125.5 452.4 C139.1 450.6 154.9 447.9 169.8 446.9 C184.8 445.9 199.5 445.9 215.0 446.3 C230.6 446.7 248.2 447.7 263.0 449.4 C277.7 451.0 290.9 454.3 303.6 456.1 C316.3 458.0 329.0 457.4 339.1 460.5 C349.1 463.6 357.4 471.0 363.8 474.6 C370.2 478.1 374.5 478.4 377.4 481.8 C380.3 485.1 382.3 490.8 381.2 494.8 C380.1 498.9 376.3 501.8 370.8 506.2 C365.3 510.6 357.2 517.8 348.2 521.2 C339.2 524.7 328.7 524.4 317.0 526.9 C305.3 529.5 291.7 534.6 277.8 536.4 C263.9 538.2 248.7 536.9 233.4 537.7 C218.2 538.5 202.7 541.6 186.3 541.2 C170.0 540.8 151.2 536.6 135.6 535.1 C119.9 533.7 105.3 534.6 92.4 532.5 C79.5 530.4 67.9 526.1 58.2 522.7 C48.5 519.2 41.2 515.7 34.3 511.9 C27.4 508.0 20.2 503.4 17.0 499.6 C13.8 495.7 13.7 493.0 15.2 488.9 C16.6 484.7 19.8 478.9 25.6 474.7 C31.4 470.5 41.0 466.7 49.9 463.5 C58.9 460.3 74.6 456.9 79.5 455.5" fill="none" stroke="#34A853" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="n1" style="position:absolute;left:600px;top:154px;font-size:64px;color:#34A853">1</div><div class="hand hide" id="n2" style="position:absolute;left:600px;top:454px;font-size:64px;color:#34A853">2</div><svg class="sk" id="st1" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M39.7 294.4 C103.3 293.6 287.8 288.9 421.4 289.2 C554.9 289.5 771.1 295.1 841.0 296.3" fill="none" stroke="#EA4335" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="st2" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M39.8 393.1 C110.0 393.9 327.4 397.8 461.0 397.8 C594.6 397.8 777.8 393.8 841.2 393.0" fill="none" stroke="#EA4335" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+<div class="g full" id="bd1"><div class="board"></div><div class="lbl hide" id="b1L" style="left:110px;top:170px">SendPulse · AI-агент</div><div class="hand hide" id="b1T" style="left:108px;top:214px;position:absolute;font-size:84px">Інструкції</div><svg class="sk" id="b1U" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M110.7 325.7 C145.6 325.0 250.5 322.6 320.2 321.7 C389.9 320.7 494.0 320.3 528.8 320.0" fill="none" stroke="#4285F4" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="b1N" style="position:absolute;left:740px;top:220px;font-size:80px;color:#EA4335">№1</div><svg class="sk" id="b1NC" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M706.6 246.8 C709.0 243.9 714.8 234.5 720.8 229.3 C726.8 224.1 734.8 219.7 742.6 215.7 C750.4 211.8 759.6 207.6 767.5 205.5 C775.5 203.5 781.4 204.1 790.4 203.4 C799.4 202.7 811.8 200.8 821.6 201.5 C831.4 202.1 840.1 205.7 849.3 207.3 C858.4 208.8 868.3 207.5 876.5 210.7 C884.8 213.9 892.1 221.3 898.7 226.4 C905.3 231.6 911.9 236.5 916.3 241.7 C920.7 246.9 924.2 252.1 925.2 257.7 C926.2 263.3 923.4 269.9 922.2 275.3 C921.0 280.8 921.1 285.2 917.9 290.4 C914.7 295.7 908.7 301.9 903.1 306.7 C897.5 311.5 891.1 315.2 884.3 319.1 C877.4 322.9 870.4 327.5 861.9 329.9 C853.3 332.3 842.6 332.4 832.7 333.7 C822.9 335.0 812.9 338.2 802.7 337.8 C792.6 337.3 781.7 333.1 771.8 330.9 C761.9 328.7 751.8 328.0 743.6 324.6 C735.4 321.1 728.5 314.6 722.6 310.3 C716.6 306.0 712.1 303.9 708.0 298.6 C703.9 293.4 700.3 284.8 698.1 278.6 C696.0 272.3 694.5 267.0 694.9 261.3 C695.3 255.7 697.0 249.8 700.6 244.5 C704.2 239.3 710.2 235.1 716.4 229.9 C722.6 224.7 734.3 216.2 737.9 213.5" fill="none" stroke="#EA4335" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="field hide" id="b1F" style="left:110px;top:410px;width:860px;height:300px"><span class="fl">Інструкції</span></div><svg class="sk" id="b1S" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M151.0 479.3 C195.8 478.7 328.6 474.4 420.2 475.4 C511.8 476.3 617.3 484.9 700.7 485.2 C784.1 485.5 884.0 478.6 920.6 477.3" fill="none" stroke="#3c4043" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M149.1 541.0 C184.1 541.4 280.7 544.4 359.1 543.4 C437.5 542.4 532.9 535.5 619.7 535.0 C706.5 534.5 836.7 539.7 880.1 540.6" fill="none" stroke="#3c4043" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M149.2 600.8 C179.4 600.2 262.0 596.7 330.4 597.1 C398.7 597.4 487.8 602.7 559.4 602.8 C631.0 602.8 726.6 598.2 760.1 597.3" fill="none" stroke="#3c4043" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M148.9 659.7 C173.9 659.0 243.9 655.2 298.9 655.5 C353.9 655.8 412.1 660.9 478.9 661.5 C545.7 662.1 662.9 659.5 699.6 659.2" fill="none" stroke="#3c4043" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="b1A" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M1010.1 450.4 C1011.0 508.9 1015.3 684.7 1015.4 801.2 C1015.5 917.6 1011.5 1091.3 1010.7 1149.3" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M1009.8 1150.4 C1005.9 1143.9 1004.1 1138.2 995.9 1122.4 M1010.1 1149.6 C1014.8 1140.4 1022.2 1130.3 1024.6 1122.9" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M1009.5 450.5 C1013.1 457.2 1018.2 463.8 1023.8 475.3 M1010.6 449.6 C1005.0 458.7 999.7 468.5 996.4 477.1" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="b1LT" style="position:absolute;left:640px;top:345px;font-size:44px;color:#4285F4">майже без ліміту</div><div class="ab hide" id="b1c1" style="left:150px;top:760px"><span class="chip cy">скрипти</span></div><div class="ab hide" id="b1c2" style="left:420px;top:850px"><span class="chip on">цільова аудиторія</span></div><div class="ab hide" id="b1c3" style="left:200px;top:960px"><span class="chip cg">контекст про бізнес</span></div></div>
+<div class="g" id="md" style="top:0;height:700px"><div class="gcard" id="mdC" style="left:100px;top:70px;width:880px;height:560px"><div id="mdA"><div class="field" id="mdF" style="left:40px;top:70px;width:800px;height:120px"><span class="fl">Модель</span><span class="ty" id="mdV" data-text="Haiku" style="left:34px;top:34px;font-size:46px;font-weight:700"></span></div><svg class="sk" id="mdCar" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M759.2 120.8 C762.9 124.4 774.4 142.8 781.4 142.7 C788.3 142.5 797.5 123.7 800.7 119.9" fill="none" stroke="#1e1e1e" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="ab hide" id="mdCh" style="left:40px;top:230px"><span class="chip cg">найдешевша</span></div><div class="hand hide" id="mdSc" style="position:absolute;left:400px;top:236px;font-size:50px">йде по скрипту</div><svg class="sk" id="mdAr" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M409.5 320.9 C441.3 319.6 532.1 313.4 600.6 313.2 C669.1 312.9 783.7 318.4 820.4 319.4" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M820.2 320.0 C811.1 325.1 802.5 329.0 793.6 332.9 M819.9 319.1 C813.2 316.4 807.5 312.6 794.0 305.2" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="ab hide" id="mdEc" style="left:40px;top:400px"><span class="chip cy">гроші зекономиш</span></div><svg class="sk" id="mdSp" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M404.9 421.4 C395.7 415.1 385.5 411.0 378.7 405.6 M413.8 412.5 C410.5 401.8 406.8 392.7 404.1 384.7 M426.5 412.9 C428.2 404.4 431.3 398.3 435.8 384.0" fill="none" stroke="#34A853" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gs hide" id="mbS" style="position:absolute;left:60px;top:40px;width:340px;text-align:center;font-size:48px;font-weight:700">Sonnet</div><div class="gs hide" id="mbH" style="position:absolute;left:480px;top:40px;width:340px;text-align:center;font-size:48px;font-weight:700">Haiku</div><svg class="sk" id="mbDiv" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M440.2 40.8 C440.3 111.2 440.7 183.8 441.2 329.4" fill="none" stroke="#bdc1c6" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="mbBS" viewBox="0 0 880 560" width="880" height="560"><path class="dr hz" pathLength="1" d="M170.1 150.3 C177.3 144.7 184.9 138.1 193.7 131.0 M173.1 170.1 C183.2 158.3 191.9 149.1 216.1 130.1 M171.4 188.5 C198.4 167.0 222.6 142.4 235.6 132.5 M170.6 205.6 C194.5 186.4 216.5 165.8 258.4 131.5 M171.1 225.5 C206.7 193.1 240.4 163.1 276.2 133.8 M170.8 245.0 C214.3 206.8 257.8 167.9 288.0 143.3 M172.8 261.7 C198.9 240.7 225.9 215.8 286.9 160.1 M173.0 282.0 C207.1 249.1 239.2 221.3 289.9 179.1 M175.1 298.0 C200.1 276.7 224.2 256.5 288.5 196.6 M183.8 307.5 C219.6 274.5 254.7 243.5 289.1 215.0 M203.4 309.2 C234.3 280.7 267.9 251.6 287.6 234.4 M223.1 308.1 C243.2 295.2 260.0 278.1 287.2 254.3 M245.0 307.6 C254.2 301.5 263.0 294.2 289.4 270.2 M267.2 307.7 C272.9 302.0 281.4 298.3 288.0 290.7" fill="none" stroke="#EA4335" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M269.6 129.5 C282.8 135.2 284.6 137.4 286.5 139.8 C288.4 142.2 290.8 134.8 291.4 148.0 C292.0 161.2 290.6 195.2 290.3 219.2 C289.9 243.1 289.5 278.4 289.2 291.7 C288.9 305.0 290.2 296.3 288.5 298.8 C286.8 301.4 281.6 305.0 278.8 306.9 C276.0 308.8 286.5 309.6 271.6 310.4 C256.7 311.1 204.5 311.7 189.4 311.3 C174.3 310.9 184.1 309.9 181.0 308.1 C177.9 306.2 172.6 303.1 171.0 300.3 C169.4 297.5 171.5 304.8 171.5 291.2 C171.4 277.7 171.0 242.6 170.9 219.0 C170.9 195.3 171.0 162.2 171.2 149.2 C171.4 136.2 170.4 144.0 172.0 141.1 C173.6 138.1 177.8 133.1 180.7 131.3 C183.5 129.5 174.0 130.7 188.8 130.4 C203.7 130.1 254.4 129.0 269.6 129.5 C284.8 130.0 277.2 131.7 280.0 133.5 C282.8 135.2 284.6 137.4 286.5 139.8" fill="none" stroke="#EA4335" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M289.3 151.5 C288.2 245.8 289.0 280.2 288.5 293.3 C288.0 306.5 286.8 298.6 285.4 300.9 C284.0 303.3 282.0 306.2 279.9 307.4 C277.9 308.6 288.5 308.1 273.0 308.1 C257.5 308.1 202.5 307.6 186.9 307.6 C171.3 307.6 181.9 309.5 179.6 308.2 C177.3 306.8 175.1 301.8 173.2 299.3 C171.4 296.8 168.6 306.5 168.4 293.4 C168.2 280.2 171.9 244.9 172.0 220.6 C172.0 196.2 168.6 161.0 168.7 147.3 C168.8 133.7 171.1 140.5 172.6 138.5 C174.2 136.4 175.2 136.4 178.2 135.0 C181.2 133.6 175.5 130.9 190.5 130.0 C205.6 129.1 253.6 128.9 268.5 129.5 C283.4 130.1 276.7 132.4 279.8 133.6 C283.0 134.9 285.7 134.0 287.3 137.0 C288.9 140.0 289.1 137.3 289.3 151.5 C289.5 165.7 288.5 198.6 288.4 222.2 C288.2 245.8 289.0 280.2 288.5 293.3" fill="none" stroke="#EA4335" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="mbBH" viewBox="0 0 880 560" width="880" height="560"><path class="dr hz" pathLength="1" d="M592.0 275.8 C594.2 271.8 597.9 267.1 608.0 261.5 M591.2 293.0 C598.4 285.1 607.7 280.3 628.4 259.9 M596.6 308.0 C609.4 296.5 623.8 283.6 648.0 262.4 M615.4 310.2 C634.8 291.2 652.3 274.5 670.3 262.6 M638.8 309.9 C651.4 297.6 668.5 282.2 690.9 262.1 M659.0 310.1 C677.1 292.0 693.4 279.1 706.8 267.6 M680.2 308.3 C689.3 302.3 696.6 294.5 709.7 284.4 M700.0 308.7 C703.7 307.1 705.5 305.9 707.7 303.2" fill="none" stroke="#34A853" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M703.0 259.1 C706.3 260.9 708.4 262.4 709.1 263.9 C709.8 265.3 709.0 262.5 709.3 268.9 C709.6 275.3 710.7 295.8 710.7 302.1 C710.7 308.4 710.3 305.9 709.5 306.9 C708.7 308.0 707.4 308.0 705.9 308.3 C704.4 308.6 718.7 308.3 700.8 308.7 C682.8 309.0 616.0 310.4 598.3 310.4 C580.5 310.3 595.3 308.8 594.3 308.3 C593.2 307.7 592.4 308.3 591.9 307.1 C591.4 305.8 591.7 307.4 591.1 300.8 C590.6 294.2 588.6 273.7 588.8 267.4 C589.1 261.1 591.6 263.8 592.5 262.9 C593.3 262.0 592.9 262.2 593.9 261.9 C594.9 261.5 580.5 261.1 598.6 260.6 C616.8 260.2 685.2 259.2 703.0 259.1 C720.8 259.0 704.3 259.3 705.3 260.1 C706.3 260.9 708.4 262.4 709.1 263.9" fill="none" stroke="#34A853" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M710.6 265.6 C709.4 307.1 709.8 305.9 709.1 307.5 C708.5 309.1 707.0 309.4 705.6 309.7 C704.1 310.0 718.6 309.2 700.4 309.3 C682.3 309.5 614.1 310.8 596.6 310.4 C579.1 310.0 596.5 307.5 595.3 307.0 C594.2 306.5 590.9 308.3 589.7 307.4 C588.5 306.5 588.3 308.1 588.1 301.4 C587.9 294.6 588.2 272.8 588.5 266.9 C588.7 261.0 588.5 266.8 589.7 265.8 C590.9 264.8 594.5 262.2 595.7 260.9 C596.9 259.7 579.4 258.7 596.9 258.2 C614.4 257.7 682.8 257.7 700.8 258.1 C718.9 258.6 704.0 260.2 705.1 260.9 C706.2 261.6 706.3 261.5 707.2 262.3 C708.2 263.1 710.1 259.3 710.6 265.6 C711.0 271.9 709.9 293.2 709.7 300.1 C709.4 307.1 709.8 305.9 709.1 307.5" fill="none" stroke="#34A853" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="mbX" style="position:absolute;left:300px;top:150px;font-size:56px;color:#EA4335">×3–4</div><div class="lbl hide" id="mbP" style="left:60px;top:325px;width:780px;text-align:center">ціна</div><div class="bub me hide" id="mbR1" style="left:60px;top:385px;width:340px;height:120px;box-sizing:border-box"></div><div class="bub me hide" id="mbR2" style="left:480px;top:385px;width:340px;height:120px;box-sizing:border-box"></div><svg class="sk" id="mbRL" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M95.7 424.9 C118.2 424.3 186.4 421.3 230.6 421.4 C274.8 421.6 339.1 425.1 360.8 425.9" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M94.4 465.6 C111.9 466.1 164.8 469.0 199.1 468.6 C233.4 468.1 283.3 464.0 300.1 463.1" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M513.7 426.2 C536.2 425.4 604.5 421.0 649.0 421.0 C693.5 421.1 758.8 425.7 780.8 426.6" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M515.4 464.4 C532.8 465.0 585.9 468.2 620.0 468.0 C654.0 467.8 703.0 464.0 719.6 463.1" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="mbEq" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M415.3 429.5 C431.6 428.0 449.9 427.7 465.0 428.6" fill="none" stroke="#34A853" stroke-width="9.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M415.3 463.6 C430.2 461.4 443.9 461.6 465.7 458.2" fill="none" stroke="#34A853" stroke-width="9.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+<div class="g" id="fl" style="top:0;height:700px"><div class="gcard" id="flC" style="left:100px;top:70px;width:880px;height:560px"><div class="gs" style="position:absolute;left:40px;top:44px;font-size:42px;font-weight:700">Завантаження файлів</div><div class="ab" id="flB" style="left:40px;top:120px;width:360px;height:84px;border-radius:42px;border:2px solid #747775;display:flex;align-items:center;justify-content:center;font-family:GSans,sans-serif;font-size:32px;color:#0b57d0;font-weight:500">Завантажити файл</div><svg class="sk" id="flX" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M31.2 126.4 C35.3 138.5 47.4 199.4 56.0 198.9 C64.7 198.5 74.0 124.0 83.0 123.5 C92.1 123.0 101.4 195.2 110.5 195.8 C119.6 196.4 128.4 127.2 137.7 127.0 C147.0 126.8 157.1 195.2 166.1 194.7 C175.2 194.1 183.4 123.2 192.2 123.7 C200.9 124.2 209.8 196.7 218.7 197.6 C227.6 198.6 236.6 130.0 245.8 129.3 C255.0 128.6 264.9 194.4 273.9 193.4 C283.0 192.4 291.0 124.1 300.2 123.5 C309.5 122.9 320.2 189.8 329.5 189.7 C338.8 189.6 346.7 121.9 355.8 122.9 C364.8 124.0 374.5 195.6 383.7 196.1 C393.0 196.5 406.9 137.5 411.5 125.7" fill="none" stroke="#EA4335" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div id="flDoc" class="ab hide" style="left:50px;top:270px;width:170px;height:220px"><svg class="sk" id="flDS" viewBox="0 0 170 220" width="170" height="220"><path class="dr" pathLength="1" d="M8.2 9.3 C58.7 13.0 107.8 12.5 158.3 7.9 M158.0 11.9 C160.3 61.6 160.2 107.3 159.7 209.9 M160.6 209.2 C118.8 209.4 74.8 211.1 11.6 210.2 M9.0 212.4 C7.2 167.6 8.2 123.8 9.6 9.3" fill="none" stroke="#1e1e1e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M9.9 10.9 C66.5 8.2 126.9 7.0 162.4 10.2 M159.6 10.0 C159.8 68.8 157.3 124.8 158.8 208.6 M160.8 208.2 C128.6 208.9 94.2 212.2 8.7 212.0 M9.1 209.9 C10.2 156.5 12.4 100.6 10.2 11.3" fill="none" stroke="#1e1e1e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M34.8 71.4 C66.5 67.6 95.4 65.4 134.2 65.1" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M34.3 105.2 C52.4 105.0 71.9 106.7 124.9 108.8" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M34.1 139.9 C53.7 138.4 75.1 137.4 111.4 136.6" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand" style="position:absolute;left:0;width:170px;top:160px;text-align:center;font-size:36px">файл</div></div><svg class="sk" id="flAr" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M240.8 380.2 C257.2 375.1 303.0 349.6 339.4 349.7 C375.8 349.8 439.4 375.5 459.4 380.7" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M461.0 379.3 C450.4 381.4 441.6 384.3 430.9 388.2 M460.3 380.5 C454.7 374.6 448.1 368.7 438.4 359.0" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="field hide" id="flF" style="left:480px;top:270px;width:360px;height:220px"><span class="fl">Інструкції</span></div><svg class="sk" id="flFS" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M510.8 329.5 C532.2 329.1 590.9 326.8 639.2 327.4 C687.5 327.9 773.9 332.0 800.8 332.9" fill="none" stroke="#3c4043" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M511.3 379.8 C529.6 380.3 579.8 383.2 621.2 382.9 C662.7 382.5 737.0 378.4 760.2 377.5" fill="none" stroke="#3c4043" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M509.7 429.6 C524.7 429.0 564.3 425.7 599.6 425.9 C634.8 426.1 701.0 430.0 721.2 430.9" fill="none" stroke="#3c4043" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="flL" style="position:absolute;left:520px;top:496px;font-size:42px;color:#4285F4">без ліміту</div></div></div>
+<div class="g" id="tk" style="top:0;height:700px"><div class="pill hide" id="tkP" style="left:190px;top:260px;width:700px;height:130px;padding:0 44px;box-sizing:border-box;justify-content:space-between;font-size:48px;font-weight:700"><span>Макс. токенів</span><span class="field" style="position:relative;width:170px;height:76px;display:inline-block"></span></div><div class="hand hide" id="tkQ" style="position:absolute;left:740px;top:230px;font-size:120px;color:#EA4335">?</div></div>
+<div class="g full" id="bd2"><div class="board"></div><div class="lbl hide" id="b2L" style="left:110px;top:170px">SendPulse · AI-агент</div><div class="hand hide" id="b2T" style="left:108px;top:214px;position:absolute;font-size:84px">Токени</div><svg class="sk" id="b2U" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M109.4 326.5 C134.3 326.8 208.7 328.9 258.6 328.2 C308.6 327.5 384.1 323.4 409.2 322.4" fill="none" stroke="#EA4335" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M126.7 340.9 C151.1 340.4 228.2 339.7 273.3 338.4 C318.3 337.1 376.5 333.9 397.1 333.1" fill="none" stroke="#EA4335" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/></svg><div id="b2A"><div class="hand hide" id="b2lo" style="position:absolute;left:640px;top:240px;font-size:52px;color:#5f6368">логічно?</div><div class="lbl hide" id="b2sl" style="left:110px;top:420px">Макс. токенів</div><div class="ab hide" id="b2tr" style="left:110px;top:490px;width:860px;height:12px;border-radius:6px;background:#d3e3fd"><div id="b2tf" style="height:100%;width:100%;border-radius:6px;background:#0b57d0;transform-origin:0 50%"></div><div id="b2th" style="position:absolute;left:0;top:-22px;width:56px;height:56px;border-radius:50%;background:#0b57d0"></div></div><div class="bub me hide" id="b2sb" style="left:110px;top:590px">Ок</div><div class="ab hide" id="b2ch" style="left:330px;top:600px"><span class="chip cy">дешевше?</span></div></div><div class="dots hide" id="b2D" style="left:110px;top:410px"><i></i><i></i><i></i><i></i></div><div class="hand hide" id="b2Dt" style="position:absolute;left:290px;top:392px;font-size:54px;color:#d39e00">думає</div><div class="hand hide" id="b2Rt" style="position:absolute;left:600px;top:392px;font-size:54px;color:#4285F4">відповідь</div><div class="num hide" id="b2n5" style="position:absolute;left:110px;top:500px;font-size:96px">500</div><svg class="sk" id="b2r5" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M421.5 620.4 C433.0 624.9 437.5 625.2 438.9 627.5 C440.3 629.8 438.5 623.1 438.7 637.5 C438.8 651.9 440.3 700.0 439.9 713.9 C439.5 727.8 437.8 718.7 436.2 721.2 C434.6 723.7 432.5 727.3 430.2 728.9 C427.8 730.5 439.6 730.6 422.2 730.7 C404.7 730.8 358.3 729.9 325.3 729.5 C292.4 729.2 257.4 728.6 224.4 728.8 C191.4 728.9 144.5 730.8 127.1 730.5 C109.7 730.1 122.7 727.8 120.2 726.5 C117.6 725.2 113.5 725.0 111.8 722.6 C110.0 720.2 110.1 726.2 109.6 712.3 C109.1 698.3 108.5 652.7 108.8 638.7 C109.1 624.7 109.7 631.2 111.3 628.2 C113.0 625.2 115.9 622.3 118.9 620.8 C121.8 619.2 111.2 619.2 128.9 618.9 C146.7 618.6 193.3 618.9 225.6 619.1 C258.0 619.3 290.6 619.9 323.2 620.1 C355.9 620.3 403.7 619.8 421.5 620.4 C439.3 621.0 427.2 622.5 430.1 623.7 C433.0 624.9 437.5 625.2 438.9 627.5" fill="none" stroke="#1e1e1e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M438.7 638.8 C439.7 728.0 441.0 721.2 439.8 723.1 C438.7 725.1 435.8 724.1 432.7 725.5 C429.5 726.8 438.9 730.8 420.9 731.2 C403.0 731.5 357.3 728.2 324.9 727.7 C292.5 727.2 259.8 728.2 226.5 728.2 C193.2 728.3 143.3 727.7 125.1 728.0 C106.8 728.3 118.6 731.6 116.8 730.1 C115.0 728.6 115.5 722.4 114.4 719.2 C113.3 716.1 111.2 725.1 110.1 711.2 C108.9 697.2 107.2 649.7 107.4 635.6 C107.7 621.5 109.3 629.1 111.5 626.5 C113.6 624.0 117.4 621.0 120.5 620.2 C123.6 619.4 112.3 621.9 130.1 621.7 C147.8 621.5 194.2 619.0 226.8 619.0 C259.5 619.1 293.6 621.5 326.1 622.0 C358.5 622.4 404.1 621.4 421.8 621.6 C439.4 621.8 429.8 622.3 432.0 623.1 C434.3 623.9 434.2 623.7 435.3 626.3 C436.4 628.9 438.0 624.2 438.7 638.8 C439.4 653.3 439.3 699.8 439.5 713.9 C439.7 728.0 441.0 721.2 439.8 723.1" fill="none" stroke="#1e1e1e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="b2h5" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr hz" pathLength="1" d="M119.8 636.3 C120.2 635.6 124.8 632.9 129.4 630.6 M119.7 652.9 C126.6 648.5 134.1 639.8 149.7 628.5 M118.3 670.9 C133.0 659.2 147.4 649.6 168.1 628.2 M119.7 687.9 C143.7 666.3 167.7 646.4 189.2 629.7 M118.7 706.0 C139.1 689.9 159.3 672.5 208.1 628.8 M121.6 719.2 C157.7 688.8 196.4 655.2 228.2 627.9 M140.6 720.6 C185.6 685.1 226.6 648.7 246.1 629.4 M163.4 721.3 C199.0 688.5 238.3 656.7 267.0 630.7 M182.5 720.0 C223.4 684.3 263.4 649.6 287.0 628.5 M202.8 719.3 C224.5 696.9 250.6 674.7 308.0 629.0 M222.8 721.9 C257.8 690.6 296.8 658.8 326.3 630.2 M241.8 721.7 C273.6 690.1 306.2 662.7 346.5 630.6 M260.5 720.7 C285.7 699.7 310.5 678.4 365.0 627.8 M282.3 719.2 C306.5 699.2 332.0 677.0 385.7 628.9 M301.8 721.5 C336.3 691.1 369.1 661.7 404.4 630.4 M319.6 719.5 C343.8 701.1 368.4 677.7 425.3 630.1 M339.0 720.0 C369.9 695.8 400.7 670.6 429.0 641.4 M358.6 720.6 C377.4 706.5 395.9 691.1 429.6 658.4 M379.0 720.1 C395.0 705.5 412.7 690.8 430.7 675.3 M398.8 720.0 C406.4 714.0 413.6 709.1 429.9 692.7 M418.6 720.8 C420.7 717.7 423.8 717.0 431.7 710.0" fill="none" stroke="#FBBC04" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="bub me hide" id="b2e5" style="left:520px;top:620px;width:300px;height:110px;box-sizing:border-box"></div><svg class="sk" id="b2x5" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M623.7 630.4 C648.3 648.8 668.2 670.6 715.3 720.9 M714.7 631.3 C685.8 660.9 656.8 691.0 624.6 718.7" fill="none" stroke="#EA4335" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="num hide" id="b2n2" style="position:absolute;left:110px;top:790px;font-size:96px">2000</div><svg class="sk" id="b2r2" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M951.9 910.8 C965.3 914.1 966.6 915.3 968.0 917.8 C969.4 920.2 970.9 913.2 971.0 927.5 C971.1 941.8 969.1 990.1 968.7 1003.8 C968.3 1017.5 970.2 1007.7 968.8 1009.7 C967.3 1011.8 962.9 1014.5 960.1 1016.1 C957.2 1017.6 975.8 1018.2 951.6 1019.0 C927.5 1019.9 860.5 1021.1 814.9 1021.2 C769.3 1021.3 723.4 1019.9 677.8 1019.5 C632.3 1019.1 587.4 1018.4 541.5 1018.8 C495.5 1019.1 448.0 1021.3 402.0 1021.5 C356.0 1021.8 311.4 1020.5 265.6 1020.3 C219.8 1020.1 151.7 1021.0 127.2 1020.4 C102.6 1019.8 120.6 1017.9 118.3 1016.6 C115.9 1015.3 114.7 1014.8 113.1 1012.6 C111.6 1010.4 109.2 1017.9 108.8 1003.5 C108.4 989.2 110.3 941.0 110.9 926.7 C111.5 912.4 110.8 920.1 112.3 917.9 C113.9 915.7 117.5 914.6 120.2 913.5 C122.9 912.4 104.6 912.1 128.6 911.3 C152.6 910.5 218.8 908.7 264.3 908.5 C309.8 908.3 355.7 909.7 401.6 909.9 C447.5 910.2 493.9 909.9 539.8 909.9 C585.6 909.9 631.1 910.2 676.9 910.0 C722.6 909.8 768.3 908.6 814.1 908.7 C860.0 908.8 927.2 910.1 951.9 910.8 C976.7 911.5 959.9 911.7 962.6 912.9 C965.3 914.1 966.6 915.3 968.0 917.8" fill="none" stroke="#1e1e1e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M969.5 929.0 C968.3 1016.7 967.0 1007.3 965.4 1009.8 C963.7 1012.2 961.4 1016.6 959.1 1017.9 C956.9 1019.2 976.2 1017.0 951.8 1017.6 C927.5 1018.1 858.9 1020.7 813.2 1021.2 C767.5 1021.7 723.0 1020.5 677.6 1020.5 C632.3 1020.5 586.6 1021.3 541.2 1021.1 C495.8 1020.8 450.9 1018.9 405.1 1018.9 C359.2 1018.9 312.6 1021.1 266.1 1021.2 C219.6 1021.3 150.8 1020.0 126.2 1019.6 C101.6 1019.2 120.9 1020.3 118.5 1019.1 C116.2 1017.9 113.3 1014.7 112.3 1012.3 C111.3 1010.0 113.1 1019.3 112.5 1004.9 C111.9 990.6 108.9 940.2 108.9 926.2 C108.8 912.2 110.6 923.6 112.2 920.9 C113.9 918.2 116.1 911.4 118.9 909.9 C121.8 908.3 104.7 911.5 129.3 911.6 C153.8 911.7 220.1 910.6 266.1 910.6 C312.0 910.6 359.3 911.8 404.9 911.4 C450.5 911.0 493.9 907.9 539.8 908.1 C585.6 908.3 634.4 911.8 679.9 912.4 C725.4 913.1 767.7 912.7 812.9 911.9 C858.2 911.2 926.1 907.8 951.2 907.8 C976.3 907.8 960.3 909.9 963.4 912.1 C966.5 914.3 968.8 918.5 969.9 921.3 C970.9 924.1 969.6 915.3 969.5 929.0 C969.3 942.7 969.7 989.8 969.0 1003.3 C968.3 1016.7 967.0 1007.3 965.4 1009.8" fill="none" stroke="#1e1e1e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="b2h2y" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr hz" pathLength="1" d="M120.6 925.8 C123.1 923.9 127.1 922.4 128.8 920.0 M120.4 943.4 C127.1 938.2 133.4 933.1 148.7 918.7 M119.7 961.0 C129.6 953.9 140.0 944.3 168.9 917.9 M120.1 978.4 C132.8 966.7 148.2 952.0 188.1 919.1 M119.9 994.4 C144.8 973.1 169.1 952.1 207.9 918.0 M120.8 1011.8 C164.2 974.7 204.0 937.8 227.1 918.3 M141.8 1010.1 C182.5 976.9 223.9 942.0 246.8 918.8 M160.7 1011.8 C202.1 975.8 240.4 942.1 268.3 918.7 M182.2 1011.9 C213.2 985.4 239.9 958.6 286.9 919.9 M200.0 1009.4 C224.9 994.3 245.2 974.9 306.7 919.0 M221.0 1009.1 C259.6 977.9 296.2 946.2 327.5 919.3 M241.2 1010.4 C277.0 977.5 313.6 947.1 347.3 919.9 M261.5 1009.3 C282.0 991.8 305.2 972.5 367.4 918.4 M282.2 1009.8 C322.2 976.5 363.0 941.6 386.2 917.9 M299.2 1009.8 C328.1 985.7 357.0 957.6 406.2 918.3 M319.3 1011.1 C353.0 980.5 386.2 954.1 426.5 920.8 M341.5 1009.2 C369.3 986.4 396.5 961.2 437.4 925.4 M360.2 1010.2 C381.6 995.1 399.0 977.9 438.2 941.7 M379.6 1011.9 C396.6 994.9 413.7 980.7 438.9 961.4 M400.0 1010.0 C413.4 997.2 429.7 986.7 438.5 976.5 M420.6 1011.1 C426.1 1003.5 435.6 998.3 436.9 993.6" fill="none" stroke="#FBBC04" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="b2h2b" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr hz" pathLength="1" d="M448.8 927.3 C450.5 925.0 453.0 923.3 458.7 919.8 M451.1 945.6 C458.3 934.3 470.4 927.9 477.7 920.8 M450.3 963.1 C463.1 946.9 479.3 936.6 496.4 919.6 M448.0 978.5 C465.0 966.9 477.5 956.1 518.7 918.3 M448.7 997.3 C470.3 977.2 491.0 960.1 536.5 918.5 M453.6 1011.1 C480.3 982.0 513.3 958.1 558.4 919.2 M471.4 1009.5 C499.8 983.7 529.3 957.9 576.5 918.7 M492.2 1009.9 C526.6 978.3 561.9 948.5 596.5 920.1 M513.0 1012.0 C552.2 977.3 592.1 942.3 616.5 920.4 M530.3 1009.3 C560.0 985.1 585.8 963.4 635.9 919.6 M552.5 1011.2 C582.3 981.2 614.9 956.1 655.8 918.6 M571.0 1011.9 C607.8 980.8 645.6 946.7 675.4 918.5 M590.5 1010.3 C625.2 978.2 661.6 947.5 694.9 918.2 M610.5 1009.8 C636.6 991.6 657.7 969.3 714.4 918.0 M630.1 1011.5 C660.5 987.1 688.3 962.6 736.4 918.3 M649.2 1011.1 C675.9 987.7 700.0 965.7 755.9 918.3 M671.9 1012.0 C708.7 974.6 748.4 942.2 774.4 919.6 M690.6 1011.8 C728.8 979.2 768.1 944.7 794.8 918.2 M709.6 1011.1 C729.9 992.2 751.9 971.0 816.0 918.1 M728.6 1010.2 C753.5 988.1 781.0 965.8 834.3 920.5 M750.6 1011.3 C784.1 981.1 817.8 952.2 854.2 917.9 M769.5 1009.4 C805.9 978.3 841.8 948.9 874.5 920.0 M790.2 1011.4 C813.2 992.0 838.0 972.1 894.3 920.6 M808.6 1009.6 C840.2 983.8 870.4 958.0 913.1 917.9 M830.1 1009.2 C850.9 991.2 873.5 972.0 934.2 920.3 M847.3 1011.2 C881.6 980.8 914.6 951.7 953.2 919.6 M866.9 1011.2 C903.7 981.2 938.6 952.8 960.3 930.2 M888.6 1010.8 C904.9 996.1 921.8 980.4 960.7 946.9 M908.2 1011.7 C924.5 996.3 938.5 983.3 959.6 964.7 M928.2 1010.1 C939.7 998.8 954.7 990.0 961.7 980.9 M946.4 1011.7 C952.2 1006.3 955.1 1002.1 959.4 998.8" fill="none" stroke="#4285F4" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="b2ok" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M520.9 830.5 C525.6 835.2 536.1 865.4 549.2 858.5 C562.2 851.6 590.9 800.6 599.2 789.0" fill="none" stroke="#34A853" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="bub me hide" id="b2rb" style="left:450px;top:1050px;width:520px;height:110px;box-sizing:border-box"></div><svg class="sk" id="b2rl" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M491.2 1090.8 C517.6 1090.2 594.3 1086.9 649.3 1087.3 C704.2 1087.7 774.0 1093.0 820.7 1093.1 C867.4 1093.2 911.2 1088.6 929.2 1087.7" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M490.6 1126.7 C512.3 1127.4 575.7 1131.6 620.8 1131.3 C665.9 1130.9 738.0 1125.8 761.4 1124.7" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="b2v" style="position:absolute;left:110px;top:1070px;width:320px;font-size:46px;color:#34A853">вартість<br>≈ та сама</div></div>
+<div class="g" id="ins" style="top:0;height:700px"><div class="gcard" id="inC" style="left:100px;top:70px;width:880px;height:560px"><div class="field" id="inF" style="left:40px;top:60px;width:800px;height:440px"><span class="fl">Інструкції</span><span class="ty" id="in1" data-text="Пиши коротко." style="left:34px;top:50px"></span><span class="ty" id="in2" data-text="Пиши коротко!" style="left:34px;top:150px"></span><span class="ty" id="in3" data-text="ПИШИ КОРОТКО." style="left:34px;top:250px;font-weight:700"></span></div><svg class="sk" id="inU" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M75.6 378.7 C103.9 378.7 188.9 379.1 245.8 378.9 C302.7 378.8 388.5 377.7 417.0 377.5" fill="none" stroke="#EA4335" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M95.8 391.8 C123.8 391.4 212.3 389.5 263.8 389.2 C315.2 388.9 380.9 389.7 404.3 389.8" fill="none" stroke="#EA4335" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="dots hide" id="inD" style="left:560px;top:420px"><i></i><i></i><i></i><i></i></div></div><div class="gcard hide" id="lgC" style="left:100px;top:70px;width:880px;height:560px;overflow:hidden"><div class="av" style="left:36px;top:26px;background:#34A853">К</div><div class="gs" style="position:absolute;left:122px;top:30px;font-size:34px;font-weight:700">Клієнтка</div><div class="gs" style="position:absolute;left:122px;top:72px;font-size:24px;color:#5f6368">Direct</div><div style="position:absolute;left:0;right:0;top:116px;height:2px;background:#e8eaed"></div><div class="bub me" id="lgB" style="right:36px;top:140px;width:600px;height:390px;box-sizing:border-box;max-width:none"></div><svg class="sk" id="lgL" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M281.2 178.9 C314.4 178.3 393.5 175.3 480.0 175.6 C566.5 175.9 746.9 179.9 800.3 180.7" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M279.9 224.1 C313.4 223.5 400.4 220.4 480.6 220.5 C560.8 220.6 714.4 224.1 761.2 224.8" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M279.4 268.5 C312.9 267.7 406.9 263.3 480.5 263.7 C554.0 264.0 680.7 269.6 720.7 270.8" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M279.6 312.3 C313.2 311.8 394.6 308.8 481.1 309.2 C567.6 309.6 745.8 313.7 798.8 314.6" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M279.8 355.6 C313.1 354.8 399.6 350.4 479.5 350.8 C559.5 351.2 712.9 356.8 759.6 357.9" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M279.7 401.3 C313.2 400.3 407.8 395.4 480.9 395.4 C554.1 395.3 679.1 400.0 718.7 401.0" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M281.0 445.0 C314.2 444.0 393.8 439.1 480.2 439.1 C566.6 439.0 746.3 443.8 799.5 444.8" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M280.7 488.8 C313.8 488.0 399.0 483.5 478.8 483.8 C558.6 484.1 712.8 489.3 759.6 490.4" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="lgX" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M250.4 190.5 C254.7 240.7 267.3 492.5 276.1 491.8 C285.0 491.0 294.3 186.0 303.6 186.0 C312.9 186.0 322.8 490.5 332.0 491.8 C341.3 493.1 350.3 193.4 359.2 193.7 C368.1 194.1 376.5 495.0 385.4 494.1 C394.3 493.2 403.3 189.1 412.6 188.1 C421.9 187.1 431.8 488.1 441.1 488.0 C450.4 487.8 459.4 186.4 468.4 187.2 C477.3 188.0 485.9 491.8 494.8 492.7 C503.7 493.7 513.1 193.3 521.9 192.9 C530.8 192.5 539.1 491.3 548.1 490.5 C557.1 489.6 566.9 188.1 575.9 187.8 C585.0 187.5 593.6 488.2 602.5 488.5 C611.3 488.8 619.8 189.3 629.0 189.5 C638.2 189.8 648.3 489.7 657.6 490.1 C666.9 490.4 676.0 190.9 684.8 191.6 C693.7 192.3 701.8 493.8 710.7 494.3 C719.6 494.8 728.8 194.7 738.1 194.4 C747.4 194.1 757.2 492.9 766.5 492.3 C775.7 491.7 784.7 190.9 793.4 190.8 C802.2 190.7 814.6 441.5 818.9 491.6" fill="none" stroke="#EA4335" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="lgT" style="position:absolute;left:40px;top:400px;width:200px;font-size:40px;color:#EA4335">про всі послуги…</div></div></div>
+<div class="g" id="cta" style="top:0;height:700px"><div class="ab" style="left:100px;top:70px;width:880px;display:flex;flex-wrap:wrap;gap:20px"><span class="chip cr hide" id="c1">немає менеджера</span><span class="chip cy hide" id="c2">менеджер не справляється</span></div><div class="ab" id="ntW" style="left:100px;top:250px;width:880px;height:390px"><div class="ntf hide" id="nt0" style="top:0px"><div class="av" style="background:#4285F4">М</div><b>Марія</b><span>Нове повідомлення</span><em>DIRECT</em></div><div class="ntf hide" id="nt1" style="top:96px"><div class="av" style="background:#EA4335">О</div><b>Олена</b><span>Нове повідомлення</span><em>DIRECT</em></div><div class="ntf hide" id="nt2" style="top:192px"><div class="av" style="background:#FBBC04">А</div><b>Андрій</b><span>Нове повідомлення</span><em>DIRECT</em></div><div class="ntf hide" id="nt3" style="top:288px"><div class="av" style="background:#34A853">І</div><b>Ірина</b><span>Нове повідомлення</span><em>DIRECT</em></div></div><div class="hand hide over-plate" id="ntT" style="position:absolute;left:600px;top:520px;font-size:54px;color:#EA4335">без відповіді</div><svg class="sk over-plate" id="plus" viewBox="0 0 1080 700" width="1080" height="700"><path class="dr" pathLength="1" d="M606.3 406.7 C578.7 423.8 573.8 427.3 566.5 428.6 C559.3 430.0 549.2 428.5 541.9 428.4 C534.5 428.3 529.2 429.0 522.4 428.0 C515.5 427.1 508.1 424.9 500.8 422.5 C493.5 420.0 485.3 417.6 478.6 413.2 C471.8 408.8 465.5 402.1 460.3 396.1 C455.1 390.2 450.7 383.3 447.2 377.6 C443.6 371.8 440.7 368.3 439.0 361.5 C437.3 354.6 437.7 344.2 437.3 336.7 C436.8 329.2 435.5 323.3 436.4 316.5 C437.3 309.7 440.5 302.6 442.8 295.9 C445.1 289.2 446.4 282.0 449.9 276.2 C453.4 270.4 458.3 265.9 463.9 261.1 C469.5 256.3 476.5 251.6 483.3 247.3 C490.1 243.1 497.6 238.2 504.5 235.6 C511.5 233.1 517.9 232.9 525.1 232.0 C532.2 231.1 539.5 230.1 547.2 230.3 C554.9 230.4 563.9 230.7 571.3 232.8 C578.7 234.9 585.6 239.2 591.7 243.0 C597.9 246.8 602.3 251.2 608.1 255.7 C613.9 260.2 621.9 264.3 626.4 270.1 C630.8 275.9 632.0 283.2 634.8 290.3 C637.6 297.4 641.3 305.5 643.0 312.8 C644.8 320.2 645.6 327.1 645.2 334.2 C644.8 341.3 642.5 348.9 640.9 355.4 C639.3 361.8 638.7 367.0 635.7 373.0 C632.7 379.0 627.9 385.7 623.0 391.3 C618.1 396.9 612.6 401.9 606.3 406.7 C600.0 411.5 592.0 416.5 585.4 420.2 C578.7 423.8 573.8 427.3 566.5 428.6" fill="none" stroke="#ffffff" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M563.1 424.8 C534.4 430.3 528.9 426.9 522.0 425.1 C515.1 423.3 506.6 421.3 499.8 419.4 C493.0 417.6 487.6 418.2 481.2 414.2 C474.7 410.1 466.5 401.1 461.0 395.2 C455.4 389.2 452.0 384.8 447.9 378.6 C443.8 372.4 438.2 364.5 436.3 357.8 C434.5 351.2 436.7 345.5 436.7 338.8 C436.6 332.1 435.0 324.6 436.3 317.7 C437.5 310.7 441.8 304.0 444.4 297.0 C447.0 290.0 447.9 281.9 451.7 275.5 C455.5 269.2 461.7 263.5 467.4 258.8 C473.2 254.1 480.8 250.9 486.4 247.2 C492.0 243.5 494.8 238.9 501.1 236.6 C507.4 234.4 516.1 234.2 524.4 233.7 C532.7 233.1 543.5 233.4 551.0 233.4 C558.5 233.3 562.9 231.7 569.4 233.4 C576.0 235.1 583.6 239.7 590.2 243.6 C596.8 247.5 603.7 252.4 609.1 256.8 C614.4 261.3 618.3 264.2 622.3 270.2 C626.3 276.2 630.0 286.7 633.2 293.0 C636.5 299.2 639.5 301.7 641.7 307.9 C644.0 314.1 647.0 321.9 646.9 330.0 C646.7 338.1 642.7 349.7 641.1 356.6 C639.5 363.6 639.9 366.2 637.0 371.9 C634.1 377.5 628.7 384.2 623.7 390.4 C618.7 396.5 613.5 404.6 607.0 409.0 C600.4 413.4 591.5 414.1 584.2 416.7 C576.9 419.3 570.3 422.5 563.1 424.8 C556.0 427.1 548.1 430.2 541.2 430.3 C534.4 430.3 528.9 426.9 522.0 425.1" fill="none" stroke="#ffffff" stroke-width="3.9" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M540.0 274.4 C540.1 298.1 540.4 325.5 539.1 384.7" fill="none" stroke="#ffffff" stroke-width="11.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M485.2 330.2 C508.7 331.2 532.1 332.2 592.6 330.8" fill="none" stroke="#ffffff" stroke-width="11.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="pill hide" id="cmt" style="left:170px;top:480px;width:740px;height:100px;padding:0 36px;font-size:36px"><span style="color:#5f6368">Коментар:</span><span id="cmtT" data-text="+" style="font-weight:700;font-size:52px"></span></div></div>
+
+      <div id="scrim"></div>
+      <div class="cap" id="cap0">НАЛАШТОВУВАЛА</div>
+      <div class="cap" id="cap1">НЕЩОДАВНО</div>
+      <div class="cap" id="cap2">AI-АГЕНТА</div>
+      <div class="cap" id="cap3">ЧЕРЕЗ</div>
+      <div class="cap" id="cap4">SENDPULSE,</div>
+      <div class="cap" id="cap5">ЯКИЙ</div>
+      <div class="cap" id="cap6">САМ</div>
+      <div class="cap" id="cap7">КВАЛІФІКУЄ</div>
+      <div class="cap" id="cap8">ЛЮДЕЙ</div>
+      <div class="cap" id="cap9">В</div>
+      <div class="cap" id="cap10">ДІРЕКТ,</div>
+      <div class="cap" id="cap11">СПІЛКУЄТЬСЯ</div>
+      <div class="cap" id="cap12">З</div>
+      <div class="cap" id="cap13">НИМИ</div>
+      <div class="cap" id="cap14">І</div>
+      <div class="cap" id="cap15">ДОВОДИТЬ</div>
+      <div class="cap" id="cap16">ДО</div>
+      <div class="cap" id="cap17">ПРОДАЖУ.</div>
+      <div class="cap" id="cap18">І ОСЬ</div>
+      <div class="cap" id="cap19">З УСІХ</div>
+      <div class="cap" id="cap20">НАЛАШТУВАНЬ,</div>
+      <div class="cap" id="cap21">ЯКІ</div>
+      <div class="cap" id="cap22">ТАМ</div>
+      <div class="cap" id="cap23">Є,</div>
+      <div class="cap" id="cap24">ЧЕСНО,</div>
+      <div class="cap" id="cap25">ВАЖЛИВІ</div>
+      <div class="cap" id="cap26">ТІЛЬКИ</div>
+      <div class="cap" id="cap27">ДВА.</div>
+      <div class="cap" id="cap28">А НА</div>
+      <div class="cap" id="cap29">ВСЕ</div>
+      <div class="cap" id="cap30">ІНШЕ</div>
+      <div class="cap" id="cap31">МОЖНА</div>
+      <div class="cap" id="cap32">ПРОСТО</div>
+      <div class="cap" id="cap33">ЗАБИТИ.</div>
+      <div class="cap" id="cap34">ІНСТРУКЦІЯ</div>
+      <div class="cap inv" id="cap35">ЦЕ, ЗВИЧАЙНО,</div>
+      <div class="cap inv" id="cap36">НАЙВАЖЛИВІША</div>
+      <div class="cap inv" id="cap37">ЧАСТИНА,</div>
+      <div class="cap inv" id="cap38">І</div>
+      <div class="cap inv" id="cap39">ТАМ</div>
+      <div class="cap inv" id="cap40">ЛІМІТУ,</div>
+      <div class="cap inv" id="cap41">ПО</div>
+      <div class="cap inv" id="cap42">СУТІ,</div>
+      <div class="cap inv" id="cap43">І</div>
+      <div class="cap inv" id="cap44">НЕМАЄ.</div>
+      <div class="cap inv" id="cap45">ТОБТО</div>
+      <div class="cap inv" id="cap46">ТИ</div>
+      <div class="cap inv" id="cap47">ТУДИ</div>
+      <div class="cap inv" id="cap48">ЗАНОСИШ</div>
+      <div class="cap inv" id="cap49">ВСЕ:</div>
+      <div class="cap inv" id="cap50">І</div>
+      <div class="cap inv" id="cap51">СКРИПТИ,</div>
+      <div class="cap inv" id="cap52">І ЦІЛЬОВА</div>
+      <div class="cap inv" id="cap53">АУДИТОРІЯ,</div>
+      <div class="cap inv" id="cap54">ВЗАГАЛІ</div>
+      <div class="cap inv" id="cap55">ВЕСЬ</div>
+      <div class="cap inv" id="cap56">КОНТЕКСТ</div>
+      <div class="cap inv" id="cap57">ПРО</div>
+      <div class="cap inv" id="cap58">БІЗНЕС,</div>
+      <div class="cap inv" id="cap59">ЯКИЙ В</div>
+      <div class="cap inv" id="cap60">НЬОГО</div>
+      <div class="cap inv" id="cap61">ВЗАГАЛІ</div>
+      <div class="cap inv" id="cap62">МАЄ</div>
+      <div class="cap inv" id="cap63">БУТИ.</div>
+      <div class="cap inv" id="cap64">МОДЕЛЬ</div>
+      <div class="cap" id="cap65">МОЖНА</div>
+      <div class="cap" id="cap66">ОБИРАТИ,</div>
+      <div class="cap" id="cap67">ДО</div>
+      <div class="cap" id="cap68">РЕЧІ,</div>
+      <div class="cap" id="cap69">НАЙДЕШЕВШУ,</div>
+      <div class="cap" id="cap70">ТИПУ</div>
+      <div class="cap" id="cap71">HAIKU</div>
+      <div class="cap" id="cap72">5.5,</div>
+      <div class="cap" id="cap73">ТОМУ</div>
+      <div class="cap" id="cap74">ЩО</div>
+      <div class="cap" id="cap75">ВІН</div>
+      <div class="cap" id="cap76">ВСЕ</div>
+      <div class="cap" id="cap77">ОДНО</div>
+      <div class="cap" id="cap78">ЙДЕ</div>
+      <div class="cap" id="cap79">ЧІТКО</div>
+      <div class="cap" id="cap80">ПО</div>
+      <div class="cap" id="cap81">СКРИПТУ,</div>
+      <div class="cap" id="cap82">І</div>
+      <div class="cap" id="cap83">РІЗНИЦІ</div>
+      <div class="cap" id="cap84">В ЯКОСТІ</div>
+      <div class="cap" id="cap85">ТИ</div>
+      <div class="cap" id="cap86">РЕАЛЬНО</div>
+      <div class="cap" id="cap87">НЕ</div>
+      <div class="cap" id="cap88">ПОБАЧИШ,</div>
+      <div class="cap" id="cap89">А</div>
+      <div class="cap" id="cap90">ГРОШІ</div>
+      <div class="cap" id="cap91">ЗЕКОНОМИШ.</div>
+      <div class="cap" id="cap92">Я</div>
+      <div class="cap" id="cap93">ТЕСТУВАЛА</div>
+      <div class="cap" id="cap94">НА</div>
+      <div class="cap" id="cap95">SONNET</div>
+      <div class="cap" id="cap96">І</div>
+      <div class="cap" id="cap97">НА</div>
+      <div class="cap" id="cap98">HAIKU.</div>
+      <div class="cap" id="cap99">SONNET</div>
+      <div class="cap" id="cap100">ВИЙШОВ</div>
+      <div class="cap" id="cap101">ДЕСЬ</div>
+      <div class="cap" id="cap102">В</div>
+      <div class="cap" id="cap103">ТРИ</div>
+      <div class="cap" id="cap104">ЧИ</div>
+      <div class="cap" id="cap105">ЧОТИРИ</div>
+      <div class="cap" id="cap106">РАЗИ</div>
+      <div class="cap" id="cap107">ДОРОЖЧЕ,</div>
+      <div class="cap" id="cap108">АЛЕ</div>
+      <div class="cap" id="cap109">РІЗНИЦІ</div>
+      <div class="cap" id="cap110">ВІЗУАЛЬНО</div>
+      <div class="cap" id="cap111">В</div>
+      <div class="cap" id="cap112">ТЕСТІ</div>
+      <div class="cap" id="cap113">Я</div>
+      <div class="cap" id="cap114">АБСОЛЮТНО</div>
+      <div class="cap" id="cap115">НЕ</div>
+      <div class="cap" id="cap116">ПОБАЧИЛА.</div>
+      <div class="cap" id="cap117">І,</div>
+      <div class="cap" id="cap118">ДО</div>
+      <div class="cap" id="cap119">РЕЧІ,</div>
+      <div class="cap" id="cap120">ЗАВАНТАЖЕННЯ</div>
+      <div class="cap" id="cap121">ФАЙЛІВ</div>
+      <div class="cap" id="cap122">ТЕЖ</div>
+      <div class="cap" id="cap123">МОЖНА</div>
+      <div class="cap" id="cap124">ПРОПУСТИТИ,</div>
+      <div class="cap" id="cap125">ТОМУ</div>
+      <div class="cap" id="cap126">ЩО</div>
+      <div class="cap" id="cap127">ВСЕ,</div>
+      <div class="cap" id="cap128">ЩО ТИ</div>
+      <div class="cap" id="cap129">ХОТІЛА</div>
+      <div class="cap" id="cap130">ДАТИ</div>
+      <div class="cap" id="cap131">ФАЙЛОМ,</div>
+      <div class="cap" id="cap132">МОЖНА</div>
+      <div class="cap" id="cap133">ДАТИ</div>
+      <div class="cap" id="cap134">В</div>
+      <div class="cap" id="cap135">ІНСТРУКЦІЇ,</div>
+      <div class="cap" id="cap136">ЗНОВУ</div>
+      <div class="cap" id="cap137">Ж ТАКИ,</div>
+      <div class="cap" id="cap138">ТАМ</div>
+      <div class="cap" id="cap139">НЕМАЄ</div>
+      <div class="cap" id="cap140">ЛІМІТУ,</div>
+      <div class="cap" id="cap141">НАМ НЕ</div>
+      <div class="cap" id="cap142">ТРЕБА</div>
+      <div class="cap" id="cap143">ЦЕ</div>
+      <div class="cap" id="cap144">ОПТИМІЗОВУВАТИ.</div>
+      <div class="cap" id="cap145">АЛЕ</div>
+      <div class="cap" id="cap146">ЩО</div>
+      <div class="cap" id="cap147">НАСПРАВДІ</div>
+      <div class="cap" id="cap148">ВАЖЛИВО</div>
+      <div class="cap" id="cap149">І</div>
+      <div class="cap" id="cap150">БУЛО</div>
+      <div class="cap" id="cap151">ДЛЯ</div>
+      <div class="cap" id="cap152">МЕНЕ</div>
+      <div class="cap" id="cap153">ДУЖЕ</div>
+      <div class="cap" id="cap154">ДИВНИМ?</div>
+      <div class="cap" id="cap155">ТОКЕНИ.</div>
+      <div class="cap inv" id="cap156">ТОМУ</div>
+      <div class="cap inv" id="cap157">ЩО</div>
+      <div class="cap inv" id="cap158">ЗДАЄТЬСЯ</div>
+      <div class="cap inv" id="cap159">ЛОГІЧНИМ,</div>
+      <div class="cap inv" id="cap160">ЩО</div>
+      <div class="cap inv" id="cap161">ЧИМ</div>
+      <div class="cap inv" id="cap162">МЕНШЕ</div>
+      <div class="cap inv" id="cap163">ТОКЕНІВ</div>
+      <div class="cap inv" id="cap164">ТИ</div>
+      <div class="cap inv" id="cap165">ДАЄШ,</div>
+      <div class="cap inv" id="cap166">ТИМ</div>
+      <div class="cap inv" id="cap167">КОРОТШІ</div>
+      <div class="cap inv" id="cap168">ПОВІДОМЛЕННЯ</div>
+      <div class="cap inv" id="cap169">ВІН</div>
+      <div class="cap inv" id="cap170">ПИШЕ,</div>
+      <div class="cap inv" id="cap171">І</div>
+      <div class="cap inv" id="cap172">ТИМ</div>
+      <div class="cap inv" id="cap173">ДЕШЕВШЕ</div>
+      <div class="cap inv" id="cap174">ЦЕ</div>
+      <div class="cap inv" id="cap175">ВИХОДИТЬ.</div>
+      <div class="cap inv" id="cap176">АЛЕ</div>
+      <div class="cap inv" id="cap177">ВИЯВЛЯЄТЬСЯ,</div>
+      <div class="cap inv" id="cap178">ЩО</div>
+      <div class="cap inv" id="cap179">ЧАСТИНУ</div>
+      <div class="cap inv" id="cap180">ЦИХ</div>
+      <div class="cap inv" id="cap181">ТОКЕНІВ</div>
+      <div class="cap inv" id="cap182">ВІН</div>
+      <div class="cap inv" id="cap183">ВИТРАЧАЄ</div>
+      <div class="cap inv" id="cap184">НА</div>
+      <div class="cap inv" id="cap185">ТЕ,</div>
+      <div class="cap inv" id="cap186">ЩОБ</div>
+      <div class="cap inv" id="cap187">ПОДУМАТИ,</div>
+      <div class="cap inv" id="cap188">І ЯКЩО</div>
+      <div class="cap inv" id="cap189">ТИ</div>
+      <div class="cap inv" id="cap190">ДАСИ</div>
+      <div class="cap inv" id="cap191">ЙОМУ,</div>
+      <div class="cap inv" id="cap192">НАПРИКЛАД,</div>
+      <div class="cap inv" id="cap193">500,</div>
+      <div class="cap inv" id="cap194">ТІЛЬКИ</div>
+      <div class="cap inv" id="cap195">НЕ</div>
+      <div class="cap inv" id="cap196">В</div>
+      <div class="cap inv" id="cap197">МАКСИМУМ,</div>
+      <div class="cap inv" id="cap198">ТО</div>
+      <div class="cap inv" id="cap199">ВІН</div>
+      <div class="cap inv" id="cap200">ПРОСТО</div>
+      <div class="cap inv" id="cap201">ВИТРАТИТЬ</div>
+      <div class="cap inv" id="cap202">ВСЕ</div>
+      <div class="cap inv" id="cap203">НА</div>
+      <div class="cap inv" id="cap204">ПОДУМАТИ</div>
+      <div class="cap inv" id="cap205">І</div>
+      <div class="cap inv" id="cap206">НЕ</div>
+      <div class="cap inv" id="cap207">ЗМОЖЕ</div>
+      <div class="cap inv" id="cap208">НОРМАЛЬНО</div>
+      <div class="cap inv" id="cap209">НАПИСАТИ</div>
+      <div class="cap inv" id="cap210">ТЕКСТ.</div>
+      <div class="cap inv" id="cap211">У</div>
+      <div class="cap inv" id="cap212">МЕНЕ</div>
+      <div class="cap inv" id="cap213">ВИЙШЛО,</div>
+      <div class="cap inv" id="cap214">ЩО</div>
+      <div class="cap inv" id="cap215">ДЕСЬ</div>
+      <div class="cap inv" id="cap216">2000</div>
+      <div class="cap inv" id="cap217">ТОКЕНІВ</div>
+      <div class="cap inv" id="cap218">ЦЕ</div>
+      <div class="cap inv" id="cap219">АДЕКВАТНА</div>
+      <div class="cap inv" id="cap220">КІЛЬКІСТЬ,</div>
+      <div class="cap inv" id="cap221">ЩОБ</div>
+      <div class="cap inv" id="cap222">І</div>
+      <div class="cap inv" id="cap223">ПОДУМАТИ</div>
+      <div class="cap inv" id="cap224">ВСТИГ,</div>
+      <div class="cap inv" id="cap225">І НАПИСАТИ</div>
+      <div class="cap inv" id="cap226">НОРМАЛЬНЕ</div>
+      <div class="cap inv" id="cap227">ПОВІДОМЛЕННЯ,</div>
+      <div class="cap inv" id="cap228">І</div>
+      <div class="cap inv" id="cap229">ЦЕ</div>
+      <div class="cap inv" id="cap230">МАЙЖЕ НЕ</div>
+      <div class="cap inv" id="cap231">ВПЛИВАЄ</div>
+      <div class="cap inv" id="cap232">НА</div>
+      <div class="cap inv" id="cap233">ВАРТІСТЬ.</div>
+      <div class="cap inv" id="cap234">І</div>
+      <div class="cap" id="cap235">ЯКЩО</div>
+      <div class="cap" id="cap236">ХОЧЕШ,</div>
+      <div class="cap" id="cap237">ЩОБ</div>
+      <div class="cap" id="cap238">ВІН</div>
+      <div class="cap" id="cap239">ПИСАВ</div>
+      <div class="cap" id="cap240">КОРОТКО,</div>
+      <div class="cap" id="cap241">ТО ЦЕ</div>
+      <div class="cap" id="cap242">ТРЕБА</div>
+      <div class="cap" id="cap243">ПРОСТО</div>
+      <div class="cap" id="cap244">ПРОПИСАТИ</div>
+      <div class="cap" id="cap245">ДУЖЕ</div>
+      <div class="cap" id="cap246">ЧІТКО</div>
+      <div class="cap" id="cap247">В ІНСТРУКЦІЇ.</div>
+      <div class="cap" id="cap248">Я</div>
+      <div class="cap" id="cap249">НАВІТЬ</div>
+      <div class="cap" id="cap250">ДЕКІЛЬКА</div>
+      <div class="cap" id="cap251">РАЗІВ</div>
+      <div class="cap" id="cap252">ЦЕ</div>
+      <div class="cap" id="cap253">НАПИСАЛА.</div>
+      <div class="cap" id="cap254">ТОМУ</div>
+      <div class="cap" id="cap255">ЩО</div>
+      <div class="cap" id="cap256">САМ</div>
+      <div class="cap" id="cap257">ВІН</div>
+      <div class="cap" id="cap258">ПРО</div>
+      <div class="cap" id="cap259">ЦЕ НЕ</div>
+      <div class="cap" id="cap260">ЗДОГАДАЄТЬСЯ,</div>
+      <div class="cap" id="cap261">І</div>
+      <div class="cap" id="cap262">ВІН</div>
+      <div class="cap" id="cap263">ДІЙСНО</div>
+      <div class="cap" id="cap264">БУДЕ</div>
+      <div class="cap" id="cap265">ПИСАТИ</div>
+      <div class="cap" id="cap266">ВЕЛИКІ,</div>
+      <div class="cap" id="cap267">РОЗШИРЕНІ</div>
+      <div class="cap" id="cap268">ПОВІДОМЛЕННЯ</div>
+      <div class="cap" id="cap269">ПРО</div>
+      <div class="cap" id="cap270">ВСІ</div>
+      <div class="cap" id="cap271">ПОСЛУГИ</div>
+      <div class="cap" id="cap272">БІЗНЕСУ</div>
+      <div class="cap" id="cap273">І</div>
+      <div class="cap" id="cap274">ТАК</div>
+      <div class="cap" id="cap275">ДАЛІ.</div>
+      <div class="cap" id="cap276">ТОМУ,</div>
+      <div class="cap" id="cap277">ЯКЩО</div>
+      <div class="cap" id="cap278">В ТЕБЕ</div>
+      <div class="cap" id="cap279">ЩЕ</div>
+      <div class="cap" id="cap280">НЕМАЄ</div>
+      <div class="cap" id="cap281">МЕНЕДЖЕРА</div>
+      <div class="cap" id="cap282">АБО</div>
+      <div class="cap" id="cap283">Є</div>
+      <div class="cap" id="cap284">МЕНЕДЖЕР,</div>
+      <div class="cap" id="cap285">І</div>
+      <div class="cap" id="cap286">ВІН</div>
+      <div class="cap" id="cap287">НЕ</div>
+      <div class="cap" id="cap288">СПРАВЛЯЄТЬСЯ,</div>
+      <div class="cap" id="cap289">КУПА</div>
+      <div class="cap" id="cap290">ЗАЯВОК</div>
+      <div class="cap" id="cap291">У ДІРЕКТІ,</div>
+      <div class="cap" id="cap292">ЦЕ СУПЕРПОПУЛЯРНО.</div>
+      <div class="cap" id="cap293">І</div>
+      <div class="cap" id="cap294">ТИ</div>
+      <div class="cap" id="cap295">БАЧИШ,</div>
+      <div class="cap" id="cap296">ЩО ВОНИ</div>
+      <div class="cap" id="cap297">ПРОСТО</div>
+      <div class="cap" id="cap298">ГУБЛЯТЬСЯ</div>
+      <div class="cap" id="cap299">БЕЗ</div>
+      <div class="cap" id="cap300">ВІДПОВІДІ,</div>
+      <div class="cap" id="cap301">ТО</div>
+      <div class="cap" id="cap302">СТАВ</div>
+      <div class="cap" id="cap303">ПЛЮС,</div>
+      <div class="cap" id="cap304">І</div>
+      <div class="cap" id="cap305">Я</div>
+      <div class="cap" id="cap306">РОЗКАЖУ</div>
+      <div class="cap" id="cap307">ТОБІ</div>
+      <div class="cap" id="cap308">ПЕРСОНАЛЬНО,</div>
+      <div class="cap" id="cap309">ЯК</div>
+      <div class="cap" id="cap310">ЦЕ</div>
+      <div class="cap" id="cap311">ВСЕ</div>
+      <div class="cap" id="cap312">НАЛАШТУВАТИ,</div>
+      <div class="cap" id="cap313">І</div>
+      <div class="cap" id="cap314">ЩО</div>
+      <div class="cap" id="cap315">ТОБІ</div>
+      <div class="cap" id="cap316">ЦЕ</div>
+      <div class="cap" id="cap317">ВЗАГАЛІ</div>
+      <div class="cap" id="cap318">ДОПОМОЖЕ.</div>
+      <div class="cap" id="cap319">ПОБАЧИМОСЯ</div>
+      <div class="cap" id="cap320">ДАЛІ!</div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="115.550" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  tl.set("#cap0", {autoAlpha: 1}, 0.000);
+  tl.set("#cap0", {autoAlpha: 0}, 0.666);
+  tl.set("#cap1", {autoAlpha: 1}, 0.751);
+  tl.set("#cap1", {autoAlpha: 0}, 1.346);
+  tl.set("#cap2", {autoAlpha: 1}, 1.431);
+  tl.set("#cap2", {autoAlpha: 0}, 1.786);
+  tl.set("#cap3", {autoAlpha: 1}, 1.871);
+  tl.set("#cap3", {autoAlpha: 0}, 2.126);
+  tl.set("#cap4", {autoAlpha: 1}, 2.211);
+  tl.set("#cap4", {autoAlpha: 0}, 2.603);
+  tl.set("#cap5", {autoAlpha: 1}, 2.688);
+  tl.set("#cap5", {autoAlpha: 0}, 2.788);
+  tl.set("#cap6", {autoAlpha: 1}, 2.868);
+  tl.set("#cap6", {autoAlpha: 0}, 3.103);
+  tl.set("#cap7", {autoAlpha: 1}, 3.188);
+  tl.set("#cap7", {autoAlpha: 0}, 3.623);
+  tl.set("#cap8", {autoAlpha: 1}, 3.708);
+  tl.set("#cap8", {autoAlpha: 0}, 3.883);
+  tl.set("#cap9", {autoAlpha: 1}, 3.968);
+  tl.set("#cap9", {autoAlpha: 0}, 4.123);
+  tl.set("#cap10", {autoAlpha: 1}, 4.208);
+  tl.set("#cap10", {autoAlpha: 0}, 4.557);
+  tl.set("#cap11", {autoAlpha: 1}, 4.642);
+  tl.set("#cap11", {autoAlpha: 0}, 5.177);
+  tl.set("#cap12", {autoAlpha: 1}, 5.262);
+  tl.set("#cap12", {autoAlpha: 0}, 5.362);
+  tl.set("#cap13", {autoAlpha: 1}, 5.362);
+  tl.set("#cap13", {autoAlpha: 0}, 5.462);
+  tl.set("#cap14", {autoAlpha: 1}, 5.542);
+  tl.set("#cap14", {autoAlpha: 0}, 5.717);
+  tl.set("#cap15", {autoAlpha: 1}, 5.802);
+  tl.set("#cap15", {autoAlpha: 0}, 6.097);
+  tl.set("#cap16", {autoAlpha: 1}, 6.182);
+  tl.set("#cap16", {autoAlpha: 0}, 6.337);
+  tl.set("#cap17", {autoAlpha: 1}, 6.422);
+  tl.set("#cap17", {autoAlpha: 0}, 6.851);
+  tl.set("#cap18", {autoAlpha: 1}, 6.936);
+  tl.set("#cap18", {autoAlpha: 0}, 7.145);
+  tl.set("#cap19", {autoAlpha: 1}, 7.230);
+  tl.set("#cap19", {autoAlpha: 0}, 7.598);
+  tl.set("#cap20", {autoAlpha: 1}, 7.683);
+  tl.set("#cap20", {autoAlpha: 0}, 8.078);
+  tl.set("#cap21", {autoAlpha: 1}, 8.163);
+  tl.set("#cap21", {autoAlpha: 0}, 8.263);
+  tl.set("#cap22", {autoAlpha: 1}, 8.323);
+  tl.set("#cap22", {autoAlpha: 0}, 8.478);
+  tl.set("#cap23", {autoAlpha: 1}, 8.563);
+  tl.set("#cap23", {autoAlpha: 0}, 8.938);
+  tl.set("#cap24", {autoAlpha: 1}, 9.023);
+  tl.set("#cap24", {autoAlpha: 0}, 9.178);
+  tl.set("#cap25", {autoAlpha: 1}, 9.263);
+  tl.set("#cap25", {autoAlpha: 0}, 9.638);
+  tl.set("#cap26", {autoAlpha: 1}, 9.723);
+  tl.set("#cap26", {autoAlpha: 0}, 9.958);
+  tl.set("#cap27", {autoAlpha: 1}, 10.043);
+  tl.set("#cap27", {autoAlpha: 0}, 10.515);
+  tl.set("#cap28", {autoAlpha: 1}, 10.600);
+  tl.set("#cap28", {autoAlpha: 0}, 10.894);
+  tl.set("#cap29", {autoAlpha: 1}, 10.979);
+  tl.set("#cap29", {autoAlpha: 0}, 11.079);
+  tl.set("#cap30", {autoAlpha: 1}, 11.139);
+  tl.set("#cap30", {autoAlpha: 0}, 11.294);
+  tl.set("#cap31", {autoAlpha: 1}, 11.379);
+  tl.set("#cap31", {autoAlpha: 0}, 11.715);
+  tl.set("#cap32", {autoAlpha: 1}, 11.800);
+  tl.set("#cap32", {autoAlpha: 0}, 12.025);
+  tl.set("#cap33", {autoAlpha: 1}, 12.110);
+  tl.set("#cap33", {autoAlpha: 0}, 12.582);
+  tl.set("#cap34", {autoAlpha: 1}, 12.667);
+  tl.set("#cap34", {autoAlpha: 0}, 13.552);
+  tl.set("#cap35", {autoAlpha: 1}, 13.637);
+  tl.set("#cap35", {autoAlpha: 0}, 14.372);
+  tl.set("#cap36", {autoAlpha: 1}, 14.457);
+  tl.set("#cap36", {autoAlpha: 0}, 14.952);
+  tl.set("#cap37", {autoAlpha: 1}, 15.037);
+  tl.set("#cap37", {autoAlpha: 0}, 15.532);
+  tl.set("#cap38", {autoAlpha: 1}, 15.617);
+  tl.set("#cap38", {autoAlpha: 0}, 15.717);
+  tl.set("#cap39", {autoAlpha: 1}, 15.777);
+  tl.set("#cap39", {autoAlpha: 0}, 15.877);
+  tl.set("#cap40", {autoAlpha: 1}, 15.897);
+  tl.set("#cap40", {autoAlpha: 0}, 16.448);
+  tl.set("#cap41", {autoAlpha: 1}, 16.533);
+  tl.set("#cap41", {autoAlpha: 0}, 16.718);
+  tl.set("#cap42", {autoAlpha: 1}, 16.803);
+  tl.set("#cap42", {autoAlpha: 0}, 17.178);
+  tl.set("#cap43", {autoAlpha: 1}, 17.263);
+  tl.set("#cap43", {autoAlpha: 0}, 17.478);
+  tl.set("#cap44", {autoAlpha: 1}, 17.563);
+  tl.set("#cap44", {autoAlpha: 0}, 17.882);
+  tl.set("#cap45", {autoAlpha: 1}, 17.967);
+  tl.set("#cap45", {autoAlpha: 0}, 18.192);
+  tl.set("#cap46", {autoAlpha: 1}, 18.277);
+  tl.set("#cap46", {autoAlpha: 0}, 18.377);
+  tl.set("#cap47", {autoAlpha: 1}, 18.457);
+  tl.set("#cap47", {autoAlpha: 0}, 18.572);
+  tl.set("#cap48", {autoAlpha: 1}, 18.657);
+  tl.set("#cap48", {autoAlpha: 0}, 19.232);
+  tl.set("#cap49", {autoAlpha: 1}, 19.317);
+  tl.set("#cap49", {autoAlpha: 0}, 19.645);
+  tl.set("#cap50", {autoAlpha: 1}, 19.730);
+  tl.set("#cap50", {autoAlpha: 0}, 19.965);
+  tl.set("#cap51", {autoAlpha: 1}, 20.050);
+  tl.set("#cap51", {autoAlpha: 0}, 20.525);
+  tl.set("#cap52", {autoAlpha: 1}, 20.610);
+  tl.set("#cap52", {autoAlpha: 0}, 20.985);
+  tl.set("#cap53", {autoAlpha: 1}, 21.070);
+  tl.set("#cap53", {autoAlpha: 0}, 21.628);
+  tl.set("#cap54", {autoAlpha: 1}, 21.713);
+  tl.set("#cap54", {autoAlpha: 0}, 21.868);
+  tl.set("#cap55", {autoAlpha: 1}, 21.953);
+  tl.set("#cap55", {autoAlpha: 0}, 22.088);
+  tl.set("#cap56", {autoAlpha: 1}, 22.173);
+  tl.set("#cap56", {autoAlpha: 0}, 22.468);
+  tl.set("#cap57", {autoAlpha: 1}, 22.553);
+  tl.set("#cap57", {autoAlpha: 0}, 22.688);
+  tl.set("#cap58", {autoAlpha: 1}, 22.773);
+  tl.set("#cap58", {autoAlpha: 0}, 23.168);
+  tl.set("#cap59", {autoAlpha: 1}, 23.253);
+  tl.set("#cap59", {autoAlpha: 0}, 23.353);
+  tl.set("#cap60", {autoAlpha: 1}, 23.373);
+  tl.set("#cap60", {autoAlpha: 0}, 23.488);
+  tl.set("#cap61", {autoAlpha: 1}, 23.573);
+  tl.set("#cap61", {autoAlpha: 0}, 23.748);
+  tl.set("#cap62", {autoAlpha: 1}, 23.833);
+  tl.set("#cap62", {autoAlpha: 0}, 23.988);
+  tl.set("#cap63", {autoAlpha: 1}, 24.073);
+  tl.set("#cap63", {autoAlpha: 0}, 24.415);
+  tl.set("#cap64", {autoAlpha: 1}, 24.500);
+  tl.set("#cap64", {autoAlpha: 0}, 25.045);
+  tl.set("#cap65", {autoAlpha: 1}, 25.130);
+  tl.set("#cap65", {autoAlpha: 0}, 25.405);
+  tl.set("#cap66", {autoAlpha: 1}, 25.490);
+  tl.set("#cap66", {autoAlpha: 0}, 25.845);
+  tl.set("#cap67", {autoAlpha: 1}, 25.930);
+  tl.set("#cap67", {autoAlpha: 0}, 26.030);
+  tl.set("#cap68", {autoAlpha: 1}, 26.070);
+  tl.set("#cap68", {autoAlpha: 0}, 26.285);
+  tl.set("#cap69", {autoAlpha: 1}, 26.370);
+  tl.set("#cap69", {autoAlpha: 0}, 27.025);
+  tl.set("#cap70", {autoAlpha: 1}, 27.110);
+  tl.set("#cap70", {autoAlpha: 0}, 27.485);
+  tl.set("#cap71", {autoAlpha: 1}, 27.570);
+  tl.set("#cap71", {autoAlpha: 0}, 27.845);
+  tl.set("#cap72", {autoAlpha: 1}, 27.930);
+  tl.set("#cap72", {autoAlpha: 0}, 28.715);
+  tl.set("#cap73", {autoAlpha: 1}, 28.800);
+  tl.set("#cap73", {autoAlpha: 0}, 28.945);
+  tl.set("#cap74", {autoAlpha: 1}, 29.030);
+  tl.set("#cap74", {autoAlpha: 0}, 29.130);
+  tl.set("#cap75", {autoAlpha: 1}, 29.170);
+  tl.set("#cap75", {autoAlpha: 0}, 29.365);
+  tl.set("#cap76", {autoAlpha: 1}, 29.450);
+  tl.set("#cap76", {autoAlpha: 0}, 29.585);
+  tl.set("#cap77", {autoAlpha: 1}, 29.670);
+  tl.set("#cap77", {autoAlpha: 0}, 29.825);
+  tl.set("#cap78", {autoAlpha: 1}, 29.910);
+  tl.set("#cap78", {autoAlpha: 0}, 30.185);
+  tl.set("#cap79", {autoAlpha: 1}, 30.270);
+  tl.set("#cap79", {autoAlpha: 0}, 30.545);
+  tl.set("#cap80", {autoAlpha: 1}, 30.630);
+  tl.set("#cap80", {autoAlpha: 0}, 30.730);
+  tl.set("#cap81", {autoAlpha: 1}, 30.810);
+  tl.set("#cap81", {autoAlpha: 0}, 31.125);
+  tl.set("#cap82", {autoAlpha: 1}, 31.210);
+  tl.set("#cap82", {autoAlpha: 0}, 31.310);
+  tl.set("#cap83", {autoAlpha: 1}, 31.370);
+  tl.set("#cap83", {autoAlpha: 0}, 31.685);
+  tl.set("#cap84", {autoAlpha: 1}, 31.770);
+  tl.set("#cap84", {autoAlpha: 0}, 32.125);
+  tl.set("#cap85", {autoAlpha: 1}, 32.210);
+  tl.set("#cap85", {autoAlpha: 0}, 32.385);
+  tl.set("#cap86", {autoAlpha: 1}, 32.470);
+  tl.set("#cap86", {autoAlpha: 0}, 32.685);
+  tl.set("#cap87", {autoAlpha: 1}, 32.770);
+  tl.set("#cap87", {autoAlpha: 0}, 32.905);
+  tl.set("#cap88", {autoAlpha: 1}, 32.990);
+  tl.set("#cap88", {autoAlpha: 0}, 33.382);
+  tl.set("#cap89", {autoAlpha: 1}, 33.467);
+  tl.set("#cap89", {autoAlpha: 0}, 33.721);
+  tl.set("#cap90", {autoAlpha: 1}, 33.806);
+  tl.set("#cap90", {autoAlpha: 0}, 34.061);
+  tl.set("#cap91", {autoAlpha: 1}, 34.146);
+  tl.set("#cap91", {autoAlpha: 0}, 34.648);
+  tl.set("#cap92", {autoAlpha: 1}, 34.733);
+  tl.set("#cap92", {autoAlpha: 0}, 34.978);
+  tl.set("#cap93", {autoAlpha: 1}, 35.063);
+  tl.set("#cap93", {autoAlpha: 0}, 35.498);
+  tl.set("#cap94", {autoAlpha: 1}, 35.583);
+  tl.set("#cap94", {autoAlpha: 0}, 35.818);
+  tl.set("#cap95", {autoAlpha: 1}, 35.903);
+  tl.set("#cap95", {autoAlpha: 0}, 36.398);
+  tl.set("#cap96", {autoAlpha: 1}, 36.483);
+  tl.set("#cap96", {autoAlpha: 0}, 36.583);
+  tl.set("#cap97", {autoAlpha: 1}, 36.643);
+  tl.set("#cap97", {autoAlpha: 0}, 36.743);
+  tl.set("#cap98", {autoAlpha: 1}, 36.803);
+  tl.set("#cap98", {autoAlpha: 0}, 37.125);
+  tl.set("#cap99", {autoAlpha: 1}, 37.210);
+  tl.set("#cap99", {autoAlpha: 0}, 37.665);
+  tl.set("#cap100", {autoAlpha: 1}, 37.750);
+  tl.set("#cap100", {autoAlpha: 0}, 38.065);
+  tl.set("#cap101", {autoAlpha: 1}, 38.150);
+  tl.set("#cap101", {autoAlpha: 0}, 38.285);
+  tl.set("#cap102", {autoAlpha: 1}, 38.370);
+  tl.set("#cap102", {autoAlpha: 0}, 38.585);
+  tl.set("#cap103", {autoAlpha: 1}, 38.670);
+  tl.set("#cap103", {autoAlpha: 0}, 38.770);
+  tl.set("#cap104", {autoAlpha: 1}, 38.830);
+  tl.set("#cap104", {autoAlpha: 0}, 38.930);
+  tl.set("#cap105", {autoAlpha: 1}, 38.990);
+  tl.set("#cap105", {autoAlpha: 0}, 39.365);
+  tl.set("#cap106", {autoAlpha: 1}, 39.450);
+  tl.set("#cap106", {autoAlpha: 0}, 39.605);
+  tl.set("#cap107", {autoAlpha: 1}, 39.690);
+  tl.set("#cap107", {autoAlpha: 0}, 40.104);
+  tl.set("#cap108", {autoAlpha: 1}, 40.189);
+  tl.set("#cap108", {autoAlpha: 0}, 40.604);
+  tl.set("#cap109", {autoAlpha: 1}, 40.689);
+  tl.set("#cap109", {autoAlpha: 0}, 41.104);
+  tl.set("#cap110", {autoAlpha: 1}, 41.189);
+  tl.set("#cap110", {autoAlpha: 0}, 41.644);
+  tl.set("#cap111", {autoAlpha: 1}, 41.729);
+  tl.set("#cap111", {autoAlpha: 0}, 41.829);
+  tl.set("#cap112", {autoAlpha: 1}, 41.889);
+  tl.set("#cap112", {autoAlpha: 0}, 42.164);
+  tl.set("#cap113", {autoAlpha: 1}, 42.249);
+  tl.set("#cap113", {autoAlpha: 0}, 42.504);
+  tl.set("#cap114", {autoAlpha: 1}, 42.589);
+  tl.set("#cap114", {autoAlpha: 0}, 43.084);
+  tl.set("#cap115", {autoAlpha: 1}, 43.169);
+  tl.set("#cap115", {autoAlpha: 0}, 43.324);
+  tl.set("#cap116", {autoAlpha: 1}, 43.409);
+  tl.set("#cap116", {autoAlpha: 0}, 43.882);
+  tl.set("#cap117", {autoAlpha: 1}, 43.967);
+  tl.set("#cap117", {autoAlpha: 0}, 44.132);
+  tl.set("#cap118", {autoAlpha: 1}, 44.217);
+  tl.set("#cap118", {autoAlpha: 0}, 44.317);
+  tl.set("#cap119", {autoAlpha: 1}, 44.337);
+  tl.set("#cap119", {autoAlpha: 0}, 44.592);
+  tl.set("#cap120", {autoAlpha: 1}, 44.677);
+  tl.set("#cap120", {autoAlpha: 0}, 45.032);
+  tl.set("#cap121", {autoAlpha: 1}, 45.117);
+  tl.set("#cap121", {autoAlpha: 0}, 45.372);
+  tl.set("#cap122", {autoAlpha: 1}, 45.457);
+  tl.set("#cap122", {autoAlpha: 0}, 45.592);
+  tl.set("#cap123", {autoAlpha: 1}, 45.677);
+  tl.set("#cap123", {autoAlpha: 0}, 45.932);
+  tl.set("#cap124", {autoAlpha: 1}, 46.017);
+  tl.set("#cap124", {autoAlpha: 0}, 46.592);
+  tl.set("#cap125", {autoAlpha: 1}, 46.677);
+  tl.set("#cap125", {autoAlpha: 0}, 46.777);
+  tl.set("#cap126", {autoAlpha: 1}, 46.817);
+  tl.set("#cap126", {autoAlpha: 0}, 46.952);
+  tl.set("#cap127", {autoAlpha: 1}, 47.037);
+  tl.set("#cap127", {autoAlpha: 0}, 47.172);
+  tl.set("#cap128", {autoAlpha: 1}, 47.257);
+  tl.set("#cap128", {autoAlpha: 0}, 47.572);
+  tl.set("#cap129", {autoAlpha: 1}, 47.657);
+  tl.set("#cap129", {autoAlpha: 0}, 47.992);
+  tl.set("#cap130", {autoAlpha: 1}, 48.077);
+  tl.set("#cap130", {autoAlpha: 0}, 48.232);
+  tl.set("#cap131", {autoAlpha: 1}, 48.317);
+  tl.set("#cap131", {autoAlpha: 0}, 48.848);
+  tl.set("#cap132", {autoAlpha: 1}, 48.933);
+  tl.set("#cap132", {autoAlpha: 0}, 49.359);
+  tl.set("#cap133", {autoAlpha: 1}, 49.444);
+  tl.set("#cap133", {autoAlpha: 0}, 49.619);
+  tl.set("#cap134", {autoAlpha: 1}, 49.704);
+  tl.set("#cap134", {autoAlpha: 0}, 49.804);
+  tl.set("#cap135", {autoAlpha: 1}, 49.824);
+  tl.set("#cap135", {autoAlpha: 0}, 50.439);
+  tl.set("#cap136", {autoAlpha: 1}, 50.524);
+  tl.set("#cap136", {autoAlpha: 0}, 50.679);
+  tl.set("#cap137", {autoAlpha: 1}, 50.764);
+  tl.set("#cap137", {autoAlpha: 0}, 50.899);
+  tl.set("#cap138", {autoAlpha: 1}, 50.984);
+  tl.set("#cap138", {autoAlpha: 0}, 51.084);
+  tl.set("#cap139", {autoAlpha: 1}, 51.124);
+  tl.set("#cap139", {autoAlpha: 0}, 51.419);
+  tl.set("#cap140", {autoAlpha: 1}, 51.504);
+  tl.set("#cap140", {autoAlpha: 0}, 51.979);
+  tl.set("#cap141", {autoAlpha: 1}, 52.064);
+  tl.set("#cap141", {autoAlpha: 0}, 52.164);
+  tl.set("#cap142", {autoAlpha: 1}, 52.244);
+  tl.set("#cap142", {autoAlpha: 0}, 52.459);
+  tl.set("#cap143", {autoAlpha: 1}, 52.544);
+  tl.set("#cap143", {autoAlpha: 0}, 52.644);
+  tl.set("#cap144", {autoAlpha: 1}, 52.684);
+  tl.set("#cap144", {autoAlpha: 0}, 53.582);
+  tl.set("#cap145", {autoAlpha: 1}, 53.667);
+  tl.set("#cap145", {autoAlpha: 0}, 54.016);
+  tl.set("#cap146", {autoAlpha: 1}, 54.101);
+  tl.set("#cap146", {autoAlpha: 0}, 54.316);
+  tl.set("#cap147", {autoAlpha: 1}, 54.401);
+  tl.set("#cap147", {autoAlpha: 0}, 54.936);
+  tl.set("#cap148", {autoAlpha: 1}, 55.021);
+  tl.set("#cap148", {autoAlpha: 0}, 55.376);
+  tl.set("#cap149", {autoAlpha: 1}, 55.461);
+  tl.set("#cap149", {autoAlpha: 0}, 55.576);
+  tl.set("#cap150", {autoAlpha: 1}, 55.661);
+  tl.set("#cap150", {autoAlpha: 0}, 55.761);
+  tl.set("#cap151", {autoAlpha: 1}, 55.821);
+  tl.set("#cap151", {autoAlpha: 0}, 55.921);
+  tl.set("#cap152", {autoAlpha: 1}, 55.961);
+  tl.set("#cap152", {autoAlpha: 0}, 56.156);
+  tl.set("#cap153", {autoAlpha: 1}, 56.241);
+  tl.set("#cap153", {autoAlpha: 0}, 56.436);
+  tl.set("#cap154", {autoAlpha: 1}, 56.521);
+  tl.set("#cap154", {autoAlpha: 0}, 57.015);
+  tl.set("#cap155", {autoAlpha: 1}, 57.100);
+  tl.set("#cap155", {autoAlpha: 0}, 57.611);
+  tl.set("#cap156", {autoAlpha: 1}, 57.696);
+  tl.set("#cap156", {autoAlpha: 0}, 57.891);
+  tl.set("#cap157", {autoAlpha: 1}, 57.976);
+  tl.set("#cap157", {autoAlpha: 0}, 58.076);
+  tl.set("#cap158", {autoAlpha: 1}, 58.136);
+  tl.set("#cap158", {autoAlpha: 0}, 58.331);
+  tl.set("#cap159", {autoAlpha: 1}, 58.416);
+  tl.set("#cap159", {autoAlpha: 0}, 58.971);
+  tl.set("#cap160", {autoAlpha: 1}, 59.056);
+  tl.set("#cap160", {autoAlpha: 0}, 59.156);
+  tl.set("#cap161", {autoAlpha: 1}, 59.236);
+  tl.set("#cap161", {autoAlpha: 0}, 59.430);
+  tl.set("#cap162", {autoAlpha: 1}, 59.515);
+  tl.set("#cap162", {autoAlpha: 0}, 59.770);
+  tl.set("#cap163", {autoAlpha: 1}, 59.855);
+  tl.set("#cap163", {autoAlpha: 0}, 60.130);
+  tl.set("#cap164", {autoAlpha: 1}, 60.215);
+  tl.set("#cap164", {autoAlpha: 0}, 60.315);
+  tl.set("#cap165", {autoAlpha: 1}, 60.396);
+  tl.set("#cap165", {autoAlpha: 0}, 60.692);
+  tl.set("#cap166", {autoAlpha: 1}, 60.777);
+  tl.set("#cap166", {autoAlpha: 0}, 60.877);
+  tl.set("#cap167", {autoAlpha: 1}, 60.917);
+  tl.set("#cap167", {autoAlpha: 0}, 61.172);
+  tl.set("#cap168", {autoAlpha: 1}, 61.257);
+  tl.set("#cap168", {autoAlpha: 0}, 61.652);
+  tl.set("#cap169", {autoAlpha: 1}, 61.737);
+  tl.set("#cap169", {autoAlpha: 0}, 61.837);
+  tl.set("#cap170", {autoAlpha: 1}, 61.917);
+  tl.set("#cap170", {autoAlpha: 0}, 62.352);
+  tl.set("#cap171", {autoAlpha: 1}, 62.437);
+  tl.set("#cap171", {autoAlpha: 0}, 62.612);
+  tl.set("#cap172", {autoAlpha: 1}, 62.697);
+  tl.set("#cap172", {autoAlpha: 0}, 62.797);
+  tl.set("#cap173", {autoAlpha: 1}, 62.857);
+  tl.set("#cap173", {autoAlpha: 0}, 63.292);
+  tl.set("#cap174", {autoAlpha: 1}, 63.377);
+  tl.set("#cap174", {autoAlpha: 0}, 63.512);
+  tl.set("#cap175", {autoAlpha: 1}, 63.597);
+  tl.set("#cap175", {autoAlpha: 0}, 64.048);
+  tl.set("#cap176", {autoAlpha: 1}, 64.133);
+  tl.set("#cap176", {autoAlpha: 0}, 64.573);
+  tl.set("#cap177", {autoAlpha: 1}, 64.658);
+  tl.set("#cap177", {autoAlpha: 0}, 65.293);
+  tl.set("#cap178", {autoAlpha: 1}, 65.378);
+  tl.set("#cap178", {autoAlpha: 0}, 65.478);
+  tl.set("#cap179", {autoAlpha: 1}, 65.538);
+  tl.set("#cap179", {autoAlpha: 0}, 65.793);
+  tl.set("#cap180", {autoAlpha: 1}, 65.878);
+  tl.set("#cap180", {autoAlpha: 0}, 66.033);
+  tl.set("#cap181", {autoAlpha: 1}, 66.118);
+  tl.set("#cap181", {autoAlpha: 0}, 66.433);
+  tl.set("#cap182", {autoAlpha: 1}, 66.518);
+  tl.set("#cap182", {autoAlpha: 0}, 66.618);
+  tl.set("#cap183", {autoAlpha: 1}, 66.678);
+  tl.set("#cap183", {autoAlpha: 0}, 67.133);
+  tl.set("#cap184", {autoAlpha: 1}, 67.218);
+  tl.set("#cap184", {autoAlpha: 0}, 67.318);
+  tl.set("#cap185", {autoAlpha: 1}, 67.338);
+  tl.set("#cap185", {autoAlpha: 0}, 67.460);
+  tl.set("#cap186", {autoAlpha: 1}, 67.545);
+  tl.set("#cap186", {autoAlpha: 0}, 67.645);
+  tl.set("#cap187", {autoAlpha: 1}, 67.665);
+  tl.set("#cap187", {autoAlpha: 0}, 68.322);
+  tl.set("#cap188", {autoAlpha: 1}, 68.407);
+  tl.set("#cap188", {autoAlpha: 0}, 68.742);
+  tl.set("#cap189", {autoAlpha: 1}, 68.827);
+  tl.set("#cap189", {autoAlpha: 0}, 68.927);
+  tl.set("#cap190", {autoAlpha: 1}, 68.947);
+  tl.set("#cap190", {autoAlpha: 0}, 69.142);
+  tl.set("#cap191", {autoAlpha: 1}, 69.227);
+  tl.set("#cap191", {autoAlpha: 0}, 69.502);
+  tl.set("#cap192", {autoAlpha: 1}, 69.587);
+  tl.set("#cap192", {autoAlpha: 0}, 69.782);
+  tl.set("#cap193", {autoAlpha: 1}, 69.867);
+  tl.set("#cap193", {autoAlpha: 0}, 70.272);
+  tl.set("#cap194", {autoAlpha: 1}, 70.357);
+  tl.set("#cap194", {autoAlpha: 0}, 70.612);
+  tl.set("#cap195", {autoAlpha: 1}, 70.697);
+  tl.set("#cap195", {autoAlpha: 0}, 70.797);
+  tl.set("#cap196", {autoAlpha: 1}, 70.817);
+  tl.set("#cap196", {autoAlpha: 0}, 70.917);
+  tl.set("#cap197", {autoAlpha: 1}, 70.917);
+  tl.set("#cap197", {autoAlpha: 0}, 71.345);
+  tl.set("#cap198", {autoAlpha: 1}, 71.430);
+  tl.set("#cap198", {autoAlpha: 0}, 71.585);
+  tl.set("#cap199", {autoAlpha: 1}, 71.670);
+  tl.set("#cap199", {autoAlpha: 0}, 71.770);
+  tl.set("#cap200", {autoAlpha: 1}, 71.790);
+  tl.set("#cap200", {autoAlpha: 0}, 72.185);
+  tl.set("#cap201", {autoAlpha: 1}, 72.270);
+  tl.set("#cap201", {autoAlpha: 0}, 72.705);
+  tl.set("#cap202", {autoAlpha: 1}, 72.790);
+  tl.set("#cap202", {autoAlpha: 0}, 72.905);
+  tl.set("#cap203", {autoAlpha: 1}, 72.990);
+  tl.set("#cap203", {autoAlpha: 0}, 73.090);
+  tl.set("#cap204", {autoAlpha: 1}, 73.170);
+  tl.set("#cap204", {autoAlpha: 0}, 73.585);
+  tl.set("#cap205", {autoAlpha: 1}, 73.670);
+  tl.set("#cap205", {autoAlpha: 0}, 73.865);
+  tl.set("#cap206", {autoAlpha: 1}, 73.950);
+  tl.set("#cap206", {autoAlpha: 0}, 74.050);
+  tl.set("#cap207", {autoAlpha: 1}, 74.110);
+  tl.set("#cap207", {autoAlpha: 0}, 74.405);
+  tl.set("#cap208", {autoAlpha: 1}, 74.490);
+  tl.set("#cap208", {autoAlpha: 0}, 74.845);
+  tl.set("#cap209", {autoAlpha: 1}, 74.930);
+  tl.set("#cap209", {autoAlpha: 0}, 75.305);
+  tl.set("#cap210", {autoAlpha: 1}, 75.390);
+  tl.set("#cap210", {autoAlpha: 0}, 75.848);
+  tl.set("#cap211", {autoAlpha: 1}, 75.933);
+  tl.set("#cap211", {autoAlpha: 0}, 76.058);
+  tl.set("#cap212", {autoAlpha: 1}, 76.143);
+  tl.set("#cap212", {autoAlpha: 0}, 76.278);
+  tl.set("#cap213", {autoAlpha: 1}, 76.363);
+  tl.set("#cap213", {autoAlpha: 0}, 76.658);
+  tl.set("#cap214", {autoAlpha: 1}, 76.743);
+  tl.set("#cap214", {autoAlpha: 0}, 76.843);
+  tl.set("#cap215", {autoAlpha: 1}, 76.843);
+  tl.set("#cap215", {autoAlpha: 0}, 76.998);
+  tl.set("#cap216", {autoAlpha: 1}, 77.083);
+  tl.set("#cap216", {autoAlpha: 0}, 77.538);
+  tl.set("#cap217", {autoAlpha: 1}, 77.623);
+  tl.set("#cap217", {autoAlpha: 0}, 78.238);
+  tl.set("#cap218", {autoAlpha: 1}, 78.323);
+  tl.set("#cap218", {autoAlpha: 0}, 78.423);
+  tl.set("#cap219", {autoAlpha: 1}, 78.483);
+  tl.set("#cap219", {autoAlpha: 0}, 78.878);
+  tl.set("#cap220", {autoAlpha: 1}, 78.963);
+  tl.set("#cap220", {autoAlpha: 0}, 79.338);
+  tl.set("#cap221", {autoAlpha: 1}, 79.423);
+  tl.set("#cap221", {autoAlpha: 0}, 79.523);
+  tl.set("#cap222", {autoAlpha: 1}, 79.583);
+  tl.set("#cap222", {autoAlpha: 0}, 79.778);
+  tl.set("#cap223", {autoAlpha: 1}, 79.863);
+  tl.set("#cap223", {autoAlpha: 0}, 80.058);
+  tl.set("#cap224", {autoAlpha: 1}, 80.143);
+  tl.set("#cap224", {autoAlpha: 0}, 80.464);
+  tl.set("#cap225", {autoAlpha: 1}, 80.549);
+  tl.set("#cap225", {autoAlpha: 0}, 80.924);
+  tl.set("#cap226", {autoAlpha: 1}, 81.009);
+  tl.set("#cap226", {autoAlpha: 0}, 81.364);
+  tl.set("#cap227", {autoAlpha: 1}, 81.449);
+  tl.set("#cap227", {autoAlpha: 0}, 82.209);
+  tl.set("#cap228", {autoAlpha: 1}, 82.294);
+  tl.set("#cap228", {autoAlpha: 0}, 82.549);
+  tl.set("#cap229", {autoAlpha: 1}, 82.634);
+  tl.set("#cap229", {autoAlpha: 0}, 82.769);
+  tl.set("#cap230", {autoAlpha: 1}, 82.854);
+  tl.set("#cap230", {autoAlpha: 0}, 82.954);
+  tl.set("#cap231", {autoAlpha: 1}, 83.014);
+  tl.set("#cap231", {autoAlpha: 0}, 83.389);
+  tl.set("#cap232", {autoAlpha: 1}, 83.474);
+  tl.set("#cap232", {autoAlpha: 0}, 83.574);
+  tl.set("#cap233", {autoAlpha: 1}, 83.614);
+  tl.set("#cap233", {autoAlpha: 0}, 84.148);
+  tl.set("#cap234", {autoAlpha: 1}, 84.233);
+  tl.set("#cap234", {autoAlpha: 0}, 84.378);
+  tl.set("#cap235", {autoAlpha: 1}, 84.463);
+  tl.set("#cap235", {autoAlpha: 0}, 84.698);
+  tl.set("#cap236", {autoAlpha: 1}, 84.783);
+  tl.set("#cap236", {autoAlpha: 0}, 85.078);
+  tl.set("#cap237", {autoAlpha: 1}, 85.163);
+  tl.set("#cap237", {autoAlpha: 0}, 85.298);
+  tl.set("#cap238", {autoAlpha: 1}, 85.383);
+  tl.set("#cap238", {autoAlpha: 0}, 85.538);
+  tl.set("#cap239", {autoAlpha: 1}, 85.623);
+  tl.set("#cap239", {autoAlpha: 0}, 86.018);
+  tl.set("#cap240", {autoAlpha: 1}, 86.103);
+  tl.set("#cap240", {autoAlpha: 0}, 86.758);
+  tl.set("#cap241", {autoAlpha: 1}, 86.843);
+  tl.set("#cap241", {autoAlpha: 0}, 86.998);
+  tl.set("#cap242", {autoAlpha: 1}, 87.083);
+  tl.set("#cap242", {autoAlpha: 0}, 87.358);
+  tl.set("#cap243", {autoAlpha: 1}, 87.443);
+  tl.set("#cap243", {autoAlpha: 0}, 87.738);
+  tl.set("#cap244", {autoAlpha: 1}, 87.823);
+  tl.set("#cap244", {autoAlpha: 0}, 88.338);
+  tl.set("#cap245", {autoAlpha: 1}, 88.423);
+  tl.set("#cap245", {autoAlpha: 0}, 88.598);
+  tl.set("#cap246", {autoAlpha: 1}, 88.683);
+  tl.set("#cap246", {autoAlpha: 0}, 88.858);
+  tl.set("#cap247", {autoAlpha: 1}, 88.943);
+  tl.set("#cap247", {autoAlpha: 0}, 89.448);
+  tl.set("#cap248", {autoAlpha: 1}, 89.533);
+  tl.set("#cap248", {autoAlpha: 0}, 89.633);
+  tl.set("#cap249", {autoAlpha: 1}, 89.653);
+  tl.set("#cap249", {autoAlpha: 0}, 89.768);
+  tl.set("#cap250", {autoAlpha: 1}, 89.853);
+  tl.set("#cap250", {autoAlpha: 0}, 90.128);
+  tl.set("#cap251", {autoAlpha: 1}, 90.213);
+  tl.set("#cap251", {autoAlpha: 0}, 90.328);
+  tl.set("#cap252", {autoAlpha: 1}, 90.413);
+  tl.set("#cap252", {autoAlpha: 0}, 90.513);
+  tl.set("#cap253", {autoAlpha: 1}, 90.573);
+  tl.set("#cap253", {autoAlpha: 0}, 91.176);
+  tl.set("#cap254", {autoAlpha: 1}, 91.261);
+  tl.set("#cap254", {autoAlpha: 0}, 91.496);
+  tl.set("#cap255", {autoAlpha: 1}, 91.581);
+  tl.set("#cap255", {autoAlpha: 0}, 91.876);
+  tl.set("#cap256", {autoAlpha: 1}, 91.961);
+  tl.set("#cap256", {autoAlpha: 0}, 92.061);
+  tl.set("#cap257", {autoAlpha: 1}, 92.121);
+  tl.set("#cap257", {autoAlpha: 0}, 92.221);
+  tl.set("#cap258", {autoAlpha: 1}, 92.261);
+  tl.set("#cap258", {autoAlpha: 0}, 92.361);
+  tl.set("#cap259", {autoAlpha: 1}, 92.421);
+  tl.set("#cap259", {autoAlpha: 0}, 92.576);
+  tl.set("#cap260", {autoAlpha: 1}, 92.661);
+  tl.set("#cap260", {autoAlpha: 0}, 93.196);
+  tl.set("#cap261", {autoAlpha: 1}, 93.281);
+  tl.set("#cap261", {autoAlpha: 0}, 93.456);
+  tl.set("#cap262", {autoAlpha: 1}, 93.541);
+  tl.set("#cap262", {autoAlpha: 0}, 93.736);
+  tl.set("#cap263", {autoAlpha: 1}, 93.821);
+  tl.set("#cap263", {autoAlpha: 0}, 94.036);
+  tl.set("#cap264", {autoAlpha: 1}, 94.121);
+  tl.set("#cap264", {autoAlpha: 0}, 94.221);
+  tl.set("#cap265", {autoAlpha: 1}, 94.301);
+  tl.set("#cap265", {autoAlpha: 0}, 94.715);
+  tl.set("#cap266", {autoAlpha: 1}, 94.800);
+  tl.set("#cap266", {autoAlpha: 0}, 95.486);
+  tl.set("#cap267", {autoAlpha: 1}, 95.571);
+  tl.set("#cap267", {autoAlpha: 0}, 96.306);
+  tl.set("#cap268", {autoAlpha: 1}, 96.391);
+  tl.set("#cap268", {autoAlpha: 0}, 97.086);
+  tl.set("#cap269", {autoAlpha: 1}, 97.171);
+  tl.set("#cap269", {autoAlpha: 0}, 97.366);
+  tl.set("#cap270", {autoAlpha: 1}, 97.451);
+  tl.set("#cap270", {autoAlpha: 0}, 97.666);
+  tl.set("#cap271", {autoAlpha: 1}, 97.751);
+  tl.set("#cap271", {autoAlpha: 0}, 98.206);
+  tl.set("#cap272", {autoAlpha: 1}, 98.291);
+  tl.set("#cap272", {autoAlpha: 0}, 98.646);
+  tl.set("#cap273", {autoAlpha: 1}, 98.731);
+  tl.set("#cap273", {autoAlpha: 0}, 98.831);
+  tl.set("#cap274", {autoAlpha: 1}, 98.831);
+  tl.set("#cap274", {autoAlpha: 0}, 98.931);
+  tl.set("#cap275", {autoAlpha: 1}, 98.971);
+  tl.set("#cap275", {autoAlpha: 0}, 99.348);
+  tl.set("#cap276", {autoAlpha: 1}, 99.433);
+  tl.set("#cap276", {autoAlpha: 0}, 99.578);
+  tl.set("#cap277", {autoAlpha: 1}, 99.663);
+  tl.set("#cap277", {autoAlpha: 0}, 99.858);
+  tl.set("#cap278", {autoAlpha: 1}, 99.943);
+  tl.set("#cap278", {autoAlpha: 0}, 100.178);
+  tl.set("#cap279", {autoAlpha: 1}, 100.263);
+  tl.set("#cap279", {autoAlpha: 0}, 100.363);
+  tl.set("#cap280", {autoAlpha: 1}, 100.403);
+  tl.set("#cap280", {autoAlpha: 0}, 100.578);
+  tl.set("#cap281", {autoAlpha: 1}, 100.663);
+  tl.set("#cap281", {autoAlpha: 0}, 101.118);
+  tl.set("#cap282", {autoAlpha: 1}, 101.203);
+  tl.set("#cap282", {autoAlpha: 0}, 101.438);
+  tl.set("#cap283", {autoAlpha: 1}, 101.523);
+  tl.set("#cap283", {autoAlpha: 0}, 101.623);
+  tl.set("#cap284", {autoAlpha: 1}, 101.683);
+  tl.set("#cap284", {autoAlpha: 0}, 102.238);
+  tl.set("#cap285", {autoAlpha: 1}, 102.323);
+  tl.set("#cap285", {autoAlpha: 0}, 102.423);
+  tl.set("#cap286", {autoAlpha: 1}, 102.463);
+  tl.set("#cap286", {autoAlpha: 0}, 102.563);
+  tl.set("#cap287", {autoAlpha: 1}, 102.583);
+  tl.set("#cap287", {autoAlpha: 0}, 102.683);
+  tl.set("#cap288", {autoAlpha: 1}, 102.723);
+  tl.set("#cap288", {autoAlpha: 0}, 103.248);
+  tl.set("#cap289", {autoAlpha: 1}, 103.333);
+  tl.set("#cap289", {autoAlpha: 0}, 103.667);
+  tl.set("#cap290", {autoAlpha: 1}, 103.752);
+  tl.set("#cap290", {autoAlpha: 0}, 104.047);
+  tl.set("#cap291", {autoAlpha: 1}, 104.132);
+  tl.set("#cap291", {autoAlpha: 0}, 104.587);
+  tl.set("#cap292", {autoAlpha: 1}, 104.672);
+  tl.set("#cap292", {autoAlpha: 0}, 105.715);
+  tl.set("#cap293", {autoAlpha: 1}, 105.800);
+  tl.set("#cap293", {autoAlpha: 0}, 105.925);
+  tl.set("#cap294", {autoAlpha: 1}, 106.010);
+  tl.set("#cap294", {autoAlpha: 0}, 106.225);
+  tl.set("#cap295", {autoAlpha: 1}, 106.310);
+  tl.set("#cap295", {autoAlpha: 0}, 106.585);
+  tl.set("#cap296", {autoAlpha: 1}, 106.670);
+  tl.set("#cap296", {autoAlpha: 0}, 106.785);
+  tl.set("#cap297", {autoAlpha: 1}, 106.870);
+  tl.set("#cap297", {autoAlpha: 0}, 107.245);
+  tl.set("#cap298", {autoAlpha: 1}, 107.330);
+  tl.set("#cap298", {autoAlpha: 0}, 107.865);
+  tl.set("#cap299", {autoAlpha: 1}, 107.950);
+  tl.set("#cap299", {autoAlpha: 0}, 108.065);
+  tl.set("#cap300", {autoAlpha: 1}, 108.150);
+  tl.set("#cap300", {autoAlpha: 0}, 108.845);
+  tl.set("#cap301", {autoAlpha: 1}, 108.930);
+  tl.set("#cap301", {autoAlpha: 0}, 109.125);
+  tl.set("#cap302", {autoAlpha: 1}, 109.210);
+  tl.set("#cap302", {autoAlpha: 0}, 109.648);
+  tl.set("#cap303", {autoAlpha: 1}, 109.733);
+  tl.set("#cap303", {autoAlpha: 0}, 110.045);
+  tl.set("#cap304", {autoAlpha: 1}, 110.130);
+  tl.set("#cap304", {autoAlpha: 0}, 110.405);
+  tl.set("#cap305", {autoAlpha: 1}, 110.490);
+  tl.set("#cap305", {autoAlpha: 0}, 110.590);
+  tl.set("#cap306", {autoAlpha: 1}, 110.610);
+  tl.set("#cap306", {autoAlpha: 0}, 110.825);
+  tl.set("#cap307", {autoAlpha: 1}, 110.910);
+  tl.set("#cap307", {autoAlpha: 0}, 111.225);
+  tl.set("#cap308", {autoAlpha: 1}, 111.310);
+  tl.set("#cap308", {autoAlpha: 0}, 111.785);
+  tl.set("#cap309", {autoAlpha: 1}, 111.870);
+  tl.set("#cap309", {autoAlpha: 0}, 111.970);
+  tl.set("#cap310", {autoAlpha: 1}, 111.990);
+  tl.set("#cap310", {autoAlpha: 0}, 112.090);
+  tl.set("#cap311", {autoAlpha: 1}, 112.110);
+  tl.set("#cap311", {autoAlpha: 0}, 112.210);
+  tl.set("#cap312", {autoAlpha: 1}, 112.270);
+  tl.set("#cap312", {autoAlpha: 0}, 112.705);
+  tl.set("#cap313", {autoAlpha: 1}, 112.790);
+  tl.set("#cap313", {autoAlpha: 0}, 112.905);
+  tl.set("#cap314", {autoAlpha: 1}, 112.990);
+  tl.set("#cap314", {autoAlpha: 0}, 113.090);
+  tl.set("#cap315", {autoAlpha: 1}, 113.130);
+  tl.set("#cap315", {autoAlpha: 0}, 113.230);
+  tl.set("#cap316", {autoAlpha: 1}, 113.310);
+  tl.set("#cap316", {autoAlpha: 0}, 113.410);
+  tl.set("#cap317", {autoAlpha: 1}, 113.490);
+  tl.set("#cap317", {autoAlpha: 0}, 113.685);
+  tl.set("#cap318", {autoAlpha: 1}, 113.770);
+  tl.set("#cap318", {autoAlpha: 0}, 114.348);
+  tl.set("#cap319", {autoAlpha: 1}, 114.433);
+  tl.set("#cap319", {autoAlpha: 0}, 114.958);
+  tl.set("#cap320", {autoAlpha: 1}, 115.043);
+  tl.set("#cap320", {autoAlpha: 0}, 115.343);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 115.443);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 12.717);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 24.673);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 57.150);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 84.414);
+
+
+function spring(z, w) {
+  var wd = w * Math.sqrt(1 - z * z);
+  function f(t) { return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + (z * w / wd) * Math.sin(wd * t)); }
+  var e = f(1);
+  return function (t) { return t >= 1 ? 1 : f(t) / e; };
+}
+var SP = spring(0.62, 13), POP = spring(0.46, 14), SOFT = spring(0.84, 11);
+
+function sketchHelpers(tl) {
+  var Q = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+  // draw every stroke inside sel in document order — a hand drawing it.
+  // d is the total time; hachure strokes go faster than outlines.
+  function draw(sel, t, d) {
+    var ps = Q(sel + " .dr").filter(function (p) { return !p.classList.contains("dash"); });
+    if (!ps.length && document.querySelector(sel) && document.querySelector(sel).classList.contains("dr")) ps = Q(sel);
+    var w = ps.map(function (p) { return p.classList.contains("hz") ? 0.6 : (p.classList.contains("ah") ? 0.25 : 1); });
+    var sum = w.reduce(function (a, b) { return a + b; }, 0) || 1, at = t;
+    d = d || 0.7;
+    ps.forEach(function (p, i) {
+      var dd = d * w[i] / sum;
+      tl.fromTo(p, {strokeDashoffset: 1.05}, {strokeDashoffset: 0, duration: dd, ease: "power1.inOut", immediateRender: false}, at);
+      at += dd;
+    });
+    Q(sel + " .dr.dash").forEach(function (p) { tl.fromTo(p, {autoAlpha: 0}, {autoAlpha: 1, duration: 0.25, immediateRender: false}, t); });
+    Q(sel + " .sf, " + sel + " .mk").forEach(function (p) {
+      tl.fromTo(p, {autoAlpha: 0}, {autoAlpha: 1, duration: 0.3, ease: "power1.out", immediateRender: false}, t + d * 0.5);
+    });
+    return at;
+  }
+  // erase: the strokes un-draw backwards, fast
+  function undraw(sel, t, d) {
+    var ps = Q(sel + " .dr").reverse(); d = d || 0.35;
+    ps.forEach(function (p, i) { tl.to(p, {strokeDashoffset: 1.05, duration: d, ease: "power1.in"}, t); });
+    Q(sel + " .sf, " + sel + " .mk").forEach(function (p) { tl.to(p, {autoAlpha: 0, duration: d}, t); });
+  }
+  // handwriting: the text is revealed left to right, like ink going down
+  function write(sel, t, d) {
+    tl.set(sel, {autoAlpha: 1}, t);
+    tl.fromTo(sel, {clipPath: "inset(-20% 100% -20% 0%)"},
+              {clipPath: "inset(-20% -2% -20% 0%)", duration: d || 0.55, ease: "power1.inOut", immediateRender: false}, t);
+  }
+  // a Material object lands: scale with a spring, a whisker of tilt that settles
+  function pop(sel, t, o) {
+    o = o || {};
+    tl.fromTo(sel, {autoAlpha: 0, scale: o.s == null ? 0.6 : o.s, rotation: o.r == null ? -4 : o.r, y: o.y == null ? 24 : o.y},
+              {autoAlpha: 1, scale: 1, rotation: o.to || 0, y: 0, duration: o.d || 0.7, ease: o.ease || POP, immediateRender: true}, t);
+  }
+  function show(sel, t) { tl.set(sel, {autoAlpha: 1}, t); }
+  function out(sel, t, d) { tl.to(sel, {autoAlpha: 0, scale: 0.92, duration: d || 0.25, ease: "power2.in"}, t); }
+  function fadeOut(sel, t, d) { tl.to(sel, {autoAlpha: 0, duration: d || 0.25, ease: "power1.in"}, t); }
+  function bump(sel, t) {
+    tl.to(sel, {scale: 1.08, duration: 0.1, ease: "power2.out"}, t);
+    tl.to(sel, {scale: 1, duration: 0.45, ease: SP}, t + 0.1);
+  }
+  function wiggle(sel, t) { tl.to(sel, {keyframes: {rotation: [0, -5, 4, -2.5, 1, 0]}, duration: 0.5, ease: "none"}, t); }
+  // the four Google dots bounce in sequence while something "thinks"
+  function think(sel, t, d) {
+    var dots = Q(sel + " i"), n = Math.max(1, Math.floor((d || 1.2) / 0.6));
+    dots.forEach(function (el, i) {
+      for (var k = 0; k < n; k++)
+        tl.to(el, {keyframes: {y: [0, -22, 0]}, duration: 0.42, ease: "sine.inOut"}, t + k * 0.6 + i * 0.09);
+    });
+  }
+  function toggle(sel, t, color) {
+    tl.to(sel, {backgroundColor: color || "#0b57d0", borderColor: color || "#0b57d0", duration: 0.18}, t);
+    tl.to(sel + " b", {x: 40, scale: 1.18, backgroundColor: "#fff", duration: 0.45, ease: SP}, t);
+  }
+  // typing into a Google search pill / input: chars appear one by one
+  function type(sel, t, cps) {
+    var el = document.querySelector(sel), txt = el.getAttribute("data-text") || "", o = {n: 0};
+    cps = cps || 22;
+    tl.fromTo(o, {n: 0}, {n: txt.length, duration: txt.length / cps, ease: "none", immediateRender: true,
+      onUpdate: function () { el.textContent = txt.slice(0, Math.round(o.n)); }}, t);
+  }
+  function count(sel, t, to, d, fmt) {
+    var o = {v: 0}, el = document.querySelector(sel);
+    tl.fromTo(o, {v: 0}, {v: to, duration: d || 1.0, ease: "power2.out", immediateRender: false,
+              onUpdate: function () { el.textContent = fmt ? fmt(o.v) : Math.round(o.v); }}, t);
+  }
+  // the whiteboard takes over: it is wiped in by a marker sweep from a point
+  function boardIn(sel, t, x, y, d) {
+    tl.set(sel, {autoAlpha: 1}, t);
+    tl.fromTo(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)"},
+              {clipPath: "circle(2300px at " + x + "px " + y + "px)", duration: d || 0.75, ease: "power3.inOut", immediateRender: false}, t);
+  }
+  function boardOut(sel, t, x, y, d) {
+    tl.to(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)", duration: d || 0.55, ease: "power3.inOut"}, t);
+    tl.set(sel, {autoAlpha: 0}, t + (d || 0.55) + 0.02);
+  }
+  // infinite canvas: pan/zoom the board's camera layer to frame the next idea
+  function pan(sel, t, x, y, s, d) {
+    tl.to(sel, {x: x, y: y, scale: s == null ? 1 : s, duration: d || 0.8, ease: "power3.inOut"}, t);
+  }
+  return {draw: draw, undraw: undraw, write: write, pop: pop, show: show, out: out, fadeOut: fadeOut,
+          bump: bump, wiggle: wiggle, think: think, toggle: toggle, type: type, count: count,
+          boardIn: boardIn, boardOut: boardOut, pan: pan};
+}
+
+  var h = sketchHelpers(tl);
+  gsap.set("#vid", {transformOrigin: "540px 900px"});
+  tl.fromTo("#vid", {scale: 1}, {scale: 1.045, duration: 115.550, ease: "none"}, 0);
+  /* b_agent */
+
+  h.pop("#ag", 0.05, {s: 1, r: 0, y: 0, d: 0.2});
+  h.pop("#agC", 0.1, {s: 0.7, r: -3});
+  h.bump("#spW", 2.211);
+  h.wiggle("#spDot", 2.211);
+  h.draw("#jag", 0.9, 0.8);
+  h.write("#jagT", 1.4, 0.4);
+  h.draw("#ja0", 2.838, 0.3);
+  h.pop("#j1", 3.138, {s: 0.5, r: -5});
+  h.draw("#ja1", 4.292, 0.3);
+  h.pop("#j2", 4.642, {s: 0.5, r: 4});
+  h.draw("#ja2", 6.022, 0.3);
+  h.pop("#j3", 6.372, {s: 0.5, r: -4});
+  h.bump("#j3", 6.822);
+  /* b_settings */
+
+  h.out("#j1", 7.133, 0.2);
+  h.out("#j2", 7.183, 0.2);
+  h.out("#j3", 7.233, 0.2);
+  h.undraw("#ja0", 7.133, 0.2);
+  h.undraw("#ja1", 7.133, 0.2);
+  h.undraw("#jag", 7.133, 0.25);
+  h.out("#jagT", 7.133, 0.2);
+  h.undraw("#ja2", 7.133, 0.2);
+  h.pop("#sr0", 7.583, {s: 0.95, r: 0, y: 16, d: 0.5});
+  h.pop("#sr1", 7.733, {s: 0.95, r: 0, y: 16, d: 0.5});
+  h.pop("#sr2", 7.883, {s: 0.95, r: 0, y: 16, d: 0.5});
+  h.pop("#sr3", 8.033, {s: 0.95, r: 0, y: 16, d: 0.5});
+  h.draw("#lp1", 9.893, 0.4);
+  h.write("#n1", 10.143, 0.25);
+  h.draw("#lp2", 10.293, 0.4);
+  h.write("#n2", 10.543, 0.25);
+  h.draw("#st1", 11.139, 0.35);
+  tl.to("#sr1", {opacity: 0.35, duration: 0.3}, 11.239);
+  h.draw("#st2", 11.589, 0.35);
+  tl.to("#sr2", {opacity: 0.35, duration: 0.3}, 11.689);
+  h.bump("#sr0", 12.217);
+  /* b_board1 */
+
+  h.boardIn("#bd1", 12.517, 340, 262, 0.7);
+  tl.set("#ag", {autoAlpha: 0}, 13.267);
+  h.write("#b1L", 12.867, 0.35);
+  h.write("#b1T", 13.017, 0.55);
+  h.draw("#b1U", 13.467, 0.35);
+  h.write("#b1N", 14.407, 0.3);
+  h.draw("#b1NC", 14.707, 0.45);
+  h.pop("#b1F", 15.497, {s: 0.92, r: 0, y: 14});
+  tl.fromTo("#b1F", {height: 300}, {height: 740, duration: 0.9, ease: "power3.inOut", immediateRender: false}, 15.997);
+  h.draw("#b1A", 16.297, 0.5);
+  h.write("#b1LT", 17.463, 0.5);
+  h.draw("#b1S", 18.457, 1.0);
+  h.pop("#b1c1", 20.000, {s: 0.4, r: -6, y: -60});
+  h.pop("#b1c2", 20.820, {s: 0.4, r: 5, y: -60});
+  h.pop("#b1c3", 22.273, {s: 0.4, r: -4, y: -60});
+  h.bump("#b1F", 23.873);
+  h.boardOut("#bd1", 24.023, 540, 330, 0.45);
+  /* b_model */
+
+  h.pop("#md", 24.520, {s: 1, r: 0, y: 0, d: 0.2});
+  h.pop("#mdC", 24.520, {s: 0.4, r: 2, y: -60});
+  h.draw("#mdCar", 24.800, 0.3);
+  h.pop("#mdCh", 26.370, {s: 0.5, r: -4});
+  h.type("#mdV", 27.520, 14);
+  h.bump("#mdF", 27.920);
+  h.write("#mdSc", 30.170, 0.55);
+  h.draw("#mdAr", 30.810, 0.5);
+  h.pop("#mdEc", 33.656, {s: 0.5, r: 4});
+  h.draw("#mdSp", 34.006, 0.3);
+  /* A clears, B: Sonnet | Haiku */
+  h.fadeOut("#mdA", 34.863, 0.25);
+  h.pop("#mbS", 35.853, {s: 0.6, r: -3});
+  h.draw("#mbDiv", 36.103, 0.3);
+  h.pop("#mbH", 36.753, {s: 0.6, r: 3});
+  h.write("#mbP", 37.203, 0.3);
+  h.draw("#mbBH", 37.203, 0.5);
+  h.draw("#mbBS", 38.470, 0.9);
+  h.write("#mbX", 38.770, 0.4);
+  h.wiggle("#mbX", 39.690);
+  h.pop("#mbR1", 40.689, {s: 0.6, r: -2});
+  h.pop("#mbR2", 40.839, {s: 0.6, r: 2});
+  h.draw("#mbRL", 40.989, 0.7);
+  h.draw("#mbEq", 41.389, 0.35);
+  h.bump("#mbR1", 43.409);
+  h.bump("#mbR2", 43.409);
+  tl.to("#mdC", {scale: 0.9, autoAlpha: 0, duration: 0.3, ease: "power2.in"}, 43.809);
+  tl.set("#md", {autoAlpha: 0}, 44.159);
+  /* b_files */
+
+  h.pop("#fl", 44.527, {s: 1, r: 0, y: 0, d: 0.2});
+  h.pop("#flC", 44.527, {s: 0.7, r: -2});
+  h.draw("#flX", 46.017, 0.45);
+  tl.to("#flB", {opacity: 0.4, duration: 0.3}, 46.317);
+  h.pop("#flDoc", 48.117, {s: 0.5, r: -8});
+  h.draw("#flDS", 48.117, 0.5);
+  h.pop("#flF", 48.617, {s: 0.8, r: 0, y: 10});
+  h.draw("#flAr", 49.324, 0.35);
+  tl.to("#flDoc", {x: 470, scale: 0.35, autoAlpha: 0, duration: 0.55, ease: "power3.in"}, 49.724);
+  h.draw("#flFS", 50.174, 0.6);
+  h.bump("#flF", 50.324);
+  h.write("#flL", 51.304, 0.45);
+  tl.to("#flC", {y: -30, autoAlpha: 0, duration: 0.3, ease: "power2.in"}, 53.284);
+  tl.set("#fl", {autoAlpha: 0}, 53.634);
+  /* b_tokpill */
+
+  h.show("#tk", 53.567);
+  h.pop("#tkP", 53.617, {s: 0.5, r: -3});
+  h.write("#tkQ", 56.521, 0.35);
+  h.wiggle("#tkQ", 56.921);
+  /* b_board2 */
+
+  h.boardIn("#bd2", 57.000, 735, 325, 0.7);
+  tl.set("#tk", {autoAlpha: 0}, 57.700);
+  h.write("#b2L", 57.300, 0.35);
+  h.write("#b2T", 57.400, 0.45);
+  h.draw("#b2U", 57.800, 0.4);
+  h.write("#b2lo", 58.416, 0.45);
+  h.write("#b2sl", 58.716, 0.3);
+  h.pop("#b2tr", 58.816, {s: 0.95, r: 0, y: 10});
+  tl.fromTo("#b2th", {x: 800}, {x: 170, duration: 0.8, ease: "power3.inOut", immediateRender: false}, 59.415);
+  tl.fromTo("#b2tf", {scaleX: 0.95}, {scaleX: 0.22, duration: 0.8, ease: "power3.inOut", immediateRender: false}, 59.415);
+  h.pop("#b2sb", 60.917, {s: 0.5, r: 0});
+  h.pop("#b2ch", 62.807, {s: 0.5, r: 4});
+  h.wiggle("#b2lo", 63.257);
+  /* B: but part of it is for thinking */
+  h.fadeOut("#b2A", 64.133, 0.3);
+  h.pop("#b2D", 65.338, {s: 0.5, r: 0, y: 0});
+  h.write("#b2Dt", 65.638, 0.4);
+  h.think("#b2D", 65.738, 3.0);
+  h.write("#b2Rt", 67.965, 0.45);
+  h.pop("#b2n5", 69.817, {s: 0.5, r: -3});
+  h.draw("#b2r5", 70.067, 0.5);
+  h.draw("#b2h5", 72.170, 0.9);
+  h.think("#b2D", 72.270, 1.8);
+  h.pop("#b2e5", 73.910, {s: 0.6, r: 2});
+  h.draw("#b2x5", 74.210, 0.35);
+  h.wiggle("#b2e5", 75.390);
+  /* C: 2000 fits both */
+  h.pop("#b2n2", 77.033, {s: 0.5, r: 3});
+  h.draw("#b2r2", 77.333, 0.6);
+  h.draw("#b2h2y", 79.563, 0.6);
+  h.draw("#b2ok", 80.143, 0.3);
+  h.draw("#b2h2b", 80.393, 0.7);
+  h.pop("#b2rb", 80.909, {s: 0.6, r: -2});
+  h.draw("#b2rl", 81.159, 0.5);
+  h.write("#b2v", 82.714, 0.6);
+  h.boardOut("#bd2", 84.014, 540, 330, 0.55);
+  /* b_short */
+
+  h.pop("#ins", 84.533, {s: 1, r: 0, y: 0, d: 0.2});
+  h.pop("#inC", 84.533, {s: 0.4, r: -2, y: -60});
+  h.type("#in1", 87.623, 16);
+  h.type("#in2", 89.753, 18);
+  h.type("#in3", 90.273, 18);
+  h.draw("#inU", 90.973, 0.5);
+  h.pop("#inD", 91.961, {s: 0.5, r: 0, y: 0});
+  h.think("#inD", 92.061, 1.2);
+  h.out("#inC", 94.500, 0.25);
+  h.pop("#lgC", 94.600, {s: 0.7, r: 2});
+  tl.fromTo("#lgB", {clipPath: "inset(0% 0% 88% 0%)"}, {clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "power1.inOut", immediateRender: true}, 94.800);
+  h.draw("#lgL", 94.800, 1.6);
+  h.write("#lgT", 97.551, 0.45);
+  h.draw("#lgX", 98.671, 0.45);
+  tl.to("#lgC", {y: -30, autoAlpha: 0, duration: 0.3, ease: "power2.in"}, 99.321);
+  tl.set("#ins", {autoAlpha: 0}, 99.671);
+  /* b_cta */
+
+  h.show("#cta", 100.463);
+  h.pop("#c1", 100.563, {s: 0.5, r: -4});
+  h.pop("#c2", 102.523, {s: 0.5, r: 4});
+  h.pop("#nt0", 103.602, {s: 0.8, r: 0, y: -30, d: 0.5});
+  h.pop("#nt1", 103.902, {s: 0.8, r: 0, y: -30, d: 0.5});
+  h.pop("#nt2", 104.202, {s: 0.8, r: 0, y: -30, d: 0.5});
+  h.pop("#nt3", 104.502, {s: 0.8, r: 0, y: -30, d: 0.5});
+  tl.to("#ntW", {opacity: 0.45, filter: "grayscale(1)", duration: 0.6}, 107.330);
+  tl.to("#ntW", {y: 40, duration: 1.2, ease: "power2.in"}, 107.330);
+  h.write("#ntT", 107.630, 0.5);
+  h.fadeOut("#ntW", 109.083, 0.25);
+  h.fadeOut("#ntT", 109.083, 0.25);
+  h.out("#c1", 109.083, 0.25);
+  h.out("#c2", 109.083, 0.25);
+  h.draw("#plus", 109.383, 0.7);
+  h.pop("#cmt", 109.933, {s: 0.8, r: 0, y: 20});
+  h.type("#cmtT", 110.333, 6);
+  h.bump("#plus", 111.310);
+  h.fadeOut("#cta", 115.150, 0.35);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>

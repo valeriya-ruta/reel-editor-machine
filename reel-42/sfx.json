@@ -1,0 +1,227 @@
+[
+ {
+  "t": 0.41,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 0.81,
+  "name": "ping",
+  "db": 0
+ },
+ {
+  "t": 2.39,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 5.932,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 6.812,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 10.97,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 11.655,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 15.833,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 17.143,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 19.817,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 20.757,
+  "name": "kaching",
+  "db": -2
+ },
+ {
+  "t": 22.397,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 23.033,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 28.117,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 30.843,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 31.503,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 34.096,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 34.233,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 37.372,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 37.852,
+  "name": "typing",
+  "db": -6
+ },
+ {
+  "t": 42.234,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 43.114,
+  "name": "ping",
+  "db": -3
+ },
+ {
+  "t": 43.694,
+  "name": "notification",
+  "db": 0
+ },
+ {
+  "t": 46.117,
+  "name": "notification",
+  "db": -2
+ },
+ {
+  "t": 48.481,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 51.654,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 52.323,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 52.523,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 54.683,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 56.067,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 58.467,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 61.795,
+  "name": "ping",
+  "db": -3
+ },
+ {
+  "t": 64.79,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 66.937,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 67.767,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 71.746,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 76.497,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 78.768,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 80.948,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 81.1,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 83.01,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 84.25,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 86.33,
+  "name": "sparkle",
+  "db": -3
+ },
+ {
+  "t": 87.067,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 89.317,
+  "name": "click",
+  "db": 0
+ }
+]

@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 42 — автоматизація без бану</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+    @font-face {
+      font-family: "ProductSans";
+      src: url("assets/fonts/ProductSans-Bold.ttf");
+      font-weight: 900; font-style: normal; font-display: block;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px;
+            overflow: hidden; background: #000;
+            font-family: "ProductSans", system-ui, sans-serif;
+      --surface:        #fffcfd;
+      --container:      #fbeef2;
+      --container-high: #f4dfe5;
+      --graphite:       rgba(23,20,28,0.13);
+      --accent:         #b4122f;
+      --accent-deep:    #8d0d24;
+      --pink:           #ff6e9c;
+      --ink:            #17141c;
+
+      --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
+      --lit-blush:  linear-gradient(115deg, #ffffff 0%, #fff7fa 100%);
+      --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
+      --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
+      --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
+
+      --rim: inset 0 1.5px 0 rgba(255,255,255,0.92),
+             inset 0 -1.5px 0 rgba(255,255,255,0.14),
+             inset 0 0 0 1px rgba(255,255,255,0.28);
+      --rim-dark: inset 0 1.5px 0 rgba(255,255,255,0.16),
+                  inset 0 0 0 1px rgba(255,255,255,0.08);
+      --rim-glass: inset 0 2px 0 rgba(255,255,255,0.70),
+                   inset 0 -2px 0 rgba(255,255,255,0.10),
+                   inset 0 0 0 1.5px rgba(255,255,255,0.30);
+
+      /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
+         Light coming off the object, not the object sitting on a surface. */
+      --glow: drop-shadow(0 0 10px rgba(255,196,218,0.95))
+              drop-shadow(0 0 26px rgba(255,110,156,0.85))
+              drop-shadow(0 0 64px rgba(255,110,156,0.55))
+              drop-shadow(0 0 120px rgba(255,110,156,0.32));
+      --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
+                   drop-shadow(0 0 60px rgba(255,110,156,0.30));
+
+      --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
+              drop-shadow(0 24px 48px rgba(26,30,39,0.14));
+      --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))
+                 drop-shadow(0 12px 24px rgba(26,30,39,0.12));
+ }
+    .plate { position: absolute; inset: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    #scrim { position: absolute; left: 20px; top: 1247px;
+             width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png");
+             background-size: 100% 100%; background-repeat: no-repeat;
+             opacity: 0; visibility: hidden; pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; top: 1413px;
+           height: 118px; line-height: 118px; text-align: center;
+           color: #fff; font-size: 90px; font-weight: 900;
+           letter-spacing: -0.015em; white-space: nowrap;
+           opacity: 0; visibility: hidden; }
+    .cap.inv { color: var(--ink); }
+    .g { position: absolute; left: 0; top: 40px; width: 1080px;
+         height: 600px; opacity: 0; visibility: hidden; }
+    .g.full { top: 0; height: 1920px; }
+
+    /* §5a.9 — glass over her footage is the house look. Panels only; an
+       edge-to-edge frosted ground blurs her out of her own reel. */
+    .glass { background: rgba(255,255,255,0.15);
+             -webkit-backdrop-filter: blur(24px) saturate(1.4);
+             backdrop-filter: blur(24px) saturate(1.4);
+             box-shadow: var(--rim); filter: var(--cast); }
+
+    /* A takeover: a tinted pane laid ON the footage, with a real margin so it
+       reads as an object rather than a blur applied to the video. */
+    /* The inset pane is a *pane*: 44/64 margin so the footage shows past it,
+       and corners, because a full-bleed hard-cornered rectangle is a bug she
+       has reported. base_css() squircles it; this radius is the fallback. */
+    .ground { position: absolute; left: 44px; top: 64px;
+              width: 992px; height: 1792px; border-radius: 68px;
+              background: linear-gradient(158deg, rgba(196,20,52,0.62) 0%,
+                          rgba(141,13,36,0.70) 100%);
+              -webkit-backdrop-filter: blur(30px) saturate(1.5);
+              backdrop-filter: blur(30px) saturate(1.5);
+              box-shadow: var(--rim-glass); filter: var(--cast); }
+
+    .card { position: absolute; background: var(--lit-blush);
+            filter: var(--cast); box-shadow: var(--rim); }
+    .card.ink { background: var(--lit-ink); box-shadow: var(--rim-dark); }
+    .card.accent { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+
+    .tile { position: absolute; display: grid; place-items: center;
+            background: var(--lit-blush); filter: var(--cast);
+            box-shadow: var(--rim); }
+
+    /* §5a.3 — bar rhythm. One thick heading, then ragged body. Uniform bars
+       read as a loading state; ragged ones read as an abstracted screen. */
+    .ph { display: block; height: 66px; border-radius: 18px;
+          background: var(--lit-accent); margin-bottom: 26px;
+          box-shadow: var(--rim-dark); }
+    .pr { display: block; height: 40px; border-radius: 12px;
+          background: var(--graphite); margin-bottom: 18px; }
+    .pr:nth-of-type(2) { width: 94%; }
+    .pr:nth-of-type(3) { width: 71%; }
+    .pr:nth-of-type(4) { width: 43%; }
+
+    .phone { position: absolute; background: var(--lit-blush);
+             overflow: hidden; filter: var(--cast); box-shadow: var(--rim); }
+    .phone video, .phone img { width: 100%; height: 100%; object-fit: cover;
+                               display: block; }
+
+    /* a value in its own card — her reference's "big number" pattern, minus
+       the label, because a graphic here carries no words */
+    .valcard { position: absolute; background: rgba(255,255,255,0.16);
+               -webkit-backdrop-filter: blur(16px) saturate(1.3);
+               backdrop-filter: blur(16px) saturate(1.3);
+               box-shadow: var(--rim-dark);
+               display: grid; place-items: center; }
+    .valcard span { color: #fff; font-weight: 900; letter-spacing: -0.04em; }
+
+    .wire { fill: none; stroke-width: 20; stroke-linecap: round;
+            filter: drop-shadow(0 8px 18px rgba(26,30,39,0.22)); }
+    .node { fill: #fdf6f6; stroke: #b4122f; stroke-width: 16;
+            filter: drop-shadow(0 10px 22px rgba(26,30,39,0.24)); }
+    .node.hub { fill: #b4122f; stroke: #fff; }
+
+    /* §5a.10 — the glow rides a WRAPPER, never the clipped element itself.
+       clip-path is applied *after* filter, so a drop-shadow declared on the
+       same element as the clip is cut away with everything else outside the
+       silhouette and the object ends up with no light at all. Put the clip on
+       the shape and the filter on its parent: the parent filters the already
+       clipped bitmap, so the light traces the squircle and survives. */
+    .lit { position: absolute; inset: 0; pointer-events: none;
+           filter: var(--glow); }
+    .lit.soft { filter: var(--glow-soft); }
+
+    /* Emoji are images, never glyphs. The render runs on someone else's
+       Chrome, so a literal 💩 in the HTML comes out in whatever emoji font
+       that machine has — Noto on the cloud renderer, Segoe on hers, Apple on
+       nobody's. She wants the Apple set, so the artwork ships in assets/emoji
+       and the glyph never appears in a composition. */
+    .emoji { display: block; width: auto; image-rendering: auto; }
+
+    .halo { position: absolute; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(255,110,156,0.5) 0%,
+                        rgba(255,110,156,0) 70%); }
+    .ring { position: absolute; border-radius: 50%; pointer-events: none;
+            border: 18px solid rgba(255,110,156,0.92);
+            filter: drop-shadow(0 0 40px rgba(255,110,156,0.55)); }
+
+    /* ---- takeovers (STYLE.md 2c) ----
+       The graphic owns the frame: the plate is gone, so none of the
+       over-footage rules apply — no glow budget, no band discipline, ink type
+       on a light ground. Lives here rather than per-reel because every reel
+       from 9 onwards needs it. A takeover that does not bleed off at least
+       two edges reads as a slide, not a takeover. */
+    .tk { position: absolute; inset: 0; }
+    .tk.paper { background: var(--surface); }
+    .tk.white { background: #ffffff; }
+    .tk.blush { background: linear-gradient(150deg,#ffffff 0%,#fffafc 55%,
+                                            #fdf4f8 100%); }
+    /* graph paper — the texture the reference takeovers all have. 60px cells
+       at 5.8% ink: visible, never a pattern you read. */
+    .gp { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px),
+            repeating-linear-gradient(90deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px); }
+    /* horizontal rules only — a transcript or a list is ruled paper, not
+       graph paper, and the difference is what makes it read as an export. */
+    .gl { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.05) 0 1px,
+                                      transparent 1px 175px); }
+
+    /* the finished artefact, in her system — one class at any aspect ratio */
+    .dk { position: absolute; overflow: hidden; border-radius: 28px;
+          background: var(--lit-blush); box-shadow: var(--rim);
+          filter: var(--cast); }
+    .dk i { position: absolute; display: block; }
+    .dk .hb { left: 30px; top: 30px; height: 20px; border-radius: 6px;
+              background: var(--lit-accent); }
+    .dk .rr { left: 30px; height: 9px; border-radius: 4px;
+              background: rgba(23,20,28,0.22); }
+    .dk .pb { border-radius: 16px; background: var(--lit-pink);
+              box-shadow: var(--rim-dark); }
+
+    @font-face { font-family: "Hand"; src: url("assets/fonts/Excalifont.ttf") format("truetype");
+                 font-display: block; }
+    @font-face { font-family: "Cap"; src: url("assets/fonts/ProductSans-Bold.ttf") format("truetype");
+                 font-weight: 900; font-display: block; }
+    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-cyrillic-ext.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-cyrillic.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-symbols.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0001-000C, U+000E-001F, U+007F-009F, U+20DD-20E0, U+20E2-20E4, U+2150-218F, U+2190, U+2192, U+2194-2199, U+21AF, U+21E6-21F0, U+21F3, U+2218-2219, U+2299, U+22C4-22C6, U+2300-243F, U+2440-244A, U+2460-24FF, U+25A0-27BF, U+2800-28FF, U+2921-2922, U+2981, U+29BF, U+29EB, U+2B00-2BFF, U+4DC0-4DFF, U+FFF9-FFFB, U+10140-1018E, U+10190-1019C, U+101A0, U+101D0-101FD, U+102E0-102FB, U+10E60-10E7E, U+1D2C0-1D2D3, U+1D2E0-1D37F, U+1F000-1F0FF, U+1F100-1F1AE, U+1F1E6-1F1FF, U+1F30D-1F30F, U+1F315, U+1F31C, U+1F31E, U+1F320-1F32C, U+1F336, U+1F378, U+1F37D, U+1F382, U+1F393-1F39F, U+1F3A7-1F3A8, U+1F3AC-1F3AF, U+1F3C2, U+1F3C4-1F3C6, U+1F3CA-1F3CE, U+1F3D4-1F3E0, U+1F3ED, U+1F3F1-1F3F3, U+1F3F5-1F3F7, U+1F408, U+1F415, U+1F41F, U+1F426, U+1F43F, U+1F441-1F442, U+1F444, U+1F446-1F449, U+1F44C-1F44E, U+1F453, U+1F46A, U+1F47D, U+1F4A3, U+1F4B0, U+1F4B3, U+1F4B9, U+1F4BB, U+1F4BF, U+1F4C8-1F4CB, U+1F4D6, U+1F4DA, U+1F4DF, U+1F4E3-1F4E6, U+1F4EA-1F4ED, U+1F4F7, U+1F4F9-1F4FB, U+1F4FD-1F4FE, U+1F503, U+1F507-1F50B, U+1F50D, U+1F512-1F513, U+1F53E-1F54A, U+1F54F-1F5FA, U+1F610, U+1F650-1F67F, U+1F687, U+1F68D, U+1F691, U+1F694, U+1F698, U+1F6AD, U+1F6B2, U+1F6B9-1F6BA, U+1F6BC, U+1F6C6-1F6CF, U+1F6D3-1F6D7, U+1F6E0-1F6EA, U+1F6F0-1F6F3, U+1F6F7-1F6FC, U+1F700-1F80B, U+1F810-1F847, U+1F850-1F859, U+1F860-1F887, U+1F890-1F8AD, U+1F8B0-1F8BB, U+1F8C0-1F8C1, U+1F8D0-1F8D8, U+1F900-1F90B, U+1F93B, U+1F946, U+1F984, U+1F996, U+1F9E9, U+1FA00-1FA6F, U+1FA70-1FA7C, U+1FA80-1FAC6, U+1FAC8, U+1FACC-1FADD, U+1FADF-1FAEB, U+1FAEF-1FAFA, U+1FB00-1FBFF; }
+    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-latin-ext.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-latin.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    
+    #root { --ink: #1e1e1e; --gb: #4285F4; --gr: #EA4335; --gy: #FBBC04; --gg: #34A853;
+            --pb: #a5d8ff; --pr: #ffc9c9; --py: #ffec99; --pg: #b2f2bb;
+            --paper: #ffffff; --line: #dadce0; --sub: #5f6368;
+            --e1: 0 1px 2px rgba(60,64,67,.30), 0 1px 3px 1px rgba(60,64,67,.15);
+            --e3: 0 4px 8px 3px rgba(60,64,67,.15), 0 1px 3px rgba(60,64,67,.30);
+            --e5: 0 8px 12px 6px rgba(60,64,67,.15), 0 4px 4px rgba(60,64,67,.30); }
+    .cap { font-family: "Cap", system-ui, sans-serif !important; }
+    .hand { font-family: "Hand", "Cap", sans-serif; color: var(--ink); line-height: 1.12;
+            letter-spacing: 0; }
+    .gs { font-family: "GSans", "Cap", sans-serif; color: #202124; letter-spacing: -0.01em; }
+    .sk { position: absolute; left: 0; top: 0; overflow: visible; }
+    .sk .dr { stroke-dasharray: 1 2; stroke-dashoffset: 1.05; }
+    .sk .dr.dash { stroke-dasharray: 0.03 0.025; stroke-dashoffset: 0; }
+
+    /* a Material card: white, 28px corners, elevation shadow — Google's side */
+    .gcard { position: absolute; background: #fff; border-radius: 28px; box-shadow: var(--e3); }
+    .gcard.flat { box-shadow: var(--e1); }
+    /* paper: the Excalidraw side — a white sheet with a hand-drawn edge (draw the
+       edge with sk.rect inside it), a whisker of tilt, a soft cast shadow */
+    .paper { position: absolute; background: #fff; border-radius: 22px;
+             box-shadow: 0 18px 40px rgba(0,0,0,.22), 0 2px 6px rgba(0,0,0,.12); }
+    .pill { position: absolute; display: flex; align-items: center; gap: 18px;
+            background: #fff; border-radius: 999px; box-shadow: var(--e3);
+            font-family: "GSans", sans-serif; color: #202124; }
+    .chip { display: inline-flex; align-items: center; gap: 12px; padding: 0 30px;
+            height: 72px; border-radius: 20px; border: 2px solid var(--line); background: #fff;
+            font-family: "GSans", sans-serif; font-weight: 500; font-size: 34px; color: #3c4043; }
+    .chip.on { background: #d3e3fd; border-color: #d3e3fd; color: #041e49; }
+    .chip.cg { background: #c4eed0; border-color: #c4eed0; color: #072711; }
+    .chip.cr { background: #ffdad6; border-color: #ffdad6; color: #410002; }
+    .chip.cy { background: #ffefc2; border-color: #ffefc2; color: #3d2e00; }
+    /* the four-dot loader, Google's "thinking" */
+    .dots { position: absolute; display: flex; gap: 18px; }
+    .dots i { display: block; width: 30px; height: 30px; border-radius: 50%; }
+    .dots i:nth-child(1) { background: var(--gb); } .dots i:nth-child(2) { background: var(--gr); }
+    .dots i:nth-child(3) { background: var(--gy); } .dots i:nth-child(4) { background: var(--gg); }
+    /* Material toggle */
+    .tgl { position: absolute; width: 104px; height: 64px; border-radius: 32px; background: #e1e3e1;
+           border: 4px solid #747775; }
+    .tgl b { position: absolute; left: 10px; top: 10px; width: 36px; height: 36px; border-radius: 50%;
+             background: #747775; }
+    /* whiteboard: Excalidraw's canvas — white with a faint dot grid */
+    .board { position: absolute; inset: 0; background-color: #fff;
+             background-image: radial-gradient(circle, rgba(30,30,30,.16) 2px, transparent 2.6px);
+             background-size: 44px 44px; background-position: 11px 11px; }
+    /* free strokes over her footage need to survive a busy background */
+    .over-plate .dr, .over-plate .hand { filter: drop-shadow(0 2px 5px rgba(0,0,0,.35)); }
+    .wbox { position: absolute; }
+    .num { font-family: "GSans", sans-serif; font-weight: 700; letter-spacing: -0.04em; color: #202124; }
+
+
+.hide { opacity: 0; visibility: hidden; }
+.sk .sf, .sk .mk { opacity: 0; visibility: hidden; }
+.ab { position: absolute; }
+.bub { position: absolute; padding: 22px 30px; border-radius: 30px; font-family: "GSans", sans-serif;
+       font-size: 36px; font-weight: 500; line-height: 1.25; max-width: 600px; }
+.bub.in { background: #f1f3f4; color: #202124; border-bottom-left-radius: 8px; }
+.bub.me { background: #d3e3fd; color: #041e49; border-bottom-right-radius: 8px; }
+.av { position: absolute; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
+      font-family: "GSans", sans-serif; font-weight: 700; font-size: 30px; color: #fff; }
+.lbl { font-family: "GSans", sans-serif; font-size: 26px; font-weight: 700; letter-spacing: .14em;
+       color: #5f6368; text-transform: uppercase; position: absolute; }
+.field { position: absolute; border-radius: 16px; border: 2px solid #747775; background: #fff; }
+.row { position: absolute; display: flex; align-items: center; gap: 26px; font-family: "GSans", sans-serif; }
+.hdr { position: absolute; left: 0; right: 0; top: 0; height: 110px; border-bottom: 2px solid #e8eaed; }
+.gl { position: absolute; height: 18px; border-radius: 9px; background: #e8eaed; }
+.cur { position: absolute; left: 0; top: 0; width: 56px; height: 80px; }
+.btn { position: absolute; display: flex; align-items: center; justify-content: center; gap: 16px;
+       border-radius: 999px; font-family: "GSans", sans-serif; font-weight: 700; }
+
+    .ground { clip-path: path('M 883.2 0 c 36.293 0 54.439 0 70.765 8.318 a 68 68 0 0 1 29.717 29.717 c 8.318 16.325 8.318 34.472 8.318 70.765 L 992 1683.2 c 0 36.293 0 54.439 -8.318 70.765 a 68 68 0 0 1 -29.717 29.717 c -16.325 8.318 -34.472 8.318 -70.765 8.318 L 108.8 1792 c -36.293 0 -54.439 0 -70.765 -8.318 a 68 68 0 0 1 -29.717 -29.717 c -8.318 -16.325 -8.318 -34.472 -8.318 -70.765 L 0 108.8 c 0 -36.293 0 -54.439 8.318 -70.765 a 68 68 0 0 1 29.717 -29.717 c 16.325 -8.318 34.472 -8.318 70.765 -8.318 Z'); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="90.017" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="90.017" data-media-start="0"
+             muted playsinline></video>
+<div class="g" id="dc" style="top:0;height:700px"><div class="gcard" id="dcC" style="left:100px;top:60px;width:880px;height:580px"><div id="h1"><div class="hdr"><div class="av" style="left:36px;top:24px;background:#EA4335">I</div><div class="gs" style="position:absolute;left:122px;top:22px;font-size:34px;font-weight:700">Instagram</div><div class="gs" style="position:absolute;left:122px;top:64px;font-size:24px;color:#5f6368">Direct</div></div><div class="num hide" id="cnt" style="position:absolute;left:44px;top:140px;font-size:170px;color:#4285F4">0</div><div class="hand hide" id="cntT" style="position:absolute;left:52px;top:330px;font-size:54px">повідомлень</div><div class="bub me hide" id="b1" style="right:36px;top:140px;width:330px;height:64px;padding:0"></div><div class="bub me hide" id="b2" style="right:36px;top:222px;width:280px;height:64px;padding:0"></div><div class="bub me hide" id="b3" style="right:36px;top:304px;width:340px;height:64px;padding:0"></div><svg class="sk" id="bS" viewBox="0 0 880 580" width="880" height="580"><path class="dr" pathLength="1" d="M530.4 170.7 C548.6 170.1 596.0 166.6 639.4 167.2 C682.7 167.9 765.4 173.3 790.7 174.5" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M581.1 252.8 C600.9 252.2 663.4 248.2 699.8 248.7 C736.1 249.2 782.6 254.8 799.2 256.0" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M518.7 335.2 C542.3 334.7 613.7 331.6 660.4 332.1 C707.2 332.6 776.1 337.2 799.2 338.2" fill="none" stroke="#041e49" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="ab hide" id="ban" style="left:52px;top:452px"><span class="chip cr" style="height:84px;font-size:38px">Акаунт заблоковано</span></div><svg class="sk" id="banX" viewBox="0 0 880 580" width="880" height="580"><path class="dr" pathLength="1" d="M151.2 438.8 C173.2 460.3 191.8 481.5 259.4 546.6 M261.2 438.9 C223.3 472.6 189.8 508.1 150.1 549.9" fill="none" stroke="#EA4335" stroke-width="11.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M60.3 481.9 C64.8 485.9 78.3 505.4 86.9 505.6 C95.6 505.8 103.4 483.6 112.1 483.1 C120.8 482.6 130.3 503.2 139.2 502.5 C148.1 501.8 156.7 478.7 165.6 478.9 C174.4 479.0 183.7 504.0 192.1 503.5 C200.5 503.0 207.6 476.2 216.1 476.1 C224.6 476.0 233.8 502.7 243.1 503.0 C252.3 503.3 262.6 477.7 271.3 477.9 C280.1 478.2 287.2 504.0 295.7 504.7 C304.2 505.4 313.4 482.4 322.2 482.3 C331.0 482.2 340.0 504.7 348.6 504.2 C357.3 503.7 365.6 479.2 374.2 479.1 C382.9 479.1 391.5 504.1 400.5 503.9 C409.6 503.7 420.0 476.7 428.7 477.8 C437.4 479.0 444.4 510.6 452.9 511.0 C461.5 511.3 475.5 485.1 480.0 480.0" fill="none" stroke="#EA4335" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="okH" viewBox="0 0 880 580" width="880" height="580"><path class="dr" pathLength="1" d="M678.6 498.8 C684.9 505.2 699.5 545.2 716.4 536.9 C733.2 528.5 769.2 463.4 779.8 448.7" fill="none" stroke="#34A853" stroke-width="11.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div id="h2"><div class="gs hide" id="tT" style="position:absolute;left:44px;top:40px;font-size:40px;font-weight:700">Мої ліди</div><div class="av hide" id="a1" style="left:250px;top:30px;background:#4285F4">О</div><div class="av hide" id="a2" style="left:300px;top:30px;background:#34A853">М</div><div class="av hide" id="a3" style="left:350px;top:30px;background:#FBBC04">А</div><svg class="sk" id="cb1" viewBox="0 0 880 580" width="880" height="580"><path class="dr" pathLength="1" d="M44.1 152.2 C68.2 150.7 90.5 148.8 103.7 147.7 M101.7 149.8 C100.7 162.9 100.3 177.7 104.1 209.7 M102.6 208.5 C87.1 208.8 72.0 205.2 42.4 209.2 M46.0 209.8 C41.7 197.9 45.8 182.4 45.5 149.1" fill="none" stroke="#1e1e1e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M45.2 151.2 C56.6 148.9 70.5 149.6 100.3 149.9 M103.1 148.6 C103.1 167.6 102.5 184.0 101.1 210.3 M102.4 206.7 C87.1 207.1 72.8 210.1 42.7 206.0 M44.8 206.7 C43.7 193.5 44.7 180.7 42.3 152.0" fill="none" stroke="#1e1e1e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="cb2" viewBox="0 0 880 580" width="880" height="580"><path class="dr" pathLength="1" d="M43.7 249.6 C57.5 251.8 67.6 249.1 101.8 251.1 M100.8 248.6 C101.2 270.4 104.2 292.9 101.8 307.6 M99.9 310.3 C86.0 309.1 64.5 307.4 45.6 310.2 M42.0 307.4 C44.9 291.5 43.2 277.6 46.3 248.9" fill="none" stroke="#1e1e1e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M45.0 248.4 C62.4 250.9 81.2 248.6 101.1 252.2 M103.6 248.4 C100.4 267.9 102.7 283.6 104.1 306.1 M100.8 308.4 C80.5 308.6 60.2 307.2 44.6 307.6 M43.5 308.8 C45.5 291.6 44.1 281.6 43.1 249.1" fill="none" stroke="#1e1e1e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="cb3" viewBox="0 0 880 580" width="880" height="580"><path class="dr" pathLength="1" d="M42.7 348.9 C58.2 350.1 67.3 352.2 104.0 351.8 M104.3 350.7 C100.8 369.5 103.8 385.7 99.7 409.5 M102.2 406.9 C87.8 409.2 75.2 408.5 44.5 409.0 M42.1 407.6 C45.8 387.2 43.5 366.3 43.0 347.7" fill="none" stroke="#1e1e1e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M41.7 348.0 C60.8 351.6 77.5 348.4 103.8 351.9 M103.9 351.4 C101.2 364.0 100.7 381.7 103.7 409.9 M102.6 406.4 C87.9 408.9 71.1 405.3 46.0 409.7 M46.0 409.4 C43.2 393.9 42.5 378.8 45.7 351.4" fill="none" stroke="#1e1e1e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="r1" style="position:absolute;left:132px;top:150px;font-size:54px">писати лідам</div><div class="hand hide" id="r2" style="position:absolute;left:132px;top:250px;font-size:54px">нагадувати</div><div class="hand hide" id="r3" style="position:absolute;left:132px;top:350px;font-size:54px">розсилати повідомлення</div><svg class="sk" id="ck1" viewBox="0 0 880 580" width="880" height="580"><path class="dr" pathLength="1" d="M49.1 170.2 C52.8 174.0 61.2 198.1 71.3 193.2 C81.3 188.3 103.1 149.6 109.4 140.9" fill="none" stroke="#34A853" stroke-width="9.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="ck2" viewBox="0 0 880 580" width="880" height="580"><path class="dr" pathLength="1" d="M47.2 269.6 C50.9 273.4 58.7 297.5 69.4 292.8 C80.1 288.1 104.1 250.0 111.1 241.4" fill="none" stroke="#34A853" stroke-width="9.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="ck3" viewBox="0 0 880 580" width="880" height="580"><path class="dr" pathLength="1" d="M47.3 371.4 C51.1 375.3 59.6 399.8 70.0 394.8 C80.5 389.7 103.4 350.2 110.1 341.3" fill="none" stroke="#34A853" stroke-width="9.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="pill hide" id="kp" style="left:600px;top:26px;height:84px;padding:0 34px 0 22px;font-size:38px;font-weight:700;box-shadow:var(--e1)"><span style="display:inline-block;width:40px;height:40px;border-radius:50%;background:#D97757"></span>Клод</div><div class="hand hide" id="kpT" style="position:absolute;left:610px;top:112px;font-size:46px;color:#4285F4">менеджер</div><div class="ab" style="left:44px;top:470px;display:flex;gap:18px"><span class="chip cg hide" id="ch1">не втомлюється</span><span class="chip cy hide" id="ch2">безкоштовно</span></div></div></div></div>
+<div class="g full" id="bd1"><div class="board"></div><div class="hand hide" id="b1T" style="position:absolute;left:110px;top:170px;font-size:80px">внутрішній браузер</div><svg class="sk" id="b1U" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M113.9 278.7 C167.2 278.4 327.8 277.2 433.9 276.8 C539.9 276.3 697.7 275.9 750.4 275.7" fill="none" stroke="#4285F4" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="b1B" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M662.7 349.4 C680.2 356.3 683.7 360.1 685.9 364.2 C688.0 368.4 688.8 358.1 689.2 378.7 C689.6 399.2 688.3 451.4 688.4 487.4 C688.6 523.4 689.7 558.8 690.1 594.7 C690.5 630.6 691.5 682.6 690.8 702.5 C690.1 722.5 688.2 710.8 685.8 714.6 C683.4 718.5 680.6 723.0 676.5 725.7 C672.5 728.5 683.9 730.5 661.4 731.1 C638.9 731.7 582.0 729.6 541.7 729.4 C501.4 729.1 459.9 729.7 419.4 729.7 C378.9 729.7 339.1 729.3 298.7 729.3 C258.3 729.4 199.0 730.2 176.8 729.7 C154.6 729.3 169.0 729.0 165.4 726.8 C161.8 724.6 157.7 720.5 155.0 716.4 C152.4 712.3 150.5 722.7 149.4 702.2 C148.3 681.6 148.3 629.3 148.4 593.3 C148.5 557.3 149.4 522.2 149.8 486.3 C150.1 450.4 149.9 398.4 150.5 377.9 C151.1 357.4 151.3 366.9 153.6 363.1 C155.8 359.3 159.7 357.4 163.9 355.0 C168.1 352.7 156.7 349.8 178.9 348.9 C201.2 348.1 257.4 350.0 297.7 350.0 C337.9 350.1 379.7 349.3 420.4 349.5 C461.2 349.6 501.6 350.8 542.0 350.8 C582.4 350.8 640.3 348.9 662.7 349.4 C685.1 349.9 672.5 351.3 676.3 353.8 C680.2 356.3 683.7 360.1 685.9 364.2" fill="none" stroke="#1e1e1e" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M690.9 376.6 C688.1 519.7 688.1 557.8 688.7 593.9 C689.2 629.9 692.3 679.3 691.8 699.8 C691.3 720.2 688.7 712.1 685.8 716.7 C682.9 721.3 678.4 725.3 674.4 727.3 C670.4 729.3 684.1 728.6 662.0 728.7 C639.9 728.7 581.9 727.0 541.8 727.4 C501.7 727.9 462.1 731.0 421.3 731.4 C380.5 731.8 337.8 729.4 297.0 729.6 C256.1 729.8 198.5 733.3 176.3 732.4 C154.2 731.4 168.1 726.3 164.1 723.9 C160.1 721.5 154.8 721.2 152.4 717.8 C150.1 714.4 150.0 723.8 149.8 703.6 C149.5 683.4 150.8 632.4 150.9 596.5 C151.0 560.7 150.3 524.7 150.5 488.3 C150.7 452.0 151.3 399.3 152.0 378.6 C152.8 357.9 152.6 368.1 154.9 364.0 C157.2 359.9 161.5 356.1 165.7 354.0 C169.9 351.9 157.9 352.1 180.1 351.3 C202.3 350.4 259.1 348.8 298.9 348.7 C338.6 348.7 378.1 350.5 418.7 350.7 C459.3 350.9 501.7 350.4 542.4 350.1 C583.0 349.8 640.8 348.4 662.7 348.8 C684.6 349.2 670.1 350.3 673.8 352.6 C677.5 355.0 682.2 359.1 685.1 363.1 C687.9 367.1 690.3 356.5 690.9 376.6 C691.5 396.6 688.8 447.3 688.4 483.5 C688.1 519.7 688.1 557.8 688.7 593.9" fill="none" stroke="#1e1e1e" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M149.9 429.1 C264.6 431.8 379.8 431.5 689.0 429.7" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="sf" d="M203.6 379.6 C206.2 385.0 207.9 387.5 208.4 389.2 C208.9 390.9 208.8 391.9 208.4 393.4 C207.9 394.9 206.8 396.9 205.7 398.2 C204.5 399.4 203.1 400.1 201.5 400.8 C199.9 401.6 197.8 402.6 196.0 402.8 C194.1 403.0 192.0 402.7 190.5 402.2 C189.1 401.7 188.5 401.0 187.3 400.0 C186.0 399.0 184.0 397.6 183.0 396.3 C182.0 394.9 181.6 393.4 181.4 391.7 C181.1 390.1 181.0 388.0 181.6 386.2 C182.2 384.4 183.7 382.4 184.9 381.0 C186.2 379.6 187.5 378.7 189.0 377.9 C190.4 377.1 191.9 376.4 193.4 376.2 C195.0 376.1 196.6 376.4 198.3 376.9 C200.0 377.5 202.4 378.5 203.6 379.6 C204.8 380.7 204.6 381.8 205.4 383.4 C206.2 385.0 207.9 387.5 208.4 389.2" fill="#ffc9c9" stroke="none"/><path class="dr" pathLength="1" d="M203.6 379.6 C206.2 385.0 207.9 387.5 208.4 389.2 C208.9 390.9 208.8 391.9 208.4 393.4 C207.9 394.9 206.8 396.9 205.7 398.2 C204.5 399.4 203.1 400.1 201.5 400.8 C199.9 401.6 197.8 402.6 196.0 402.8 C194.1 403.0 192.0 402.7 190.5 402.2 C189.1 401.7 188.5 401.0 187.3 400.0 C186.0 399.0 184.0 397.6 183.0 396.3 C182.0 394.9 181.6 393.4 181.4 391.7 C181.1 390.1 181.0 388.0 181.6 386.2 C182.2 384.4 183.7 382.4 184.9 381.0 C186.2 379.6 187.5 378.7 189.0 377.9 C190.4 377.1 191.9 376.4 193.4 376.2 C195.0 376.1 196.6 376.4 198.3 376.9 C200.0 377.5 202.4 378.5 203.6 379.6 C204.8 380.7 204.6 381.8 205.4 383.4 C206.2 385.0 207.9 387.5 208.4 389.2" fill="none" stroke="#EA4335" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M207.4 389.3 C206.9 395.7 207.3 396.4 206.2 397.3 C205.0 398.3 201.7 398.8 200.1 399.9 C198.5 401.1 198.1 403.9 196.6 404.4 C195.1 404.9 192.5 403.6 191.0 402.9 C189.5 402.3 188.9 401.5 187.8 400.6 C186.7 399.8 185.5 399.4 184.4 397.7 C183.3 395.9 181.7 392.1 181.2 390.1 C180.7 388.0 180.8 386.6 181.5 385.3 C182.2 384.0 184.3 383.1 185.3 382.1 C186.4 381.1 186.3 380.2 187.8 379.2 C189.3 378.2 192.5 376.3 194.3 376.1 C196.1 375.9 197.6 377.5 198.9 378.2 C200.2 379.0 200.5 380.1 201.9 380.8 C203.4 381.5 206.8 381.1 207.7 382.5 C208.7 383.9 207.5 387.3 207.4 389.3 C207.3 391.3 207.3 393.0 207.1 394.3 C206.9 395.7 207.3 396.4 206.2 397.3" fill="none" stroke="#EA4335" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="sf" d="M247.5 392.4 C246.2 397.9 244.4 398.7 243.0 399.7 C241.6 400.8 240.2 402.3 238.3 402.9 C236.5 403.5 233.7 403.6 232.2 403.4 C230.6 403.1 230.2 402.1 228.8 401.2 C227.4 400.4 224.7 399.9 223.7 398.5 C222.7 397.1 223.2 394.5 222.9 392.7 C222.6 390.9 221.9 389.3 222.0 387.7 C222.2 386.0 222.9 384.1 224.0 382.9 C225.0 381.6 226.9 380.8 228.1 380.1 C229.3 379.3 229.7 378.6 231.3 378.2 C232.8 377.8 235.5 377.7 237.3 377.8 C239.2 377.9 240.8 377.9 242.2 378.8 C243.7 379.7 245.2 381.8 246.0 383.3 C246.8 384.8 247.0 386.1 247.2 387.6 C247.5 389.1 247.5 390.9 247.5 392.4 C247.4 393.9 247.7 395.4 246.9 396.6 C246.2 397.9 244.4 398.7 243.0 399.7" fill="#ffec99" stroke="none"/><path class="dr" pathLength="1" d="M247.5 392.4 C246.2 397.9 244.4 398.7 243.0 399.7 C241.6 400.8 240.2 402.3 238.3 402.9 C236.5 403.5 233.7 403.6 232.2 403.4 C230.6 403.1 230.2 402.1 228.8 401.2 C227.4 400.4 224.7 399.9 223.7 398.5 C222.7 397.1 223.2 394.5 222.9 392.7 C222.6 390.9 221.9 389.3 222.0 387.7 C222.2 386.0 222.9 384.1 224.0 382.9 C225.0 381.6 226.9 380.8 228.1 380.1 C229.3 379.3 229.7 378.6 231.3 378.2 C232.8 377.8 235.5 377.7 237.3 377.8 C239.2 377.9 240.8 377.9 242.2 378.8 C243.7 379.7 245.2 381.8 246.0 383.3 C246.8 384.8 247.0 386.1 247.2 387.6 C247.5 389.1 247.5 390.9 247.5 392.4 C247.4 393.9 247.7 395.4 246.9 396.6 C246.2 397.9 244.4 398.7 243.0 399.7" fill="none" stroke="#FBBC04" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M242.7 400.5 C236.0 403.9 233.7 404.5 232.2 403.9 C230.8 403.3 230.2 401.0 229.1 399.8 C228.0 398.7 226.7 397.9 225.6 396.8 C224.4 395.7 222.9 395.0 222.2 393.3 C221.6 391.6 221.4 388.4 221.8 386.5 C222.3 384.7 224.2 383.2 225.0 382.2 C225.8 381.2 225.5 381.0 226.5 380.3 C227.6 379.7 229.7 379.1 231.5 378.5 C233.4 377.8 236.2 376.2 237.7 376.5 C239.2 376.8 239.3 379.2 240.4 380.3 C241.5 381.4 243.1 381.8 244.3 383.1 C245.5 384.3 246.9 386.2 247.6 387.8 C248.3 389.4 248.7 390.9 248.4 392.5 C248.1 394.2 247.0 396.4 246.0 397.7 C245.1 399.0 244.1 399.6 242.7 400.5 C241.3 401.4 239.5 402.8 237.8 403.3 C236.0 403.9 233.7 404.5 232.2 403.9" fill="none" stroke="#FBBC04" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="sf" d="M285.3 397.5 C280.6 401.8 279.1 402.4 277.5 402.8 C276.0 403.2 274.1 403.5 272.4 403.2 C270.7 403.0 268.9 402.3 267.5 401.2 C266.1 400.2 264.8 398.3 263.8 396.8 C262.8 395.3 261.9 393.5 261.5 392.0 C261.2 390.5 261.0 389.2 261.5 387.6 C262.0 386.0 263.7 383.6 264.7 382.2 C265.6 380.8 265.8 379.9 267.2 379.2 C268.6 378.5 271.1 378.6 272.8 378.2 C274.6 377.8 276.1 376.8 277.5 376.8 C279.0 376.9 280.1 377.7 281.4 378.6 C282.7 379.5 284.4 380.6 285.3 382.1 C286.2 383.6 286.5 385.6 286.8 387.5 C287.2 389.4 287.6 391.7 287.3 393.4 C287.1 395.1 286.2 396.3 285.3 397.5 C284.4 398.8 283.2 400.1 281.9 400.9 C280.6 401.8 279.1 402.4 277.5 402.8" fill="#b2f2bb" stroke="none"/><path class="dr" pathLength="1" d="M285.3 397.5 C280.6 401.8 279.1 402.4 277.5 402.8 C276.0 403.2 274.1 403.5 272.4 403.2 C270.7 403.0 268.9 402.3 267.5 401.2 C266.1 400.2 264.8 398.3 263.8 396.8 C262.8 395.3 261.9 393.5 261.5 392.0 C261.2 390.5 261.0 389.2 261.5 387.6 C262.0 386.0 263.7 383.6 264.7 382.2 C265.6 380.8 265.8 379.9 267.2 379.2 C268.6 378.5 271.1 378.6 272.8 378.2 C274.6 377.8 276.1 376.8 277.5 376.8 C279.0 376.9 280.1 377.7 281.4 378.6 C282.7 379.5 284.4 380.6 285.3 382.1 C286.2 383.6 286.5 385.6 286.8 387.5 C287.2 389.4 287.6 391.7 287.3 393.4 C287.1 395.1 286.2 396.3 285.3 397.5 C284.4 398.8 283.2 400.1 281.9 400.9 C280.6 401.8 279.1 402.4 277.5 402.8" fill="none" stroke="#34A853" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M277.8 403.3 C269.8 403.6 269.0 403.1 267.8 401.9 C266.6 400.8 265.4 398.9 264.4 397.2 C263.5 395.5 262.7 393.0 262.1 391.7 C261.5 390.3 260.6 390.1 260.9 388.8 C261.2 387.5 263.0 385.6 264.1 383.8 C265.2 382.0 266.0 379.3 267.4 378.0 C268.9 376.6 271.3 376.0 272.8 375.9 C274.3 375.8 275.0 376.6 276.4 377.4 C277.9 378.2 280.2 379.6 281.6 380.6 C283.0 381.6 283.6 382.2 284.6 383.5 C285.7 384.8 287.7 386.8 288.1 388.3 C288.4 389.8 287.3 391.1 286.9 392.5 C286.6 394.0 286.3 395.4 285.7 397.0 C285.1 398.6 284.7 401.2 283.3 402.2 C282.0 403.3 279.7 403.1 277.8 403.3 C275.8 403.6 273.1 404.1 271.4 403.9 C269.8 403.6 269.0 403.1 267.8 401.9" fill="none" stroke="#34A853" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M643.3 372.4 C648.5 373.9 650.3 373.3 650.6 374.1 C650.9 374.9 649.4 373.8 649.1 378.6 C648.8 383.4 649.1 398.4 648.9 402.9 C648.7 407.3 648.2 404.3 647.8 405.4 C647.5 406.5 647.6 408.9 646.8 409.5 C646.0 410.1 661.3 408.9 643.3 409.1 C625.2 409.3 573.9 410.4 538.6 410.6 C503.4 410.9 467.1 410.6 431.9 410.6 C396.7 410.6 345.5 411.1 327.4 410.9 C309.4 410.8 324.3 410.4 323.4 409.7 C322.6 409.0 322.8 407.6 322.2 406.7 C321.7 405.8 320.3 409.0 320.1 404.4 C320.0 399.8 321.4 384.2 321.3 379.1 C321.2 374.1 319.3 374.9 319.4 374.0 C319.6 373.1 321.3 374.1 322.4 373.6 C323.6 373.2 308.2 371.5 326.3 371.3 C344.4 371.2 395.4 372.3 430.8 372.6 C466.2 373.0 503.2 373.5 538.6 373.4 C574.0 373.4 625.2 372.4 643.3 372.4 C661.4 372.4 646.1 373.3 647.3 373.6 C648.5 373.9 650.3 373.3 650.6 374.1" fill="none" stroke="#1e1e1e" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M650.0 378.0 C647.6 406.2 649.2 405.1 648.8 406.0 C648.5 407.0 646.1 406.1 645.7 407.1 C645.2 408.0 664.2 410.9 646.3 411.7 C628.4 412.6 573.6 412.5 538.4 412.3 C503.1 412.2 470.2 411.7 434.6 410.9 C399.0 410.1 343.3 407.9 324.9 407.6 C306.5 407.3 324.9 408.8 324.4 409.0 C323.8 409.3 322.6 409.9 321.6 409.1 C320.6 408.3 318.5 409.5 318.3 404.4 C318.2 399.2 320.6 383.1 320.7 378.0 C320.8 373.0 318.4 375.0 318.7 374.2 C318.9 373.5 320.6 374.2 322.2 373.7 C323.7 373.2 309.5 371.6 327.9 371.1 C346.4 370.6 397.6 370.5 433.0 370.9 C468.4 371.3 505.1 373.5 540.3 373.6 C575.5 373.8 626.6 372.1 644.2 371.8 C661.8 371.5 644.8 371.4 646.0 371.9 C647.2 372.4 651.0 373.5 651.6 374.5 C652.3 375.6 650.6 373.6 650.0 378.0 C649.4 382.5 648.0 396.9 647.8 401.5 C647.6 406.2 649.2 405.1 648.8 406.0" fill="none" stroke="#1e1e1e" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M200.0 501.4 C236.8 500.5 350.5 496.2 420.4 496.1 C490.4 496.1 586.5 500.3 619.8 501.1" fill="none" stroke="#9aa0a6" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M199.6 560.7 C229.7 561.4 320.4 565.2 380.4 564.7 C440.3 564.3 529.4 559.2 559.2 558.1" fill="none" stroke="#9aa0a6" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M201.2 619.8 C244.4 619.0 387.2 614.5 460.6 614.9 C533.9 615.4 611.2 621.1 641.3 622.3" fill="none" stroke="#9aa0a6" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="b1Eq" style="position:absolute;left:712px;top:480px;font-size:96px">=</div><div class="pill hide" id="b1Ch" style="left:790px;top:490px;height:96px;padding:0 34px;font-size:42px;font-weight:700">Chrome</div><div class="hand hide" id="b1Zv" style="position:absolute;left:770px;top:610px;font-size:44px;color:#5f6368">звичайний</div><svg class="sk" id="b1K" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M701.2 318.9 C720.1 326.7 722.4 331.6 724.9 335.6 C727.5 339.6 730.7 324.6 731.3 347.9 C732.0 371.1 729.0 432.9 728.8 475.1 C728.6 517.2 729.8 559.0 730.0 600.7 C730.2 642.4 729.8 683.1 730.0 725.3 C730.2 767.4 731.8 830.1 731.1 853.5 C730.3 877.0 728.0 862.2 725.4 866.2 C722.9 870.2 719.5 875.1 715.6 877.6 C711.7 880.1 722.9 880.9 702.0 881.2 C681.1 881.5 627.8 879.5 590.4 879.3 C552.9 879.0 514.9 879.6 477.3 879.7 C439.8 879.9 402.6 880.1 365.0 880.0 C327.4 880.0 289.8 879.3 251.8 879.3 C213.9 879.3 158.4 880.8 137.4 880.3 C116.3 879.8 129.7 878.6 125.6 876.2 C121.5 873.9 115.3 870.1 112.6 866.1 C109.9 862.1 109.9 875.5 109.5 852.2 C109.1 828.8 110.2 768.1 110.1 725.9 C110.1 683.7 109.3 640.9 109.4 599.0 C109.5 557.1 110.7 515.9 110.6 474.2 C110.6 432.5 108.9 372.1 109.1 348.9 C109.4 325.6 109.7 338.8 112.3 334.8 C114.9 330.8 120.4 327.1 124.7 324.7 C128.9 322.4 116.4 321.1 137.6 320.5 C158.8 320.0 214.2 321.9 251.8 321.5 C289.5 321.2 326.2 318.7 363.6 318.5 C401.0 318.3 438.6 319.8 476.4 320.3 C514.2 320.7 552.9 321.4 590.4 321.2 C627.8 321.0 680.2 318.5 701.2 318.9 C722.1 319.4 712.2 321.1 716.2 323.9 C720.1 326.7 722.4 331.6 724.9 335.6" fill="none" stroke="#4285F4" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M729.7 348.1 C729.7 517.3 729.8 559.0 729.5 600.8 C729.3 642.6 727.7 684.1 728.2 725.8 C728.7 767.6 732.6 827.7 732.4 851.2 C732.3 874.7 729.7 862.3 727.3 866.8 C724.8 871.3 721.7 876.0 717.8 878.1 C713.9 880.2 725.5 878.9 703.9 879.4 C682.3 879.9 625.9 880.7 588.2 881.1 C550.6 881.6 515.6 882.5 477.7 881.9 C439.9 881.4 398.9 877.7 361.2 877.8 C323.5 877.8 288.2 881.6 251.5 882.2 C214.7 882.8 161.9 882.6 140.6 881.3 C119.3 879.9 128.0 876.4 123.7 874.2 C119.3 871.9 116.8 871.5 114.4 867.9 C112.1 864.4 110.1 877.1 109.7 853.0 C109.3 829.0 111.8 766.0 112.1 723.6 C112.4 681.3 112.0 640.8 111.5 598.9 C111.1 557.0 109.6 513.9 109.3 472.2 C109.1 430.4 109.2 371.7 110.2 348.3 C111.1 325.0 113.3 336.1 115.3 332.3 C117.2 328.5 117.9 328.0 121.8 325.7 C125.7 323.4 116.8 319.9 138.6 318.7 C160.5 317.4 215.5 318.1 252.9 318.1 C290.4 318.2 326.4 318.8 363.4 318.7 C400.4 318.6 437.2 316.9 475.1 317.4 C513.0 318.0 552.8 322.0 590.8 322.1 C628.8 322.2 682.1 318.1 702.9 318.2 C723.7 318.4 711.7 320.2 715.7 322.9 C719.7 325.7 724.4 330.5 726.7 334.7 C729.0 338.9 729.2 324.7 729.7 348.1 C730.2 371.5 729.8 433.0 729.8 475.2 C729.7 517.3 729.8 559.0 729.5 600.8" fill="none" stroke="#4285F4" stroke-width="4.3" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="pill hide" id="b1KP" style="left:130px;top:790px;height:72px;padding:0 28px 0 18px;font-size:34px;font-weight:700;box-shadow:var(--e1)"><span style="display:inline-block;width:34px;height:34px;border-radius:50%;background:#D97757"></span>Клод</div><svg class="sk" id="b1F" viewBox="0 0 1080 1300" width="1080" height="1300"><path class="dr" pathLength="1" d="M159.8 1039.4 C203.3 1036.0 327.5 1020.9 420.8 1019.3 C514.1 1017.7 669.9 1028.2 719.7 1030.0" fill="none" stroke="#4285F4" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M720.1 1031.0 C711.9 1033.9 703.3 1038.8 692.6 1044.1 M720.2 1030.0 C715.2 1026.9 708.9 1023.8 694.8 1014.6" fill="none" stroke="#4285F4" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M131.5 990.9 C163.2 991.3 194.5 989.4 230.1 988.3" fill="none" stroke="#4285F4" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M111.9 1080.0 C140.7 1080.8 171.6 1079.2 208.3 1079.0" fill="none" stroke="#4285F4" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M743.7 1001.9 C735.0 996.3 724.5 989.2 719.2 986.4 M753.9 993.0 C752.1 987.9 750.8 980.8 743.9 965.2 M766.9 993.2 C767.2 987.9 771.0 981.1 777.2 964.3" fill="none" stroke="#FBBC04" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="b1Sh" style="position:absolute;left:300px;top:1090px;font-size:64px;color:#4285F4">швидше</div></div>
+<div class="g" id="br" style="top:0;height:700px"><div class="gcard" id="brC" style="left:100px;top:60px;width:880px;height:580px;overflow:hidden"><div style="position:absolute;left:0;right:0;top:0;height:96px;background:#f1f3f4"></div><div style="position:absolute;left:30px;top:36px;width:22px;height:22px;border-radius:50%;background:#EA4335"></div><div style="position:absolute;left:62px;top:36px;width:22px;height:22px;border-radius:50%;background:#FBBC04"></div><div style="position:absolute;left:94px;top:36px;width:22px;height:22px;border-radius:50%;background:#34A853"></div><div class="pill" style="left:150px;top:20px;width:690px;height:56px;padding:0 26px;font-size:30px;box-shadow:none"><span id="brU" data-text="instagram.com/direct" style="color:#3c4043"></span></div><div id="brIn"><div class="ab hide" id="p0" data-layout-allow-overlap style="left:30px;top:130px;width:480px;height:80px"><div class="av" style="left:0;top:8px;background:#4285F4">О</div><div class="gl" style="left:86px;top:18px;width:220px"></div><div class="gl" style="left:86px;top:48px;width:320px;height:14px;opacity:.7"></div></div><div class="bub me hide" id="m0" style="left:470px;top:134px;padding:14px 24px;font-size:28px">Привіт! Бачу, що ти…</div><div class="ab hide" id="p1" data-layout-allow-overlap style="left:30px;top:225px;width:480px;height:80px"><div class="av" style="left:0;top:8px;background:#34A853">М</div><div class="gl" style="left:86px;top:18px;width:220px"></div><div class="gl" style="left:86px;top:48px;width:320px;height:14px;opacity:.7"></div></div><div class="bub me hide" id="m1" style="left:470px;top:229px;padding:14px 24px;font-size:28px">Привіт! Бачу, що ти…</div><div class="ab hide" id="p2" data-layout-allow-overlap style="left:30px;top:320px;width:480px;height:80px"><div class="av" style="left:0;top:8px;background:#FBBC04">А</div><div class="gl" style="left:86px;top:18px;width:220px"></div><div class="gl" style="left:86px;top:48px;width:320px;height:14px;opacity:.7"></div></div><div class="bub me hide" id="m2" style="left:470px;top:324px;padding:14px 24px;font-size:28px">Привіт! Бачу, що ти…</div><div class="pill hide" id="pr" style="left:30px;top:452px;width:820px;height:96px;padding:0 26px;font-size:32px;box-shadow:var(--e1)"><span class="chip on" style="height:56px;font-size:28px;padding:0 20px">Клод</span><span id="prT" data-text="Розішли повідомлення лідам" style="color:#202124"></span></div><svg class="sk" id="prOK" viewBox="0 0 880 580" width="880" height="580"><path class="dr" pathLength="1" d="M779.7 494.9 C783.1 498.1 791.3 518.5 800.1 514.1 C808.8 509.8 826.7 476.3 832.0 468.8" fill="none" stroke="#34A853" stroke-width="9.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="sent" viewBox="0 0 880 580" width="880" height="580"><path class="dr" pathLength="1" d="M821.2 158.9 C823.3 161.6 827.7 177.8 834.3 174.9 C840.9 172.0 856.3 146.9 860.7 141.3" fill="none" stroke="#34A853" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M819.8 255.7 C822.0 258.0 826.9 272.6 833.4 269.1 C839.9 265.7 854.6 240.7 858.8 235.0" fill="none" stroke="#34A853" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M819.7 351.4 C821.9 353.5 826.3 367.3 833.0 364.0 C839.7 360.7 855.4 336.8 859.8 331.4" fill="none" stroke="#34A853" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="hide" id="warn" data-layout-allow-overlap style="position:absolute;left:30px;top:116px;width:820px;height:110px;border-radius:20px;background:#ffdad6;border:3px solid #EA4335;display:flex;align-items:center;gap:20px;padding:0 30px;box-sizing:border-box"><span class="gs" style="font-size:56px;font-weight:700;color:#EA4335">!</span><span class="gs" style="font-size:36px;font-weight:700;color:#410002">Підозріла активність</span></div><div class="hand hide" id="botT" style="position:absolute;left:560px;top:360px;font-size:64px;color:#EA4335">бот?</div><svg class="sk" id="botO" viewBox="0 0 880 580" width="880" height="580"><path class="dr" pathLength="1" d="M529.0 375.4 C531.2 373.2 536.4 366.8 542.4 362.3 C548.4 357.8 557.2 352.5 564.9 348.5 C572.5 344.5 579.7 340.2 588.4 338.2 C597.1 336.1 606.7 336.7 617.1 336.1 C627.4 335.4 639.5 334.0 650.4 334.2 C661.2 334.5 672.8 335.5 682.4 337.5 C691.9 339.6 699.3 343.5 707.6 346.4 C716.0 349.3 725.2 351.0 732.5 354.9 C739.8 358.7 746.5 364.0 751.5 369.3 C756.5 374.6 760.8 380.4 762.5 386.8 C764.1 393.2 762.6 402.0 761.4 407.8 C760.2 413.5 758.3 416.7 755.3 421.5 C752.3 426.3 749.1 431.8 743.5 436.6 C737.9 441.4 730.4 446.5 721.6 450.6 C712.8 454.6 701.0 457.8 690.8 460.8 C680.5 463.8 670.7 467.5 660.0 468.4 C649.4 469.3 637.0 466.9 626.7 466.1 C616.5 465.3 608.5 465.4 598.6 463.5 C588.6 461.6 576.6 458.0 567.0 455.0 C557.5 452.0 548.1 449.8 541.2 445.8 C534.3 441.7 530.0 436.0 525.7 430.6 C521.3 425.2 517.2 419.9 515.2 413.5 C513.2 407.0 512.8 397.8 513.6 392.0 C514.5 386.1 517.2 383.4 520.5 378.3 C523.8 373.2 526.7 366.5 533.3 361.2 C539.8 355.9 555.3 348.8 559.7 346.3" fill="none" stroke="#EA4335" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hide" id="stamp" style="position:absolute;left:120px;top:260px;width:380px;height:170px;border:10px solid #EA4335;border-radius:20px;display:grid;place-items:center;background:rgba(255,255,255,.85)"><span class="gs" style="font-size:110px;font-weight:700;color:#EA4335;letter-spacing:.08em">БАН</span></div></div><div class="ab" id="curW" style="left:0;top:0"><svg class="cur" viewBox="0 0 56 80" width="56" height="80"><path d="M4 4 L4 64 L18 51 L29 75 L40 70 L29 46 L50 46 Z" fill="#1e1e1e" stroke="#fff" stroke-width="4" stroke-linejoin="round"/></svg></div><div class="paper hide" id="nt" style="left:350px;top:150px;width:380px;height:330px;background:#fff7d1"><div class="num" data-layout-allow-overlap style="position:absolute;left:0;right:0;top:20px;text-align:center;font-size:170px;line-height:1">2</div><div class="hand" data-layout-allow-overlap style="position:absolute;left:0;right:0;top:245px;text-align:center;font-size:56px">речі</div><svg class="sk" id="ntS" viewBox="0 0 380 330" width="380" height="330"><path class="dr" pathLength="1" d="M95.8 111.5 C97.5 107.6 100.8 94.8 105.7 88.1 C110.5 81.5 118.0 76.4 124.9 71.6 C131.9 66.9 139.8 63.7 147.4 59.9 C154.9 56.0 161.7 50.5 170.3 48.4 C179.0 46.2 190.5 46.0 199.4 47.1 C208.2 48.1 215.4 52.0 223.6 54.8 C231.8 57.7 240.8 59.7 248.6 64.1 C256.4 68.5 265.0 74.9 270.6 81.1 C276.2 87.4 279.4 94.3 282.4 101.6 C285.5 108.9 287.0 117.1 288.9 125.0 C290.9 132.9 294.3 140.8 294.1 148.8 C294.0 156.8 291.6 165.4 288.1 172.8 C284.6 180.2 278.6 186.8 273.2 193.1 C267.7 199.3 261.8 205.4 255.2 210.6 C248.6 215.7 241.8 220.7 233.6 224.2 C225.4 227.7 214.7 230.4 206.0 231.8 C197.4 233.3 190.7 233.1 181.7 232.8 C172.8 232.6 161.5 232.8 152.5 230.5 C143.5 228.2 135.3 224.2 127.8 218.9 C120.3 213.6 112.9 204.9 107.5 198.7 C102.2 192.5 99.3 188.6 95.8 181.6 C92.3 174.6 88.2 165.4 86.4 156.9 C84.6 148.5 84.6 139.2 85.0 130.9 C85.3 122.5 85.4 114.0 88.5 106.6 C91.6 99.2 98.0 92.9 103.8 86.4 C109.6 79.9 120.1 70.8 123.4 67.7" fill="none" stroke="#4285F4" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+<div class="g full" id="bd2"><div class="board"></div><div id="cam" style="position:absolute;left:0;top:0;width:1080px;height:2400px"><div class="num hide" id="n1" style="position:absolute;left:110px;top:140px;font-size:150px;color:#4285F4">1</div><div class="hand hide" id="n1T" style="position:absolute;left:230px;top:180px;font-size:96px">пауза</div><svg class="sk" id="tl1" viewBox="0 0 1080 2400" width="1080" height="2400"><path class="dr" pathLength="1" d="M120.5 519.2 C403.1 518.6 684.3 519.4 970.6 519.8" fill="none" stroke="#1e1e1e" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M123.5 520.4 C448.6 517.4 774.6 519.4 969.1 521.5" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="tlD" viewBox="0 0 1080 2400" width="1080" height="2400"><path class="sf" d="M140.5 506.2 C151.3 492.9 155.3 490.8 159.1 489.5 C162.8 488.1 166.6 487.3 170.6 487.6 C174.5 487.9 178.8 489.5 182.6 491.3 C186.5 493.0 191.1 495.4 193.8 498.1 C196.5 500.8 197.6 503.6 198.9 507.4 C200.1 511.2 201.0 516.9 201.2 521.0 C201.3 525.2 201.1 528.7 199.7 532.4 C198.2 536.1 195.5 540.3 192.5 543.1 C189.4 545.9 185.2 548.0 181.4 549.3 C177.6 550.6 173.9 551.2 169.8 551.1 C165.7 551.0 160.6 550.3 156.9 548.7 C153.1 547.2 150.0 545.1 147.3 542.0 C144.5 539.0 142.1 534.2 140.5 530.5 C139.0 526.7 137.8 523.5 137.8 519.5 C137.8 515.4 138.8 510.2 140.5 506.2 C142.2 502.2 145.1 498.5 148.2 495.7 C151.3 492.9 155.3 490.8 159.1 489.5" fill="#a5d8ff" stroke="none"/><path class="dr" pathLength="1" d="M140.5 506.2 C151.3 492.9 155.3 490.8 159.1 489.5 C162.8 488.1 166.6 487.3 170.6 487.6 C174.5 487.9 178.8 489.5 182.6 491.3 C186.5 493.0 191.1 495.4 193.8 498.1 C196.5 500.8 197.6 503.6 198.9 507.4 C200.1 511.2 201.0 516.9 201.2 521.0 C201.3 525.2 201.1 528.7 199.7 532.4 C198.2 536.1 195.5 540.3 192.5 543.1 C189.4 545.9 185.2 548.0 181.4 549.3 C177.6 550.6 173.9 551.2 169.8 551.1 C165.7 551.0 160.6 550.3 156.9 548.7 C153.1 547.2 150.0 545.1 147.3 542.0 C144.5 539.0 142.1 534.2 140.5 530.5 C139.0 526.7 137.8 523.5 137.8 519.5 C137.8 515.4 138.8 510.2 140.5 506.2 C142.2 502.2 145.1 498.5 148.2 495.7 C151.3 492.9 155.3 490.8 159.1 489.5" fill="none" stroke="#4285F4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M156.6 489.4 C173.9 486.7 178.4 488.0 182.0 490.1 C185.6 492.1 188.5 495.9 191.3 498.9 C194.1 501.9 196.7 504.4 198.6 508.0 C200.5 511.7 202.4 516.4 202.8 520.8 C203.1 525.1 202.6 530.2 200.5 534.1 C198.5 538.1 193.9 542.2 190.4 544.5 C187.0 546.9 183.1 546.5 179.8 548.0 C176.5 549.5 174.6 553.1 170.8 553.4 C167.1 553.6 161.2 551.5 157.3 549.5 C153.5 547.6 150.7 545.1 147.6 541.8 C144.5 538.5 140.4 533.3 138.7 529.7 C137.0 526.1 136.9 523.9 137.3 520.4 C137.8 516.8 139.2 512.5 141.2 508.3 C143.2 504.1 147.0 498.4 149.5 495.3 C152.1 492.1 153.2 490.8 156.6 489.4 C160.0 488.0 165.4 486.5 169.7 486.6 C173.9 486.7 178.4 488.0 182.0 490.1" fill="none" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="sf" d="M437.3 493.7 C449.0 505.4 450.3 509.6 451.0 513.5 C451.7 517.4 451.7 521.7 451.0 525.6 C450.2 529.5 448.8 533.3 446.5 537.0 C444.3 540.7 441.1 545.2 437.7 547.7 C434.2 550.1 429.6 551.2 425.7 552.0 C421.9 552.7 418.4 553.1 414.4 552.1 C410.3 551.1 405.1 548.1 401.5 545.7 C397.8 543.3 394.6 541.1 392.6 537.9 C390.5 534.7 390.0 530.4 389.2 526.5 C388.4 522.5 387.2 518.2 387.9 514.3 C388.6 510.3 390.9 506.2 393.5 502.7 C396.0 499.2 399.4 495.5 403.0 493.2 C406.5 490.9 410.9 489.4 414.9 488.7 C418.9 488.0 423.0 488.1 426.7 488.9 C430.4 489.8 434.0 491.5 437.3 493.7 C440.6 495.9 444.5 498.8 446.7 502.1 C449.0 505.4 450.3 509.6 451.0 513.5" fill="#a5d8ff" stroke="none"/><path class="dr" pathLength="1" d="M437.3 493.7 C449.0 505.4 450.3 509.6 451.0 513.5 C451.7 517.4 451.7 521.7 451.0 525.6 C450.2 529.5 448.8 533.3 446.5 537.0 C444.3 540.7 441.1 545.2 437.7 547.7 C434.2 550.1 429.6 551.2 425.7 552.0 C421.9 552.7 418.4 553.1 414.4 552.1 C410.3 551.1 405.1 548.1 401.5 545.7 C397.8 543.3 394.6 541.1 392.6 537.9 C390.5 534.7 390.0 530.4 389.2 526.5 C388.4 522.5 387.2 518.2 387.9 514.3 C388.6 510.3 390.9 506.2 393.5 502.7 C396.0 499.2 399.4 495.5 403.0 493.2 C406.5 490.9 410.9 489.4 414.9 488.7 C418.9 488.0 423.0 488.1 426.7 488.9 C430.4 489.8 434.0 491.5 437.3 493.7 C440.6 495.9 444.5 498.8 446.7 502.1 C449.0 505.4 450.3 509.6 451.0 513.5" fill="none" stroke="#4285F4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M452.8 514.4 C448.9 528.5 448.5 533.8 446.3 537.1 C444.1 540.5 440.2 542.7 436.8 545.0 C433.4 547.3 430.0 549.9 426.1 550.7 C422.2 551.5 417.2 550.6 413.4 549.7 C409.6 548.7 406.5 546.7 403.4 544.9 C400.2 543.1 397.1 542.1 394.7 539.0 C392.3 535.9 390.1 530.3 389.0 526.1 C388.0 521.9 387.6 517.6 388.5 513.8 C389.4 510.1 392.3 506.8 394.6 503.6 C396.9 500.4 398.8 497.1 402.2 494.5 C405.5 491.9 410.5 489.1 414.5 487.9 C418.5 486.7 422.7 486.6 426.3 487.3 C429.9 488.0 432.6 489.6 436.2 492.0 C439.9 494.4 445.4 498.0 448.2 501.7 C451.0 505.5 452.5 510.6 452.8 514.4 C453.1 518.2 451.1 520.9 450.0 524.7 C448.9 528.5 448.5 533.8 446.3 537.1" fill="none" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="sf" d="M662.9 488.0 C678.8 489.1 683.5 490.8 686.9 493.0 C690.3 495.1 693.0 497.9 695.3 501.2 C697.6 504.5 699.7 508.6 700.7 512.7 C701.7 516.7 701.6 521.5 701.2 525.6 C700.7 529.7 700.1 534.1 697.8 537.4 C695.5 540.6 690.9 542.9 687.5 545.1 C684.1 547.4 681.3 549.6 677.5 550.7 C673.8 551.8 669.1 552.4 665.2 551.9 C661.2 551.5 657.5 550.2 653.9 548.0 C650.3 545.8 646.2 542.2 643.5 538.7 C640.8 535.2 638.6 530.7 638.0 526.8 C637.3 522.8 638.8 519.0 639.6 515.1 C640.3 511.2 640.5 506.8 642.7 503.2 C644.8 499.6 649.2 496.0 652.5 493.4 C655.9 490.9 659.2 488.9 662.9 488.0 C666.6 487.2 670.8 487.5 674.8 488.3 C678.8 489.1 683.5 490.8 686.9 493.0" fill="#a5d8ff" stroke="none"/><path class="dr" pathLength="1" d="M662.9 488.0 C678.8 489.1 683.5 490.8 686.9 493.0 C690.3 495.1 693.0 497.9 695.3 501.2 C697.6 504.5 699.7 508.6 700.7 512.7 C701.7 516.7 701.6 521.5 701.2 525.6 C700.7 529.7 700.1 534.1 697.8 537.4 C695.5 540.6 690.9 542.9 687.5 545.1 C684.1 547.4 681.3 549.6 677.5 550.7 C673.8 551.8 669.1 552.4 665.2 551.9 C661.2 551.5 657.5 550.2 653.9 548.0 C650.3 545.8 646.2 542.2 643.5 538.7 C640.8 535.2 638.6 530.7 638.0 526.8 C637.3 522.8 638.8 519.0 639.6 515.1 C640.3 511.2 640.5 506.8 642.7 503.2 C644.8 499.6 649.2 496.0 652.5 493.4 C655.9 490.9 659.2 488.9 662.9 488.0 C666.6 487.2 670.8 487.5 674.8 488.3 C678.8 489.1 683.5 490.8 686.9 493.0" fill="none" stroke="#4285F4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M686.6 494.0 C699.9 505.4 701.6 509.9 702.5 513.8 C703.3 517.7 703.1 521.6 702.3 525.5 C701.5 529.3 700.0 533.4 697.6 536.7 C695.3 540.1 691.6 543.3 688.0 545.6 C684.4 547.8 679.5 549.1 675.9 550.1 C672.3 551.1 670.3 552.2 666.3 551.5 C662.3 550.8 655.9 547.7 651.9 545.7 C647.9 543.8 644.7 542.8 642.3 539.8 C639.8 536.9 637.7 532.1 637.3 528.1 C636.9 524.2 639.1 520.4 639.7 516.1 C640.4 511.8 639.0 506.3 641.1 502.3 C643.3 498.4 649.0 495.0 652.5 492.5 C656.0 490.0 658.4 488.0 662.4 487.5 C666.4 487.0 672.6 488.4 676.6 489.5 C680.7 490.6 683.1 491.9 686.6 494.0 C690.0 496.1 694.6 498.8 697.3 502.1 C699.9 505.4 701.6 509.9 702.5 513.8" fill="none" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path class="sf" d="M930.8 490.0 C944.9 500.1 947.1 503.2 948.7 507.0 C950.3 510.7 951.3 515.8 951.5 519.9 C951.7 524.0 951.2 527.9 949.7 531.7 C948.2 535.5 945.5 539.8 942.7 542.9 C939.8 545.9 936.5 548.4 932.8 550.1 C929.1 551.8 924.3 553.1 920.4 553.1 C916.5 553.0 913.4 551.4 909.5 549.7 C905.7 548.0 900.5 545.5 897.4 542.8 C894.2 540.2 892.2 537.6 890.8 534.0 C889.3 530.4 889.0 525.8 888.8 521.4 C888.5 517.0 887.9 511.6 889.3 507.8 C890.7 504.0 894.2 501.8 897.2 498.8 C900.2 495.7 903.4 491.4 907.2 489.8 C911.1 488.1 916.2 488.8 920.1 488.8 C924.1 488.9 927.2 488.6 930.8 490.0 C934.4 491.4 938.9 494.5 941.9 497.3 C944.9 500.1 947.1 503.2 948.7 507.0" fill="#a5d8ff" stroke="none"/><path class="dr" pathLength="1" d="M930.8 490.0 C944.9 500.1 947.1 503.2 948.7 507.0 C950.3 510.7 951.3 515.8 951.5 519.9 C951.7 524.0 951.2 527.9 949.7 531.7 C948.2 535.5 945.5 539.8 942.7 542.9 C939.8 545.9 936.5 548.4 932.8 550.1 C929.1 551.8 924.3 553.1 920.4 553.1 C916.5 553.0 913.4 551.4 909.5 549.7 C905.7 548.0 900.5 545.5 897.4 542.8 C894.2 540.2 892.2 537.6 890.8 534.0 C889.3 530.4 889.0 525.8 888.8 521.4 C888.5 517.0 887.9 511.6 889.3 507.8 C890.7 504.0 894.2 501.8 897.2 498.8 C900.2 495.7 903.4 491.4 907.2 489.8 C911.1 488.1 916.2 488.8 920.1 488.8 C924.1 488.9 927.2 488.6 930.8 490.0 C934.4 491.4 938.9 494.5 941.9 497.3 C944.9 500.1 947.1 503.2 948.7 507.0" fill="none" stroke="#4285F4" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M948.5 508.1 C951.1 524.7 949.5 528.0 948.5 531.4 C947.4 534.7 947.4 538.2 944.8 541.1 C942.2 544.0 937.0 547.2 932.7 548.7 C928.4 550.3 922.9 550.3 918.9 550.3 C914.8 550.3 911.6 550.1 908.4 548.8 C905.2 547.5 903.0 545.0 899.8 542.6 C896.5 540.3 890.7 538.1 888.9 534.5 C887.2 531.0 888.9 525.9 889.3 521.3 C889.7 516.7 890.2 510.7 891.3 507.0 C892.4 503.3 893.3 502.1 896.1 499.1 C898.8 496.2 903.9 491.2 907.9 489.3 C911.9 487.4 916.4 487.9 920.1 487.8 C923.7 487.7 926.2 486.8 929.7 488.6 C933.2 490.3 938.1 494.9 941.2 498.2 C944.3 501.4 946.8 504.3 948.5 508.1 C950.1 511.9 951.1 517.0 951.1 520.8 C951.1 524.7 949.5 528.0 948.5 531.4" fill="none" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide d0" id="dL0" style="position:absolute;left:110px;top:570px;width:120px;text-align:center;font-size:44px">дія</div><div class="hand hide d1" id="dL1" style="position:absolute;left:360px;top:570px;width:120px;text-align:center;font-size:44px">дія</div><div class="hand hide d2" id="dL2" style="position:absolute;left:610px;top:570px;width:120px;text-align:center;font-size:44px">дія</div><div class="hand hide d3" id="dL3" style="position:absolute;left:860px;top:570px;width:120px;text-align:center;font-size:44px">дія</div><div class="hand hide" id="gL0" style="position:absolute;left:195px;top:420px;width:200px;text-align:center;font-size:44px;color:#EA4335">30-40 с</div><div class="hand hide" id="gL1" style="position:absolute;left:445px;top:420px;width:200px;text-align:center;font-size:44px;color:#EA4335">30-40 с</div><div class="hand hide" id="gL2" style="position:absolute;left:695px;top:420px;width:200px;text-align:center;font-size:44px;color:#EA4335">30-40 с</div><svg class="sk" id="gA" viewBox="0 0 1080 2400" width="1080" height="2400"><path class="dr" pathLength="1" d="M210.1 480.5 C224.3 478.3 266.8 467.2 295.1 467.1 C323.3 466.9 365.4 477.4 379.5 479.5" fill="none" stroke="#EA4335" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M380.6 479.9 C375.5 481.0 370.5 483.2 362.3 487.0 M380.2 479.5 C374.9 478.0 370.7 474.1 365.3 469.7" fill="none" stroke="#EA4335" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M210.1 479.8 C216.8 475.3 220.6 472.2 224.5 469.7 M210.3 480.5 C215.0 482.2 222.4 483.5 227.4 485.8" fill="none" stroke="#EA4335" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M460.7 479.9 C474.8 478.0 517.1 468.5 545.5 468.3 C573.8 468.2 616.5 477.2 630.7 479.0" fill="none" stroke="#EA4335" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M629.6 479.1 C625.9 481.7 621.1 483.6 612.5 485.2 M629.4 479.7 C624.5 475.6 619.5 473.4 616.0 470.1" fill="none" stroke="#EA4335" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M459.8 480.9 C466.4 476.1 471.7 472.5 474.5 469.4 M460.6 480.1 C465.8 481.4 471.1 483.6 476.6 485.3" fill="none" stroke="#EA4335" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M710.5 479.6 C724.4 477.9 765.7 468.6 793.9 468.9 C822.1 469.1 865.4 479.1 879.6 481.2" fill="none" stroke="#EA4335" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M880.9 479.2 C873.9 482.9 867.5 484.2 863.4 485.9 M879.1 479.1 C874.6 476.3 869.9 472.8 866.0 469.1" fill="none" stroke="#EA4335" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M710.5 480.1 C714.4 476.8 717.3 474.8 724.6 469.2 M710.1 479.5 C715.7 481.3 720.2 483.4 726.4 486.0" fill="none" stroke="#EA4335" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="nb" style="position:absolute;left:130px;top:680px;font-size:58px;color:#34A853">не бот</div><svg class="sk" id="nbC" viewBox="0 0 1080 2400" width="1080" height="2400"><path class="dr" pathLength="1" d="M338.9 709.1 C342.9 712.9 352.1 738.0 362.9 732.2 C373.7 726.5 397.0 684.3 403.8 674.8" fill="none" stroke="#34A853" stroke-width="9.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="clk" viewBox="0 0 1080 2400" width="1080" height="2400"><path class="dr" pathLength="1" d="M767.2 684.7 C793.9 676.6 802.2 678.7 809.9 680.0 C817.5 681.2 825.5 682.3 832.6 685.0 C839.6 687.6 846.4 691.5 852.1 696.0 C857.9 700.4 863.3 705.9 867.2 711.6 C871.1 717.2 873.2 723.0 875.4 730.1 C877.6 737.2 879.8 746.4 880.4 754.0 C881.0 761.5 880.1 768.2 878.9 775.4 C877.6 782.7 876.0 790.9 873.0 797.5 C870.0 804.1 866.2 810.1 861.1 815.3 C856.0 820.5 848.3 824.6 842.4 828.6 C836.4 832.6 832.1 836.9 825.3 839.3 C818.5 841.7 809.0 843.2 801.6 842.9 C794.1 842.7 787.3 839.8 780.4 837.8 C773.6 835.9 766.9 834.7 760.3 831.3 C753.8 828.0 746.4 822.8 740.9 817.7 C735.4 812.5 730.6 806.9 727.3 800.4 C724.0 793.9 722.8 785.8 721.0 778.6 C719.3 771.5 716.8 764.7 717.0 757.5 C717.1 750.3 719.7 742.9 722.0 735.4 C724.3 727.9 726.6 719.1 730.6 712.6 C734.6 706.0 739.8 700.8 745.9 696.1 C752.0 691.5 760.4 687.9 767.2 684.7 C774.0 681.6 779.7 678.2 786.8 677.4 C793.9 676.6 802.2 678.7 809.9 680.0" fill="none" stroke="#1e1e1e" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M808.6 679.8 C837.8 689.8 847.3 693.3 853.0 697.6 C858.7 701.8 860.6 707.1 864.6 712.3 C868.7 717.6 874.4 722.1 877.1 728.9 C879.7 735.7 879.9 745.7 880.5 753.1 C881.1 760.5 881.3 766.4 880.6 773.3 C879.9 780.1 879.2 787.2 876.1 794.3 C873.0 801.5 867.1 810.0 861.9 816.2 C856.6 822.4 850.8 827.3 844.5 831.3 C838.2 835.4 831.6 839.2 823.9 840.5 C816.3 841.8 805.9 839.4 798.6 839.3 C791.3 839.1 786.7 840.9 780.1 839.8 C773.6 838.7 766.2 836.1 759.6 832.4 C753.0 828.8 745.9 823.3 740.6 817.9 C735.3 812.4 731.5 806.0 727.9 799.8 C724.2 793.6 720.4 787.9 718.8 780.9 C717.1 773.8 717.2 765.7 718.0 757.7 C718.8 749.7 721.4 740.4 723.4 732.7 C725.3 725.0 725.7 717.2 729.6 711.3 C733.5 705.4 741.0 701.4 746.8 697.2 C752.5 693.0 757.6 688.9 764.2 686.0 C770.8 683.2 778.8 681.3 786.3 680.3 C793.7 679.3 801.3 678.7 808.6 679.8 C816.0 680.9 823.0 683.9 830.4 686.9 C837.8 689.8 847.3 693.3 853.0 697.6" fill="none" stroke="#1e1e1e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M800.1 760.9 C799.6 742.6 800.6 725.7 800.7 703.3" fill="none" stroke="#1e1e1e" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M800.0 761.0 C809.7 765.1 822.4 771.9 841.1 781.5" fill="none" stroke="#1e1e1e" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="clkT" style="position:absolute;left:660px;top:850px;width:280px;text-align:center;font-size:44px">більше часу</div><svg class="sk" id="oA" viewBox="0 0 1080 2400" width="1080" height="2400"><path class="dr" pathLength="1" d="M483.5 959.1 C499.3 965.0 503.7 971.0 506.2 975.2 C508.7 979.5 509.8 963.3 510.5 987.9 C511.1 1012.6 510.9 1098.2 510.1 1123.1 C509.4 1148.0 508.3 1133.2 506.0 1137.2 C503.8 1141.2 500.8 1145.0 496.7 1147.1 C492.7 1149.2 503.1 1149.4 481.6 1149.7 C460.0 1150.0 405.7 1149.2 367.6 1149.0 C329.4 1148.8 291.1 1148.3 252.8 1148.6 C214.6 1148.9 159.6 1151.0 138.0 1150.8 C116.4 1150.7 127.2 1150.5 123.3 1147.8 C119.3 1145.1 116.3 1139.1 114.3 1134.8 C112.4 1130.4 112.1 1146.2 111.5 1121.7 C111.0 1097.1 110.3 1012.0 110.9 987.5 C111.5 963.0 113.1 978.8 115.2 974.8 C117.2 970.9 119.2 966.5 123.0 963.8 C126.8 961.1 116.6 959.3 138.0 958.5 C159.4 957.8 213.3 959.2 251.5 959.5 C289.7 959.7 328.6 959.9 367.2 959.9 C405.9 959.8 462.1 958.7 483.5 959.1 C504.9 959.5 491.7 959.6 495.5 962.3 C499.3 965.0 503.7 971.0 506.2 975.2" fill="none" stroke="#34A853" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M510.6 988.1 C508.1 1147.7 506.5 1134.8 504.5 1138.6 C502.5 1142.3 501.1 1143.0 497.2 1145.2 C493.4 1147.4 502.8 1150.7 481.1 1151.7 C459.5 1152.7 405.8 1151.1 367.5 1151.1 C329.2 1151.1 290.0 1151.7 251.6 1151.6 C213.3 1151.6 158.2 1151.7 137.3 1150.9 C116.5 1150.1 130.2 1149.0 126.5 1146.7 C122.8 1144.4 117.9 1141.7 115.3 1137.2 C112.7 1132.6 111.9 1144.0 111.0 1119.5 C110.1 1095.1 109.2 1014.4 109.9 990.4 C110.6 966.4 112.8 979.7 115.2 975.4 C117.6 971.2 120.5 967.8 124.4 964.9 C128.3 962.0 116.9 959.0 138.4 958.3 C159.9 957.6 214.9 960.6 253.3 960.6 C291.8 960.6 330.8 958.7 369.1 958.2 C407.4 957.7 461.4 957.0 482.9 957.6 C504.5 958.2 494.9 959.1 498.3 961.7 C501.8 964.3 501.7 968.6 503.7 973.0 C505.8 977.4 509.7 963.2 510.6 988.1 C511.4 1013.0 510.1 1097.5 509.1 1122.6 C508.1 1147.7 506.5 1134.8 504.5 1138.6" fill="none" stroke="#34A853" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="oB" viewBox="0 0 1080 2400" width="1080" height="2400"><path class="dr" pathLength="1" d="M940.9 960.6 C960.2 967.1 965.1 971.5 967.6 975.2 C970.1 978.9 970.5 962.3 970.8 986.6 C971.0 1010.9 969.7 1096.1 968.8 1121.1 C968.0 1146.1 967.8 1132.4 965.7 1136.5 C963.6 1140.6 960.2 1143.2 956.1 1145.7 C952.0 1148.1 962.5 1150.7 941.0 1151.3 C919.4 1152.0 864.7 1149.6 826.8 1149.5 C788.9 1149.4 751.6 1150.5 713.5 1150.7 C675.5 1150.9 620.0 1151.5 598.5 1150.6 C576.9 1149.7 588.6 1147.7 584.4 1145.3 C580.1 1142.9 575.5 1139.8 572.9 1136.2 C570.4 1132.6 569.7 1148.3 569.1 1123.5 C568.5 1098.7 568.7 1012.1 569.4 987.3 C570.0 962.5 570.5 978.7 572.8 974.7 C575.2 970.6 579.0 965.6 583.4 963.3 C587.8 961.0 578.0 961.7 599.4 960.9 C620.8 960.2 673.9 959.0 711.9 958.8 C750.0 958.6 789.7 959.3 827.9 959.6 C866.1 959.9 919.6 959.8 940.9 960.6 C962.2 961.4 951.3 962.2 955.7 964.6 C960.2 967.1 965.1 971.5 967.6 975.2" fill="none" stroke="#EA4335" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M972.5 989.7 C971.1 1147.8 967.7 1131.3 965.2 1134.9 C962.6 1138.5 961.0 1143.1 957.1 1145.4 C953.2 1147.8 963.3 1148.2 941.7 1148.7 C920.1 1149.2 865.4 1147.9 827.2 1148.5 C789.1 1149.0 750.9 1152.3 712.9 1152.3 C674.8 1152.2 620.4 1149.0 599.0 1148.1 C577.6 1147.2 589.0 1148.6 584.6 1146.7 C580.2 1144.8 574.8 1140.9 572.4 1136.9 C570.0 1132.9 571.0 1147.6 570.2 1122.7 C569.4 1097.8 566.9 1012.7 567.7 987.5 C568.5 962.4 571.9 976.3 574.9 971.9 C577.8 967.5 581.5 962.8 585.4 961.2 C589.3 959.6 577.1 962.1 598.3 962.2 C619.4 962.4 673.7 962.7 712.2 962.3 C750.7 961.9 791.3 959.9 829.3 959.9 C867.3 959.9 919.5 961.6 940.4 962.4 C961.4 963.2 950.4 962.9 955.1 964.5 C959.7 966.1 965.5 967.7 968.4 971.9 C971.3 976.1 971.8 964.4 972.5 989.7 C973.2 1014.9 973.6 1099.4 972.4 1123.6 C971.1 1147.8 967.7 1131.3 965.2 1134.9" fill="none" stroke="#EA4335" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="oAT" style="position:absolute;left:110px;top:1015px;width:400px;text-align:center;font-size:66px">довше</div><div class="hand hide" id="oBT" style="position:absolute;left:570px;top:985px;width:400px;text-align:center;font-size:52px">заблокували<br>акаунт</div><svg class="sk" id="oAO" viewBox="0 0 1080 2400" width="1080" height="2400"><path class="dr" pathLength="1" d="M94.2 1014.1 C98.9 1009.8 110.7 997.0 122.2 988.2 C133.8 979.3 148.2 968.4 163.5 961.0 C178.8 953.6 195.9 947.6 214.0 943.8 C232.0 940.0 252.5 939.8 271.8 938.1 C291.1 936.5 309.7 933.2 329.8 933.9 C349.8 934.7 372.6 939.0 392.0 942.9 C411.5 946.7 430.5 951.2 446.4 956.9 C462.2 962.5 474.8 968.5 487.3 976.7 C499.7 984.8 512.2 995.7 521.2 1005.6 C530.1 1015.5 537.0 1026.1 541.1 1036.1 C545.2 1046.1 546.7 1055.2 545.6 1065.7 C544.6 1076.2 541.7 1089.2 534.8 1099.0 C527.9 1108.8 516.7 1116.3 504.4 1124.5 C492.1 1132.8 476.7 1141.4 461.1 1148.5 C445.5 1155.5 429.2 1161.5 410.6 1166.6 C392.1 1171.7 370.0 1176.9 350.0 1179.1 C330.0 1181.3 310.7 1181.3 290.6 1180.0 C270.4 1178.7 248.6 1174.5 229.1 1171.2 C209.6 1167.9 190.7 1165.8 173.6 1160.0 C156.5 1154.1 140.8 1144.5 126.6 1136.1 C112.5 1127.6 98.1 1119.4 88.5 1109.2 C79.0 1099.1 73.1 1086.3 69.5 1075.2 C65.8 1064.1 65.1 1053.5 66.8 1042.7 C68.5 1031.8 72.3 1019.9 79.7 1010.2 C87.1 1000.4 99.1 992.8 111.1 984.1 C123.1 975.5 144.8 962.5 151.6 958.2" fill="none" stroke="#34A853" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="oBX" viewBox="0 0 1080 2400" width="1080" height="2400"><path class="dr" pathLength="1" d="M700.8 988.2 C747.6 1034.7 795.8 1081.8 838.5 1129.2 M841.7 989.2 C807.9 1020.5 779.1 1053.6 700.5 1128.9" fill="none" stroke="#EA4335" stroke-width="11.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="num hide" id="n2" style="position:absolute;left:110px;top:1440px;font-size:150px;color:#34A853">2</div><div class="hand hide" id="n2T" style="position:absolute;left:230px;top:1480px;font-size:88px">персоналізація</div><svg class="sk" id="n2U" viewBox="0 0 1080 2400" width="1080" height="2400"><path class="dr" pathLength="1" d="M232.2 1599.9 C282.2 1599.9 432.4 1601.0 532.2 1600.2 C631.9 1599.3 781.1 1595.9 830.9 1595.0" fill="none" stroke="#34A853" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M269.0 1614.5 C317.6 1613.9 470.4 1612.2 560.3 1610.8 C650.3 1609.4 767.4 1607.1 808.8 1606.3" fill="none" stroke="#34A853" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="bub me hide" id="q1" style="left:110px;top:1680px;font-size:40px">Привіт, <span style="background:#ffec99;padding:0 6px;border-radius:6px">Олено</span>!</div><div class="hand hide" id="q1T" style="position:absolute;left:560px;top:1690px;font-size:50px;color:#EA4335">лише ім'я</div><svg class="sk" id="q12" viewBox="0 0 1080 2400" width="1080" height="2400"><path class="dr" pathLength="1" d="M300.2 1778.9 C298.5 1785.8 290.1 1806.6 290.1 1820.0 C290.1 1833.4 298.5 1852.6 300.2 1859.2" fill="none" stroke="#1e1e1e" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M299.2 1859.4 C295.5 1855.7 290.9 1850.2 285.4 1842.8 M299.9 1860.6 C301.7 1856.0 302.4 1850.1 305.8 1838.4" fill="none" stroke="#1e1e1e" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="bub me hide" id="q2" style="left:110px;top:1870px;width:560px;font-size:34px;max-width:600px">Олено, бачу, що ти <span id="q2M" style="padding:0 6px;border-radius:6px">робиш букети на весілля</span>. Хочу запропонувати…</div><div class="hand hide" id="q2T" style="position:absolute;left:770px;top:1900px;font-size:44px;color:#34A853">усе<br>повідомлення</div><div class="pill hide" id="k2" style="left:110px;top:2130px;height:84px;padding:0 32px 0 22px;font-size:38px;font-weight:700"><span style="display:inline-block;width:40px;height:40px;border-radius:50%;background:#D97757"></span>Клод</div><svg class="sk" id="k2A" viewBox="0 0 1080 2400" width="1080" height="2400"><path class="dr" pathLength="1" d="M329.6 2171.0 C348.2 2167.6 403.0 2149.4 441.2 2151.0 C479.4 2152.7 539.3 2176.0 559.0 2181.0" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M560.5 2180.5 C551.7 2183.4 543.4 2185.1 531.8 2187.5 M560.4 2180.3 C553.8 2173.6 548.0 2168.8 537.8 2160.2" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="gcard hide" id="pf" style="left:590px;top:2060px;width:380px;height:300px"><div class="av" style="left:30px;top:30px;width:90px;height:90px;font-size:40px;background:#EA4335">О</div><div class="gs" style="position:absolute;left:140px;top:44px;font-size:36px;font-weight:700">Олена</div><div class="gs" style="position:absolute;left:140px;top:90px;font-size:24px;color:#5f6368">профіль</div><div class="gs" style="position:absolute;left:30px;top:150px;width:320px;font-size:30px;line-height:1.3;color:#3c4043"><span id="pfM" style="padding:0 4px;border-radius:6px">Флористка · весільні букети</span></div><div class="gl" style="left:30px;top:250px;width:240px"></div></div><svg class="sk" id="pfA" viewBox="0 0 1080 2400" width="1080" height="2400"><path class="dr" pathLength="1" d="M760.5 2049.3 C760.3 2040.9 769.0 2013.7 758.8 1998.9 C748.6 1984.0 709.4 1966.8 699.5 1960.4" fill="none" stroke="#34A853" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M700.6 1959.5 C710.0 1961.4 717.5 1962.5 729.5 1962.5 M700.8 1959.0 C704.1 1969.5 710.5 1977.7 713.6 1985.6" fill="none" stroke="#34A853" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="doc" viewBox="0 0 1080 2400" width="1080" height="2400"><path class="dr" pathLength="1" d="M382.8 2259.7 C399.3 2265.0 404.9 2268.5 407.4 2272.6 C409.9 2276.7 409.4 2264.0 410.0 2287.3 C410.6 2310.7 411.7 2389.6 411.0 2412.7 C410.3 2435.9 408.1 2422.5 405.7 2426.3 C403.3 2430.1 400.6 2433.6 396.6 2435.7 C392.5 2437.8 404.0 2438.3 381.4 2438.9 C358.7 2439.4 301.2 2439.2 260.5 2439.1 C219.8 2439.1 159.9 2438.9 137.4 2438.6 C114.8 2438.3 129.2 2439.5 125.4 2437.5 C121.7 2435.4 117.7 2430.6 115.1 2426.4 C112.5 2422.2 110.4 2434.8 109.8 2412.0 C109.2 2389.2 110.8 2312.3 111.5 2289.4 C112.3 2266.6 112.3 2279.2 114.3 2274.9 C116.3 2270.6 119.7 2266.0 123.4 2263.5 C127.2 2260.9 114.0 2260.2 136.9 2259.6 C159.8 2259.0 219.8 2259.9 260.8 2259.9 C301.8 2259.9 360.4 2259.2 382.8 2259.7 C405.2 2260.2 391.0 2260.7 395.1 2262.8 C399.3 2265.0 404.9 2268.5 407.4 2272.6" fill="none" stroke="#1e1e1e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M411.8 2287.0 C410.5 2436.8 410.5 2422.5 408.4 2426.3 C406.3 2430.2 403.2 2434.5 398.4 2436.5 C393.7 2438.6 403.4 2438.0 380.1 2438.7 C356.8 2439.4 298.4 2440.2 258.5 2440.8 C218.5 2441.3 163.0 2442.4 140.2 2441.8 C117.4 2441.2 126.6 2440.3 121.9 2437.4 C117.2 2434.6 114.0 2428.9 112.1 2424.8 C110.3 2420.6 110.9 2435.6 110.9 2412.5 C110.9 2389.5 111.2 2309.3 111.9 2286.4 C112.6 2263.5 113.1 2279.0 115.1 2275.2 C117.2 2271.4 120.2 2266.3 124.3 2263.6 C128.4 2261.0 116.9 2260.2 139.9 2259.1 C162.9 2258.1 221.7 2256.9 262.4 2257.5 C303.1 2258.0 362.3 2260.9 384.3 2262.4 C406.2 2263.9 390.4 2264.6 394.0 2266.3 C397.7 2268.1 403.2 2269.2 406.1 2272.7 C409.1 2276.1 411.0 2263.5 411.8 2287.0 C412.6 2310.5 411.6 2390.4 411.1 2413.6 C410.5 2436.8 410.5 2422.5 408.4 2426.3" fill="none" stroke="#1e1e1e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M140.4 2308.8 C201.3 2308.7 263.6 2308.9 360.5 2306.2" fill="none" stroke="#9aa0a6" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M140.0 2350.5 C186.8 2351.1 232.6 2352.4 330.9 2354.0" fill="none" stroke="#9aa0a6" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M142.2 2390.4 C225.3 2386.5 308.8 2386.1 370.4 2385.6" fill="none" stroke="#9aa0a6" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="docT" style="position:absolute;left:430px;top:2320px;font-size:56px">мій скрипт</div><svg class="sk" id="docA" viewBox="0 0 1080 2400" width="1080" height="2400"><path class="dr" pathLength="1" d="M241.0 2255.1 C234.2 2245.7 207.4 2231.3 200.3 2198.9 C193.3 2166.6 199.1 2083.9 198.9 2060.8" fill="none" stroke="#1e1e1e" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M200.5 2059.8 C204.8 2068.0 209.1 2077.6 214.8 2086.0 M200.2 2060.0 C195.3 2067.8 190.6 2077.2 185.9 2085.5" fill="none" stroke="#1e1e1e" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+<div class="g" id="fn" style="top:0;height:700px"><div class="gcard" id="fnC" style="left:100px;top:60px;width:880px;height:560px"><div class="hdr"><div class="av" style="left:36px;top:24px;background:#EA4335">I</div><div class="gs" style="position:absolute;left:122px;top:22px;font-size:34px;font-weight:700">Instagram</div><div class="gs" style="position:absolute;left:122px;top:64px;font-size:24px;color:#5f6368">Direct</div></div><div class="num" id="fnN" style="position:absolute;left:44px;top:140px;font-size:170px;color:#4285F4">0</div><div class="hand hide" id="fnT" style="position:absolute;left:52px;top:330px;font-size:54px">повідомлень</div><div class="ab" style="left:44px;top:440px"><span class="chip cg hide" id="fnCh" style="height:84px;font-size:38px">без жодної проблеми</span></div><svg class="sk" id="fnOK" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M641.4 238.6 C649.8 247.3 668.1 302.1 691.3 290.9 C714.6 279.7 766.0 191.2 780.9 171.2" fill="none" stroke="#34A853" stroke-width="13.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="fnSp" viewBox="0 0 880 560" width="880" height="560"><path class="dr" pathLength="1" d="M688.5 147.4 C681.0 143.7 673.6 139.4 654.6 128.6 M701.2 137.8 C697.1 123.0 690.1 107.3 688.8 100.2 M717.2 136.8 C721.7 129.7 724.8 120.8 731.9 99.7" fill="none" stroke="#FBBC04" stroke-width="8.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+<div class="g" id="cta" style="top:0;height:700px"><div class="btn hide" id="fb" style="left:240px;top:250px;width:600px;height:150px;background:#4285F4;color:#fff;font-size:56px"><span id="fbA">Підписатися</span></div><div class="btn hide" id="fb2" style="left:240px;top:250px;width:600px;height:150px;background:#e8eaed;color:#202124;font-size:52px">Ви підписані</div><svg class="sk over-plate" id="fbA2" viewBox="0 0 1080 700" width="1080" height="700"><path class="dr" pathLength="1" d="M150.1 138.9 C154.9 159.2 166.7 232.4 179.3 260.9 C192.0 289.4 218.2 301.8 225.9 309.9" fill="none" stroke="#ffffff" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M225.9 310.8 C219.7 307.7 213.7 306.1 196.9 298.8 M224.8 309.2 C223.4 299.8 221.0 289.7 217.1 280.4" fill="none" stroke="#ffffff" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk over-plate" id="fbS" viewBox="0 0 1080 700" width="1080" height="700"><path class="dr" pathLength="1" d="M822.3 239.6 C813.4 234.8 807.9 230.5 790.1 222.1 M832.4 230.2 C829.0 216.4 822.9 204.1 819.4 195.4 M847.7 228.9 C851.9 217.5 854.9 207.4 859.9 196.5" fill="none" stroke="#FBBC04" stroke-width="8.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="ab" id="cur2" style="left:0;top:0"><svg class="cur" viewBox="0 0 56 80" width="56" height="80"><path d="M4 4 L4 64 L18 51 L29 75 L40 70 L29 46 L50 46 Z" fill="#1e1e1e" stroke="#fff" stroke-width="4" stroke-linejoin="round"/></svg></div></div>
+
+      <div id="scrim"></div>
+      <div class="cap" id="cap0">МІЙ</div>
+      <div class="cap" id="cap1">КЛОД</div>
+      <div class="cap" id="cap2">ВІДПРАВИВ</div>
+      <div class="cap" id="cap3">БІЛЬШЕ</div>
+      <div class="cap" id="cap4">НІЖ</div>
+      <div class="cap" id="cap7">В</div>
+      <div class="cap" id="cap8">ІНСТАГРАМ.</div>
+      <div class="cap" id="cap9">І</div>
+      <div class="cap" id="cap10">ЖОДНОГО</div>
+      <div class="cap" id="cap11">РАЗУ</div>
+      <div class="cap" id="cap12">ІНСТАГРАМ</div>
+      <div class="cap" id="cap13">МЕНЕ</div>
+      <div class="cap" id="cap14">ЗА</div>
+      <div class="cap" id="cap15">ЦЕ</div>
+      <div class="cap" id="cap16">НЕ</div>
+      <div class="cap" id="cap17">ЗАБЛОКУВАВ.</div>
+      <div class="cap" id="cap18">КОРОТШЕ,</div>
+      <div class="cap" id="cap19">ЯКЩО</div>
+      <div class="cap" id="cap20">ТОБІ</div>
+      <div class="cap" id="cap21">ВЗАГАЛІ</div>
+      <div class="cap" id="cap22">ХОЧЕТЬСЯ</div>
+      <div class="cap" id="cap23">ПОСТІЙНО</div>
+      <div class="cap" id="cap24">БУТИ</div>
+      <div class="cap" id="cap25">НА</div>
+      <div class="cap" id="cap26">ЗВʼЯЗКУ</div>
+      <div class="cap" id="cap27">ЗІ</div>
+      <div class="cap" id="cap28">СВОЄЮ</div>
+      <div class="cap" id="cap29">АУДИТОРІЄЮ,</div>
+      <div class="cap" id="cap37">ТО</div>
+      <div class="cap" id="cap38">ЦЕЙ</div>
+      <div class="cap" id="cap39">МЕТОД</div>
+      <div class="cap" id="cap40">ДЛЯ</div>
+      <div class="cap" id="cap41">ТЕБЕ.</div>
+      <div class="cap" id="cap42">КЛОД</div>
+      <div class="cap" id="cap43">ТЕПЕР</div>
+      <div class="cap" id="cap44">МОЖЕ</div>
+      <div class="cap" id="cap45">ПРАЦЮВАТИ</div>
+      <div class="cap" id="cap46">ЯК</div>
+      <div class="cap" id="cap47">ТВІЙ</div>
+      <div class="cap" id="cap49">ТІЛЬКИ</div>
+      <div class="cap" id="cap50">ВІН</div>
+      <div class="cap" id="cap51">НІКОЛИ</div>
+      <div class="cap" id="cap52">НЕ</div>
+      <div class="cap" id="cap58">І</div>
+      <div class="cap" id="cap59">ПРАЦЮЄ</div>
+      <div class="cap" id="cap60">ЦЕ</div>
+      <div class="cap" id="cap61">ВСЕ</div>
+      <div class="cap" id="cap62">ЗАВДЯКИ</div>
+      <div class="cap inv" id="cap65">КЛОДА.</div>
+      <div class="cap inv" id="cap66">ВНУТРІШНІЙ</div>
+      <div class="cap inv" id="cap67">БРАУЗЕР</div>
+      <div class="cap inv" id="cap68">ЦЕ</div>
+      <div class="cap inv" id="cap69">ПО</div>
+      <div class="cap inv" id="cap70">ФАКТУ</div>
+      <div class="cap inv" id="cap71">ТОЙ</div>
+      <div class="cap inv" id="cap72">ЖЕ</div>
+      <div class="cap inv" id="cap74">ЩО І</div>
+      <div class="cap inv" id="cap75">ЗВИЧАЙНИЙ</div>
+      <div class="cap inv" id="cap76">НАШ</div>
+      <div class="cap inv" id="cap77">БРАУЗЕР,</div>
+      <div class="cap inv" id="cap78">ПРОСТО</div>
+      <div class="cap inv" id="cap79">ВІН</div>
+      <div class="cap inv" id="cap80">ПРАЦЮЄ</div>
+      <div class="cap inv" id="cap81">ВСЕРЕДИНІ</div>
+      <div class="cap inv" id="cap82">КЛОДА,</div>
+      <div class="cap inv" id="cap83">І</div>
+      <div class="cap inv" id="cap84">САМ</div>
+      <div class="cap inv" id="cap85">КЛОД</div>
+      <div class="cap inv" id="cap86">У НЬОМУ</div>
+      <div class="cap inv" id="cap87">ОРІЄНТУЄТЬСЯ</div>
+      <div class="cap inv" id="cap88">ТРОШКИ</div>
+      <div class="cap inv" id="cap90">ВІДКРИВАЄШ</div>
+      <div class="cap" id="cap91">ЦЕЙ</div>
+      <div class="cap" id="cap92">БРАУЗЕР,</div>
+      <div class="cap" id="cap93">ВХОДИШ</div>
+      <div class="cap" id="cap94">В СВІЙ</div>
+      <div class="cap" id="cap95">АКАУНТ</div>
+      <div class="cap" id="cap96">В ІНСТАГРАМІ</div>
+      <div class="cap" id="cap97">І</div>
+      <div class="cap" id="cap98">ПРОСИШ</div>
+      <div class="cap" id="cap99">ЙОГО</div>
+      <div class="cap" id="cap102">І,</div>
+      <div class="cap" id="cap103">В</div>
+      <div class="cap" id="cap104">ПРИНЦИПІ,</div>
+      <div class="cap" id="cap105">ВСЕ.</div>
+      <div class="cap" id="cap106">І</div>
+      <div class="cap" id="cap107">ВІН БУДЕ</div>
+      <div class="cap" id="cap108">ХОДИТИ</div>
+      <div class="cap" id="cap109">ПО</div>
+      <div class="cap" id="cap110">СТОРІНЦІ,</div>
+      <div class="cap" id="cap111">ШУКАТИ</div>
+      <div class="cap" id="cap112">ЛЮДЕЙ,</div>
+      <div class="cap" id="cap113">ПИСАТИ</div>
+      <div class="cap" id="cap114">ЇМ</div>
+      <div class="cap" id="cap115">І</div>
+      <div class="cap" id="cap116">ВІДПРАВЛЯТИ.</div>
+      <div class="cap" id="cap117">АЛЕ</div>
+      <div class="cap" id="cap118">ЗВИЧАЙНО,</div>
+      <div class="cap" id="cap119">ЩО Є</div>
+      <div class="cap" id="cap120">НЮАНС,</div>
+      <div class="cap" id="cap121">ЩО ІНСТАГРАМУ</div>
+      <div class="cap" id="cap122">ЦЕ</div>
+      <div class="cap" id="cap123">НЕ</div>
+      <div class="cap" id="cap124">ПОДОБАЄТЬСЯ,</div>
+      <div class="cap" id="cap125">ТОМУ</div>
+      <div class="cap" id="cap126">ЩО</div>
+      <div class="cap" id="cap127">ЦЕ</div>
+      <div class="cap" id="cap128">НЕСАНКЦІОНОВАНА</div>
+      <div class="cap" id="cap129">ПОВЕДІНКА</div>
+      <div class="cap" id="cap130">БОТІВ.</div>
+      <div class="cap" id="cap131">І</div>
+      <div class="cap" id="cap132">ЗА</div>
+      <div class="cap" id="cap133">ЦЕ</div>
+      <div class="cap" id="cap134">МОЖУТЬ</div>
+      <div class="cap" id="cap135">ДАТИ</div>
+      <div class="cap" id="cap136">ПО</div>
+      <div class="cap" id="cap137">ШАПЦІ.</div>
+      <div class="cap" id="cap138">ТОМУ</div>
+      <div class="cap" id="cap139">Є ДВІ</div>
+      <div class="cap" id="cap140">РЕЧІ,</div>
+      <div class="cap" id="cap141">ЯКІ Я</div>
+      <div class="cap" id="cap142">ЗАВЖДИ</div>
+      <div class="cap" id="cap143">ПРОПИСУЮ,</div>
+      <div class="cap" id="cap144">ЩОБ</div>
+      <div class="cap" id="cap145">ЦЬОГО</div>
+      <div class="cap" id="cap146">НЕ</div>
+      <div class="cap" id="cap147">СТАЛОСЬ.</div>
+      <div class="cap inv" id="cap151">МІНІМУМ</div>
+      <div class="cap inv" id="cap153">СЕКУНД</div>
+      <div class="cap inv" id="cap154">МІЖ</div>
+      <div class="cap inv" id="cap155">КОЖНОЮ</div>
+      <div class="cap inv" id="cap156">ДІЄЮ,</div>
+      <div class="cap inv" id="cap157">ЩОБ ЦЕ</div>
+      <div class="cap inv" id="cap158">НЕ</div>
+      <div class="cap inv" id="cap159">ВИГЛЯДАЛО</div>
+      <div class="cap inv" id="cap160">ЯК</div>
+      <div class="cap inv" id="cap161">ПОВЕДІНКА</div>
+      <div class="cap inv" id="cap162">БОТА.</div>
+      <div class="cap inv" id="cap163">І,</div>
+      <div class="cap inv" id="cap164">ДА,</div>
+      <div class="cap inv" id="cap165">ЦЕ ЗАЙМАЄ</div>
+      <div class="cap inv" id="cap166">БІЛЬШЕ</div>
+      <div class="cap inv" id="cap167">ЧАСУ,</div>
+      <div class="cap inv" id="cap168">АЛЕ</div>
+      <div class="cap inv" id="cap169">МІЖ</div>
+      <div class="cap inv" id="cap174">МИ</div>
+      <div class="cap inv" id="cap175">ОБИРАЄМО</div>
+      <div class="cap inv" id="cap176">ДОВШЕ.</div>
+      <div class="cap inv" id="cap180">І</div>
+      <div class="cap inv" id="cap181">ЧИМ</div>
+      <div class="cap inv" id="cap182">ГЛИБША,</div>
+      <div class="cap inv" id="cap183">ТИМ</div>
+      <div class="cap inv" id="cap184">КРАЩЕ.</div>
+      <div class="cap inv" id="cap185">ТОБТО</div>
+      <div class="cap inv" id="cap186">НЕ</div>
+      <div class="cap inv" id="cap187">ПРОСТО</div>
+      <div class="cap inv" id="cap188">ІМ'Я,</div>
+      <div class="cap inv" id="cap189">А</div>
+      <div class="cap inv" id="cap190">САМЕ</div>
+      <div class="cap inv" id="cap191">ПОВІДОМЛЕННЯ.</div>
+      <div class="cap inv" id="cap192">АЛЕ</div>
+      <div class="cap inv" id="cap193">ТУТ</div>
+      <div class="cap inv" id="cap194">ВСЕ</div>
+      <div class="cap inv" id="cap195">ПРОСТО,</div>
+      <div class="cap inv" id="cap196">ТОМУ ЩО</div>
+      <div class="cap inv" id="cap197">КЛОД</div>
+      <div class="cap inv" id="cap198">МОЖЕ</div>
+      <div class="cap inv" id="cap199">САМ</div>
+      <div class="cap inv" id="cap200">ЗАЙТИ</div>
+      <div class="cap inv" id="cap201">В</div>
+      <div class="cap inv" id="cap202">ПРОФІЛЬ</div>
+      <div class="cap inv" id="cap203">ЛЮДИНИ,</div>
+      <div class="cap inv" id="cap204">ПОДИВИТИСЬ,</div>
+      <div class="cap inv" id="cap205">ЧИМ</div>
+      <div class="cap inv" id="cap206">ВОНА</div>
+      <div class="cap inv" id="cap207">ЗАЙМАЄТЬСЯ,</div>
+      <div class="cap inv" id="cap208">І ВПИСАТИ</div>
+      <div class="cap inv" id="cap209">ЦЕ</div>
+      <div class="cap inv" id="cap210">В</div>
+      <div class="cap inv" id="cap211">ТЕКСТ</div>
+      <div class="cap inv" id="cap212">ЗА</div>
+      <div class="cap inv" id="cap213">МОЇМ</div>
+      <div class="cap inv" id="cap214">СКРИПТОМ.</div>
+      <div class="cap inv" id="cap215">ТОМУ</div>
+      <div class="cap" id="cap216">ТАК</div>
+      <div class="cap" id="cap217">Я</div>
+      <div class="cap" id="cap218">РОЗІСЛАЛА</div>
+      <div class="cap" id="cap219">ВЖЕ</div>
+      <div class="cap" id="cap227">ДОСІ</div>
+      <div class="cap" id="cap228">ЦИМ</div>
+      <div class="cap" id="cap229">КОРИСТУЮСЬ.</div>
+      <div class="cap" id="cap230">ЯКЩО</div>
+      <div class="cap" id="cap231">ТОБІ</div>
+      <div class="cap" id="cap232">БУЛО</div>
+      <div class="cap" id="cap233">КОРИСНО,</div>
+      <div class="cap" id="cap234">ТО</div>
+      <div class="cap" id="cap235">ОБОВ'ЯЗКОВО</div>
+      <div class="cap" id="cap236">ПІДПИШИСЬ.</div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="90.017" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  tl.set("#cap0", {autoAlpha: 1}, 0.000);
+  tl.set("#cap0", {autoAlpha: 0}, 0.405);
+  tl.set("#cap1", {autoAlpha: 1}, 0.490);
+  tl.set("#cap1", {autoAlpha: 0}, 0.725);
+  tl.set("#cap2", {autoAlpha: 1}, 0.810);
+  tl.set("#cap2", {autoAlpha: 0}, 1.305);
+  tl.set("#cap3", {autoAlpha: 1}, 1.390);
+  tl.set("#cap3", {autoAlpha: 0}, 1.825);
+  tl.set("#cap4", {autoAlpha: 1}, 1.910);
+  tl.set("#cap4", {autoAlpha: 0}, 2.305);
+  tl.set("#cap7", {autoAlpha: 1}, 3.950);
+  tl.set("#cap7", {autoAlpha: 0}, 4.050);
+  tl.set("#cap8", {autoAlpha: 1}, 4.090);
+  tl.set("#cap8", {autoAlpha: 0}, 4.615);
+  tl.set("#cap9", {autoAlpha: 1}, 4.700);
+  tl.set("#cap9", {autoAlpha: 0}, 4.847);
+  tl.set("#cap10", {autoAlpha: 1}, 4.932);
+  tl.set("#cap10", {autoAlpha: 0}, 5.407);
+  tl.set("#cap11", {autoAlpha: 1}, 5.492);
+  tl.set("#cap11", {autoAlpha: 0}, 5.847);
+  tl.set("#cap12", {autoAlpha: 1}, 5.932);
+  tl.set("#cap12", {autoAlpha: 0}, 6.287);
+  tl.set("#cap13", {autoAlpha: 1}, 6.372);
+  tl.set("#cap13", {autoAlpha: 0}, 6.507);
+  tl.set("#cap14", {autoAlpha: 1}, 6.592);
+  tl.set("#cap14", {autoAlpha: 0}, 6.692);
+  tl.set("#cap15", {autoAlpha: 1}, 6.712);
+  tl.set("#cap15", {autoAlpha: 0}, 6.812);
+  tl.set("#cap16", {autoAlpha: 1}, 6.812);
+  tl.set("#cap16", {autoAlpha: 0}, 6.967);
+  tl.set("#cap17", {autoAlpha: 1}, 7.052);
+  tl.set("#cap17", {autoAlpha: 0}, 7.615);
+  tl.set("#cap18", {autoAlpha: 1}, 7.700);
+  tl.set("#cap18", {autoAlpha: 0}, 8.185);
+  tl.set("#cap19", {autoAlpha: 1}, 8.270);
+  tl.set("#cap19", {autoAlpha: 0}, 8.385);
+  tl.set("#cap20", {autoAlpha: 1}, 8.470);
+  tl.set("#cap20", {autoAlpha: 0}, 8.585);
+  tl.set("#cap21", {autoAlpha: 1}, 8.670);
+  tl.set("#cap21", {autoAlpha: 0}, 8.945);
+  tl.set("#cap22", {autoAlpha: 1}, 9.030);
+  tl.set("#cap22", {autoAlpha: 0}, 9.385);
+  tl.set("#cap23", {autoAlpha: 1}, 9.470);
+  tl.set("#cap23", {autoAlpha: 0}, 9.785);
+  tl.set("#cap24", {autoAlpha: 1}, 9.870);
+  tl.set("#cap24", {autoAlpha: 0}, 10.025);
+  tl.set("#cap25", {autoAlpha: 1}, 10.110);
+  tl.set("#cap25", {autoAlpha: 0}, 10.210);
+  tl.set("#cap26", {autoAlpha: 1}, 10.270);
+  tl.set("#cap26", {autoAlpha: 0}, 10.525);
+  tl.set("#cap27", {autoAlpha: 1}, 10.610);
+  tl.set("#cap27", {autoAlpha: 0}, 10.725);
+  tl.set("#cap28", {autoAlpha: 1}, 10.810);
+  tl.set("#cap28", {autoAlpha: 0}, 10.910);
+  tl.set("#cap29", {autoAlpha: 1}, 10.970);
+  tl.set("#cap29", {autoAlpha: 0}, 11.570);
+  tl.set("#cap37", {autoAlpha: 1}, 14.533);
+  tl.set("#cap37", {autoAlpha: 0}, 14.718);
+  tl.set("#cap38", {autoAlpha: 1}, 14.803);
+  tl.set("#cap38", {autoAlpha: 0}, 14.903);
+  tl.set("#cap39", {autoAlpha: 1}, 14.963);
+  tl.set("#cap39", {autoAlpha: 0}, 15.118);
+  tl.set("#cap40", {autoAlpha: 1}, 15.203);
+  tl.set("#cap40", {autoAlpha: 0}, 15.303);
+  tl.set("#cap41", {autoAlpha: 1}, 15.383);
+  tl.set("#cap41", {autoAlpha: 0}, 15.748);
+  tl.set("#cap42", {autoAlpha: 1}, 15.833);
+  tl.set("#cap42", {autoAlpha: 0}, 16.438);
+  tl.set("#cap43", {autoAlpha: 1}, 16.523);
+  tl.set("#cap43", {autoAlpha: 0}, 16.698);
+  tl.set("#cap44", {autoAlpha: 1}, 16.783);
+  tl.set("#cap44", {autoAlpha: 0}, 17.058);
+  tl.set("#cap45", {autoAlpha: 1}, 17.143);
+  tl.set("#cap45", {autoAlpha: 0}, 17.718);
+  tl.set("#cap46", {autoAlpha: 1}, 17.803);
+  tl.set("#cap46", {autoAlpha: 0}, 17.958);
+  tl.set("#cap47", {autoAlpha: 1}, 18.043);
+  tl.set("#cap47", {autoAlpha: 0}, 18.178);
+  tl.set("#cap49", {autoAlpha: 1}, 18.967);
+  tl.set("#cap49", {autoAlpha: 0}, 19.192);
+  tl.set("#cap50", {autoAlpha: 1}, 19.277);
+  tl.set("#cap50", {autoAlpha: 0}, 19.377);
+  tl.set("#cap51", {autoAlpha: 1}, 19.437);
+  tl.set("#cap51", {autoAlpha: 0}, 19.612);
+  tl.set("#cap52", {autoAlpha: 1}, 19.697);
+  tl.set("#cap52", {autoAlpha: 0}, 19.797);
+  tl.set("#cap58", {autoAlpha: 1}, 21.497);
+  tl.set("#cap58", {autoAlpha: 0}, 21.632);
+  tl.set("#cap59", {autoAlpha: 1}, 21.717);
+  tl.set("#cap59", {autoAlpha: 0}, 22.072);
+  tl.set("#cap60", {autoAlpha: 1}, 22.157);
+  tl.set("#cap60", {autoAlpha: 0}, 22.257);
+  tl.set("#cap61", {autoAlpha: 1}, 22.337);
+  tl.set("#cap61", {autoAlpha: 0}, 22.437);
+  tl.set("#cap62", {autoAlpha: 1}, 22.497);
+  tl.set("#cap62", {autoAlpha: 0}, 22.948);
+  tl.set("#cap65", {autoAlpha: 1}, 24.957);
+  tl.set("#cap65", {autoAlpha: 0}, 25.482);
+  tl.set("#cap66", {autoAlpha: 1}, 25.567);
+  tl.set("#cap66", {autoAlpha: 0}, 26.252);
+  tl.set("#cap67", {autoAlpha: 1}, 26.337);
+  tl.set("#cap67", {autoAlpha: 0}, 26.652);
+  tl.set("#cap68", {autoAlpha: 1}, 26.737);
+  tl.set("#cap68", {autoAlpha: 0}, 26.892);
+  tl.set("#cap69", {autoAlpha: 1}, 26.977);
+  tl.set("#cap69", {autoAlpha: 0}, 27.077);
+  tl.set("#cap70", {autoAlpha: 1}, 27.097);
+  tl.set("#cap70", {autoAlpha: 0}, 27.472);
+  tl.set("#cap71", {autoAlpha: 1}, 27.557);
+  tl.set("#cap71", {autoAlpha: 0}, 27.792);
+  tl.set("#cap72", {autoAlpha: 1}, 27.877);
+  tl.set("#cap72", {autoAlpha: 0}, 28.032);
+  tl.set("#cap74", {autoAlpha: 1}, 28.697);
+  tl.set("#cap74", {autoAlpha: 0}, 28.812);
+  tl.set("#cap75", {autoAlpha: 1}, 28.897);
+  tl.set("#cap75", {autoAlpha: 0}, 29.252);
+  tl.set("#cap76", {autoAlpha: 1}, 29.337);
+  tl.set("#cap76", {autoAlpha: 0}, 29.437);
+  tl.set("#cap77", {autoAlpha: 1}, 29.477);
+  tl.set("#cap77", {autoAlpha: 0}, 29.848);
+  tl.set("#cap78", {autoAlpha: 1}, 29.933);
+  tl.set("#cap78", {autoAlpha: 0}, 30.158);
+  tl.set("#cap79", {autoAlpha: 1}, 30.243);
+  tl.set("#cap79", {autoAlpha: 0}, 30.343);
+  tl.set("#cap80", {autoAlpha: 1}, 30.403);
+  tl.set("#cap80", {autoAlpha: 0}, 30.758);
+  tl.set("#cap81", {autoAlpha: 1}, 30.843);
+  tl.set("#cap81", {autoAlpha: 0}, 31.418);
+  tl.set("#cap82", {autoAlpha: 1}, 31.503);
+  tl.set("#cap82", {autoAlpha: 0}, 31.738);
+  tl.set("#cap83", {autoAlpha: 1}, 31.823);
+  tl.set("#cap83", {autoAlpha: 0}, 31.938);
+  tl.set("#cap84", {autoAlpha: 1}, 32.023);
+  tl.set("#cap84", {autoAlpha: 0}, 32.123);
+  tl.set("#cap85", {autoAlpha: 1}, 32.143);
+  tl.set("#cap85", {autoAlpha: 0}, 32.282);
+  tl.set("#cap86", {autoAlpha: 1}, 32.367);
+  tl.set("#cap86", {autoAlpha: 0}, 32.538);
+  tl.set("#cap87", {autoAlpha: 1}, 32.623);
+  tl.set("#cap87", {autoAlpha: 0}, 33.221);
+  tl.set("#cap88", {autoAlpha: 1}, 33.306);
+  tl.set("#cap88", {autoAlpha: 0}, 33.761);
+  tl.set("#cap90", {autoAlpha: 1}, 34.233);
+  tl.set("#cap90", {autoAlpha: 0}, 34.740);
+  tl.set("#cap91", {autoAlpha: 1}, 34.825);
+  tl.set("#cap91", {autoAlpha: 0}, 34.925);
+  tl.set("#cap92", {autoAlpha: 1}, 35.003);
+  tl.set("#cap92", {autoAlpha: 0}, 35.487);
+  tl.set("#cap93", {autoAlpha: 1}, 35.572);
+  tl.set("#cap93", {autoAlpha: 0}, 35.947);
+  tl.set("#cap94", {autoAlpha: 1}, 36.032);
+  tl.set("#cap94", {autoAlpha: 0}, 36.132);
+  tl.set("#cap95", {autoAlpha: 1}, 36.212);
+  tl.set("#cap95", {autoAlpha: 0}, 36.447);
+  tl.set("#cap96", {autoAlpha: 1}, 36.532);
+  tl.set("#cap96", {autoAlpha: 0}, 37.067);
+  tl.set("#cap97", {autoAlpha: 1}, 37.152);
+  tl.set("#cap97", {autoAlpha: 0}, 37.287);
+  tl.set("#cap98", {autoAlpha: 1}, 37.372);
+  tl.set("#cap98", {autoAlpha: 0}, 37.547);
+  tl.set("#cap99", {autoAlpha: 1}, 37.632);
+  tl.set("#cap99", {autoAlpha: 0}, 37.867);
+  tl.set("#cap102", {autoAlpha: 1}, 39.400);
+  tl.set("#cap102", {autoAlpha: 0}, 39.567);
+  tl.set("#cap103", {autoAlpha: 1}, 39.652);
+  tl.set("#cap103", {autoAlpha: 0}, 39.752);
+  tl.set("#cap104", {autoAlpha: 1}, 39.812);
+  tl.set("#cap104", {autoAlpha: 0}, 40.187);
+  tl.set("#cap105", {autoAlpha: 1}, 40.272);
+  tl.set("#cap105", {autoAlpha: 0}, 40.449);
+  tl.set("#cap106", {autoAlpha: 1}, 40.534);
+  tl.set("#cap106", {autoAlpha: 0}, 40.689);
+  tl.set("#cap107", {autoAlpha: 1}, 40.774);
+  tl.set("#cap107", {autoAlpha: 0}, 41.009);
+  tl.set("#cap108", {autoAlpha: 1}, 41.094);
+  tl.set("#cap108", {autoAlpha: 0}, 41.349);
+  tl.set("#cap109", {autoAlpha: 1}, 41.434);
+  tl.set("#cap109", {autoAlpha: 0}, 41.534);
+  tl.set("#cap110", {autoAlpha: 1}, 41.594);
+  tl.set("#cap110", {autoAlpha: 0}, 42.149);
+  tl.set("#cap111", {autoAlpha: 1}, 42.234);
+  tl.set("#cap111", {autoAlpha: 0}, 42.489);
+  tl.set("#cap112", {autoAlpha: 1}, 42.574);
+  tl.set("#cap112", {autoAlpha: 0}, 43.029);
+  tl.set("#cap113", {autoAlpha: 1}, 43.114);
+  tl.set("#cap113", {autoAlpha: 0}, 43.329);
+  tl.set("#cap114", {autoAlpha: 1}, 43.414);
+  tl.set("#cap114", {autoAlpha: 0}, 43.514);
+  tl.set("#cap115", {autoAlpha: 1}, 43.574);
+  tl.set("#cap115", {autoAlpha: 0}, 43.674);
+  tl.set("#cap116", {autoAlpha: 1}, 43.694);
+  tl.set("#cap116", {autoAlpha: 0}, 44.182);
+  tl.set("#cap117", {autoAlpha: 1}, 44.267);
+  tl.set("#cap117", {autoAlpha: 0}, 44.692);
+  tl.set("#cap118", {autoAlpha: 1}, 44.777);
+  tl.set("#cap118", {autoAlpha: 0}, 45.312);
+  tl.set("#cap119", {autoAlpha: 1}, 45.397);
+  tl.set("#cap119", {autoAlpha: 0}, 45.497);
+  tl.set("#cap120", {autoAlpha: 1}, 45.537);
+  tl.set("#cap120", {autoAlpha: 0}, 46.032);
+  tl.set("#cap121", {autoAlpha: 1}, 46.117);
+  tl.set("#cap121", {autoAlpha: 0}, 46.852);
+  tl.set("#cap122", {autoAlpha: 1}, 46.937);
+  tl.set("#cap122", {autoAlpha: 0}, 47.112);
+  tl.set("#cap123", {autoAlpha: 1}, 47.197);
+  tl.set("#cap123", {autoAlpha: 0}, 47.297);
+  tl.set("#cap124", {autoAlpha: 1}, 47.377);
+  tl.set("#cap124", {autoAlpha: 0}, 47.796);
+  tl.set("#cap125", {autoAlpha: 1}, 47.881);
+  tl.set("#cap125", {autoAlpha: 0}, 47.981);
+  tl.set("#cap126", {autoAlpha: 1}, 48.001);
+  tl.set("#cap126", {autoAlpha: 0}, 48.176);
+  tl.set("#cap127", {autoAlpha: 1}, 48.261);
+  tl.set("#cap127", {autoAlpha: 0}, 48.396);
+  tl.set("#cap128", {autoAlpha: 1}, 48.481);
+  tl.set("#cap128", {autoAlpha: 0}, 49.296);
+  tl.set("#cap129", {autoAlpha: 1}, 49.381);
+  tl.set("#cap129", {autoAlpha: 0}, 49.796);
+  tl.set("#cap130", {autoAlpha: 1}, 49.881);
+  tl.set("#cap130", {autoAlpha: 0}, 50.348);
+  tl.set("#cap131", {autoAlpha: 1}, 50.433);
+  tl.set("#cap131", {autoAlpha: 0}, 50.638);
+  tl.set("#cap132", {autoAlpha: 1}, 50.723);
+  tl.set("#cap132", {autoAlpha: 0}, 50.823);
+  tl.set("#cap133", {autoAlpha: 1}, 50.883);
+  tl.set("#cap133", {autoAlpha: 0}, 50.983);
+  tl.set("#cap134", {autoAlpha: 1}, 51.043);
+  tl.set("#cap134", {autoAlpha: 0}, 51.278);
+  tl.set("#cap135", {autoAlpha: 1}, 51.363);
+  tl.set("#cap135", {autoAlpha: 0}, 51.538);
+  tl.set("#cap136", {autoAlpha: 1}, 51.623);
+  tl.set("#cap136", {autoAlpha: 0}, 51.723);
+  tl.set("#cap137", {autoAlpha: 1}, 51.754);
+  tl.set("#cap137", {autoAlpha: 0}, 52.148);
+  tl.set("#cap138", {autoAlpha: 1}, 52.233);
+  tl.set("#cap138", {autoAlpha: 0}, 52.438);
+  tl.set("#cap139", {autoAlpha: 1}, 52.523);
+  tl.set("#cap139", {autoAlpha: 0}, 52.718);
+  tl.set("#cap140", {autoAlpha: 1}, 52.803);
+  tl.set("#cap140", {autoAlpha: 0}, 53.038);
+  tl.set("#cap141", {autoAlpha: 1}, 53.123);
+  tl.set("#cap141", {autoAlpha: 0}, 53.298);
+  tl.set("#cap142", {autoAlpha: 1}, 53.383);
+  tl.set("#cap142", {autoAlpha: 0}, 53.598);
+  tl.set("#cap143", {autoAlpha: 1}, 53.683);
+  tl.set("#cap143", {autoAlpha: 0}, 54.138);
+  tl.set("#cap144", {autoAlpha: 1}, 54.223);
+  tl.set("#cap144", {autoAlpha: 0}, 54.323);
+  tl.set("#cap145", {autoAlpha: 1}, 54.323);
+  tl.set("#cap145", {autoAlpha: 0}, 54.538);
+  tl.set("#cap146", {autoAlpha: 1}, 54.623);
+  tl.set("#cap146", {autoAlpha: 0}, 54.798);
+  tl.set("#cap147", {autoAlpha: 1}, 54.883);
+  tl.set("#cap147", {autoAlpha: 0}, 55.315);
+  tl.set("#cap151", {autoAlpha: 1}, 57.077);
+  tl.set("#cap151", {autoAlpha: 0}, 57.372);
+  tl.set("#cap153", {autoAlpha: 1}, 58.057);
+  tl.set("#cap153", {autoAlpha: 0}, 58.382);
+  tl.set("#cap154", {autoAlpha: 1}, 58.467);
+  tl.set("#cap154", {autoAlpha: 0}, 59.410);
+  tl.set("#cap155", {autoAlpha: 1}, 59.495);
+  tl.set("#cap155", {autoAlpha: 0}, 59.810);
+  tl.set("#cap156", {autoAlpha: 1}, 59.895);
+  tl.set("#cap156", {autoAlpha: 0}, 60.230);
+  tl.set("#cap157", {autoAlpha: 1}, 60.315);
+  tl.set("#cap157", {autoAlpha: 0}, 60.490);
+  tl.set("#cap158", {autoAlpha: 1}, 60.575);
+  tl.set("#cap158", {autoAlpha: 0}, 60.675);
+  tl.set("#cap159", {autoAlpha: 1}, 60.715);
+  tl.set("#cap159", {autoAlpha: 0}, 61.070);
+  tl.set("#cap160", {autoAlpha: 1}, 61.155);
+  tl.set("#cap160", {autoAlpha: 0}, 61.270);
+  tl.set("#cap161", {autoAlpha: 1}, 61.355);
+  tl.set("#cap161", {autoAlpha: 0}, 61.810);
+  tl.set("#cap162", {autoAlpha: 1}, 61.895);
+  tl.set("#cap162", {autoAlpha: 0}, 62.315);
+  tl.set("#cap163", {autoAlpha: 1}, 62.400);
+  tl.set("#cap163", {autoAlpha: 0}, 62.645);
+  tl.set("#cap164", {autoAlpha: 1}, 62.730);
+  tl.set("#cap164", {autoAlpha: 0}, 62.985);
+  tl.set("#cap165", {autoAlpha: 1}, 63.070);
+  tl.set("#cap165", {autoAlpha: 0}, 63.545);
+  tl.set("#cap166", {autoAlpha: 1}, 63.630);
+  tl.set("#cap166", {autoAlpha: 0}, 63.805);
+  tl.set("#cap167", {autoAlpha: 1}, 63.890);
+  tl.set("#cap167", {autoAlpha: 0}, 64.325);
+  tl.set("#cap168", {autoAlpha: 1}, 64.410);
+  tl.set("#cap168", {autoAlpha: 0}, 64.510);
+  tl.set("#cap169", {autoAlpha: 1}, 64.530);
+  tl.set("#cap169", {autoAlpha: 0}, 64.705);
+  tl.set("#cap174", {autoAlpha: 1}, 66.567);
+  tl.set("#cap174", {autoAlpha: 0}, 66.852);
+  tl.set("#cap175", {autoAlpha: 1}, 66.937);
+  tl.set("#cap175", {autoAlpha: 0}, 67.272);
+  tl.set("#cap176", {autoAlpha: 1}, 67.357);
+  tl.set("#cap176", {autoAlpha: 0}, 67.782);
+  tl.set("#cap180", {autoAlpha: 1}, 69.777);
+  tl.set("#cap180", {autoAlpha: 0}, 69.877);
+  tl.set("#cap181", {autoAlpha: 1}, 69.957);
+  tl.set("#cap181", {autoAlpha: 0}, 70.057);
+  tl.set("#cap182", {autoAlpha: 1}, 70.097);
+  tl.set("#cap182", {autoAlpha: 0}, 70.741);
+  tl.set("#cap183", {autoAlpha: 1}, 70.826);
+  tl.set("#cap183", {autoAlpha: 0}, 70.926);
+  tl.set("#cap184", {autoAlpha: 1}, 71.006);
+  tl.set("#cap184", {autoAlpha: 0}, 71.341);
+  tl.set("#cap185", {autoAlpha: 1}, 71.426);
+  tl.set("#cap185", {autoAlpha: 0}, 71.541);
+  tl.set("#cap186", {autoAlpha: 1}, 71.626);
+  tl.set("#cap186", {autoAlpha: 0}, 71.761);
+  tl.set("#cap187", {autoAlpha: 1}, 71.846);
+  tl.set("#cap187", {autoAlpha: 0}, 72.061);
+  tl.set("#cap188", {autoAlpha: 1}, 72.146);
+  tl.set("#cap188", {autoAlpha: 0}, 72.481);
+  tl.set("#cap189", {autoAlpha: 1}, 72.566);
+  tl.set("#cap189", {autoAlpha: 0}, 72.666);
+  tl.set("#cap190", {autoAlpha: 1}, 72.746);
+  tl.set("#cap190", {autoAlpha: 0}, 73.121);
+  tl.set("#cap191", {autoAlpha: 1}, 73.206);
+  tl.set("#cap191", {autoAlpha: 0}, 73.882);
+  tl.set("#cap192", {autoAlpha: 1}, 73.967);
+  tl.set("#cap192", {autoAlpha: 0}, 74.192);
+  tl.set("#cap193", {autoAlpha: 1}, 74.277);
+  tl.set("#cap193", {autoAlpha: 0}, 74.377);
+  tl.set("#cap194", {autoAlpha: 1}, 74.437);
+  tl.set("#cap194", {autoAlpha: 0}, 74.537);
+  tl.set("#cap195", {autoAlpha: 1}, 74.597);
+  tl.set("#cap195", {autoAlpha: 0}, 74.972);
+  tl.set("#cap196", {autoAlpha: 1}, 75.057);
+  tl.set("#cap196", {autoAlpha: 0}, 75.292);
+  tl.set("#cap197", {autoAlpha: 1}, 75.377);
+  tl.set("#cap197", {autoAlpha: 0}, 75.477);
+  tl.set("#cap198", {autoAlpha: 1}, 75.557);
+  tl.set("#cap198", {autoAlpha: 0}, 75.812);
+  tl.set("#cap199", {autoAlpha: 1}, 75.897);
+  tl.set("#cap199", {autoAlpha: 0}, 76.012);
+  tl.set("#cap200", {autoAlpha: 1}, 76.097);
+  tl.set("#cap200", {autoAlpha: 0}, 76.272);
+  tl.set("#cap201", {autoAlpha: 1}, 76.357);
+  tl.set("#cap201", {autoAlpha: 0}, 76.457);
+  tl.set("#cap202", {autoAlpha: 1}, 76.497);
+  tl.set("#cap202", {autoAlpha: 0}, 76.612);
+  tl.set("#cap203", {autoAlpha: 1}, 76.697);
+  tl.set("#cap203", {autoAlpha: 0}, 77.072);
+  tl.set("#cap204", {autoAlpha: 1}, 77.157);
+  tl.set("#cap204", {autoAlpha: 0}, 77.643);
+  tl.set("#cap205", {autoAlpha: 1}, 77.728);
+  tl.set("#cap205", {autoAlpha: 0}, 77.828);
+  tl.set("#cap206", {autoAlpha: 1}, 77.868);
+  tl.set("#cap206", {autoAlpha: 0}, 77.989);
+  tl.set("#cap207", {autoAlpha: 1}, 78.074);
+  tl.set("#cap207", {autoAlpha: 0}, 78.683);
+  tl.set("#cap208", {autoAlpha: 1}, 78.768);
+  tl.set("#cap208", {autoAlpha: 0}, 79.303);
+  tl.set("#cap209", {autoAlpha: 1}, 79.388);
+  tl.set("#cap209", {autoAlpha: 0}, 79.488);
+  tl.set("#cap210", {autoAlpha: 1}, 79.528);
+  tl.set("#cap210", {autoAlpha: 0}, 79.628);
+  tl.set("#cap211", {autoAlpha: 1}, 79.688);
+  tl.set("#cap211", {autoAlpha: 0}, 79.883);
+  tl.set("#cap212", {autoAlpha: 1}, 79.968);
+  tl.set("#cap212", {autoAlpha: 0}, 80.223);
+  tl.set("#cap213", {autoAlpha: 1}, 80.308);
+  tl.set("#cap213", {autoAlpha: 0}, 80.463);
+  tl.set("#cap214", {autoAlpha: 1}, 80.548);
+  tl.set("#cap214", {autoAlpha: 0}, 81.015);
+  tl.set("#cap215", {autoAlpha: 1}, 81.100);
+  tl.set("#cap215", {autoAlpha: 0}, 81.505);
+  tl.set("#cap216", {autoAlpha: 1}, 81.590);
+  tl.set("#cap216", {autoAlpha: 0}, 81.725);
+  tl.set("#cap217", {autoAlpha: 1}, 81.810);
+  tl.set("#cap217", {autoAlpha: 0}, 81.925);
+  tl.set("#cap218", {autoAlpha: 1}, 82.010);
+  tl.set("#cap218", {autoAlpha: 0}, 82.385);
+  tl.set("#cap219", {autoAlpha: 1}, 82.470);
+  tl.set("#cap219", {autoAlpha: 0}, 82.605);
+  tl.set("#cap227", {autoAlpha: 1}, 85.870);
+  tl.set("#cap227", {autoAlpha: 0}, 86.085);
+  tl.set("#cap228", {autoAlpha: 1}, 86.170);
+  tl.set("#cap228", {autoAlpha: 0}, 86.270);
+  tl.set("#cap229", {autoAlpha: 1}, 86.330);
+  tl.set("#cap229", {autoAlpha: 0}, 86.982);
+  tl.set("#cap230", {autoAlpha: 1}, 87.067);
+  tl.set("#cap230", {autoAlpha: 0}, 87.532);
+  tl.set("#cap231", {autoAlpha: 1}, 87.617);
+  tl.set("#cap231", {autoAlpha: 0}, 87.717);
+  tl.set("#cap232", {autoAlpha: 1}, 87.797);
+  tl.set("#cap232", {autoAlpha: 0}, 87.912);
+  tl.set("#cap233", {autoAlpha: 1}, 87.997);
+  tl.set("#cap233", {autoAlpha: 0}, 88.612);
+  tl.set("#cap234", {autoAlpha: 1}, 88.697);
+  tl.set("#cap234", {autoAlpha: 0}, 88.797);
+  tl.set("#cap235", {autoAlpha: 1}, 88.837);
+  tl.set("#cap235", {autoAlpha: 0}, 89.232);
+  tl.set("#cap236", {autoAlpha: 1}, 89.317);
+  tl.set("#cap236", {autoAlpha: 0}, 89.777);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 89.877);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 2.190);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 3.890);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 11.455);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 14.463);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 18.063);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 18.663);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 19.617);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 21.257);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 22.597);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 34.446);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 37.752);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 38.952);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 54.883);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 81.298);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 82.490);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 84.110);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 84.050);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 85.650);
+
+
+function spring(z, w) {
+  var wd = w * Math.sqrt(1 - z * z);
+  function f(t) { return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + (z * w / wd) * Math.sin(wd * t)); }
+  var e = f(1);
+  return function (t) { return t >= 1 ? 1 : f(t) / e; };
+}
+var SP = spring(0.62, 13), POP = spring(0.46, 14), SOFT = spring(0.84, 11);
+
+function sketchHelpers(tl) {
+  var Q = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+  // draw every stroke inside sel in document order — a hand drawing it.
+  // d is the total time; hachure strokes go faster than outlines.
+  function draw(sel, t, d) {
+    var ps = Q(sel + " .dr").filter(function (p) { return !p.classList.contains("dash"); });
+    if (!ps.length && document.querySelector(sel) && document.querySelector(sel).classList.contains("dr")) ps = Q(sel);
+    var w = ps.map(function (p) { return p.classList.contains("hz") ? 0.6 : (p.classList.contains("ah") ? 0.25 : 1); });
+    var sum = w.reduce(function (a, b) { return a + b; }, 0) || 1, at = t;
+    d = d || 0.7;
+    ps.forEach(function (p, i) {
+      var dd = d * w[i] / sum;
+      tl.fromTo(p, {strokeDashoffset: 1.05}, {strokeDashoffset: 0, duration: dd, ease: "power1.inOut", immediateRender: false}, at);
+      at += dd;
+    });
+    Q(sel + " .dr.dash").forEach(function (p) { tl.fromTo(p, {autoAlpha: 0}, {autoAlpha: 1, duration: 0.25, immediateRender: false}, t); });
+    Q(sel + " .sf, " + sel + " .mk").forEach(function (p) {
+      tl.fromTo(p, {autoAlpha: 0}, {autoAlpha: 1, duration: 0.3, ease: "power1.out", immediateRender: false}, t + d * 0.5);
+    });
+    return at;
+  }
+  // erase: the strokes un-draw backwards, fast
+  function undraw(sel, t, d) {
+    var ps = Q(sel + " .dr").reverse(); d = d || 0.35;
+    ps.forEach(function (p, i) { tl.to(p, {strokeDashoffset: 1.05, duration: d, ease: "power1.in"}, t); });
+    Q(sel + " .sf, " + sel + " .mk").forEach(function (p) { tl.to(p, {autoAlpha: 0, duration: d}, t); });
+  }
+  // handwriting: the text is revealed left to right, like ink going down
+  function write(sel, t, d) {
+    tl.set(sel, {autoAlpha: 1}, t);
+    tl.fromTo(sel, {clipPath: "inset(-20% 100% -20% 0%)"},
+              {clipPath: "inset(-20% -2% -20% 0%)", duration: d || 0.55, ease: "power1.inOut", immediateRender: false}, t);
+  }
+  // a Material object lands: scale with a spring, a whisker of tilt that settles
+  function pop(sel, t, o) {
+    o = o || {};
+    tl.fromTo(sel, {autoAlpha: 0, scale: o.s == null ? 0.6 : o.s, rotation: o.r == null ? -4 : o.r, y: o.y == null ? 24 : o.y},
+              {autoAlpha: 1, scale: 1, rotation: o.to || 0, y: 0, duration: o.d || 0.7, ease: o.ease || POP, immediateRender: true}, t);
+  }
+  function show(sel, t) { tl.set(sel, {autoAlpha: 1}, t); }
+  function out(sel, t, d) { tl.to(sel, {autoAlpha: 0, scale: 0.92, duration: d || 0.25, ease: "power2.in"}, t); }
+  function fadeOut(sel, t, d) { tl.to(sel, {autoAlpha: 0, duration: d || 0.25, ease: "power1.in"}, t); }
+  function bump(sel, t) {
+    tl.to(sel, {scale: 1.08, duration: 0.1, ease: "power2.out"}, t);
+    tl.to(sel, {scale: 1, duration: 0.45, ease: SP}, t + 0.1);
+  }
+  function wiggle(sel, t) { tl.to(sel, {keyframes: {rotation: [0, -5, 4, -2.5, 1, 0]}, duration: 0.5, ease: "none"}, t); }
+  // the four Google dots bounce in sequence while something "thinks"
+  function think(sel, t, d) {
+    var dots = Q(sel + " i"), n = Math.max(1, Math.floor((d || 1.2) / 0.6));
+    dots.forEach(function (el, i) {
+      for (var k = 0; k < n; k++)
+        tl.to(el, {keyframes: {y: [0, -22, 0]}, duration: 0.42, ease: "sine.inOut"}, t + k * 0.6 + i * 0.09);
+    });
+  }
+  function toggle(sel, t, color) {
+    tl.to(sel, {backgroundColor: color || "#0b57d0", borderColor: color || "#0b57d0", duration: 0.18}, t);
+    tl.to(sel + " b", {x: 40, scale: 1.18, backgroundColor: "#fff", duration: 0.45, ease: SP}, t);
+  }
+  // typing into a Google search pill / input: chars appear one by one
+  function type(sel, t, cps) {
+    var el = document.querySelector(sel), txt = el.getAttribute("data-text") || "", o = {n: 0};
+    cps = cps || 22;
+    tl.fromTo(o, {n: 0}, {n: txt.length, duration: txt.length / cps, ease: "none", immediateRender: true,
+      onUpdate: function () { el.textContent = txt.slice(0, Math.round(o.n)); }}, t);
+  }
+  function count(sel, t, to, d, fmt) {
+    var o = {v: 0}, el = document.querySelector(sel);
+    tl.fromTo(o, {v: 0}, {v: to, duration: d || 1.0, ease: "power2.out", immediateRender: false,
+              onUpdate: function () { el.textContent = fmt ? fmt(o.v) : Math.round(o.v); }}, t);
+  }
+  // the whiteboard takes over: it is wiped in by a marker sweep from a point
+  function boardIn(sel, t, x, y, d) {
+    tl.set(sel, {autoAlpha: 1}, t);
+    tl.fromTo(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)"},
+              {clipPath: "circle(2300px at " + x + "px " + y + "px)", duration: d || 0.75, ease: "power3.inOut", immediateRender: false}, t);
+  }
+  function boardOut(sel, t, x, y, d) {
+    tl.to(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)", duration: d || 0.55, ease: "power3.inOut"}, t);
+    tl.set(sel, {autoAlpha: 0}, t + (d || 0.55) + 0.02);
+  }
+  // infinite canvas: pan/zoom the board's camera layer to frame the next idea
+  function pan(sel, t, x, y, s, d) {
+    tl.to(sel, {x: x, y: y, scale: s == null ? 1 : s, duration: d || 0.8, ease: "power3.inOut"}, t);
+  }
+  return {draw: draw, undraw: undraw, write: write, pop: pop, show: show, out: out, fadeOut: fadeOut,
+          bump: bump, wiggle: wiggle, think: think, toggle: toggle, type: type, count: count,
+          boardIn: boardIn, boardOut: boardOut, pan: pan};
+}
+
+  var h = sketchHelpers(tl);
+  gsap.set("#vid", {transformOrigin: "540px 900px"});
+  tl.fromTo("#vid", {scale: 1}, {scale: 1.045, duration: 90.017, ease: "none"}, 0);
+  /* b_dc */
+
+  h.show("#dc", 0);
+  h.pop("#dcC", 0.0, {s: 0.7, r: -3});
+  h.pop("#b1", 0.810, {s: 0.5, r: 3});
+  h.pop("#b2", 1.110, {s: 0.5, r: -3});
+  h.pop("#b3", 1.410, {s: 0.5, r: 3});
+  h.draw("#bS", 1.010, 0.9);
+  h.show("#cnt", 2.340);
+  h.count("#cnt", 2.340, 150, 0.8);
+  h.write("#cntT", 3.290, 0.5);
+  h.pop("#ban", 5.832, {s: 0.5, r: -5});
+  h.draw("#banX", 6.812, 0.4);
+  h.draw("#okH", 7.052, 0.35);
+  h.bump("#cnt", 7.152);
+  /* -> the same card becomes her list */
+  tl.to("#h1", {autoAlpha: 0, duration: 0.25, ease: "power1.in"}, 7.650);
+  h.bump("#dcC", 7.800);
+  /* b_tasks */
+
+  h.write("#tT", 8.100, 0.5);
+  h.pop("#a1", 10.920, {s: 0.3, r: 0});
+  h.pop("#a2", 11.070, {s: 0.3, r: 0});
+  h.pop("#a3", 11.220, {s: 0.3, r: 0});
+  h.draw("#cb1", 11.555, 0.3);  h.write("#r1", 11.655, 0.5);
+  h.draw("#cb2", 12.295, 0.3);  h.write("#r2", 12.395, 0.5);
+  h.draw("#cb3", 13.335, 0.3);  h.write("#r3", 13.435, 0.7);
+  h.wiggle("#tT", 14.963);
+  h.pop("#kp", 15.783, {s: 0.4, r: 6});
+  h.draw("#ck1", 17.143, 0.25);
+  h.draw("#ck2", 17.493, 0.25);
+  h.draw("#ck3", 17.843, 0.25);
+  h.write("#kpT", 18.263, 0.5);
+  h.pop("#ch1", 19.767, {s: 0.5, r: -4});
+  h.pop("#ch2", 20.757, {s: 0.5, r: 4});
+  h.bump("#kp", 22.097);
+  /* b_board1 */
+
+  tl.to("#kp", {scale: 1.3, duration: 0.3, ease: "power2.in"}, 22.347);
+  h.boardIn("#bd1", 22.347, 830, 130, 0.75);
+  tl.set("#dc", {autoAlpha: 0}, 23.097);
+  h.write("#b1T", 22.933, 0.8);
+  h.draw("#b1U", 23.633, 0.35);
+  h.draw("#b1B", 23.833, 1.6);
+  h.write("#b1Eq", 27.967, 0.25);
+  h.pop("#b1Ch", 28.117, {s: 0.5, r: 5});
+  h.write("#b1Zv", 28.897, 0.5);
+  h.draw("#b1K", 30.743, 0.7);
+  h.pop("#b1KP", 31.453, {s: 0.5, r: -4});
+  h.draw("#b1F", 32.623, 0.6);
+  h.write("#b1Sh", 33.746, 0.4);
+  h.boardOut("#bd1", 34.096, 420, 540, 0.55);
+  /* b_browser */
+
+  h.show("#br", 34.083);
+  h.pop("#brC", 34.083, {s: 0.55, r: 0, y: 0, d: 0.6});
+  tl.set("#curW", {autoAlpha: 0}, 0);
+  h.type("#brU", 36.232, 20);
+  h.pop("#pr", 37.272, {s: 0.8, r: 0, y: 20});
+  h.type("#prT", 37.902, 24);
+  h.draw("#prOK", 40.272, 0.3);
+  tl.fromTo("#curW", {autoAlpha: 0, x: 700, y: 520}, {autoAlpha: 1, x: 640, y: 470, duration: 0.3, immediateRender: false}, 40.894);
+  tl.to("#curW", {x: 420, y: 280, duration: 0.6, ease: "power2.inOut"}, 41.244);
+  h.pop("#p0", 42.084, {s: 0.8, r: 0, y: 12});
+  h.pop("#p1", 42.284, {s: 0.8, r: 0, y: 12});
+  h.pop("#p2", 42.484, {s: 0.8, r: 0, y: 12});
+  tl.to("#curW", {x: 300, y: 230, duration: 0.35, ease: "power2.inOut"}, 42.234);
+  tl.to("#curW", {x: 300, y: 420, duration: 0.45, ease: "power2.inOut"}, 42.634);
+  h.pop("#m0", 43.014, {s: 0.5, r: 2});
+  h.pop("#m1", 43.214, {s: 0.5, r: -2});
+  h.pop("#m2", 43.414, {s: 0.5, r: 2});
+  tl.to("#curW", {x: 760, y: 440, duration: 0.4, ease: "power2.inOut"}, 43.114);
+  h.draw("#sent", 43.694, 0.5);
+  /* b_catch */
+
+  tl.to("#brIn", {autoAlpha: 0.25, duration: 0.3}, 45.537);
+  tl.to("#prT", {autoAlpha: 0, duration: 0.2}, 45.537);
+  tl.to("#p0, #m0", {autoAlpha: 0, duration: 0.15}, 45.917);
+  h.pop("#warn", 46.067, {s: 0.8, r: 0, y: -20});
+  h.wiggle("#brC", 47.377);
+  tl.to("#curW", {x: 590, y: 380, duration: 0.4, ease: "power2.inOut"}, 48.081);
+  h.draw("#botO", 48.481, 0.5);
+  h.write("#botT", 49.581, 0.45);
+  tl.fromTo("#stamp", {autoAlpha: 0, scale: 2.2, rotation: -14}, {autoAlpha: 1, scale: 1, rotation: -8, duration: 0.3, ease: "power3.in", immediateRender: false}, 51.354);
+  h.wiggle("#brC", 51.704);
+  /* -> folds into the note «2 речі» */
+  tl.to("#brC", {scale: 0.4, autoAlpha: 0, duration: 0.4, ease: "power3.in"}, 52.223);
+  tl.to("#curW", {autoAlpha: 0, duration: 0.2}, 52.223);
+  h.pop("#nt", 52.473, {s: 0.4, r: -12, to: -3});
+  h.draw("#ntS", 53.683, 0.5);
+  /* b_board2 */
+
+  tl.to("#nt", {scale: 1.25, duration: 0.3, ease: "power2.in"}, 54.633);
+  h.boardIn("#bd2", 54.633, 540, 315, 0.75);
+  tl.set("#br", {autoAlpha: 0}, 55.433);
+  h.pop("#n1", 55.400, {s: 0.4, r: -6});
+  h.write("#n1T", 56.167, 0.5);
+  h.draw("#tl1", 56.777, 0.5);
+  h.draw("#tlD", 57.177, 0.5);
+  h.draw("#gA", 57.357, 0.6);
+  h.write("#gL0", 57.457, 0.3);
+  h.write("#gL1", 57.657, 0.3);
+  h.write("#gL2", 57.857, 0.3);
+  h.write("#dL0", 58.467, 0.25);
+  h.write("#dL1", 58.817, 0.25);
+  h.write("#dL2", 59.167, 0.25);
+  h.write("#dL3", 59.517, 0.25);
+  h.write("#nb", 60.715, 0.45);
+  h.draw("#nbC", 61.795, 0.3);
+  h.draw("#clk", 62.970, 0.6);
+  h.write("#clkT", 63.590, 0.5);
+  h.draw("#oA", 64.590, 0.4);
+  h.write("#oAT", 64.790, 0.4);
+  h.draw("#oB", 65.170, 0.4);
+  h.write("#oBT", 65.370, 0.6);
+  h.draw("#oAO", 66.937, 0.5);
+  h.draw("#oBX", 67.357, 0.3);
+  /* pan down to rule 2 */
+  tl.fromTo("#cam", {y: 0}, {y: -1300, duration: 0.8, ease: "power3.inOut", immediateRender: false}, 67.717);
+  h.pop("#n2", 68.217, {s: 0.4, r: 6});
+  h.write("#n2T", 68.577, 0.7);
+  h.draw("#n2U", 70.097, 0.4);
+  h.pop("#q1", 71.746, {s: 0.5, r: -3});
+  h.write("#q1T", 72.146, 0.4);
+  h.draw("#q12", 72.596, 0.3);
+  h.pop("#q2", 72.746, {s: 0.6, r: 2});
+  h.write("#q2T", 73.006, 0.5);
+  h.pop("#k2", 75.327, {s: 0.5, r: -5});
+  h.draw("#k2A", 76.097, 0.35);
+  h.pop("#pf", 76.447, {s: 0.6, r: 3});
+  tl.to("#pfM", {backgroundColor: "#ffec99", duration: 0.3}, 77.974);
+  h.draw("#pfA", 78.768, 0.4);
+  tl.to("#q2M", {backgroundColor: "#ffec99", duration: 0.3}, 79.118);
+  h.bump("#q2", 79.688);
+  h.draw("#doc", 80.008, 0.5);
+  h.write("#docT", 80.308, 0.45);
+  h.draw("#docA", 80.548, 0.3);
+  h.boardOut("#bd2", 80.948, 410, 640, 0.55);
+  /* b_fn */
+
+  h.show("#fn", 81.050);
+  h.pop("#fnC", 81.050, {s: 0.5, r: -3});
+  tl.set("#fnN", {autoAlpha: 0}, 0);
+  h.show("#fnN", 82.710);
+  h.count("#fnN", 82.710, 150, 0.8, function (v) { return Math.round(v) + (v > 149.5 ? "+" : ""); });
+  h.write("#fnT", 83.610, 0.5);
+  h.draw("#fnOK", 84.250, 0.4);
+  h.pop("#fnCh", 84.550, {s: 0.5, r: 4});
+  h.draw("#fnSp", 86.330, 0.3);
+  h.bump("#fnOK", 86.330);
+  tl.to("#fnC", {y: -30, autoAlpha: 0, duration: 0.3, ease: "power2.in"}, 86.717);
+  tl.set("#fn", {autoAlpha: 0}, 87.067);
+  /* b_cta */
+
+  h.show("#cta", 87.017);
+  tl.set("#cur2", {autoAlpha: 0}, 0);
+  h.pop("#fb", 87.067, {s: 0.5, r: -3});
+  h.draw("#fbA2", 87.797, 0.5);
+  tl.fromTo("#cur2", {autoAlpha: 0, x: 900, y: 600}, {autoAlpha: 1, x: 620, y: 340, duration: 0.7, ease: "power2.out", immediateRender: false}, 88.417);
+  tl.to("#cur2", {scale: 0.85, duration: 0.08}, 89.267);
+  tl.to("#cur2", {scale: 1, duration: 0.15}, 89.367);
+  h.show("#fb2", 89.317);
+  h.fadeOut("#fb", 89.317, 0.05);
+  h.bump("#fb2", 89.317);
+  h.draw("#fbS", 89.417, 0.3);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>
