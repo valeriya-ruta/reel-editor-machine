@@ -163,6 +163,7 @@ def beat(fn):
 
 k.css("""
 .hide { opacity: 0; visibility: hidden; }
+.sk .sf { opacity: 0; visibility: hidden; }
 .ab { position: absolute; }
 .bub { position: absolute; padding: 22px 30px; border-radius: 30px; font-family: "GSans", sans-serif;
        font-size: 36px; font-weight: 500; line-height: 1.25; max-width: 560px; }
@@ -212,9 +213,9 @@ L.append(
     sk.svg(1080, 700, sk.line([(575, 270), (505, 400)], stroke="red", sw=9, double=False), sid="vsNe") +
     # the price tag with an arrow up (no number: she says none)
     sk.svg(1080, 700,
-           sk.rect(250, 470, 190, 110, stroke="ink", fill="yellow", style="solid") +
-           sk.ellipse(282, 525, 12, 12, stroke="ink", sw=3.5), sid="vsTag") +
-    '<div class="hand hide" id="vsTagT" style="position:absolute;left:300px;top:496px;font-size:48px">ціна</div>'
+           sk.rect(240, 470, 220, 110, stroke="ink", fill="yellow", style="solid") +
+           sk.ellipse(268, 525, 11, 11, stroke="ink", sw=3.5), sid="vsTag") +
+    '<div class="hand hide" id="vsTagT" style="position:absolute;left:310px;top:496px;font-size:48px">ціна</div>'
     + sk.svg(1080, 700, sk.arrow([(480, 590), (492, 520), (500, 450)], stroke="red", sw=7), sid="vsUp") +
     '</div>')
 

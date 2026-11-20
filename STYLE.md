@@ -129,6 +129,35 @@ google+excalidraw style"*. For these reels this replaces §0's refined glass;
 
 ---
 
+## 0c. Where graphics go: move-down, halfscreen (2026-11-20)
+
+Her note on the first renders of this batch: a card sitting on top of her head
+*"is pretty annoying visually"*. A graphic never overlaps her head. Instead her
+video itself moves, which also adds motion. Two layouts, by what the graphic is:
+
+| graphic | layout | how |
+|---|---|---|
+| a **mockup**: browser, app screen, DM chat, settings UI, a phone screen | **move-down** | a full-width `.sheet` drops from the top edge (`sheetIn(sel, t, h)`), her plate is pushed down by the same move (`h − 580` px by default), `sheetOut` reverses both. Keep `h` ≈ 600–760. |
+| a **scheme** for an explanation: a diagram, a flow, a list, a comparison, a table | **halfscreen** | the same move with a whiteboard sheet (`.sheet.board-bg`), `h` ≈ 880–960: the scheme owns the top half, she is in the bottom half. Author it at full size inside `0…h−40`, never shrink a full-frame board to fit. |
+| a small object: chip, pill, sticky note, a lone icon | over the footage | bottom edge at least ~40 px above her hairline (≈ y 650 on the wide shot; measure it on a plate frame). If it can't fit, it is a mockup or a scheme: use the layouts above. |
+
+- **On a zoomed-in clip** (the cutter's `in` framing) with a graphic up, use
+  **move-down** — her ask: *"i want to see the move down when im zoomed in,
+  its gonna add more motion"*.
+- `plateDown(t, d)` / `plateUp(t)` move her on their own, but only ever while a
+  sheet covers the top strip she leaves behind (the plate has no picture above
+  her: the raw take is exactly 1080×1920).
+- The full-frame whiteboard (`boardIn`) is no longer the default takeover;
+  halfscreen is. Captions stay white on the plaque over her in both layouts (no
+  `invert=` needed).
+- Worked example: `reel-45/build.py` (DM mockups = move-down, the SendPulse
+  settings scheme = halfscreen).
+
+**Rendering: locally, never HeyGen** (her call, 2026-11-20). `$HF render -o
+renders/REEL-NN.mp4 --workers 2`, one reel at a time.
+
+---
+
 ## 1. The delivery model
 
 **She makes the base edit. I add the animations and render the final video.**
