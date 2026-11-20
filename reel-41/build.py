@@ -382,8 +382,8 @@ L.append(
     '<div class="g" id="pp" style="top:0;height:700px">'
     + sk.svg(1080, 700, CROWD, sid="ppA", cls="sk over-plate") +
     '<div class="gcard hide" id="ppN" style="left:90px;top:290px;width:420px;height:280px">'
-    '<div class="num" style="position:absolute;left:0;right:0;top:20px;text-align:center;font-size:170px;line-height:1">70+</div>'
-    '<div class="hand" style="position:absolute;left:0;right:0;top:196px;text-align:center;font-size:52px">людей</div></div>'
+    '<div class="num" style="position:absolute;left:0;right:0;top:14px;text-align:center;font-size:160px;line-height:1">70+</div>'
+    '<div class="hand" style="position:absolute;left:0;right:0;top:206px;text-align:center;font-size:52px">людей</div></div>'
     '<div class="bub in hide" id="ppQ" style="left:560px;top:300px;width:420px;box-shadow:var(--e3);background:#fff">«це спасіння для РДУГ»</div>'
     '<div class="ab hide" id="ppB" style="left:0;top:0;width:1080px;height:700px">'
     + sk.svg(1080, 700, BARS + sk.line([(620, 562), (970, 562)], sw=4, double=False) +
@@ -752,7 +752,7 @@ L.append(
     '<div class="lbl" style="left:50px;top:40px">твоя відповідь</div>'
     '<div class="ab" style="left:50px;top:90px;display:flex;gap:18px">'
     '<span class="chip mid cg">+ плюс</span><span class="chip mid cr" id="ctM">− мінус</span><span class="chip mid gr">0 нуль</span></div>'
-    + sk.svg(900, 580, sk.circle_around(384, 132, 150, 62, stroke="red", sw=6), sid="ctOK") +
+    + sk.svg(900, 580, sk.circle_around(384, 132, 128, 54, stroke="red", sw=6), sid="ctOK") +
     '<div class="pill hide" id="ctCm" style="left:50px;top:230px;width:800px;height:100px;padding:0 36px;box-shadow:var(--e1);border:2px solid #dadce0">'
     '<span class="gs" style="font-size:34px;color:#5f6368">Коментар:</span>'
     '<span class="wm" id="ctCmT" data-text="RUTA" style="font-size:48px"></span></div>'

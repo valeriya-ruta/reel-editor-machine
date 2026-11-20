@@ -316,6 +316,16 @@ SKETCH_CSS = r"""
            border: 4px solid #747775; }
     .tgl b { position: absolute; left: 10px; top: 10px; width: 36px; height: 36px; border-radius: 50%%;
              background: #747775; }
+    /* §0c layouts. A .sheet is a full-width panel from the top edge down to
+       its own height; her plate is pushed down under it (plateDown), so the
+       panel never covers her head. .sheet.board-bg = halfscreen (a scheme on
+       the whiteboard); a plain .sheet holds a mockup (browser, app screen). */
+    .sheet { position: absolute; left: 0; top: 0; width: 1080px; overflow: hidden;
+             box-shadow: 0 10px 30px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.18); }
+    .sheet.board-bg { background-color: #fff;
+             background-image: radial-gradient(circle, rgba(30,30,30,.16) 2px, transparent 2.6px);
+             background-size: 44px 44px; background-position: 11px 11px; }
+    .sheet .edge { position: absolute; left: 0; right: 0; bottom: 0; height: 6px; }
     /* whiteboard: Excalidraw's canvas — white with a faint dot grid */
     .board { position: absolute; inset: 0; background-color: #fff;
              background-image: radial-gradient(circle, rgba(30,30,30,.16) 2px, transparent 2.6px);
@@ -431,7 +441,32 @@ function sketchHelpers(tl) {
   function pan(sel, t, x, y, s, d) {
     tl.to(sel, {x: x, y: y, scale: s == null ? 1 : s, duration: d || 0.8, ease: "power3.inOut"}, t);
   }
-  return {draw: draw, undraw: undraw, write: write, pop: pop, show: show, out: out, fadeOut: fadeOut,
+  // §0c — her plate moves. plateDown: push her down by d px (spring), so a
+  // panel/card above her never sits on her head. plateUp: back to full frame.
+  function plateDown(t, d, dur) {
+    tl.to("#platebox", {y: d, duration: dur || 0.75, ease: SP}, t);
+  }
+  function plateUp(t, dur) {
+    tl.to("#platebox", {y: 0, duration: dur || 0.6, ease: "power3.inOut"}, t);
+  }
+  // halfscreen / mockup sheet: the panel drops in from the top edge while she
+  // is pushed down by the same move; out = the panel rolls back up and she
+  // rises. h = panel height, d = how far she moves (default h - 560: her
+  // hairline sits ~40 px under the panel's edge).
+  function sheetIn(sel, t, h, d, dur) {
+    dur = dur || 0.7; d = d == null ? Math.max(0, h - 580) : d;
+    tl.set(sel, {autoAlpha: 1}, t);
+    tl.fromTo(sel, {y: -h - 40}, {y: 0, duration: dur, ease: SOFT, immediateRender: false}, t);
+    plateDown(t, d, dur + 0.1);
+  }
+  function sheetOut(sel, t, h, dur) {
+    dur = dur || 0.55;
+    tl.to(sel, {y: -h - 40, duration: dur, ease: "power3.in"}, t);
+    tl.set(sel, {autoAlpha: 0}, t + dur + 0.02);
+    plateUp(t + 0.05, dur + 0.1);
+  }
+  return {plateDown: plateDown, plateUp: plateUp, sheetIn: sheetIn, sheetOut: sheetOut,
+          draw: draw, undraw: undraw, write: write, pop: pop, show: show, out: out, fadeOut: fadeOut,
           bump: bump, wiggle: wiggle, think: think, toggle: toggle, type: type, count: count,
           boardIn: boardIn, boardOut: boardOut, pan: pan};
 }

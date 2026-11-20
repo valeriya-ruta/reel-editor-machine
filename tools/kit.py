@@ -327,6 +327,9 @@ class Kit(object):
             font-family: "ProductSans", system-ui, sans-serif;%(tokens)s }
     .plate { position: absolute; inset: 0; width: %(w)dpx; height: %(h)dpx;
              object-fit: cover; }
+    /* the plate's own frame: moved as a whole (move-down, halfscreen —
+       STYLE.md §0c) while #vid inside it keeps its slow push */
+    #platebox { position: absolute; inset: 0; transform-origin: 540px 0; }
     #scrim { position: absolute; left: 20px; top: %(scrim)dpx;
              width: 1040px; height: 450px;
              background-image: url("assets/underlay.png");
@@ -366,9 +369,11 @@ class Kit(object):
     <div id="root" data-composition-id="main" data-start="0"
          data-width="%(w)d" data-height="%(h)d" data-duration="%(dur).3f" data-fps="%(fps)d">
 
+      <div id="platebox">
       <video id="vid" class="plate" src="%(plate)s"
              data-start="0" data-duration="%(dur).3f" data-media-start="0"
              muted playsinline></video>
+      </div>
 %(gfx)s
 %(mattes)s
       <div id="scrim"></div>

@@ -170,7 +170,9 @@ CHAT = "#dm"
 
 
 def dm_card(cid, top):
-    return ('<div class="gcard" id="%sC" style="left:100px;top:%dpx;width:880px;height:560px">'
+    # a mockup -> a sheet that drops from the top and pushes her down (STYLE.md §0c)
+    return ('<div class="sheet hide" id="%sC" style="height:700px;background:#fff">'
+            '<div style="position:absolute;left:100px;top:%dpx;width:880px;height:560px">'
             '<div class="av" style="left:36px;top:30px;background:#34A853">К</div>'
             '<div class="gs" style="position:absolute;left:122px;top:34px;font-size:34px;font-weight:700">Клієнтка</div>'
             '<div class="gs" style="position:absolute;left:122px;top:76px;font-size:24px;color:#5f6368">Direct</div>'
@@ -179,7 +181,7 @@ def dm_card(cid, top):
 
 
 L.append(
-    '<div class="g" id="dm" style="top:0;height:700px">' + dm_card("dm", 60) +
+    '<div class="g" id="dm" style="top:0;height:700px">' + dm_card("dm", 110) +
     '<div class="bub in hide" id="dmQ" style="left:36px;top:160px">Скільки коштує і коли можна почати?</div>'
     '<div class="dots hide" id="dmD" style="left:690px;top:330px"><i></i><i></i><i></i><i></i></div>'
     '<div class="bub me hide" id="dmA" style="right:36px;top:300px;width:470px;height:150px"></div>'
@@ -189,7 +191,7 @@ L.append(
              sid="dmS", style="left:0;top:0") +
     sk.svg(880, 560, sk.cross(560, 300, 150, sw=11), sid="dmX") +
     '<div class="hand hide" id="dmH" style="position:absolute;left:470px;top:470px;font-size:48px;color:#EA4335">дурниця!</div>'
-    '</div></div>')
+    '</div></div></div>')
 
 
 @beat
@@ -199,8 +201,8 @@ def b_dm():
     sfx("pencil", "@prydumaie", 2)
     sfx("click", "@durnytsiu")
     return js("""
-  h.pop("#dm", @strakh-0.05, {s: 1, r: 0, y: 0, d: 0.2});
-  h.pop("#dmC", @strakh-0.05, {s: 0.7, r: -3});
+  h.show("#dm", @strakh-0.3);
+  h.sheetIn("#dmC", @strakh-0.3, 700);
   h.pop("#dmQ", @strakh+0.35, {s: 0.5, r: 0});
   h.pop("#dmD", @ahentom, {s: 0.5, r: 0});
   h.think("#dmD", @ahentom+0.1, 2.6);
@@ -229,8 +231,8 @@ def b_one():
     sfx("pop", "@odnu")
     sfx("pencil", "@shtuku", -2)
     return js("""
-  tl.to("#dmC", {scale: 0.35, x: 30, y: -40, autoAlpha: 0, duration: 0.45, ease: "power3.in"}, @skladno);
-  tl.set("#dm", {autoAlpha: 0}, @skladno+0.5);
+  h.sheetOut("#dmC", @skladno, 700);
+  tl.set("#dm", {autoAlpha: 0}, @skladno+0.7);
   h.pop("#one", @odnu-0.1, {s: 1, r: 0, y: 0, d: 0.2});
   h.pop("#oneP", @odnu-0.1, {s: 0.4, r: -12, to: -3});
   h.draw("#oneS", @shtuku+0.05, 0.45);
@@ -241,8 +243,9 @@ def b_one():
 GX, GY = 540, 315          # the note's centre: the board opens out of it
 L.append(
     '<div class="g full" id="bd">'
-    '<div class="board"></div>'
-    '<div id="cam" style="position:absolute;inset:0;transform-origin:540px 700px">'
+    # a scheme -> halfscreen: the whiteboard sheet takes the top 930 px (STYLE.md §0c)
+    '<div class="sheet board-bg hide" id="bdS" style="height:930px">'
+    '<div id="cam" style="position:absolute;inset:0;transform-origin:540px 0;transform:scale(0.72)">'
     '<div class="lbl hide" id="bdL" style="left:110px;top:170px">SendPulse · AI-агент</div>'
     '<div class="hand hide" id="bdT" style="left:108px;top:214px;position:absolute;font-size:78px">Налаштування</div>'
     + sk.svg(1080, 1300, sk.underline(110, 318, 470, stroke="blue"), sid="bdU") +
@@ -280,7 +283,7 @@ L.append(
     + sk.svg(1080, 1300, sk.scribble(722, 960, 216, 170, sw=8), sid="glX")
     # the fence: agent + instructions, nothing gets out
     + sk.svg(1080, 1300, sk.rect(80, 380, 920, 820, stroke="green", sw=7), sid="fence")
-    + '</div></div>')
+    + '</div></div></div>')
 
 
 @beat
@@ -301,7 +304,8 @@ def b_board():
     sfx("whoosh-short", "@instruktsii2+0.25")
     return js("""
   tl.to("#oneP", {scale: 1.25, duration: 0.35, ease: "power2.in"}, @koly-0.15);
-  h.boardIn("#bd", @koly-0.15, %d, %d, 0.75);
+  h.show("#bd", @koly-0.15);
+  h.sheetIn("#bdS", @koly-0.15, 930);
   tl.set("#one", {autoAlpha: 0}, @koly+0.6);
   h.write("#bdL", @koly+0.25, 0.35);
   h.write("#bdT", @koly+0.45, 0.6);
@@ -335,8 +339,8 @@ def b_board():
   h.bump("#fI", @propysaty);
   h.bump("#chS", @skrypty2);
   h.draw("#fence", @nikoly-0.1, 0.9);
-  h.boardOut("#bd", @instruktsii2+0.25, 250, 1050, 0.55);
-""" % (GX, GY))
+  h.sheetOut("#bdS", @instruktsii2+0.25, 930);
+""")
 
 
 # ---------------------------------------------------------------- 4 genius + SendPulse
@@ -372,7 +376,7 @@ def b_gen():
 
 # ---------------------------------------------------------------- 5 the DM again: it doesn't know
 L.append(
-    '<div class="g" id="dm2" style="top:0;height:700px">' + dm_card("dm2", 60) +
+    '<div class="g" id="dm2" style="top:0;height:700px">' + dm_card("dm2", 110) +
     '<div class="bub in hide" id="d2Q" style="left:36px;top:160px">А ви робите доставку в Канаду?</div>'
     '<div class="dots hide" id="d2D" style="left:690px;top:330px"><i></i><i></i><i></i><i></i></div>'
     '<div class="bub me hide" id="d2A" style="right:36px;top:290px;width:520px">Не знаю відповіді. Передаю вас менеджеру</div>'
@@ -380,7 +384,7 @@ L.append(
     '<div class="hand hide" id="d2MT" style="position:absolute;left:24px;top:500px;font-size:40px">менеджер</div>'
     + sk.svg(880, 560, sk.arrow([(470, 410), (330, 440), (150, 466)], stroke="red", sw=5), sid="d2Ar") +
     sk.svg(880, 560, sk.check(760, 440, 80), sid="d2OK") +
-    '</div></div>')
+    '</div></div></div>')
 
 
 @beat
@@ -391,8 +395,8 @@ def b_dm2():
     sfx("pop", "@menedzheru")
     sfx("pencil", "@nichoho", -3)
     return js("""
-  h.pop("#dm2", @pytannia-0.35, {s: 1, r: 0, y: 0, d: 0.2});
-  h.pop("#dm2C", @pytannia-0.35, {s: 0.7, r: 3});
+  h.show("#dm2", @pytannia-0.6);
+  h.sheetIn("#dm2C", @pytannia-0.6, 700);
   h.pop("#d2Q", @pytannia, {s: 0.5, r: 0});
   h.pop("#d2D", @znaie, {s: 0.5, r: 0});
   h.think("#d2D", @znaie+0.1, 2.6);
@@ -403,8 +407,8 @@ def b_dm2():
   h.write("#d2MT", @menedzheru+0.2, 0.4);
   h.draw("#d2OK", @nichoho, 0.35);
   h.bump("#d2OK", @mozhe);
-  tl.to("#dm2C", {y: -30, autoAlpha: 0, duration: 0.3, ease: "power2.in"}, @mozhe+0.3);
-  tl.set("#dm2", {autoAlpha: 0}, @mozhe+0.65);
+  h.sheetOut("#dm2C", @mozhe+0.2, 700);
+  tl.set("#dm2", {autoAlpha: 0}, @mozhe+0.9);
 """)
 
 
@@ -420,7 +424,7 @@ L.append(
              sk.line([(540, 345), (540, 445)], stroke="white", sw=10, double=False) +
              sk.line([(490, 395), (590, 395)], stroke="white", sw=10, double=False),
              sid="plus", cls="sk over-plate") +
-    '<div class="pill hide" id="cmt" style="left:170px;top:520px;width:740px;height:100px;padding:0 36px;font-size:36px">'
+    '<div class="pill hide" id="cmt" style="left:170px;top:470px;width:740px;height:100px;padding:0 36px;font-size:36px">'
     '<span style="color:#5f6368">Коментар:</span><span id="cmtT" data-text="+" style="font-weight:700;font-size:48px"></span></div>'
     '</div>')
 
@@ -446,7 +450,7 @@ def b_cta():
 """)
 
 
-INVERT = [(T["koly"] + 0.3, T["instruktsii2"] + 0.5, "")]    # the white board under ink captions
+INVERT = []    # halfscreen keeps her (and the white captions) in the bottom half
 
 
 def main():
