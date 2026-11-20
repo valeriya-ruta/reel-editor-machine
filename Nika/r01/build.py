@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Nika r01: «Шукаю 25 експертів». An UNLOCK ad, built on the approved look (../tools/look.py).
 
-    python ../tools/plate.py ../work/src/IMG_7332.MOV . "<SPANS>"   # graded, tightened, -14 LUFS
+    python ../tools/plate.py ../work/src/IMG_7332.MOV . "<SPANS>" <SPEED>   # graded, tightened, -14 LUFS
     python build.py && python ../tools/sfx.py mix .                  # index.html + sfx.json -> base.mp4
     npx hyperframes@0.8.33 render . -o renders/NIKA-R01.mp4 -q high --fps 30
 
@@ -18,7 +18,8 @@ from look import Reel, scrap, card, html_card, icon, cursor, pink_shadow, LOCK, 
 # Kept spans of IMG_7332. The pauses over ~0.5 s are tightened to ~0.3 s and the
 # lead-in is trimmed. Three cuts fall under the stage; the two on her get a zoom change.
 SPANS = [(0.52, 14.92), (15.52, 20.00), (20.42, 45.05), (45.85, 55.00), (55.36, 68.40), (68.66, 72.10)]
-R = Reel(SPANS)
+SPEED = 1.2                    # her delivery sped up, pitch kept (Nika, 2026-11-20)
+R = Reel(SPANS, SPEED)
 T = R.T
 
 CAPS = [
@@ -312,19 +313,21 @@ def motion():
     # ---- the platform, 23.0–29.8: one screen per thing she names
     d = T(23.00)
     R.stage_in(d)
-    R.card_in("cP", T(23.06)); R.card_hold("cP", T(23.68), T(24.80))
-    R.click("k1", T(23.90), T(24.36))
-    R.card_out("cP", T(24.80)); R.fx(T(24.80), "swish")
-    R.card_in("cE", T(24.86)); R.card_hold("cE", T(25.48), T(25.58))
-    R.card_out("cE", T(25.58)); R.fx(T(25.58), "swish")
-    R.card_in("cPay", T(25.64)); R.card_hold("cPay", T(26.26), T(26.52))
+    # at 1.2x the screens come quicker: shorter entrances and exits, and the editor follows the click
+    IN, OUT = 0.48, 0.34
+    R.card_in("cP", T(23.06), IN); R.card_hold("cP", round(T(23.06) + IN, 3), T(24.56))
+    R.click("k1", T(23.86), T(24.30))
+    R.card_out("cP", T(24.56), OUT); R.fx(T(24.56), "swish")
+    R.card_in("cE", T(24.62), IN); R.card_hold("cE", round(T(24.62) + IN, 3), T(25.58))
+    R.card_out("cE", T(25.58), OUT); R.fx(T(25.58), "swish")
+    R.card_in("cPay", T(25.64), IN); R.card_hold("cPay", round(T(25.64) + IN, 3), T(26.52))
     R.show("#tPay", T(26.06))
     R.pop('"#tPay"', T(26.06), "{autoAlpha:0,x:240,y:-330,z:160,scale:0.7,rotationY:-21,rotationX:13,rotationZ:2}",
           "{autoAlpha:1,x:220,y:-300,z:200,scale:1}", 0.45, "back.out(2)", "kaching", 0)
-    R.card_out("cPay", T(26.52))
-    j(f'tl.to("#tPay",{{x:-700,y:-380,z:0,autoAlpha:0,duration:0.42,ease:"power2.in"}},{T(26.52)});')
+    R.card_out("cPay", T(26.52), OUT)
+    j(f'tl.to("#tPay",{{x:-700,y:-380,z:0,autoAlpha:0,duration:{OUT},ease:"power2.in"}},{T(26.52)});')
     R.fx(T(26.52), "swish")
-    R.card_in("cS", T(26.58)); R.card_hold("cS", T(27.20), T(27.90))
+    R.card_in("cS", T(26.58), IN); R.card_hold("cS", round(T(26.58) + IN, 3), T(27.90))
     R.click("k2", T(27.10), T(27.52))
     e = T(27.90)                       # «і все в одному місці»: everything at once, the camera pulls back
     R.fx(e - 0.04, "whoosh", -3)
@@ -442,8 +445,13 @@ def motion():
 
 
 def main():
+    """`python build.py --window 12 10` writes a 10 s test of the stretch from 12 s; plain builds the reel."""
     motion()
-    R.write(HERE, body(), CSS, title="Nika r01 — «Шукаю 25 експертів»")
+    win = None
+    if "--window" in sys.argv:
+        i = sys.argv.index("--window")
+        win = (float(sys.argv[i + 1]), float(sys.argv[i + 2]))
+    R.write(HERE, body(), CSS, title="Nika r01 — «Шукаю 25 експертів»", window=win)
 
 
 if __name__ == "__main__":

@@ -180,31 +180,32 @@ REST_POSE = dict(rotationY=-21, rotationX=13, rotationZ=2)
 
 # --------------------------------------------------------------------------- the reel
 class Reel:
-    def __init__(self, spans):
-        """`spans`: the source spans her plate was cut to, exactly as given to plate.py."""
-        self.spans, self.offs = [], []
+    def __init__(self, spans, speed=1.0):
+        """`spans` and `speed`: exactly as her plate was cut with plate.py. At speed 1.2 her
+        take plays 1.2x faster (pitch kept); the animations keep their own pace."""
+        self.spans, self.offs, self.speed = [], [], speed
         acc = 0
         for a, b in spans:
             fa, n = round(a * FPS), round((b - a) * FPS)
             self.spans.append((fa / FPS, (fa + n) / FPS))
             self.offs.append(acc / FPS)
             acc += n
-        self.frames = acc
-        self.dur = round(acc / FPS, 3)
+        self.frames = round(acc / speed)
+        self.dur = round(self.frames / FPS, 3)
         self.js, self.fx_list = [], []
 
     def T(self, src):
         """Source time (seconds into her take) -> reel time. Inside a cut, the next span's start."""
         for (a, b), o in zip(self.spans, self.offs):
             if src < a:
-                return round(o, 3)
+                return round(o / self.speed, 3)
             if src <= b:
-                return round(o + src - a, 3)
+                return round((o + src - a) / self.speed, 3)
         return self.dur
 
     def cuts(self):
         """Reel times where the plate jumps."""
-        return [round(o, 3) for o in self.offs[1:]]
+        return [round(o / self.speed, 3) for o in self.offs[1:]]
 
     # -- plumbing
     def j(self, s):
@@ -292,8 +293,12 @@ class Reel:
             self.fx(t, sound, db)
 
     # -- output
-    def write(self, here, body, css="", title="Nika"):
+    def write(self, here, body, css="", title="Nika", window=None):
+        """window=(start, length): render only that stretch of the reel (a quick test)."""
         script = "\n  ".join(self.js)
+        w0, wd = window if window else (0, self.dur)
+        main = (f'var w = gsap.timeline({{paused: true}});\n  w.add(tl.tweenFromTo({w0}, {round(w0 + wd, 3)}, {{ease: "none"}}));\n'
+                f'  window.__timelines["main"] = w;' if window else 'window.__timelines["main"] = tl;')
         html = f"""<!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -305,18 +310,18 @@ class Reel:
 <body>
 {sprite()}
 <div id="root" data-composition-id="main" data-start="0" data-width="1080" data-height="1920"
-     data-duration="{self.dur}" data-fps="{FPS}">
-  <div id="cam"><video id="vid" src="assets/base.mp4" data-start="0" data-duration="{self.dur}"
-       data-media-start="0" muted playsinline></video></div>
+     data-duration="{wd}" data-fps="{FPS}">
+  <div id="cam"><video id="vid" src="assets/base.mp4" data-start="0" data-duration="{wd}"
+       data-media-start="{w0}" muted playsinline></video></div>
 {body}
-  <audio id="vo" src="assets/base.mp4" data-start="0" data-duration="{self.dur}" data-media-start="0"></audio>
+  <audio id="vo" src="assets/base.mp4" data-start="0" data-duration="{wd}" data-media-start="{w0}"></audio>
 </div>
 <script>
 window.__timelines = window.__timelines || {{}};
 function build() {{
   var tl = gsap.timeline({{paused: true}});
   {script}
-  window.__timelines["main"] = tl;
+  {main}
 }}
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(build); else build();
 </script>
