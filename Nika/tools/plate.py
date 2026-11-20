@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 """Cut her take into a reel's plate: graded, pauses tightened, voice at -14 LUFS.
 
-    python Nika/tools/plate.py <source.MOV> <reel dir> <a-b,a-b,...> [speed]   # kept source spans, seconds
+    python Nika/tools/plate.py <source.MOV> <reel dir> <a-b,a-b,...> [speed] [tail]   # kept source spans, seconds
                                                                               # -> <reel dir>/assets/voice.mp4
 
 - **Speed**: optional, e.g. 1.2. Her take is sped up after the join, picture by
   re-timing and voice by `atempo` (pitch kept). `look.Reel(spans, speed)` maps
   times the same way, and the plate is cut to exactly the frame count it expects.
+- **Tail**: optional seconds of held last frame + silence after her last word, for
+  an end card that covers the frame and carries only sound effects.
 
 - **Spans**: the source is cut to these spans and joined. Each span is rounded to
   whole frames, so picture and sound stay locked. `look.Reel(spans)` maps source
@@ -46,10 +48,10 @@ def run(cmd):
     return subprocess.run(cmd, capture_output=True, text=True, check=True)
 
 
-def main(src, reel, spec, speed="1"):
-    speed = float(speed)
+def main(src, reel, spec, speed="1", tail="0"):
+    speed, tail = float(speed), float(tail)
     spans = frame_spans([tuple(float(x) for x in s.split("-")) for s in spec.split(",")])
-    frames = round(sum(round((b - a) * FPS) for a, b in spans) / speed)
+    frames = round(sum(round((b - a) * FPS) for a, b in spans) / speed) + round(tail * FPS)
     assets = os.path.join(reel, "assets")
     os.makedirs(assets, exist_ok=True)
     raw, out = os.path.join(assets, "voice_raw.mkv"), os.path.join(assets, "voice.mp4")
@@ -64,8 +66,8 @@ def main(src, reel, spec, speed="1"):
         labels.append(f"[v{i}][a{i}]")
     graph = ("".join(parts) + "".join(labels) + f"concat=n={len(spans)}:v=1:a=1[vc][ac];"
              f"[vc]setpts=PTS/{speed},scale=1080:1920:flags=lanczos,fps={FPS},{GRADE},"
-             f"tpad=stop_mode=clone:stop_duration=0.5,format=yuv420p[v];"
-             f"[ac]atempo={speed},apad=pad_dur=0.5[a]")
+             f"tpad=stop_mode=clone:stop_duration={tail + 0.5},format=yuv420p[v];"
+             f"[ac]atempo={speed},apad=pad_dur={tail + 0.5}[a]")
     run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-i", src, "-filter_complex", graph,
          "-map", "[v]", "-map", "[a]", "-frames:v", str(frames), "-t", f"{frames / FPS:.4f}",
          "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-c:a", "pcm_s16le", "-ar", "48000", raw])
@@ -86,4 +88,4 @@ def main(src, reel, spec, speed="1"):
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:5])
+    main(*sys.argv[1:6])

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Nika r01: «Шукаю 25 експертів». An UNLOCK ad, built on the approved look (../tools/look.py).
 
-    python ../tools/plate.py ../work/src/IMG_7332.MOV . "<SPANS>" <SPEED>   # graded, tightened, -14 LUFS
+    python ../tools/plate.py ../work/src/IMG_7332.MOV . "<SPANS>" <SPEED> <TAIL>   # graded, tightened, -14 LUFS
     python build.py && python ../tools/sfx.py mix .                  # index.html + sfx.json -> base.mp4
     npx hyperframes@0.8.33 render . -o renders/NIKA-R01.mp4 -q high --fps 30
 
@@ -17,9 +17,10 @@ from look import Reel, scrap, card, html_card, icon, cursor, pink_shadow, LOCK, 
 
 # Kept spans of IMG_7332. The pauses over ~0.5 s are tightened to ~0.3 s and the
 # lead-in is trimmed. Three cuts fall under the stage; the two on her get a zoom change.
-SPANS = [(0.52, 14.92), (15.52, 20.00), (20.42, 45.05), (45.85, 55.00), (55.36, 68.40), (68.66, 72.10)]
+SPANS = [(0.52, 14.92), (15.52, 20.00), (20.42, 45.05), (45.85, 55.00), (55.36, 68.40)]
+TAIL = 3.0                     # the end card: her CTA line is out, no voice (Nika, 2026-11-20)
 SPEED = 1.2                    # her delivery sped up, pitch kept (Nika, 2026-11-20)
-R = Reel(SPANS, SPEED)
+R = Reel(SPANS, SPEED, TAIL)
 T = R.T
 
 CAPS = [
@@ -48,7 +49,7 @@ CAPS = [
     ("пропозиція діє", 55.50, 56.54), ("тільки для перших", 56.54, 57.74), ("ста експертів.", 57.74, 59.48),
     # 59.48–66.02: the chips name them
     ("хто хоче", 66.02, 66.82), ("монетизувати", 66.82, 67.48), ("свої знання.", 67.48, 68.40),
-    ("пиши «Unlock»", 68.82, 69.58), ("у коментарях", 69.58, 70.38), ("і побачимося на демо", 70.38, 72.10),
+    # then the end card, no voice
 ]
 
 # --------------------------------------------------------------------------- pieces
@@ -75,9 +76,6 @@ EVERYONE = [  # «і всі-всі-всі»: the site's own list of fields, arou
     ("Психологія та розвиток", "i-n-psy", 300, 1480, 3), ("Фінанси та кар’єра", "i-n-wallet", 790, 1525, -4),
     ("Мистецтво та творчість", "i-n-brush", 330, 1650, -2), ("Професійна експертиза", "i-n-award", 760, 1700, 4),
 ]
-
-HEART = ('<svg viewBox="0 0 24 24" width="46" height="46"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.6 6.6 4.6c2.1 0 '
-         '3.6 1.2 5.4 3.2 1.8-2 3.3-3.2 5.4-3.2 3.6 0 5.7 3.8 4.2 7.2C19.5 16.4 12 21 12 21z" fill="#F0648F"/></svg>')
 
 CSS = """
 #pile, #gB, #nich { display: none; }
@@ -153,19 +151,14 @@ CSS = """
 .chip.sm { position: absolute; font-size: 28px; padding: 8px 24px 8px 8px; gap: 12px; }
 .chip.sm .ib { width: 46px; height: 46px; }
 
-#cmt { position: absolute; left: 540px; top: 1110px; width: 880px; height: 118px; border-radius: 59px; background: #fff;
-  box-shadow: 0 30px 60px -20px rgba(0,0,0,0.40); display: none; align-items: center; gap: 22px; padding: 0 20px;
+#gEnd { display: none; }
+#eHead { top: 940px; }
+#eBtn { position: absolute; left: 540px; top: 1120px; display: flex; align-items: center; gap: 18px; padding: 30px 40px 30px 46px;
+  border-radius: 999px; background: linear-gradient(135deg, #2D43D2, #8F31EA); color: #fff; white-space: nowrap;
+  font: 650 44px/1 "Geist"; letter-spacing: -0.01em; box-shadow: 0 30px 60px -18px rgba(63,88,232,0.65); visibility: hidden; }
+.eArr { display: flex; transform: rotate(-90deg); }
+#eUrl { position: absolute; left: 540px; top: 1248px; font: 500 36px/1 "Geist"; letter-spacing: -0.01em; color: #4B5163;
   visibility: hidden; }
-.cav { width: 78px; height: 78px; border-radius: 50%; background: #E4E7EE; display: flex; align-items: center;
-  justify-content: center; flex: none; }
-.fld { flex: 1; position: relative; font: 500 40px/1 "Geist"; color: #0A0F1D; white-space: nowrap; }
-#ph { position: absolute; left: 0; top: 50%; transform: translateY(-50%); color: #878D9C; }
-.k { visibility: hidden; font-weight: 650; }
-#caret { display: inline-block; width: 3px; height: 44px; background: #2D43D2; vertical-align: middle; margin-left: 2px;
-  visibility: hidden; }
-#send { width: 78px; height: 78px; border-radius: 50%; background: linear-gradient(135deg, #2D43D2, #8F31EA);
-  display: flex; align-items: center; justify-content: center; flex: none; }
-#heart { position: absolute; right: 120px; top: 36px; visibility: hidden; }
 """
 
 
@@ -221,6 +214,13 @@ def body():
       {months}
       {hund}
     </div></div>
+    <div id="gEnd">
+      <div class="lockup" id="eLock" style="left:540px;top:680px"><div class="mark" id="eMark">{LOCK}</div><div class="word" id="eWord">unlock</div></div>
+      {scrap("eHead", "записуйся на демо", 84, 21, cls="big")}
+      <div id="eBtn"><span>посилання в шапці профілю</span><span class="eArr">{icon("i-arrow", 46, "#fff", 2.6)}</span>
+        {cursor("k3", 0.62, 0.72)}</div>
+      <div id="eUrl">unlockexpertise.online</div>
+    </div>
   </div>"""
 
     rows = [NICHES[0:2], NICHES[2:4], NICHES[4:6]]
@@ -232,18 +232,12 @@ def body():
         f'<span class="chip sm" id="cb{i}" style="left:{x}px;top:{y}px"><span class="ib">{icon(ic, 26)}</span>{lbl}</span>'
         for i, (lbl, ic, x, y, rot) in enumerate(EVERYONE))
 
-    letters = "".join(f'<span class="k" id="kk{i}">{c}</span>' for i, c in enumerate("Unlock"))
-    composer = f"""<div id="cmt"><span class="cav">{icon("i-user", 40, "#656B7A")}</span>
-    <span class="fld"><span id="ph">Додайте коментар…</span>{letters}<span id="caret"></span></span>
-    <span id="send">{icon("i-send", 38, "#fff", 2.4)}</span><span id="heart">{HEART}</span></div>"""
-
     return stage + f"""
   <div id="over">
 <div id="nich">
 {chips}
 {burst}
 </div>
-{composer}
   </div>
   <div id="caps">
 {R.captions(CAPS)}
@@ -253,7 +247,7 @@ def body():
 # --------------------------------------------------------------------------- motion
 def motion():
     j = R.j
-    j('gsap.set([".big","#plus","#lock",".tile",".chip.sm","#cmt"],{xPercent:-50,yPercent:-50});')
+    j('gsap.set([".big","#plus","#lock",".tile",".chip.sm","#eLock","#eBtn","#eUrl"],{xPercent:-50,yPercent:-50});')
     j('gsap.set(".cap",{xPercent:-50,yPercent:-50});')
     j('gsap.set(".card",{xPercent:-50,yPercent:-50});')
     j('gsap.set(["#mhead","#mtag"],{xPercent:-50});')
@@ -426,23 +420,25 @@ def motion():
     R.fx(q, "swish", -4)
     R.hide("#nich", round(q + 0.6, 3))
 
-    # ---- «пиши Unlock у коментарях, і побачимося на демо»
-    R.push(T(68.66), R.dur, 1.10, 1.14)               # the cut on her: a closer frame
-    R.show("#cmt", T(68.80), "flex")
-    R.pop('"#cmt"', T(68.82), "{autoAlpha:0,y:60,scale:0.9}", "{autoAlpha:1,y:0,scale:1}", 0.45, "back.out(1.7)", "pop", -4)
-    j(f'tl.set("#caret",{{autoAlpha:1}},{T(68.95)});')
-    t0, t1 = T(69.18), T(69.62)
-    j(f'tl.set("#ph",{{autoAlpha:0}},{t0});')
-    for i in range(6):
-        t = round(t0 + i * (t1 - t0) / 6, 3)
-        j(f'tl.set("#kk{i}",{{autoAlpha:1}},{t});')
-        R.fx(t, "click", -2)
-    R.click_send = T(70.05)
-    j(f'tl.to("#send",{{scale:0.84,duration:0.08,yoyo:true,repeat:1}},{T(70.05)});')
-    R.fx(T(70.05), "tap")
-    j(f'tl.set("#caret",{{autoAlpha:0}},{T(70.10)});')
-    R.pop('"#heart"', T(70.30), "{autoAlpha:0,scale:0.2}", "{autoAlpha:1,scale:1}", 0.45, "back.out(3)", "ping", -6)
-
+    # ---- the end card, 3 s, no voice: link in bio
+    E = R.speech_end
+    R.stage_in(E)
+    R.show("#gEnd", E)
+    j(f'tl.set("#eLock",{{autoAlpha:1}},{round(E + 0.12, 3)});')
+    R.pop('"#eMark"', round(E + 0.12, 3), "{scale:0,rotation:-25}", "{scale:1,rotation:0}", 0.55, "back.out(2)", "pop", -2)
+    j(f'tl.fromTo("#eWord",{{autoAlpha:0,x:-50,clipPath:"inset(0 100% 0 0)"}},{{autoAlpha:1,x:0,'
+      f'clipPath:"inset(0 0% 0 0)",duration:0.5,ease:"power3.out",immediateRender:false}},{round(E + 0.25, 3)});')
+    R.pop('"#eHead"', round(E + 0.48, 3), "{autoAlpha:0,scale:0.6,rotation:-10}", "{autoAlpha:1,scale:1,rotation:-2}",
+          0.5, "back.out(1.9)", "pop", 0)
+    R.pop('"#eBtn"', round(E + 0.80, 3), "{autoAlpha:0,y:60,scale:0.9}", "{autoAlpha:1,y:0,scale:1}", 0.5,
+          "back.out(1.7)", "pop", -4)
+    R.pop('"#eUrl"', round(E + 1.00, 3), "{autoAlpha:0,y:20}", "{autoAlpha:1,y:0}", 0.45, "power3.out", None)
+    R.click("k3", round(E + 1.25, 3), round(E + 1.75, 3))
+    j(f'tl.to("#eBtn",{{scale:0.95,duration:0.08,yoyo:true,repeat:1}},{round(E + 1.75, 3)});')
+    j(f'tl.to(".eArr",{{y:-10,duration:0.3,yoyo:true,repeat:3,ease:"sine.inOut"}},{round(E + 1.9, 3)});')
+    R.fx(round(E + 1.8, 3), "sparkle", -2)
+    j(f'tl.to(["#eLock","#eHead","#eBtn","#eUrl"],{{y:"-=18",duration:{round(R.dur - E - 0.5, 3)},'
+      f'ease:"sine.inOut"}},{round(E + 0.5, 3)});')
 
 def main():
     """`python build.py --window 12 10` writes a 10 s test of the stretch from 12 s; plain builds the reel."""

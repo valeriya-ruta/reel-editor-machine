@@ -180,7 +180,7 @@ REST_POSE = dict(rotationY=-21, rotationX=13, rotationZ=2)
 
 # --------------------------------------------------------------------------- the reel
 class Reel:
-    def __init__(self, spans, speed=1.0):
+    def __init__(self, spans, speed=1.0, tail=0.0):
         """`spans` and `speed`: exactly as her plate was cut with plate.py. At speed 1.2 her
         take plays 1.2x faster (pitch kept); the animations keep their own pace."""
         self.spans, self.offs, self.speed = [], [], speed
@@ -190,7 +190,8 @@ class Reel:
             self.spans.append((fa / FPS, (fa + n) / FPS))
             self.offs.append(acc / FPS)
             acc += n
-        self.frames = round(acc / speed)
+        self.speech_end = round(round(acc / speed) / FPS, 3)    # her last frame; the tail follows
+        self.frames = round(acc / speed) + round(tail * FPS)
         self.dur = round(self.frames / FPS, 3)
         self.js, self.fx_list = [], []
 
@@ -201,7 +202,7 @@ class Reel:
                 return round(o / self.speed, 3)
             if src <= b:
                 return round((o + src - a) / self.speed, 3)
-        return self.dur
+        return self.speech_end
 
     def cuts(self):
         """Reel times where the plate jumps."""
