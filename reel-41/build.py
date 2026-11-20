@@ -215,6 +215,7 @@ k.css("""
        color: #5f6368; text-transform: uppercase; position: absolute; }
 .row { position: absolute; display: flex; align-items: center; gap: 22px; font-family: "GSans", sans-serif; }
 .wm { font-family: "GSans", sans-serif; font-weight: 700; letter-spacing: .02em; color: #202124; }
+.chip.big, .chip.mid { white-space: nowrap; }
 .chip.big { height: 104px; font-size: 50px; padding: 0 40px; border-radius: 28px; font-weight: 700; }
 .chip.mid { height: 84px; font-size: 40px; padding: 0 32px; border-radius: 24px; }
 .chip.gr { background: #f1f3f4; border-color: #f1f3f4; color: #3c4043; }
