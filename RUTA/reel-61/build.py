@@ -253,20 +253,17 @@ L.append(
     # Content: y 290 (top no-go) to ~940 across, and beside her head to 1240.
     '<div class="sheet board-bg hide" id="bdS" style="height:1240px">'
     '<div id="cam" style="position:absolute;inset:0">'
-    '<div class="lbl hide" id="bdL" style="left:110px;top:300px">SendPulse · AI-агент</div>'
-    '<div class="hand hide" id="bdT" style="left:108px;top:336px;position:absolute;font-size:70px">Налаштування</div>'
-    + sk.svg(1080, 1240, sk.underline(110, 428, 430, stroke="blue"), sid="bdU") +
-    '<div class="field hide" id="fI" style="left:110px;top:480px;width:860px;height:220px"><span class="fl">Інструкції</span></div>'
-    + sk.svg(1080, 1240,
-             sk.line([(150, 535), (420, 531), (700, 539), (900, 533)], stroke="#3c4043", sw=5, double=False) +
-             sk.line([(150, 590), (360, 594), (620, 586), (840, 592)], stroke="#3c4043", sw=5, double=False) +
-             sk.line([(150, 645), (330, 641), (560, 649)], stroke="#3c4043", sw=5, double=False),
-             sid="fIS") +
-    '<div class="ab hide" id="chS" style="left:720px;top:618px"><span class="chip cy">скрипти</span></div>'
-    '<div class="row hide" id="rW" style="left:110px;top:730px;width:860px;height:90px">'
-    '<div class="gs" style="font-size:44px;font-weight:700">Веб</div>'
-    '<div class="gs" style="font-size:30px;color:#5f6368;flex:1">користування веб-сайтами</div></div>'
-    '<div class="tgl hide" id="tW" style="left:866px;top:743px"><b></b></div>'
+    # her real SendPulse agent screen (Drive, 2026-11-20), 940 px wide from y 290
+    '<img class="hide" id="spShot" src="assets/shots/sendpulse-agent.png" '
+    'style="position:absolute;left:70px;top:290px;width:940px;border-radius:18px;'
+    'box-shadow:0 2px 6px rgba(60,64,67,.25), 0 8px 24px rgba(60,64,67,.18)">'
+    # «окреме поле… інструкції й скрипти»: the instruction field, drawn around
+    + sk.svg(1080, 1240, sk.rect(80, 360, 548, 226, stroke="blue", sw=6), sid="fIS") +
+    '<div class="ab hide" id="chS" style="left:420px;top:520px"><span class="chip cy">скрипти</span></div>'
+    # «кнопка «Веб»»: a loop round ВЕБ-ПОШУК, and a live toggle laid over hers
+    + sk.svg(1080, 1240, sk.circle_around(812, 524, 205, 58, stroke="red", sw=6), sid="webL") +
+    '<div class="ab hide" id="tWw" style="left:946px;top:500px;width:46px;height:28px">'
+    '<div class="tgl" id="tW" style="left:0;top:0;transform:scale(0.44);transform-origin:0 0"><b></b></div></div>'
     # agent left of her head, the internet right of it, arrows arcing over her
     + sk.svg(1080, 1240, sk.ellipse(170, 1080, 92, 92, stroke="blue", fill="blue", style="hachure"), sid="agO") +
     '<div class="gs hide" id="agT" style="position:absolute;left:70px;top:1058px;width:200px;text-align:center;font-size:38px;font-weight:700;color:#0b57d0">агент</div>'
@@ -284,7 +281,7 @@ L.append(
     + '<div class="hand hide" id="rkT" style="position:absolute;left:40px;top:1168px;font-size:36px;color:#EA4335">шанс помилки</div>'
     + sk.svg(1080, 1240, sk.scribble(815, 990, 190, 180, sw=8), sid="glX")
     # the fence: instructions + the (off) web row — nothing gets out
-    + sk.svg(1080, 1240, sk.rect(60, 462, 960, 378, stroke="green", sw=7), sid="fence")
+    + sk.svg(1080, 1240, sk.rect(68, 348, 572, 250, stroke="green", sw=8), sid="fence")
     + '</div></div></div>')
 k.matte("half1", HALF0, round(HALF1 - HALF0, 3))
 
@@ -310,14 +307,11 @@ def b_board():
   h.show("#bd", @koly-0.15);
   h.halfIn("#bdS", @koly-0.15);
   tl.set("#one", {autoAlpha: 0}, @koly+0.6);
-  h.write("#bdL", @koly+0.25, 0.35);
-  h.write("#bdT", @koly+0.45, 0.6);
-  h.draw("#bdU", @sendpulse+0.1, 0.4);
-  h.pop("#fI", @pole-0.1, {s: 0.9, r: 0, y: 14});
-  h.draw("#fIS", @instruktsii-0.05, 0.7);
+  h.pop("#spShot", @koly+0.35, {s: 0.94, r: 0, y: 30});
+  h.draw("#fIS", @pole-0.1, 0.7);
   h.pop("#chS", @skrypty, {s: 0.4, r: -6});
-  h.pop("#rW", @knopka-0.05, {s: 0.95, r: 0, y: 18});
-  h.pop("#tW", @knopka+0.1, {s: 0.5, r: 0, y: 0});
+  h.draw("#webL", @knopka-0.05, 0.6);
+  h.show("#tWw", @knopka);
   /* on: the agent can go out */
   h.toggle("#tW", @tsia+0.2, "#0b57d0");
   h.draw("#agO", @oznachaie, 0.6);
@@ -339,7 +333,7 @@ def b_board():
   h.undraw("#okC", @vmykaty, 0.2);
   h.draw("#glX", @vmykaty+0.15, 0.45);
   tl.to("#rkF", {scaleX: 0.06, duration: 0.8, ease: "power2.inOut"}, @natomist);
-  h.bump("#fI", @propysaty);
+  h.bump("#chS", @propysaty);
   h.bump("#chS", @skrypty2);
   h.draw("#fence", @nikoly-0.1, 0.9);
   h.halfOut("#bdS", @instruktsii2+0.25);
