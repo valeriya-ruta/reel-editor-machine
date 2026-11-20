@@ -91,6 +91,44 @@ black), Product Sans, rounded corners, liquid/frosted glass, the three placement
 
 ---
 
+## 0b. The look — Google × Excalidraw (from 2026-11-20)
+
+Her brief for the 2026-11-20 batch (reels 41–56): *"edit these reels in the
+google+excalidraw style"*. For these reels this replaces §0's refined glass;
+§0 stays the reference for anything built in the glass look.
+
+- **Library:** `tools/sketch.py` — `Sketch(seed)` makes the hand-drawn SVG
+  (rect / ellipse / diamond / line / arrow / underline / circle_around / check /
+  cross / scribble / spark / marker), `sketch_css()` the materials, `SKETCH_JS`
+  the motion (`sketchHelpers(tl)`: draw, undraw, write, pop, think, toggle, type,
+  count, boardIn/boardOut, pan, bump, wiggle).
+- **Worked example:** `reel-45/build.py`. Copy its skeleton.
+- **Excalidraw side:** strokes are rough, doubled, and **draw themselves on**
+  (`draw`), never fade in. Fills are hachure (or Excalidraw's pastels, solid,
+  when text sits on them). Labels and annotations are handwritten in
+  **Excalifont** (`.hand`) — merged with its Cyrillic subsets, Ukrainian works.
+  Arrows, loops around a word, underlines, ticks, crosses, scribble-outs.
+- **Google side:** the only accents are Google's four — blue #4285F4, red
+  #EA4335, yellow #FBBC04, green #34A853 — over ink #1e1e1e. Titles, numbers and
+  UI text in **Google Sans** (`.gs`, `.num`). Surfaces are Material: white
+  `.gcard` (28 px corners, elevation shadow), `.pill`, `.chip` (+ `.on .cg .cy
+  .cr`), `.tgl` toggles, outlined text fields, the four-dot loader (`.dots` +
+  `think`) for "AI is thinking".
+- **Placements:** near = a Material card / pill / chips above her head
+  (y ≈ 60–640), sketched content inside it. Over = the **whiteboard** (`.board`,
+  white with Excalidraw's dot grid) wiped in from a point by `boardIn` and
+  closed onto the next object by `boardOut`; captions run `invert=` over it.
+  Free strokes directly over her footage get `.over-plate` (a shadow so they
+  survive the room).
+- **Captions:** unchanged rule (word by word, white on the plaque), set in
+  ProductSans-**Bold** (`k.cap_font`) — the Black cut is not in the repo.
+- **Sound:** `pencil` (a marker on a whiteboard) under draw-ons, plus the usual
+  kit. `python tools/sfx.py synth` builds the kit on a fresh checkout.
+- Every §0 rule about timing, chains, nameable objects, NO_PAINT, blackout and
+  invented numbers still applies.
+
+---
+
 ## 1. The delivery model
 
 **She makes the base edit. I add the animations and render the final video.**

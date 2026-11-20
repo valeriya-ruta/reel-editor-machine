@@ -204,6 +204,8 @@ class Kit(object):
         self._sq = []
         self._css = []
         self._mattes = []
+        # the caption face; the sketch look (STYLE.md §0b) ships ProductSans-Bold.ttf
+        self.cap_font = "assets/fonts/ProductSans-Black.woff"
         # §5a.1 + §5a.9 — the takeover pane is the largest surface in any reel,
         # so it is the one place a square corner is unmissable. It already
         # carries a backdrop-filter, so clipping it costs nothing against the
@@ -316,7 +318,7 @@ class Kit(object):
         return """
     @font-face {
       font-family: "ProductSans";
-      src: url("assets/fonts/ProductSans-Black.woff") format("woff");
+      src: url("%(capfont)s");
       font-weight: 900; font-style: normal; font-display: block;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -345,7 +347,7 @@ class Kit(object):
             "capTop": self.cap_y - self.cap_size // 2 - 14,
             "capH": self.cap_size + 28, "capSize": self.cap_size,
             "gfxTop": self.gfx_top, "gfxH": self.gfx_bot - self.gfx_top,
-            "surfaces": SURFACES,
+            "surfaces": SURFACES, "capfont": self.cap_font,
         }
 
     def document(self, title, plate, gfx_html, gfx_js, caps,

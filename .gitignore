@@ -52,3 +52,8 @@ work/media/
 covers/*/.vercel/
 covers/*/out/
 covers/deploy.log
+
+# cloud batch scratch (2026-11-20)
+work/scratch/
+work/inbox-1120/
+work/r*/utt/

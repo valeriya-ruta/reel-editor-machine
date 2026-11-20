@@ -26,7 +26,8 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KIT = os.path.join(ROOT, "assets", "sfx")
-CACHE = "E:/reels-work/sfxcache"
+SCRATCH = os.environ.get("REELS_SCRATCH", "E:/reels-work")   # cloud: set to work/scratch
+CACHE = os.path.join(SCRATCH, "sfxcache")
 SR = 48000
 
 # peak of the effect, in dB below the peak of her voice
@@ -34,7 +35,7 @@ LEVEL = {
     "click-soft": 14, "click": 14, "key-press": 15, "typing": 17,
     "pop": 13, "whoosh-short": 15, "whoosh": 15, "whoosh-cinematic": 18,
     "kaching": 10, "notification": 13, "ping": 15, "chime": 17, "sparkle": 18,
-    "impact-bass-1": 16, "riser": 20, "glitch-1": 20,
+    "impact-bass-1": 16, "pencil": 19, "riser": 20, "glitch-1": 20,
 }
 
 
@@ -99,11 +100,78 @@ def synth_kaching():
     write_wav(os.path.join(KIT, "kaching.wav"), out * 0.89)
 
 
+def _env(n, a, d):
+    t = np.arange(n) / SR
+    return np.clip(t / max(a, 1e-4), 0, 1) * np.exp(-np.clip(t - a, 0, None) / d)
+
+
+def synth_kit():
+    """The rest of the kit, synthesised so a fresh cloud checkout can mix sound
+    without her local assets/sfx. If her .mp3 originals are present they win
+    (mix() looks for .mp3 first). 'pencil' is new with the Google x Excalidraw
+    look (STYLE.md §0b): a marker scratching on a whiteboard, under a draw-on."""
+    rng = np.random.default_rng(11)
+
+    def save(name, a):
+        a = a / (np.abs(a).max() + 1e-9)
+        write_wav(os.path.join(KIT, name + ".wav"), a * 0.89)
+
+    def click(f0, n_ms, hp):
+        n = int(SR * n_ms / 1000)
+        t = np.arange(n) / SR
+        return (bandnoise(n, hp, 9000, rng) * 0.6 + np.sin(2 * np.pi * f0 * t) * 0.5) * _env(n, 0.0008, 0.006)
+    save("click", click(2200, 40, 2500))
+    save("click-soft", click(1500, 50, 1200) * 0.7)
+    save("key-press", click(1800, 35, 3000))
+    # typing: a run of key presses with human jitter
+    n = int(SR * 1.2); a = np.zeros(n); t = 0.0
+    while t < 1.1:
+        i = int(t * SR); k = click(1600 + rng.uniform(-300, 300), 30, 2800) * rng.uniform(0.5, 1)
+        a[i:i + len(k)] += k[: n - i]; t += rng.uniform(0.07, 0.13)
+    save("typing", a)
+    # pop: a pitched bubble, quick downward glide
+    n = int(SR * 0.16); t = np.arange(n) / SR
+    f = 900 * np.exp(-t / 0.05) + 380
+    save("pop", np.sin(2 * np.pi * np.cumsum(f) / SR) * _env(n, 0.002, 0.04))
+    # whoosh: band noise sweeping up then down, swelled
+    for name, dur, lo, hi in (("whoosh-short", 0.42, 300, 5000), ("whoosh", 0.7, 200, 4000)):
+        n = int(SR * dur); t = np.arange(n) / SR
+        x = bandnoise(n, lo, hi, rng)
+        sw = np.sin(np.pi * t / dur) ** 2
+        # crude moving filter: blend a low and a high band by position
+        xl = bandnoise(n, lo, lo * 4, rng)
+        mixp = np.sin(np.pi * t / dur)
+        save(name, (x * mixp + xl * (1 - mixp)) * sw)
+    # ping / notification: two soft sine bells
+    def bell(fs, dur):
+        n = int(SR * dur); t = np.arange(n) / SR; o = np.zeros(n)
+        for k, (f, t0) in enumerate(fs):
+            tt = np.clip(t - t0, 0, None)
+            o += (t >= t0) * (np.sin(2 * np.pi * f * tt) + 0.3 * np.sin(2 * np.pi * 2.01 * f * tt)) * np.exp(-tt / 0.22)
+        return o
+    save("ping", bell([(1568, 0)], 0.6))
+    save("notification", bell([(1175, 0), (1568, 0.11)], 0.8))
+    save("chime", bell([(1047, 0), (1319, 0.08), (1568, 0.16)], 1.0))
+    # sparkle: a scatter of tiny high glints
+    n = int(SR * 0.7); a = np.zeros(n); t = np.arange(n) / SR
+    for k in range(9):
+        t0 = rng.uniform(0, 0.45); f = rng.uniform(3500, 7500); tt = np.clip(t - t0, 0, None)
+        a += (t >= t0) * np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.06) * rng.uniform(0.3, 1)
+    save("sparkle", a)
+    # pencil: marker on a whiteboard — grainy band noise with stroke-rate wobble
+    n = int(SR * 0.9); t = np.arange(n) / SR
+    x = bandnoise(n, 1800, 7000, rng)
+    strokes = 0.55 + 0.45 * np.abs(np.sin(2 * np.pi * 3.2 * t + rng.uniform(0, 3)))
+    grain = 0.7 + 0.3 * bandnoise(n, 20, 120, rng)
+    save("pencil", x * strokes * grain * np.minimum(1, t / 0.03) * np.minimum(1, (0.9 - t) / 0.15))
+    print("kit:", sorted(os.listdir(KIT)))
+
+
 def mix(nn):
     reel = os.path.join(ROOT, "reel-" + nn)
     voice = os.path.join(reel, "assets", "voice.mp4")
     cues = json.load(open(os.path.join(reel, "sfx.json"), encoding="utf-8"))
-    tmp = os.path.join("E:/reels-work", "r" + nn)
+    tmp = os.path.join(SCRATCH, "r" + nn)
     os.makedirs(tmp, exist_ok=True)
     vw = os.path.join(tmp, "voice-mix-in.wav")
     subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-i", voice, "-vn", "-ac", "2",
@@ -118,7 +186,9 @@ def mix(nn):
     for c in cues:
         name = c["name"]
         if name not in lib:
-            p = os.path.join(KIT, name + (".wav" if name == "kaching" else ".mp3"))
+            p = os.path.join(KIT, name + ".mp3")
+            if not os.path.exists(p):           # the synthesised kit (python tools/sfx.py synth)
+                p = os.path.join(KIT, name + ".wav")
             lib[name] = read_any(p)
         s = lib[name]
         spk = float(np.abs(s).max()) + 1e-9
@@ -145,6 +215,8 @@ def mix(nn):
 
 if __name__ == "__main__":
     if sys.argv[1] == "synth":
+        os.makedirs(KIT, exist_ok=True)
         synth_kaching()
+        synth_kit()
     elif sys.argv[1] == "mix":
         mix(sys.argv[2])

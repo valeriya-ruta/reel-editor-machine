@@ -384,6 +384,21 @@ def frame_plan(segs, punch_spans):
     return clips, round(t, 4)
 
 
+def probe_src(src):
+    """Raw take dimensions after rotation. Her phone shot 4K before 2026-11;
+    the 2026-11-20 batch is 1080p (1920x1080 with -90 rotation)."""
+    global SRC_W, SRC_H
+    out = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+                          "stream=width,height:stream_side_data=rotation", "-of", "json", src],
+                         capture_output=True, text=True).stdout
+    st = json.loads(out)["streams"][0]
+    w, h = st["width"], st["height"]
+    rot = [d.get("rotation") for d in st.get("side_data_list", []) if "rotation" in d]
+    if rot and abs(int(rot[0])) % 180 == 90:
+        w, h = h, w
+    SRC_W, SRC_H = w, h
+
+
 def crop_filter(name, face):
     spec = FRAMES[name]
     z, pull = spec[0], spec[1]
@@ -454,6 +469,7 @@ def main():
     src = open(os.path.join(wd, "SOURCE.txt"), encoding="utf-8").read().strip()
     if os.environ.get("CUT_RAW"):                       # the cloud runner's copy
         src = os.path.join(os.environ["CUT_RAW"], os.path.basename(src))
+    probe_src(src)
     utts = [json.loads(l) for l in open(os.path.join(wd, "utt.jsonl"), encoding="utf-8")]
     utts.sort(key=lambda u: u["a"])
     script_text = open(os.path.join(wd, "script.txt"), encoding="utf-8").read()
