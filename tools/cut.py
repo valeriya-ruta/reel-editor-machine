@@ -246,6 +246,7 @@ def word_est(w):
     plus an attack. Generous on purpose — this only trims what is clearly not
     the word."""
     n = len(re.sub(r"[^\w]", "", w))
+    n += 3 * len(re.findall(r"\d", w))     # a digit is said as a whole word («шістдесят»)
     return 0.14 + 0.075 * n
 
 
