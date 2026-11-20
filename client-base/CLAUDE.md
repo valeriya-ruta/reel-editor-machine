@@ -22,9 +22,9 @@ client, no design in it) and `LOOK.md` (this client's look) before anything.
   (RULES.md §4). Proof is her real screenshot. No invented stats.
 - Render on the machine (`npx hyperframes render`), not HeyGen (Ruta, 2026-11-17).
 - No music for now (Ruta, 2026-11-17). Basic sfx on the frame a graphic appears.
-- Never invent a rule, a target or an asset. Don't stop mid-run to ask:
-  decide from RULES.md, LOOK.md, the transcript and the refs, and list your
-  calls and any missing real asset at the end.
+- Never invent a rule, a target or an asset. What RULES.md, LOOK.md, the
+  transcript and the refs settle, decide (calls go in `reel-NN/PLAN.md`).
+  Anything not settled, ask Ruta (Ruta, 2026-11-20).
 - Design (fonts, colours, sizes, materials, motion, rhythm) lives only in
   `LOOK.md`, `tools/look.py` and `assets/fonts/`. Everything else is the base:
   don't change it per client.

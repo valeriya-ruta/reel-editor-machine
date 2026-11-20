@@ -17,11 +17,11 @@ element is drawn), stroke weights, motion style, timing lead, rhythm, and
 where her own refs put things. `LOOK.md` decides only those things. It never
 loosens a rule in this file.
 
-The run does not stop mid-way to ask (Ruta, 2026-11-05): it decides from these
-two files, the transcript and the refs, and lists its calls and anything
-missing at the end. *(The 17 Nov Marina file still carried the older line
-"anything not settled is asked, not decided"; the 5 Nov rule is kept here.
-Flagged for Ruta.)*
+**Anything not settled is asked, not decided** (Ruta's 17 Nov file, confirmed
+by Ruta 2026-11-20). What these two files, the transcript and the refs settle,
+the run decides and writes into `reel-NN/PLAN.md`. What they don't settle (a
+call no rule covers, a missing real asset, a bad take that may be content),
+it asks Ruta instead of guessing.
 
 **Transcription:** local whisper (`tools/utt.py`), OpenRouter whisper as the
 fallback. **Never ElevenLabs**, and not the video-use skill.
@@ -297,7 +297,7 @@ client's (`LOOK.md §4`, from her refs). What applies to every client:
 - **The literal thing, shown as itself:** the app she opens as its real
   screen recording, her follower count as her real profile, her views as her
   real Insights card. When the real asset is missing, don't draw a stand-in:
-  list it at the end for Ruta.
+  ask Ruta for it.
 - **Every element is a real element** (Ruta, 2026-11-17: *"I don't like the
   style of these um, like message button icons or the sort of sending line.
   Everything is always, according to our design system ... a real element. So
@@ -431,7 +431,7 @@ early; snapshots beat a long silent build.
 **B-roll** (Ruta, 2026-11-05): the client's b-roll is catalogued once, in
 `broll/CATALOG.md` (what each clip shows, where it is, length, orientation),
 so a reel run picks from the catalogue instead of sorting footage every time.
-Only her real footage and photos; if nothing fits, list it for Ruta. How her
+Only her real footage and photos; if nothing fits, ask Ruta. How her
 refs use b-roll is in `LOOK.md §9`.
 
 **Music: none for now** (Ruta, 2026-11-17). Voice plus sound effects only.

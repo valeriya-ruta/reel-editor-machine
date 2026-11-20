@@ -14,21 +14,19 @@ is the editing contract, LOOK.md is her look.
 
 - Raw take in `raw/`. Cut **only pauses and bad takes**, never content; the
   reel stays under 3 minutes (RULES.md §1). No length targets.
-- Last take wins; anything `cut.py` flags is kept (never cut content) and listed at the end.
+- Last take wins; anything `cut.py` flags that the transcript doesn't settle goes to Ruta, not guessed.
 - Captions: what she said, verbatim, in her caption style (LOOK.md §2b).
 - Safe zones (RULES.md §3): never on her face, never in a corner, clear of
   Instagram's UI.
 - 30 fps. Output `reel-NN/renders/REEL-NN.mp4`.
 
-## Silence (Ruta's rule, as is)
+## When to ask (Ruta, 2026-11-20)
 
-She hands the take over and the next thing she hears is that it's done. No
-questions, no editing plan for approval, no check-ins (Ruta, 2026-11-05: "dont
-ask me — the instructions should be enough for you to take decisions"). Decide
-every cut, take and beat from RULES.md, LOOK.md, the transcript and the refs,
-and write each call into `reel-NN/PLAN.md`. Speak mid-run only for money (a
-cloud render can't be paid) — nothing else. A bad take you are unsure of: keep
-it (never cut content) and list it in the final message.
+Anything not settled is asked, not decided. Decide every cut, take and beat
+that RULES.md, LOOK.md, the transcript and the refs settle, and write each
+call into `reel-NN/PLAN.md`. When they don't settle it (a bad take that may
+be content, a missing real asset, a call no rule covers), ask Ruta, then
+carry on. No editing plan for approval and no check-ins beyond that.
 
 ## The run
 
