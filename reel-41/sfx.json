@@ -1,0 +1,387 @@
+[
+ {
+  "t": 0.1,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 1.57,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 3.33,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 4.17,
+  "name": "kaching",
+  "db": -4
+ },
+ {
+  "t": 7.083,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 9.143,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 9.767,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 10.597,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 12.938,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 13.778,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 14.79,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 15.093,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 16.473,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 18.033,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 19.503,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 22.383,
+  "name": "notification",
+  "db": -2
+ },
+ {
+  "t": 23.167,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 24.497,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 26.232,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 28.222,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 31.063,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 33.703,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 34.3,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 36.35,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 39.055,
+  "name": "ping",
+  "db": -2
+ },
+ {
+  "t": 41.455,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 43.867,
+  "name": "sparkle",
+  "db": 0
+ },
+ {
+  "t": 46.033,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 46.433,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 50.35,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 51.75,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 54.181,
+  "name": "pencil",
+  "db": -1
+ },
+ {
+  "t": 56.301,
+  "name": "pencil",
+  "db": -4
+ },
+ {
+  "t": 56.501,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 58.438,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 60.697,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 61.567,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 65.799,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 67.699,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 69.543,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 71.103,
+  "name": "pencil",
+  "db": -4
+ },
+ {
+  "t": 74.717,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 77.083,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 79.528,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 81.248,
+  "name": "kaching",
+  "db": -3
+ },
+ {
+  "t": 82.533,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 84.323,
+  "name": "pencil",
+  "db": -4
+ },
+ {
+  "t": 86.203,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 87.403,
+  "name": "pencil",
+  "db": -4
+ },
+ {
+  "t": 89.978,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 90.978,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 91.498,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 92.3,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 95.3,
+  "name": "kaching",
+  "db": -4
+ },
+ {
+  "t": 97.3,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 101.91,
+  "name": "sparkle",
+  "db": 0
+ },
+ {
+  "t": 102.433,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 103.742,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 105.282,
+  "name": "pencil",
+  "db": -4
+ },
+ {
+  "t": 107.748,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 111.443,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 115.7,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 116.2,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 116.97,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 118.73,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 120.03,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 121.1,
+  "name": "kaching",
+  "db": -3
+ },
+ {
+  "t": 123.03,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 125.411,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 127.301,
+  "name": "ping",
+  "db": 0
+ },
+ {
+  "t": 127.6,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 127.7,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 128.29,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 128.69,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 129.17,
+  "name": "key-press",
+  "db": 0
+ },
+ {
+  "t": 130.09,
+  "name": "notification",
+  "db": -2
+ },
+ {
+  "t": 132.263,
+  "name": "pop",
+  "db": 0
+ }
+]
