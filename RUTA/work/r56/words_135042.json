@@ -1,0 +1,118 @@
+{
+ "lang": "nn",
+ "text": "Hello everyone! Today I will show you how to make a delicious and delicious chicken breast First,",
+ "segments": [
+  {
+   "s": 0.0,
+   "e": 1.14,
+   "t": "Hello everyone!"
+  },
+  {
+   "s": 3.58,
+   "e": 6.36,
+   "t": "Today I will show you how to make a"
+  },
+  {
+   "s": 7.82,
+   "e": 8.86,
+   "t": "delicious and delicious"
+  },
+  {
+   "s": 10.3,
+   "e": 11.34,
+   "t": "chicken breast"
+  },
+  {
+   "s": 11.34,
+   "e": 11.86,
+   "t": "First,"
+  }
+ ],
+ "words": [
+  {
+   "w": "Hello",
+   "s": 0.0,
+   "e": 0.34
+  },
+  {
+   "w": "everyone!",
+   "s": 0.34,
+   "e": 1.14
+  },
+  {
+   "w": "Today",
+   "s": 3.58,
+   "e": 4.62
+  },
+  {
+   "w": "I",
+   "s": 4.62,
+   "e": 5.66
+  },
+  {
+   "w": "will",
+   "s": 5.66,
+   "e": 6.0
+  },
+  {
+   "w": "show",
+   "s": 6.0,
+   "e": 6.06
+  },
+  {
+   "w": "you",
+   "s": 6.06,
+   "e": 6.14
+  },
+  {
+   "w": "how",
+   "s": 6.14,
+   "e": 6.36
+  },
+  {
+   "w": "to",
+   "s": 6.36,
+   "e": 6.36
+  },
+  {
+   "w": "make",
+   "s": 6.36,
+   "e": 6.36
+  },
+  {
+   "w": "a",
+   "s": 6.36,
+   "e": 6.36
+  },
+  {
+   "w": "delicious",
+   "s": 7.82,
+   "e": 8.86
+  },
+  {
+   "w": "and",
+   "s": 8.86,
+   "e": 8.86
+  },
+  {
+   "w": "delicious",
+   "s": 8.86,
+   "e": 8.86
+  },
+  {
+   "w": "chicken",
+   "s": 10.3,
+   "e": 11.34
+  },
+  {
+   "w": "breast",
+   "s": 11.34,
+   "e": 11.34
+  },
+  {
+   "w": "First,",
+   "s": 11.34,
+   "e": 11.86
+  }
+ ]
+}

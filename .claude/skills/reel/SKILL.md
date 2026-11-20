@@ -5,10 +5,16 @@ description: Build one of Ruta's Instagram reels end to end, from her delivered 
 
 # Reel
 
+**Whose reel?** This skill and `RUTA/STYLE.md` are Ruta's, and everything of
+hers lives under `RUTA/`: run every path below from inside it. If the footage, the
+request or the path says Nika (anything under `Nika/`, UNLOCK ads), drop this
+skill's look and work from `Nika/README.md`. If nothing says whose it is, ask
+one line before touching anything. That counts as *her input alone* below.
+
 She records, cuts and colour-grades. This builds everything on top — animations,
 word-by-word captions, the render — and hands her back a finished file.
 
-**Read [`STYLE.md`](../../../STYLE.md) before authoring anything.** It is the
+**Read [`RUTA/STYLE.md`](../../../RUTA/STYLE.md) before authoring anything.** It is the
 design contract and it wins over instinct every time. This skill is the *run*;
 STYLE.md is the *look*.
 
@@ -38,7 +44,7 @@ A design question is not her input. Pick the answer STYLE.md implies.
 
 ## The run
 
-Reel N lives in `reel-0N/`, its intermediates in `work/rN/`.
+Reel N lives in `RUTA/reel-0N/`, its intermediates in `RUTA/work/rN/`.
 
 ```bash
 export PATH="/c/Users/Ruta/AppData/Roaming/npm:$PATH"   # or use ./hf
@@ -62,9 +68,13 @@ cd reel-0N && python build.py && ../hf check
 
 `tools/kit.py` holds the shared surfaces, tokens and squircles — build beats out
 of it rather than hand-rolling CSS, and it keeps STYLE.md §5a satisfied for free.
-**`tools/glass.py` is the look since 2026-09-28 (STYLE.md §0)** — the refined-glass
-materials, the monochrome tile family and the spring motion helpers. Every new
-reel builds its beats from it; `style-test/build.py` is the worked example.
+**`tools/gstyle.py` is the look (STYLE.md §00, the default since 2026-10-28)** —
+Google style + Excalidraw sketches: white cards and chips above her, big white
+words behind her, the white half-screen panel (the video pushes down 330 px),
+the white full-screen cover, rough.js sketches, Google Sans, white and
+`#7A1424` only. `reel-54/build.py` is the latest worked example. The refined-glass
+look (`tools/glass.py`, burgundy ground, iris takeovers) is **archived** —
+`archive/STYLE-refined-glass.md` — and never used for a new reel unless she asks.
 `tools/matte.py` cuts her out of a span so a **big** graphic can sit behind her
 (§1) — per beat only, ~3.3 s/frame on CPU.
 
@@ -82,6 +92,13 @@ Non-negotiable, and cheap:
 
 Her Desktop, then `SendUserFile` both files. Once rclone has write scope, also
 `rclone copy` to `gdrive:Reels inbox/Done`. Commit the reel and push.
+
+**The full-quality 1080p file is what she posts, so it always reaches her.**
+A review page (artifact) can only hold ~15 MB per file, so it carries 720p
+previews: every label, button and download filename on it says *preview, not
+for posting* (`REEL-NN-PREVIEW-720p.mp4`), and the full files go to her in the
+same message via `SendUserFile`. On 2026-10-21 she posted the 720p copies from
+the 41–52 page because the page only said "review copies" in small print.
 
 One closing message: it's done, here it is, and anything that changed about
 *her* side — a line she improvised, a beat that needed a different treatment.

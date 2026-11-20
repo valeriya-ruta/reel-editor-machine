@@ -1,0 +1,31 @@
+CAPTIONS 176   script 112 | whisper-corrected 13 | her wording 51
+
+WHISPER MISHEARD -> script spelling restored (5)
+     2.33s  0.86  чату GPT,                        <- чата ГПТ,
+    24.92s  1.00  контент-план                     <- контент план
+    27.38s  0.86  чіткими                          <- чуткими
+    31.20s  0.83  рутина,                          <- родина,
+    41.73s  0.94  клієнткам                        <- клієнтам
+
+SHE IMPROVISED -> her wording kept (18)
+     6.55s  script: —                            said: я
+    11.73s  script: велкам                       said: великим
+        -  script: сама                         said: — (cut)
+    14.61s  script: не подумала                  said: сама
+    15.31s  script: що це людям цікаво і що вони said: ніколи
+    15.83s  script: знають. А                    said: додумалась. Але
+        -  script: таке питання                 said: — (cut)
+    17.96s  script: —                            said: такі питання,
+    23.58s  script: І                            said: Тому
+    29.23s  script: сиджу                        said: саджу
+    39.91s  script: мій основний той, що йде по  said: мою стратегію. І
+    42.25s  script: —                            said: це
+    43.35s  script: це                           said: як
+    44.53s  script: нього                        said: цього
+    45.64s  script: А звідки                     said: І в мене навіть є ціла інструція за всьо
+    53.15s  script: береш                        said: постійно проводиш якісь консультації Тоб
+        -  script: свого                        said: — (cut)
+    56.89s  script: коли власна голова вже порож said: то пиши слово «цвінок». щоб отримати в і
+
+REVIEW -- could go either way (1)
+     8.27s  script: консультацій і велкам      said: консультацією, з великим   (0.79)

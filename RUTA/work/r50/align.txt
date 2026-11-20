@@ -1,0 +1,17 @@
+CAPTIONS 104   script 83 | whisper-corrected 8 | her wording 13
+
+WHISPER MISHEARD -> script spelling restored (6)
+     0.85s  0.67  Claude                           <- Міклот
+    13.51s  0.83  задачі                           <- задачу
+    16.54s  1.00  дає                              <- та є
+    18.26s  0.89  ідеї                             <- іде їй
+    25.37s  0.95  виконуються                      <- виконується
+    31.66s  1.00  будь-який                        <- будь який
+
+SHE IMPROVISED -> her wording kept (4)
+     4.54s  script: —                            said: тому що
+    12.85s  script: створює                      said: сорюю
+    26.89s  script: —                            said: І
+    34.14s  script: зображень або відео. Підпису said: тому якщо тебе цікавлять саме такі систе
+
+REVIEW -- could go either way (0)

@@ -9,9 +9,11 @@
 *.m4a
 *.mp3
 
+# Ruta's pipeline lives in RUTA/ (Nika's in Nika/); paths below are from the repo root.
+
 # Footage pulled from Drive arrives without a file extension, so the *.mp4
 # rules above do not catch it. Ignore the whole landing folder.
-work/incoming/
+RUTA/work/incoming/
 
 # Rendered output
 renders/
@@ -19,14 +21,14 @@ REEL-*.mp4
 
 # Generated during a build — reproducible from the source
 study/
-work/r*/*.jpg
-work/r*/*.png
-work/r*/stills/
-work/r*/ex/
-work/r*/mob/
-work/r*/band/
-work/r*/verify/
-work/ref/thumbs/
+RUTA/work/r*/*.jpg
+RUTA/work/r*/*.png
+RUTA/work/r*/stills/
+RUTA/work/r*/ex/
+RUTA/work/r*/mob/
+RUTA/work/r*/band/
+RUTA/work/r*/verify/
+RUTA/work/ref/thumbs/
 
 # Superseded: the loose-overlay-clip model, kept on disk but not in the system
 # (STYLE.md §6)
@@ -41,21 +43,43 @@ __pycache__/
 node_modules/
 .DS_Store
 Thumbs.db
-assets/emoji/*.png
+RUTA/assets/emoji/*.png
 
 # Client carousels used as footage in reels 13/19 — client work, kept out of history
-work/carousels/
+RUTA/work/carousels/
 # Her media for upcoming reels (screenshots, recordings, product photos) - not for history
-work/media/
+RUTA/work/media/
 
 # Covers: Vercel link state and snapshot scratch
-covers/*/.vercel/
-covers/*/out/
-covers/deploy.log
+RUTA/covers/*/.vercel/
+RUTA/covers/*/out/
+RUTA/covers/deploy.log
 
-# cloud batch scratch (2026-11-20)
-work/scratch/
-work/inbox-1120/
-work/r*/utt/
-reel-*/assets/
-style-sketch/assets/
+# Per-take ASR intermediates for a batch; each take's utt.jsonl is copied into
+# work/rNN/ once matched to its reel, and that copy is the tracked one
+RUTA/work/b*/asr/
+
+# Per-reel copies of the shared fonts / underlay / grain (work/b1021/scaffold.sh);
+# the originals are tracked in assets/ and reel-07/assets/
+RUTA/reel-*/assets/
+RUTA/work/r*/mattelog/
+RUTA/work/r*/seg/
+
+# full-quality reels handed to her, not committed
+00-FULL-QUALITY-*/
+
+# Git's ignore rules are case-sensitive on Linux: iPhone footage arrives as .MOV
+*.MOV
+*.MP4
+*.M4A
+*.WAV
+# Nika: her source footage and intermediates (frames, stills) stay out of history
+Nika/work/src/
+Nika/work/**/*.jpg
+Nika/work/**/*.png
+
+# cloud batch 2026-11-20
+RUTA/work/inbox-1120/
+RUTA/work/scratch/
+RUTA/work/r*/utt/
+RUTA/reel-*/assets/
