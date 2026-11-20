@@ -61,20 +61,25 @@ def fix(caps):
         assert abs(caps[c]["s"] - near) < 0.5, (word, near)
         return c
     # the leading whisper hallucination over silence: not her
-    del caps[find(u"підтримку!", 0.0)]
+    del caps[find(u"підтримку!", 0.00)]
     edits = [
-        (u"сказати", 13.55, u"сказати,"), (u"ділса.", 16.78, u"рілса."),
-        (u"тексту", 20.76, u"текст"), (u"Флера,", 21.18, u"з суфлера,"),
-        (u"понвілок", 23.76, u"помилок,"), (u"Такі", 28.07, u"такі"), (u"А якщо", 33.07, u"Якщо"),
-        (u"і що,", 36.60, u"і ще"), (u"всі", 38.76, u"в"), (u"хвилини", 39.30, u"хвилини,"),
-        (u"не", 48.13, u"навіть"), (u"біддак!", 48.51, u"так!"), (u"це", 48.69, u"Це"),
-        (u"Мені", 59.14, u"мені"), (u"кривосів", 61.42, u"рілсів,"), (u"Ви", 61.82, u"віддати"),
-        (u"Клоді?", 63.68, u"Клоді,"), (u"Повся", 74.17, u"бо все"), (u"хмарій.", 75.47, u"в хмарі."),
-        (u"Якщо", 77.07, u"якщо"), (u"Claude,", 88.53, u"мій Claude,"), (u"результат.", 89.82, u"результат"),
+        (u"сказати", 13.81, u"сказати,"), (u"ділса.", 16.78, u"рілса."),
+        (u"тексту", 21.18, u"текст"), (u"Флера,", 21.56, u"з суфлера,"),
+        (u"понвілок", 23.76, u"помилок,"), (u"Такі", 28.23, u"такі"), (u"А якщо", 33.73, u"Якщо"),
+        (u"і що,", 37.16, u"і ще"), (u"всі", 39.14, u"в"), (u"хвилини", 39.44, u"хвилини,"),
+        (u"не", 48.51, u"навіть"), (u"біддак!", 48.69, u"так!"), (u"це", 49.17, u"Це"),
+        (u"Мені", 59.28, u"мені"), (u"кривосів", 61.82, u"рілсів,"), (u"Ви", 62.57, u"віддати"),
+        (u"Клоді?", 63.84, u"Клоді,"), (u"Повся", 74.97, u"бо все"), (u"хмарій.", 75.99, u"в хмарі."),
+        (u"Якщо", 77.39, u"якщо"), (u"Claude,", 89.04, u"мій Claude,"), (u"результат.", 90.26, u"результат"),
+        # punctuation only
+        (u"анімацій", 31.43, u"анімацій,"), (u"менше", 32.67, u"менше,"), (u"одно", 49.97, u"одно,"),
+        (u"більше", 69.38, u"більше,"), (u"телефона", 70.60, u"телефона,"), (u"пам'ять", 73.45, u"пам'ять,"),
+        (u"перегріється.", 74.17, u"перегріється,"), (u"інвестувати.", 81.53, u"інвестувати,"),
+        (u"напишу", 84.58, u"напишу,"),
     ]
     for w, near, new in edits:
         caps[find(w, near)]["w"] = new
-    for w, near in [(u"дати", 62.57)]:          # «Ви дати» -> «віддати»
+    for w, near in [(u"дати", 62.92)]:          # «Ви дати» -> «віддати»
         i = find(w, near)
         caps[i - 1]["e"] = caps[i]["e"]
         del caps[i]
@@ -220,12 +225,10 @@ L.append(
 @beat
 def b_hook():
     sfx("pop", "@skilky-0.1")
-    sfx("pencil", "@skilky+0.05", -4)
     sfx("pop", "@nalashtovana")
     sfx("ping", "@n1015")
     sfx("pencil", "@pravdyva", -2)
     sfx("pencil", "@zalezhyt", -4)
-    sfx("whoosh-short", "@rilsa2+0.2", -3)
     return js("""
   h.show("#hk", @skilky-0.15);
   h.pop("#hkC", @skilky-0.15, {s: 0.7, r: -3});
@@ -314,15 +317,12 @@ def b_boardA():
     sfx("pop", "@klod")
     sfx("ping", "@n1520")
     sfx("click-soft", "@bilshe")
-    sfx("click-soft", "@menshe")
     sfx("whoosh-short", "@yakshcho-0.15", -4)
     sfx("pencil", "@dovshe2", -3)
     sfx("click", "@pomylok")
     sfx("pencil", "@vyrizaty", -2)
-    sfx("pop", "@n30-0.6")
     sfx("ping", "@n30")
     sfx("click", "@hodynu")
-    sfx("pencil", "@pohanykh-0.3", -4)
     sfx("whoosh-short", "@pratsiuie+0.3")
     return js("""
   h.show("#bA", @koly-0.2);
@@ -405,7 +405,6 @@ def b_cmp():
     sfx("pop", "@montazhera-0.1")
     sfx("kaching", "@bezkoshtovno")
     sfx("pop", "@pidpysku-0.2")
-    sfx("whoosh-short", "@i_yakshcho", -4)
     return js("""
   h.show("#cm", @ale-0.25);
   h.sheetIn("#cmS", @ale-0.25, %d);
@@ -438,8 +437,8 @@ L.append(
     '<div class="g full" id="bB">'
     '<div class="sheet board-bg hide" id="bBS" style="height:%dpx">'
     '<div id="camB" style="position:absolute;left:0;top:0;width:1080px;height:1900px">' % HB
-    + sk.svg(1080, 1900, sk.ellipse(150, 140, 50, 50, stroke="yellow", sw=6, fill="yellow", style="solid") +
-             sk.spark(150, 140, 70, stroke="yellow", sw=7), sid="sun") +
+    + sk.svg(1080, 1900, sk.ellipse(150, 165, 46, 46, stroke="yellow", sw=6, fill="yellow", style="solid") +
+             sk.spark(150, 165, 48, stroke="yellow", sw=7), sid="sun") +
     '<div class="hand hide" id="sunT" style="position:absolute;left:240px;top:100px;font-size:66px">зранку</div>'
     + sk.svg(1080, 1900, thumbs, sid="th") +
     '<div class="hand hide" id="thT" style="position:absolute;left:560px;top:110px;font-size:58px;color:#1a73e8">10 рілсів</div>'
@@ -456,7 +455,7 @@ L.append(
            sk.line([(205, 1350), (265, 1350)], sw=5, double=False) +
            sk.rect(155, 1040, 160, 280, stroke="green", sw=3, fill="green", style="hachure"), sid="ph") +
     '<div class="hand hide" id="phT" style="position:absolute;left:132px;top:1395px;font-size:52px">телефон</div>'
-    + sk.svg(1080, 1900, sk.check(195, 920, 80, sw=10), sid="phC") +
+    + sk.svg(1080, 1900, sk.check(360, 1020, 80, sw=10), sid="phC") +
     sk.svg(1080, 1900, sk.rect(560, 1000, 380, 230, stroke="ink", sw=6) +
            sk.line([(520, 1262), (980, 1262)], sw=6), sid="lp") +
     '<div class="hand hide" id="lpT" style="position:absolute;left:600px;top:1275px;font-size:50px">комп\'ютер</div>'
@@ -465,8 +464,8 @@ L.append(
     '<div class="ab hide" id="cH" style="left:780px;top:1360px"><span class="chip cr">перегрів</span></div>'
     + sk.svg(1080, 1900, sk.line([(548, 1398), (700, 1392)], stroke="red", sw=7, double=False), sid="cMx") +
     sk.svg(1080, 1900, sk.line([(768, 1398), (950, 1392)], stroke="red", sw=7, double=False), sid="cHx") +
-    sk.svg(1080, 1900, sk.ellipse(700, 1640, 190, 95, stroke="blue", sw=6, fill="blue", style="hachure") +
-           sk.ellipse(590, 1590, 90, 75, stroke="blue", sw=5) + sk.ellipse(790, 1575, 110, 85, stroke="blue", sw=5),
+    sk.svg(1080, 1900, sk.ellipse(590, 1590, 90, 75, stroke="blue", sw=5) + sk.ellipse(790, 1575, 110, 85, stroke="blue", sw=5) +
+           sk.ellipse(700, 1640, 190, 95, stroke="blue", sw=6, fill="blue", style="solid"),
            sid="cl") +
     '<div class="gs hide" id="clT" style="position:absolute;left:560px;top:1610px;width:280px;text-align:center;font-size:44px;font-weight:700;color:#0b57d0">хмара</div>'
     + sk.svg(1080, 1900, sk.arrow([(345, 1300), (420, 1560), (500, 1620)], stroke="blue", dashed=False), sid="phA") +
@@ -479,16 +478,12 @@ def b_boardB():
     sfx("pencil", "@zranku-0.1", -4)
     sfx("pencil", "@n10-0.1", -2)
     sfx("pop", "@montazh")
-    sfx("click-soft", "@klodi+0.3")
     sfx("pencil", "@kilka", -4)
     sfx("ping", "@hotovykh")
-    sfx("pencil", "@spravamy-0.6", -4)
     sfx("whoosh-short", "@tym-0.1", -4)
     sfx("pencil", "@telefona-0.2", -3)
     sfx("click", "@kompiutera+0.1")
     sfx("pop", "@pamiat-0.1")
-    sfx("pop", "@perehriietsia-0.1")
-    sfx("pencil", "@montuietsia", -3)
     sfx("whoosh-short", "@khmari+0.8")
     s = js("""
   h.show("#bB", @zranku-0.6);
@@ -535,7 +530,7 @@ L.append(
     '<div class="g" id="dq" style="top:0;height:700px">'
     '<div class="pill hide" id="dqP" style="left:230px;top:170px;height:120px;padding:0 54px;font-size:52px;font-weight:700">'
     u'АІ-монтаж</div>'
-    '<div class="hand hide" id="dqQ" style="position:absolute;left:740px;top:120px;font-size:150px;color:#EA4335">?</div>'
+    '<div class="hand hide" id="dqQ" style="position:absolute;left:650px;top:120px;font-size:150px;color:#EA4335">?</div>'
     '</div>')
 
 

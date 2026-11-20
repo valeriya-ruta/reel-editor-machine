@@ -1,5 +1,6 @@
 plan: 19 clips, 71.60s; dropped 0 takes; 0 flags
-[vost#0:0/libx264 @ 0x55d257e6e840] Error submitting a packet to the muxer: Immediate exit requested
+PLATE FRAMES 2148  DUR = 71.583
+40] Error submitting a packet to the muxer: Immediate exit requested
 [out#0/mp4 @ 0x55d257df8ec0] Error muxing a packet
 [out#0/mp4 @ 0x55d257df8ec0] Error writing trailer: Immediate exit requested
 [out#0/mp4 @ 0x55d257df8ec0] Error closing file: Immediate exit requested
