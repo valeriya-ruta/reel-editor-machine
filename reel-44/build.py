@@ -312,13 +312,13 @@ L.append(
     + sk.svg(1080, 1300, sk.line([(540, 450), (546, 800), (538, 1180)], sw=4, double=False), sid="bDiv")
     + chips(80, LEFT) + chips(570, RIGHT)
     + "".join(sk.svg(1080, 1300, tile(x, y), sid="lt%d" % i) for i, (x, y) in enumerate(LT))
-    + '<div class="hand hide" id="lMore" style="position:absolute;left:372px;top:965px;font-size:52px;color:#4285F4">+ ще</div>'
+    + '<div class="hand hide" id="lMore" style="position:absolute;left:370px;top:960px;width:110px;text-align:center;font-size:100px;color:#4285F4">+</div>'
     + sk.svg(1080, 1300, sk.rect(370, 930, 110, 180, sw=4), sid="lDash", style="opacity:.45")
     + '<div class="hand hide" id="lN" style="position:absolute;left:100px;top:1130px;font-size:56px">5 рілсів</div>'
     + "".join(sk.svg(1080, 1300, tile(x, y, fill="yellow"), sid="rt%d" % i) for i, (x, y) in enumerate(RT))
     + '<div class="hand hide" id="rN" style="position:absolute;left:600px;top:925px;font-size:56px">3 рілси</div>'
-    + sk.svg(1080, 1300, sk.circle_around(300, 525, 250, 120, stroke="red", sw=6), sid="lLoop")
-    + sk.svg(1080, 1300, sk.circle_around(790, 525, 250, 120, stroke="red", sw=6), sid="rLoop")
+    + sk.svg(1080, 1300, sk.circle_around(300, 555, 245, 150, stroke="red", sw=6), sid="lLoop")
+    + sk.svg(1080, 1300, sk.circle_around(790, 555, 245, 150, stroke="red", sw=6), sid="rLoop")
     + '</div>')
 
 
@@ -475,15 +475,15 @@ L.append(
     '<div class="g" id="pl" style="top:0;height:700px">'
     '<div class="gcard" id="plC" style="left:90px;top:80px;width:900px;height:560px;overflow:hidden">'
     '<div class="lbl" style="left:50px;top:40px">Мій тариф</div>'
-    '<div class="num hide" id="pl100" style="position:absolute;left:44px;top:66px;font-size:130px">&#8364;100</div>'
+    '<div class="num hide" id="pl100" style="position:absolute;left:44px;top:84px;font-size:130px;line-height:1">&#8364;100</div>'
     '<div class="ab hide" id="plK" style="left:600px;top:96px"><span class="chip on" style="font-size:40px;height:84px">Клод</span></div>'
     + "".join(sk.svg(900, 560, tile(50 + i * 100, 250, 80, 130, fill=("blue", "yellow", "green", "red")[i % 4]),
                      sid="pt%d" % i) for i in range(10)) +
     '<div style="position:absolute;right:0;top:240px;width:160px;height:160px;background:linear-gradient(90deg,rgba(255,255,255,0),#fff)"></div>'
-    '<div class="hand hide" id="plN" style="position:absolute;left:50px;top:392px;font-size:52px">10-15 рілсів за раз</div>'
-    '<div class="lbl" style="left:50px;top:470px">Ліміт</div>'
-    '<div class="track" style="left:180px;top:466px;width:520px"><i id="plF" style="background:#4285F4"></i></div>'
-    + sk.svg(900, 560, sk.ellipse(200, 482, 46, 46, sw=5) + sk.line([(234, 516), (280, 556)], sw=8, double=False),
+    '<div class="hand hide" id="plN" style="position:absolute;left:50px;top:398px;font-size:52px">10-15 рілсів за раз</div>'
+    '<div class="lbl" style="left:50px;top:480px">Ліміт</div>'
+    '<div class="track" style="left:240px;top:476px;width:520px"><i id="plF" style="background:#4285F4"></i></div>'
+    + sk.svg(900, 560, sk.ellipse(262, 493, 46, 46, sw=5) + sk.line([(296, 527), (330, 556)], sw=8, double=False),
              sid="plM") +
     '</div></div>')
 
