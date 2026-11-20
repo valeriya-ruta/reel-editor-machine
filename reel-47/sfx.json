@@ -1,0 +1,222 @@
+[
+ {
+  "t": 0.05,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 1.41,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 2.19,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 3.5,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 4.26,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 6.033,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 11.49,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 12.33,
+  "name": "typing",
+  "db": -4
+ },
+ {
+  "t": 13.65,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 15.23,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 17.538,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 18.567,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 19.257,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 20.749,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 22.902,
+  "name": "pencil",
+  "db": -4
+ },
+ {
+  "t": 23.614,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 23.9,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 25.59,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 29.69,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 31.59,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 32.333,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 35.0,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 36.91,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 39.421,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 41.611,
+  "name": "click-soft",
+  "db": 0
+ },
+ {
+  "t": 43.655,
+  "name": "typing",
+  "db": -5
+ },
+ {
+  "t": 44.595,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 45.403,
+  "name": "ping",
+  "db": 0
+ },
+ {
+  "t": 46.177,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 47.177,
+  "name": "pencil",
+  "db": -2
+ },
+ {
+  "t": 49.497,
+  "name": "pencil",
+  "db": -4
+ },
+ {
+  "t": 50.637,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 51.497,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 51.959,
+  "name": "pencil",
+  "db": -4
+ },
+ {
+  "t": 53.419,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 53.999,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 56.217,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 58.722,
+  "name": "pencil",
+  "db": -3
+ },
+ {
+  "t": 59.382,
+  "name": "pop",
+  "db": 0
+ },
+ {
+  "t": 60.702,
+  "name": "pencil",
+  "db": -4
+ },
+ {
+  "t": 61.683,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 62.622,
+  "name": "click",
+  "db": 0
+ },
+ {
+  "t": 64.713,
+  "name": "whoosh-short",
+  "db": 0
+ },
+ {
+  "t": 65.469,
+  "name": "click-soft",
+  "db": 0
+ }
+]

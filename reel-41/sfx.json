@@ -1,5 +1,10 @@
 [
  {
+  "t": 0.0,
+  "name": "whoosh-short",
+  "db": -6
+ },
+ {
   "t": 0.1,
   "name": "pop",
   "db": 0

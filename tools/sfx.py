@@ -208,8 +208,11 @@ def mix(nn):
         f.writeframes((out * 32767).astype(np.int16).tobytes())
     base = os.path.join(reel, "assets", "base.mp4")
     subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-i", voice, "-i", mw,
-                    "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
-                    "-movflags", "+faststart", base], check=True)
+                    "-map", "0:v", "-map", "1:a", "-c:v", "libx264", "-crf", "17", "-preset", "fast",
+                    "-pix_fmt", "yuv420p", "-r", "30", "-g", "30", "-keyint_min", "30",
+                    "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", base], check=True)
+    # a keyframe every second: the local renderer seeks the plate per frame and
+    # freezes on sparse keyframes (the cut's concat leaves gaps of 5 s+)
     print("mixed %d cues -> %s" % (len(cues), base))
 
 

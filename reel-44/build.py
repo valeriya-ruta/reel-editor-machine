@@ -191,6 +191,8 @@ def tile(x, y, w=110, h=180, fill="blue"):
 
 
 # ---------------------------------------------------------------- 1 the question
+# §0c: everything near goes on a sheet that drops from the top and pushes her down
+L.append('<div class="g full" id="sa"><div class="sheet board-bg hide" id="saS" style="height:700px">')
 L.append(
     '<div class="g" id="q" style="top:0;height:700px">'
     '<div class="gcard" id="qC" style="left:90px;top:90px;width:900px;height:500px">'
@@ -210,13 +212,16 @@ L.append(
 
 @beat
 def b_q():
-    sfx("pop", "@skilky+0.1")
+    sfx("whoosh-short", "@skilky+0.05", -4)
+    sfx("pop", "@skilky+0.5")
     sfx("pencil", "@porakhuvaty", -3)
     sfx("click", "@nemozhlyvo")
     sfx("pencil", "@iusadzh-0.1", -2)
     return js("""
-  h.pop("#q", @skilky+0.1, {s: 1, r: 0, y: 0, d: 0.2});
-  h.pop("#qC", @skilky+0.1, {s: 0.7, r: -3});
+  h.show("#sa", 0);
+  h.sheetIn("#saS", 0.0, 700);
+  h.show("#q", @skilky+0.45);
+  h.pop("#qC", @skilky+0.45, {s: 0.7, r: -3});
   h.write("#qL", @montazh-0.1, 0.4);
   h.write("#qT", @misiats-0.3, 0.45);
   h.write("#qQ", @misiats, 0.35);
@@ -253,6 +258,7 @@ L.append(
     '<div class="hand hide" id="tQ" style="position:absolute;left:250px;top:440px;font-size:70px;color:#EA4335">?</div>'
     '<div class="hand hide" id="tEq" style="position:absolute;left:512px;top:250px;font-size:80px">=</div>'
     '</div>')
+L.append('</div></div>')
 
 
 @beat
@@ -277,10 +283,8 @@ def b_tk():
   tl.to("#tAF", {scaleX: 0.22, duration: 0.7, ease: "power2.out"}, @riznu-0.1);
   tl.to("#tBF", {scaleX: 0.92, duration: 1.1, ease: "power2.out"}, @riznu-0.1);
   h.bump("#tB", @tokeniv);
-  h.out("#tA", @oriientyr-0.35, 0.25);
-  h.out("#tB", @oriientyr-0.35, 0.25);
-  h.fadeOut("#tEq", @oriientyr-0.35, 0.2);
-  tl.set("#tk", {autoAlpha: 0}, @oriientyr);
+  h.sheetOut("#saS", @oriientyr-0.45, 700);
+  tl.set("#sa", {autoAlpha: 0}, @oriientyr+0.2);
 """)
 
 
@@ -292,34 +296,36 @@ L.append(
     '</div>')
 
 LEFT = [("on", "cE", u"експертні"), ("on", "cK", u"на камеру"), ("on", "cS", u"суфлер"), ("cg", "c23", u"2-3 хв")]
-RIGHT = [("cy", "cD", u"довші"), ("cr", "c56", u"5-6 хв"), ("cy", "cV", u"багато вставок"), ("cy", "cP", u"помилки")]
+RIGHT = [("cy", "cD", u"довші"), ("cr", "c56", u"5-6 хв"), ("cy", "cV", u"вставки"), ("cy", "cP", u"помилки")]
 
 
 def chips(left, items):
-    return ('<div class="wrap" style="left:%dpx;top:440px;width:450px">' % left +
+    return ('<div class="wrap" style="left:%dpx;top:255px;width:460px">' % left +
             "".join('<span class="chip %s hide" id="%s">%s</span>' % c for c in items) + '</div>')
 
 
-LT = [(100, 720), (235, 720), (370, 720), (100, 930), (235, 930)]
-RT = [(600, 720), (735, 720), (870, 720)]
+LT = [(100, 520), (220, 520), (340, 520), (100, 690), (220, 690)]
+RT = [(600, 520), (720, 520), (840, 520)]
+TW, TH = 95, 150
 L.append(
     '<div class="g full" id="bd">'
-    '<div class="board"></div>'
-    '<div class="lbl hide" id="bL" style="left:100px;top:150px">Підписка Клода</div>'
-    '<div class="num hide" id="b20" style="position:absolute;left:92px;top:180px;font-size:150px">$20</div>'
-    '<div class="gs hide" id="bLim" style="position:absolute;left:520px;top:200px;font-size:36px;font-weight:700">Ліміт на 5 годин</div>'
-    '<div class="track hide" id="bTr" style="left:520px;top:270px;width:460px"><i id="bF" style="background:#4285F4"></i></div>'
-    + sk.svg(1080, 1300, sk.line([(540, 450), (546, 800), (538, 1180)], sw=4, double=False), sid="bDiv")
+    # a scheme -> halfscreen whiteboard sheet, authored full size inside 0..900 (STYLE.md §0c)
+    '<div class="sheet board-bg hide" id="bdS" style="height:940px">'
+    '<div class="lbl hide" id="bL" style="left:100px;top:50px">Підписка Клода</div>'
+    '<div class="num hide" id="b20" style="position:absolute;left:92px;top:84px;font-size:150px;line-height:1">$20</div>'
+    '<div class="gs hide" id="bLim" style="position:absolute;left:520px;top:96px;font-size:36px;font-weight:700">Ліміт на 5 годин</div>'
+    '<div class="track hide" id="bTr" style="left:520px;top:160px;width:460px"><i id="bF" style="background:#4285F4"></i></div>'
+    + sk.svg(1080, 940, sk.line([(545, 260), (550, 560), (542, 850)], sw=4, double=False), sid="bDiv")
     + chips(80, LEFT) + chips(570, RIGHT)
-    + "".join(sk.svg(1080, 1300, tile(x, y), sid="lt%d" % i) for i, (x, y) in enumerate(LT))
-    + '<div class="hand hide" id="lMore" style="position:absolute;left:370px;top:960px;width:110px;text-align:center;font-size:100px;color:#4285F4">+</div>'
-    + sk.svg(1080, 1300, sk.rect(370, 930, 110, 180, sw=4), sid="lDash", style="opacity:.45")
-    + '<div class="hand hide" id="lN" style="position:absolute;left:100px;top:1130px;font-size:56px">5 рілсів</div>'
-    + "".join(sk.svg(1080, 1300, tile(x, y, fill="yellow"), sid="rt%d" % i) for i, (x, y) in enumerate(RT))
-    + '<div class="hand hide" id="rN" style="position:absolute;left:600px;top:925px;font-size:56px">3 рілси</div>'
-    + sk.svg(1080, 1300, sk.circle_around(300, 555, 245, 150, stroke="red", sw=6), sid="lLoop")
-    + sk.svg(1080, 1300, sk.circle_around(790, 555, 245, 150, stroke="red", sw=6), sid="rLoop")
-    + '</div>')
+    + "".join(sk.svg(1080, 940, tile(x, y, TW, TH), sid="lt%d" % i) for i, (x, y) in enumerate(LT))
+    + '<div class="hand hide" id="lMore" style="position:absolute;left:340px;top:710px;width:95px;text-align:center;font-size:90px;color:#4285F4">+</div>'
+    + sk.svg(1080, 940, sk.rect(340, 690, TW, TH, sw=4), sid="lDash", style="opacity:.45")
+    + '<div class="hand hide" id="lN" style="position:absolute;left:100px;top:440px;font-size:56px">5 рілсів</div>'
+    + "".join(sk.svg(1080, 940, tile(x, y, TW, TH, fill="yellow"), sid="rt%d" % i) for i, (x, y) in enumerate(RT))
+    + '<div class="hand hide" id="rN" style="position:absolute;left:600px;top:440px;font-size:56px">3 рілси</div>'
+    + sk.svg(1080, 940, sk.circle_around(295, 335, 240, 110, stroke="red", sw=6), sid="lLoop")
+    + sk.svg(1080, 940, sk.circle_around(790, 335, 240, 110, stroke="red", sw=6), sid="rLoop")
+    + '</div></div>')
 
 
 @beat
@@ -341,7 +347,8 @@ def b_board():
     return js("""
   h.show("#or", @oriientyr-0.1);
   h.pop("#orP", @oriientyr-0.1, {s: 0.5, r: -4});
-  h.boardIn("#bd", @na-0.15, 540, 305, 0.75);
+  h.show("#bd", @na-0.15);
+  h.sheetIn("#bdS", @na-0.15, 940);
   tl.set("#or", {autoAlpha: 0}, @na+0.6);
   h.write("#bL", @na+0.3, 0.4);
   h.pop("#b20", @dvadtsiat-0.05, {s: 0.5, r: -5});
@@ -369,21 +376,22 @@ def b_board():
   h.write("#rN", @try+0.7, 0.45);
   h.draw("#lLoop", @upyraietsia-0.1, 0.5);
   h.draw("#rLoop", @upyraietsia+0.4, 0.5);
-  h.boardOut("#bd", @video+0.3, 540, 700, 0.55);
+  h.sheetOut("#bdS", @video+0.3, 940);
+  tl.set("#bd", {autoAlpha: 0}, @video+0.95);
 """)
 
 
 # ---------------------------------------------------------------- 4 the client's system: optimise tokens
 L.append(
-    '<div class="g" id="sys" style="top:0;height:700px">'
-    '<div class="gcard" id="sysC" style="left:90px;top:110px;width:900px;height:420px">'
+    '<div class="g full" id="sys"><div class="sheet hide" id="sysS" style="height:700px;background:#f8f9fa">'
+    '<div class="gcard" id="sysC" style="left:90px;top:150px;width:900px;height:420px">'
     '<div class="lbl" style="left:50px;top:44px">Система для клієнтки</div>'
     '<div class="row" style="left:50px;top:110px;width:800px;height:120px">'
     '<div class="gs" style="font-size:46px;font-weight:700;flex:1">Оптимізація токенів</div></div>'
     '<div class="tgl" id="sysT" style="left:746px;top:138px"><b></b></div>'
     '<div class="lbl" style="left:50px;top:270px">токени на рілс</div>'
     '<div class="track" style="left:50px;top:320px;width:800px"><i id="sysF" style="background:#FBBC04"></i></div>'
-    '</div></div>')
+    '</div></div></div>')
 
 
 @beat
@@ -392,8 +400,8 @@ def b_sys():
     sfx("click", "@optymizuiu")
     sfx("whoosh-short", "@vytratu", -4)
     return js("""
-  h.show("#sys", @nalashtovuiu-0.15);
-  h.pop("#sysC", @nalashtovuiu-0.15, {s: 0.7, r: 3});
+  h.show("#sys", @nalashtovuiu-0.25);
+  h.sheetIn("#sysS", @nalashtovuiu-0.25, 700);
   tl.set("#sysF", {scaleX: 0.85}, 0);
   h.toggle("#sysT", @optymizuiu, "#0b57d0");
   tl.to("#sysF", {scaleX: 0.3, duration: 0.9, ease: "power2.inOut"}, @vytratu);
@@ -408,32 +416,32 @@ def tpl(x, y, motif, lab, cid):
             'font-size:30px;color:#5f6368;font-weight:500">%s</div>' % (cid, x, y + 212, lab))
 
 
-M1 = (sk.rect(150, 370, 180, 110, stroke="blue", fill="blue", style="solid", sw=3.5) +
-      sk.line([(170, 400), (290, 398)], sw=3.5, double=False) + sk.line([(170, 435), (250, 433)], sw=3.5, double=False))
-M2 = sk.arrow([(450, 470), (530, 380), (630, 400)], stroke="red", sw=5)
-M3 = (sk.rect(745, 420, 40, 70, fill="green", style="solid", sw=3.5, round_=False) +
-      sk.rect(805, 390, 40, 100, fill="yellow", style="solid", sw=3.5, round_=False) +
-      sk.rect(865, 360, 40, 130, fill="blue", style="solid", sw=3.5, round_=False))
+M1 = (sk.rect(150, 230, 180, 110, stroke="blue", fill="blue", style="solid", sw=3.5) +
+      sk.line([(170, 260), (290, 258)], sw=3.5, double=False) + sk.line([(170, 295), (250, 293)], sw=3.5, double=False))
+M2 = sk.arrow([(450, 330), (530, 240), (630, 260)], stroke="red", sw=5)
+M3 = (sk.rect(745, 280, 40, 70, fill="green", style="solid", sw=3.5, round_=False) +
+      sk.rect(805, 250, 40, 100, fill="yellow", style="solid", sw=3.5, round_=False) +
+      sk.rect(865, 220, 40, 130, fill="blue", style="solid", sw=3.5, round_=False))
 CODE = "".join(sk.line([(150, y), (150 + w, y + 3)], stroke="#5f6368", sw=4, double=False)
-               for y, w in [(760, 300), (800, 240), (840, 330), (880, 200), (920, 280), (960, 320), (1000, 180)])
+               for y, w in [(530, 300), (568, 240), (606, 330), (644, 200), (682, 280), (720, 320), (758, 180)])
 L.append(
     '<div class="g full" id="bd2">'
-    '<div class="board"></div>'
-    '<div class="hand hide" id="b2T" style="position:absolute;left:110px;top:150px;font-size:80px">шаблони анімації</div>'
-    + sk.svg(1080, 1300, sk.underline(110, 262, 600, stroke="blue"), sid="b2U")
-    + tpl(110, 330, M1, u"картка", "tp1") + tpl(410, 330, M2, u"стрілка", "tp2") + tpl(710, 330, M3, u"графік", "tp3")
-    + sk.svg(1080, 1300, sk.rect(110, 700, 420, 360, sw=4.5) + CODE, sid="code")
-    + '<div class="hand hide" id="codeL" style="position:absolute;left:120px;top:1075px;font-size:54px">з нуля</div>'
-    + sk.svg(1080, 1300, sk.cross(200, 760, 240, sw=12), sid="codeX")
-    + sk.svg(1080, 1300, sk.rect(700, 660, 240, 420, sw=5) + sk.line([(780, 690), (860, 690)], sw=4, double=False),
+    '<div class="sheet board-bg hide" id="bd2S" style="height:940px">'
+    '<div class="hand hide" id="b2T" style="position:absolute;left:110px;top:40px;font-size:80px">шаблони анімації</div>'
+    + sk.svg(1080, 940, sk.underline(110, 150, 600, stroke="blue"), sid="b2U")
+    + tpl(110, 190, M1, u"картка", "tp1") + tpl(410, 190, M2, u"стрілка", "tp2") + tpl(710, 190, M3, u"графік", "tp3")
+    + sk.svg(1080, 940, sk.rect(110, 480, 420, 320, sw=4.5) + CODE, sid="code")
+    + '<div class="hand hide" id="codeL" style="position:absolute;left:120px;top:812px;font-size:54px">з нуля</div>'
+    + sk.svg(1080, 940, sk.cross(200, 520, 240, sw=12), sid="codeX")
+    + sk.svg(1080, 940, sk.rect(710, 470, 220, 360, sw=5) + sk.line([(785, 498), (855, 498)], sw=4, double=False),
              sid="ph")
-    + '<div class="gs hide" id="phL" style="position:absolute;left:700px;top:1095px;width:240px;text-align:center;font-size:34px;font-weight:700">рілс</div>'
-    + '<div class="ab hide" id="mv" style="left:410px;top:330px;width:260px;height:200px;border-radius:22px;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.2)">'
+    + '<div class="gs hide" id="phL" style="position:absolute;left:710px;top:842px;width:220px;text-align:center;font-size:34px;font-weight:700">рілс</div>'
+    + '<div class="ab hide" id="mv" style="left:410px;top:190px;width:260px;height:200px;border-radius:22px;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.2)">'
     + sk.svg(260, 200, sk.rect(4, 4, 252, 192, sw=4.5) + sk.arrow([(40, 140), (120, 50), (220, 70)], stroke="red", sw=5),
              sid="mvS", style="left:0;top:0")
     + '</div>'
-    + sk.svg(1080, 1300, sk.check(960, 880, 90), sid="phOK")
-    + '</div>')
+    + sk.svg(1080, 940, sk.check(950, 640, 90), sid="phOK")
+    + '</div></div>')
 
 
 @beat
@@ -446,9 +454,9 @@ def b_board2():
     sfx("ping", "@vstavyty+0.25", -3)
     sfx("whoosh-short", "@vstavyty+0.5")
     return js("""
-  tl.to("#sysC", {scale: 1.06, duration: 0.3, ease: "power2.in"}, @napryklad-0.3);
-  h.boardIn("#bd2", @napryklad-0.2, 790, 280, 0.75);
-  tl.set("#sys", {autoAlpha: 0}, @napryklad+0.6);
+  h.show("#bd2", @napryklad-0.2);
+  h.sheetIn("#bd2S", @napryklad-0.2, 940);
+  tl.set("#sys", {autoAlpha: 0}, @napryklad+0.7);
   h.write("#b2T", @napryklad+0.3, 0.7);
   h.draw("#b2U", @shablony-0.2, 0.35);
   h.draw("#tp1", @shablony, 0.5);
@@ -464,15 +472,16 @@ def b_board2():
   h.draw("#codeX", @nulia, 0.35);
   tl.set("#mv", {autoAlpha: 1}, @prosto);
   h.draw("#mvS", @prosto-0.01, 0.01);
-  tl.fromTo("#mv", {x: 0, y: 0, scale: 1, rotation: 0}, {x: 280, y: 440, scale: 0.8, rotation: -4, duration: 0.7, ease: SP, immediateRender: false}, @vziaty);
+  tl.fromTo("#mv", {x: 0, y: 0, scale: 1, rotation: 0}, {x: 280, y: 360, scale: 0.75, rotation: -4, duration: 0.7, ease: SP, immediateRender: false}, @vziaty);
   h.draw("#phOK", @vstavyty+0.1, 0.3);
-  h.boardOut("#bd2", @vstavyty+0.55, 820, 870, 0.55);
+  h.sheetOut("#bd2S", @vstavyty+0.55, 940);
+  tl.set("#bd2", {autoAlpha: 0}, @vstavyty+1.2);
 """)
 
 
 # ---------------------------------------------------------------- 6 my €100 plan: 10-15 reels, the limit barely moves
 L.append(
-    '<div class="g" id="pl" style="top:0;height:700px">'
+    '<div class="g full" id="pl"><div class="sheet hide" id="plS" style="height:700px;background:#f8f9fa">'
     '<div class="gcard" id="plC" style="left:90px;top:80px;width:900px;height:560px;overflow:hidden">'
     '<div class="lbl" style="left:50px;top:40px">Мій тариф</div>'
     '<div class="num hide" id="pl100" style="position:absolute;left:44px;top:84px;font-size:130px;line-height:1">&#8364;100</div>'
@@ -485,7 +494,7 @@ L.append(
     '<div class="track" style="left:240px;top:476px;width:520px"><i id="plF" style="background:#4285F4"></i></div>'
     + sk.svg(900, 560, sk.ellipse(262, 493, 46, 46, sw=5) + sk.line([(296, 527), (330, 556)], sw=8, double=False),
              sid="plM") +
-    '</div></div>')
+    '</div></div></div>')
 
 
 @beat
@@ -495,8 +504,8 @@ def b_pl():
     sfx("pencil", "@bachu-0.2", -3)
     pts = "\n".join('  h.draw("#pt%d", @montuiu+%.2f, 0.25);' % (i, i * 0.16) for i in range(10))
     return js("""
-  h.show("#pl", @klod-0.15);
-  h.pop("#plC", @klod-0.15, {s: 0.7, r: -3});
+  h.show("#pl", @klod-0.5);
+  h.sheetIn("#plS", @klod-0.5, 700);
   h.pop("#plK", @klod+0.05, {s: 0.5, r: 4});
   h.pop("#pl100", @sto-0.05, {s: 0.5, r: -5});
   tl.set("#plF", {scaleX: 0.03}, 0);
@@ -504,12 +513,13 @@ def b_pl():
   h.write("#plN", @desiat, 0.6);
   h.draw("#plM", @bachu-0.2, 0.5);
   h.bump("#plM", @vytrachalos);
-  tl.to("#plC", {y: -30, autoAlpha: 0, duration: 0.3, ease: "power2.in"}, @tomu-0.35);
-  tl.set("#pl", {autoAlpha: 0}, @tomu);
+  h.sheetOut("#plS", @tomu-0.45, 700);
+  tl.set("#pl", {autoAlpha: 0}, @tomu+0.2);
 """)
 
 
 # ---------------------------------------------------------------- 7 CTA: doubts -> comment ТЕСТ -> DM -> result
+L.append('<div class="g full" id="ct"><div class="sheet hide" id="ctS" style="height:700px;background:#f8f9fa">')
 L.append(
     '<div class="g" id="dbt" style="top:0;height:700px">'
     '<div class="gcard" id="dbC" style="left:90px;top:110px;width:900px;height:420px">'
@@ -543,6 +553,7 @@ L.append(
     '<div class="bub in hide" id="dm3" style="left:36px;top:470px">Готово, ось результат</div>'
     + sk.svg(900, 590, sk.check(450, 470, 70), sid="dmOK") +
     '</div></div>')
+L.append('</div></div>')
 
 
 @beat
@@ -558,6 +569,8 @@ def b_cta():
     sfx("pop", "@pyshy2")
     sfx("key-press", "@test2")
     return js("""
+  h.show("#ct", @systemu2-0.6);
+  h.sheetIn("#ctS", @systemu2-0.6, 700);
   h.show("#dbt", @systemu2-0.2);
   h.pop("#dbC", @systemu2-0.2, {s: 0.7, r: 3});
   h.write("#dbQ", @vpevnena, 0.35);
@@ -592,7 +605,7 @@ def b_cta():
 """)
 
 
-INVERT = [(T["na"] + 0.3, T["video"] + 0.7, ""), (T["napryklad"] + 0.3, T["vstavyty"] + 0.95, "")]
+INVERT = []    # halfscreen keeps her (and the white captions) in the bottom half (STYLE.md §0c)
 BLACKOUT = [(T["dvadtsiat"], T["odyn"], u"$20"), (T["sto"], T["montuiu"] - 0.2, u"€100"),
             (T["test"], T["komentariakh"], u"ТЕСТ"), (T["test2"], T["test2"] + 0.25, u"ТЕСТ")]
 

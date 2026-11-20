@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """Reel 43 — «Які автоматизації зробити репетиторці?». Google x Excalidraw (STYLE.md §0b).
 
+Layouts per STYLE.md §0c: mockups = move-down sheets (h 640-700), the
+list board = halfscreen whiteboard sheet (h 940); her plate moves, never under a card.
+
 A list reel: the running object is the WHITEBOARD LIST «Автоматизації
 репетиторки» with four checkboxes. Every item is written onto the board, the
 board closes onto that item and it is shown near (a Material card above her
@@ -12,7 +15,7 @@ Chain:  NEAR the Threads question card -> it shrinks into a little sketch board
 of it: title, four empty checkboxes, «1. CRM учнів + фінанси» -> board closes
 onto row 1 -> NEAR the Claude card: connectors Notion / Google Drive, the
 message «Оля заплатила 2000 за 4 уроки» types, a table row lands with a tick;
-«Скільки я заробила?» -> dots -> «2000 грн»; «приблизно» scribbled out -> OVER
+«Скільки я заробила?» -> dots -> «точна сума»; «приблизно» scribbled out -> OVER
 board reopens out of the answer: tick 1, «2. Нагадування», Google Calendar +
 SendPulse -> Claude -> chip «щоранку» -> board closes onto SendPulse -> NEAR
 the Telegram bot: today's lessons, «Нагадую: сьогодні урок», «оплачені уроки
@@ -178,6 +181,7 @@ def beat(fn):
 
 k.css("""
 .hide { opacity: 0; visibility: hidden; }
+.cap, #scrim { z-index: 60; }
 .sk .sf { opacity: 0; visibility: hidden; }
 .ab { position: absolute; }
 .bub { position: absolute; padding: 22px 30px; border-radius: 30px; font-family: "GSans", sans-serif;
@@ -211,14 +215,15 @@ k.css("""
 # ---------------------------------------------------------------- 1 the Threads question
 L.append(
     '<div class="g" id="q" style="top:0;height:700px">'
-    '<div class="gcard" id="qC" style="left:100px;top:70px;width:880px;height:500px">'
+    '<div class="sheet hide" id="qS" style="height:640px;background:#fff">'
+    '<div class="gcard" id="qC" style="left:100px;top:90px;width:880px;height:500px">'
     '<div class="av" style="left:36px;top:30px;background:#1e1e1e">@</div>'
     '<div class="gs hd">Threads</div><div class="gs hs">питання з Threads</div><div class="sep"></div>'
     '<div class="lbl hide" id="qL" style="left:40px;top:160px">Ваша улюблена рубрика</div>'
     '<div class="gs hide" id="qT" style="position:absolute;left:40px;top:215px;width:800px;font-size:58px;'
     'font-weight:700;line-height:1.18">Які автоматизації можна використати репетиторці?</div>'
     + sk.svg(880, 500, sk.underline(70, 440, 360, stroke="red", sw=7), sid="qU") +
-    '</div></div>')
+    '</div></div></div>')
 
 
 @beat
@@ -227,8 +232,8 @@ def b_q():
     sfx("click-soft", "@yaki")
     sfx("pencil", "@repet", -3)
     return js("""
-  h.pop("#q", 0.0, {s: 1, r: 0, y: 0, d: 0.2});
-  h.pop("#qC", 0.0, {s: 0.7, r: -3});
+  h.show("#q", 0.0);
+  h.sheetIn("#qS", 0.0, 640, null, 0.6);
   h.write("#qL", @rubryka-0.3, 0.5);
   h.pop("#qT", @yaki-0.05, {s: 0.85, r: 0, y: 18});
   h.draw("#qU", @repet, 0.45);
@@ -238,7 +243,8 @@ def b_q():
 # ---------------------------------------------------------------- 2 if I were a tutor: a little sketch board
 L.append(
     '<div class="g" id="tb" style="top:0;height:700px">'
-    '<div class="paper" id="tbP" style="left:250px;top:90px;width:580px;height:360px;transform:rotate(-2deg)">'
+    '<div class="sheet board-bg hide" id="tbS" style="height:700px">'
+    '<div class="paper" id="tbP" style="left:250px;top:100px;width:580px;height:360px;transform:rotate(-2deg)">'
     + sk.svg(580, 360, sk.rect(14, 14, 552, 332, stroke="ink", sw=4), sid="tbE") +
     '<div class="hand hide" id="tbF" style="position:absolute;left:0;right:0;top:110px;text-align:center;font-size:92px">'
     'a² + b² = c²</div>'
@@ -246,7 +252,7 @@ L.append(
     '</div>'
     '<div class="ab hide" id="tc1" style="left:250px;top:500px"><span class="chip on">математика</span></div>'
     '<div class="ab hide" id="tc2" style="left:590px;top:500px"><span class="chip cy">історія</span></div>'
-    '</div>')
+    '</div></div>')
 
 
 @beat
@@ -256,9 +262,7 @@ def b_tb():
     sfx("pop", "@matem")
     sfx("pop", "@istorii")
     return js("""
-  tl.to("#qC", {scale: 0.4, y: 40, autoAlpha: 0, duration: 0.4, ease: "power3.in"}, @korotshe-0.15);
-  tl.set("#q", {autoAlpha: 0}, @korotshe+0.3);
-  h.show("#tb", @korotshe+0.1);
+  swap("#q", "#tb", "#tbS", @korotshe-0.2, 700);
   h.pop("#tbP", @korotshe+0.1, {s: 0.4, r: -10, to: -2});
   h.draw("#tbE", @korotshe+0.25, 0.6);
   h.write("#tbF", @bula, 0.9);
@@ -269,62 +273,64 @@ def b_tb():
 
 
 # ---------------------------------------------------------------- the BOARD: the running list
-RY = [290 + 94 * i for i in range(4)]
+RY = [214 + 80 * i for i in range(4)]
+BH = 940                   # halfscreen sheet height (STYLE.md §0c)
 ROWS = [u"CRM учнів + фінанси", u"Нагадування: урок + оплата", u"Афтеркер", u"Тести у форматі НМТ"]
-board = ['<div class="g full" id="bd"><div class="board"></div><div id="cam" style="position:absolute;inset:0">',
-         '<div class="lbl hide" id="bdL" style="left:100px;top:120px">якби я була репетиторкою</div>',
-         '<div class="hand hide" id="bdT" style="position:absolute;left:96px;top:158px;font-size:66px">'
+board = ['<div class="g full" id="bd"><div class="sheet board-bg hide" id="bdS" style="height:%dpx">' % BH,
+         '<div id="cam" style="position:absolute;inset:0">',
+         '<div class="lbl hide" id="bdL" style="left:100px;top:56px">якби я була репетиторкою</div>',
+         '<div class="hand hide" id="bdT" style="position:absolute;left:96px;top:90px;font-size:64px">'
          u'Автоматизації репетиторки</div>',
-         sk.svg(1080, 1300, sk.underline(100, 248, 560, stroke="blue"), sid="bdU")]
+         sk.svg(1080, 1300, sk.underline(100, 176, 560, stroke="blue"), sid="bdU")]
 for i, y in enumerate(RY):
-    board.append(sk.svg(1080, 1300, sk.rect(100, y, 58, 58, stroke="ink", sw=4, round_=False), sid="cb%d" % (i + 1)))
-    board.append(sk.svg(1080, 1300, sk.check(102, y - 6, 62, sw=9), sid="ck%d" % (i + 1)))
-    board.append('<div class="hand hide" id="rt%d" style="position:absolute;left:190px;top:%dpx;font-size:54px;'
+    board.append(sk.svg(1080, 1300, sk.rect(100, y, 54, 54, stroke="ink", sw=4, round_=False), sid="cb%d" % (i + 1)))
+    board.append(sk.svg(1080, 1300, sk.check(102, y - 6, 58, sw=9), sid="ck%d" % (i + 1)))
+    board.append('<div class="hand hide" id="rt%d" style="position:absolute;left:186px;top:%dpx;font-size:50px;'
                  'white-space:nowrap"><span style="color:#4285F4">%d.</span> %s</div>' % (i + 1, y - 4, i + 1, ROWS[i]))
 # diagram 2: calendar + SendPulse -> Claude -> every morning
 board.append(
     '<div id="d2">'
-    '<div class="pill bpill hide" id="p2c" style="left:80px;top:700px"><span class="dot" style="background:#4285F4"></span>Google Calendar</div>'
-    '<div class="pill bpill hide" id="p2s" style="left:640px;top:700px"><span class="dot" style="background:#34A853"></span>SendPulse</div>'
-    + sk.svg(1080, 1300, sk.ellipse(540, 960, 112, 100, stroke="ink", fill="yellow", style="solid"), sid="d2C") +
-    '<div class="gs hide" id="d2CT" style="position:absolute;left:428px;top:934px;width:224px;text-align:center;font-size:44px;font-weight:700">Claude</div>'
-    + sk.svg(1080, 1300, sk.arrow([(300, 810), (360, 880), (440, 920)], stroke="blue"), sid="d2a1")
-    + sk.svg(1080, 1300, sk.arrow([(800, 810), (730, 880), (650, 920)], stroke="green"), sid="d2a2")
-    + sk.svg(1080, 1300, sk.ellipse(330, 1150, 46, 46, stroke="red", sw=4) +
-             sk.line([(330, 1150), (330, 1120)], stroke="red", sw=4, double=False) +
-             sk.line([(330, 1150), (352, 1162)], stroke="red", sw=4, double=False), sid="d2K") +
-    '<div class="ab hide" id="d2ch" style="left:400px;top:1114px"><span class="chip cr">задача: щоранку</span></div>'
+    '<div class="pill bpill hide" id="p2c" style="left:80px;top:556px"><span class="dot" style="background:#4285F4"></span>Google Calendar</div>'
+    '<div class="pill bpill hide" id="p2s" style="left:640px;top:556px"><span class="dot" style="background:#34A853"></span>SendPulse</div>'
+    + sk.svg(1080, 1300, sk.ellipse(540, 730, 112, 76, stroke="ink", fill="yellow", style="solid"), sid="d2C") +
+    '<div class="gs hide" id="d2CT" style="position:absolute;left:428px;top:704px;width:224px;text-align:center;font-size:44px;font-weight:700">Claude</div>'
+    + sk.svg(1080, 1300, sk.arrow([(300, 664), (360, 700), (432, 716)], stroke="blue"), sid="d2a1")
+    + sk.svg(1080, 1300, sk.arrow([(800, 664), (730, 700), (650, 716)], stroke="green"), sid="d2a2")
+    + sk.svg(1080, 1300, sk.ellipse(340, 858, 34, 34, stroke="red", sw=4) +
+             sk.line([(340, 858), (340, 836)], stroke="red", sw=4, double=False) +
+             sk.line([(340, 858), (356, 867)], stroke="red", sw=4, double=False), sid="d2K") +
+    '<div class="ab hide" id="d2ch" style="left:396px;top:822px"><span class="chip cr">задача: щоранку</span></div>'
     '</div>')
 # diagram 3: aftercare
 board.append(
     '<div id="d3">'
-    '<div class="pill bpill hide" id="p3z" style="left:70px;top:690px"><span class="dot" style="background:#4285F4"></span>Zoom / Meet</div>'
-    + sk.svg(1080, 1300, sk.arrow([(450, 738), (580, 738)], stroke="ink"), sid="d3a1") +
-    '<div class="pill bpill hide" id="p3f" style="left:600px;top:690px"><span class="dot" style="background:#EA4335"></span>Fathom</div>'
-    '<div class="hand hide" id="d3rec" style="position:absolute;left:640px;top:800px;font-size:40px;color:#EA4335">запис уроку</div>'
-    + sk.svg(1080, 1300, sk.arrow([(760, 860), (520, 900), (290, 905)], stroke="blue"), sid="d3a2") +
-    '<div class="hand hide" id="d3tr" style="position:absolute;left:390px;top:830px;font-size:40px;color:#4285F4">транскрипт</div>'
-    + sk.svg(1080, 1300, sk.ellipse(190, 990, 100, 80, stroke="ink", fill="yellow", style="solid"), sid="d3C") +
-    '<div class="gs hide" id="d3CT" style="position:absolute;left:90px;top:966px;width:200px;text-align:center;font-size:40px;font-weight:700">Claude</div>'
-    '<div class="ab hide" id="d3sk" style="left:120px;top:1060px"><span class="chip on">скіл</span></div>'
-    + sk.svg(1080, 1300, sk.arrow([(300, 990), (370, 990)], stroke="ink"), sid="d3a3") +
-    '<div class="paper hide" id="d3k" style="left:390px;top:920px;width:260px;height:150px">'
-    '<div class="hand" style="position:absolute;left:24px;top:14px;font-size:40px">конспект</div>'
-    + sk.svg(260, 150, sk.line([(26, 86), (230, 84)], stroke="#9aa0a6", sw=4, double=False) +
-             sk.line([(26, 118), (180, 120)], stroke="#9aa0a6", sw=4, double=False), sid="d3kL") +
+    '<div class="pill bpill hide" id="p3z" style="left:60px;top:540px"><span class="dot" style="background:#4285F4"></span>Zoom / Meet</div>'
+    + sk.svg(1080, 1300, sk.arrow([(430, 588), (560, 588)], stroke="ink"), sid="d3a1") +
+    '<div class="pill bpill hide" id="p3f" style="left:580px;top:540px"><span class="dot" style="background:#EA4335"></span>Fathom</div>'
+    '<div class="hand hide" id="d3rec" style="position:absolute;left:850px;top:556px;font-size:34px;line-height:1;color:#EA4335">запис<br>уроку</div>'
+    + sk.svg(1080, 1300, sk.arrow([(720, 648), (470, 702), (220, 712)], stroke="blue"), sid="d3a2") +
+    '<div class="hand hide" id="d3tr" style="position:absolute;left:300px;top:636px;font-size:40px;color:#4285F4">транскрипт</div>'
+    + sk.svg(1080, 1300, sk.ellipse(150, 772, 100, 62, stroke="ink", fill="yellow", style="solid"), sid="d3C") +
+    '<div class="gs hide" id="d3CT" style="position:absolute;left:50px;top:748px;width:200px;text-align:center;font-size:40px;font-weight:700">Claude</div>'
+    '<div class="ab hide" id="d3sk" style="left:96px;top:838px"><span class="chip on" style="height:54px;font-size:28px">скіл</span></div>'
+    + sk.svg(1080, 1300, sk.arrow([(254, 772), (284, 772)], stroke="ink", head=18), sid="d3a3") +
+    '<div class="paper hide" id="d3k" style="left:296px;top:706px;width:210px;height:132px">'
+    '<div class="hand" style="position:absolute;left:20px;top:10px;font-size:36px">конспект</div>'
+    + sk.svg(210, 132, sk.line([(22, 76), (188, 74)], stroke="#9aa0a6", sw=4, double=False) +
+             sk.line([(22, 104), (150, 106)], stroke="#9aa0a6", sw=4, double=False), sid="d3kL") +
     '</div>'
-    '<div class="paper hide" id="d3d" style="left:690px;top:920px;width:260px;height:150px">'
-    '<div class="hand" style="position:absolute;left:24px;top:14px;font-size:40px">домашка</div>'
-    + sk.svg(260, 150, sk.rect(26, 74, 26, 26, sw=3, round_=False) + sk.line([(66, 88), (220, 86)], stroke="#9aa0a6", sw=4, double=False) +
-             sk.rect(26, 110, 26, 26, sw=3, round_=False) + sk.line([(66, 124), (190, 124)], stroke="#9aa0a6", sw=4, double=False),
+    '<div class="paper hide" id="d3d" style="left:524px;top:706px;width:210px;height:132px">'
+    '<div class="hand" style="position:absolute;left:20px;top:10px;font-size:36px">домашка</div>'
+    + sk.svg(210, 132, sk.rect(22, 62, 24, 24, sw=3, round_=False) + sk.line([(58, 74), (188, 72)], stroke="#9aa0a6", sw=4, double=False) +
+             sk.rect(22, 96, 24, 24, sw=3, round_=False) + sk.line([(58, 108), (160, 108)], stroke="#9aa0a6", sw=4, double=False),
              sid="d3dL") +
     '</div>'
-    + sk.svg(1080, 1300, sk.arrow([(700, 1080), (620, 1100), (530, 1118)], stroke="green", sw=4, head=22), sid="d3a4") +
-    '<div class="pill bpill hide" id="p3s" style="left:290px;top:1126px;height:86px;font-size:34px"><span class="dot" style="background:#34A853"></span>SendPulse</div>'
-    '<div class="hand hide" id="d3u" style="position:absolute;left:700px;top:1138px;font-size:44px">учню / батькам</div>'
-    + sk.svg(1080, 1300, sk.arrow([(610, 1170), (650, 1166), (690, 1168)], stroke="green", sw=4, head=18), sid="d3a5") +
+    + sk.svg(1080, 1300, sk.arrow([(738, 772), (768, 772)], stroke="green", sw=4, head=18), sid="d3a4") +
+    '<div class="pill bpill hide" id="p3s" style="left:780px;top:732px;height:80px;font-size:30px;padding:0 24px"><span class="dot" style="background:#34A853"></span>SendPulse</div>'
+    '<div class="hand hide" id="d3u" style="position:absolute;left:740px;top:836px;font-size:40px">учню / батькам</div>'
+    + sk.svg(1080, 1300, sk.arrow([(900, 814), (898, 830), (900, 842)], stroke="green", sw=4, head=12), sid="d3a5") +
     '</div>')
-board.append('</div></div>')
+board.append('</div></div></div>')
 L.append("".join(board))
 
 
@@ -334,23 +340,21 @@ def b_board1():
     sfx("pencil", "@nalasht", -2)
     sfx("pencil", "@crm-0.1", -2)
     return js("""
-  tl.to("#tbP", {scale: 1.3, duration: 0.35, ease: "power2.in"}, @os+0.1);
-  h.boardIn("#bd", @os+0.1, 540, 270, 0.75);
-  tl.set("#tb", {autoAlpha: 0}, @os+0.9);
+  swap("#tb", "#bd", "#bdS", @os+0.1, 940);
   h.write("#bdL", @os+0.6, 0.35);
   h.write("#bdT", @nalasht-0.05, 0.75);
   h.draw("#bdU", @nalasht+0.6, 0.35);
   h.draw("#cb1", @claude0-0.1, 0.15); h.draw("#cb2", @claude0+0.05, 0.15);
   h.draw("#cb3", @claude0+0.2, 0.15); h.draw("#cb4", @claude0+0.35, 0.15);
   h.write("#rt1", @crm-0.25, 1.3);
-  h.boardOut("#bd", @pidkl-0.1, 400, 320, 0.55);
 """)
 
 
 # ---------------------------------------------------------------- 3 NEAR: Claude keeps the books
 L.append(
     '<div class="g" id="cl" style="top:0;height:700px">'
-    '<div class="gcard" id="clC" style="left:100px;top:50px;width:880px;height:570px">'
+    '<div class="sheet hide" id="clS" style="height:700px;background:#fff">'
+    '<div class="gcard" id="clC" style="left:100px;top:100px;width:880px;height:570px">'
     '<div class="av" style="left:36px;top:30px;background:#FBBC04;color:#1e1e1e">C</div>'
     '<div class="gs hd">Claude</div><div class="gs hs">конектори</div>'
     '<div class="ab hide" id="clN" style="left:360px;top:36px"><span class="chip">Notion</span></div>'
@@ -360,15 +364,15 @@ L.append(
     '<div class="dots hide" id="clD" style="left:60px;top:270px"><i></i><i></i><i></i><i></i></div>'
     '<div class="tbl hide" id="clTb" style="top:280px">'
     '<div class="th">Учень</div><div class="th">Уроки</div><div class="th">Оплата</div>'
-    '<div id="clR1">Оля</div><div id="clR2">4</div><div id="clR3">2000 грн</div></div>'
+    '<div id="clR1">Оля</div><div id="clR2">4</div><div id="clR3" style="color:#188038;font-weight:700">оплачено</div></div>'
     + sk.svg(880, 570, sk.check(770, 360, 60), sid="clOK") +
     '<div class="bub me hide" id="clQ2" style="right:36px;top:150px">Скільки я заробила цього місяця?</div>'
     '<div class="dots hide" id="clD2" style="left:60px;top:300px"><i></i><i></i><i></i><i></i></div>'
-    '<div class="bub in hide" id="clA" style="left:36px;top:280px;font-size:30px">Цього місяця:<br>'
-    '<span class="num" style="font-size:96px;color:#202124">2000 грн</span></div>'
+    '<div class="bub in hide" id="clA" style="left:36px;top:280px;font-size:30px">Рахую по таблиці оплат:<br>'
+    '<span class="num" style="font-size:72px;color:#202124">точна сума</span></div>'
     '<div class="hand hide" id="clP" style="position:absolute;left:560px;top:400px;font-size:52px;color:#5f6368">«десь так»</div>'
     + sk.svg(880, 570, sk.scribble(550, 410, 270, 40, sw=7), sid="clX") +
-    '</div></div>')
+    '</div></div></div>')
 
 
 @beat
@@ -380,11 +384,10 @@ def b_cl():
     sfx("pop", "@vnosyt")
     sfx("ping", "@oplatu")
     sfx("click-soft", "@skilky")
-    sfx("kaching", "@tsyfroiu")
+    sfx("ping", "@tsyfroiu")
     sfx("pencil", "@des", -2)
     return js("""
-  h.pop("#cl", @pidkl-0.15, {s: 1, r: 0, y: 0, d: 0.2});
-  h.pop("#clC", @pidkl-0.15, {s: 0.5, r: -3});
+  swap("#bd", "#cl", "#clS", @pidkl-0.2, 700);
   h.pop("#clN", @notion-0.05, {s: 0.5, r: -5});
   h.pop("#clG", @google-0.05, {s: 0.5, r: 5});
   h.pop("#clM", @pyshesh, {s: 0.7, r: 2});
@@ -416,8 +419,7 @@ def b_board2():
     sfx("pencil", "@vclaude", -3)
     sfx("click-soft", "@zaplan+0.2")
     return js("""
-  tl.set("#cl", {autoAlpha: 0}, @druhe+0.7);
-  h.boardIn("#bd", @druhe-0.15, 300, 400, 0.75);
+  swap("#cl", "#bd", "#bdS", @druhe-0.15, 940);
   h.draw("#ck1", @druhe+0.35, 0.3);
   h.write("#rt2", @nahad-0.1, 1.3);
   h.pop("#p2c", @konektori+0.15, {s: 0.5, r: -4});
@@ -428,15 +430,15 @@ def b_board2():
   h.write("#d2CT", @vclaude+0.3, 0.35);
   h.draw("#d2K", @zaplan, 0.45);
   h.pop("#d2ch", @zaplan+0.2, {s: 0.5, r: -3});
-  h.boardOut("#bd", @dyvytsia-0.15, 800, 748, 0.55);
-  tl.set("#d2", {autoAlpha: 0}, @dyvytsia+0.6);
+  tl.set("#d2", {autoAlpha: 0}, @dyvytsia+0.8);
 """)
 
 
 # ---------------------------------------------------------------- 4 NEAR: the Telegram bot
 L.append(
     '<div class="g" id="tg" style="top:0;height:700px">'
-    '<div class="gcard" id="tgC" style="left:100px;top:50px;width:880px;height:570px">'
+    '<div class="sheet hide" id="tgSh" style="height:700px;background:#fff">'
+    '<div class="gcard" id="tgC" style="left:100px;top:100px;width:880px;height:570px">'
     '<div class="av" style="left:36px;top:30px;background:#4285F4">Б</div>'
     '<div class="gs hd">Telegram-бот</div><div class="gs hs">SendPulse</div><div class="sep"></div>'
     '<div class="row hide" id="tgS" style="left:36px;top:146px;gap:16px">'
@@ -448,7 +450,7 @@ L.append(
     'background:#1e1e1e;color:#fff">WayForPay</div>'
     + sk.svg(880, 570, sk.arrow([(620, 520), (690, 500), (740, 480)], stroke="red", sw=5, head=22), sid="tgAr") +
     '<div class="hand hide" id="tgWT" style="position:absolute;left:420px;top:500px;font-size:40px;color:#EA4335">посилання</div>'
-    '</div></div>')
+    '</div></div></div>')
 
 
 @beat
@@ -460,8 +462,7 @@ def b_tg():
     sfx("pop", "@wfp")
     sfx("click", "@vidpr")
     return js("""
-  h.pop("#tg", @dyvytsia-0.1, {s: 1, r: 0, y: 0, d: 0.2});
-  h.pop("#tgC", @dyvytsia-0.1, {s: 0.5, r: 3});
+  swap("#bd", "#tg", "#tgSh", @dyvytsia-0.2, 700);
   h.pop("#tgS", @kogo-0.05, {s: 0.8, r: 0, y: 14});
   h.pop("#tgB1", @pyshe, {s: 0.6, r: -2});
   tl.to("#tgC", {keyframes: {x: [0, -8, 7, -4, 2, 0]}, duration: 0.35, ease: "none"}, @pyshe+0.05);
@@ -488,8 +489,7 @@ def b_board3():
     sfx("pencil", "@uchniu-0.2", -3)
     sfx("pencil", "@chetv+0.2", -2)
     return js("""
-  h.boardIn("#bd", @tretie-0.2, 840, 495, 0.75);
-  tl.set("#tg", {autoAlpha: 0}, @tretie+0.6);
+  swap("#tg", "#bd", "#bdS", @tretie-0.2, 940);
   h.draw("#ck2", @tretie+0.3, 0.3);
   h.write("#rt3", @after-0.15, 0.7);
   h.pop("#p3z", @zoom-0.15, {s: 0.5, r: -4});
@@ -513,7 +513,6 @@ def b_board3():
   tl.to("#d3", {autoAlpha: 0, duration: 0.3}, @chetv-0.1);
   h.draw("#ck3", @chetv, 0.3);
   h.write("#rt4", @chetv+0.25, 1.4);
-  h.boardOut("#bd", @tobto2-0.05, 420, 572, 0.55);
 """)
 
 
@@ -526,7 +525,8 @@ tiles = "".join('<div class="kt hide" id="kt%d" style="left:%dpx;top:%dpx;backgr
                 for i in range(4))
 L.append(
     '<div class="g" id="ts" style="top:0;height:700px">'
-    '<div class="gcard" id="tsC" style="left:100px;top:50px;width:880px;height:570px">'
+    '<div class="sheet hide" id="tsS" style="height:700px;background:#fff">'
+    '<div class="gcard" id="tsC" style="left:100px;top:100px;width:880px;height:570px">'
     '<div class="lbl" style="left:40px;top:36px">Тест за темою</div>'
     '<div class="ab" style="left:620px;top:24px"><span class="chip cy">НМТ</span></div>'
     '<div class="gs" id="tsQ" style="position:absolute;left:40px;top:96px;font-size:44px;font-weight:700">Квадратні рівняння</div>'
@@ -537,10 +537,10 @@ L.append(
     '<div class="pill hide" id="ksP" style="left:600px;top:236px;height:80px;padding:0 30px;font-size:36px;font-weight:700;'
     'background:#46178f;color:#fff">Kahoot</div>'
     '</div>'
-    '<div class="hand hide over-plate" id="ksV" style="position:absolute;left:620px;top:600px;font-size:64px;color:#fff;'
+    '<div class="hand hide" id="ksV" style="position:absolute;left:640px;top:220px;font-size:60px;color:#EA4335;'
     'transform:rotate(-4deg)">вікторина!</div>'
-    + sk.svg(1080, 700, sk.spark(600, 610, 30, stroke="yellow", sw=7), sid="ksS", cls="sk over-plate") +
-    '</div>')
+    + sk.svg(1080, 700, sk.spark(626, 240, 26, stroke="yellow", sw=7), sid="ksS") +
+    '</div></div>')
 
 
 @beat
@@ -552,8 +552,7 @@ def b_ts():
     sfx("pop", "@kahoot")
     sfx("sparkle", "@viktor")
     return js("""
-  h.pop("#ts", @tobto2, {s: 1, r: 0, y: 0, d: 0.2});
-  h.pop("#tsC", @tobto2, {s: 0.5, r: -3});
+  swap("#bd", "#ts", "#tsS", @tobto2-0.1, 700);
   h.pop("#op1", @tobto2+0.3, {s: 0.8, r: 0, y: 10}); h.pop("#op2", @tobto2+0.4, {s: 0.8, r: 0, y: 10});
   h.pop("#op3", @tobto2+0.5, {s: 0.8, r: 0, y: 10}); h.pop("#op4", @tobto2+0.6, {s: 0.8, r: 0, y: 10});
   h.pop("#tsCh", @skil2-0.05, {s: 0.6, r: -3});
@@ -567,10 +566,6 @@ def b_ts():
   h.bump("#kt1", @claude4); h.bump("#kt2", @claude4+0.1); h.bump("#kt3", @claude4+0.2); h.bump("#kt4", @claude4+0.3);
   h.write("#ksV", @viktor-0.05, 0.6);
   h.draw("#ksS", @viktor+0.3, 0.3);
-  tl.to("#tsC", {scale: 0.6, y: 40, autoAlpha: 0, duration: 0.35, ease: "power3.in"}, @tomu-0.2);
-  h.fadeOut("#ksV", @tomu-0.2, 0.25);
-  h.fadeOut("#ksS", @tomu-0.2, 0.25);
-  tl.set("#ts", {autoAlpha: 0}, @tomu+0.2);
 """)
 
 
@@ -581,7 +576,8 @@ mini = "".join('<div class="gs" style="position:absolute;left:96px;top:%dpx;font
 ticks = "".join(sk.check(36, 104 + 62 * i, 40, sw=7) for i in range(4))
 L.append(
     '<div class="g" id="cta" style="top:0;height:700px">'
-    '<div class="gcard" id="ctC" style="left:100px;top:60px;width:880px;height:380px">'
+    '<div class="sheet hide" id="ctaS" style="height:700px;background:#fff">'
+    '<div class="gcard" id="ctC" style="left:100px;top:80px;width:880px;height:380px">'
     '<div class="lbl" style="left:40px;top:40px">Автоматизації репетиторки</div>' + mini +
     sk.svg(880, 380, ticks, sid="ctK") + '</div>'
     '<div class="pill hide" id="ctS" style="left:130px;top:480px;height:110px;padding:0 40px;font-size:40px;font-weight:700">'
@@ -590,8 +586,8 @@ L.append(
     '<div class="pill hide" id="ctF" style="left:560px;top:480px;height:110px;padding:0 40px;font-size:40px;font-weight:700">'
     + sk.svg(50, 50, sk.arrow([(4, 44), (20, 16), (46, 8)], stroke="#4285F4", sw=4, head=16),
              cls="sk", style="position:relative") + 'Переслати</div>'
-    '<div class="hand hide over-plate" id="ctT" style="position:absolute;left:640px;top:610px;font-size:44px;color:#fff">колезі</div>'
-    '</div>')
+    '<div class="hand hide" id="ctT" style="position:absolute;left:640px;top:608px;font-size:46px;color:#EA4335">колезі</div>'
+    '</div></div>')
 
 
 @beat
@@ -601,8 +597,7 @@ def b_cta():
     sfx("click", "@zberezhy+0.1")
     sfx("click", "@pereshly")
     return js("""
-  h.pop("#cta", @tomu-0.05, {s: 1, r: 0, y: 0, d: 0.2});
-  h.pop("#ctC", @tomu-0.05, {s: 0.6, r: -3});
+  swap("#ts", "#cta", "#ctaS", @tomu-0.2, 700);
   h.draw("#ctK", @tomu+0.3, 0.9);
   h.pop("#ctS", @zberezhy-0.1, {s: 0.5, r: -4});
   h.bump("#ctS", @zberezhy+0.15);
@@ -613,8 +608,7 @@ def b_cta():
 
 
 # the white board under ink captions
-INVERT = [(T["os"] + 0.5, T["pidkl"] + 0.2, ""), (T["druhe"] + 0.3, T["dyvytsia"] + 0.2, ""),
-          (T["tretie"] + 0.3, T["tobto2"] + 0.25, "")]
+INVERT = []    # halfscreen keeps her and the white captions in the bottom half (STYLE.md §0c)
 # captions drop only where a graphic says her words at the same time
 BLACKOUT = [(T["yaki"], T["korotshe"], ""),                 # the question card
             (T["crm"] - 0.2, T["pidkl"] - 0.05, ""),         # «CRM учнів + фінанси» written
@@ -628,6 +622,22 @@ BLACKOUT = [(T["yaki"], T["korotshe"], ""),                 # the question card
             (T["pereshly"], T["pereshly"] + 0.6, "")]
 
 
+# one sheet replaces another: the new one drops in over the old (z on top), her
+# plate re-settles to the new height, the old one is hidden once covered.
+SWAP_JS = """
+  var Z = 10;
+  function swap(oldG, newG, newS, t, hgt) {
+    Z += 1;
+    tl.set(newG, {autoAlpha: 1, zIndex: Z}, t);
+    tl.set(newS, {autoAlpha: 1}, t);
+    tl.fromTo(newS, {y: -hgt - 40}, {y: 0, duration: 0.7, ease: SOFT, immediateRender: false}, t);
+    h.plateDown(t, Math.max(0, hgt - 580), 0.8);
+    tl.set(oldG, {autoAlpha: 0}, t + 0.72);
+  }
+  tl.set("#q", {zIndex: 10}, 0);
+"""
+
+
 def main():
     gj = []
     for fn in BEATS:
@@ -636,7 +646,7 @@ def main():
     for a, b in NO_PAINT:
         for c in SFX:
             assert not (a <= c["t"] < b), ("sfx in no_paint", c)
-    head = [SKETCH_JS, "  var h = sketchHelpers(tl);",
+    head = [SKETCH_JS, "  var h = sketchHelpers(tl);", SWAP_JS,
             '  gsap.set("#vid", {transformOrigin: "540px 900px"});',
             '  tl.fromTo("#vid", {scale: 1}, {scale: 1.045, duration: %.3f, ease: "none"}, 0);' % DUR]
     doc = k.document(
@@ -652,7 +662,6 @@ def main():
     SFX.sort(key=lambda c: c["t"])
     io.open(os.path.join(HERE, "sfx.json"), "w", encoding="utf-8").write(json.dumps(SFX, indent=1))
     print("index.html  %d captions, %d beats, %d sfx cues" % (len(CAPS), len(BEATS), len(SFX)))
-    print(" ".join(c["w"] for c in CAPS))
 
 
 main()

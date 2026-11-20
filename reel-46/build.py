@@ -6,6 +6,10 @@ Google x Excalidraw look (STYLE.md §0b), skeleton copied from reel-45.
 The one object: the SendPulse agent's SETTINGS CARD — four rows (Інструкції,
 Модель, Завантаження файлів, Макс. токенів). Every beat opens one of its rows.
 
+Layouts (STYLE.md §0c, her note «graphics never on my head»): every mockup is a
+move-down sheet (her plate is pushed down under it), the two boards and the
+Sonnet | Haiku comparison are halfscreen whiteboards; no full-frame takeover.
+
 Chain:  NEAR the agent card: SendPulse pill, three chips (кваліфікує ->
 спілкується -> продаж) joined by drawn arrows -> the chips clear and the card
 becomes the settings list; «два»: green loops 1 and 2 round Інструкції and
@@ -198,23 +202,40 @@ k.css("""
       white-space: nowrap; }
 """)
 
+# ---------------------------------------------------------------- layouts (STYLE.md §0c)
+# Mockups = move-down sheets (h 620-700, Material grey ground, the card inside);
+# schemes (the two boards, the price comparison) = halfscreen whiteboard sheets
+# (h 930, authored at full size inside 0..890). One sheet hands over to the next
+# with swap(): the old one rolls up while the new one drops over it, and her
+# plate goes straight to the new depth (no up-down bounce between them).
+MOCK_H, HALF_H = 700, 930
+SHEET_BG = "background:#f1f3f4"
+
+
+def mock_open(gid, sid, h=MOCK_H):
+    return ('<div class="g full" id="%s"><div class="sheet hide" id="%s" style="height:%dpx;%s">'
+            % (gid, sid, h, SHEET_BG))
+
+
+def half_open(gid, sid, h=HALF_H):
+    return '<div class="g full" id="%s"><div class="sheet board-bg hide" id="%s" style="height:%dpx">' % (gid, sid, h)
+
+
 # ---------------------------------------------------------------- 1+2 the agent card -> settings list
 ROWS = [(u"Інструкції", u"текст"), (u"Модель", u"Haiku"), (u"Завантаження файлів", u"вимк."),
         (u"Макс. токенів", u"—")]
-CX, CY = 100, 70          # card origin
 ROW_Y = [150, 250, 350, 450]
 rows_html = "".join(
     '<div class="srow hide" id="sr%d" style="top:%dpx"><span>%s</span><i>%s</i></div>' % (i, y, a, b)
     for i, ((a, b), y) in enumerate(zip(ROWS, ROW_Y)))
 L.append(
-    '<div class="g" id="ag" style="top:0;height:700px">'
-    '<div class="gcard" id="agC" style="left:%dpx;top:%dpx;width:880px;height:560px">' % (CX, CY) +
+    mock_open("ag", "agS") +
+    '<div class="gcard" id="agC" style="left:100px;top:110px;width:880px;height:560px">'
     '<div class="row" style="left:36px;top:30px;height:70px">'
     '<span id="spDot" style="display:inline-block;width:44px;height:44px;border-radius:50%;background:#4285F4"></span>'
     '<span class="gs" id="spW" style="font-size:42px;font-weight:700">SendPulse</span>'
     '<span class="lbl" style="position:static">AI-агент</span></div>'
     '<div style="position:absolute;left:0;right:0;top:120px;height:2px;background:#e8eaed"></div>'
-    # the three jobs (beat 1)
     + sk.svg(880, 560, sk.ellipse(170, 335, 110, 110, stroke="blue", fill="blue"), sid="jag")
     + '<div class="gs hide" id="jagT" style="position:absolute;left:60px;top:310px;width:220px;text-align:center;font-size:42px;font-weight:700;color:#0b57d0">агент</div>'
     '<div class="ab hide" id="j1" style="left:440px;top:165px"><span class="chip on">кваліфікує</span></div>'
@@ -224,27 +245,26 @@ L.append(
     + sk.svg(880, 560, sk.arrow([(295, 338), (360, 334), (425, 338)], stroke="blue", sw=5, head=22), sid="ja1")
     + sk.svg(880, 560, sk.arrow([(290, 385), (350, 445), (425, 470)], stroke="blue", sw=5, head=22), sid="ja2")
     + rows_html
-    # «два»: loops round row 0 and row 3, numbers in green hand
     + sk.svg(880, 560, sk.circle_around(200, ROW_Y[0] + 42, 175, 46, stroke="green", sw=6), sid="lp1")
     + sk.svg(880, 560, sk.circle_around(200, ROW_Y[3] + 42, 175, 46, stroke="green", sw=6), sid="lp2")
     + '<div class="hand hide" id="n1" style="position:absolute;left:600px;top:%dpx;font-size:64px;color:#34A853">1</div>' % (ROW_Y[0] + 4)
     + '<div class="hand hide" id="n2" style="position:absolute;left:600px;top:%dpx;font-size:64px;color:#34A853">2</div>' % (ROW_Y[3] + 4)
     + sk.svg(880, 560, sk.line([(40, ROW_Y[1] + 44), (420, ROW_Y[1] + 40), (840, ROW_Y[1] + 46)], stroke="red", sw=6, double=False), sid="st1")
     + sk.svg(880, 560, sk.line([(40, ROW_Y[2] + 44), (460, ROW_Y[2] + 48), (840, ROW_Y[2] + 42)], stroke="red", sw=6, double=False), sid="st2")
-    + '</div></div>')
+    + '</div></div></div>')
 
 
 @beat
 def b_agent():
-    sfx("pop", 0.15)
+    sfx("whoosh-short", 0.05, -4)
     sfx("pencil", 0.9, -4)
     sfx("click-soft", "@sendpulse")
     sfx("pop", "@kvalif")
     sfx("pop", "@spilk")
     sfx("pop", "@prodazhu")
     return js("""
-  h.pop("#ag", 0.05, {s: 1, r: 0, y: 0, d: 0.2});
-  h.pop("#agC", 0.1, {s: 0.7, r: -3});
+  h.show("#ag", 0.02);
+  h.sheetIn("#agS", 0.02, %d);
   h.bump("#spW", @sendpulse);
   h.wiggle("#spDot", @sendpulse);
   h.draw("#jag", 0.9, 0.8);
@@ -256,12 +276,11 @@ def b_agent():
   h.draw("#ja2", @prodazhu-0.4, 0.3);
   h.pop("#j3", @prodazhu-0.05, {s: 0.5, r: -4});
   h.bump("#j3", @prodazhu+0.4);
-""")
+""" % MOCK_H)
 
 
 @beat
 def b_settings():
-    sfx("whoosh-short", "@nalashtuvan-0.5")
     sfx("click-soft", "@nalashtuvan")
     sfx("pencil", "@dva-0.1", -3)
     sfx("pencil", "@inshe", -4)
@@ -271,9 +290,9 @@ def b_settings():
   h.out("#j3", @nalashtuvan-0.45, 0.2);
   h.undraw("#ja0", @nalashtuvan-0.55, 0.2);
   h.undraw("#ja1", @nalashtuvan-0.55, 0.2);
+  h.undraw("#ja2", @nalashtuvan-0.55, 0.2);
   h.undraw("#jag", @nalashtuvan-0.55, 0.25);
   h.out("#jagT", @nalashtuvan-0.55, 0.2);
-  h.undraw("#ja2", @nalashtuvan-0.55, 0.2);
   h.pop("#sr0", @nalashtuvan-0.1, {s: 0.95, r: 0, y: 16, d: 0.5});
   h.pop("#sr1", @nalashtuvan+0.05, {s: 0.95, r: 0, y: 16, d: 0.5});
   h.pop("#sr2", @nalashtuvan+0.2, {s: 0.95, r: 0, y: 16, d: 0.5});
@@ -290,29 +309,27 @@ def b_settings():
 """)
 
 
-# ---------------------------------------------------------------- 3 OVER: the instructions board
-B1X, B1Y = CX + 240, CY + ROW_Y[0] + 42
+# ---------------------------------------------------------------- 3 HALFSCREEN: the instructions board
 L.append(
-    '<div class="g full" id="bd1">'
-    '<div class="board"></div>'
-    '<div class="lbl hide" id="b1L" style="left:110px;top:170px">SendPulse · AI-агент</div>'
-    '<div class="hand hide" id="b1T" style="left:108px;top:214px;position:absolute;font-size:84px">Інструкції</div>'
-    + sk.svg(1080, 1300, sk.underline(110, 326, 420, stroke="blue"), sid="b1U")
-    + '<div class="hand hide" id="b1N" style="position:absolute;left:740px;top:220px;font-size:80px;color:#EA4335">№1</div>'
-    + sk.svg(1080, 1300, sk.circle_around(812, 268, 110, 66, stroke="red", sw=6), sid="b1NC")
-    + '<div class="field hide" id="b1F" style="left:110px;top:410px;width:860px;height:300px"><span class="fl">Інструкції</span></div>'
-    + sk.svg(1080, 1300,
-             sk.line([(150, 480), (420, 476), (700, 484), (920, 478)], stroke="#3c4043", sw=5, double=False) +
-             sk.line([(150, 540), (360, 544), (620, 536), (880, 542)], stroke="#3c4043", sw=5, double=False) +
-             sk.line([(150, 600), (330, 596), (560, 604), (760, 598)], stroke="#3c4043", sw=5, double=False) +
-             sk.line([(150, 660), (300, 656), (480, 662), (700, 658)], stroke="#3c4043", sw=5, double=False),
+    half_open("bd1", "bd1S") +
+    '<div class="lbl hide" id="b1L" style="left:110px;top:56px">SendPulse · AI-агент</div>'
+    '<div class="hand hide" id="b1T" style="left:108px;top:96px;position:absolute;font-size:84px">Інструкції</div>'
+    + sk.svg(1080, 930, sk.underline(110, 208, 420, stroke="blue"), sid="b1U")
+    + '<div class="hand hide" id="b1N" style="position:absolute;left:740px;top:96px;font-size:80px;color:#EA4335">№1</div>'
+    + sk.svg(1080, 930, sk.circle_around(812, 144, 110, 66, stroke="red", sw=6), sid="b1NC")
+    + '<div class="field hide" id="b1F" style="left:110px;top:300px;width:860px;height:270px"><span class="fl">Інструкції</span></div>'
+    + sk.svg(1080, 930,
+             sk.line([(150, 370), (420, 366), (700, 374), (920, 368)], stroke="#3c4043", sw=5, double=False) +
+             sk.line([(150, 425), (360, 429), (620, 421), (880, 427)], stroke="#3c4043", sw=5, double=False) +
+             sk.line([(150, 480), (330, 476), (560, 484), (760, 478)], stroke="#3c4043", sw=5, double=False) +
+             sk.line([(150, 535), (300, 531), (480, 537), (700, 533)], stroke="#3c4043", sw=5, double=False),
              sid="b1S")
-    + sk.svg(1080, 1300, sk.arrow([(1010, 450), (1016, 800), (1010, 1150)], stroke="blue", sw=5, both=True), sid="b1A")
-    + '<div class="hand hide" id="b1LT" style="position:absolute;left:640px;top:345px;font-size:44px;color:#4285F4">майже без ліміту</div>'
-    + '<div class="ab hide" id="b1c1" style="left:150px;top:760px"><span class="chip cy">скрипти</span></div>'
-    + '<div class="ab hide" id="b1c2" style="left:420px;top:850px"><span class="chip on">цільова аудиторія</span></div>'
-    + '<div class="ab hide" id="b1c3" style="left:200px;top:960px"><span class="chip cg">контекст про бізнес</span></div>'
-    + '</div>')
+    + sk.svg(1080, 930, sk.arrow([(1012, 330), (1018, 590), (1012, 850)], stroke="blue", sw=5, both=True), sid="b1A")
+    + '<div class="hand hide" id="b1LT" style="position:absolute;left:640px;top:226px;font-size:44px;color:#4285F4">майже без ліміту</div>'
+    + '<div class="ab hide" id="b1c1" style="left:150px;top:610px"><span class="chip cy">скрипти</span></div>'
+    + '<div class="ab hide" id="b1c2" style="left:420px;top:690px"><span class="chip on">цільова аудиторія</span></div>'
+    + '<div class="ab hide" id="b1c3" style="left:200px;top:770px"><span class="chip cg">контекст про бізнес</span></div>'
+    + '</div></div>')
 
 
 @beat
@@ -327,7 +344,8 @@ def b_board1():
     sfx("pop", "@kontekst+0.2")
     sfx("whoosh-short", "@buty-0.05")
     return js("""
-  h.boardIn("#bd1", @instr-0.15, %d, %d, 0.7);
+  h.show("#bd1", @instr-0.15);
+  swap("#agS", %(m)d, "#bd1S", @instr-0.15, %(f)d);
   tl.set("#ag", {autoAlpha: 0}, @instr+0.6);
   h.write("#b1L", @instr+0.2, 0.35);
   h.write("#b1T", @instr+0.35, 0.55);
@@ -335,7 +353,7 @@ def b_board1():
   h.write("#b1N", @naivazh-0.05, 0.3);
   h.draw("#b1NC", @naivazh+0.25, 0.45);
   h.pop("#b1F", @limitu-0.4, {s: 0.92, r: 0, y: 14});
-  tl.fromTo("#b1F", {height: 300}, {height: 740, duration: 0.9, ease: "power3.inOut", immediateRender: false}, @limitu+0.1);
+  tl.fromTo("#b1F", {height: 270}, {height: 570, duration: 0.9, ease: "power3.inOut", immediateRender: false}, @limitu+0.1);
   h.draw("#b1A", @limitu+0.4, 0.5);
   h.write("#b1LT", @nemaie-0.1, 0.5);
   h.draw("#b1S", @zanosysh-0.2, 1.0);
@@ -343,16 +361,13 @@ def b_board1():
   h.pop("#b1c2", @audytoriia-0.25, {s: 0.4, r: 5, y: -60});
   h.pop("#b1c3", @kontekst+0.1, {s: 0.4, r: -4, y: -60});
   h.bump("#b1F", @buty-0.2);
-  h.boardOut("#bd1", @buty-0.05, 540, 330, 0.45);
-""" % (B1X, B1Y))
+""" % {"m": MOCK_H, "f": HALF_H})
 
 
-# ---------------------------------------------------------------- 4 NEAR: the model
+# ---------------------------------------------------------------- 4 MOVE-DOWN: the model dropdown
 L.append(
-    '<div class="g" id="md" style="top:0;height:700px">'
-    '<div class="gcard" id="mdC" style="left:100px;top:70px;width:880px;height:560px">'
-    # part A: the dropdown
-    '<div id="mdA">'
+    mock_open("md", "mdS") +
+    '<div class="gcard" id="mdC" style="left:100px;top:110px;width:880px;height:560px">'
     '<div class="field" id="mdF" style="left:40px;top:70px;width:800px;height:120px"><span class="fl">Модель</span>'
     '<span class="ty" id="mdV" data-text="Haiku" style="left:34px;top:34px;font-size:46px;font-weight:700"></span></div>'
     + sk.svg(880, 560, sk.line([(760, 120), (780, 142), (800, 120)], sw=5, double=False), sid="mdCar")
@@ -361,30 +376,33 @@ L.append(
     + sk.svg(880, 560, sk.arrow([(410, 320), (600, 312), (820, 320)], stroke="blue", sw=5), sid="mdAr")
     + '<div class="ab hide" id="mdEc" style="left:40px;top:400px"><span class="chip cy">гроші зекономиш</span></div>'
     + sk.svg(880, 560, sk.spark(420, 430, 30, stroke="green", sw=6), sid="mdSp")
-    + '</div>'
-    # part B: Sonnet | Haiku
-    '<div class="gs hide" id="mbS" style="position:absolute;left:60px;top:40px;width:340px;text-align:center;font-size:48px;font-weight:700">Sonnet</div>'
-    '<div class="gs hide" id="mbH" style="position:absolute;left:480px;top:40px;width:340px;text-align:center;font-size:48px;font-weight:700">Haiku</div>'
-    + sk.svg(880, 560, sk.line([(440, 40), (440, 330)], stroke="#bdc1c6", sw=4, double=False), sid="mbDiv")
-    + sk.svg(880, 560, sk.rect(170, 130, 120, 180, stroke="red", fill="red"), sid="mbBS")
-    + sk.svg(880, 560, sk.rect(590, 260, 120, 50, stroke="green", fill="green"), sid="mbBH")
-    + '<div class="hand hide" id="mbX" style="position:absolute;left:300px;top:150px;font-size:56px;color:#EA4335">×3–4</div>'
-    + '<div class="lbl hide" id="mbP" style="left:60px;top:325px;width:780px;text-align:center">ціна</div>'
-    + '<div class="bub me hide" id="mbR1" style="left:60px;top:385px;width:340px;height:120px;box-sizing:border-box"></div>'
-    + '<div class="bub me hide" id="mbR2" style="left:480px;top:385px;width:340px;height:120px;box-sizing:border-box"></div>'
-    + sk.svg(880, 560,
-             sk.line([(95, 425), (230, 421), (360, 427)], stroke="#041e49", sw=5, double=False) +
-             sk.line([(95, 465), (200, 469), (300, 463)], stroke="#041e49", sw=5, double=False) +
-             sk.line([(515, 425), (650, 421), (780, 427)], stroke="#041e49", sw=5, double=False) +
-             sk.line([(515, 465), (620, 469), (720, 463)], stroke="#041e49", sw=5, double=False), sid="mbRL")
-    + sk.svg(880, 560, sk.line([(415, 430), (465, 428)], stroke="green", sw=9, double=False) +
-             sk.line([(415, 462), (465, 460)], stroke="green", sw=9, double=False), sid="mbEq")
+    + '</div></div></div>')
+
+# ---------------------------------------------------------------- 4b HALFSCREEN: Sonnet | Haiku
+L.append(
+    half_open("cmp", "cmpS") +
+    '<div class="gs hide" id="mbS" style="position:absolute;left:100px;top:70px;width:360px;text-align:center;font-size:64px;font-weight:700">Sonnet</div>'
+    '<div class="gs hide" id="mbH" style="position:absolute;left:620px;top:70px;width:360px;text-align:center;font-size:64px;font-weight:700">Haiku</div>'
+    + sk.svg(1080, 930, sk.line([(540, 70), (540, 580)], stroke="#bdc1c6", sw=4, double=False), sid="mbDiv")
+    + sk.svg(1080, 930, sk.rect(190, 190, 180, 360, stroke="red", fill="red"), sid="mbBS")
+    + sk.svg(1080, 930, sk.rect(710, 470, 180, 80, stroke="green", fill="green"), sid="mbBH")
+    + '<div class="hand hide" id="mbX" style="position:absolute;left:390px;top:200px;font-size:76px;color:#EA4335">×3–4</div>'
+    + '<div class="lbl hide" id="mbP" style="left:100px;top:578px;width:880px;text-align:center">ціна</div>'
+    + '<div class="bub me hide" id="mbR1" style="left:100px;top:650px;width:380px;height:150px;box-sizing:border-box;max-width:none"></div>'
+    + '<div class="bub me hide" id="mbR2" style="left:600px;top:650px;width:380px;height:150px;box-sizing:border-box;max-width:none"></div>'
+    + sk.svg(1080, 930,
+             sk.line([(140, 705), (290, 701), (440, 707)], stroke="#041e49", sw=5, double=False) +
+             sk.line([(140, 750), (260, 754), (370, 748)], stroke="#041e49", sw=5, double=False) +
+             sk.line([(640, 705), (790, 701), (940, 707)], stroke="#041e49", sw=5, double=False) +
+             sk.line([(640, 750), (760, 754), (870, 748)], stroke="#041e49", sw=5, double=False), sid="mbRL")
+    + sk.svg(1080, 930, sk.line([(510, 708), (570, 706)], stroke="green", sw=10, double=False) +
+             sk.line([(510, 746), (570, 744)], stroke="green", sw=10, double=False), sid="mbEq")
     + '</div></div>')
 
 
 @beat
 def b_model():
-    sfx("pop", "@model+0.05")
+    sfx("whoosh-short", "@buty-0.05", -4)
     sfx("click-soft", "@naideshevshu")
     sfx("key-press", "@haiku")
     sfx("pencil", "@chitko", -3)
@@ -396,8 +414,9 @@ def b_model():
     sfx("pop", "@riznytsi2")
     sfx("pencil", "@vizualno+0.2", -4)
     return js("""
-  h.pop("#md", @model+0.02, {s: 1, r: 0, y: 0, d: 0.2});
-  h.pop("#mdC", @model+0.02, {s: 0.4, r: 2, y: -60});
+  h.show("#md", @buty-0.05);
+  swap("#bd1S", %(f)d, "#mdS", @buty-0.05, %(m)d);
+  tl.set("#bd1", {autoAlpha: 0}, @buty+0.6);
   h.draw("#mdCar", @model+0.3, 0.3);
   h.pop("#mdCh", @naideshevshu, {s: 0.5, r: -4});
   h.type("#mdV", @haiku-0.05, 14);
@@ -406,8 +425,10 @@ def b_model():
   h.draw("#mdAr", @skryptu, 0.5);
   h.pop("#mdEc", @hroshi-0.15, {s: 0.5, r: 4});
   h.draw("#mdSp", @hroshi+0.2, 0.3);
-  /* A clears, B: Sonnet | Haiku */
-  h.fadeOut("#mdA", @testuvala-0.2, 0.25);
+  /* the test: a scheme -> halfscreen */
+  h.show("#cmp", @testuvala-0.2);
+  swap("#mdS", %(m)d, "#cmpS", @testuvala-0.2, %(f)d);
+  tl.set("#md", {autoAlpha: 0}, @testuvala+0.5);
   h.pop("#mbS", @sonnet-0.05, {s: 0.6, r: -3});
   h.draw("#mbDiv", @sonnet+0.2, 0.3);
   h.pop("#mbH", @haiku2-0.05, {s: 0.6, r: 3});
@@ -422,15 +443,13 @@ def b_model():
   h.draw("#mbEq", @vizualno+0.2, 0.35);
   h.bump("#mbR1", @pobachyla);
   h.bump("#mbR2", @pobachyla);
-  tl.to("#mdC", {scale: 0.9, autoAlpha: 0, duration: 0.3, ease: "power2.in"}, @pobachyla+0.4);
-  tl.set("#md", {autoAlpha: 0}, @pobachyla+0.75);
-""")
+""" % {"m": MOCK_H, "f": HALF_H})
 
 
-# ---------------------------------------------------------------- 5 NEAR: file upload
+# ---------------------------------------------------------------- 5 MOVE-DOWN: file upload
 L.append(
-    '<div class="g" id="fl" style="top:0;height:700px">'
-    '<div class="gcard" id="flC" style="left:100px;top:70px;width:880px;height:560px">'
+    mock_open("fl", "flS") +
+    '<div class="gcard" id="flC" style="left:100px;top:110px;width:880px;height:560px">'
     '<div class="gs" style="position:absolute;left:40px;top:44px;font-size:42px;font-weight:700">Завантаження файлів</div>'
     '<div class="ab" id="flB" style="left:40px;top:120px;width:360px;height:84px;border-radius:42px;border:2px solid #747775;'
     'display:flex;align-items:center;justify-content:center;font-family:GSans,sans-serif;font-size:32px;color:#0b57d0;font-weight:500">'
@@ -448,19 +467,20 @@ L.append(
              sk.line([(510, 380), (620, 384), (760, 378)], stroke="#3c4043", sw=5, double=False) +
              sk.line([(510, 430), (600, 426), (720, 432)], stroke="#3c4043", sw=5, double=False), sid="flFS")
     + '<div class="hand hide" id="flL" style="position:absolute;left:520px;top:496px;font-size:42px;color:#4285F4">без ліміту</div>'
-    + '</div></div>')
+    + '</div></div></div>')
 
 
 @beat
 def b_files():
-    sfx("pop", "@zavant-0.1")
+    sfx("whoosh-short", "@pobachyla+0.4", -4)
     sfx("pencil", "@propustyty", -2)
     sfx("pop", "@faylom-0.2")
     sfx("whoosh-short", "@instruktsii-0.3", -3)
     sfx("pencil", "@limitu2-0.2", -4)
     return js("""
-  h.pop("#fl", @zavant-0.15, {s: 1, r: 0, y: 0, d: 0.2});
-  h.pop("#flC", @zavant-0.15, {s: 0.7, r: -2});
+  h.show("#fl", @pobachyla+0.4);
+  swap("#cmpS", %(f)d, "#flS", @pobachyla+0.4, %(m)d);
+  tl.set("#cmp", {autoAlpha: 0}, @pobachyla+1.0);
   h.draw("#flX", @propustyty, 0.45);
   tl.to("#flB", {opacity: 0.4, duration: 0.3}, @propustyty+0.3);
   h.pop("#flDoc", @faylom-0.2, {s: 0.5, r: -8});
@@ -471,19 +491,18 @@ def b_files():
   h.draw("#flFS", @instruktsii+0.35, 0.6);
   h.bump("#flF", @instruktsii+0.5);
   h.write("#flL", @limitu2-0.2, 0.45);
-  tl.to("#flC", {y: -30, autoAlpha: 0, duration: 0.3, ease: "power2.in"}, @optym+0.6);
-  tl.set("#fl", {autoAlpha: 0}, @optym+0.95);
-""")
+""" % {"m": MOCK_H, "f": HALF_H})
 
 
-# ---------------------------------------------------------------- 6 the tokens pill
+# ---------------------------------------------------------------- 6 MOVE-DOWN: the tokens setting (zoomed-in clip)
+TK_H = 640
 L.append(
-    '<div class="g" id="tk" style="top:0;height:700px">'
-    '<div class="pill hide" id="tkP" style="left:190px;top:260px;width:700px;height:130px;padding:0 44px;box-sizing:border-box;'
+    mock_open("tk", "tkS", TK_H) +
+    '<div class="pill hide" id="tkP" style="left:190px;top:250px;width:700px;height:130px;padding:0 44px;box-sizing:border-box;'
     'justify-content:space-between;font-size:48px;font-weight:700"><span>Макс. токенів</span>'
     '<span class="field" style="position:relative;width:170px;height:76px;display:inline-block"></span></div>'
-    '<div class="hand hide" id="tkQ" style="position:absolute;left:740px;top:230px;font-size:120px;color:#EA4335">?</div>'
-    '</div>')
+    '<div class="hand hide" id="tkQ" style="position:absolute;left:740px;top:220px;font-size:120px;color:#EA4335">?</div>'
+    '</div></div>')
 
 
 @beat
@@ -491,52 +510,52 @@ def b_tokpill():
     sfx("pop", "@ale-0.05")
     sfx("pencil", "@dyvnym", -3)
     return js("""
-  h.show("#tk", @ale-0.1);
+  h.show("#tk", @optym+0.6);
+  swap("#flS", %(m)d, "#tkS", @optym+0.6, %(t)d);
+  tl.set("#fl", {autoAlpha: 0}, @optym+1.2);
   h.pop("#tkP", @ale-0.05, {s: 0.5, r: -3});
   h.write("#tkQ", @dyvnym, 0.35);
   h.wiggle("#tkQ", @dyvnym+0.4);
-""")
+""" % {"m": MOCK_H, "t": TK_H})
 
 
-# ---------------------------------------------------------------- 7 OVER: the tokens board
-B2X, B2Y = 735, 325
+# ---------------------------------------------------------------- 7 HALFSCREEN: the tokens board
 L.append(
-    '<div class="g full" id="bd2">'
-    '<div class="board"></div>'
-    '<div class="lbl hide" id="b2L" style="left:110px;top:170px">SendPulse · AI-агент</div>'
-    '<div class="hand hide" id="b2T" style="left:108px;top:214px;position:absolute;font-size:84px">Токени</div>'
-    + sk.svg(1080, 1300, sk.underline(110, 326, 300, stroke="red", twice=True), sid="b2U")
+    half_open("bd2", "bd2S") +
+    '<div class="lbl hide" id="b2L" style="left:110px;top:56px">SendPulse · AI-агент</div>'
+    '<div class="hand hide" id="b2T" style="left:108px;top:96px;position:absolute;font-size:84px">Токени</div>'
+    + sk.svg(1080, 930, sk.underline(110, 208, 300, stroke="red", twice=True), sid="b2U")
     # A: the "logical" idea
     + '<div id="b2A">'
-    + '<div class="hand hide" id="b2lo" style="position:absolute;left:640px;top:240px;font-size:52px;color:#5f6368">логічно?</div>'
-    + '<div class="lbl hide" id="b2sl" style="left:110px;top:420px">Макс. токенів</div>'
-    + '<div class="ab hide" id="b2tr" style="left:110px;top:490px;width:860px;height:12px;border-radius:6px;background:#d3e3fd">'
+    + '<div class="hand hide" id="b2lo" style="position:absolute;left:640px;top:110px;font-size:56px;color:#5f6368">логічно?</div>'
+    + '<div class="lbl hide" id="b2sl" style="left:110px;top:300px">Макс. токенів</div>'
+    + '<div class="ab hide" id="b2tr" style="left:110px;top:380px;width:860px;height:12px;border-radius:6px;background:#d3e3fd">'
       '<div id="b2tf" style="height:100%;width:100%;border-radius:6px;background:#0b57d0;transform-origin:0 50%"></div>'
       '<div id="b2th" style="position:absolute;left:0;top:-22px;width:56px;height:56px;border-radius:50%;background:#0b57d0"></div></div>'
-    + '<div class="bub me hide" id="b2sb" style="left:110px;top:590px">Ок</div>'
-    + '<div class="ab hide" id="b2ch" style="left:330px;top:600px"><span class="chip cy">дешевше?</span></div>'
+    + '<div class="bub me hide" id="b2sb" style="left:110px;top:480px">Ок</div>'
+    + '<div class="ab hide" id="b2ch" style="left:330px;top:490px"><span class="chip cy">дешевше?</span></div>'
     + '</div>'
     # B: think + 500
-    + '<div class="dots hide" id="b2D" style="left:110px;top:410px"><i></i><i></i><i></i><i></i></div>'
-    + '<div class="hand hide" id="b2Dt" style="position:absolute;left:290px;top:392px;font-size:54px;color:#d39e00">думає</div>'
-    + '<div class="hand hide" id="b2Rt" style="position:absolute;left:600px;top:392px;font-size:54px;color:#4285F4">відповідь</div>'
-    + '<div class="num hide" id="b2n5" style="position:absolute;left:110px;top:500px;font-size:96px">500</div>'
-    + sk.svg(1080, 1300, sk.rect(110, 620, 330, 110, stroke="ink"), sid="b2r5")
-    + sk.svg(1080, 1300, sk._hachure([(118, 628), (432, 628), (432, 722), (118, 722)], "#FBBC04", gap=13), sid="b2h5")
-    + '<div class="bub me hide" id="b2e5" style="left:520px;top:620px;width:300px;height:110px;box-sizing:border-box"></div>'
-    + sk.svg(1080, 1300, sk.cross(625, 630, 90, sw=10), sid="b2x5")
+    + '<div class="dots hide" id="b2D" style="left:110px;top:290px"><i></i><i></i><i></i><i></i></div>'
+    + '<div class="hand hide" id="b2Dt" style="position:absolute;left:290px;top:272px;font-size:54px;color:#d39e00">думає</div>'
+    + '<div class="hand hide" id="b2Rt" style="position:absolute;left:600px;top:272px;font-size:54px;color:#4285F4">відповідь</div>'
+    + '<div class="num hide" id="b2n5" style="position:absolute;left:110px;top:380px;font-size:84px">500</div>'
+    + sk.svg(1080, 930, sk.rect(340, 385, 260, 90, stroke="ink"), sid="b2r5")
+    + sk.svg(1080, 930, sk._hachure([(348, 393), (592, 393), (592, 467), (348, 467)], "#FBBC04", gap=13), sid="b2h5")
+    + '<div class="bub me hide" id="b2e5" style="left:650px;top:385px;width:320px;height:90px;box-sizing:border-box"></div>'
+    + sk.svg(1080, 930, sk.cross(770, 390, 80, sw=10), sid="b2x5")
     # C: 2000
-    + '<div class="num hide" id="b2n2" style="position:absolute;left:110px;top:790px;font-size:96px">2000</div>'
-    + sk.svg(1080, 1300, sk.rect(110, 910, 860, 110, stroke="ink"), sid="b2r2")
-    + sk.svg(1080, 1300, sk._hachure([(118, 918), (440, 918), (440, 1012), (118, 1012)], "#FBBC04", gap=13), sid="b2h2y")
-    + sk.svg(1080, 1300, sk._hachure([(448, 918), (962, 918), (962, 1012), (448, 1012)], "#4285F4", gap=13), sid="b2h2b")
-    + sk.svg(1080, 1300, sk.check(520, 790, 80, sw=10), sid="b2ok")
-    + '<div class="bub me hide" id="b2rb" style="left:450px;top:1050px;width:520px;height:110px;box-sizing:border-box"></div>'
-    + sk.svg(1080, 1300,
-             sk.line([(490, 1090), (650, 1086), (820, 1092), (930, 1088)], stroke="#041e49", sw=5, double=False) +
-             sk.line([(490, 1126), (620, 1130), (760, 1124)], stroke="#041e49", sw=5, double=False), sid="b2rl")
-    + '<div class="hand hide" id="b2v" style="position:absolute;left:110px;top:1070px;width:320px;font-size:46px;color:#34A853">вартість<br>≈ та сама</div>'
-    + '</div>')
+    + '<div class="num hide" id="b2n2" style="position:absolute;left:110px;top:540px;font-size:84px">2000</div>'
+    + sk.svg(1080, 930, sk.rect(340, 545, 630, 90, stroke="ink"), sid="b2r2")
+    + sk.svg(1080, 930, sk._hachure([(348, 553), (560, 553), (560, 627), (348, 627)], "#FBBC04", gap=13), sid="b2h2y")
+    + sk.svg(1080, 930, sk._hachure([(568, 553), (962, 553), (962, 627), (568, 627)], "#4285F4", gap=13), sid="b2h2b")
+    + sk.svg(1080, 930, sk.check(150, 650, 80, sw=10), sid="b2ok")
+    + '<div class="bub me hide" id="b2rb" style="left:340px;top:665px;width:630px;height:110px;box-sizing:border-box;max-width:none"></div>'
+    + sk.svg(1080, 930,
+             sk.line([(380, 705), (560, 701), (760, 707), (930, 703)], stroke="#041e49", sw=5, double=False) +
+             sk.line([(380, 741), (520, 745), (680, 739)], stroke="#041e49", sw=5, double=False), sid="b2rl")
+    + '<div class="hand hide" id="b2v" style="position:absolute;left:340px;top:800px;font-size:50px;color:#34A853">вартість ≈ та сама</div>'
+    + '</div></div>')
 
 
 @beat
@@ -556,7 +575,8 @@ def b_board2():
     sfx("pencil", "@vplyvaie-0.2", -4)
     sfx("whoosh-short", "@vartist+0.4")
     return js("""
-  h.boardIn("#bd2", @tokeny-0.1, %d, %d, 0.7);
+  h.show("#bd2", @tokeny-0.1);
+  swap("#tkS", %(t)d, "#bd2S", @tokeny-0.1, %(f)d);
   tl.set("#tk", {autoAlpha: 0}, @tokeny+0.6);
   h.write("#b2L", @tokeny+0.2, 0.35);
   h.write("#b2T", @tokeny+0.3, 0.45);
@@ -591,14 +611,13 @@ def b_board2():
   h.pop("#b2rb", @normalne-0.1, {s: 0.6, r: -2});
   h.draw("#b2rl", @normalne+0.15, 0.5);
   h.write("#b2v", @vplyvaie-0.3, 0.6);
-  h.boardOut("#bd2", @vartist+0.4, 540, 330, 0.55);
-""" % (B2X, B2Y))
+""" % {"t": TK_H, "f": HALF_H})
 
 
-# ---------------------------------------------------------------- 8 NEAR: write it short, in the instruction
+# ---------------------------------------------------------------- 8 MOVE-DOWN: write it short, in the instruction
 L.append(
-    '<div class="g" id="ins" style="top:0;height:700px">'
-    '<div class="gcard" id="inC" style="left:100px;top:70px;width:880px;height:560px">'
+    mock_open("ins", "inS") +
+    '<div class="gcard" id="inC" style="left:100px;top:110px;width:880px;height:560px">'
     '<div class="field" id="inF" style="left:40px;top:60px;width:800px;height:440px"><span class="fl">Інструкції</span>'
     '<span class="ty" id="in1" data-text="Пиши коротко." style="left:34px;top:50px"></span>'
     '<span class="ty" id="in2" data-text="Пиши коротко!" style="left:34px;top:150px"></span>'
@@ -606,8 +625,7 @@ L.append(
     + sk.svg(880, 560, sk.underline(76, 380, 340, stroke="red", twice=True), sid="inU")
     + '<div class="dots hide" id="inD" style="left:560px;top:420px"><i></i><i></i><i></i><i></i></div>'
     + '</div>'
-    # the DM it writes without that line
-    '<div class="gcard hide" id="lgC" style="left:100px;top:70px;width:880px;height:560px;overflow:hidden">'
+    '<div class="gcard hide" id="lgC" style="left:100px;top:110px;width:880px;height:560px;overflow:hidden">'
     '<div class="av" style="left:36px;top:26px;background:#34A853">К</div>'
     '<div class="gs" style="position:absolute;left:122px;top:30px;font-size:34px;font-weight:700">Клієнтка</div>'
     '<div class="gs" style="position:absolute;left:122px;top:72px;font-size:24px;color:#5f6368">Direct</div>'
@@ -618,20 +636,21 @@ L.append(
                 stroke="#041e49", sw=5, double=False) for i in range(8)), sid="lgL")
     + sk.svg(880, 560, sk.scribble(250, 190, 570, 300, sw=7), sid="lgX")
     + '<div class="hand hide" id="lgT" style="position:absolute;left:40px;top:400px;width:200px;font-size:40px;color:#EA4335">про всі послуги…</div>'
-    + '</div></div>')
+    + '</div></div></div>')
 
 
 @beat
 def b_short():
-    sfx("pop", "@khochesh-0.2")
     sfx("typing", "@propysaty-0.2", -4)
     sfx("typing", "@dekilka", -4)
     sfx("pencil", "@napysala", -3)
     sfx("whoosh-short", "@velyki-0.3")
     sfx("pencil", "@posluhy", -3)
+    sfx("whoosh-short", "@dali+0.35", -4)
     return js("""
-  h.pop("#ins", @khochesh-0.25, {s: 1, r: 0, y: 0, d: 0.2});
-  h.pop("#inC", @khochesh-0.25, {s: 0.4, r: -2, y: -60});
+  h.show("#ins", @vartist+0.4);
+  swap("#bd2S", %(f)d, "#inS", @vartist+0.4, %(m)d);
+  tl.set("#bd2", {autoAlpha: 0}, @vartist+1.0);
   h.type("#in1", @propysaty-0.2, 16);
   h.type("#in2", @dekilka-0.1, 18);
   h.type("#in3", @napysala-0.3, 18);
@@ -640,49 +659,50 @@ def b_short():
   h.think("#inD", @sam+0.1, 1.2);
   h.out("#inC", @velyki-0.3, 0.25);
   h.pop("#lgC", @velyki-0.2, {s: 0.7, r: 2});
-  tl.fromTo("#lgB", {clipPath: "inset(0% 0% 88% 0%)"}, {clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "power1.inOut", immediateRender: true}, @velyki);
+  tl.fromTo("#lgB", {clipPath: "inset(0%% 0%% 88%% 0%%)"}, {clipPath: "inset(0%% 0%% 0%% 0%%)", duration: 1.4, ease: "power1.inOut", immediateRender: true}, @velyki);
   h.draw("#lgL", @velyki, 1.6);
   h.write("#lgT", @posluhy-0.2, 0.45);
   h.draw("#lgX", @dali-0.3, 0.45);
-  tl.to("#lgC", {y: -30, autoAlpha: 0, duration: 0.3, ease: "power2.in"}, @dali+0.35);
-  tl.set("#ins", {autoAlpha: 0}, @dali+0.7);
-""")
+  h.sheetOut("#inS", @dali+0.35, %(m)d);
+  tl.set("#ins", {autoAlpha: 0}, @dali+1.0);
+""" % {"m": MOCK_H, "f": HALF_H})
 
 
-# ---------------------------------------------------------------- 9 CTA
+# ---------------------------------------------------------------- 9 MOVE-DOWN: CTA
 NT = [(u"М", "#4285F4", u"Марія"), (u"О", "#EA4335", u"Олена"), (u"А", "#FBBC04", u"Андрій"), (u"І", "#34A853", u"Ірина")]
 L.append(
-    '<div class="g" id="cta" style="top:0;height:700px">'
-    '<div class="ab" style="left:100px;top:70px;width:880px;display:flex;flex-wrap:wrap;gap:20px">'
+    mock_open("cta", "ctS") +
+    '<div class="ab" style="left:100px;top:90px;width:880px;display:flex;flex-wrap:wrap;gap:20px">'
     '<span class="chip cr hide" id="c1">немає менеджера</span>'
     '<span class="chip cy hide" id="c2">менеджер не справляється</span></div>'
-    '<div class="ab" id="ntW" style="left:100px;top:250px;width:880px;height:390px">'
+    '<div class="ab" id="ntW" style="left:100px;top:270px;width:880px;height:390px">'
     + "".join('<div class="ntf hide" id="nt%d" style="top:%dpx"><div class="av" style="background:%s">%s</div>'
               '<b>%s</b><span>Нове повідомлення</span><em>DIRECT</em></div>' % (i, i * 96, c, a, n)
               for i, (a, c, n) in enumerate(NT))
     + '</div>'
-    '<div class="hand hide over-plate" id="ntT" style="position:absolute;left:600px;top:520px;font-size:54px;color:#EA4335">без відповіді</div>'
-    + sk.svg(1080, 700, sk.ellipse(540, 330, 105, 100, stroke="white", sw=7) +
-             sk.line([(540, 275), (540, 385)], stroke="white", sw=11, double=False) +
-             sk.line([(485, 330), (595, 330)], stroke="white", sw=11, double=False),
-             sid="plus", cls="sk over-plate")
-    + '<div class="pill hide" id="cmt" style="left:170px;top:480px;width:740px;height:100px;padding:0 36px;font-size:36px">'
+    '<div class="hand hide" id="ntT" style="position:absolute;left:600px;top:560px;font-size:54px;color:#EA4335">без відповіді</div>'
+    + sk.svg(1080, 700, sk.ellipse(540, 270, 105, 100, stroke="blue", sw=7) +
+             sk.line([(540, 215), (540, 325)], stroke="blue", sw=11, double=False) +
+             sk.line([(485, 270), (595, 270)], stroke="blue", sw=11, double=False),
+             sid="plus")
+    + '<div class="pill hide" id="cmt" style="left:170px;top:440px;width:740px;height:100px;padding:0 36px;font-size:36px">'
     '<span style="color:#5f6368">Коментар:</span><span id="cmtT" data-text="+" style="font-weight:700;font-size:52px"></span></div>'
-    '</div>')
+    '</div></div>')
 
 
 @beat
 def b_cta():
+    sfx("whoosh-short", "@menedzhera-0.4", -4)
     sfx("pop", "@menedzhera")
     sfx("pop", "@sprav")
     sfx("notification", "@zaiavok-0.1")
     sfx("ping", "@zaiavok+0.45", -3)
     sfx("pencil", "@hubliatsia+0.3", -3)
-    sfx("whoosh-short", "@pliuS-0.6", -2)
     sfx("pencil", "@pliuS-0.3", -2)
     sfx("key-press", "@pliuS+0.6")
     return js("""
-  h.show("#cta", @menedzhera-0.2);
+  h.show("#cta", @menedzhera-0.4);
+  h.sheetIn("#ctS", @menedzhera-0.4, %(m)d);
   h.pop("#c1", @menedzhera-0.1, {s: 0.5, r: -4});
   h.pop("#c2", @sprav-0.2, {s: 0.5, r: 4});
   h.pop("#nt0", @zaiavok-0.15, {s: 0.8, r: 0, y: -30, d: 0.5});
@@ -700,11 +720,10 @@ def b_cta():
   h.pop("#cmt", @pliuS+0.2, {s: 0.8, r: 0, y: 20});
   h.type("#cmtT", @pliuS+0.6, 6);
   h.bump("#plus", @personalno);
-  h.fadeOut("#cta", @dur-0.4, 0.35);
-""")
+""" % {"m": MOCK_H})
 
 
-INVERT = [(T["instr"] + 0.25, T["buty"] + 0.6, ""), (T["tokeny"] + 0.25, T["vartist"] + 0.8, "")]
+INVERT = []    # move-down / halfscreen keep her and the white captions in the bottom half
 
 
 def main():
@@ -716,6 +735,13 @@ def main():
         for c in SFX:
             assert not (a <= c["t"] < b), ("sfx in no_paint", c)
     head = [SKETCH_JS, "  var h = sketchHelpers(tl);",
+            # one sheet hands over to the next: the old rolls up, the new drops
+            # over it, her plate goes straight to the new depth
+            "  function swap(o, oh, n, t, nh) {",
+            '    tl.to(o, {y: -oh - 40, duration: 0.5, ease: "power3.in"}, t + 0.15);',
+            "    tl.set(o, {autoAlpha: 0}, t + 0.67);",
+            "    h.sheetIn(n, t, nh);",
+            "  }",
             '  gsap.set("#vid", {transformOrigin: "540px 900px"});',
             '  tl.fromTo("#vid", {scale: 1}, {scale: 1.045, duration: %.3f, ease: "none"}, 0);' % DUR]
     doc = k.document(

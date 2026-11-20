@@ -232,6 +232,23 @@ def avatar(cx, cy, r=34, stroke="ink", fill=None):
             sk.line(body, stroke=stroke, sw=4, double=False))
 
 
+# ================================================================ 0 sheet A: the move-down
+# (STYLE.md §0c) every near card here is a mockup or a small scheme, so one
+# white sheet drops at the start and holds her plate 140 px down for the whole
+# reel; the two halfscreen boards drop over it and roll back up onto it.
+SH = 700
+L.append('<div class="g full" id="shA"><div class="sheet board-bg hide" id="shAS" style="height:%dpx"></div></div>' % SH)
+
+
+@beat
+def b_sheet():
+    sfx("whoosh-short", 0.0, -6)
+    return js("""
+  h.show("#shA", 0);
+  h.sheetIn("#shAS", 0, %d, 140, 0.7);
+""" % SH)
+
+
 # ================================================================ 1 the RUTA card
 L.append(
     '<div class="g" id="ru" style="top:0;height:700px">'
@@ -330,7 +347,7 @@ L.append(
     + sk.svg(1080, 700,
              sk.rect(110, 90, 270, 520, stroke="ink", sw=5) +
              sk.line([(205, 125), (285, 125)], sw=5, double=False) +
-             sk.ellipse(245, 575, 16, 16, sw=3.5), sid="apP", cls="sk over-plate") +
+             sk.ellipse(245, 575, 16, 16, sw=3.5), sid="apP", cls="sk") +
     '<div class="ab hide" id="apS" style="left:128px;top:150px;width:234px;height:420px;border-radius:24px;background:#fff"></div>'
     '<div class="wm hide" id="apW" style="position:absolute;left:110px;top:310px;width:270px;text-align:center;font-size:64px">RUTA</div>'
     '<div class="hand hide" id="apWT" style="position:absolute;left:112px;top:392px;width:266px;text-align:center;font-size:36px">продюсер<br>в телефоні</div>'
@@ -338,7 +355,7 @@ L.append(
     '<div class="pill hide" id="apV" style="left:470px;top:110px;height:100px;padding:0 34px">'
     '<span style="width:44px;height:44px;border-radius:50%;background:#EA4335;display:inline-block"></span>'
     '<span class="gs" style="font-size:36px;font-weight:700">голосове</span></div>'
-    + sk.svg(1080, 700, sk.arrow([(560, 230), (470, 300), (395, 330)], stroke="red", sw=6), sid="apA", cls="sk over-plate") +
+    + sk.svg(1080, 700, sk.arrow([(560, 230), (470, 300), (395, 330)], stroke="red", sw=6), sid="apA", cls="sk") +
     '<div class="ab" style="left:430px;top:380px;width:600px;display:flex;flex-wrap:wrap;gap:18px">'
     + "".join('<span class="chip mid %s hide" id="%s">%s</span>' % (c, i, t) for i, t, c in OUTS) +
     '</div></div>')
@@ -380,16 +397,16 @@ BARS = "".join(sk.rect(640 + i * 80, 560 - h, 56, h, stroke="ink", sw=4, fill="b
                for i, h in enumerate((60, 100, 150, 210)))
 L.append(
     '<div class="g" id="pp" style="top:0;height:700px">'
-    + sk.svg(1080, 700, CROWD, sid="ppA", cls="sk over-plate") +
+    + sk.svg(1080, 700, CROWD, sid="ppA", cls="sk") +
     '<div class="gcard hide" id="ppN" style="left:90px;top:290px;width:420px;height:280px">'
     '<div class="num" style="position:absolute;left:0;right:0;top:14px;text-align:center;font-size:160px;line-height:1">70+</div>'
     '<div class="hand" style="position:absolute;left:0;right:0;top:206px;text-align:center;font-size:52px">людей</div></div>'
     '<div class="bub in hide" id="ppQ" style="left:560px;top:300px;width:420px;box-shadow:var(--e3);background:#fff">«це спасіння для РДУГ»</div>'
     '<div class="ab hide" id="ppB" style="left:0;top:0;width:1080px;height:700px">'
     + sk.svg(1080, 700, BARS + sk.line([(620, 562), (970, 562)], sw=4, double=False) +
-             sk.arrow([(640, 450), (780, 380), (940, 300)], stroke="green", sw=7), sid="ppBS", cls="sk over-plate") +
-    '<div class="hand" style="position:absolute;left:660px;top:575px;font-size:44px;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.5)">пости частіше</div></div>'
-    + sk.svg(1080, 700, sk.check(820, 230, 120, sw=11), sid="ppOK", cls="sk over-plate") +
+             sk.arrow([(640, 450), (780, 380), (940, 300)], stroke="green", sw=7), sid="ppBS", cls="sk") +
+    '<div class="hand" style="position:absolute;left:660px;top:575px;font-size:44px;color:#1e1e1e">пости частіше</div></div>'
+    + sk.svg(1080, 700, sk.check(820, 230, 120, sw=11), sid="ppOK", cls="sk") +
     '</div>')
 
 
@@ -416,26 +433,25 @@ def b_people():
 
 # ================================================================ 5 OVER: board 1 — Claude
 L.append(
-    '<div class="g full" id="b1">'
-    '<div class="board"></div>'
-    '<div class="hand hide" id="b1T" style="position:absolute;left:100px;top:180px;font-size:74px">Скільки коштує розробити?</div>'
-    + sk.svg(1080, 1300, sk.underline(100, 290, 560, stroke="blue", twice=True), sid="b1U") +
-    '<div class="gcard hide" id="b1C" style="left:100px;top:380px;width:880px;height:220px">'
+    '<div class="g full" id="b1"><div class="sheet board-bg hide" id="b1S" style="height:930px">'
+    '<div class="hand hide" id="b1T" style="position:absolute;left:100px;top:50px;font-size:74px">Скільки коштує розробити?</div>'
+    + sk.svg(1080, 1300, sk.underline(100, 160, 560, stroke="blue", twice=True), sid="b1U") +
+    '<div class="gcard hide" id="b1C" style="left:100px;top:230px;width:880px;height:220px">'
     '<div class="pill" style="left:40px;top:58px;height:104px;padding:0 40px;box-shadow:none;background:#f1f3f4">'
     '<span class="wm" style="font-size:54px">Клод</span></div>'
     '<div class="price hide" id="b1P" style="left:470px;top:42px;font-size:120px">$100</div>'
     '<div class="gs hide" id="b1PM" style="position:absolute;left:760px;top:104px;font-size:36px;color:#5f6368">/ міс</div>'
     + sk.svg(880, 220, sk.scribble(450, 60, 400, 110, stroke="red", sw=8), sid="b1X") +
     '</div>'
-    '<div class="hand hide" id="b1NR" style="position:absolute;left:560px;top:620px;font-size:60px;color:#EA4335">не рахую</div>'
-    + sk.svg(1080, 1300, sk.arrow([(330, 610), (290, 720), (250, 820)], stroke="ink", sw=5), sid="b1A1")
-    + sk.svg(1080, 1300, sk.arrow([(560, 700), (640, 760), (720, 830)], stroke="ink", sw=5), sid="b1A2") +
-    '<div class="ab hide" id="b1R1" style="left:110px;top:850px"><span class="chip mid on">розробка</span></div>'
-    '<div class="ab hide" id="b1R2" style="left:560px;top:850px"><span class="chip mid cy">уся інша робота</span></div>'
-    + sk.svg(1080, 1300, sk.arrow([(60, 340), (40, 700), (90, 1050), (380, 1130), (620, 1110)], stroke="blue", sw=7, head=36),
+    '<div class="hand hide" id="b1NR" style="position:absolute;left:560px;top:460px;font-size:60px;color:#EA4335">не рахую</div>'
+    + sk.svg(1080, 1300, sk.arrow([(330, 460), (290, 560), (250, 640)], stroke="ink", sw=5), sid="b1A1")
+    + sk.svg(1080, 1300, sk.arrow([(600, 540), (660, 590), (720, 645)], stroke="ink", sw=5), sid="b1A2") +
+    '<div class="ab hide" id="b1R1" style="left:110px;top:665px"><span class="chip mid on">розробка</span></div>'
+    '<div class="ab hide" id="b1R2" style="left:560px;top:665px"><span class="chip mid cy">уся інша робота</span></div>'
+    + sk.svg(1080, 1300, sk.arrow([(60, 220), (40, 520), (90, 770), (380, 845), (620, 830)], stroke="blue", sw=7, head=36),
              sid="b1Y") +
-    '<div class="hand hide" id="b1YT" style="position:absolute;left:650px;top:1070px;font-size:64px;color:#4285F4">оминаю</div>'
-    '</div>')
+    '<div class="hand hide" id="b1YT" style="position:absolute;left:650px;top:790px;font-size:64px;color:#4285F4">оминаю</div>'
+    '</div></div>')
 
 
 @beat
@@ -452,7 +468,8 @@ def b_board1():
     sfx("whoosh-short", "@dali-0.3")
     return js("""
   tl.to("#pp", {autoAlpha: 0, duration: 0.3}, @to+0.4);
-  h.boardIn("#b1", @to-0.15, 540, 180, 0.75);
+  h.show("#b1", @to-0.15);
+  h.sheetIn("#b1S", @to-0.15, 930);
   h.write("#b1T", @to+0.35, 1.1);
   h.draw("#b1U", @koshtuie+0.6, 0.45);
   h.pop("#b1C", @klod-0.2, {s: 0.8, r: -2});
@@ -467,7 +484,9 @@ def b_board1():
   tl.to("#b1C, #b1NR, #b1R1, #b1R2, #b1A1, #b1A2", {opacity: 0.3, duration: 0.4}, @chystoty);
   h.draw("#b1Y", @omynaiu-0.5, 0.7);
   h.write("#b1YT", @omynaiu, 0.4);
-  h.boardOut("#b1", @dali-0.3, 540, 330, 0.55);
+  tl.to("#b1S", {y: -970, duration: 0.55, ease: "power3.in"}, @dali-0.3);
+  tl.set("#b1", {autoAlpha: 0}, @dali+0.27);
+  h.plateDown(@dali-0.25, 140, 0.65);
 """)
 
 
@@ -661,9 +680,9 @@ def b_scraper():
 
 
 # ================================================================ 9 OVER: board 2 — the scale
-PX, PY = 540, 620                     # the beam's pivot
-SC_POST = (sk.line([(PX, PY), (PX - 110, 1080)], sw=6, double=True) + sk.line([(PX, PY), (PX + 110, 1080)], sw=6, double=True) +
-           sk.line([(PX - 200, 1082), (PX + 200, 1078)], sw=6, double=True) + sk.ellipse(PX, PY, 16, 16, sw=5, fill="ink", style="solid"))
+PX, PY = 540, 420                     # the beam's pivot
+SC_POST = (sk.line([(PX, PY), (PX - 110, 820)], sw=6, double=True) + sk.line([(PX, PY), (PX + 110, 820)], sw=6, double=True) +
+           sk.line([(PX - 200, 822), (PX + 200, 818)], sw=6, double=True) + sk.ellipse(PX, PY, 16, 16, sw=5, fill="ink", style="solid"))
 BEAM = sk.line([(PX - 360, PY), (PX + 360, PY)], sw=8, double=True)
 
 
@@ -677,31 +696,30 @@ def pan(cx, y0, color):
 
 
 L.append(
-    '<div class="g full" id="b2">'
-    '<div class="board"></div>'
-    '<div class="lbl hide" id="b2L" style="left:110px;top:170px">на місяць</div>'
+    '<div class="g full" id="b2"><div class="sheet board-bg hide" id="b2S" style="height:930px">'
+    '<div class="lbl hide" id="b2L" style="left:110px;top:60px">на місяць</div>'
     + sk.svg(1080, 1300, SC_POST, sid="b2P") +
     '<div class="ab" id="b2Beam" style="left:0;top:0;width:1080px;height:1300px">'
     + sk.svg(1080, 1300, BEAM, sid="b2B") + '</div>'
     '<div class="ab" id="b2PL" style="left:0;top:0;width:1080px;height:1300px">'
     + sk.svg(1080, 1300, pan(PX - 360, PY, "red"), sid="b2PLs") +
-    '<div class="ab hide" id="b2CL" style="left:60px;top:880px;width:240px;text-align:center">'
+    '<div class="ab hide" id="b2CL" style="left:60px;top:680px;width:240px;text-align:center">'
     '<div class="hand" style="font-size:52px;color:#EA4335">витрати</div>'
     '<div class="price" style="position:relative;font-size:84px">≈ $70</div></div></div>'
     '<div class="ab" id="b2PR" style="left:0;top:0;width:1080px;height:1300px">'
     + sk.svg(1080, 1300, pan(PX + 360, PY, "green"), sid="b2PRs") +
-    '<div class="ab hide" id="b2CR" style="left:780px;top:880px;width:240px;text-align:center">'
+    '<div class="ab hide" id="b2CR" style="left:780px;top:680px;width:240px;text-align:center">'
     '<div class="hand" style="font-size:52px;color:#34A853">заробляє</div>'
     '<div class="price" style="position:relative;font-size:84px">$60</div></div>'
-    '<div class="ab hide" id="b2One" style="left:830px;top:690px;width:120px;height:130px">'
+    '<div class="ab hide" id="b2One" style="left:830px;top:490px;width:120px;height:130px">'
     + sk.svg(120, 130, avatar(60, 34, 26, stroke="blue", fill="blue"), sid="b2OneS") + '</div>'
-    '<div class="hand hide" id="b2OneT" style="position:absolute;left:830px;top:540px;font-size:44px;color:#4285F4">+1 людина</div>'
+    '<div class="hand hide" id="b2OneT" style="position:absolute;left:830px;top:330px;font-size:44px;color:#4285F4">+1 людина</div>'
     '</div>'
-    '<div class="ab" style="left:0;top:240px;width:1080px;display:flex;justify-content:center">'
+    '<div class="ab" style="left:0;top:130px;width:1080px;display:flex;justify-content:center">'
     '<span class="chip big cr hide" id="b2M">− мінус</span></div>'
-    '<div class="ab" style="left:0;top:240px;width:1080px;display:flex;justify-content:center">'
+    '<div class="ab" style="left:0;top:130px;width:1080px;display:flex;justify-content:center">'
     '<span class="chip big gr hide" id="b2Z">0 нуль</span></div>'
-    '</div>')
+    '</div></div>')
 
 
 @beat
@@ -717,7 +735,8 @@ def b_board2():
     sfx("ping", "@nul2-0.05")
     sfx("whoosh-short", "@tomu_cta-0.1")
     return js("""
-  h.boardIn("#b2", @zahalom-0.15, 700, 572, 0.75);
+  h.show("#b2", @zahalom-0.15);
+  h.sheetIn("#b2S", @zahalom-0.15, 930);
   tl.set("#sc", {autoAlpha: 0}, @zahalom+0.6);
   h.write("#b2L", @zahalom+0.4, 0.4);
   h.draw("#b2P", @zahalom+0.3, 0.8);
@@ -741,7 +760,9 @@ def b_board2():
   tl.to("#b2PR", {y: 0, duration: 1.0, ease: SP}, @oplatyt);
   h.out("#b2M", @nul2-0.3, 0.2);
   h.pop("#b2Z", @nul2-0.1, {s: 0.4, r: 6});
-  h.boardOut("#b2", @tomu_cta-0.05, 540, 300, 0.55);
+  tl.to("#b2S", {y: -970, duration: 0.55, ease: "power3.in"}, @tomu_cta-0.05);
+  tl.set("#b2", {autoAlpha: 0}, @tomu_cta+0.52);
+  h.plateDown(@tomu_cta, 140, 0.65);
 """ % (PX, PY, PX, PY))
 
 
@@ -780,7 +801,7 @@ def b_cta():
 """)
 
 
-INVERT = [(T["to"] + 0.3, T["dali"] + 0.2, ""), (T["zahalom"] + 0.3, T["tomu_cta"] + 0.4, "")]
+INVERT = []    # halfscreen keeps her and the white captions in the bottom half (STYLE.md §0c)
 BLACKOUT = [
     (T["s70"] - 0.05, T["korystuvachiv"] + 0.6, ""),                      # «70+ користувачів»
     (T["zarobliaie2"] - 0.05, T["zarobliaie2"] + 0.5, ""),               # chip заробляє

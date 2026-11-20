@@ -191,7 +191,8 @@ def header(title, sub):
 # ---------------------------------------------------------------- 1 the Direct card: 150 sent, not banned
 L.append(
     '<div class="g" id="dc" style="top:0;height:700px">'
-    '<div class="gcard" id="dcC" style="left:100px;top:60px;width:880px;height:580px">'
+    '<div class="sheet hide" id="dcC" style="height:700px;background:#f1f3f4">'
+    '<div class="gcard" id="dcI" style="left:100px;top:90px;width:880px;height:580px">'
     '<div id="h1">' + header("Instagram", "Direct") +
     '<div class="num hide" id="cnt" style="position:absolute;left:44px;top:140px;font-size:170px;color:#4285F4">0</div>'
     '<div class="hand hide" id="cntT" style="position:absolute;left:52px;top:330px;font-size:54px">повідомлень</div>'
@@ -231,7 +232,7 @@ L.append(
     '<span class="chip cg hide" id="ch1">не втомлюється</span>'
     '<span class="chip cy hide" id="ch2">безкоштовно</span></div>'
     '</div>'
-    '</div></div>')
+    '</div></div></div>')
 
 
 @beat
@@ -243,7 +244,7 @@ def b_dc():
     sfx("pencil", "@ne1", -2)
     return js("""
   h.show("#dc", 0);
-  h.pop("#dcC", 0.0, {s: 0.7, r: -3});
+  h.sheetIn("#dcC", 0.0, 700);
   h.pop("#b1", @vidpravyv, {s: 0.5, r: 3});
   h.pop("#b2", @vidpravyv+0.3, {s: 0.5, r: -3});
   h.pop("#b3", @vidpravyv+0.6, {s: 0.5, r: 3});
@@ -257,7 +258,7 @@ def b_dc():
   h.bump("#cnt", @zablokuvav+0.1);
   /* -> the same card becomes her list */
   tl.to("#h1", {autoAlpha: 0, duration: 0.25, ease: "power1.in"}, @korotshe-0.05);
-  h.bump("#dcC", @korotshe+0.1);
+  h.bump("#dcI", @korotshe+0.1);
 """)
 
 
@@ -291,33 +292,33 @@ def b_tasks():
 
 # ---------------------------------------------------------------- 3 OVER: the internal browser
 L.append(
-    '<div class="g full" id="bd1"><div class="board"></div>'
-    '<div class="hand hide" id="b1T" style="position:absolute;left:110px;top:170px;font-size:80px">внутрішній браузер</div>'
-    + sk.svg(1080, 1300, sk.underline(112, 280, 640, stroke="blue"), sid="b1U")
-    + sk.svg(1080, 1300,
-             sk.rect(150, 350, 540, 380, sw=5) +
-             sk.line([(150, 430), (690, 430)], sw=4, double=False) +
-             sk.ellipse(195, 390, 13, 13, stroke="red", fill="red", style="solid") +
-             sk.ellipse(235, 390, 13, 13, stroke="yellow", fill="yellow", style="solid") +
-             sk.ellipse(275, 390, 13, 13, stroke="green", fill="green", style="solid") +
-             sk.rect(320, 372, 330, 38, sw=3, round_=True) +
-             sk.line([(200, 500), (420, 496), (620, 502)], stroke="#9aa0a6", sw=6, double=False) +
-             sk.line([(200, 560), (380, 564), (560, 558)], stroke="#9aa0a6", sw=6, double=False) +
-             sk.line([(200, 620), (460, 616), (640, 622)], stroke="#9aa0a6", sw=6, double=False),
+    '<div class="g full" id="bd1"><div class="sheet board-bg hide" id="bd1S" style="height:930px">'
+    '<div class="hand hide" id="b1T" style="position:absolute;left:110px;top:50px;font-size:80px">внутрішній браузер</div>'
+    + sk.svg(1080, 930, sk.underline(112, 160, 640, stroke="blue"), sid="b1U")
+    + sk.svg(1080, 930,
+             sk.rect(150, 230, 540, 360, sw=5) +
+             sk.line([(150, 300), (690, 300)], sw=4, double=False) +
+             sk.ellipse(195, 265, 13, 13, stroke="red", fill="red", style="solid") +
+             sk.ellipse(235, 265, 13, 13, stroke="yellow", fill="yellow", style="solid") +
+             sk.ellipse(275, 265, 13, 13, stroke="green", fill="green", style="solid") +
+             sk.rect(320, 247, 330, 38, sw=3, round_=True) +
+             sk.line([(200, 370), (420, 366), (620, 372)], stroke="#9aa0a6", sw=6, double=False) +
+             sk.line([(200, 430), (380, 434), (560, 428)], stroke="#9aa0a6", sw=6, double=False) +
+             sk.line([(200, 490), (460, 486), (640, 492)], stroke="#9aa0a6", sw=6, double=False),
              sid="b1B")
-    + '<div class="hand hide" id="b1Eq" style="position:absolute;left:712px;top:480px;font-size:96px">=</div>'
-    '<div class="pill hide" id="b1Ch" style="left:790px;top:490px;height:96px;padding:0 34px;font-size:42px;font-weight:700">Chrome</div>'
-    '<div class="hand hide" id="b1Zv" style="position:absolute;left:770px;top:610px;font-size:44px;color:#5f6368">звичайний</div>'
-    + sk.svg(1080, 1300, sk.rect(110, 320, 620, 560, stroke="blue", sw=7), sid="b1K") +
-    '<div class="pill hide" id="b1KP" style="left:130px;top:790px;height:72px;padding:0 28px 0 18px;font-size:34px;font-weight:700;box-shadow:var(--e1)">'
+    + '<div class="hand hide" id="b1Eq" style="position:absolute;left:712px;top:345px;font-size:96px">=</div>'
+    '<div class="pill hide" id="b1Ch" style="left:790px;top:355px;height:96px;padding:0 34px;font-size:42px;font-weight:700">Chrome</div>'
+    '<div class="hand hide" id="b1Zv" style="position:absolute;left:770px;top:475px;font-size:44px;color:#5f6368">звичайний</div>'
+    + sk.svg(1080, 930, sk.rect(110, 200, 620, 520, stroke="blue", sw=7), sid="b1K") +
+    '<div class="pill hide" id="b1KP" style="left:130px;top:625px;height:72px;padding:0 28px 0 18px;font-size:34px;font-weight:700;box-shadow:var(--e1)">'
     '<span style="display:inline-block;width:34px;height:34px;border-radius:50%;background:#D97757"></span>Клод</div>'
-    + sk.svg(1080, 1300,
-             sk.arrow([(160, 1040), (420, 1020), (720, 1030)], stroke="blue", sw=6) +
-             sk.line([(130, 990), (230, 988)], stroke="blue", sw=4, double=False) +
-             sk.line([(110, 1080), (210, 1078)], stroke="blue", sw=4, double=False) +
-             sk.spark(760, 1010, 30, stroke="yellow", sw=7), sid="b1F") +
-    '<div class="hand hide" id="b1Sh" style="position:absolute;left:300px;top:1090px;font-size:64px;color:#4285F4">швидше</div>'
-    '</div>')
+    + sk.svg(1080, 930,
+             sk.arrow([(160, 810), (420, 790), (720, 800)], stroke="blue", sw=6) +
+             sk.line([(130, 765), (230, 763)], stroke="blue", sw=4, double=False) +
+             sk.line([(110, 850), (210, 848)], stroke="blue", sw=4, double=False) +
+             sk.spark(760, 780, 30, stroke="yellow", sw=7), sid="b1F") +
+    '<div class="hand hide" id="b1Sh" style="position:absolute;left:800px;top:760px;font-size:64px;color:#4285F4">швидше</div>'
+    '</div></div>')
 
 
 @beat
@@ -330,8 +331,9 @@ def b_board1():
     sfx("whoosh-short", "@shvydshe+0.25")
     return js("""
   tl.to("#kp", {scale: 1.3, duration: 0.3, ease: "power2.in"}, @zavdiaky-0.15);
-  h.boardIn("#bd1", @zavdiaky-0.15, 830, 130, 0.75);
-  tl.set("#dc", {autoAlpha: 0}, @zavdiaky+0.6);
+  h.show("#bd1", @zavdiaky-0.15);
+  h.sheetIn("#bd1S", @zavdiaky-0.15, 930);
+  tl.set("#dc", {autoAlpha: 0}, @zavdiaky+0.8);
   h.write("#b1T", @vnutrishnomu-0.1, 0.8);
   h.draw("#b1U", @vnutrishnomu+0.6, 0.35);
   h.draw("#b1B", @vnutrishnomu+0.8, 1.6);
@@ -342,7 +344,9 @@ def b_board1():
   h.pop("#b1KP", @kloda2-0.05, {s: 0.5, r: -4});
   h.draw("#b1F", @oriientuietsia, 0.6);
   h.write("#b1Sh", @shvydshe-0.1, 0.4);
-  h.boardOut("#bd1", @shvydshe+0.25, 420, 540, 0.55);
+  /* the board rolls up, the browser mockup drops in under it */
+  tl.to("#bd1S", {y: -970, duration: 0.5, ease: "power3.in"}, @shvydshe+0.25);
+  tl.set("#bd1", {autoAlpha: 0}, @shvydshe+0.8);
 """)
 
 
@@ -358,7 +362,8 @@ for i, (y, c, n) in enumerate(zip(ROWY, ["#4285F4", "#34A853", "#FBBC04"], [u"О
              % (i, y, c, n, i, y + 4))
 L.append(
     '<div class="g" id="br" style="top:0;height:700px">'
-    '<div class="gcard" id="brC" style="left:100px;top:60px;width:880px;height:580px;overflow:hidden">'
+    '<div class="sheet hide" id="brS" style="height:700px;background:#f1f3f4">'
+    '<div class="gcard" id="brC" style="left:100px;top:90px;width:880px;height:580px;overflow:hidden">'
     '<div style="position:absolute;left:0;right:0;top:0;height:96px;background:#f1f3f4"></div>'
     '<div style="position:absolute;left:30px;top:36px;width:22px;height:22px;border-radius:50%;background:#EA4335"></div>'
     '<div style="position:absolute;left:62px;top:36px;width:22px;height:22px;border-radius:50%;background:#FBBC04"></div>'
@@ -386,11 +391,11 @@ L.append(
     '</div>'
     '<div class="ab" id="curW" style="left:0;top:0">' + CURSOR + '</div>'
     # the sticky note the card folds into
-    '<div class="paper hide" id="nt" style="left:350px;top:150px;width:380px;height:330px;background:#fff7d1">'
+    '<div class="paper hide" id="nt" style="left:350px;top:180px;width:380px;height:330px;background:#fff7d1">'
     '<div class="num" data-layout-allow-overlap style="position:absolute;left:0;right:0;top:20px;text-align:center;font-size:170px;line-height:1">2</div>'
     '<div class="hand" data-layout-allow-overlap style="position:absolute;left:0;right:0;top:245px;text-align:center;font-size:56px">речі</div>'
     + sk.svg(380, 330, sk.circle_around(190, 140, 100, 90, stroke="blue", sw=7), sid="ntS") +
-    '</div></div>')
+    '</div></div></div>')
 
 
 @beat
@@ -403,23 +408,23 @@ def b_browser():
     sfx("notification", "@vidpravliaty")
     return js("""
   h.show("#br", @vidkryvaiesh-0.15);
-  h.pop("#brC", @vidkryvaiesh-0.15, {s: 0.55, r: 0, y: 0, d: 0.6});
+  h.sheetIn("#brS", @vidkryvaiesh-0.15, 700);
   tl.set("#curW", {autoAlpha: 0}, 0);
   h.type("#brU", @instahrami-0.3, 20);
   h.pop("#pr", @prosysh-0.1, {s: 0.8, r: 0, y: 20});
   h.type("#prT", @rozislaty-0.05, 24);
   h.draw("#prOK", @vse, 0.3);
-  tl.fromTo("#curW", {autoAlpha: 0, x: 700, y: 520}, {autoAlpha: 1, x: 640, y: 470, duration: 0.3, immediateRender: false}, @khodyty-0.2);
-  tl.to("#curW", {x: 420, y: 280, duration: 0.6, ease: "power2.inOut"}, @khodyty+0.15);
+  tl.fromTo("#curW", {autoAlpha: 0, x: 700, y: 550}, {autoAlpha: 1, x: 640, y: 500, duration: 0.3, immediateRender: false}, @khodyty-0.2);
+  tl.to("#curW", {x: 420, y: 310, duration: 0.6, ease: "power2.inOut"}, @khodyty+0.15);
   h.pop("#p0", @shukaty-0.15, {s: 0.8, r: 0, y: 12});
   h.pop("#p1", @shukaty+0.05, {s: 0.8, r: 0, y: 12});
   h.pop("#p2", @shukaty+0.25, {s: 0.8, r: 0, y: 12});
-  tl.to("#curW", {x: 300, y: 230, duration: 0.35, ease: "power2.inOut"}, @shukaty);
-  tl.to("#curW", {x: 300, y: 420, duration: 0.45, ease: "power2.inOut"}, @shukaty+0.4);
+  tl.to("#curW", {x: 300, y: 260, duration: 0.35, ease: "power2.inOut"}, @shukaty);
+  tl.to("#curW", {x: 300, y: 450, duration: 0.45, ease: "power2.inOut"}, @shukaty+0.4);
   h.pop("#m0", @pysaty2-0.1, {s: 0.5, r: 2});
   h.pop("#m1", @pysaty2+0.1, {s: 0.5, r: -2});
   h.pop("#m2", @pysaty2+0.3, {s: 0.5, r: 2});
-  tl.to("#curW", {x: 760, y: 440, duration: 0.4, ease: "power2.inOut"}, @pysaty2);
+  tl.to("#curW", {x: 760, y: 470, duration: 0.4, ease: "power2.inOut"}, @pysaty2);
   h.draw("#sent", @vidpravliaty, 0.5);
 """)
 
@@ -437,7 +442,7 @@ def b_catch():
   tl.to("#p0, #m0", {autoAlpha: 0, duration: 0.15}, @instahramu-0.2);
   h.pop("#warn", @instahramu-0.05, {s: 0.8, r: 0, y: -20});
   h.wiggle("#brC", @podobaietsia);
-  tl.to("#curW", {x: 590, y: 380, duration: 0.4, ease: "power2.inOut"}, @nesanktsionovana-0.4);
+  tl.to("#curW", {x: 590, y: 410, duration: 0.4, ease: "power2.inOut"}, @nesanktsionovana-0.4);
   h.draw("#botO", @nesanktsionovana, 0.5);
   h.write("#botT", @botiv-0.3, 0.45);
   tl.fromTo("#stamp", {autoAlpha: 0, scale: 2.2, rotation: -14}, {autoAlpha: 1, scale: 1, rotation: -8, duration: 0.3, ease: "power3.in", immediateRender: false}, @shaptsi-0.4);
@@ -451,75 +456,73 @@ def b_catch():
 
 
 # ---------------------------------------------------------------- 5 OVER: the two rules
-OFF = 1300       # section 2 sits this far below section 1 on the camera layer
+OFF = 1000       # section 2 sits this far below section 1 on the camera layer
 DX = [170, 420, 670, 920]
-tline = sk.line([(120, 520), (970, 520)], sw=5)
-dots = "".join(sk.ellipse(x, 520, 32, 32, stroke="blue", fill="blue", style="solid") for x in DX)
+tline = sk.line([(120, 330), (970, 330)], sw=5)
+dots = "".join(sk.ellipse(x, 330, 32, 32, stroke="blue", fill="blue", style="solid") for x in DX)
 L.append(
-    '<div class="g full" id="bd2"><div class="board"></div>'
-    '<div id="cam" style="position:absolute;left:0;top:0;width:1080px;height:2400px">'
+    '<div class="g full" id="bd2"><div class="sheet board-bg hide" id="bd2S" style="height:930px">'
+    '<div id="cam" style="position:absolute;left:0;top:0;width:1080px;height:2000px">'
     # ---- 1 pause
-    '<div class="num hide" id="n1" style="position:absolute;left:110px;top:140px;font-size:150px;color:#4285F4">1</div>'
-    '<div class="hand hide" id="n1T" style="position:absolute;left:230px;top:180px;font-size:96px">пауза</div>'
-    + sk.svg(1080, 2400, tline, sid="tl1") + sk.svg(1080, 2400, dots, sid="tlD") +
-    "".join('<div class="hand hide d%d" id="dL%d" style="position:absolute;left:%dpx;top:570px;width:120px;'
+    '<div class="num hide" id="n1" style="position:absolute;left:110px;top:20px;font-size:150px;color:#4285F4">1</div>'
+    '<div class="hand hide" id="n1T" style="position:absolute;left:230px;top:60px;font-size:96px">пауза</div>'
+    + sk.svg(1080, 2000, tline, sid="tl1") + sk.svg(1080, 2000, dots, sid="tlD") +
+    "".join('<div class="hand hide d%d" id="dL%d" style="position:absolute;left:%dpx;top:375px;width:120px;'
             'text-align:center;font-size:44px">дія</div>' % (i, i, x - 60) for i, x in enumerate(DX)) +
-    "".join('<div class="hand hide" id="gL%d" style="position:absolute;left:%dpx;top:420px;width:200px;'
+    "".join('<div class="hand hide" id="gL%d" style="position:absolute;left:%dpx;top:225px;width:200px;'
             'text-align:center;font-size:44px;color:#EA4335">30-40 с</div>' % (i, (a + b) // 2 - 100)
             for i, (a, b) in enumerate(zip(DX, DX[1:]))) +
-    sk.svg(1080, 2400, "".join(sk.arrow([(a + 40, 480), ((a + b) / 2, 468), (b - 40, 480)], stroke="red", sw=4,
+    sk.svg(1080, 2000, "".join(sk.arrow([(a + 40, 290), ((a + b) / 2, 278), (b - 40, 290)], stroke="red", sw=4,
                                         head=18, both=True) for a, b in zip(DX, DX[1:])), sid="gA") +
-    '<div class="hand hide" id="nb" style="position:absolute;left:130px;top:680px;font-size:58px;color:#34A853">не бот</div>'
-    + sk.svg(1080, 2400, sk.check(340, 676, 64, sw=9), sid="nbC")
-    + sk.svg(1080, 2400,
-             sk.ellipse(800, 760, 82, 82, sw=5) +
-             sk.line([(800, 760), (800, 705)], sw=6, double=False) +
-             sk.line([(800, 760), (842, 782)], sw=6, double=False), sid="clk") +
-    '<div class="hand hide" id="clkT" style="position:absolute;left:660px;top:850px;width:280px;text-align:center;'
+    '<div class="hand hide" id="nb" style="position:absolute;left:130px;top:480px;font-size:58px;color:#34A853">не бот</div>'
+    + sk.svg(1080, 2000, sk.check(340, 476, 64, sw=9), sid="nbC")
+    + sk.svg(1080, 2000,
+             sk.ellipse(800, 520, 78, 78, sw=5) +
+             sk.line([(800, 520), (800, 468)], sw=6, double=False) +
+             sk.line([(800, 520), (840, 541)], sw=6, double=False), sid="clk") +
+    '<div class="hand hide" id="clkT" style="position:absolute;left:660px;top:605px;width:280px;text-align:center;'
     'font-size:44px">більше часу</div>'
-    + sk.svg(1080, 2400, sk.rect(110, 960, 400, 190, stroke="green", sw=5), sid="oA")
-    + sk.svg(1080, 2400, sk.rect(570, 960, 400, 190, stroke="red", sw=5), sid="oB") +
-    '<div class="hand hide" id="oAT" style="position:absolute;left:110px;top:1015px;width:400px;text-align:center;font-size:66px">довше</div>'
-    '<div class="hand hide" id="oBT" style="position:absolute;left:570px;top:985px;width:400px;text-align:center;font-size:52px">заблокували<br>акаунт</div>'
-    + sk.svg(1080, 2400, sk.circle_around(310, 1055, 230, 120, stroke="green", sw=7), sid="oAO")
-    + sk.svg(1080, 2400, sk.cross(700, 990, 140, sw=11), sid="oBX")
+    + sk.svg(1080, 2000, sk.rect(110, 690, 400, 160, stroke="green", sw=5), sid="oA")
+    + sk.svg(1080, 2000, sk.rect(570, 690, 400, 160, stroke="red", sw=5), sid="oB") +
+    '<div class="hand hide" id="oAT" style="position:absolute;left:110px;top:730px;width:400px;text-align:center;font-size:66px">довше</div>'
+    '<div class="hand hide" id="oBT" style="position:absolute;left:570px;top:710px;width:400px;text-align:center;font-size:52px">заблокували<br>акаунт</div>'
+    + sk.svg(1080, 2000, sk.circle_around(310, 770, 225, 100, stroke="green", sw=7), sid="oAO")
+    + sk.svg(1080, 2000, sk.cross(700, 705, 130, sw=11), sid="oBX")
     # ---- 2 personalisation
     + ('<div class="num hide" id="n2" style="position:absolute;left:110px;top:%dpx;font-size:150px;color:#34A853">2</div>'
        '<div class="hand hide" id="n2T" style="position:absolute;left:230px;top:%dpx;font-size:88px">персоналізація</div>'
-       % (OFF + 140, OFF + 180))
-    + sk.svg(1080, 2400, sk.underline(232, OFF + 300, 600, stroke="green", twice=True), sid="n2U")
+       % (OFF + 20, OFF + 60))
+    + sk.svg(1080, 2000, sk.underline(232, OFF + 180, 600, stroke="green", twice=True), sid="n2U")
     + ('<div class="bub me hide" id="q1" style="left:110px;top:%dpx;font-size:40px">Привіт, '
-       '<span style="background:#ffec99;padding:0 6px;border-radius:6px">Олено</span>!</div>' % (OFF + 380))
+       '<span style="background:#ffec99;padding:0 6px;border-radius:6px">Олено</span>!</div>' % (OFF + 235))
     + ('<div class="hand hide" id="q1T" style="position:absolute;left:560px;top:%dpx;font-size:50px;color:#EA4335">лише ім\'я</div>'
-       % (OFF + 390))
-    + sk.svg(1080, 2400, sk.arrow([(300, OFF + 480), (290, OFF + 520), (300, OFF + 560)], stroke="ink", sw=5, head=22),
+       % (OFF + 245))
+    + sk.svg(1080, 2000, sk.arrow([(300, OFF + 335), (290, OFF + 365), (300, OFF + 400)], stroke="ink", sw=5, head=22),
              sid="q12")
     + ('<div class="bub me hide" id="q2" style="left:110px;top:%dpx;width:560px;font-size:34px;max-width:600px">'
        'Олено, бачу, що ти <span id="q2M" style="padding:0 6px;border-radius:6px">робиш букети на весілля</span>. '
-       'Хочу запропонувати…</div>' % (OFF + 570))
+       'Хочу запропонувати…</div>' % (OFF + 410))
     + ('<div class="hand hide" id="q2T" style="position:absolute;left:770px;top:%dpx;font-size:44px;color:#34A853">усе<br>повідомлення</div>'
-       % (OFF + 600))
+       % (OFF + 420))
     + ('<div class="pill hide" id="k2" style="left:110px;top:%dpx;height:84px;padding:0 32px 0 22px;font-size:38px;font-weight:700">'
        '<span style="display:inline-block;width:40px;height:40px;border-radius:50%%;background:#D97757"></span>Клод</div>'
-       % (OFF + 830))
-    + sk.svg(1080, 2400, sk.arrow([(330, OFF + 872), (440, OFF + 850), (560, OFF + 880)], stroke="blue", sw=5), sid="k2A")
-    + ('<div class="gcard hide" id="pf" style="left:590px;top:%dpx;width:380px;height:300px">'
-       '<div class="av" style="left:30px;top:30px;width:90px;height:90px;font-size:40px;background:#EA4335">О</div>'
-       '<div class="gs" style="position:absolute;left:140px;top:44px;font-size:36px;font-weight:700">Олена</div>'
-       '<div class="gs" style="position:absolute;left:140px;top:90px;font-size:24px;color:#5f6368">профіль</div>'
-       '<div class="gs" style="position:absolute;left:30px;top:150px;width:320px;font-size:30px;line-height:1.3;color:#3c4043">'
-       '<span id="pfM" style="padding:0 4px;border-radius:6px">Флористка · весільні букети</span></div>'
-       '<div class="gl" style="left:30px;top:250px;width:240px"></div></div>' % (OFF + 760))
-    + sk.svg(1080, 2400, sk.arrow([(760, OFF + 750), (760, OFF + 700), (700, OFF + 660)], stroke="green", sw=6), sid="pfA")
-    + sk.svg(1080, 2400,
-             sk.rect(110, OFF + 960, 300, 180, sw=4.5) +
-             sk.line([(140, OFF + 1010), (360, OFF + 1006)], stroke="#9aa0a6", sw=5, double=False) +
-             sk.line([(140, OFF + 1050), (330, OFF + 1054)], stroke="#9aa0a6", sw=5, double=False) +
-             sk.line([(140, OFF + 1090), (370, OFF + 1086)], stroke="#9aa0a6", sw=5, double=False), sid="doc")
-    + ('<div class="hand hide" id="docT" style="position:absolute;left:430px;top:%dpx;font-size:56px">мій скрипт</div>'
-       % (OFF + 1020))
-    + sk.svg(1080, 2400, sk.arrow([(240, OFF + 955), (200, OFF + 900), (200, OFF + 760)], stroke="ink", sw=5), sid="docA")
-    + '</div></div>')
+       % (OFF + 625))
+    + sk.svg(1080, 2000, sk.arrow([(330, OFF + 667), (450, OFF + 650), (575, OFF + 690)], stroke="blue", sw=5), sid="k2A")
+    + ('<div class="gcard hide" id="pf" style="left:590px;top:%dpx;width:380px;height:260px">'
+       '<div class="av" style="left:30px;top:26px;width:84px;height:84px;font-size:38px;background:#EA4335">О</div>'
+       '<div class="gs" style="position:absolute;left:134px;top:36px;font-size:36px;font-weight:700">Олена</div>'
+       '<div class="gs" style="position:absolute;left:134px;top:80px;font-size:24px;color:#5f6368">профіль</div>'
+       '<div class="gs" style="position:absolute;left:30px;top:136px;width:320px;font-size:30px;line-height:1.3;color:#3c4043">'
+       '<span id="pfM" style="padding:0 4px;border-radius:6px">Флористка · весільні букети</span></div></div>' % (OFF + 615))
+    + sk.svg(1080, 2000, sk.arrow([(800, OFF + 610), (770, OFF + 575), (690, OFF + 560)], stroke="green", sw=6), sid="pfA")
+    + sk.svg(1080, 2000,
+             sk.rect(110, OFF + 740, 220, 130, sw=4.5) +
+             sk.line([(135, OFF + 780), (300, OFF + 776)], stroke="#9aa0a6", sw=5, double=False) +
+             sk.line([(135, OFF + 810), (280, OFF + 814)], stroke="#9aa0a6", sw=5, double=False) +
+             sk.line([(135, OFF + 840), (305, OFF + 836)], stroke="#9aa0a6", sw=5, double=False), sid="doc")
+    + ('<div class="hand hide" id="docT" style="position:absolute;left:345px;top:%dpx;font-size:46px">мій скрипт</div>'
+       % (OFF + 780))
+    + '</div></div></div>')
 
 
 @beat
@@ -534,11 +537,12 @@ def b_board2():
     sfx("pop", "@prosto-0.1")
     sfx("click-soft", "@profil")
     sfx("pencil", "@vpysaty", -3)
-    sfx("whoosh-short", "@skryptom+0.4")
+    sfx("whoosh-short", "@skryptom+0.4", -3)
     return js("""
-  tl.to("#nt", {scale: 1.25, duration: 0.3, ease: "power2.in"}, @stalos-0.25);
-  h.boardIn("#bd2", @stalos-0.25, 540, 315, 0.75);
-  tl.set("#br", {autoAlpha: 0}, @stalos+0.55);
+  h.bump("#nt", @stalos-0.45);
+  h.show("#bd2", @stalos-0.25);
+  h.sheetIn("#bd2S", @stalos-0.25, 930);
+  tl.set("#br", {autoAlpha: 0}, @stalos+0.75);
   h.pop("#n1", @pershe, {s: 0.4, r: -6});
   h.write("#n1T", @pauza-0.1, 0.5);
   h.draw("#tl1", @minimum-0.3, 0.5);
@@ -580,33 +584,45 @@ def b_board2():
   h.bump("#q2", @tekst);
   h.draw("#doc", @moim-0.3, 0.5);
   h.write("#docT", @moim, 0.45);
-  h.draw("#docA", @skryptom, 0.3);
-  h.boardOut("#bd2", @skryptom+0.4, 410, 640, 0.55);
+  h.bump("#doc", @skryptom);
+  /* the board rolls up, the Direct mockup drops back in */
+  tl.to("#bd2S", {y: -970, duration: 0.5, ease: "power3.in"}, @skryptom+0.4);
+  tl.set("#bd2", {autoAlpha: 0}, @skryptom+0.95);
 """.replace("%(OFF)d", str(OFF)))
 
 
-# ---------------------------------------------------------------- 6 NEAR the Direct card again
+# ---------------------------------------------------------------- 6 the Direct mockup again, then the CTA in the same sheet
 L.append(
     '<div class="g" id="fn" style="top:0;height:700px">'
-    '<div class="gcard" id="fnC" style="left:100px;top:60px;width:880px;height:560px">' + header("Instagram", "Direct") +
+    '<div class="sheet hide" id="fnS" style="height:700px;background:#f1f3f4">'
+    '<div class="gcard" id="fnC" style="left:100px;top:90px;width:880px;height:560px">' + header("Instagram", "Direct") +
     '<div class="num" id="fnN" style="position:absolute;left:44px;top:140px;font-size:170px;color:#4285F4">0</div>'
     '<div class="hand hide" id="fnT" style="position:absolute;left:52px;top:330px;font-size:54px">повідомлень</div>'
     '<div class="ab" style="left:44px;top:440px"><span class="chip cg hide" id="fnCh" style="height:84px;font-size:38px">'
     'без жодної проблеми</span></div>'
     + sk.svg(880, 560, sk.check(640, 170, 140, sw=13), sid="fnOK")
     + sk.svg(880, 560, sk.spark(710, 160, 40, stroke="yellow", sw=8), sid="fnSp") +
+    '</div>'
+    # ---- CTA
+    '<div class="btn hide" id="fb" style="left:240px;top:280px;width:600px;height:150px;background:#4285F4;color:#fff;font-size:56px">'
+    '<span id="fbA">Підписатися</span></div>'
+    '<div class="btn hide" id="fb2" style="left:240px;top:280px;width:600px;height:150px;background:#e8eaed;color:#202124;font-size:52px">'
+    'Ви підписані</div>'
+    + sk.svg(1080, 700, sk.arrow([(130, 150), (160, 280), (225, 340)], stroke="ink", sw=7), sid="fbA2")
+    + sk.svg(1080, 700, sk.spark(840, 280, 36, stroke="yellow", sw=8), sid="fbS") +
+    '<div class="ab" id="cur2" style="left:0;top:0">' + CURSOR + '</div>'
     '</div></div>')
 
 
 @beat
 def b_fn():
-    sfx("pop", "@tomu8")
+    sfx("whoosh-short", "@tomu8-0.1", -4)
     sfx("click-soft", "@n150b")
     sfx("pencil", "@bez", -3)
     sfx("sparkle", "@korystuius", -3)
     return js("""
-  h.show("#fn", @tomu8-0.05);
-  h.pop("#fnC", @tomu8-0.05, {s: 0.5, r: -3});
+  h.show("#fn", @skryptom+0.5);
+  h.sheetIn("#fnS", @skryptom+0.5, 700);
   tl.set("#fnN", {autoAlpha: 0}, 0);
   h.show("#fnN", @n150b-0.3);
   h.count("#fnN", @n150b-0.3, 150, 0.8, function (v) { return Math.round(v) + (v > 149.5 ? "+" : ""); });
@@ -616,21 +632,7 @@ def b_fn():
   h.draw("#fnSp", @korystuius, 0.3);
   h.bump("#fnOK", @korystuius);
   tl.to("#fnC", {y: -30, autoAlpha: 0, duration: 0.3, ease: "power2.in"}, @yakshcho-0.35);
-  tl.set("#fn", {autoAlpha: 0}, @yakshcho);
 """)
-
-
-# ---------------------------------------------------------------- 7 CTA: follow
-L.append(
-    '<div class="g" id="cta" style="top:0;height:700px">'
-    '<div class="btn hide" id="fb" style="left:240px;top:250px;width:600px;height:150px;background:#4285F4;color:#fff;font-size:56px">'
-    '<span id="fbA">Підписатися</span></div>'
-    '<div class="btn hide" id="fb2" style="left:240px;top:250px;width:600px;height:150px;background:#e8eaed;color:#202124;font-size:52px">'
-    'Ви підписані</div>'
-    + sk.svg(1080, 700, sk.arrow([(150, 140), (180, 260), (225, 310)], stroke="white", sw=7), sid="fbA2", cls="sk over-plate")
-    + sk.svg(1080, 700, sk.spark(840, 250, 36, stroke="yellow", sw=8), sid="fbS", cls="sk over-plate") +
-    '<div class="ab" id="cur2" style="left:0;top:0">' + CURSOR + '</div>'
-    '</div>')
 
 
 @beat
@@ -638,11 +640,10 @@ def b_cta():
     sfx("pop", "@yakshcho")
     sfx("click", "@pidpyshys")
     return js("""
-  h.show("#cta", @yakshcho-0.05);
   tl.set("#cur2", {autoAlpha: 0}, 0);
   h.pop("#fb", @yakshcho, {s: 0.5, r: -3});
   h.draw("#fbA2", @korysno-0.2, 0.5);
-  tl.fromTo("#cur2", {autoAlpha: 0, x: 900, y: 600}, {autoAlpha: 1, x: 620, y: 340, duration: 0.7, ease: "power2.out", immediateRender: false}, @pidpyshys-0.9);
+  tl.fromTo("#cur2", {autoAlpha: 0, x: 900, y: 620}, {autoAlpha: 1, x: 620, y: 370, duration: 0.7, ease: "power2.out", immediateRender: false}, @pidpyshys-0.9);
   tl.to("#cur2", {scale: 0.85, duration: 0.08}, @pidpyshys-0.05);
   tl.to("#cur2", {scale: 1, duration: 0.15}, @pidpyshys+0.05);
   h.show("#fb2", @pidpyshys);
@@ -668,8 +669,7 @@ BLACKOUT = [
     (T["bilshe8"], T["n150b"] + 1.1, ""),                         # «150+ повідомлень»
     (T["bez"], T["problemy"] + 0.5, ""),                          # chip «без жодної проблеми»
 ]
-INVERT = [(T["zavdiaky"] + 0.3, T["shvydshe"] + 0.6, ""),
-          (T["stalos"] + 0.2, T["skryptom"] + 0.75, "")]        # the white boards under ink captions
+INVERT = []    # halfscreen keeps her (and the white captions) in the bottom half (STYLE.md §0c)
 
 
 def main():
