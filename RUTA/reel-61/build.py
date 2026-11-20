@@ -1,478 +1,244 @@
 # -*- coding: utf-8 -*-
 """Reel 61 — «Як зробити, щоб АІ-агент нічого не вигадував?». Posts 2026-11-21.
+Batch 2026-11-20 (raw 20261120_134413), STYLE.md §00 look (her call that day:
+"lets go back to the style that we always had, the one with the dark red").
 
-THE WORKED EXAMPLE of the Google x Excalidraw look (STYLE.md §0b): Material
-cards, chips, toggles and Google Sans hold hand-drawn content that draws itself
-on — Excalidraw strokes, hachure, Excalifont handwriting — in Google's four
-colours. The whiteboard (dot grid) is the takeover.
+The one object is **her real SendPulse agent screen** (Drive, 2026-11-20): the
+DM goes wrong above her -> «одна штука» -> HALF 1: the screen, «Інструкція для
+бота» boxed («інструкції й скрипти»), «Веб-пошук» looped -> above: агент ->
+інтернет, «іноді корисно», then «шанс помилки» -> HALF 2: the same screen,
+Веб-пошук struck «вимкнено», the instruction box drawn red «тільки скрипти»,
+a loop round it on «ніколи» -> above: «SendPulse» pill, «геніально» -> the DM
+again: a question it can't answer, «Не знаю — передаю менеджеру», «менеджер»
+-> CTA chips, «Пиши + в коментарях», an arrow down to the comments.
 
-Cut from her raw take by tools/cut.py (no closeups: no_paint is empty).
-
-Chain:  NEAR the DM: a client asks, the agent "thinks" (Google dots), answers
-with a scribble -> red cross on «дурницю» -> the card shrinks to one sticky
-note «1 штука» -> OVER (the board wipes in from the note): the SendPulse agent
-panel sketched — «Інструкції» field, chip «скрипти», the «Веб» toggle -> the
-toggle flips on, the agent runs an arrow out to a hand-drawn globe and back,
-a green tick (useful) then a red risk bar fills and a nonsense bubble appears
--> the toggle flips off, the globe is scratched out, the instruction field
-fills with handwriting and a fence is drawn around agent + instructions ->
-board closes onto the agent -> NEAR a lightbulb sketch «геніально», the
-SendPulse chip gets a heart -> the DM again: a question it can't answer, dots,
-«Не знаю — передаю менеджеру», a manager joins by arrow, green tick -> CTA:
-four Material chips (business, team, managers, leads), a hand-drawn «+» in a
-circle, the comment field types «+».
-
-usage: python build.py   (then: python ../tools/sfx.py mix 61)
+usage: python3 build.py   (then: sh work/b1021/mattes.sh 61; python3 tools/sfx.py mix 61)
 """
 import io
 import json
 import os
-import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, os.path.join(ROOT, "tools"))
-from kit import Kit  # noqa: E402
-from sketch import Sketch, sketch_css, SKETCH_JS  # noqa: E402
+from gstyle import G, Words, load_caps  # noqa: E402
 
 NN = "61"
-CUT = json.load(io.open(os.path.join(ROOT, "work", "r" + NN, "cut.json"), encoding="utf-8"))
 DUR = 68.417           # (2053 plate frames - 0.5) / 30
-FPS = 30
-k = Kit(width=1080, height=1920, fps=FPS, duration=DUR)
-k.cap_font = "assets/fonts/ProductSans-Bold.ttf"
-k.css(sketch_css())
-sk = Sketch(seed=45)
+g = G(dur=DUR, reel=NN)
+# her plate: hair top ≈ y 650 on the wide shot, so pushed 330 it is at ≈ 980;
+# on the panel the word captions sit with their bottom at ≈ 930
+g.PANEL_TOP = 820
 
-NO_PAINT = [tuple(x) for x in CUT["no_paint"]]   # empty on this cut
-
-CAPS = k.load_captions(os.path.join(ROOT, "work", "r" + NN, "captions.json"))
-
-
-# ---- caption fixes: whisper errors -> the script word / what she said ------
-def fix(caps):
-    """by position, because the same mangled token can be right elsewhere.
-    ('w', i, text) replaces; ('merge', i) folds caps[i+1] into caps[i]."""
-    def find(word, near):
-        c = min((i for i, c in enumerate(caps) if c["w"] == word), key=lambda i: abs(caps[i]["s"] - near))
-        assert abs(caps[c]["s"] - near) < 0.5, (word, near)
-        return c
-    edits = [
-        ("Небільше", 0.0, u"Найбільший"), ("страт", 0.75, u"страх"), ("будь", 1.35, u"будь-яким"),
-        ("дурнетю.", 7.39, u"дурницю."), ("Штукав.", 11.60, u"штуку."), ("таку", 13.38, u"такого"),
-        ("синпуївсь,", 14.10, u"SendPulse,"), ("Туму!", 34.43, u"Тому"), ("Я", 35.07, u"якщо"),
-        ("ще", 35.32, u"цю"), ("виділяв", 40.97, u"відійде"), ("Сенпульс.", 46.38, u"SendPulse."),
-        ("Йв", 56.17, u"І"), ("сссссссссссссс", 56.49, u"все."), ("пишу", 65.80, u"пиши"),
-        ("плюсів", 66.08, u"плюсик"), ("ми...", 66.98, u"ми"), ("по", 67.59, u"поспілкуємось."),
-    ]
-    for w, near, new in edits:
-        caps[find(w, near)]["w"] = new
-    drop = [("яким", 1.71), ("концюю", 35.44), ("спілкуємось.", 67.73)]
-    for w, near in drop:
-        i = find(w, near)
-        caps[i - 1]["e"] = caps[i]["e"]
-        del caps[i]
-    return caps
-
-
-CAPS = fix(CAPS)
-for _a, _b in zip(CAPS, CAPS[1:]):
-    _a["e"] = round(max(_a["s"] + 0.10, _b["s"] - 0.085), 3)
-
-
-def _n(s):
-    return "".join(ch for ch in s.lower() if ch.isalnum())
-
-
-def S(word, near):
-    hits = [c for c in CAPS if _n(word) in [_n(x) for x in c["w"].split()]]
-    c = min(hits, key=lambda c: abs(c["s"] - near))
-    assert abs(c["s"] - near) < 0.6, (word, near, c["s"])
-    return c["s"]
-
-
-def E(word, near):
-    hits = [c for c in CAPS if _n(word) in [_n(x) for x in c["w"].split()]]
-    c = min(hits, key=lambda c: abs(c["s"] - near))
-    return c["e"]
-
-
-T = {
-    "strakh": S(u"страх", 0.75), "ahentom": S(u"агентом", 2.11), "dyrekti": S(u"діректі", 3.73),
-    "prydumaie": S(u"придумає", 5.45), "klientu": S(u"клієнту", 6.73), "durnytsiu": S(u"дурницю", 7.39),
-    "skladno": S(u"складно", 8.97), "odnu": S(u"одну", 11.20), "shtuku": S(u"штуку", 11.60),
-    "koly": S(u"Коли", 12.27), "sendpulse": S(u"SendPulse", 14.10), "pole": S(u"поле", 15.62),
-    "instruktsii": S(u"інструкції", 17.14), "skrypty": S(u"скрипти", 17.66), "knopka": S(u"кнопка", 19.17),
-    "korystuvannia": S(u"користування", 19.92), "tsia": S(u"Ця", 22.48), "oznachaie": S(u"означає", 23.00),
-    "vyity": S(u"вийти", 24.92), "internet": S(u"інтернет", 25.36), "informatsiiu": S(u"інформацію", 26.94),
-    "keisy": S(u"кейси", 28.72), "korysno": S(u"корисно", 29.84), "ale": S(u"Але", 30.64),
-    "zbilshuie": S(u"збільшує", 31.62), "shans": S(u"шанс", 32.28), "ne_te": S(u"те", 34.06),
-    "tomu": S(u"Тому", 34.43), "knopku": S(u"кнопку", 35.86), "vmykaty": S(u"вмикати", 36.96),
-    "natomist": S(u"натомість", 37.66), "propysaty": S(u"прописати", 38.60), "skrypty2": S(u"скрипти", 39.36),
-    "nikoly": S(u"ніколи", 40.33), "instruktsii2": S(u"інструкції", 41.47), "henialno": S(u"геніально", 43.00),
-    "podobaiutsia": S(u"подобаються", 44.84), "sendpulse2": S(u"SendPulse", 46.38),
-    "pytannia": S(u"питання", 48.48), "znaie": S(u"знає", 50.10), "politkorektno": S(u"політкоректно", 51.30),
-    "skazhe": S(u"скаже", 53.44), "znaie2": S(u"знає", 54.25), "menedzheru": S(u"менеджеру", 55.58),
-    "vse": S(u"все", 56.49), "nichoho": S(u"нічого", 57.05), "mozhe": S(u"може", 59.59),
-    "biznes": S(u"бізнес", 61.76), "maluy": S(u"малий", 60.76), "komanda": S(u"команда", 62.32),
-    "menedzhery": S(u"менеджери", 62.83), "zaiavok": S(u"заявок", 63.53), "khochesh": S(u"хочеш", 64.31),
-    "pyshy": S(u"пиши", 65.80), "pliusyk": S(u"плюсик", 66.08), "komentari": S(u"коментарі", 66.32),
-    "dur": DUR,
+# whisper's spelling of what she said -> her word (checked against the script)
+FIX = {
+    u"Небільше": u"Найбільший", u"страт": u"страх", u"будь": u"будь-яким", u"яким": None,
+    u"дурнетю.": u"дурницю.", u"Штукав.": u"штуку.", u"таку": u"такого",
+    u"синпуївсь,": u"SendPulse,", u"Туму!": u"Тому", (u"Я", 35.1): u"якщо", (u"ще", 35.3): u"цю",
+    u"концюю": None, u"виділяв": u"відійде", u"Сенпульс.": u"SendPulse.", (u"Якщо", 47.9): u"якщо",
+    u"Йв": u"І", u"сссссссссссссс": u"все.", (u"Якщо", 60.2): u"якщо", u"пишу": u"пиши",
+    u"плюсів": u"плюсик", u"ми...": u"ми", (u"по", 67.6): u"поспілкуємось.", u"спілкуємось.": None,
 }
+CAPS = load_caps(NN, FIX)
+W = Words(CAPS)
+S, E = W.s, W.e
+
+B, P, F, C, J = [], [], [], [], []     # behind / panel / front / cover html, js
+BLACKOUT = []
+PLACE = []
+HALF = []
 
 
-# the half screen's span, snapped to frames: her cut-out covers it with slack
-HALF0 = round(int((T["koly"] - 0.25) * FPS) / FPS, 3)
-HALF1 = round(int((T["instruktsii2"] + 0.25 + 0.95) * FPS) / FPS, 3)
+def js(s):
+    J.append(s)
 
 
-def js(src):
-    """`@name`, `@name+0.12`, `@name-0.1` -> one literal time."""
-    def rep(m):
-        v = T[m.group(1)] + (float(m.group(2)) if m.group(2) else 0.0)
-        return "%.3f" % v
-    return re.sub(r"@(\w+)([+-]\d+(?:\.\d+)?)?", rep, src)
+F.append(u'<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>')
+EXTRA = u'''
+    .dm { position: absolute; left: 110px; top: 300px; width: 860px; padding: 30px 36px; }
+    .dm .lbl { margin-bottom: 18px; }
+    .bub { display: inline-block; border-radius: 28px; padding: 18px 28px; font-size: 36px;
+           font-weight: 500; line-height: 1.25; }
+    .bub.in { background: #F4EDED; color: #241919; border-bottom-left-radius: 8px; }
+    .bub.me { background: #7A1424; color: #fff; border-bottom-right-radius: 8px; }
+    .rowr { display: flex; justify-content: flex-end; margin-top: 16px; }
+    .shot { position: absolute; left: 160px; top: 290px; width: 760px; border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(36,25,25,.12), 0 10px 30px rgba(36,25,25,.14); }
+'''
 
+# 1 · ABOVE — the DM goes wrong -------------------------------------------------
+t_strakh, t_ahent, t_prydum = S(u"страх", 0.75), S(u"агентом,", 2.11), S(u"придумає", 5.45)
+t_durn, t_skladno = S(u"дурницю.", 7.39), S(u"складно", 8.97)
+F.append(u'''
+        <div id="d1" class="card dm hid">
+          <span class="lbl">Direct · AI-агент</span>
+          <div><span class="bub in hid" id="d1q">Скільки коштує і коли можна почати?</span></div>
+          <div class="rowr"><span class="bub me hid" id="d1a">Звісно! Усе безкоштовно, почнемо вчора</span></div>
+        </div>''')
+js(u'''
+  pop("#d1", %.3f); pop("#d1q", %.3f);
+  pop("#d1a", %.3f);
+  sketch("x1", "skF"); ln("x1", 520, 470, 920, 560, {stroke: "#7A1424", strokeWidth: 7, seed: 5, halo: false});
+  ln("x1", 520, 560, 920, 470, {stroke: "#7A1424", strokeWidth: 7, seed: 9, halo: false});
+  draw("x1", %.3f, .25);
+  sketch("x1t", "skF"); label("x1t", 720, 640, "дурниця!", {size: 52, color: "#7A1424"});
+  draw("x1t", %.3f);
+  sink("#d1", %.3f); erase("x1", %.3f); erase("x1t", %.3f);
+''' % (t_strakh, t_strakh + 0.4, t_prydum, t_durn - 0.1, t_durn + 0.2, t_skladno, t_skladno, t_skladno))
+g.sfx("pop", t_strakh); g.sfx("notification", t_prydum); g.sfx("click", t_durn)
 
-SFX = []
+# 2 · ABOVE — «одну штуку» ---------------------------------------------------------
+t_odnu = S(u"одну", 11.20)
+F.append(u'<div id="one" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:300px;">'
+         u'<span class="num" style="color:#fff; font-size:60px">1</span> штука</div>')
+js(u'  pop("#one", %.3f); sink("#one", %.3f);' % (t_odnu - 0.05, S(u"Коли", 12.27) - 0.2))
+g.sfx("pop", t_odnu)
 
+# 3 · HALF 1 — her real SendPulse screen: the instructions, the web button --------
+h0 = S(u"Коли", 12.27) - 0.1
+h1 = S(u"Ця", 22.48) - 0.25
+HALF.append((h0, h1))
+# the screen: 760 px wide (scale .958) at (160, 290); the instruction field is
+# x 177-601 y 355-520, ВЕБ-ПОШУК x 622-903 y 451-509; the screen's lower left
+# (x 177-601, y 577-788) is empty — the labels go there
+P.append(u'<img class="shot hid" id="shot" src="assets/shots/sendpulse-agent.png">')
+P.append(u'<svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
+t_pole, t_instr = S(u"поле,", 15.62), S(u"інструкції", 17.14)
+t_knopka, t_web = S(u"кнопка", 19.17), S(u"веб", 20.56)
+js(u'''
+  fadein("#shot", %.3f, .35);
+  sketch("p1", "skP"); box("p1", 168, 345, 444, 186, {seed: 3, stroke: "#7A1424", strokeWidth: 5, fill: false});
+  draw("p1", %.3f);
+  sketch("p1a", "skP"); label("p1a", 390, 650, "інструкції й скрипти", {size: 46});
+  draw("p1a", %.3f);
+  sketch("p2", "skP"); ell("p2", 762, 480, 330, 92, {seed: 11, stroke: "#7A1424", strokeWidth: 5, fill: false});
+  draw("p2", %.3f);
+  sketch("p2a", "skP"); label("p2a", 360, 750, "кнопка «Веб»", {size: 46});
+  arrow("p2a", 500, 735, 720, 528, {seed: 13, bend: -.12});
+  draw("p2a", %.3f);
+  erase("p1"); erase("p1a"); erase("p2"); erase("p2a");
+'''.replace("erase(\"p1\"); erase(\"p1a\"); erase(\"p2\"); erase(\"p2a\");",
+            "erase(\"p1\", %.3f); erase(\"p1a\", %.3f); erase(\"p2\", %.3f); erase(\"p2a\", %.3f);" % ((h1,) * 4))
+   % (h0 + 0.5, t_pole - 0.1, t_instr - 0.3, t_knopka - 0.1, t_web - 0.4))
+g.sfx("whoosh-short", h0); g.sfx("click-soft", t_pole); g.sfx("click-soft", t_knopka)
 
-def sfx(name, t, db=0):
-    if isinstance(t, str):
-        t = float(js(t))
-    SFX.append({"t": round(max(0.0, t), 3), "name": name, "db": db})
+# 4 · ABOVE — what the button means: агент -> інтернет, useful, but risky ----------
+t_ahent2, t_internet = S(u"агент", 23.84), S(u"інтернет", 25.36)
+t_keisy, t_korysno = S(u"кейси,", 28.72), S(u"корисно.", 29.84)
+t_ale, t_shans, t_te = S(u"Але", 30.64), S(u"шанс,", 32.28), S(u"те.", 34.06)
+F.append(u'''
+        <div id="a1" class="pill light hid" style="left:120px; top:330px;">агент</div>
+        <div id="a2" class="pill light hid" style="left:640px; top:330px;">інтернет</div>
+        <div id="a3" class="chip hid" style="position:absolute; left:0; right:0; margin:auto; width:max-content; top:500px;"><i></i>іноді корисно</div>
+        <div id="a4" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:470px;">шанс помилки ↑</div>''')
+js(u'''
+  pop("#a1", %.3f);
+  sketch("a12", "skF"); arrow("a12", 400, 390, 625, 390, {seed: 21, bend: .1});
+  draw("a12", %.3f, .45);
+  pop("#a2", %.3f);
+  pop("#a3", %.3f); out("#a3", %.3f);
+  pop("#a4", %.3f);
+  sink("#a1, #a2, #a4", %.3f); erase("a12", %.3f);
+''' % (t_ahent2 - 0.05, t_internet - 0.55, t_internet, t_korysno - 0.1, t_ale - 0.1,
+       t_shans - 0.1, t_te + 0.15, t_te + 0.15))
+g.sfx("pop", t_ahent2); g.sfx("pop", t_internet); g.sfx("click-soft", t_korysno); g.sfx("pop", t_shans)
+BLACKOUT.append((t_internet - 0.05, E(u"інтернет", 25.36) + 0.05))
+BLACKOUT.append((t_shans - 0.05, E(u"шанс,", 32.28) + 0.05))
 
+# 5 · HALF 2 — the button off, only the scripts ------------------------------------
+k0 = S(u"Тому", 34.43) - 0.1
+k1 = E(u"інструкції.", 41.47) + 0.3
+HALF.append((k0, k1))
+t_vmyk, t_propys, t_nikoly = S(u"вмикати,", 36.96), S(u"прописати", 38.60), S(u"ніколи", 40.33)
+js(u'''
+  sketch("q1", "skP"); ln("q1", 625, 448, 900, 512, {stroke: "#7A1424", strokeWidth: 7, seed: 31});
+  ln("q1", 625, 512, 900, 448, {stroke: "#7A1424", strokeWidth: 7, seed: 33});
+  draw("q1", %.3f, .3);
+  sketch("q1t", "skP"); label("q1t", 360, 750, "не вмикаю", {size: 46, color: "#7A1424"});
+  arrow("q1t", 500, 735, 720, 528, {seed: 35, bend: -.12, stroke: "#7A1424"});
+  draw("q1t", %.3f);
+  sketch("q2", "skP"); box("q2", 168, 345, 444, 186, {seed: 37, fill: true});
+  draw("q2", %.3f);
+  sketch("q2t", "skP"); label("q2t", 390, 650, "тільки скрипти", {size: 46});
+  draw("q2t", %.3f);
+  sketch("q3", "skP"); ell("q3", 390, 438, 520, 250, {seed: 41, stroke: "#7A1424", strokeWidth: 6, fill: false});
+  draw("q3", %.3f, .6);
+  erase("q1", %.3f); erase("q1t", %.3f); erase("q2", %.3f); erase("q2t", %.3f); erase("q3", %.3f);
+''' % (t_vmyk - 0.1, t_vmyk + 0.3, t_propys - 0.2, t_propys + 0.3, t_nikoly - 0.1, k1, k1, k1, k1, k1))
+g.sfx("whoosh-short", k0); g.sfx("click", t_vmyk); g.sfx("click-soft", t_propys); g.sfx("click-soft", t_nikoly)
 
-L = []        # html
-BEATS = []    # functions returning js
+# 6 · ABOVE — «геніально … SendPulse» -----------------------------------------------
+t_gen, t_sp = S(u"геніально,", 43.00), S(u"SendPulse.", 46.38)
+F.append(u'''
+        <div id="g1" class="pill light hid" style="left:0; right:0; margin:auto; width:max-content; top:330px;
+             font-size:56px; font-weight:700">SendPulse</div>''')
+js(u'''
+  sketch("g1t", "skF"); label("g1t", 540, 520, "геніально", {size: 58, color: "#7A1424"});
+  under("g1t", 400, 545, 680, {stroke: "#7A1424", seed: 45});
+  draw("g1t", %.3f);
+  pop("#g1", %.3f);
+  sink("#g1", %.3f); erase("g1t", %.3f);
+''' % (t_gen - 0.05, t_sp - 0.1, t_sp + 0.75, t_sp + 0.75))
+g.sfx("click-soft", t_gen); g.sfx("pop", t_sp)
+BLACKOUT.append((t_sp - 0.05, E(u"SendPulse.", 46.38) + 0.05))
 
+# 7 · ABOVE — the DM again: a question it can't answer ------------------------------
+t_pyt, t_znaie = S(u"питання,", 48.48), S(u"знає,", 50.10)
+t_skazhe, t_men, t_nich, t_mozhe = S(u"скаже,", 53.44), S(u"менеджеру.", 55.58), S(u"нічого", 57.05), S(u"може.", 59.59)
+F.append(u'''
+        <div id="d2" class="card dm hid">
+          <span class="lbl">Direct · AI-агент</span>
+          <div><span class="bub in hid" id="d2q">А ви робите доставку в Канаду?</span></div>
+          <div class="rowr"><span class="bub me hid" id="d2a">Не знаю відповіді. Передаю вас менеджеру</span></div>
+        </div>
+        <div id="d2m" class="chip on hid" style="position:absolute; left:130px; top:640px;"><i></i>менеджер</div>''')
+js(u'''
+  pop("#d2", %.3f); pop("#d2q", %.3f);
+  pop("#d2a", %.3f);
+  pop("#d2m", %.3f);
+  sketch("d2k", "skF"); label("d2k", 720, 690, "нічого не вигадує", {size: 50, color: "#7A1424"});
+  draw("d2k", %.3f);
+  sink("#d2, #d2m", %.3f); erase("d2k", %.3f);
+''' % (t_pyt - 0.4, t_pyt, t_skazhe, t_men - 0.05, t_nich, t_mozhe + 0.2, t_mozhe + 0.2))
+g.sfx("pop", t_pyt - 0.4); g.sfx("notification", t_skazhe); g.sfx("pop", t_men)
 
-def beat(fn):
-    BEATS.append(fn)
-    return fn
+# 8 · CTA — who it is for, «Пиши + в коментарях», pointer down ------------------------
+t_mal, t_kom, t_men2, t_zai = S(u"малий", 60.76), S(u"команда,", 62.32), S(u"менеджери,", 62.83), S(u"заявок,", 63.53)
+t_pyshy = S(u"пиши", 65.80)
+F.append(u'''
+        <div id="c" style="position:absolute; left:90px; width:900px; top:300px; display:flex; flex-wrap:wrap;
+             gap:14px; justify-content:center">
+          <span class="chip hid" id="c1"><i></i>малий чи середній бізнес</span>
+          <span class="chip hid" id="c2"><i></i>команда</span>
+          <span class="chip hid" id="c3"><i></i>менеджери</span>
+          <span class="chip hid" id="c4"><i></i>багато заявок</span>
+        </div>
+        <div id="cp" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:470px;">Пиши + в коментарях</div>''')
+js(u'''
+  pop("#c1", %.3f); pop("#c2", %.3f); pop("#c3", %.3f); pop("#c4", %.3f);
+  pop("#cp", %.3f, .6);
+  sketch("ca", "skF"); arrow("ca", 840, 560, 880, 1450, {strokeWidth: 5, seed: 97, bend: -.12});
+  draw("ca", %.3f, .55);
+''' % (t_mal, t_kom, t_men2, t_zai, t_pyshy - 0.1, t_pyshy + 0.3))
+g.sfx("pop", t_mal); g.sfx("click-soft", t_kom); g.sfx("click-soft", t_men2); g.sfx("click-soft", t_zai)
+g.sfx("pop", t_pyshy)
+BLACKOUT.append((t_pyshy - 0.05, DUR))     # the pill says it
 
-
-k.css("""
-.hide { opacity: 0; visibility: hidden; }
-.ab { position: absolute; }
-.bub { position: absolute; padding: 22px 30px; border-radius: 30px; font-family: "GSans", sans-serif;
-       font-size: 36px; font-weight: 500; line-height: 1.25; max-width: 560px; }
-.bub.in { background: #f1f3f4; color: #202124; border-bottom-left-radius: 8px; }
-.bub.me { background: #d3e3fd; color: #041e49; border-bottom-right-radius: 8px; }
-.av { position: absolute; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
-      font-family: "GSans", sans-serif; font-weight: 700; font-size: 30px; color: #fff; }
-.lbl { font-family: "GSans", sans-serif; font-size: 26px; font-weight: 700; letter-spacing: .14em;
-       color: #5f6368; text-transform: uppercase; position: absolute; }
-.field { position: absolute; border-radius: 16px; border: 2px solid #747775; background: #fff; }
-.field .fl { position: absolute; left: 22px; top: -20px; background: #fff; padding: 0 10px;
-             font-family: "GSans", sans-serif; font-size: 28px; color: #0b57d0; font-weight: 500; }
-.row { position: absolute; display: flex; align-items: center; gap: 26px; font-family: "GSans", sans-serif; }
-""")
-
-# ---------------------------------------------------------------- 1 the DM
-CHAT = "#dm"
-
-
-def dm_card(cid, top):
-    # a mockup -> a sheet that drops from the top and pushes her down (STYLE.md §0c)
-    return ('<div class="sheet hide" id="%sC" style="height:700px;background:#fff">'
-            '<div style="position:absolute;left:100px;top:%dpx;width:880px;height:560px">'
-            '<div class="av" style="left:36px;top:30px;background:#34A853">К</div>'
-            '<div class="gs" style="position:absolute;left:122px;top:34px;font-size:34px;font-weight:700">Клієнтка</div>'
-            '<div class="gs" style="position:absolute;left:122px;top:76px;font-size:24px;color:#5f6368">Direct</div>'
-            '<div style="position:absolute;left:0;right:0;top:124px;height:2px;background:#e8eaed"></div>'
-            % (cid, top))
-
-
-L.append(
-    '<div class="g" id="dm" style="top:0;height:700px">' + dm_card("dm", 110) +
-    '<div class="bub in hide" id="dmQ" style="left:36px;top:160px">Скільки коштує і коли можна почати?</div>'
-    '<div class="dots hide" id="dmD" style="left:690px;top:330px"><i></i><i></i><i></i><i></i></div>'
-    '<div class="bub me hide" id="dmA" style="right:36px;top:300px;width:470px;height:150px"></div>'
-    + sk.svg(880, 560, sk.line([(450, 340), (560, 330), (680, 345), (800, 334)], stroke="#041e49", sw=5, double=False)
-             + sk.line([(450, 380), (530, 392), (640, 372), (740, 386)], stroke="#041e49", sw=5, double=False)
-             + sk.line([(450, 418), (520, 410), (590, 420)], stroke="#041e49", sw=5, double=False),
-             sid="dmS", style="left:0;top:0") +
-    sk.svg(880, 560, sk.cross(560, 300, 150, sw=11), sid="dmX") +
-    '<div class="hand hide" id="dmH" style="position:absolute;left:470px;top:470px;font-size:48px;color:#EA4335">дурниця!</div>'
-    '</div></div></div>')
-
-
-@beat
-def b_dm():
-    sfx("pop", "@strakh")
-    sfx("click-soft", "@strakh+0.35")
-    sfx("pencil", "@prydumaie", 2)
-    sfx("click", "@durnytsiu")
-    return js("""
-  h.show("#dm", @strakh-0.3);
-  h.sheetIn("#dmC", @strakh-0.3, 700);
-  h.pop("#dmQ", @strakh+0.35, {s: 0.5, r: 0});
-  h.pop("#dmD", @ahentom, {s: 0.5, r: 0});
-  h.think("#dmD", @ahentom+0.1, 2.6);
-  h.out("#dmD", @prydumaie-0.15, 0.15);
-  h.pop("#dmA", @prydumaie-0.1, {s: 0.6, r: 2});
-  h.draw("#dmS", @prydumaie+0.15, 1.1);
-  h.draw("#dmX", @durnytsiu, 0.35);
-  h.wiggle("#dmA", @durnytsiu+0.1);
-  h.write("#dmH", @durnytsiu+0.25, 0.4);
-""")
-
-
-# ---------------------------------------------------------------- 2 one thing
-L.append(
-    '<div class="g" id="one" style="top:0;height:700px">'
-    '<div class="paper" id="oneP" style="left:350px;top:150px;width:380px;height:330px;transform:rotate(-3deg);background:#fff7d1">'
-    + sk.svg(380, 330, sk.circle_around(190, 140, 110, 80, stroke="red", sw=7), sid="oneS") +
-    '<div class="num" style="position:absolute;left:0;right:0;top:56px;text-align:center;font-size:150px;color:#202124">1</div>'
-    '<div class="hand" style="position:absolute;left:0;right:0;top:240px;text-align:center;font-size:52px">штука</div>'
-    '</div></div>')
-
-
-@beat
-def b_one():
-    sfx("whoosh-short", "@skladno")
-    sfx("pop", "@odnu")
-    sfx("pencil", "@shtuku", -2)
-    return js("""
-  h.sheetOut("#dmC", @skladno, 700);
-  tl.set("#dm", {autoAlpha: 0}, @skladno+0.7);
-  h.pop("#one", @odnu-0.1, {s: 1, r: 0, y: 0, d: 0.2});
-  h.pop("#oneP", @odnu-0.1, {s: 0.4, r: -12, to: -3});
-  h.draw("#oneS", @shtuku+0.05, 0.45);
-""")
-
-
-# ---------------------------------------------------------------- 3 OVER: the agent panel on the board
-
-L.append(
-    '<div class="g full" id="bd">'
-    # a scheme -> halfscreen, her §00.3.3 geometry: the whiteboard comes down to
-    # y 1240, she drops 330 px, her cut-out keeps her head in front of it.
-    # Content: y 290 (top no-go) to ~940 across, and beside her head to 1240.
-    '<div class="sheet board-bg hide" id="bdS" style="height:1240px">'
-    '<div id="cam" style="position:absolute;inset:0">'
-    # her real SendPulse agent screen (Drive, 2026-11-20), 940 px wide from y 290
-    '<img class="hide" id="spShot" src="assets/shots/sendpulse-agent.png" '
-    'style="position:absolute;left:70px;top:290px;width:940px;border-radius:18px;'
-    'box-shadow:0 2px 6px rgba(60,64,67,.25), 0 8px 24px rgba(60,64,67,.18)">'
-    # «окреме поле… інструкції й скрипти»: the instruction field, drawn around
-    + sk.svg(1080, 1240, sk.rect(80, 360, 548, 226, stroke="blue", sw=6), sid="fIS") +
-    '<div class="ab hide" id="chS" style="left:420px;top:520px"><span class="chip cy">скрипти</span></div>'
-    # «кнопка «Веб»»: a loop round ВЕБ-ПОШУК, and a live toggle laid over hers
-    + sk.svg(1080, 1240, sk.circle_around(812, 524, 205, 58, stroke="red", sw=6), sid="webL") +
-    '<div class="ab hide" id="tWw" style="left:946px;top:500px;width:46px;height:28px">'
-    '<div class="tgl" id="tW" style="left:0;top:0;transform:scale(0.44);transform-origin:0 0"><b></b></div></div>'
-    # agent left of her head, the internet right of it, arrows arcing over her
-    + sk.svg(1080, 1240, sk.ellipse(170, 1080, 92, 92, stroke="blue", fill="blue", style="hachure"), sid="agO") +
-    '<div class="gs hide" id="agT" style="position:absolute;left:70px;top:1058px;width:200px;text-align:center;font-size:38px;font-weight:700;color:#0b57d0">агент</div>'
-    + sk.svg(1080, 1240,
-             sk.ellipse(910, 1080, 95, 95, stroke="ink") +
-             sk.ellipse(910, 1080, 42, 95, stroke="ink", sw=3.5) +
-             sk.line([(818, 1045), (1002, 1045)], sw=3.5, double=False) +
-             sk.line([(818, 1115), (1002, 1115)], sw=3.5, double=False), sid="glO") +
-    '<div class="hand hide" id="glT" style="position:absolute;left:820px;top:1180px;width:180px;text-align:center;font-size:40px">інтернет</div>'
-    + sk.svg(1080, 1240, sk.arrow([(235, 1000), (540, 870), (845, 1000)], stroke="blue"), sid="arO")
-    + sk.svg(1080, 1240, sk.arrow([(840, 1035), (540, 950), (240, 1035)], stroke="blue"), sid="arI")
-    + sk.svg(1080, 1240, sk.check(960, 930, 60), sid="okC")
-    + '<div class="ab hide" id="rk" style="left:40px;top:1214px;width:260px;height:22px;border-radius:11px;background:#f1f3f4">'
-      '<div id="rkF" style="height:100%;width:100%;border-radius:11px;background:#EA4335;transform-origin:0 50%"></div></div>'
-    + '<div class="hand hide" id="rkT" style="position:absolute;left:40px;top:1168px;font-size:36px;color:#EA4335">шанс помилки</div>'
-    + sk.svg(1080, 1240, sk.scribble(815, 990, 190, 180, sw=8), sid="glX")
-    # the fence: instructions + the (off) web row — nothing gets out
-    + sk.svg(1080, 1240, sk.rect(68, 348, 572, 250, stroke="green", sw=8), sid="fence")
-    + '</div></div></div>')
-k.matte("half1", HALF0, round(HALF1 - HALF0, 3))
-
-
-@beat
-def b_board():
-    sfx("whoosh-short", "@koly-0.1")
-    sfx("pencil", "@koly+0.4", -2)
-    sfx("click-soft", "@pole")
-    sfx("pencil", "@instruktsii", -3)
-    sfx("pop", "@skrypty")
-    sfx("click-soft", "@knopka")
-    sfx("click", "@tsia+0.2")
-    sfx("whoosh-short", "@vyity")
-    sfx("ping", "@korysno")
-    sfx("pencil", "@ne_te-0.2", -3)
-    sfx("click", "@vmykaty")
-    sfx("pencil", "@propysaty", -2)
-    sfx("sparkle", "@nikoly")
-    sfx("whoosh-short", "@instruktsii2+0.25")
-    return js("""
-  tl.to("#oneP", {scale: 1.25, duration: 0.35, ease: "power2.in"}, @koly-0.15);
-  h.show("#bd", @koly-0.15);
-  h.halfIn("#bdS", @koly-0.15);
-  tl.set("#one", {autoAlpha: 0}, @koly+0.6);
-  h.pop("#spShot", @koly+0.35, {s: 0.94, r: 0, y: 30});
-  h.draw("#fIS", @pole-0.1, 0.7);
-  h.pop("#chS", @skrypty, {s: 0.4, r: -6});
-  h.draw("#webL", @knopka-0.05, 0.6);
-  h.show("#tWw", @knopka);
-  /* on: the agent can go out */
-  h.toggle("#tW", @tsia+0.2, "#0b57d0");
-  h.draw("#agO", @oznachaie, 0.6);
-  h.write("#agT", @oznachaie+0.3, 0.35);
-  h.draw("#glO", @vyity-0.2, 0.7);
-  h.write("#glT", @internet, 0.4);
-  h.draw("#arO", @vyity, 0.5);
-  h.draw("#arI", @informatsiiu-0.1, 0.5);
-  h.draw("#okC", @korysno-0.1, 0.3);
-  h.show("#rk", @ale);
-  h.write("#rkT", @ale, 0.4);
-  tl.fromTo("#rkF", {scaleX: 0}, {scaleX: 0.88, duration: 1.2, ease: "power2.out"}, @zbilshuie);
-  h.wiggle("#rkT", @ne_te);
-  /* off: scripts instead */
-  tl.to("#tW", {backgroundColor: "#e1e3e1", borderColor: "#747775", duration: 0.18}, @vmykaty);
-  tl.to("#tW b", {x: 0, scale: 1, backgroundColor: "#747775", duration: 0.45, ease: SP}, @vmykaty);
-  h.undraw("#arO", @vmykaty, 0.25);
-  h.undraw("#arI", @vmykaty, 0.25);
-  h.undraw("#okC", @vmykaty, 0.2);
-  h.draw("#glX", @vmykaty+0.15, 0.45);
-  tl.to("#rkF", {scaleX: 0.06, duration: 0.8, ease: "power2.inOut"}, @natomist);
-  h.bump("#chS", @propysaty);
-  h.bump("#chS", @skrypty2);
-  h.draw("#fence", @nikoly-0.1, 0.9);
-  h.halfOut("#bdS", @instruktsii2+0.25);
-""")
-
-
-# ---------------------------------------------------------------- 4 genius + SendPulse
-L.append(
-    '<div class="g" id="gen" style="top:0;height:700px">'
-    + sk.svg(1080, 700,
-             sk.ellipse(420, 290, 105, 115, stroke="ink", fill="yellow", style="solid") +
-             sk.rect(375, 400, 90, 70, stroke="ink", sw=4, round_=False) +
-             sk.line([(380, 495), (460, 495)], sw=4, double=False) +
-             sk.spark(420, 160, 34, stroke="yellow", sw=7), sid="bulb", cls="sk over-plate") +
-    '<div class="pill hide" id="spP" style="left:560px;top:250px;height:110px;padding:0 40px 0 30px;font-size:44px;font-weight:700">'
-    '<span style="display:inline-block;width:46px;height:46px;border-radius:50%;background:#4285F4"></span>SendPulse</div>'
-    + sk.svg(1080, 700,
-             sk._p("M905 410 C 870 370, 820 410, 905 470 C 990 410, 940 370, 905 410", "#EA4335", 7),
-             sid="heart", cls="sk over-plate") +
-    '</div>')
-
-
-@beat
-def b_gen():
-    sfx("sparkle", "@henialno")
-    sfx("pop", "@sendpulse2-0.4")
-    sfx("pencil", "@sendpulse2+0.2", -3)
-    return js("""
-  h.show("#gen", @henialno-0.3);
-  h.draw("#bulb", @henialno-0.3, 0.8);
-  h.pop("#spP", @podobaiutsia, {s: 0.5, r: 4});
-  h.draw("#heart", @sendpulse2, 0.5);
-  h.bump("#spP", @sendpulse2+0.35);
-  h.fadeOut("#gen", @sendpulse2+0.9, 0.3);
-""")
-
-
-# ---------------------------------------------------------------- 5 the DM again: it doesn't know
-L.append(
-    '<div class="g" id="dm2" style="top:0;height:700px">' + dm_card("dm2", 110) +
-    '<div class="bub in hide" id="d2Q" style="left:36px;top:160px">А ви робите доставку в Канаду?</div>'
-    '<div class="dots hide" id="d2D" style="left:690px;top:330px"><i></i><i></i><i></i><i></i></div>'
-    '<div class="bub me hide" id="d2A" style="right:36px;top:290px;width:520px">Не знаю відповіді. Передаю вас менеджеру</div>'
-    '<div class="av hide" id="d2M" style="left:52px;top:430px;width:84px;height:84px;background:#EA4335;font-size:36px">М</div>'
-    '<div class="hand hide" id="d2MT" style="position:absolute;left:24px;top:500px;font-size:40px">менеджер</div>'
-    + sk.svg(880, 560, sk.arrow([(470, 410), (330, 440), (150, 466)], stroke="red", sw=5), sid="d2Ar") +
-    sk.svg(880, 560, sk.check(760, 440, 80), sid="d2OK") +
-    '</div></div></div>')
-
-
-@beat
-def b_dm2():
-    sfx("pop", "@pytannia-0.3")
-    sfx("click-soft", "@pytannia")
-    sfx("notification", "@skazhe")
-    sfx("pop", "@menedzheru")
-    sfx("pencil", "@nichoho", -3)
-    return js("""
-  h.show("#dm2", @pytannia-0.6);
-  h.sheetIn("#dm2C", @pytannia-0.6, 700);
-  h.pop("#d2Q", @pytannia, {s: 0.5, r: 0});
-  h.pop("#d2D", @znaie, {s: 0.5, r: 0});
-  h.think("#d2D", @znaie+0.1, 2.6);
-  h.out("#d2D", @skazhe-0.15, 0.15);
-  h.pop("#d2A", @skazhe, {s: 0.6, r: 2});
-  h.pop("#d2M", @menedzheru-0.1, {s: 0.3, r: 0});
-  h.draw("#d2Ar", @menedzheru-0.25, 0.35);
-  h.write("#d2MT", @menedzheru+0.2, 0.4);
-  h.draw("#d2OK", @nichoho, 0.35);
-  h.bump("#d2OK", @mozhe);
-  h.sheetOut("#dm2C", @mozhe+0.2, 700);
-  tl.set("#dm2", {autoAlpha: 0}, @mozhe+0.9);
-""")
-
-
-# ---------------------------------------------------------------- 6 CTA
-L.append(
-    '<div class="g" id="cta" style="top:0;height:700px">'
-    '<div class="ab" style="left:90px;top:90px;width:900px;display:flex;flex-wrap:wrap;gap:20px">'
-    '<span class="chip on hide" id="c1">малий чи середній бізнес</span>'
-    '<span class="chip cg hide" id="c2">команда</span>'
-    '<span class="chip cy hide" id="c3">менеджери</span>'
-    '<span class="chip cr hide" id="c4">багато заявок</span></div>'
-    + sk.svg(1080, 700, sk.ellipse(540, 395, 95, 90, stroke="white", sw=7) +
-             sk.line([(540, 345), (540, 445)], stroke="white", sw=10, double=False) +
-             sk.line([(490, 395), (590, 395)], stroke="white", sw=10, double=False),
-             sid="plus", cls="sk over-plate") +
-    '<div class="pill hide" id="cmt" style="left:170px;top:470px;width:740px;height:100px;padding:0 36px;font-size:36px">'
-    '<span style="color:#5f6368">Коментар:</span><span id="cmtT" data-text="+" style="font-weight:700;font-size:48px"></span></div>'
-    '</div>')
-
-
-@beat
-def b_cta():
-    sfx("pop", "@maluy")
-    sfx("pop", "@komanda")
-    sfx("pop", "@menedzhery")
-    sfx("pop", "@zaiavok")
-    sfx("pencil", "@pyshy", -2)
-    sfx("key-press", "@komentari+0.3")
-    return js("""
-  h.show("#cta", @maluy-0.1);
-  h.pop("#c1", @maluy, {s: 0.5, r: -4});
-  h.pop("#c2", @komanda, {s: 0.5, r: 4});
-  h.pop("#c3", @menedzhery, {s: 0.5, r: -4});
-  h.pop("#c4", @zaiavok, {s: 0.5, r: 4});
-  h.draw("#plus", @pyshy, 0.7);
-  h.pop("#cmt", @komentari-0.2, {s: 0.8, r: 0, y: 20});
-  h.type("#cmtT", @komentari+0.3, 6);
-  h.bump("#plus", @komentari+0.4);
-""")
-
-
-INVERT = []    # halfscreen keeps her (and the white captions) in the bottom half
+# ---------------------------------------------------------------- mattes for the half screens
+for i, (a, b) in enumerate(HALF):
+    g.matte("half%d" % (i + 1), round(a - 0.1, 3), round(b - a + 1.2, 3))
+    js("  half(%.3f, %.3f);" % (a, b))
+    PLACE.append((a + 0.4, b + 0.2, "bottom", 938))
 
 
 def main():
-    gj = []
-    for fn in BEATS:
-        gj.append("  /* %s */" % fn.__name__)
-        gj.append(fn().rstrip())
-    for a, b in NO_PAINT:
-        for c in SFX:
-            assert not (a <= c["t"] < b), ("sfx in no_paint", c)
-    head = [SKETCH_JS, "  var h = sketchHelpers(tl);",
-            '  gsap.set("#vid, .plate.matte", {transformOrigin: "540px 900px"});',
-            '  tl.fromTo("#vid, .plate.matte", {scale: 1}, {scale: 1.045, duration: %.3f, ease: "none"}, 0);' % DUR]
-    doc = k.document(
-        title=u"Reel 61 — агент нічого не вигадує",
-        plate="assets/base.mp4",
-        gfx_html="\n".join(L),
-        gfx_js="\n".join(head + gj),
-        caps=CAPS,
-        invert=INVERT,
-    )
-    io.open(os.path.join(HERE, "index.html"), "w", encoding="utf-8").write(doc)
-    SFX.sort(key=lambda c: c["t"])
-    io.open(os.path.join(HERE, "sfx.json"), "w", encoding="utf-8").write(json.dumps(SFX, indent=1))
-    print("index.html  %d captions, %d beats, %d sfx cues" % (len(CAPS), len(BEATS), len(SFX)))
+    chunks = g.chunks(CAPS, place=PLACE)
+    doc = g.document(title=u"Reel 61 — агент нічого не вигадує", plate="assets/base.mp4",
+                     behind="\n".join(B), panel="\n".join(P), front="\n".join(F), cover="\n".join(C),
+                     js="\n".join(J), chunks=chunks, blackout=BLACKOUT, extra_css=EXTRA)
+    g.write(HERE, doc)
+    print("index.html  %d caption chunks, %d sfx cues, %d mattes" % (len(chunks), len(g.cues), len(g.mattes)))
 
 
 main()

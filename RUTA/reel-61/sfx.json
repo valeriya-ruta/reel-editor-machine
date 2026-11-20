@@ -1,177 +1,102 @@
 [
  {
   "t": 0.75,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 1.1,
-  "name": "click-soft",
-  "db": 0
+  "name": "pop"
  },
  {
   "t": 5.453,
-  "name": "pencil",
-  "db": 2
+  "name": "notification"
  },
  {
   "t": 7.39,
-  "name": "click",
-  "db": 0
- },
- {
-  "t": 8.969,
-  "name": "whoosh-short",
-  "db": 0
+  "name": "click"
  },
  {
   "t": 11.202,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 11.595,
-  "name": "pencil",
-  "db": -2
+  "name": "pop"
  },
  {
   "t": 12.167,
-  "name": "whoosh-short",
-  "db": 0
- },
- {
-  "t": 12.667,
-  "name": "pencil",
-  "db": -2
+  "name": "whoosh-short"
  },
  {
   "t": 15.617,
-  "name": "click-soft",
-  "db": 0
- },
- {
-  "t": 17.139,
-  "name": "pencil",
-  "db": -3
- },
- {
-  "t": 17.659,
-  "name": "pop",
-  "db": 0
+  "name": "click-soft"
  },
  {
   "t": 19.167,
-  "name": "click-soft",
-  "db": 0
+  "name": "click-soft"
  },
  {
-  "t": 22.677,
-  "name": "click",
-  "db": 0
+  "t": 23.837,
+  "name": "pop"
  },
  {
-  "t": 24.917,
-  "name": "whoosh-short",
-  "db": 0
+  "t": 25.357,
+  "name": "pop"
  },
  {
   "t": 29.837,
-  "name": "ping",
-  "db": 0
+  "name": "click-soft"
  },
  {
-  "t": 33.862,
-  "name": "pencil",
-  "db": -3
+  "t": 32.282,
+  "name": "pop"
+ },
+ {
+  "t": 34.333,
+  "name": "whoosh-short"
  },
  {
   "t": 36.957,
-  "name": "click",
-  "db": 0
+  "name": "click"
  },
  {
   "t": 38.604,
-  "name": "pencil",
-  "db": -2
+  "name": "click-soft"
  },
  {
   "t": 40.326,
-  "name": "sparkle",
-  "db": 0
- },
- {
-  "t": 41.716,
-  "name": "whoosh-short",
-  "db": 0
+  "name": "click-soft"
  },
  {
   "t": 42.997,
-  "name": "sparkle",
-  "db": 0
+  "name": "click-soft"
  },
  {
-  "t": 45.976,
-  "name": "pop",
-  "db": 0
+  "t": 46.376,
+  "name": "pop"
  },
  {
-  "t": 46.576,
-  "name": "pencil",
-  "db": -3
- },
- {
-  "t": 48.177,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 48.477,
-  "name": "click-soft",
-  "db": 0
+  "t": 48.077,
+  "name": "pop"
  },
  {
   "t": 53.44,
-  "name": "notification",
-  "db": 0
+  "name": "notification"
  },
  {
   "t": 55.582,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 57.05,
-  "name": "pencil",
-  "db": -3
+  "name": "pop"
  },
  {
   "t": 60.763,
-  "name": "pop",
-  "db": 0
+  "name": "pop"
  },
  {
   "t": 62.323,
-  "name": "pop",
-  "db": 0
+  "name": "click-soft"
  },
  {
   "t": 62.833,
-  "name": "pop",
-  "db": 0
+  "name": "click-soft"
  },
  {
   "t": 63.529,
-  "name": "pop",
-  "db": 0
+  "name": "click-soft"
  },
  {
   "t": 65.803,
-  "name": "pencil",
-  "db": -2
- },
- {
-  "t": 66.623,
-  "name": "key-press",
-  "db": 0
+  "name": "pop"
  }
 ]
