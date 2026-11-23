@@ -269,23 +269,30 @@ js(u'''
 ''' % (t_pyt - 0.3, t_skazhe, t_men, t_mozhe + 0.2))
 g.sfx("pop", t_pyt - 0.3); g.sfx("notification", t_skazhe); g.sfx("ping", t_men)
 
-# 8 · CTA — who it is for, «Пиши + в коментарях» -------------------------------------
-t_mal, t_pyshy = S(u"малий", 60.76), S(u"пиши", 65.80)
-F.append(u'''
-        <div id="ct" class="glass cta hid">
-          <div class="chips" style="justify-content:center; flex-wrap:nowrap; gap:12px">
-            <span class="chip" style="font-size:30px; padding:10px 18px"><i></i>малий бізнес</span>
-            <span class="chip" style="font-size:30px; padding:10px 18px"><i></i>команда</span>
-            <span class="chip" style="font-size:30px; padding:10px 18px"><i></i>багато заявок</span>
-          </div>
-        </div>
-        <div id="ctp" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:1404px;
+# 8 · CTA — who it is for, one chip at a time; «Пиши + в коментарях» -----------------
+# Her idea on v4: one slot on top, the chips shuffle through it like cards — each
+# leaves upward as the next rises from below. Less space, more motion. The pill
+# sits in the subtitle band (the blackout from «пиши» leaves it free).
+t_mal, t_kom, t_zai = S(u"малий", 60.76), S(u"команда,", 62.32), S(u"заявок,", 63.53)
+t_pyshy = S(u"пиши", 65.80)
+CH = [(u"малий і середній бізнес", t_mal - 0.1), (u"команда і менеджери", t_kom - 0.1),
+      (u"багато заявок", S(u"багато", 63.37) - 0.1)]
+for i, (txt, _) in enumerate(CH):
+    F.append(u'        <div id="sh%d" class="glass shuf hid"><span class="chip"><i></i>%s</span></div>' % (i, txt))
+F.append(u'''        <div id="ctp" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:1404px;
              font-size:46px; padding:28px 56px">Пиши + в коментарях</div>''')
-js(u'''
-  rise("#ct", %.3f);
-  pop("#ctp", %.3f);
-''' % (t_mal - 0.1, t_pyshy - 0.1))
-g.sfx("pop", t_mal); g.sfx("pop", t_pyshy)
+EXTRA += u"""
+    .shuf { left: 0; right: 0; margin: auto; width: max-content; top: 330px; padding: 14px;
+            border-radius: 30px; transform-origin: 50% 100%; }
+    .shuf .chip { font-size: 40px; padding: 14px 26px; }
+"""
+for i, (txt, t) in enumerate(CH):
+    js(u'  tl.fromTo("#sh%d", {autoAlpha: 0, y: 90, scale: .92, rotationX: -35}, X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), %.3f);' % (i, t))
+    end = CH[i + 1][1] if i + 1 < len(CH) else t_pyshy + 1.2
+    js(u'  tl.to("#sh%d", {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, %.3f);' % (i, end - 0.05))
+    g.sfx("pop", t)
+js(u'  pop("#ctp", %.3f);' % (t_pyshy - 0.1))
+g.sfx("pop", t_pyshy)
 BLACKOUT.append((t_pyshy - 0.05, DUR))
 
 # ---------------------------------------------------------------- half screens + their mattes
