@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 46 — Два акаунти, одна система</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="assets/js/rough-4.6.6.js"></script>
+    <style>
+    @font-face { font-family: "Google Sans"; font-weight: 400; font-display: block;
+                 src: url("assets/fonts/GoogleSans-400.ttf") format("truetype"); }
+    @font-face { font-family: "Google Sans"; font-weight: 500; font-display: block;
+                 src: url("assets/fonts/GoogleSans-500.ttf") format("truetype"); }
+    @font-face { font-family: "Google Sans"; font-weight: 700; font-display: block;
+                 src: url("assets/fonts/GoogleSans-700.ttf") format("truetype"); }
+    @font-face { font-family: "ProductSans"; font-weight: 900; font-display: block;
+                 src: url("assets/fonts/ProductSans-Black.woff") format("woff"); }
+    @font-face { font-family: "Pangolin"; font-weight: 400; font-display: block;
+                 src: url("assets/fonts/Pangolin.ttf") format("truetype"); }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px; overflow: hidden;
+            background: #fff; font-family: "Google Sans", system-ui, sans-serif;
+            color: #241919;
+            --primary: #7A1424; --on-surface: #241919; --on-surface-var: #574142;
+            --outline-var: #DEBFBF; --container-low: #FFF0F0; --chip: #FFF8F7; }
+    .plate { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    .L { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+         pointer-events: none; }
+    .hid { opacity: 0; visibility: hidden; }
+
+    /* §00.3.1 above me */
+    .card { position: absolute; background: #FFFFFF; border-radius: 40px;
+            box-shadow: 0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.10);
+            padding: 36px 40px; }
+    .card .lbl { display: block; font-weight: 500; font-size: 28px;
+                 color: var(--on-surface-var); margin-bottom: 20px; }
+    .card .ttl { display: block; font-weight: 700; font-size: 56px; line-height: 1.08;
+                 letter-spacing: -0.02em; color: var(--on-surface); }
+    .chips { display: flex; flex-wrap: wrap; gap: 14px; }
+    .chip { display: inline-flex; align-items: center; gap: 12px;
+            border: 2px solid var(--outline-var); border-radius: 16px;
+            padding: 14px 24px; font-weight: 500; font-size: 36px;
+            color: var(--on-surface); background: var(--chip); }
+    .chip i { width: 16px; height: 16px; border-radius: 50%; background: var(--primary);
+              display: inline-block; flex: none; }
+    .chip.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .chip.on i { background: #fff; }
+    .pill { position: absolute; display: inline-flex; align-items: center; gap: 16px;
+            background: var(--primary); color: #fff; border-radius: 999px;
+            padding: 30px 54px; font-weight: 500; font-size: 46px; white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(36,25,25,.12), 0 10px 30px rgba(122,20,36,.22); }
+    .pill.light { background: #fff; color: var(--on-surface);
+                  box-shadow: 0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.10); }
+    .num { font-weight: 700; letter-spacing: -0.04em; color: var(--primary); line-height: 1; }
+    .row { display: flex; align-items: center; gap: 18px; }
+    .check { width: 44px; height: 44px; border-radius: 12px; flex: none;
+             border: 3px solid var(--outline-var); background: #fff; position: relative; }
+    .check.on { background: var(--primary); border-color: var(--primary); }
+    .check.on::after { content: ""; position: absolute; left: 13px; top: 5px; width: 11px;
+                       height: 22px; border: solid #fff; border-width: 0 5px 5px 0;
+                       transform: rotate(45deg); }
+    .line { display: block; height: 18px; border-radius: 9px; background: #EFE3E3; }
+    .logo { width: 64px; height: 64px; flex: none; }
+    .logo path { fill: var(--primary); }
+    .mark { display: block; }
+    .mark path { fill: currentColor; }
+
+    /* §00.3.2 behind me */
+    .big { position: absolute; left: 0; width: 1080px; text-align: center;
+           font-weight: 700; line-height: 0.9; letter-spacing: -0.04em;
+           /* white, her call 2026-10-21: the red read badly over the room */
+           color: #FFFFFF; white-space: nowrap;
+           text-shadow: 0 6px 40px rgba(20,12,12,.30), 0 2px 8px rgba(20,12,12,.22); }
+
+    /* §00.3.3 half screen. Its parked position (up, off frame) is set from JS
+       with gsap.set: a CSS translate here would be parsed by GSAP as a px offset
+       and then stacked under yPercent, and the panel stalls a quarter of the
+       way in (reel 41's first snapshot). Same for #cover. */
+    #panel { position: absolute; left: 0; top: 0; width: 1080px; height: 1240px;
+             background: #FFFFFF; }
+    /* §00.3.4 full screen */
+    #cover { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+             background: #FFFFFF; }
+
+    /* §00.5 sketches */
+    .sk { position: absolute; left: 0; top: 0; overflow: visible; }
+    .sk text, .hand { font-family: "Pangolin", cursive; fill: #1E1E1E; color: #1E1E1E; }
+    #front .sk { filter: drop-shadow(0 3px 10px rgba(20,12,12,.22)); }
+    .hand { position: absolute; white-space: nowrap; }
+
+    /* captions — exactly as before §00 (her call 2026-10-21, over the boxed
+       phrases of the spec): kit.py's rail, word by word, upper case */
+    #scrim { position: absolute; left: 20px; top: 1247px; width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png"); background-size: 100% 100%;
+             background-repeat: no-repeat; opacity: 0; visibility: hidden; pointer-events: none; }
+    .wc { position: absolute; left: 0; width: 1080px; top: 1413px; height: 118px;
+          line-height: 118px; text-align: center; color: #fff;
+          font-family: "ProductSans", system-ui, sans-serif; font-size: 90px; font-weight: 900;
+          letter-spacing: -0.015em; white-space: nowrap; opacity: 0; visibility: hidden; }
+    .wc.inv { color: #241919; }
+    /* §00.2 boxed phrase captions (spec; not in use — see .wc) */
+    #caps { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+            pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; display: flex;
+           justify-content: center; opacity: 0; visibility: hidden; }
+    .cap .box { display: inline-block; max-width: 720px; text-align: center;
+                background: rgba(255,255,255,.94); border-radius: 28px; padding: 16px 30px;
+                font-weight: 500; font-size: 54px; line-height: 1.25; letter-spacing: -0.01em;
+                color: #241919; box-shadow: 0 2px 10px rgba(36,25,25,.10);
+                text-wrap: balance; }
+    .cap .k { position: relative; display: inline-block; padding: 0 .32em; }
+    .cap .kb { position: absolute; inset: 0; border-radius: 999px; background: #7A1424;
+               opacity: 0; }
+    .cap .kt { position: relative; }
+
+    .ava { width: 78px; height: 78px; border-radius: 50%; flex: none; display: flex;
+           align-items: center; justify-content: center; color: var(--primary);
+           background: var(--container-low); border: 3px solid var(--primary); }
+    .plus { width: 40px; height: 40px; border-radius: 50%; flex: none; display: inline-flex;
+            align-items: center; justify-content: center; background: var(--primary);
+            color: #fff; font-weight: 700; font-size: 34px; line-height: 1; }
+    .ctr { position: absolute; left: 0; width: 1080px; display: flex; justify-content: center;
+           gap: 14px; }
+    .ctr .pill { position: relative; }
+    .post { position: absolute; width: 190px; height: 220px; padding: 18px; border-radius: 28px; }
+    .post .img { display: block; height: 110px; margin-top: 12px; border-radius: 16px;
+                 background: var(--container-low); }
+    .tick { font-size: 38px; font-weight: 500; }
+
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="66.050" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="66.050" data-media-start="0"
+             muted playsinline></video>
+      <div id="behind" class="L">
+
+        <div id="bw1" class="big hid" data-layout-allow-overlap style="top:320px; font-size:240px">дві</div>
+        <div id="bw2" class="big hid" data-layout-allow-overlap style="top:536px; font-size:240px">окремі</div>
+      </div>
+      <div id="panel">
+<svg class="sk" id="skP" width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
+      </div>
+      <video id="matte-big" class="plate matte" src="assets/mattes/big.webm"
+             data-start="25.733" data-duration="2.400" data-media-start="0"
+             muted playsinline></video>
+      <video id="matte-half1" class="plate matte" src="assets/mattes/half1.webm"
+             data-start="10.867" data-duration="10.700" data-media-start="0"
+             muted playsinline></video>
+      <video id="matte-half2" class="plate matte" src="assets/mattes/half2.webm"
+             data-start="27.833" data-duration="11.633" data-media-start="0"
+             muted playsinline></video>
+      <div id="front" class="L">
+<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+
+        <div id="a1" class="card hid" style="left:110px; top:310px; width:410px; padding:28px 30px;">
+          <div class="row" style="gap:18px">
+            <span class="ava"><svg class="mark" width="40" height="40" viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></span>
+            <div style="flex:1"><span class="line" style="width:86%"></span>
+              <span class="line" style="width:58%; margin-top:12px"></span></div>
+          </div>
+          <span class="ttl hid" id="a1t" style="font-size:52px; margin-top:22px">особистий</span>
+          <div class="chips" style="margin-top:16px"><span class="chip hid" id="a1c"><i></i>свій</span></div>
+        </div>
+        <div id="a2" class="card hid" style="left:560px; top:310px; width:410px; padding:28px 30px;">
+          <div class="row" style="gap:18px">
+            <span class="ava"><svg class="mark" width="40" height="40" viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></span>
+            <div style="flex:1"><span class="line" style="width:86%"></span>
+              <span class="line" style="width:58%; margin-top:12px"></span></div>
+          </div>
+          <span class="ttl hid" id="a2t" style="font-size:52px; margin-top:22px">професійний</span>
+          <div class="chips" style="margin-top:16px"><span class="chip hid" id="a2c"><i></i>школа</span></div>
+        </div>
+
+        <div class="ctr" style="top:572px"><div id="sys" class="pill hid"
+             style="padding:22px 46px; font-size:44px">AI-система</div></div>
+
+        <div id="pcL" class="hid" style="position:absolute; left:120px; top:568px"><span class="chip" id="pcLc"><i></i>особистий</span></div>
+        <div id="pcR" class="hid" style="position:absolute; left:790px; top:568px"><span class="chip" id="pcRc"><i></i>школа</span></div>
+        <div id="ps1" class="card post hid" style="left:425px; top:322px; transform: rotate(-6deg)"><div class="row" style="gap:10px; color:#7A1424"><svg class="mark" width="30" height="30" viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg><span class="line" style="flex:1"></span></div><span class="img"></span><span class="line" style="margin-top:14px; width:70%"></span></div>
+        <div id="ps2" class="card post hid" style="left:465px; top:322px; transform: rotate(5deg)"><div class="row" style="gap:10px; color:#7A1424"><svg class="mark" width="30" height="30" viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg><span class="line" style="flex:1"></span></div><span class="img"></span><span class="line" style="margin-top:14px; width:70%"></span></div>
+
+        <div id="a3" class="card hid" style="left:110px; top:310px; width:410px; padding:28px 30px;">
+          <div class="row" style="gap:18px">
+            <span class="ava"><svg class="mark" width="40" height="40" viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></span>
+            <div style="flex:1"><span class="line" style="width:86%"></span>
+              <span class="line" style="width:58%; margin-top:12px"></span></div>
+          </div>
+          <span class="ttl" id="a3t" style="font-size:52px; margin-top:22px">особистий</span>
+          <div class="chips" style="margin-top:16px"><span class="chip" id="a3c"><i></i>свій</span></div>
+        </div>
+        <div id="a4" class="card hid" style="left:560px; top:310px; width:410px; padding:28px 30px;">
+          <div class="row" style="gap:18px">
+            <span class="ava"><svg class="mark" width="40" height="40" viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></span>
+            <div style="flex:1"><span class="line" style="width:86%"></span>
+              <span class="line" style="width:58%; margin-top:12px"></span></div>
+          </div>
+          <span class="ttl" id="a4t" style="font-size:52px; margin-top:22px">професійний</span>
+          <div class="chips" style="margin-top:16px"><span class="chip" id="a4c"><i></i>школа</span></div>
+        </div>
+<div id="ck2" class="card hid" style="left:144px; top:296px; width:500px; padding:30px 36px;"><div class="row" style="gap:12px; color:#7A1424; margin-bottom:18px"><svg class="mark" width="30" height="30" viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg><span class="lbl" style="margin:0">налаштування · школа</span></div><div class="row" style="margin-top:0px"><span class="check"></span><span class="tick" data-layout-allow-overlap>скіл сценариста</span></div><div class="row" style="margin-top:16px"><span class="check"></span><span class="tick" data-layout-allow-overlap>tone of voice</span></div><div class="row" style="margin-top:16px"><span class="check"></span><span class="tick" data-layout-allow-overlap>дизайн-система</span></div></div><div id="ck1" class="card hid" data-layout-allow-occlusion style="left:100px; top:372px; width:500px; padding:30px 36px;"><div class="row" style="gap:12px; color:#7A1424; margin-bottom:18px"><svg class="mark" width="30" height="30" viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg><span class="lbl" style="margin:0">налаштування · особистий</span></div><div class="row" style="margin-top:0px"><span class="check"></span><span class="tick">скіл сценариста</span></div><div class="row" style="margin-top:16px"><span class="check"></span><span class="tick">tone of voice</span></div><div class="row" style="margin-top:16px"><span class="check"></span><span class="tick">дизайн-система</span></div></div>
+<div id="pl0" class="hid" style="position:absolute; left:668px; top:340px"><span class="chip" style="font-size:40px; padding:14px 26px 14px 16px"><b class="plus">+</b>робота</span></div><div id="pl1" class="hid" style="position:absolute; left:668px; top:448px"><span class="chip" style="font-size:40px; padding:14px 26px 14px 16px"><b class="plus">+</b>час</span></div><div id="pl2" class="hid" style="position:absolute; left:668px; top:556px"><span class="chip" style="font-size:40px; padding:14px 26px 14px 16px"><b class="plus">+</b>гроші</span></div>
+
+        <div id="bl" class="card hid" style="left:120px; top:300px; width:840px; padding:34px 40px;">
+          <div class="row" style="gap:20px">
+            <span class="ava"><svg class="mark" width="40" height="40" viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></span>
+            <div style="flex:1"><span class="line" style="width:52%"></span>
+              <span class="line" style="width:34%; margin-top:12px"></span></div>
+          </div>
+          <div class="chips" style="margin-top:24px; justify-content:center; align-items:center">
+            <span class="chip hid" id="bl1"><i></i>особисте</span>
+            <b class="plus hid" id="blp">+</b>
+            <span class="chip hid" id="bl2"><i></i>професійне</span>
+          </div>
+          <span class="ttl hid" id="blt" style="font-size:56px; margin-top:22px; text-align:center">особистий бренд</span>
+        </div>
+        <div class="ctr" style="top:430px"><div id="no2" class="pill light hid"
+             style="font-size:46px; padding:26px 50px">дві окремі системи</div></div>
+
+        <div class="ctr" style="top:312px">
+          <span class="chip hid" id="ct1"><i></i>блогерка</span>
+          <span class="chip hid" id="ct2"><i></i>СММниця</span>
+          <span class="chip hid" id="ct3"><i></i>підприємиця</span>
+        </div>
+        <div class="ctr" style="top:450px"><div id="ctaP" class="pill hid">Став + в коментарі</div></div>
+<svg class="sk" id="skT" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+      </div>
+      <div id="cover">
+
+      </div>
+      <div id="scrim"></div>
+      <div id="caps">
+      <div class="wc" id="w0">УЯВИМО,</div>
+      <div class="wc" id="w1">ЩО</div>
+      <div class="wc" id="w2">В</div>
+      <div class="wc" id="w3">ТЕБЕ</div>
+      <div class="wc" id="w4">Є</div>
+      <div class="wc" id="w5">ДВА</div>
+      <div class="wc" id="w6">АКАУНТИ</div>
+      <div class="wc" id="w10">НАПРИКЛАД</div>
+      <div class="wc" id="w11">СВІЙ</div>
+      <div class="wc" id="w12">І</div>
+      <div class="wc" id="w13">ТВОЄЇ</div>
+      <div class="wc" id="w14">ШКОЛИ.</div>
+      <div class="wc" id="w15">І</div>
+      <div class="wc" id="w16">ТИ</div>
+      <div class="wc" id="w17">ДУМАЄШ</div>
+      <div class="wc" id="w18">НАЛАШТУВАТИ</div>
+      <div class="wc" id="w19">СОБІ</div>
+      <div class="wc" id="w20">AI-СИСТЕМУ</div>
+      <div class="wc" id="w21">ДЛЯ</div>
+      <div class="wc" id="w22">КОНТЕНТУ.</div>
+      <div class="wc" id="w23">ТО</div>
+      <div class="wc" id="w24">ЦЕ</div>
+      <div class="wc" id="w25">ОДНА</div>
+      <div class="wc" id="w26">СИСТЕМА</div>
+      <div class="wc" id="w27">НА</div>
+      <div class="wc" id="w28">ДВОХ</div>
+      <div class="wc" id="w29">ЧИ</div>
+      <div class="wc" id="w30">ДВІ</div>
+      <div class="wc" id="w31">ОКРЕМІ?</div>
+      <div class="wc" id="w32">ТАК</div>
+      <div class="wc inv" id="w33" style="top:862px">ОТ,</div>
+      <div class="wc inv" id="w34" style="top:862px">ЦЕ</div>
+      <div class="wc inv" id="w35" style="top:862px">ДВІ</div>
+      <div class="wc inv" id="w36" style="top:862px">ОКРЕМІ</div>
+      <div class="wc inv" id="w37" style="top:862px">СИСТЕМИ.</div>
+      <div class="wc inv" id="w38" style="top:862px">ПІД</div>
+      <div class="wc inv" id="w39" style="top:862px">КОЖЕН</div>
+      <div class="wc inv" id="w40" style="top:862px">АКАУНТ</div>
+      <div class="wc inv" id="w41" style="top:862px">ТРЕБА</div>
+      <div class="wc inv" id="w42" style="top:862px">РОЗРОБИТИ</div>
+      <div class="wc inv" id="w43" style="top:862px">ВЛАСНИЙ</div>
+      <div class="wc inv" id="w44" style="top:862px">СКІЛ</div>
+      <div class="wc inv" id="w45" style="top:862px">СЦЕНАРИСТА,</div>
+      <div class="wc inv" id="w46" style="top:862px">ВЛАСНИЙ</div>
+      <div class="wc inv" id="w47" style="top:862px">TONE</div>
+      <div class="wc inv" id="w48" style="top:862px">OF</div>
+      <div class="wc inv" id="w49" style="top:862px">VOICE,</div>
+      <div class="wc inv" id="w50" style="top:862px">ВЛАСНУ</div>
+      <div class="wc inv" id="w51" style="top:862px">ДИЗАЙН-СИСТЕМУ.</div>
+      <div class="wc inv" id="w52" style="top:862px">І</div>
+      <div class="wc inv" id="w53" style="top:862px">ВОНИ,</div>
+      <div class="wc inv" id="w54" style="top:862px">ЗВИЧАЙНО,</div>
+      <div class="wc inv" id="w55" style="top:862px">МОЖУТЬ</div>
+      <div class="wc inv" id="w56" style="top:862px">ПЕРЕКЛИКАТИСЯ.</div>
+      <div class="wc inv" id="w57" style="top:862px">І</div>
+      <div class="wc inv" id="w58" style="top:862px">В</div>
+      <div class="wc" id="w59">КІНЦІ</div>
+      <div class="wc" id="w60">КІНЦІВ</div>
+      <div class="wc" id="w61">МИ</div>
+      <div class="wc" id="w62">ВИРІШУЄМО,</div>
+      <div class="wc" id="w63">ЩО</div>
+      <div class="wc" id="w64">КУДИ</div>
+      <div class="wc" id="w65">БУДЕ</div>
+      <div class="wc" id="w66">ПОСТИТИ.</div>
+      <div class="wc" id="w67">АЛЕ</div>
+      <div class="wc" id="w68">В</div>
+      <div class="wc" id="w69">ОСНОВІ</div>
+      <div class="wc" id="w70">ВСЬОГО</div>
+      <div class="wc" id="w71">ЦЕ</div>
+      <div class="wc" id="w74">СИСТЕМИ.</div>
+      <div class="wc" id="w75">ТЕ</div>
+      <div class="wc" id="w76">САМЕ</div>
+      <div class="wc inv" id="w77" style="top:862px">З</div>
+      <div class="wc inv" id="w78" style="top:862px">РУТИНОЮ.</div>
+      <div class="wc inv" id="w79" style="top:862px">МОЖНА</div>
+      <div class="wc inv" id="w80" style="top:862px">БУЛО</div>
+      <div class="wc inv" id="w81" style="top:862px">Б</div>
+      <div class="wc inv" id="w82" style="top:862px">ЗАПХАТИ</div>
+      <div class="wc inv" id="w83" style="top:862px">ВСЕ</div>
+      <div class="wc inv" id="w84" style="top:862px">В</div>
+      <div class="wc inv" id="w85" style="top:862px">ОДИН</div>
+      <div class="wc inv" id="w86" style="top:862px">АНАЛІЗ,</div>
+      <div class="wc inv" id="w87" style="top:862px">АЛЕ</div>
+      <div class="wc inv" id="w88" style="top:862px">КОНКУРЕНТИ</div>
+      <div class="wc inv" id="w89" style="top:862px">НА</div>
+      <div class="wc inv" id="w90" style="top:862px">АКАУНТ</div>
+      <div class="wc inv" id="w91" style="top:862px">ШКОЛИ</div>
+      <div class="wc inv" id="w92" style="top:862px">І</div>
+      <div class="wc inv" id="w93" style="top:862px">КОНКУРЕНТИ</div>
+      <div class="wc inv" id="w94" style="top:862px">НА</div>
+      <div class="wc inv" id="w95" style="top:862px">ОСОБИСТИЙ</div>
+      <div class="wc inv" id="w96" style="top:862px">БЛОГ</div>
+      <div class="wc inv" id="w97" style="top:862px">ЦЕ</div>
+      <div class="wc inv" id="w98" style="top:862px">ЗОВСІМ</div>
+      <div class="wc inv" id="w99" style="top:862px">РІЗНІ</div>
+      <div class="wc inv" id="w100" style="top:862px">ЛЮДИ.</div>
+      <div class="wc inv" id="w101" style="top:862px">І</div>
+      <div class="wc inv" id="w102" style="top:862px">ЦЕ</div>
+      <div class="wc inv" id="w103" style="top:862px">НОРМАЛЬНО,</div>
+      <div class="wc inv" id="w104" style="top:862px">ЩО</div>
+      <div class="wc inv" id="w105" style="top:862px">ЦІ</div>
+      <div class="wc inv" id="w106" style="top:862px">СИСТЕМИ</div>
+      <div class="wc inv" id="w107" style="top:862px">НЕ</div>
+      <div class="wc inv" id="w108" style="top:862px">ПЕРЕТИНАЮТЬСЯ.</div>
+      <div class="wc inv" id="w109" style="top:862px">ТОМУ</div>
+      <div class="wc" id="w110">КОЛИ</div>
+      <div class="wc" id="w111">В</div>
+      <div class="wc" id="w112">ТЕБЕ</div>
+      <div class="wc" id="w113">ДЕКІЛЬКА</div>
+      <div class="wc" id="w114">АБСОЛЮТНО</div>
+      <div class="wc" id="w115">РІЗНИХ</div>
+      <div class="wc" id="w116">АКАУНТІВ,</div>
+      <div class="wc" id="w117">У</div>
+      <div class="wc" id="w118">РОБОТІ</div>
+      <div class="wc" id="w119">НАД</div>
+      <div class="wc" id="w120">AI-СИСТЕМОЮ</div>
+      <div class="wc" id="w121">ЦЕ</div>
+      <div class="wc" id="w122">РАХУЄТЬСЯ</div>
+      <div class="wc" id="w123">ЯК</div>
+      <div class="wc" id="w127">ЦЕ</div>
+      <div class="wc" id="w128">ЗАЙМАЄ</div>
+      <div class="wc" id="w129">ТРОШКИ</div>
+      <div class="wc" id="w130">БІЛЬШЕ</div>
+      <div class="wc" id="w132">І,</div>
+      <div class="wc" id="w133">ЗВИЧАЙНО,</div>
+      <div class="wc" id="w134">КОШТУЄ</div>
+      <div class="wc" id="w135">ТРОШЕЧКИ</div>
+      <div class="wc" id="w136">БІЛЬШЕ.</div>
+      <div class="wc" id="w137">АЛЕ</div>
+      <div class="wc" id="w138">ЦЕ,</div>
+      <div class="wc" id="w139">ЗВИЧАЙНО,</div>
+      <div class="wc" id="w140">НЕ</div>
+      <div class="wc" id="w141">ДЛЯ</div>
+      <div class="wc" id="w142">ВСІХ.</div>
+      <div class="wc" id="w143">БЛОГЕРИ,</div>
+      <div class="wc" id="w144">ЯКІ</div>
+      <div class="wc" id="w145">ЯК</div>
+      <div class="wc" id="w146">Я,</div>
+      <div class="wc" id="w147">ВЕДУТЬ</div>
+      <div class="wc" id="w148">ОСОБИСТЕ</div>
+      <div class="wc" id="w149">І</div>
+      <div class="wc" id="w150">ПРОФЕСІЙНЕ</div>
+      <div class="wc" id="w151">В</div>
+      <div class="wc" id="w152">ОДНОМУ</div>
+      <div class="wc" id="w153">БЛОЗІ</div>
+      <div class="wc" id="w154">І</div>
+      <div class="wc" id="w155">БУДУЮТЬ</div>
+      <div class="wc" id="w156">ОСОБИСТИЙ</div>
+      <div class="wc" id="w157">БРЕНД</div>
+      <div class="wc" id="w158">САМЕ</div>
+      <div class="wc" id="w159">ЧЕРЕЗ</div>
+      <div class="wc" id="w160">ЦЕЙ</div>
+      <div class="wc" id="w161">МІКС,</div>
+      <div class="wc" id="w162">ДО</div>
+      <div class="wc" id="w163">ВАС</div>
+      <div class="wc" id="w164">ЦЕ</div>
+      <div class="wc" id="w165">НЕ</div>
+      <div class="wc" id="w166">СТОСУЄТЬСЯ.</div>
+      <div class="wc" id="w167">ТОМУ</div>
+      <div class="wc" id="w168">ЯКЩО</div>
+      <div class="wc" id="w169">ТИ</div>
+      <div class="wc" id="w170">БЛОГЕРКА,</div>
+      <div class="wc" id="w171">АБО</div>
+      <div class="wc" id="w172">СММНИЦЯ,</div>
+      <div class="wc" id="w173">АБО</div>
+      <div class="wc" id="w174">ПІДПРИЄМИЦЯ,</div>
+      <div class="wc" id="w175">І</div>
+      <div class="wc" id="w176">ТИ</div>
+      <div class="wc" id="w177">МРІЄШ</div>
+      <div class="wc" id="w178">ПРО</div>
+      <div class="wc" id="w179">ВЛАСНУ</div>
+      <div class="wc" id="w180">КОМАНДУ,</div>
+      <div class="wc" id="w181">ЯКА</div>
+      <div class="wc" id="w182">НІКОЛИ</div>
+      <div class="wc" id="w183">НЕ</div>
+      <div class="wc" id="w184">ВТОМЛЮЄТЬСЯ,</div>
+      </div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="66.050" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  function bez(x1, y1, x2, y2) {
+    function a(p1, p2) { return 1 - 3 * p2 + 3 * p1; }
+    function b(p1, p2) { return 3 * p2 - 6 * p1; }
+    function c(p1) { return 3 * p1; }
+    function at(t, p1, p2) { return ((a(p1, p2) * t + b(p1, p2)) * t + c(p1)) * t; }
+    function slope(t, p1, p2) { return 3 * a(p1, p2) * t * t + 2 * b(p1, p2) * t + c(p1); }
+    return function (x) {
+      if (x <= 0) return 0; if (x >= 1) return 1;
+      var t = x;
+      for (var i = 0; i < 8; i++) {
+        var s = slope(t, x1, x2); if (Math.abs(s) < 1e-6) break;
+        t -= (at(t, x1, x2) - x) / s;
+      }
+      t = Math.min(1, Math.max(0, t));
+      return at(t, y1, y2);
+    };
+  }
+  var POP = bez(.34, 1.56, .64, 1), RISE = bez(.2, .9, .25, 1), SLIDE = bez(.65, 0, .25, 1);
+  var PUSH = "#vid, .matte";
+  gsap.set("#panel", {yPercent: -101}); gsap.set("#cover", {yPercent: 101});
+  var NO = {immediateRender: false};
+  function X(o) { for (var k in NO) o[k] = NO[k]; return o; }
+
+  // arrivals (§00.7): pops 0.5-0.6 s, rise-ins 0.7 s; exits quicker, easing in
+  function pop(sel, t, d) {
+    tl.fromTo(sel, {autoAlpha: 0, scale: .6}, X({autoAlpha: 1, scale: 1, duration: d || .55, ease: POP}), t);
+  }
+  function rise(sel, t, dy) {
+    tl.fromTo(sel, {autoAlpha: 0, y: dy || 60}, X({autoAlpha: 1, y: 0, duration: .7, ease: RISE}), t);
+  }
+  function fadein(sel, t, d) { tl.fromTo(sel, {autoAlpha: 0}, X({autoAlpha: 1, duration: d || .4}), t); }
+  function out(sel, t) { tl.to(sel, {autoAlpha: 0, scale: .9, duration: .3, ease: "power2.in"}, t); }
+  function sink(sel, t) { tl.to(sel, {autoAlpha: 0, y: 40, duration: .35, ease: "power2.in"}, t); }
+
+  // §00.3.3 half screen: the panel comes down as the video goes down
+  function half(t0, t1) {
+    tl.fromTo("#panel", {yPercent: -101}, X({yPercent: 0, duration: .85, ease: SLIDE}), t0);
+    tl.fromTo(PUSH, {y: 0}, X({y: 330, duration: .85, ease: SLIDE}), t0);
+    tl.to("#panel", {yPercent: -101, duration: .85, ease: SLIDE}, t1);
+    tl.to(PUSH, {y: 0, duration: .85, ease: SLIDE}, t1);
+  }
+  // §00.3.4 full screen: white up from the bottom over everything
+  function full(t0, t1) {
+    tl.fromTo("#cover", {yPercent: 101}, X({yPercent: 0, duration: .85, ease: SLIDE}), t0);
+    tl.to("#cover", {yPercent: 101, duration: .85, ease: SLIDE}, t1);
+  }
+
+  // ---- §00.5 Excalidraw sketches (rough.js), drawn on stroke by stroke ----
+  // roughness 1 ≈ Excalidraw's own default — 2.4 was "too sloppy" (her review of 41)
+  var SKO = {roughness: 1.0, bowing: 1.0, strokeWidth: 4.5, stroke: "#1E1E1E",
+             disableMultiStroke: false, preserveVertices: false};
+  var HACH = {fill: "#F2C7CA", fillStyle: "hachure", hachureGap: 16, hachureAngle: -41,
+              fillWeight: 2.5};
+  var _ink = "#1E1E1E";
+  function opt(o, seed) { var r = {}; for (var k in SKO) r[k] = SKO[k]; r.stroke = _ink;
+    for (var k2 in (o || {})) r[k2] = o[k2]; r.seed = seed; return r; }
+  function hatch(o) { var r = {}; for (var k in HACH) r[k] = HACH[k];
+    for (var k2 in (o || {})) r[k2] = o[k2]; return r; }
+  function rrectD(x, y, w, h, r) {
+    return "M" + (x + r) + " " + y + " H" + (x + w - r) + " A" + r + " " + r + " 0 0 1 " + (x + w) + " " + (y + r) +
+           " V" + (y + h - r) + " A" + r + " " + r + " 0 0 1 " + (x + w - r) + " " + (y + h) +
+           " H" + (x + r) + " A" + r + " " + r + " 0 0 1 " + x + " " + (y + h - r) +
+           " V" + (y + r) + " A" + r + " " + r + " 0 0 1 " + (x + r) + " " + y + " Z";
+  }
+  var SK = {};
+  // a sketch is a named group of rough shapes inside one <svg class="sk">
+  function sketch(name, svgId) {
+    var svg = document.getElementById(svgId);
+    var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("id", "sk-" + name); svg.appendChild(g);
+    // Over her footage (her review of 41, "not passing even AA"): a thin line
+    // of any one colour fails against her light room — white included. So
+    // over the footage closed shapes are solid white stickers with the dark
+    // Excalidraw outline, and open strokes and free labels are dark ink with a
+    // thick white halo, which reads on light and dark ground alike. On the
+    // white panel and cover nothing changes. Explicit colours win.
+    var foot = !!(svg.closest && svg.closest("#front"));
+    SK[name] = {g: g, rc: rough.svg(svg), shapes: [], foot: foot, boxes: [], ink: "#1E1E1E"};
+    return SK[name];
+  }
+  function _add(s, node, kind, o) {   // o.halo === false: a stroke over a white card / pill (a strike-through) needs none
+    s.g.appendChild(node);
+    var paths = [].slice.call(node.querySelectorAll ? node.querySelectorAll("path") : []);
+    if (node.tagName === "path") paths = [node];
+    paths.forEach(function (p) {
+      var f = p.getAttribute("fill");
+      if (f && f !== "none") { p.style.opacity = 0; p.dataset.fill = "1"; return; }  // a solid fill fades in
+      var L = 0; try { L = p.getTotalLength(); } catch (e) {}
+      if (s.foot && !(o && o.halo === false)) {   // the white halo under a stroke over the footage
+        var h = p.cloneNode(false);
+        h.setAttribute("stroke", "#FFFFFF");
+        h.setAttribute("stroke-width", (parseFloat(p.getAttribute("stroke-width")) || 4.5) + 8);
+        p.parentNode.insertBefore(h, p);
+        p._halo = h;
+      }
+      [p, p._halo].forEach(function (q) { if (!q) return;
+        q.style.strokeDasharray = L + " " + (L + 2); q.style.strokeDashoffset = L + 1;
+        q.style.strokeLinecap = "round"; q.style.strokeLinejoin = "round"; });
+    });
+    s.shapes.push({paths: paths, kind: kind || "stroke"});
+  }
+  // a closed shape over the footage: solid white with a dark outline (see sketch())
+  function _closed(s, oo, o, x, y, w, h) {
+    if (s.foot && !(o && o.fill === false)) {
+      oo.fill = "#FFFFFF"; oo.fillStyle = "solid";
+      if (!(o && o.stroke)) oo.stroke = "#1E1E1E";
+      s.boxes.push([x, y, x + w, y + h]);
+    }
+    return oo;
+  }
+  function box(name, x, y, w, h, o) { _ink = SK[name].ink;      // rounded rough box, radius 28 (§00.5.2)
+    var s = SK[name], r = (o && o.r) || 28;
+    var oo = opt(o, (o && o.seed) || 7);
+    if (o && o.fill) { var f = hatch(o.fill === true ? {} : {fill: o.fill}); for (var k in f) oo[k] = f[k]; }
+    else _closed(s, oo, o, x, y, w, h);
+    _add(s, s.rc.path(rrectD(x, y, w, h, r), oo));
+  }
+  function ell(name, cx, cy, w, h, o) { _ink = SK[name].ink; var s = SK[name];
+    _add(s, s.rc.ellipse(cx, cy, w, h, _closed(s, opt(o, (o && o.seed) || 11), o, cx - w / 2, cy - h / 2, w, h))); }
+  // any closed hand-drawn outline (a cloud…): d is an SVG path, bbox its bounds
+  function blob(name, d, bbox, o) { _ink = SK[name].ink; var s = SK[name];
+    _add(s, s.rc.path(d, _closed(s, opt(o, (o && o.seed) || 23), o, bbox[0], bbox[1], bbox[2], bbox[3]))); }
+  function ln(name, x1, y1, x2, y2, o) { _ink = SK[name].ink; var s = SK[name];
+    _add(s, s.rc.line(x1, y1, x2, y2, opt(o, (o && o.seed) || 13)), null, o); }
+  function under(name, x1, y, x2, o) { _ink = SK[name].ink; var s = SK[name];      // a hand underline
+    _add(s, s.rc.curve([[x1, y + 4], [(x1 + x2) / 2, y - 6], [x2, y + 2]], opt(o, (o && o.seed) || 17)), null, o); }
+  function arrow(name, x1, y1, x2, y2, o) { _ink = SK[name].ink;
+    var s = SK[name], oo = opt(o, (o && o.seed) || 19), bend = (o && o.bend != null) ? o.bend : .12;
+    var mx = (x1 + x2) / 2 + (y2 - y1) * bend, my = (y1 + y2) / 2 - (x2 - x1) * bend;
+    _add(s, s.rc.curve([[x1, y1], [mx, my], [x2, y2]], oo), null, o);
+    var ang = Math.atan2(y2 - my, x2 - mx), L = 38, sp = .5;
+    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang - sp), y2 - L * Math.sin(ang - sp), oo), "head", o);
+    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang + sp), y2 - L * Math.sin(ang + sp), oo), "head", o);
+  }
+  function label(name, x, y, txt, o) {   // Pangolin, fades in after its shapes
+    var s = SK[name], t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    t.setAttribute("x", x); t.setAttribute("y", y);
+    t.setAttribute("text-anchor", (o && o.anchor) || "middle");
+    t.setAttribute("font-size", (o && o.size) || 50);
+    var inside = s.boxes.some(function (b) { return x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3] + 20; });
+    t.style.fill = (o && o.color) || "#1E1E1E";
+    if (s.foot && !inside) {         // a free label over the footage gets the white halo too
+      t.style.stroke = "#FFFFFF"; t.style.strokeWidth = "12px"; t.style.paintOrder = "stroke";
+      t.style.strokeLinejoin = "round";
+    }
+    t.textContent = txt; t.style.opacity = 0; s.g.appendChild(t);
+    s.shapes.push({text: t});
+  }
+  // draw a sketch on from time t: each stroke 0.7 s, in sequence (the next one
+  // starts as the last is two-thirds done); a label fades in after its box.
+  function draw(name, t, per) {
+    var s = SK[name], at = t; per = per || .7;
+    s.shapes.forEach(function (sh) {
+      if (sh.text) { tl.to(sh.text, {opacity: 1, duration: .35}, at + .05); return; }
+      // an arrowhead is a flick, not a stroke: the arrow reads as one gesture
+      if (sh.kind === "head") {
+        sh.paths.forEach(function (p) { tl.to([p, p._halo].filter(Boolean), {strokeDashoffset: 0, duration: .18, ease: "power1.out"}, at); });
+        at += .12; return;
+      }
+      sh.paths.forEach(function (p, i) {
+        if (p.dataset.fill) { tl.to(p, {opacity: 1, duration: .3}, at); return; }
+        tl.to([p, p._halo].filter(Boolean), {strokeDashoffset: 0, duration: per, ease: "power1.inOut"}, at + i * .12);
+      });
+      at += per * .66 + (sh.paths.length - 1) * .12;
+    });
+    return at;
+  }
+  function erase(name, t) { tl.to("#sk-" + name, {autoAlpha: 0, duration: .3, ease: "power2.in"}, t); }
+
+  gsap.set(PUSH, {transformOrigin: "540px 900px"});
+  tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 66.050, ease: "none"}, 0);
+
+  tl.set("#w0", {autoAlpha: 1}, 0.000); tl.set("#w0", {autoAlpha: 0}, 0.553);
+  tl.set("#w1", {autoAlpha: 1}, 0.638); tl.set("#w1", {autoAlpha: 0}, 0.738);
+  tl.set("#w2", {autoAlpha: 1}, 0.738); tl.set("#w2", {autoAlpha: 0}, 0.838);
+  tl.set("#w3", {autoAlpha: 1}, 0.838); tl.set("#w3", {autoAlpha: 0}, 0.938);
+  tl.set("#w4", {autoAlpha: 1}, 0.978); tl.set("#w4", {autoAlpha: 0}, 1.078);
+  tl.set("#w5", {autoAlpha: 1}, 1.158); tl.set("#w5", {autoAlpha: 0}, 1.293);
+  tl.set("#w6", {autoAlpha: 1}, 1.378); tl.set("#w6", {autoAlpha: 0}, 2.028);
+  tl.set("#w10", {autoAlpha: 1}, 3.193); tl.set("#w10", {autoAlpha: 0}, 3.688);
+  tl.set("#w11", {autoAlpha: 1}, 3.773); tl.set("#w11", {autoAlpha: 0}, 3.873);
+  tl.set("#w12", {autoAlpha: 1}, 3.953); tl.set("#w12", {autoAlpha: 0}, 4.068);
+  tl.set("#w13", {autoAlpha: 1}, 4.153); tl.set("#w13", {autoAlpha: 0}, 4.468);
+  tl.set("#w14", {autoAlpha: 1}, 4.553); tl.set("#w14", {autoAlpha: 0}, 5.183);
+  tl.set("#w15", {autoAlpha: 1}, 5.268); tl.set("#w15", {autoAlpha: 0}, 5.368);
+  tl.set("#w16", {autoAlpha: 1}, 5.368); tl.set("#w16", {autoAlpha: 0}, 5.468);
+  tl.set("#w17", {autoAlpha: 1}, 5.468); tl.set("#w17", {autoAlpha: 0}, 5.679);
+  tl.set("#w18", {autoAlpha: 1}, 5.764); tl.set("#w18", {autoAlpha: 0}, 6.223);
+  tl.set("#w19", {autoAlpha: 1}, 6.308); tl.set("#w19", {autoAlpha: 0}, 6.603);
+  tl.set("#w20", {autoAlpha: 1}, 6.688); tl.set("#w20", {autoAlpha: 0}, 7.143);
+  tl.set("#w21", {autoAlpha: 1}, 7.228); tl.set("#w21", {autoAlpha: 0}, 7.328);
+  tl.set("#w22", {autoAlpha: 1}, 7.408); tl.set("#w22", {autoAlpha: 0}, 8.082);
+  tl.set("#w23", {autoAlpha: 1}, 8.167); tl.set("#w23", {autoAlpha: 0}, 8.267);
+  tl.set("#w24", {autoAlpha: 1}, 8.287); tl.set("#w24", {autoAlpha: 0}, 8.602);
+  tl.set("#w25", {autoAlpha: 1}, 8.687); tl.set("#w25", {autoAlpha: 0}, 8.982);
+  tl.set("#w26", {autoAlpha: 1}, 9.067); tl.set("#w26", {autoAlpha: 0}, 9.422);
+  tl.set("#w27", {autoAlpha: 1}, 9.507); tl.set("#w27", {autoAlpha: 0}, 9.682);
+  tl.set("#w28", {autoAlpha: 1}, 9.767); tl.set("#w28", {autoAlpha: 0}, 9.902);
+  tl.set("#w29", {autoAlpha: 1}, 9.987); tl.set("#w29", {autoAlpha: 0}, 10.122);
+  tl.set("#w30", {autoAlpha: 1}, 10.207); tl.set("#w30", {autoAlpha: 0}, 10.442);
+  tl.set("#w31", {autoAlpha: 1}, 10.527); tl.set("#w31", {autoAlpha: 0}, 11.108);
+  tl.set("#w32", {autoAlpha: 1}, 11.193); tl.set("#w32", {autoAlpha: 0}, 11.468);
+  tl.set("#w33", {autoAlpha: 1}, 11.553); tl.set("#w33", {autoAlpha: 0}, 11.848);
+  tl.set("#w34", {autoAlpha: 1}, 11.933); tl.set("#w34", {autoAlpha: 0}, 12.033);
+  tl.set("#w35", {autoAlpha: 1}, 12.073); tl.set("#w35", {autoAlpha: 0}, 12.368);
+  tl.set("#w36", {autoAlpha: 1}, 12.453); tl.set("#w36", {autoAlpha: 0}, 12.788);
+  tl.set("#w37", {autoAlpha: 1}, 12.873); tl.set("#w37", {autoAlpha: 0}, 13.448);
+  tl.set("#w38", {autoAlpha: 1}, 13.533); tl.set("#w38", {autoAlpha: 0}, 13.738);
+  tl.set("#w39", {autoAlpha: 1}, 13.823); tl.set("#w39", {autoAlpha: 0}, 13.958);
+  tl.set("#w40", {autoAlpha: 1}, 14.043); tl.set("#w40", {autoAlpha: 0}, 14.258);
+  tl.set("#w41", {autoAlpha: 1}, 14.343); tl.set("#w41", {autoAlpha: 0}, 14.498);
+  tl.set("#w42", {autoAlpha: 1}, 14.583); tl.set("#w42", {autoAlpha: 0}, 14.978);
+  tl.set("#w43", {autoAlpha: 1}, 15.063); tl.set("#w43", {autoAlpha: 0}, 15.418);
+  tl.set("#w44", {autoAlpha: 1}, 15.503); tl.set("#w44", {autoAlpha: 0}, 15.603);
+  tl.set("#w45", {autoAlpha: 1}, 15.683); tl.set("#w45", {autoAlpha: 0}, 16.548);
+  tl.set("#w46", {autoAlpha: 1}, 16.633); tl.set("#w46", {autoAlpha: 0}, 16.828);
+  tl.set("#w47", {autoAlpha: 1}, 16.913); tl.set("#w47", {autoAlpha: 0}, 17.013);
+  tl.set("#w48", {autoAlpha: 1}, 17.093); tl.set("#w48", {autoAlpha: 0}, 17.208);
+  tl.set("#w49", {autoAlpha: 1}, 17.293); tl.set("#w49", {autoAlpha: 0}, 17.648);
+  tl.set("#w50", {autoAlpha: 1}, 17.733); tl.set("#w50", {autoAlpha: 0}, 17.848);
+  tl.set("#w51", {autoAlpha: 1}, 17.933); tl.set("#w51", {autoAlpha: 0}, 19.028);
+  tl.set("#w52", {autoAlpha: 1}, 19.113); tl.set("#w52", {autoAlpha: 0}, 19.213);
+  tl.set("#w53", {autoAlpha: 1}, 19.213); tl.set("#w53", {autoAlpha: 0}, 19.313);
+  tl.set("#w54", {autoAlpha: 1}, 19.353); tl.set("#w54", {autoAlpha: 0}, 19.782);
+  tl.set("#w55", {autoAlpha: 1}, 19.867); tl.set("#w55", {autoAlpha: 0}, 20.003);
+  tl.set("#w56", {autoAlpha: 1}, 20.088); tl.set("#w56", {autoAlpha: 0}, 20.602);
+  tl.set("#w57", {autoAlpha: 1}, 20.687); tl.set("#w57", {autoAlpha: 0}, 20.787);
+  tl.set("#w58", {autoAlpha: 1}, 20.787); tl.set("#w58", {autoAlpha: 0}, 20.887);
+  tl.set("#w59", {autoAlpha: 1}, 20.887); tl.set("#w59", {autoAlpha: 0}, 21.022);
+  tl.set("#w60", {autoAlpha: 1}, 21.107); tl.set("#w60", {autoAlpha: 0}, 21.602);
+  tl.set("#w61", {autoAlpha: 1}, 21.687); tl.set("#w61", {autoAlpha: 0}, 22.002);
+  tl.set("#w62", {autoAlpha: 1}, 22.087); tl.set("#w62", {autoAlpha: 0}, 22.815);
+  tl.set("#w63", {autoAlpha: 1}, 22.900); tl.set("#w63", {autoAlpha: 0}, 23.000);
+  tl.set("#w64", {autoAlpha: 1}, 23.040); tl.set("#w64", {autoAlpha: 0}, 23.155);
+  tl.set("#w65", {autoAlpha: 1}, 23.240); tl.set("#w65", {autoAlpha: 0}, 23.395);
+  tl.set("#w66", {autoAlpha: 1}, 23.480); tl.set("#w66", {autoAlpha: 0}, 24.235);
+  tl.set("#w67", {autoAlpha: 1}, 24.320); tl.set("#w67", {autoAlpha: 0}, 24.575);
+  tl.set("#w68", {autoAlpha: 1}, 24.660); tl.set("#w68", {autoAlpha: 0}, 24.835);
+  tl.set("#w69", {autoAlpha: 1}, 24.920); tl.set("#w69", {autoAlpha: 0}, 25.395);
+  tl.set("#w70", {autoAlpha: 1}, 25.480); tl.set("#w70", {autoAlpha: 0}, 25.748);
+  tl.set("#w71", {autoAlpha: 1}, 25.833); tl.set("#w71", {autoAlpha: 0}, 26.118);
+  tl.set("#w74", {autoAlpha: 1}, 27.263); tl.set("#w74", {autoAlpha: 0}, 27.961);
+  tl.set("#w75", {autoAlpha: 1}, 28.046); tl.set("#w75", {autoAlpha: 0}, 28.161);
+  tl.set("#w76", {autoAlpha: 1}, 28.246); tl.set("#w76", {autoAlpha: 0}, 28.346);
+  tl.set("#w77", {autoAlpha: 1}, 28.426); tl.set("#w77", {autoAlpha: 0}, 28.526);
+  tl.set("#w78", {autoAlpha: 1}, 28.566); tl.set("#w78", {autoAlpha: 0}, 29.021);
+  tl.set("#w79", {autoAlpha: 1}, 29.106); tl.set("#w79", {autoAlpha: 0}, 29.401);
+  tl.set("#w80", {autoAlpha: 1}, 29.486); tl.set("#w80", {autoAlpha: 0}, 29.641);
+  tl.set("#w81", {autoAlpha: 1}, 29.726); tl.set("#w81", {autoAlpha: 0}, 29.861);
+  tl.set("#w82", {autoAlpha: 1}, 29.946); tl.set("#w82", {autoAlpha: 0}, 30.421);
+  tl.set("#w83", {autoAlpha: 1}, 30.506); tl.set("#w83", {autoAlpha: 0}, 30.621);
+  tl.set("#w84", {autoAlpha: 1}, 30.706); tl.set("#w84", {autoAlpha: 0}, 30.841);
+  tl.set("#w85", {autoAlpha: 1}, 30.926); tl.set("#w85", {autoAlpha: 0}, 31.026);
+  tl.set("#w86", {autoAlpha: 1}, 31.106); tl.set("#w86", {autoAlpha: 0}, 31.445);
+  tl.set("#w87", {autoAlpha: 1}, 31.530); tl.set("#w87", {autoAlpha: 0}, 31.645);
+  tl.set("#w88", {autoAlpha: 1}, 31.730); tl.set("#w88", {autoAlpha: 0}, 32.145);
+  tl.set("#w89", {autoAlpha: 1}, 32.230); tl.set("#w89", {autoAlpha: 0}, 32.345);
+  tl.set("#w90", {autoAlpha: 1}, 32.430); tl.set("#w90", {autoAlpha: 0}, 32.665);
+  tl.set("#w91", {autoAlpha: 1}, 32.750); tl.set("#w91", {autoAlpha: 0}, 32.945);
+  tl.set("#w92", {autoAlpha: 1}, 33.030); tl.set("#w92", {autoAlpha: 0}, 33.130);
+  tl.set("#w93", {autoAlpha: 1}, 33.130); tl.set("#w93", {autoAlpha: 0}, 33.485);
+  tl.set("#w94", {autoAlpha: 1}, 33.570); tl.set("#w94", {autoAlpha: 0}, 33.670);
+  tl.set("#w95", {autoAlpha: 1}, 33.750); tl.set("#w95", {autoAlpha: 0}, 34.056);
+  tl.set("#w96", {autoAlpha: 1}, 34.141); tl.set("#w96", {autoAlpha: 0}, 34.315);
+  tl.set("#w97", {autoAlpha: 1}, 34.400); tl.set("#w97", {autoAlpha: 0}, 34.625);
+  tl.set("#w98", {autoAlpha: 1}, 34.710); tl.set("#w98", {autoAlpha: 0}, 35.025);
+  tl.set("#w99", {autoAlpha: 1}, 35.110); tl.set("#w99", {autoAlpha: 0}, 35.365);
+  tl.set("#w100", {autoAlpha: 1}, 35.450); tl.set("#w100", {autoAlpha: 0}, 35.976);
+  tl.set("#w101", {autoAlpha: 1}, 36.061); tl.set("#w101", {autoAlpha: 0}, 36.161);
+  tl.set("#w102", {autoAlpha: 1}, 36.181); tl.set("#w102", {autoAlpha: 0}, 36.281);
+  tl.set("#w103", {autoAlpha: 1}, 36.281); tl.set("#w103", {autoAlpha: 0}, 36.696);
+  tl.set("#w104", {autoAlpha: 1}, 36.781); tl.set("#w104", {autoAlpha: 0}, 36.881);
+  tl.set("#w105", {autoAlpha: 1}, 36.901); tl.set("#w105", {autoAlpha: 0}, 37.001);
+  tl.set("#w106", {autoAlpha: 1}, 37.081); tl.set("#w106", {autoAlpha: 0}, 37.376);
+  tl.set("#w107", {autoAlpha: 1}, 37.461); tl.set("#w107", {autoAlpha: 0}, 37.616);
+  tl.set("#w108", {autoAlpha: 1}, 37.701); tl.set("#w108", {autoAlpha: 0}, 38.489);
+  tl.set("#w109", {autoAlpha: 1}, 38.574); tl.set("#w109", {autoAlpha: 0}, 38.729);
+  tl.set("#w110", {autoAlpha: 1}, 38.814); tl.set("#w110", {autoAlpha: 0}, 39.049);
+  tl.set("#w111", {autoAlpha: 1}, 39.134); tl.set("#w111", {autoAlpha: 0}, 39.234);
+  tl.set("#w112", {autoAlpha: 1}, 39.274); tl.set("#w112", {autoAlpha: 0}, 39.449);
+  tl.set("#w113", {autoAlpha: 1}, 39.534); tl.set("#w113", {autoAlpha: 0}, 40.089);
+  tl.set("#w114", {autoAlpha: 1}, 40.174); tl.set("#w114", {autoAlpha: 0}, 40.829);
+  tl.set("#w115", {autoAlpha: 1}, 40.914); tl.set("#w115", {autoAlpha: 0}, 41.189);
+  tl.set("#w116", {autoAlpha: 1}, 41.274); tl.set("#w116", {autoAlpha: 0}, 41.689);
+  tl.set("#w117", {autoAlpha: 1}, 41.774); tl.set("#w117", {autoAlpha: 0}, 41.874);
+  tl.set("#w118", {autoAlpha: 1}, 41.914); tl.set("#w118", {autoAlpha: 0}, 42.209);
+  tl.set("#w119", {autoAlpha: 1}, 42.294); tl.set("#w119", {autoAlpha: 0}, 42.394);
+  tl.set("#w120", {autoAlpha: 1}, 42.465); tl.set("#w120", {autoAlpha: 0}, 42.969);
+  tl.set("#w121", {autoAlpha: 1}, 43.054); tl.set("#w121", {autoAlpha: 0}, 43.154);
+  tl.set("#w122", {autoAlpha: 1}, 43.194); tl.set("#w122", {autoAlpha: 0}, 43.549);
+  tl.set("#w123", {autoAlpha: 1}, 43.634); tl.set("#w123", {autoAlpha: 0}, 43.815);
+  tl.set("#w127", {autoAlpha: 1}, 45.343); tl.set("#w127", {autoAlpha: 0}, 45.443);
+  tl.set("#w128", {autoAlpha: 1}, 45.443); tl.set("#w128", {autoAlpha: 0}, 45.638);
+  tl.set("#w129", {autoAlpha: 1}, 45.723); tl.set("#w129", {autoAlpha: 0}, 45.918);
+  tl.set("#w130", {autoAlpha: 1}, 46.003); tl.set("#w130", {autoAlpha: 0}, 46.178);
+  tl.set("#w132", {autoAlpha: 1}, 46.663); tl.set("#w132", {autoAlpha: 0}, 46.763);
+  tl.set("#w133", {autoAlpha: 1}, 46.803); tl.set("#w133", {autoAlpha: 0}, 47.478);
+  tl.set("#w134", {autoAlpha: 1}, 47.563); tl.set("#w134", {autoAlpha: 0}, 47.932);
+  tl.set("#w135", {autoAlpha: 1}, 48.017); tl.set("#w135", {autoAlpha: 0}, 48.572);
+  tl.set("#w136", {autoAlpha: 1}, 48.657); tl.set("#w136", {autoAlpha: 0}, 49.282);
+  tl.set("#w137", {autoAlpha: 1}, 49.367); tl.set("#w137", {autoAlpha: 0}, 49.814);
+  tl.set("#w138", {autoAlpha: 1}, 49.899); tl.set("#w138", {autoAlpha: 0}, 50.074);
+  tl.set("#w139", {autoAlpha: 1}, 50.159); tl.set("#w139", {autoAlpha: 0}, 50.414);
+  tl.set("#w140", {autoAlpha: 1}, 50.499); tl.set("#w140", {autoAlpha: 0}, 50.599);
+  tl.set("#w141", {autoAlpha: 1}, 50.599); tl.set("#w141", {autoAlpha: 0}, 50.699);
+  tl.set("#w142", {autoAlpha: 1}, 50.759); tl.set("#w142", {autoAlpha: 0}, 50.883);
+  tl.set("#w143", {autoAlpha: 1}, 50.968); tl.set("#w143", {autoAlpha: 0}, 51.583);
+  tl.set("#w144", {autoAlpha: 1}, 51.668); tl.set("#w144", {autoAlpha: 0}, 51.768);
+  tl.set("#w145", {autoAlpha: 1}, 51.768); tl.set("#w145", {autoAlpha: 0}, 51.868);
+  tl.set("#w146", {autoAlpha: 1}, 51.948); tl.set("#w146", {autoAlpha: 0}, 52.156);
+  tl.set("#w147", {autoAlpha: 1}, 52.241); tl.set("#w147", {autoAlpha: 0}, 52.456);
+  tl.set("#w148", {autoAlpha: 1}, 52.541); tl.set("#w148", {autoAlpha: 0}, 53.056);
+  tl.set("#w149", {autoAlpha: 1}, 53.141); tl.set("#w149", {autoAlpha: 0}, 53.241);
+  tl.set("#w150", {autoAlpha: 1}, 53.241); tl.set("#w150", {autoAlpha: 0}, 53.616);
+  tl.set("#w151", {autoAlpha: 1}, 53.701); tl.set("#w151", {autoAlpha: 0}, 53.801);
+  tl.set("#w152", {autoAlpha: 1}, 53.861); tl.set("#w152", {autoAlpha: 0}, 54.036);
+  tl.set("#w153", {autoAlpha: 1}, 54.121); tl.set("#w153", {autoAlpha: 0}, 54.416);
+  tl.set("#w154", {autoAlpha: 1}, 54.501); tl.set("#w154", {autoAlpha: 0}, 54.601);
+  tl.set("#w155", {autoAlpha: 1}, 54.621); tl.set("#w155", {autoAlpha: 0}, 54.836);
+  tl.set("#w156", {autoAlpha: 1}, 54.921); tl.set("#w156", {autoAlpha: 0}, 55.296);
+  tl.set("#w157", {autoAlpha: 1}, 55.381); tl.set("#w157", {autoAlpha: 0}, 55.556);
+  tl.set("#w158", {autoAlpha: 1}, 55.641); tl.set("#w158", {autoAlpha: 0}, 55.836);
+  tl.set("#w159", {autoAlpha: 1}, 55.921); tl.set("#w159", {autoAlpha: 0}, 56.076);
+  tl.set("#w160", {autoAlpha: 1}, 56.161); tl.set("#w160", {autoAlpha: 0}, 56.296);
+  tl.set("#w161", {autoAlpha: 1}, 56.381); tl.set("#w161", {autoAlpha: 0}, 57.096);
+  tl.set("#w162", {autoAlpha: 1}, 57.181); tl.set("#w162", {autoAlpha: 0}, 57.281);
+  tl.set("#w163", {autoAlpha: 1}, 57.281); tl.set("#w163", {autoAlpha: 0}, 57.381);
+  tl.set("#w164", {autoAlpha: 1}, 57.381); tl.set("#w164", {autoAlpha: 0}, 57.481);
+  tl.set("#w165", {autoAlpha: 1}, 57.561); tl.set("#w165", {autoAlpha: 0}, 57.661);
+  tl.set("#w166", {autoAlpha: 1}, 57.681); tl.set("#w166", {autoAlpha: 0}, 58.557);
+  tl.set("#w167", {autoAlpha: 1}, 58.642); tl.set("#w167", {autoAlpha: 0}, 58.742);
+  tl.set("#w168", {autoAlpha: 1}, 58.802); tl.set("#w168", {autoAlpha: 0}, 59.017);
+  tl.set("#w169", {autoAlpha: 1}, 59.102); tl.set("#w169", {autoAlpha: 0}, 59.202);
+  tl.set("#w170", {autoAlpha: 1}, 59.222); tl.set("#w170", {autoAlpha: 0}, 59.877);
+  tl.set("#w171", {autoAlpha: 1}, 59.962); tl.set("#w171", {autoAlpha: 0}, 60.062);
+  tl.set("#w172", {autoAlpha: 1}, 60.142); tl.set("#w172", {autoAlpha: 0}, 60.753);
+  tl.set("#w173", {autoAlpha: 1}, 60.838); tl.set("#w173", {autoAlpha: 0}, 60.938);
+  tl.set("#w174", {autoAlpha: 1}, 61.018); tl.set("#w174", {autoAlpha: 0}, 61.653);
+  tl.set("#w175", {autoAlpha: 1}, 61.738); tl.set("#w175", {autoAlpha: 0}, 61.838);
+  tl.set("#w176", {autoAlpha: 1}, 61.838); tl.set("#w176", {autoAlpha: 0}, 61.938);
+  tl.set("#w177", {autoAlpha: 1}, 61.938); tl.set("#w177", {autoAlpha: 0}, 62.113);
+  tl.set("#w178", {autoAlpha: 1}, 62.198); tl.set("#w178", {autoAlpha: 0}, 62.298);
+  tl.set("#w179", {autoAlpha: 1}, 62.338); tl.set("#w179", {autoAlpha: 0}, 62.613);
+  tl.set("#w180", {autoAlpha: 1}, 62.698); tl.set("#w180", {autoAlpha: 0}, 62.993);
+  tl.set("#w181", {autoAlpha: 1}, 63.078); tl.set("#w181", {autoAlpha: 0}, 63.178);
+  tl.set("#w182", {autoAlpha: 1}, 63.218); tl.set("#w182", {autoAlpha: 0}, 63.633);
+  tl.set("#w183", {autoAlpha: 1}, 63.718); tl.set("#w183", {autoAlpha: 0}, 63.818);
+  tl.set("#w184", {autoAlpha: 1}, 63.878); tl.set("#w184", {autoAlpha: 0}, 64.634);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 66.039);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 1.863);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 2.703);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 11.243);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 20.837);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 25.953);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 26.813);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 28.196);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 38.724);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 43.650);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 44.586);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 46.013);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 46.313);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 64.469);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 66.050);
+
+
+  rise("#a1", 0.858); rise("#a2", 1.058);
+  fadein("#a1t", 2.113, .3); pop("#a1t", 2.113, .5);
+  fadein("#a2t", 2.653, .3); pop("#a2t", 2.653, .5);
+  pop("#a1c", 3.773); pop("#a2c", 4.553);
+
+
+  gsap.set("#a1, #a2", {transformOrigin: "50% 0%"});
+  tl.to("#a1, #a2", {scale: .62, y: -14, duration: .6, ease: RISE}, 5.664);
+  sketch("in2", "skF"); arrow("in2", 290, 492, 432, 566, {seed: 5, bend: -.1}); arrow("in2", 790, 492, 648, 566, {seed: 9, bend: .1});
+  draw("in2", 6.138, .45);
+  pop("#sys", 6.688);
+  // an outline round the pill, not a sticker: a white fill would hide the
+  // pill's arrowheads (the kit gives the open ring its white halo)
+  sketch("c3", "skF"); ell("c3", 540, 622, 440, 160, {strokeWidth: 5, seed: 15, fill: false});
+  draw("c3", 8.537, .6);
+  sketch("q3", "skT"); ln("q3", 545, 548, 535, 700, {strokeWidth: 6, seed: 21, halo: false});
+  label("q3", 790, 600, "?", {size: 72});
+  draw("q3", 9.987, .4);
+  sink("#a1, #a2", 10.893); erase("in2", 10.893);
+  out("#sys", 11.773); erase("c3", 11.773); erase("q3", 11.773);
+
+
+  sketch("hL", "skP"); box("hL", 100, 300, 350, 100, {seed: 23, fill: true}); label("hL", 275, 366, "особистий", {size: 50});
+  draw("hL", 11.973, .55);
+  sketch("hR", "skP"); box("hR", 630, 300, 350, 100, {seed: 25, fill: true}); label("hR", 805, 366, "школа", {size: 50});
+  draw("hR", 12.353, .55);
+  sketch("wall", "skP"); ln("wall", 540, 292, 538, 785, {stroke: "#7A1424", strokeWidth: 6, seed: 27});
+  draw("wall", 12.623, .55);
+  sketch("dn", "skP"); under("dn", 185, 382, 365, {stroke: "#7A1424", seed: 28}); under("dn", 735, 382, 875, {stroke: "#7A1424", seed: 29});
+  draw("dn", 13.673, .35);
+
+  sketch("r1L", "skP"); box("r1L", 100, 480, 350, 85, {seed: 30}); label("r1L", 275, 536, "скіл сценариста", {size: 42}); draw("r1L", 15.053, .5);
+  sketch("r1R", "skP"); box("r1R", 630, 480, 350, 85, {seed: 32}); label("r1R", 805, 536, "скіл сценариста", {size: 42}); draw("r1R", 15.353, .5);
+  sketch("r2L", "skP"); box("r2L", 100, 585, 350, 85, {seed: 34}); label("r2L", 275, 641, "tone of voice", {size: 42}); draw("r2L", 16.613, .5);
+  sketch("r2R", "skP"); box("r2R", 630, 585, 350, 85, {seed: 36}); label("r2R", 805, 641, "tone of voice", {size: 42}); draw("r2R", 16.913, .5);
+  sketch("r3L", "skP"); box("r3L", 100, 690, 350, 85, {seed: 38}); label("r3L", 275, 746, "дизайн-система", {size: 42}); draw("r3L", 17.633, .5);
+  sketch("r3R", "skP"); box("r3R", 630, 690, 350, 85, {seed: 40}); label("r3R", 805, 746, "дизайн-система", {size: 42}); draw("r3R", 17.933, .5);
+  // ⇄ across the wall, in the 180 px gap between the columns, box edge to box edge
+  sketch("ech", "skP"); arrow("ech", 448, 616, 632, 616, {stroke: "#7A1424", strokeWidth: 5, seed: 41, bend: .2});
+  arrow("ech", 632, 670, 448, 670, {stroke: "#7A1424", strokeWidth: 5, seed: 43, bend: .2});
+  draw("ech", 19.063, .45);
+  erase("hL", 20.437); erase("hR", 20.437); erase("wall", 20.437); erase("dn", 20.437); erase("r1L", 20.437); erase("r1R", 20.437); erase("r2L", 20.437); erase("r2R", 20.437); erase("r3L", 20.437); erase("r3R", 20.437); erase("ech", 20.437);
+
+
+  pop("#pcL", 21.337); pop("#pcR", 21.487);
+  pop("#ps1", 21.937); pop("#ps2", 22.137);
+  tl.to("#ps1", {x: -300, rotation: -3, duration: .55, ease: RISE}, 22.940);
+  tl.to("#ps2", {x: 325, rotation: 3, duration: .55, ease: RISE}, 23.090);
+  tl.set("#pcLc, #pcRc", {className: "chip on"}, 23.480);
+  pop("#pcL, #pcR", 23.480, .45);
+  sink("#pcL, #pcR, #ps1, #ps2", 24.170);
+
+
+  rise("#bw1", 25.953); rise("#bw2", 26.463);
+  sink("#bw1, #bw2", 27.646);
+
+
+  sketch("lp", "skP"); ell("lp", 540, 378, 420, 150, {seed: 51});
+  label("lp", 540, 396, "рутина", {size: 52});
+  draw("lp", 28.266, .7);
+  sketch("an1", "skP"); label("an1", 205, 505, "особистий", {size: 44}); label("an1", 875, 505, "школа", {size: 44});
+  arrow("an1", 215, 530, 345, 655, {seed: 55, bend: -.1}); arrow("an1", 865, 530, 735, 655, {seed: 57, bend: .1});
+  draw("an1", 29.746, .45);
+  sketch("an2", "skP"); box("an2", 350, 612, 380, 104, {seed: 59, fill: true}); label("an2", 540, 680, "один аналіз", {size: 48});
+  draw("an2", 30.626, .5);
+  sketch("anx", "skP"); ln("anx", 330, 735, 750, 600, {stroke: "#7A1424", strokeWidth: 7, seed: 61});
+  draw("anx", 31.480, .35);
+  erase("an1", 32.030); erase("an2", 32.030); erase("anx", 32.030);
+  sketch("cR", "skP"); box("cR", 600, 470, 370, 300, {seed: 63}); label("cR", 785, 530, "школа", {size: 48});
+  ell("cR", 690, 596, 58, 58, {seed: 100}); _add(SK["cR"], SK["cR"].rc.curve([[644, 708], [690, 640], [736, 708]], opt({}, 103))); ell("cR", 785, 596, 58, 58, {seed: 107}); _add(SK["cR"], SK["cR"].rc.curve([[739, 708], [785, 640], [831, 708]], opt({}, 110))); ell("cR", 880, 596, 58, 58, {seed: 114}); _add(SK["cR"], SK["cR"].rc.curve([[834, 708], [880, 640], [926, 708]], opt({}, 117)));
+  draw("cR", 32.180, .4);
+  sketch("cL", "skP"); box("cL", 110, 470, 370, 300, {seed: 65}); label("cL", 295, 530, "особистий блог", {size: 44});
+  ell("cL", 200, 596, 58, 58, {seed: 100, stroke: "#7A1424", fill: "#F2C7CA", fillStyle: "hachure", hachureGap: 12, hachureAngle: -41, fillWeight: 2.5}); _add(SK["cL"], SK["cL"].rc.curve([[154, 708], [200, 640], [246, 708]], opt({stroke: "#7A1424"}, 103))); ell("cL", 295, 596, 58, 58, {seed: 107, stroke: "#7A1424", fill: "#F2C7CA", fillStyle: "hachure", hachureGap: 12, hachureAngle: -41, fillWeight: 2.5}); _add(SK["cL"], SK["cL"].rc.curve([[249, 708], [295, 640], [341, 708]], opt({stroke: "#7A1424"}, 110))); ell("cL", 390, 596, 58, 58, {seed: 114, stroke: "#7A1424", fill: "#F2C7CA", fillStyle: "hachure", hachureGap: 12, hachureAngle: -41, fillWeight: 2.5}); _add(SK["cL"], SK["cL"].rc.curve([[344, 708], [390, 640], [436, 708]], opt({stroke: "#7A1424"}, 117)));
+  draw("cL", 33.080, .4);
+  sketch("ne", "skP"); ln("ne", 512, 622, 570, 620, {stroke: "#7A1424", strokeWidth: 7, seed: 71});
+  ln("ne", 512, 656, 570, 654, {stroke: "#7A1424", strokeWidth: 7, seed: 73});
+  ln("ne", 562, 592, 522, 688, {stroke: "#7A1424", strokeWidth: 7, seed: 75});
+  draw("ne", 34.910, .3);
+  erase("ne", 37.011);
+  sketch("wall2", "skP"); ln("wall2", 540, 452, 538, 782, {stroke: "#7A1424", strokeWidth: 7, seed: 77});
+  draw("wall2", 37.161, .5);
+  erase("lp", 38.324); erase("an1", 38.324); erase("an2", 38.324); erase("anx", 38.324); erase("cR", 38.324); erase("cL", 38.324); erase("ne", 38.324); erase("wall2", 38.324);
+
+
+  rise("#a3", 39.434); rise("#a4", 39.634);
+  tl.to("#a3", {rotation: -4, x: -14, duration: .5, ease: POP}, 40.914);
+  tl.to("#a4", {rotation: 4, x: 14, duration: .5, ease: POP}, 40.914);
+  sink("#a3, #a4", 41.524);
+  rise("#ck1", 41.864);
+  tl.fromTo("#ck2", {autoAlpha: 0, x: -44, y: 76}, X({autoAlpha: 1, x: 0, y: 0, duration: .55, ease: POP}), 43.900);
+  pop("#pl0", 44.000); pop("#pl1", 46.263); pop("#pl2", 47.563);
+  sink("#ck1, #ck2, #pl0, #pl1, #pl2", 49.167);
+
+
+  rise("#bl", 50.868);
+  pop("#bl1", 52.541); pop("#bl2", 53.241); pop("#blp", 53.861, .45);
+  rise("#blt", 54.871, 30);
+  // the ring round «особисте + професійне» is an outline (a sticker would
+  // cover the chips); ink + white halo from the kit, no colour of our own
+  sketch("mx", "skT"); ell("mx", 540, 470, 700, 124, {strokeWidth: 5, seed: 81, fill: false});
+  draw("mx", 56.131, .6);
+  sink("#bl", 56.981); erase("mx", 56.981);
+  pop("#no2", 57.181);
+  sketch("nx", "skT"); ln("nx", 236, 500, 846, 470, {strokeWidth: 8, seed: 83, halo: false});
+  draw("nx", 57.461, .35);
+  out("#no2", 58.492); erase("nx", 58.492);
+
+
+  pop("#ct1", 59.222); pop("#ct2", 60.142); pop("#ct3", 61.018);
+  sketch("tm", "skF"); ell("tm", 330, 452, 58, 58, {seed: 100}); _add(SK["tm"], SK["tm"].rc.curve([[284, 564], [330, 496], [376, 564]], opt({}, 103))); ell("tm", 440, 452, 58, 58, {seed: 107}); _add(SK["tm"], SK["tm"].rc.curve([[394, 564], [440, 496], [486, 564]], opt({}, 110))); ell("tm", 550, 452, 58, 58, {seed: 114}); _add(SK["tm"], SK["tm"].rc.curve([[504, 564], [550, 496], [596, 564]], opt({}, 117)));
+  draw("tm", 62.298, .4);
+  // a battery: the kit makes the body and the nub white stickers; four dark
+  // charge bars fill it on «не втомлюється» — a full battery
+  sketch("bt", "skF"); box("bt", 650, 470, 200, 104, {seed: 91, r: 20});
+  box("bt", 850, 500, 22, 44, {seed: 93, r: 8});
+  draw("bt", 62.918, .4);
+  sketch("bt2", "skF"); ln("bt2", 692, 494, 692, 550, {strokeWidth: 20, seed: 95}); ln("bt2", 732, 494, 732, 550, {strokeWidth: 20, seed: 96}); ln("bt2", 772, 494, 772, 550, {strokeWidth: 20, seed: 97}); ln("bt2", 812, 494, 812, 550, {strokeWidth: 20, seed: 98});
+  draw("bt2", 63.568, .22);
+  erase("tm", 64.519); erase("bt", 64.519); erase("bt2", 64.519);
+  pop("#ctaP", 64.719, .6);
+  // comments are down at the right of the IG rail, so the pointer goes down to
+  // them — never up at the pill (her review of 41). Tip stays left of x 900.
+  sketch("pt", "skF"); label("pt", 800, 700, "сюди!", {size: 52});
+  arrow("pt", 820, 730, 880, 960, {strokeWidth: 5, seed: 97, bend: -.25});
+  draw("pt", 64.869, .5);
+
+  half(10.993, 20.437);
+  half(27.946, 38.324);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>
