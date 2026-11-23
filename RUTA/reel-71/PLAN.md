@@ -18,7 +18,14 @@ why it's worth it → FULL her phone as a platform-ad: 10 рілсів in, мо�
 | 24.1–31.0 | half 1 | сире відео → «2–3 хв» 26.6 → arrow → Клод 28.8 → «15–20 хв» 29.5 |
 | 33.4–43.4 | half 2 | сире відео «5–6 хв» 35.6, ××× 36.6, cut line 37.8, «3 хв» 39.3, → Клод, «30 хв» 41.4, «1 год» circled 42.5 |
 | 51.9–58.1 | above | shuffle: швидше, ніж самій / швидше, ніж чекати монтажера / безкоштовно / лише підписка на Клод |
-| 59.1–71.0 | full | phone (Claude): tilt in; zoom on list as 10 rows land 61.4; status «сире відео» → «монтаж» 63.3; zoom out 64.4; 10 ticks on «готових» 66.5; drifts through «з телефона» |
+| 59.1–71.0 | full | Claude list as a platform ad, 960 px window (body 36 px, pills 30 px): tilts in with its 10 rows landing; 1.06× on «10 рілсів» 61.4 (thumbs pulse); push in 1.12× (full width) on «віддати»; «сире відео» → «монтаж •••» 63.3; zoom out 64.4; all 10 → «✓ готовий» on «готових» 66.5; drifts through «з телефона» |
 | 71.0–76.6 | — | her alone to the end |
+
+## Memes (cap 3, none in the last 2 s; no CTA remains)
+| meme | time | reacts to | why |
+|---|---|---|---|
+| 30 «НІХУЯ СОБІ» (top) | 44.0–45.2 | «…і навіть годину» | stunned at the number; starts once half 2's panel has cleared the top band |
+| 35 hamster in sunglasses (r) | 49.2–50.4 | «Але навіть так!» | deal-with-it: still faster |
+| 59 «алівідерчі» (top) | 72.7–73.9 | «не прив'язана до комп'ютера» | bye, computer |
 
 BLACKOUT: «монтаж» 2.1 (behind word), «10-15» 8.5 (card).

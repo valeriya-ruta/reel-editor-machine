@@ -150,29 +150,31 @@
          font-weight: 700; font-size: 84px; line-height: 120px; text-align: center; flex: none; }
 
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
-    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
-    #ph { position: absolute; left: 0; top: 0; width: 440px; height: 820px; border-radius: 60px;
-          background: #1E1717; padding: 14px; transform-origin: 0 0; will-change: transform;
-          box-shadow: 0 2px 6px rgba(36,25,25,.14), 0 40px 90px rgba(36,25,25,.28); }
-    #scr { position: relative; width: 412px; height: 792px; border-radius: 47px; background: #fff;
-           overflow: hidden; font-family: "Google Sans", sans-serif; color: #241919; }
-    #scr .hd { display: flex; align-items: center; gap: 12px; padding: 50px 26px 16px; font-size: 27px;
-               font-weight: 700; color: #7A1424; border-bottom: 1px solid #F0E4E4; }
-    #scr .hd span { color: #241919; }
-    #rows { padding: 8px 18px; }
-    .prow { position: relative; display: flex; align-items: center; height: 66px; border-bottom: 1px solid #F4EBEB; }
-    .prow .th { width: 38px; height: 50px; border-radius: 8px; background: #E9DCDC; flex: none; margin-right: 16px;
-             position: relative; }
-    .prow .th::after { content: ""; position: absolute; left: 14px; top: 17px; border-left: 12px solid #fff;
-                    border-top: 8px solid transparent; border-bottom: 8px solid transparent; }
-    .prow .nm { font-size: 22px; font-weight: 500; }
-    .prow .stt { position: absolute; right: 4px; top: 0; height: 66px; display: flex; align-items: center;
-              font-size: 17px; font-weight: 500; }
-    .prow .s0 { color: #8A7373; } .prow .s1 { color: #7A1424; opacity: 0; } .prow .s2 { opacity: 0; }
-    .prow .s1 em { display: inline-flex; gap: 4px; margin-left: 6px; }
-    .prow .s1 em i { width: 6px; height: 6px; border-radius: 50%; background: #7A1424; display: block; }
-    .prow .check { width: 34px; height: 34px; border-radius: 10px; }
-    .prow .check.on::after { left: 10px; top: 3px; width: 9px; height: 18px; border-width: 0 4px 4px 0; }
+    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2400px; }
+    #win { position: absolute; left: 0; top: 0; width: 960px; height: 1060px; background: #fff;
+           border-radius: 36px; font-family: "Google Sans", sans-serif; color: #241919; overflow: hidden;
+           box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
+           transform-origin: 0 0; will-change: transform; }
+    #win .hd { height: 120px; box-sizing: border-box; display: flex; align-items: center; gap: 20px;
+               padding: 0 40px; font-size: 44px; font-weight: 700; border-bottom: 2px solid #ECE6E6; }
+    #win .hd svg { fill: #7A1424; }
+    #rows { padding: 12px 40px; }
+    .prow { position: relative; display: flex; align-items: center; height: 92px; border-bottom: 2px solid #F3ECEC; }
+    .prow:last-child { border-bottom: 0; }
+    .prow .th { width: 56px; height: 72px; border-radius: 12px; background: #E9DCDC; flex: none; margin-right: 28px;
+                position: relative; }
+    .prow .th::after { content: ""; position: absolute; left: 21px; top: 24px; border-left: 18px solid #fff;
+                       border-top: 12px solid transparent; border-bottom: 12px solid transparent; }
+    .prow .nm { font-size: 36px; font-weight: 500; }
+    .prow .stt { position: absolute; right: 0; top: 15px; height: 62px; border-radius: 31px; padding: 0 26px;
+                 display: flex; align-items: center; gap: 12px; font-size: 30px; font-weight: 500; box-sizing: border-box; }
+    .prow .s0 { color: #574142; background: #F4F1F1; }
+    .prow .s1 { color: #7A1424; background: #FFF0F0; border: 2px solid #DEBFBF; opacity: 0; }
+    .prow .s2 { color: #fff; background: #7A1424; opacity: 0; }
+    .prow .s1 em { display: inline-flex; gap: 6px; }
+    .prow .s1 em i { width: 9px; height: 9px; border-radius: 50%; background: #7A1424; display: block; }
+    .prow .tk { width: 12px; height: 22px; border: solid #fff; border-width: 0 5px 5px 0; transform: rotate(45deg);
+                margin: -6px 4px 0 0; }
 
     </style>
   </head>
@@ -214,31 +216,31 @@
       <div id="cover">
 
         <div id="stage">
-          <div id="ph"><div id="scr">
-            <div class="hd"><svg class="mark" width="40" height="40" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><span>Claude</span></div>
+          <div id="win">
+            <div class="hd"><svg class="mark" width="56" height="56" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><span>Claude</span></div>
             <div id="rows">
-            <div class="prow" id="r0"><b class="th"></b><span class="nm">Рілс 01</span>
-              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="check on"></span></span></div>
-            <div class="prow" id="r1"><b class="th"></b><span class="nm">Рілс 02</span>
-              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="check on"></span></span></div>
-            <div class="prow" id="r2"><b class="th"></b><span class="nm">Рілс 03</span>
-              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="check on"></span></span></div>
-            <div class="prow" id="r3"><b class="th"></b><span class="nm">Рілс 04</span>
-              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="check on"></span></span></div>
-            <div class="prow" id="r4"><b class="th"></b><span class="nm">Рілс 05</span>
-              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="check on"></span></span></div>
-            <div class="prow" id="r5"><b class="th"></b><span class="nm">Рілс 06</span>
-              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="check on"></span></span></div>
-            <div class="prow" id="r6"><b class="th"></b><span class="nm">Рілс 07</span>
-              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="check on"></span></span></div>
-            <div class="prow" id="r7"><b class="th"></b><span class="nm">Рілс 08</span>
-              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="check on"></span></span></div>
-            <div class="prow" id="r8"><b class="th"></b><span class="nm">Рілс 09</span>
-              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="check on"></span></span></div>
+            <div class="prow" id="r0"><b class="th"></b><span class="nm">Рілс 1</span>
+              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="tk"></span>готовий</span></div>
+            <div class="prow" id="r1"><b class="th"></b><span class="nm">Рілс 2</span>
+              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="tk"></span>готовий</span></div>
+            <div class="prow" id="r2"><b class="th"></b><span class="nm">Рілс 3</span>
+              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="tk"></span>готовий</span></div>
+            <div class="prow" id="r3"><b class="th"></b><span class="nm">Рілс 4</span>
+              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="tk"></span>готовий</span></div>
+            <div class="prow" id="r4"><b class="th"></b><span class="nm">Рілс 5</span>
+              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="tk"></span>готовий</span></div>
+            <div class="prow" id="r5"><b class="th"></b><span class="nm">Рілс 6</span>
+              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="tk"></span>готовий</span></div>
+            <div class="prow" id="r6"><b class="th"></b><span class="nm">Рілс 7</span>
+              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="tk"></span>готовий</span></div>
+            <div class="prow" id="r7"><b class="th"></b><span class="nm">Рілс 8</span>
+              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="tk"></span>готовий</span></div>
+            <div class="prow" id="r8"><b class="th"></b><span class="nm">Рілс 9</span>
+              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="tk"></span>готовий</span></div>
             <div class="prow" id="r9"><b class="th"></b><span class="nm">Рілс 10</span>
-              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="check on"></span></span></div>
+              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="tk"></span>готовий</span></div>
             </div>
-          </div></div>
+          </div>
         </div>
       </div>
       <div id="scrim"></div>
@@ -901,24 +903,25 @@
 
   shuffle(["#sh0", "#sh1", "#sh2", "#sh3"], [51.884, 53.631, 55.221, 57.031], 58.298);
 
-  gsap.set("#ph", {transformOrigin: "220px 410px"});
-  gsap.set("#ph", {x: 320.0, y: 390.0 + 240, scale: 1.3 * .86, rotationX: 24, rotationY: 20, rotationZ: -5});
-  gsap.set(".prow", {autoAlpha: 0, x: 40});
-  tl.to("#ph", {x: 320.0, y: 390.0, scale: 1.3, rotationX: 8, rotationY: 12, rotationZ: -2, duration: 1.3, ease: "power3.out"}, 59.133 + .15);
-  tl.to("#ph", {x: 410.0, y: 688.0, scale: 1.8, rotationX: 3, rotationY: -6, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, 61.423 - .9);
-  tl.to(".prow", {autoAlpha: 1, x: 0, duration: .35, ease: "power2.out", stagger: .07}, 61.423 - .05);
-  tl.to("#ph", {x: 89.0, y: 613.0, scale: 2.1, rotationX: -2, rotationY: 7, duration: 1.2, ease: "power3.inOut"}, 62.567 - .4);
+  gsap.set("#win", {transformOrigin: "480px 530px"});
+  gsap.set("#win", {x: 60.0, y: 300.0 + 220, scale: 1.0 * .86, rotationX: 22, rotationY: 18, rotationZ: -4});
+  gsap.set(".prow", {autoAlpha: 0, x: 50});
+  tl.to("#win", {x: 60.0, y: 300.0, scale: 1.0, rotationX: 7, rotationY: 9, rotationZ: -1.5, duration: 1.3, ease: "power3.out"}, 59.133 + .15);
+  tl.to("#win", {x: 59.8, y: 311.8, scale: 1.06, rotationX: 2, rotationY: -3, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, 61.423 - .8);
+  tl.to(".prow", {autoAlpha: 1, x: 0, duration: .35, ease: "power2.out", stagger: .06}, 59.133 + .35);
+  tl.fromTo(".prow .th", {scale: 1}, X({scale: 1.15, duration: .16, yoyo: true, repeat: 1, stagger: .04, ease: "power2.out"}), 61.423 - .05);
+  tl.to("#win", {x: 59.6, y: 276.6, scale: 1.12, rotationX: -1, rotationY: 3, duration: 1.1, ease: "power3.inOut"}, 62.567 - .4);
   tl.to(".prow .s0", {opacity: 0, duration: .2, stagger: .05}, 63.297);
   tl.to(".prow .s1", {opacity: 1, duration: .2, stagger: .05}, 63.297 + .1);
-  tl.fromTo(".prow .s1 em i", {opacity: .25}, X({opacity: 1, duration: .3, repeat: 7, yoyo: true, stagger: .1, ease: "sine.inOut"}), 63.297 + .4);
-  tl.to("#ph", {x: 320.0, y: 390.0, scale: 1.3, rotationX: 6, rotationY: -12, rotationZ: 2, duration: 1.3, ease: "power3.inOut"}, 64.718 - .3);
+  tl.fromTo(".prow .s1 em i", {opacity: .25}, X({opacity: 1, duration: .3, repeat: 5, yoyo: true, stagger: .1, ease: "sine.inOut"}), 63.297 + .4);
+  tl.to("#win", {x: 60.0, y: 300.0, scale: 1.0, rotationX: 6, rotationY: -9, rotationZ: 1.5, duration: 1.2, ease: "power3.inOut"}, 64.718 - .3);
   tl.to(".prow .s1", {opacity: 0, duration: .15, stagger: .08}, 66.547 - .2);
-  tl.fromTo(".prow .s2", {opacity: 0, scale: .4}, X({opacity: 1, scale: 1, duration: .35, ease: POP, stagger: .08}), 66.547 - .1);
-  tl.to("#ph", {rotationX: 10, rotationY: 14, rotationZ: -2, y: 390.0 - 30, duration: 2.6, ease: "sine.inOut"}, 68.427 - .4);
+  tl.fromTo(".prow .s2", {opacity: 0, scale: .5}, X({opacity: 1, scale: 1, duration: .35, ease: POP, stagger: .08}), 66.547 - .1);
+  tl.to("#win", {rotationX: 9, rotationY: 10, rotationZ: -1.5, y: 300.0 - 20, duration: 2.6, ease: "sine.inOut"}, 68.427 - .4);
   full(59.133, 71.037);
 
-  tl.fromTo("#mm1", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 43.448);
-  tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 44.468);
+  tl.fromTo("#mm1", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 43.998);
+  tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 45.018);
   tl.fromTo("#mm2", {autoAlpha: 0, scale: .72, rotation: -3.5}, X({autoAlpha: 1, scale: 1, rotation: 1.5, duration: .28, ease: POP}), 49.189);
   tl.to("#mm2", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 50.209);
   tl.fromTo("#mm3", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 72.682);

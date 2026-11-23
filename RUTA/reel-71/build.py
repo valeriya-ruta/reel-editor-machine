@@ -158,69 +158,76 @@ t_sprav, t_tel = S(u"справами.", 68.4), S(u"телефона,", 70.6)
 f1 = S(u"не", 71.1) - 0.1
 rows = []
 for i in range(10):
-    rows.append(u'''            <div class="prow" id="r%d"><b class="th"></b><span class="nm">Рілс %02d</span>
-              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="check on"></span></span></div>''' % (i, i + 1))
+    rows.append(u"""            <div class="prow" id="r%d"><b class="th"></b><span class="nm">Рілс %d</span>
+              <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="tk"></span>готовий</span></div>""" % (i, i + 1))
+# No screenshot of hers for this: a clean, plausible Claude list, clearly a demo, with
+# only what she names — 10 рілсів, «монтаж», 10 «готових». No numbers, no proof.
+# Sized per the full-screen bar (reel-67): 960 px window, body 36 px, labels 30 px.
 C.append(u"""
         <div id="stage">
-          <div id="ph"><div id="scr">
+          <div id="win">
             <div class="hd">%s<span>Claude</span></div>
             <div id="rows">
 %s
             </div>
-          </div></div>
-        </div>""" % (mark("claude", 40), "\n".join(rows)))
+          </div>
+        </div>""" % (mark("claude", 56), "\n".join(rows)))
 EXTRA += u"""
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
-    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
-    #ph { position: absolute; left: 0; top: 0; width: 440px; height: 820px; border-radius: 60px;
-          background: #1E1717; padding: 14px; transform-origin: 0 0; will-change: transform;
-          box-shadow: 0 2px 6px rgba(36,25,25,.14), 0 40px 90px rgba(36,25,25,.28); }
-    #scr { position: relative; width: 412px; height: 792px; border-radius: 47px; background: #fff;
-           overflow: hidden; font-family: "Google Sans", sans-serif; color: #241919; }
-    #scr .hd { display: flex; align-items: center; gap: 12px; padding: 50px 26px 16px; font-size: 27px;
-               font-weight: 700; color: #7A1424; border-bottom: 1px solid #F0E4E4; }
-    #scr .hd span { color: #241919; }
-    #rows { padding: 8px 18px; }
-    .prow { position: relative; display: flex; align-items: center; height: 66px; border-bottom: 1px solid #F4EBEB; }
-    .prow .th { width: 38px; height: 50px; border-radius: 8px; background: #E9DCDC; flex: none; margin-right: 16px;
-             position: relative; }
-    .prow .th::after { content: ""; position: absolute; left: 14px; top: 17px; border-left: 12px solid #fff;
-                    border-top: 8px solid transparent; border-bottom: 8px solid transparent; }
-    .prow .nm { font-size: 22px; font-weight: 500; }
-    .prow .stt { position: absolute; right: 4px; top: 0; height: 66px; display: flex; align-items: center;
-              font-size: 17px; font-weight: 500; }
-    .prow .s0 { color: #8A7373; } .prow .s1 { color: #7A1424; opacity: 0; } .prow .s2 { opacity: 0; }
-    .prow .s1 em { display: inline-flex; gap: 4px; margin-left: 6px; }
-    .prow .s1 em i { width: 6px; height: 6px; border-radius: 50%; background: #7A1424; display: block; }
-    .prow .check { width: 34px; height: 34px; border-radius: 10px; }
-    .prow .check.on::after { left: 10px; top: 3px; width: 9px; height: 18px; border-width: 0 4px 4px 0; }
+    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2400px; }
+    #win { position: absolute; left: 0; top: 0; width: 960px; height: 1060px; background: #fff;
+           border-radius: 36px; font-family: "Google Sans", sans-serif; color: #241919; overflow: hidden;
+           box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
+           transform-origin: 0 0; will-change: transform; }
+    #win .hd { height: 120px; box-sizing: border-box; display: flex; align-items: center; gap: 20px;
+               padding: 0 40px; font-size: 44px; font-weight: 700; border-bottom: 2px solid #ECE6E6; }
+    #win .hd svg { fill: #7A1424; }
+    #rows { padding: 12px 40px; }
+    .prow { position: relative; display: flex; align-items: center; height: 92px; border-bottom: 2px solid #F3ECEC; }
+    .prow:last-child { border-bottom: 0; }
+    .prow .th { width: 56px; height: 72px; border-radius: 12px; background: #E9DCDC; flex: none; margin-right: 28px;
+                position: relative; }
+    .prow .th::after { content: ""; position: absolute; left: 21px; top: 24px; border-left: 18px solid #fff;
+                       border-top: 12px solid transparent; border-bottom: 12px solid transparent; }
+    .prow .nm { font-size: 36px; font-weight: 500; }
+    .prow .stt { position: absolute; right: 0; top: 15px; height: 62px; border-radius: 31px; padding: 0 26px;
+                 display: flex; align-items: center; gap: 12px; font-size: 30px; font-weight: 500; box-sizing: border-box; }
+    .prow .s0 { color: #574142; background: #F4F1F1; }
+    .prow .s1 { color: #7A1424; background: #FFF0F0; border: 2px solid #DEBFBF; opacity: 0; }
+    .prow .s2 { color: #fff; background: #7A1424; opacity: 0; }
+    .prow .s1 em { display: inline-flex; gap: 6px; }
+    .prow .s1 em i { width: 9px; height: 9px; border-radius: 50%; background: #7A1424; display: block; }
+    .prow .tk { width: 12px; height: 22px; border: solid #fff; border-width: 0 5px 5px 0; transform: rotate(45deg);
+                margin: -6px 4px 0 0; }
 """
 
 
-def cam(px, py, sc, cx=540, cy=800):
-    # the phone turns and scales about its own centre (220, 410): a point p of
-    # it lands at O + s*(p - O) + (x, y); put p at (cx, cy)
-    return (round(cx - 220 - sc * (px - 220), 1), round(cy - 410 - sc * (py - 410), 1))
+# camera: the window (960x1060) turns and scales about its centre O = (480, 530); a
+# point p lands at O + s*(p - O) + (x, y). A shot is given as the window's on-screen
+# scale, left and top (rotation aside): x = left - 480 + 480 s, y = top - 530 + 530 s.
+def shot(s, left, top):
+    return (s, round(left - 480 + 480 * s, 1), round(top - 530 + 530 * s, 1))
 
 
-WIDE = (1.3,) + cam(220, 410, 1.3)
-LIST = (1.8,) + cam(170, 300, 1.8, cy=900)
-STAT = (2.1,) + cam(330, 380, 2.1, cy=960)
+WIDE = shot(1.0, 60, 300)          # the whole window, 960 px (89 % of the width), y 300-1360
+LIST = shot(1.06, 31, 280)         # rows landing: 1018 px, bottom 1404 (above the caption rail)
+STAT = shot(1.12, 2, 213)          # push in on «монтаж»: 1075 px, full width, bottom 1400
 js(u"""
-  gsap.set("#ph", {transformOrigin: "220px 410px"});
-  gsap.set("#ph", {x: %(wx)s, y: %(wy)s + 240, scale: %(ws)s * .86, rotationX: 24, rotationY: 20, rotationZ: -5});
-  gsap.set(".prow", {autoAlpha: 0, x: 40});
-  tl.to("#ph", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 8, rotationY: 12, rotationZ: -2, duration: 1.3, ease: "power3.out"}, %(f0)s + .15);
-  tl.to("#ph", {x: %(lx)s, y: %(ly)s, scale: %(ls)s, rotationX: 3, rotationY: -6, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, %(t10a)s - .9);
-  tl.to(".prow", {autoAlpha: 1, x: 0, duration: .35, ease: "power2.out", stagger: .07}, %(t10a)s - .05);
-  tl.to("#ph", {x: %(sx)s, y: %(sy)s, scale: %(ss)s, rotationX: -2, rotationY: 7, duration: 1.2, ease: "power3.inOut"}, %(vidd)s - .4);
+  gsap.set("#win", {transformOrigin: "480px 530px"});
+  gsap.set("#win", {x: %(wx)s, y: %(wy)s + 220, scale: %(ws)s * .86, rotationX: 22, rotationY: 18, rotationZ: -4});
+  gsap.set(".prow", {autoAlpha: 0, x: 50});
+  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 7, rotationY: 9, rotationZ: -1.5, duration: 1.3, ease: "power3.out"}, %(f0)s + .15);
+  tl.to("#win", {x: %(lx)s, y: %(ly)s, scale: %(ls)s, rotationX: 2, rotationY: -3, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, %(t10a)s - .8);
+  tl.to(".prow", {autoAlpha: 1, x: 0, duration: .35, ease: "power2.out", stagger: .06}, %(f0)s + .35);
+  tl.fromTo(".prow .th", {scale: 1}, X({scale: 1.15, duration: .16, yoyo: true, repeat: 1, stagger: .04, ease: "power2.out"}), %(t10a)s - .05);
+  tl.to("#win", {x: %(sx)s, y: %(sy)s, scale: %(ss)s, rotationX: -1, rotationY: 3, duration: 1.1, ease: "power3.inOut"}, %(vidd)s - .4);
   tl.to(".prow .s0", {opacity: 0, duration: .2, stagger: .05}, %(mont)s);
   tl.to(".prow .s1", {opacity: 1, duration: .2, stagger: .05}, %(mont)s + .1);
-  tl.fromTo(".prow .s1 em i", {opacity: .25}, X({opacity: 1, duration: .3, repeat: 7, yoyo: true, stagger: .1, ease: "sine.inOut"}), %(mont)s + .4);
-  tl.to("#ph", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 6, rotationY: -12, rotationZ: 2, duration: 1.3, ease: "power3.inOut"}, %(kilka)s - .3);
+  tl.fromTo(".prow .s1 em i", {opacity: .25}, X({opacity: 1, duration: .3, repeat: 5, yoyo: true, stagger: .1, ease: "sine.inOut"}), %(mont)s + .4);
+  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 6, rotationY: -9, rotationZ: 1.5, duration: 1.2, ease: "power3.inOut"}, %(kilka)s - .3);
   tl.to(".prow .s1", {opacity: 0, duration: .15, stagger: .08}, %(hotov)s - .2);
-  tl.fromTo(".prow .s2", {opacity: 0, scale: .4}, X({opacity: 1, scale: 1, duration: .35, ease: POP, stagger: .08}), %(hotov)s - .1);
-  tl.to("#ph", {rotationX: 10, rotationY: 14, rotationZ: -2, y: %(wy)s - 30, duration: 2.6, ease: "sine.inOut"}, %(sprav)s - .4);
+  tl.fromTo(".prow .s2", {opacity: 0, scale: .5}, X({opacity: 1, scale: 1, duration: .35, ease: POP, stagger: .08}), %(hotov)s - .1);
+  tl.to("#win", {rotationX: 9, rotationY: 10, rotationZ: -1.5, y: %(wy)s - 20, duration: 2.6, ease: "sine.inOut"}, %(sprav)s - .4);
   full(%(f0)s, %(f1)s);
 """ % {"wx": WIDE[1], "wy": WIDE[2], "ws": WIDE[0], "lx": LIST[1], "ly": LIST[2], "ls": LIST[0],
        "sx": STAT[1], "sy": STAT[2], "ss": STAT[0], "f0": "%.3f" % f0, "f1": "%.3f" % f1,
@@ -231,8 +238,8 @@ g.sfx("whoosh-short", t_vidd - 0.4); g.sfx("click", t_montazh); g.sfx("whoosh-sh
 g.sfx("chime", t_hotov - 0.1); g.sfx("whoosh-short", f1)
 
 # 7 · MEMES — comic relief, slapped straight on, in the free stretches ---------------
-# 30 «НІХУЯ СОБІ» — the long video can take «навіть годину» (right after half 2 leaves)
-g.meme(F, J, "30", round(h2b + 0.05, 3), dur=1.2, slot="top")
+# 30 «НІХУЯ СОБІ» — the long video can take «навіть годину» (as soon as half 2's panel clears the top band)
+g.meme(F, J, "30", round(h2b + 0.6, 3), dur=1.2, slot="top")   # once the panel has cleared the top band
 # 35 hamster in sunglasses — «Але навіть так!»: still faster, deal with it
 g.meme(F, J, "35", round(E(u"так!", 48.7) + 0.1, 3), dur=1.2, slot="r")
 # 59 «алівідерчі» — «не прив'язана до комп'ютера»: bye, computer
