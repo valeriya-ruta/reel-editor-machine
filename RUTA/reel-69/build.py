@@ -367,20 +367,21 @@ h1 = E(u"камерою.", 66.53) + 0.3
 HALF.append((h0, h1))
 t_kad, t_pyshe, t_lut, t_odn = S(u"кадри", 60.56), S(u"пише", 61.80), S(u"LUT,", 63.18), S(u"однією", 66.22)
 js(u'''
-  sketch("c1", "skP"); box("c1", 90, 320, 230, 110, {seed: 21}); label("c1", 205, 390, "камера 1", {size: 42});
-  box("c1", 90, 560, 230, 110, {seed: 23}); label("c1", 205, 630, "камера 2", {size: 42});
+  sketch("c1", "skP"); box("c1", 430, 440, 260, 120, {seed: 29, fill: true}); label("c1", 560, 512, "Claude Code", {size: 42});
   draw("c1", %.3f, .4);
-  sketch("c2", "skP"); arrow("c2", 330, 380, 420, 470, {seed: 25, bend: .1}); arrow("c2", 330, 615, 420, 530, {seed: 27, bend: -.1});
-  box("c2", 430, 440, 260, 120, {seed: 29, fill: true}); label("c2", 560, 512, "Claude Code", {size: 42});
-  label("c2", 560, 615, "скрипт", {size: 44});
-  draw("c2", %.3f, .4);
-  sketch("c3", "skP"); arrow("c3", 700, 500, 790, 500, {seed: 31}); box("c3", 800, 440, 190, 120, {seed: 33});
-  label("c3", 895, 512, "LUT", {size: 58});
-  draw("c3", %.3f, .4);
-  sketch("c4", "skP"); label("c4", 870, 640, "як одна камера", {size: 44, stroke: "#7A1424", fill: "#7A1424"});
-  draw("c4", %.3f);
-  erase("c1", %.3f); erase("c2", %.3f); erase("c3", %.3f); erase("c4", %.3f);
-''' % (h0 + 0.5, t_kad + 0.2, t_lut - 0.6, t_odn - 0.2, h1, h1, h1, h1))
+  sketch("c2", "skP"); box("c2", 90, 320, 230, 110, {seed: 21}); label("c2", 205, 390, "камера 1", {size: 42});
+  box("c2", 90, 560, 230, 110, {seed: 23}); label("c2", 205, 630, "камера 2", {size: 42});
+  arrow("c2", 330, 380, 420, 470, {seed: 25, bend: .1}); arrow("c2", 330, 615, 420, 530, {seed: 27, bend: -.1});
+  draw("c2", %.3f, .35);
+  sketch("c3", "skP"); label("c3", 560, 615, "скрипт", {size: 44});
+  draw("c3", %.3f);
+  sketch("c4", "skP"); arrow("c4", 700, 500, 790, 500, {seed: 31}); box("c4", 800, 440, 190, 120, {seed: 33});
+  label("c4", 895, 512, "LUT", {size: 58});
+  draw("c4", %.3f, .35);
+  sketch("c5", "skP"); label("c5", 870, 640, "як одна камера", {size: 44, stroke: "#7A1424", fill: "#7A1424"});
+  draw("c5", %.3f);
+  erase("c1", %.3f); erase("c2", %.3f); erase("c3", %.3f); erase("c4", %.3f); erase("c5", %.3f);
+''' % (h0 + 0.75, t_kad - 0.05, t_pyshe - 0.1, t_lut - 0.8, t_odn - 0.2, h1, h1, h1, h1, h1))
 g.sfx("whoosh-short", h0); g.sfx("click-soft", t_kad); g.sfx("click-soft", t_pyshe); g.sfx("click", t_lut)
 g.matte("h2", round(h0 - 0.1, 3), round(h1 - h0 + 1.2, 3))
 PLACE.append((h0 + 0.4, h1 + 0.2, "bottom", 938))
