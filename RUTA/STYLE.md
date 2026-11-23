@@ -401,6 +401,14 @@ y ≈ 1500 and left of x ≈ 880 — at 45 % in the bottom-right corner she was
 *"eated by the buttons from ig interface"* (the like/comment/share rail and the
 caption block).
 
+**Screen demos are tutorial style.** Her call, 2026-10-27: while she walks
+through an app on screen, she sits in a **rounded rectangle** (picture-in-picture),
+not a cutout. Frame her wide enough — head and shoulders with clear headroom, never
+cropped at the top of her head, never a tight face crop. Keep the box clear of
+Instagram's right rail and caption block. The screen itself moves like a smooth
+demo: eased in/out, a big cursor, personal details blurred, the pressed button
+ringed in a hand-drawn (Excalidraw-style) stroke.
+
 **Proof is a screenshot.** Her call, 2026-09-29: Instagram stats, DMs, comments,
 reviews go on screen as her real screenshots (cropped, blurred where personal),
 never redesigned as glass cards — *"then people trust it more and dont think

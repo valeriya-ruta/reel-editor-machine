@@ -83,3 +83,11 @@ RUTA/work/inbox-1120/
 RUTA/work/scratch/
 RUTA/work/r*/utt/
 RUTA/reel-*/assets/
+
+# Long-form cut intermediates (tools/cutlong.py, work/udc-tutorial/finish.sh)
+RUTA/work/*/segs/
+RUTA/work/*/*.log
+RUTA/work/*/demo_list.txt
+RUTA/work/*/final_list.txt
+RUTA/work/udc-tutorial/src/
+RUTA/work/udc-tutorial/*.jpg
