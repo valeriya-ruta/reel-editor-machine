@@ -1,0 +1,100 @@
+{
+  "id": "ep03-ideas",
+  "title": "Ідеї для контенту: від порожньої голови до нескінченних ідей",
+  "audio": "vo/03-ideas.mp3",
+  "scene": {
+    "floorY": 1300,
+    "rooms": {
+      "default": [60, 720, 1420, 1340],
+      "tiles": [0, 180, 1060, 900],
+      "final": [0, 240, 1420, 1340]
+    },
+    "objects": [
+      {"id": "ruta", "type": "chibi", "x": 1120, "y": 1300, "scale": 1.05, "layer": "back", "props": {"pose": "neutral"}},
+      {"id": "laptop", "type": "laptop", "x": 520, "y": 1300, "scale": 0.92, "props": {"window": "claude"}},
+      {"id": "page", "type": "paper", "x": 540, "y": 560, "rot": -3, "layer": "air", "props": {"blank": true, "w": 420, "h": 520}},
+      {"id": "phone", "type": "phone", "x": 300, "y": 640, "scale": 2.1, "layer": "air", "hidden": true, "props": {"screen": "feed"}},
+      {"id": "clock", "type": "clock", "x": 900, "y": 540, "scale": 0.8, "layer": "air", "hidden": true, "props": {"label": "3:00"}},
+      {"id": "chips", "type": "chips", "x": 540, "y": 580, "layer": "air", "hidden": true,
+        "props": {"items": ["5 порад для бізнесу", "Мій ранок", "Топ-3 застосунки", "Як я все встигаю"]}},
+      {"id": "calendar", "type": "calendar", "x": 320, "y": 580, "scale": 0.85, "layer": "air", "hidden": true, "props": {"title": "Щотижня нове"}},
+      {"id": "ig", "type": "app", "x": 180, "y": 360, "layer": "air", "hidden": true, "props": {"app": "instagram", "label": "Твій акаунт"}},
+      {"id": "fathom", "type": "app", "x": 180, "y": 680, "layer": "air", "hidden": true, "props": {"app": "fathom", "label": "Дзвінки"}},
+      {"id": "rivals", "type": "app", "x": 520, "y": 300, "layer": "air", "hidden": true, "props": {"glyph": "person", "bg": "#8E7CF0", "label": "Конкуренти"}},
+      {"id": "claude", "type": "app", "x": 880, "y": 560, "layer": "air", "hidden": true, "props": {"app": "claude", "label": "Claude"}},
+      {"id": "cable1", "type": "cable", "x": 0, "y": 0, "layer": "air", "props": {"from": "ig", "to": "claude"}},
+      {"id": "cable2", "type": "cable", "x": 0, "y": 0, "layer": "air", "props": {"from": "fathom", "to": "claude"}},
+      {"id": "cable3", "type": "cable", "x": 0, "y": 0, "layer": "air", "props": {"from": "rivals", "to": "claude"}},
+      {"id": "ideas", "type": "chips", "x": 540, "y": 600, "layer": "air", "hidden": true,
+        "props": {"items": ["питання клієнток", "що зайшло", "що в конкурентів", "твої кейси", "розбори"]}}
+    ]
+  },
+  "steps": [
+    {
+      "caption": "Постити *регулярно*",
+      "vo": "Ти хочеш почати постити контент регулярно,",
+      "beats": [
+        {"action": "page.pulse", "shot": "object_punch:page"}
+      ],
+      "minus": {
+        "caption": "Але *жодної* ідеї",
+        "vo": "але жодна ідея не лізе в голову.",
+        "beats": [
+          {"action": "ruta.pose", "args": {"pose": "bored"}, "shot": "whip>character_close"},
+          {"action": "page.shake", "shot": "punch>object_punch:page*1.2"}
+        ]
+      }
+    },
+    {
+      "caption": "Шукаєш *натхнення*",
+      "vo": "Ти відкриваєш інстаграм, щоб надихнутись,",
+      "beats": [
+        {"action": "phone.show", "shot": "whip>phone_dive", "also": [{"action": "page.hide"}, {"action": "phone.swipe", "args": {"n": 2}, "at": 0.2}]},
+        {"action": "ruta.pose", "args": {"pose": "phone"}, "shot": "whip>character_close"}
+      ],
+      "minus": {
+        "caption": "*3:00* — шалаш у джунглях",
+        "vo": "і о третій ранку вже дивишся, як будують шалаш у джунглях.",
+        "beats": [
+          {"action": "clock.show", "shot": "whip>object_punch:clock", "also": [{"action": "clock.spin", "args": {"hours": 5}, "at": 0.1}]},
+          {"action": "phone.swipe", "args": {"n": 4}, "shot": "whip>phone_dive"},
+          {"action": "ruta.pose", "args": {"pose": "exhausted"}, "shot": "whip>character_close"}
+        ]
+      }
+    },
+    {
+      "caption": "Ідеї від *Claude*",
+      "vo": "Тоді ти розповідаєш Клоду про свої послуги та цільову авдиторію і просиш його придумати тобі ідеї.",
+      "beats": [
+        {"action": "laptop.ask", "args": {"text": "Мої послуги й аудиторія. Дай ідеї"}, "shot": "whip>screen", "also": [{"action": "phone.hide"}, {"action": "clock.hide"}]},
+        {"action": "laptop.reply", "args": {"title": "10 ідей для рілсів"}, "shot": "punch>object_punch:laptop#chat"},
+        {"action": "chips.show", "shot": "whip>object_punch:chips", "also": [{"action": "chips.pop", "at": 0.1}]},
+        {"action": "ruta.pose", "args": {"pose": "smug"}, "shot": "whip>character_close"}
+      ],
+      "minus": {
+        "caption": "Але *щотижня* — нове",
+        "vo": "Але кожного тижня треба придумувати щось нове!",
+        "beats": [
+          {"action": "calendar.show", "shot": "whip>object_punch:calendar", "also": [{"action": "chips.hide"}, {"action": "calendar.flip", "args": {"weeks": 3}, "at": 0.1}]},
+          {"action": "ruta.pose", "args": {"pose": "frustrated"}, "shot": "whip>character_close"}
+        ]
+      }
+    },
+    {
+      "caption": "Підключаєш *акаунт*",
+      "vo": "Тоді ти підключаєш свій акаунт, щоб знати, які теми заходять найкраще, підключаєш запис дзвінків з клієнтами, щоб знати, які питання тобі задають, та даєш посилання на своїх конкурентів, щоб красти як художниця. Тепер у тебе є нескінченна кількість ідей для контенту!",
+      "beats": [
+        {"action": "ig.show", "shot": "pull_back>room:tiles", "also": [{"action": "calendar.hide"}, {"action": "claude.show", "at": 0.15}, {"action": "ruta.pose", "args": {"pose": "neutral"}}]},
+        {"action": "cable1.plug", "shot": "follow>object_punch:cable1"},
+        {"action": "fathom.show", "shot": "whip>object_punch:fathom", "caption": "*Дзвінки* з клієнтками"},
+        {"action": "cable2.plug", "shot": "follow>object_punch:cable2"},
+        {"action": "rivals.show", "shot": "whip>object_punch:rivals", "caption": "Красти як *художниця*"},
+        {"action": "cable3.plug", "shot": "follow>object_punch:cable3"},
+        {"action": "ideas.show", "shot": "whip>object_punch:ideas", "caption": "*Нескінченні* ідеї",
+          "also": [{"action": "ig.hide"}, {"action": "fathom.hide"}, {"action": "rivals.hide"}, {"action": "claude.hide"}, {"action": "cable1.hide"}, {"action": "cable2.hide"}, {"action": "cable3.hide"}, {"action": "ideas.pop", "at": 0.1}]},
+        {"action": "ruta.pose", "args": {"pose": "ecstatic"}, "shot": "pull_back>room:final"},
+        {"action": "ruta.pulse", "shot": "punch>character_close"}
+      ]
+    }
+  ]
+}

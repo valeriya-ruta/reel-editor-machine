@@ -1,0 +1,115 @@
+{
+  "id": "ep02-analysis",
+  "title": "Аналіз контенту: від скріншотів до звіту щонеділі",
+  "audio": "vo/02-analysis.mp3",
+  "scene": {
+    "floorY": 1300,
+    "rooms": {
+      "default": [60, 720, 1420, 1340],
+      "tiles": [0, 230, 1060, 900],
+      "final": [0, 240, 1420, 1340]
+    },
+    "objects": [
+      {"id": "ruta", "type": "chibi", "x": 1120, "y": 1300, "scale": 1.05, "layer": "back", "props": {"pose": "neutral"}},
+      {"id": "laptop", "type": "laptop", "x": 520, "y": 1300, "scale": 0.92, "props": {"window": "claude"}},
+      {"id": "reels", "type": "reels", "x": 320, "y": 600, "scale": 0.75, "layer": "air", "props": {"title": "Мої рілси", "count": 12}},
+      {"id": "sheet", "type": "sheet", "x": 540, "y": 560, "scale": 0.9, "layer": "air", "hidden": true, "props": {"title": "Статистика"}},
+      {"id": "clock", "type": "clock", "x": 990, "y": 540, "scale": 0.8, "layer": "air", "hidden": true, "props": {"label": "години"}},
+      {"id": "shots", "type": "notespile", "x": 520, "y": 560, "layer": "air", "hidden": true, "props": {"kind": "screens"}},
+      {"id": "calendar", "type": "calendar", "x": 320, "y": 580, "scale": 0.85, "layer": "air", "hidden": true, "props": {"title": "Щотижня", "day": 6}},
+      {"id": "buffer", "type": "app", "x": 200, "y": 420, "layer": "air", "hidden": true, "props": {"app": "buffer", "label": "Buffer"}},
+      {"id": "notion", "type": "app", "x": 200, "y": 420, "layer": "air", "hidden": true, "props": {"app": "notion", "label": "Notion"}},
+      {"id": "claude", "type": "app", "x": 820, "y": 560, "layer": "air", "hidden": true, "props": {"app": "claude", "label": "Claude"}},
+      {"id": "cable1", "type": "cable", "x": 0, "y": 0, "layer": "air", "props": {"from": "buffer", "to": "claude"}},
+      {"id": "cable2", "type": "cable", "x": 0, "y": 0, "layer": "air", "props": {"from": "notion", "to": "claude"}},
+      {"id": "skill", "type": "skill", "x": 520, "y": 1050, "layer": "air", "hidden": true, "props": {"name": "/аналіз", "sub": "скіл · правила аналізу"}},
+      {"id": "report", "type": "paper", "x": 780, "y": 600, "rot": 4, "scale": 0.85, "layer": "air", "hidden": true,
+        "props": {"title": "Звіт тижня", "sub": "демо · неділя", "items": ["+ що повторити", "- що прибрати", "+ нові ідеї"], "w": 460, "h": 440, "folded": true}}
+    ]
+  },
+  "steps": [
+    {
+      "caption": "Постиш *щодня*",
+      "vo": "Ти постиш контент кожного дня,",
+      "beats": [
+        {"action": "reels.fill", "args": {"dur": 1.6}, "shot": "object_punch:reels"}
+      ],
+      "minus": {
+        "caption": "Один *залітає*, інший — ні",
+        "vo": "але один рілс залітає, а інший — ні.",
+        "beats": [
+          {"action": "reels.mark", "args": {"index": 4, "kind": "star"}, "shot": "punch>object_punch:reels#grid"},
+          {"action": "reels.mark", "args": {"index": 7, "kind": "x"}, "shot": "whip>object_punch:reels#grid*1.2"}
+        ]
+      }
+    },
+    {
+      "caption": "Дивишся *статистику*",
+      "vo": "Тоді ти дивишся в статистику і намагаєшся проаналізувати.",
+      "beats": [
+        {"action": "sheet.show", "shot": "whip>object_punch:sheet", "also": [{"action": "reels.hide"}, {"action": "sheet.fill", "args": {"to": 0.7}, "at": 0.2}]},
+        {"action": "ruta.pose", "args": {"pose": "thinking"}, "shot": "whip>character_close"}
+      ],
+      "minus": {
+        "caption": "І нічого *не розумієш*",
+        "vo": "Але це займає забагато часу, і ти нічого не розумієш.",
+        "beats": [
+          {"action": "clock.show", "shot": "whip>object_punch:clock", "also": [{"action": "clock.spin", "args": {"hours": 2}, "at": 0.15}]},
+          {"action": "sheet.blur", "shot": "whip>object_punch:sheet", "also": [{"action": "sheet.fill", "args": {"to": 1, "dur": 0.5}}]},
+          {"action": "ruta.pose", "args": {"pose": "confused"}, "shot": "whip>character_close"}
+        ]
+      }
+    },
+    {
+      "caption": "*Скріншоти* — в Claude",
+      "vo": "Тоді ти робиш мільйон скріншотів та відправляєш їх у Клод.",
+      "beats": [
+        {"action": "shots.show", "shot": "whip>object_punch:shots", "also": [{"action": "sheet.hide"}, {"action": "clock.hide"}, {"action": "shots.grow", "args": {"n": 18, "dur": 1.2}, "at": 0.1}]},
+        {"action": "shots.fly", "args": {"x": 520, "y": 1050, "scale": 0.1, "arc": 60}, "shot": "whip>screen",
+          "also": [{"action": "shots.hide", "at": 0.55}, {"action": "laptop.ask", "args": {"text": "Проаналізуй мої рілси"}, "at": 0.4}]}
+      ],
+      "minus": {
+        "caption": "Але *щотижня* сама",
+        "vo": "Він усе проаналізував, але тобі треба робити це кожного тижня самостійно.",
+        "beats": [
+          {"action": "laptop.reply", "args": {"title": "Аналіз готовий"}, "shot": "punch>object_punch:laptop#chat"},
+          {"action": "calendar.show", "shot": "whip>object_punch:calendar", "also": [{"action": "calendar.flip", "args": {"weeks": 2, "mark": "miss"}, "at": 0.15}]},
+          {"action": "ruta.pose", "args": {"pose": "exhausted"}, "shot": "whip>character_close"}
+        ]
+      }
+    },
+    {
+      "caption": "*Buffer* + Claude",
+      "vo": "Тоді ти підключаєш Баффер до Клода і просиш його проаналізувати контент.",
+      "beats": [
+        {"action": "buffer.show", "shot": "pull_back>room:tiles", "also": [{"action": "calendar.hide"}, {"action": "claude.show", "at": 0.2}]},
+        {"action": "cable1.plug", "shot": "follow>object_punch:cable1"}
+      ],
+      "minus": {
+        "caption": "Пояснюєш *щоразу*",
+        "vo": "Він дає тобі аналіз, але тобі кожного разу треба пояснювати, що це були за рілси і як саме аналізувати.",
+        "beats": [
+          {"action": "laptop.newchat", "shot": "whip>screen",
+            "also": [{"action": "buffer.hide"}, {"action": "claude.hide"}, {"action": "cable1.hide"}, {"action": "laptop.type", "args": {"text": "Рілс №3 був про ціни, №7 — розбір кейсу. Аналізуй так:"}, "at": 0.35}]},
+          {"action": "ruta.pose", "args": {"pose": "bored"}, "shot": "whip>character_close"},
+          {"action": "laptop.pulse", "shot": "whip>input_close"}
+        ]
+      }
+    },
+    {
+      "caption": "*Notion* + Claude",
+      "vo": "Тоді ти підключаєш свій контент-план у Ноушені до Клода, зберігаєш правила аналізу в скіл і налаштовуєш рутину. Тепер кожну неділю ти отримуєш повний звіт контенту з новими ідеями.",
+      "beats": [
+        {"action": "notion.show", "shot": "pull_back>room:tiles", "also": [{"action": "laptop.clear"}, {"action": "claude.show", "at": 0.2}, {"action": "ruta.pose", "args": {"pose": "neutral"}}]},
+        {"action": "cable2.plug", "shot": "follow>object_punch:cable2"},
+        {"action": "skill.show", "shot": "whip>object_punch:skill", "caption": "*Скіл* і рутина",
+          "also": [{"action": "notion.hide"}, {"action": "claude.hide"}, {"action": "cable2.hide"}, {"action": "skill.stamp", "at": 0.3}]},
+        {"action": "calendar.show", "shot": "whip>object_punch:calendar", "caption": "Щонеділі — *звіт*",
+          "also": [{"action": "skill.hide"}, {"action": "calendar.flip", "args": {"weeks": 2, "mark": "done"}, "at": 0.1}]},
+        {"action": "report.show", "shot": "whip>object_punch:report", "caption": "*Нові ідеї* щотижня", "also": [{"action": "report.unfold", "at": 0.25}]},
+        {"action": "ruta.pose", "args": {"pose": "coffee"}, "shot": "pull_back>room:final"},
+        {"action": "ruta.pulse", "shot": "punch>character_close"}
+      ]
+    }
+  ]
+}

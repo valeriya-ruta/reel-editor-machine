@@ -1,0 +1,445 @@
+<title>Промпт у скіл</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: one centered column — the 9:16 reel frame, transport controls, scene jump list. The frame is a fixed white video look. */
+:root{
+  --bg:#F4F5F7; --fg:#1F1F22; --muted:#6B6E76; --line:#DDE0E5; --panel:#FFFFFF; --accent:#D97757;
+  --ui:'Onest',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#16171A;--fg:#ECEDEF;--muted:#9A9DA5;--line:#2C2E33;--panel:#1E2024;--accent:#E58A6B;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#16171A;--fg:#ECEDEF;--muted:#9A9DA5;--line:#2C2E33;--panel:#1E2024;--accent:#E58A6B;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--ui)}
+.wrap{max-width:440px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:14px}
+h1{font-weight:800;font-size:24px;margin:0;letter-spacing:-.3px}
+.sub{color:var(--muted);font-size:13px;margin:4px 0 0}
+.stage{width:min(100%,380px,calc((100vh - 260px) * 0.5625));min-width:220px;aspect-ratio:9/16;max-width:100%;margin:0 auto;position:relative;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1px var(--line),0 10px 30px rgba(0,0,0,.08);background:#fff}
+.frame{position:absolute;left:0;top:0;width:360px;height:640px;transform-origin:0 0;background:radial-gradient(120% 70% at 50% 35%,#FFFFFF 0,#F7F8FA 70%,#EEF0F4 100%);overflow:hidden;font-family:var(--ui)}
+.world{position:absolute;left:0;top:0;width:360px;height:640px;transform-origin:0 0}
+.floor{position:absolute;left:-500px;top:434px;width:1400px;height:500px;background:linear-gradient(#E9ECF1 0,#F5F6F8 30%,#FFFFFF 70%)}
+.floor::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:rgba(0,0,0,.06)}
+
+/* laptop */
+.shadow{position:absolute;border-radius:50%;background:radial-gradient(closest-side,rgba(20,22,30,.28),rgba(20,22,30,0))}
+.lid{position:absolute;left:60px;top:268px;width:240px;height:156px;border-radius:11px 11px 4px 4px;background:linear-gradient(160deg,#3D3E44 0,#1B1C1F 60%,#25262A 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),0 8px 18px rgba(0,0,0,.16)}
+.lid::after{content:"";position:absolute;left:117px;top:3px;width:4px;height:4px;border-radius:50%;background:#0B0B0C;box-shadow:inset 0 0 1px rgba(120,160,255,.6)}
+.base{position:absolute;left:30px;top:424px;width:300px;height:12px;border-radius:2px 2px 12px 12px;background:linear-gradient(#F2F3F5 0,#D4D7DC 35%,#AEB2B9 100%);box-shadow:0 2px 3px rgba(0,0,0,.12)}
+.base::before{content:"";position:absolute;left:125px;top:0;width:50px;height:4px;border-radius:0 0 5px 5px;background:linear-gradient(#B9BDC3,#CDD0D5)}
+
+/* screen = crisp UI */
+.screen{position:absolute;left:67px;top:276px;width:226px;height:140px;overflow:hidden;background:linear-gradient(160deg,#E8F0FE,#DCE6F8);border-radius:3px}
+.glare{position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.22) 0,rgba(255,255,255,0) 38%);pointer-events:none}
+.win{position:absolute;left:6px;top:6px;width:214px;height:114px;background:#FAF9F5;border-radius:7px;box-shadow:0 2px 8px rgba(30,40,70,.18);overflow:hidden}
+.whead{height:12px;border-bottom:1px solid #ECE7DF;display:flex;align-items:center;gap:2.5px;padding:0 5px;position:relative}
+.whead i{width:4px;height:4px;border-radius:50%;background:#E0DBD2;display:block}
+.whead b{position:absolute;left:0;right:0;text-align:center;font-size:5.5px;font-weight:500;color:#7A746C}
+.greet{position:absolute;left:0;right:0;top:28px;display:flex;justify-content:center;align-items:center;gap:4px;font-family:Georgia,'Times New Roman',serif;font-size:10px;color:#2B2925}
+.inp{position:absolute;left:14px;top:64px;width:186px;height:38px;background:#fff;border:1px solid #E3DED5;border-radius:8px;box-sizing:border-box;padding:5px 22px 5px 7px;font-size:7.4px;line-height:1.35;color:#2B2925;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.ph{position:absolute;left:7px;top:5px;color:#A8A29A}
+.sel{background:#CFE3FF}
+.caret{display:inline-block;width:.6px;height:8px;background:#2B2925;vertical-align:-1px;margin-left:.5px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.send{position:absolute;right:5px;bottom:5px;width:13px;height:13px;border-radius:4px;background:linear-gradient(#E58A6B,#CF6A49);display:grid;place-items:center;box-shadow:0 1px 2px rgba(150,60,30,.35)}
+.dock{position:absolute;left:73px;bottom:3px;width:80px;height:9px;border-radius:3px;background:rgba(255,255,255,.75);display:flex;justify-content:center;align-items:center;gap:4px;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.dock i{display:block;width:5px;height:5px;border-radius:1.5px;background:#C9D3E2}
+.dock i.c{background:#D97757}
+
+/* folder */
+.folder{position:absolute;left:12px;top:12px;width:40px;height:44px}
+.fback{position:absolute;left:0;top:4px;width:40px;height:30px;border-radius:4px;background:linear-gradient(#F6B511,#DD9500)}
+.fback::before{content:"";position:absolute;left:2px;top:-4px;width:16px;height:7px;border-radius:3px 3px 0 0;background:#F2AE0C}
+.fpeek{position:absolute;left:5px;top:6px;width:30px;height:20px;border-radius:2px;background:linear-gradient(#FFE1EA,#F7B6C9);opacity:0}
+.ffront{position:absolute;left:0;top:12px;width:40px;height:22px;border-radius:3px 3px 4px 4px;background:linear-gradient(#FFDB6E,#F7BF22);box-shadow:0 1px 2px rgba(120,80,0,.35),inset 0 1px 0 rgba(255,255,255,.6);transform-origin:50% 100%}
+.fl{position:absolute;left:-6px;right:-6px;top:36px;text-align:center;font-size:6.5px;font-weight:600;color:#2F3440;text-shadow:0 0 3px #fff}
+
+/* paper */
+.paper{position:absolute;left:53px;top:24px;width:120px;height:76px;perspective:420px;filter:drop-shadow(0 6px 8px rgba(150,50,85,.28))}
+.half{position:absolute;left:0;width:120px;height:38px}
+.ptop{top:0;overflow:hidden;border-radius:3px 3px 0 0;background:linear-gradient(#FFD6E2,#FBC4D4)}
+.pbot{top:38px;transform-style:preserve-3d}
+.face{position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:0 0 3px 3px}
+.pfront{background:linear-gradient(#FBC4D4,#F6B0C5)}
+.pback{transform:rotateX(180deg);background:linear-gradient(#F3A3BB,#E98AA6);border-radius:3px 3px 0 0}
+.ptext{position:absolute;left:9px;top:8px;width:102px;font-size:8.6px;line-height:1.32;color:#4A2734;font-weight:600}
+.pbot .ptext{top:-30px}
+.crease{position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(rgba(140,40,80,.18),rgba(140,40,80,0))}
+
+/* skill card */
+.skill{position:absolute;left:30px;top:20px;width:166px;height:46px;border-radius:12px;background:linear-gradient(135deg,#FFE0E9,#F6A9C0);box-shadow:0 8px 16px rgba(170,60,95,.26),inset 0 1px 0 rgba(255,255,255,.8);overflow:hidden}
+.skill::before{content:"";position:absolute;left:0;right:0;top:0;height:50%;background:linear-gradient(rgba(255,255,255,.45),rgba(255,255,255,0))}
+.slot{position:absolute;left:8px;top:8px;width:30px;height:30px;border-radius:50%;background:rgba(160,60,95,.15);box-shadow:inset 0 1px 3px rgba(120,30,60,.25)}
+.skill .k{position:absolute;left:46px;top:10px;font-weight:800;font-size:11.5px;color:#1F1F22;letter-spacing:-.2px}
+.skill .s{position:absolute;left:46px;top:26px;font-size:6.5px;font-weight:500;color:#6A3A4B}
+.stamp{position:absolute;left:38px;top:28px;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#4A4B52,#141416 70%);color:#fff;display:grid;place-items:center;font-weight:800;font-size:18px;line-height:1;box-shadow:0 3px 6px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.25)}
+
+/* chibi placeholder */
+.chibi{position:absolute;left:330px;top:300px;width:96px;height:136px}
+.chibi > div{position:absolute}
+.cshadow{left:6px;top:126px;width:86px;height:14px;border-radius:50%;background:radial-gradient(closest-side,rgba(20,22,30,.25),rgba(20,22,30,0))}
+.chairback{left:8px;top:8px;width:80px;height:92px;border-radius:40px 40px 26px 26px;background:linear-gradient(#4E3629,#2A1C15)}
+.cbody{left:22px;top:78px;width:52px;height:54px;border-radius:26px 26px 16px 16px;background:linear-gradient(160deg,#FFFFFF,#E4E0EE);box-shadow:inset -5px -5px 10px rgba(120,110,150,.2),0 2px 4px rgba(0,0,0,.08)}
+.carm{width:14px;height:30px;border-radius:7px;background:linear-gradient(160deg,#FFFFFF,#E1DDEB);box-shadow:inset -2px -2px 4px rgba(120,110,150,.2)}
+.carm.l{left:13px;top:88px;transform:rotate(14deg)}
+.carm.r{left:66px;top:84px;transform:rotate(-34deg);transform-origin:50% 0}
+.chead{left:10px;top:8px;width:76px;height:72px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#FFF0E6 0,#F8CDB3 62%,#EBB091 100%);box-shadow:0 3px 6px rgba(120,60,40,.12)}
+.cbangs{left:7px;top:1px;width:82px;height:40px;border-radius:41px 41px 22px 22px / 34px 34px 16px 16px;background:linear-gradient(#5A3E30,#36241B);box-shadow:inset 0 -3px 4px rgba(0,0,0,.2)}
+.cbangs::after{content:"";position:absolute;left:14px;top:5px;width:22px;height:6px;border-radius:50%;background:rgba(255,255,255,.18);transform:rotate(-12deg)}
+.cface{left:0;top:0;width:96px;height:80px}
+.ceye{position:absolute;top:43px;width:9px;height:12px;border-radius:50%;background:radial-gradient(circle at 50% 70%,#4A2E24,#1E1410)}
+.ceye::after{content:"";position:absolute;left:2px;top:2px;width:3.2px;height:3.2px;border-radius:50%;background:#fff}
+.ceye.a{left:31px}.ceye.b{left:56px}
+.cblush{position:absolute;top:57px;width:11px;height:6px;border-radius:50%;background:#F6A1B4;opacity:.7}
+.cblush.a{left:22px}.cblush.b{left:63px}
+.cmouth{position:absolute;left:44px;top:59px;width:8px;height:4px;border-bottom:1.6px solid #9A4E3E;border-radius:0 0 8px 8px}
+.ctag{left:0;right:0;top:142px;text-align:center;font-size:7px;font-weight:600;color:#9AA0AA;letter-spacing:.3px}
+
+/* phone */
+.phone{left:56px;top:40px;width:40px;height:78px;border-radius:7px;background:linear-gradient(145deg,#45464C,#141416);box-shadow:0 5px 10px rgba(0,0,0,.28),inset 0 0 0 .6px rgba(255,255,255,.18)}
+.pscreen{position:absolute;inset:1.8px;border-radius:5.4px;background:#FAF9F5;overflow:hidden}
+.island{position:absolute;left:14.2px;top:2px;width:8px;height:2.4px;border-radius:2px;background:#0B0B0C}
+.phead{position:absolute;left:0;right:0;top:6.5px;text-align:center;font-size:3.2px;font-weight:600;color:#3A3631}
+.phead::after{content:"";position:absolute;left:3px;right:3px;top:5px;height:.3px;background:#ECE7DF}
+.pgreet{position:absolute;left:0;right:0;top:24px;text-align:center;font-family:Georgia,serif;font-size:3.8px;color:#2B2925}
+.pin{position:absolute;left:2.4px;right:2.4px;bottom:3.4px;height:7px;background:#fff;border:.4px solid #E3DED5;border-radius:3.5px;box-sizing:border-box}
+.pplus{position:absolute;left:.9px;top:.6px;width:5px;height:5px;border-radius:50%;background:#F1EDE6;font-size:4.4px;line-height:5px;text-align:center;color:#6B655E}
+.ptyped{position:absolute;left:7px;top:1.4px;font-size:3.1px;color:#2B2925;white-space:nowrap}
+.pph{position:absolute;left:7px;top:1.4px;font-size:3.1px;color:#A8A29A;white-space:nowrap}
+.psend{position:absolute;right:.9px;top:.6px;width:5px;height:5px;border-radius:50%;background:#D97757}
+.ripple{position:absolute;width:5px;height:5px;border-radius:50%;background:rgba(217,119,87,.35);opacity:0}
+.sheet{position:absolute;left:0;right:0;bottom:0;height:34px;background:#fff;border-radius:5px 5px 0 0;box-shadow:0 -2px 5px rgba(0,0,0,.12)}
+.grab{position:absolute;left:14px;top:1.6px;width:8px;height:1px;border-radius:1px;background:#D6D2CB}
+.sheet h4{position:absolute;left:3px;top:4px;margin:0;font-size:3.6px;font-weight:700;color:#2B2925}
+.efold{position:absolute;left:13px;top:11px;width:10px;height:7.5px;border-radius:1.2px;background:linear-gradient(#E4E6EA,#CDD1D7)}
+.efold::before{content:"";position:absolute;left:.6px;top:-1.4px;width:4px;height:2px;border-radius:1px 1px 0 0;background:#D9DCE1}
+.sheet p{position:absolute;left:0;right:0;margin:0;text-align:center}
+.e1{top:21px;font-size:3.3px;font-weight:700;color:#2B2925}
+.e2{top:25.5px;font-size:2.7px;color:#8A847C}
+.ubub{position:absolute;right:2.4px;top:15px;padding:1.4px 2.4px;border-radius:3px;background:#EFE9DF;font-size:3.1px;color:#2B2925}
+.reply{position:absolute;left:2.6px;top:22px;width:30px}
+.reply .r1{display:flex;align-items:center;gap:1px;font-size:3px;font-weight:600;color:#2B2925}
+.bar{height:1.6px;border-radius:1px;background:#E6E1D8;margin-top:1.6px}
+.dots{position:absolute;left:2.6px;top:22px;display:flex;gap:.8px}
+.dots i{display:block;width:1.4px;height:1.4px;border-radius:50%;background:#C9C3BA}
+
+/* captions */
+.caps{position:absolute;left:0;right:0;top:54px;height:110px;pointer-events:none}
+.cap{position:absolute;left:18px;right:18px;top:0;text-align:center;font-weight:800;font-size:29px;line-height:1.12;letter-spacing:-.6px;color:#1F1F22;text-wrap:balance;opacity:0;text-shadow:0 0 12px #fff,0 0 4px #fff}
+.cap em{font-style:normal;padding:0 5px;border-radius:8px;background:#FDE293;box-decoration-break:clone;-webkit-box-decoration-break:clone;text-shadow:none}
+
+/* controls */
+.ctrl{display:flex;align-items:center;gap:10px}
+.btn{font-family:var(--ui);font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:10px;padding:8px 12px;cursor:pointer;min-width:44px}
+.btn:focus-visible,.scene:focus-visible,input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn.on{border-color:var(--accent);color:var(--accent)}
+input[type=range]{flex:1;min-width:0;accent-color:var(--accent)}
+.time{font-variant-numeric:tabular-nums;font-size:12px;color:var(--muted);width:34px;text-align:right}
+.scenes{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:0;padding:0;list-style:none}
+.scene{width:100%;text-align:left;border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:10px;padding:7px 8px;cursor:pointer;font-family:var(--ui)}
+.scene b{display:block;font-size:11px;color:var(--muted);font-weight:500}
+.scene span{font-size:12.5px;font-weight:600}
+.scene.cur{border-color:var(--accent)}
+.note{font-size:13px;color:var(--muted);line-height:1.5;margin:0}
+@media (max-width:400px){.scenes{grid-template-columns:repeat(3,1fr)}}
+</style>
+
+<div class="wrap">
+  <div>
+    <h1>Промпт → скіл</h1>
+    <p class="sub">Моушн-тест №2. Чисто, з об’ємом і постійним рухом камери. Чібі поки заглушка.</p>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="frame" id="frame">
+      <div class="world" id="world">
+        <div class="floor"></div>
+        <div class="shadow" style="left:10px;top:426px;width:340px;height:22px"></div>
+        <div class="lid"></div>
+        <div class="screen" id="screen">
+          <div class="folder" id="folder">
+            <div class="fback"></div>
+            <div class="fpeek" id="fpeek"></div>
+            <div class="ffront" id="ffront"></div>
+            <div class="fl">промпти</div>
+          </div>
+          <div class="win" id="win">
+            <div class="whead"><i></i><i></i><i></i><b>Claude</b></div>
+            <div class="greet" id="greet">
+              <svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true"><g stroke="#D97757" stroke-width="3.2" stroke-linecap="round"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9 4.9 19.1"/></g></svg>
+              Добрий день, Руто
+            </div>
+            <div class="skill" id="skill">
+              <div class="slot"></div>
+              <div class="k">/контент-план</div>
+              <div class="s">скіл · збережено</div>
+            </div>
+            <div class="stamp" id="stamp">/</div>
+            <div class="inp">
+              <span class="ph" id="ph">Напиши повідомлення…</span>
+              <span id="typed"></span><span class="caret"></span>
+              <div class="send" id="send"><svg width="7" height="7" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 8.5V1.5M2 4.5 5 1.5l3 3" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            </div>
+          </div>
+          <div class="paper" id="paper">
+            <div class="half ptop"><div class="ptext">Зроби контент-план на тиждень у моєму стилі: 10 рілсів і 4 каруселі</div></div>
+            <div class="half pbot" id="pbot">
+              <div class="face pfront"><div class="ptext">Зроби контент-план на тиждень у моєму стилі: 10 рілсів і 4 каруселі</div><div class="crease"></div></div>
+              <div class="face pback"></div>
+            </div>
+          </div>
+          <div class="dock"><i></i><i class="c"></i><i></i><i></i></div>
+          <div class="glare"></div>
+        </div>
+        <div class="base"></div>
+
+        <div class="chibi" id="chibi">
+          <div class="cshadow"></div>
+          <div class="chairback"></div>
+          <div class="cbody"></div>
+          <div class="carm l"></div>
+          <div class="carm r" id="armR"></div>
+          <div class="chead"></div>
+          <div class="cbangs"></div>
+          <div class="cface" id="cface">
+            <div class="ceye a"></div><div class="ceye b"></div>
+            <div class="cblush a"></div><div class="cblush b"></div>
+            <div class="cmouth"></div>
+          </div>
+          <div class="phone" id="phone">
+            <div class="pscreen">
+              <div class="island"></div>
+              <div class="phead">Claude</div>
+              <div class="pgreet" id="pgreet">Добрий день, Руто</div>
+              <div class="ubub" id="ubub">/контент-план</div>
+              <div class="dots" id="dots"><i></i><i></i><i></i></div>
+              <div class="reply" id="reply">
+                <div class="r1"><svg width="4" height="4" viewBox="0 0 24 24" aria-hidden="true"><g stroke="#D97757" stroke-width="4" stroke-linecap="round"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9 4.9 19.1"/></g></svg>Ось план на тиждень</div>
+                <div class="bar" style="width:100%"></div><div class="bar" style="width:86%"></div><div class="bar" style="width:92%"></div><div class="bar" style="width:60%"></div>
+              </div>
+              <div class="pin">
+                <div class="pplus">+</div>
+                <span class="pph" id="pph">Напиши повідомлення…</span>
+                <span class="ptyped" id="ptyped"></span>
+                <div class="psend" id="psend"></div>
+                <div class="ripple" id="ripple" style="left:.9px;top:.6px"></div>
+                <div class="ripple" id="ripple2" style="right:.9px;top:.6px"></div>
+              </div>
+              <div class="sheet" id="sheet">
+                <div class="grab"></div>
+                <h4>Файли</h4>
+                <div class="efold"></div>
+                <p class="e1">Тут порожньо</p>
+                <p class="e2">«промпти» лишились на ноуті</p>
+              </div>
+            </div>
+          </div>
+          <div class="ctag">чібі-заглушка</div>
+        </div>
+      </div>
+
+      <div class="caps">
+        <div class="cap" id="c1">Пишеш <em>промпт</em></div>
+        <div class="cap" id="c2">Зберігаєш <em>у папку</em></div>
+        <div class="cap" id="c3">Але папка лишилась <em>на ноуті</em></div>
+        <div class="cap" id="c4">Тож робиш із промпту <em>скіл</em></div>
+        <div class="cap" id="c5">І пишеш <em>/контент-план</em> навіть з телефону</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ctrl">
+    <button class="btn" id="play" aria-label="Пауза">❚❚</button>
+    <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Позиція в анімації">
+    <span class="time" id="time">0.0</span>
+    <button class="btn" id="slow">0.5×</button>
+  </div>
+
+  <ul class="scenes">
+    <li><button class="scene" data-l="s1"><b>1</b><span>Промпт</span></button></li>
+    <li><button class="scene" data-l="s2"><b>2</b><span>Папка</span></button></li>
+    <li><button class="scene" data-l="s3"><b>3</b><span>Мінус</span></button></li>
+    <li><button class="scene" data-l="s4"><b>4</b><span>Скіл</span></button></li>
+    <li><button class="scene" data-l="s5"><b>5</b><span>Телефон</span></button></li>
+  </ul>
+
+  <p class="note">Камера не стоїть на місці жодної секунди: вона їде за текстом, наближається до кожного предмета й відлітає на загальний план. Мінус тепер показано великим планом прямо на телефоні.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const stage = $('stage'), frame = $('frame'), world = $('world');
+  function fit(){ frame.style.transform = 'scale(' + (stage.clientWidth/360) + ')'; }
+  fit(); new ResizeObserver(fit).observe(stage);
+
+  /* camera: put world point (cx,cy) at frame point (180,fy), zoom s */
+  const cam = (cx, cy, s, fy) => ({x: 180 - cx*s, y: (fy||330) - cy*s, scale: s});
+  const SCREEN = cam(180, 346, 1.52, 372);
+  const ROOM   = cam(250, 372, 0.80, 400);
+  const CHIBI  = cam(380, 356, 2.1, 380);
+  const PHONE  = cam(406, 379, 6.4, 372);
+  const PAPER  = cam(180, 338, 2.5, 372);
+  const FOLDER = cam(99, 306, 3.3, 380);
+  const CARD   = cam(186, 325, 2.5, 372);
+
+  /* typing (scrub-safe: everything derives from tweened numbers) */
+  const PROMPT = 'Зроби контент-план на тиждень у моєму стилі: 10 рілсів і 4 каруселі';
+  const CMD = '/контент-план';
+  const st = {n:0, sel:0, p:0};
+  function upd(){
+    const t = PROMPT.slice(0, Math.round(st.n)), el = $('typed');
+    el.textContent = t; el.className = st.sel > .5 ? 'sel' : ''; $('ph').style.opacity = t ? 0 : 1;
+    const pt = CMD.slice(0, Math.round(st.p)); $('ptyped').textContent = pt; $('pph').style.opacity = pt ? 0 : 1;
+  }
+
+  const caps = ['c1','c2','c3','c4','c5'].map($);
+  const E = 'power3.inOut';
+  const tl = gsap.timeline({repeat:-1, repeatDelay:1, defaults:{ease:'power2.out'}, onUpdate:sync});
+
+  tl.set(world, {...cam(125, 356, 3.4, 372), filter:'blur(0px)'})
+    .set(st, {n:0, sel:0, p:0, onComplete:upd})
+    .set('#paper', {opacity:0, x:-6, y:22, scale:.25, rotation:0})
+    .set('#pbot', {rotationX:0, transformOrigin:'50% 0%'})
+    .set('#win', {opacity:1, scale:1, y:0, transformOrigin:'50% 100%'})
+    .set('#ffront', {scaleY:1, skewX:0})
+    .set('#fpeek', {opacity:0})
+    .set('#folder', {scale:1, transformOrigin:'50% 60%'})
+    .set('#skill', {opacity:0, scale:.5, transformOrigin:'50% 50%'})
+    .set('#stamp', {opacity:0, scale:3.2, rotation:-40})
+    .set('#greet', {opacity:1})
+    .set('#chibi', {x:0, y:0})
+    .set('#cface', {x:0})
+    .set('#phone', {opacity:0, y:50, rotation:8, transformOrigin:'50% 100%'})
+    .set('#armR', {rotation:-34})
+    .set('#sheet', {yPercent:110})
+    .set(['#ubub','#reply','#dots','#ripple','#ripple2'], {opacity:0, scale:1})
+    .set('#ubub', {y:3})
+    .set('#pgreet', {opacity:1})
+    .set(caps, {opacity:0, y:14, scale:.92})
+    .set('#send', {scale:1});
+
+  const capIn = (id, t) => tl.to(id, {opacity:1, y:0, scale:1, duration:.4, ease:'back.out(2)'}, t);
+  const capOut = (id, t) => tl.to(id, {opacity:0, y:-12, duration:.22, ease:'power2.in'}, t);
+  const whip = t => tl.to(world, {filter:'blur(2.5px)', duration:.18, yoyo:true, repeat:1, ease:'power1.in'}, t);
+
+  /* 1 — type the prompt, camera rides along the text */
+  tl.addLabel('s1', 0);
+  capIn('#c1', .1);
+  tl.to(st, {n:PROMPT.length, duration:2.4, ease:'none', onUpdate:upd}, .35)
+    .to(world, {...cam(208, 356, 3.4, 372), duration:1.15, ease:'none'}, .35)
+    .to(world, {...cam(122, 366, 3.4, 372), duration:.25, ease:E}, 1.5)
+    .to(world, {...cam(196, 366, 3.4, 372), duration:1.0, ease:'none'}, 1.75)
+    .to(st, {sel:1, duration:.01, onUpdate:upd}, 2.8)
+    .to(world, {...SCREEN, duration:.5, ease:E}, 2.8);
+
+  /* 2 — paper pops out, folds, flies into the folder */
+  tl.addLabel('s2', 3.3);
+  capOut('#c1', 3.3); capIn('#c2', 3.4);
+  tl.to(st, {n:0, sel:0, duration:.01, onUpdate:upd}, 3.32)
+    .to('#paper', {opacity:1, x:0, y:0, scale:1, rotation:-3, duration:.55, ease:'back.out(1.7)'}, 3.32)
+    .to(world, {...PAPER, duration:.55, ease:E}, 3.32)
+    .to('#pbot', {rotationX:180, duration:.5, ease:'power2.inOut'}, 4.0)
+    .to('#paper', {rotation:0, duration:.5}, 4.0)
+    .to(world, {...cam(150, 330, 1.75, 372), duration:.45, ease:E}, 4.5)
+    .to('#win', {scale:.08, y:24, opacity:0, duration:.45, ease:'power2.in'}, 4.5)
+    .to('#paper', {x:-81, y:-29, scale:.22, duration:.6, ease:'power2.inOut'}, 4.95)
+    .to(world, {...FOLDER, duration:.6, ease:E}, 4.95)
+    .to('#paper', {opacity:0, duration:.08}, 5.5)
+    .to('#fpeek', {opacity:1, duration:.1}, 5.5)
+    .to('#ffront', {scaleY:.78, duration:.12, yoyo:true, repeat:1}, 5.48)
+    .to('#folder', {scale:1.15, duration:.14, yoyo:true, repeat:1}, 5.5);
+
+  /* 3 — the minus: big pull back, close on her, dive into the phone */
+  tl.addLabel('s3', 6.0);
+  whip(6.05);
+  tl.to(world, {...ROOM, duration:.85, ease:E}, 6.0);
+  capOut('#c2', 6.1); capIn('#c3', 6.6);
+  tl.to(world, {...CHIBI, duration:.7, ease:E}, 7.0)
+    .to('#phone', {opacity:1, y:0, rotation:0, duration:.5, ease:'back.out(1.8)'}, 7.2)
+    .to('#armR', {rotation:-60, duration:.4}, 7.2);
+  whip(7.75);
+  tl.to(world, {...PHONE, duration:.75, ease:E}, 7.75)
+    .to('#pgreet', {opacity:1, duration:.01}, 8.5)
+    .to('#ripple', {opacity:1, scale:3, duration:.35, ease:'power1.out'}, 8.65)
+    .to('#ripple', {opacity:0, duration:.2}, 8.95)
+    .to('#sheet', {yPercent:0, duration:.45, ease:'back.out(1.3)'}, 8.85)
+    .to('#phone', {x:'+=1.2', duration:.06, yoyo:true, repeat:5, ease:'none'}, 9.45);
+  whip(9.95);
+  tl.to(world, {...ROOM, duration:.8, ease:E}, 9.95)
+    .to('#sheet', {yPercent:110, duration:.3}, 10.2)
+    .to('#cface', {x:-5, duration:.3}, 10.3)
+    .to('#phone', {opacity:0, y:50, rotation:8, duration:.35, ease:'power2.in'}, 10.4)
+    .to('#armR', {rotation:-34, duration:.3}, 10.4);
+
+  /* 4 — back into the laptop, open the folder, make the skill */
+  tl.addLabel('s4', 10.8);
+  capOut('#c3', 10.8); capIn('#c4', 11.1);
+  whip(10.8);
+  tl.to(world, {...SCREEN, duration:.75, ease:E}, 10.8)
+    .to('#cface', {x:0, duration:.2}, 11.4)
+    .to(world, {...FOLDER, duration:.5, ease:E}, 11.55)
+    .to('#ffront', {scaleY:.45, skewX:-12, duration:.22}, 12.0)
+    .to('#fpeek', {opacity:0, duration:.05}, 12.1)
+    .set('#paper', {opacity:1, x:-81, y:-29, scale:.22, rotation:0}, 12.1)
+    .to('#paper', {x:0, y:0, scale:1, rotation:3, duration:.55, ease:'back.out(1.5)'}, 12.12)
+    .to(world, {...PAPER, duration:.55, ease:E}, 12.12)
+    .to('#ffront', {scaleY:1, skewX:0, duration:.25}, 12.5)
+    .to('#win', {scale:1, y:0, opacity:1, duration:.4}, 12.5)
+    .to('#pbot', {rotationX:0, duration:.45, ease:'power2.inOut'}, 12.7)
+    .to('#paper', {rotation:0, duration:.45}, 12.7)
+    .to('#paper', {x:-6, y:22, scale:.12, opacity:0, duration:.45, ease:'power2.in'}, 13.25)
+    .to(world, {...cam(180, 346, 1.65, 372), duration:.45, ease:E}, 13.25)
+    .to(st, {n:PROMPT.length, duration:.01, onUpdate:upd}, 13.65)
+    .to('#greet', {opacity:0, duration:.2}, 13.75)
+    .to(st, {n:0, duration:.3, ease:'none', onUpdate:upd}, 13.85)
+    .to('#skill', {opacity:1, scale:1, duration:.5, ease:'back.out(1.9)'}, 13.95)
+    .to(world, {...CARD, duration:.5, ease:E}, 13.95)
+    .to('#stamp', {opacity:1, scale:1, rotation:-8, duration:.26, ease:'power4.in'}, 14.55)
+    .to(world, {...cam(186, 325, 2.75, 372), duration:.08, yoyo:true, repeat:1, ease:'power2.out'}, 14.8)
+    .to('#skill', {scale:.94, duration:.08, yoyo:true, repeat:1}, 14.8);
+
+  /* 5 — it works from the phone */
+  tl.addLabel('s5', 15.4);
+  capOut('#c4', 15.4); capIn('#c5', 15.9);
+  whip(15.45);
+  tl.to(world, {...ROOM, duration:.8, ease:E}, 15.4)
+    .to('#cface', {x:3, duration:.25}, 15.9)
+    .to('#phone', {opacity:1, y:0, rotation:0, duration:.5, ease:'back.out(1.8)'}, 16.0)
+    .to('#armR', {rotation:-60, duration:.4}, 16.0)
+    .set('#pgreet', {opacity:1}, 16.0);
+  whip(16.45);
+  tl.to(world, {...PHONE, duration:.8, ease:E}, 16.45)
+    .to(st, {p:CMD.length, duration:.75, ease:'none', onUpdate:upd}, 17.3)
+    .to('#ripple2', {opacity:1, scale:3, duration:.3}, 18.15)
+    .to('#ripple2', {opacity:0, duration:.2}, 18.45)
+    .to(st, {p:0, duration:.01, onUpdate:upd}, 18.3)
+    .to('#pgreet', {opacity:0, duration:.15}, 18.3)
+    .to('#ubub', {opacity:1, y:0, duration:.3, ease:'back.out(2)'}, 18.32)
+    .to('#dots', {opacity:1, duration:.15}, 18.6)
+    .to('#dots i', {y:-.8, duration:.15, yoyo:true, repeat:3, stagger:.08}, 18.6)
+    .to('#dots', {opacity:0, duration:.1}, 19.3)
+    .to('#reply', {opacity:1, duration:.3}, 19.35)
+    .to(world, {...cam(406, 375, 5.6, 380), duration:1.2, ease:'sine.inOut'}, 19.35)
+    .to({}, {duration:.5}, 20.55);
+
+  /* controls */
+  const play = $('play'), scrub = $('scrub'), time = $('time'), slow = $('slow');
+  const labels = ['s1','s2','s3','s4','s5'], btns = [...document.querySelectorAll('.scene')];
+  let dragging = false;
+  function sync(){
+    const t = tl.time();
+    if(!dragging) scrub.value = Math.round(t / tl.duration() * 1000);
+    time.textContent = t.toFixed(1);
+    let cur = 0; labels.forEach((l,i) => { if(t >= tl.labels[l] - .001) cur = i; });
+    btns.forEach((b,i) => b.classList.toggle('cur', i === cur));
+  }
+  function setPlaying(on){ on ? tl.play() : tl.pause(); play.textContent = on ? '❚❚' : '▶'; play.setAttribute('aria-label', on ? 'Пауза' : 'Грати'); }
+  play.addEventListener('click', () => setPlaying(tl.paused()));
+  scrub.addEventListener('input', () => { dragging = true; setPlaying(false); tl.time(scrub.value/1000 * tl.duration()); sync(); });
+  scrub.addEventListener('change', () => { dragging = false; });
+  slow.addEventListener('click', () => { const s = tl.timeScale() === 1 ? .5 : 1; tl.timeScale(s); slow.classList.toggle('on', s !== 1); });
+  btns.forEach(b => b.addEventListener('click', () => { tl.time(tl.labels[b.dataset.l]); setPlaying(true); }));
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) setPlaying(false);
+  upd(); sync();
+})();
+</script>
