@@ -24,6 +24,8 @@ import io
 import json
 import os
 import re
+import shutil
+import glob
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -358,11 +360,69 @@ JS = r"""
 """
 
 
+MEME_CSS = """
+    /* comic-relief memes (assets/memes/MEMES.md): a white-framed sticker over her footage,
+       under the captions. c = one big, l / r = a pair. Inside the no-go zones' margins. */
+    .meme { position: absolute; display: flex; align-items: center; justify-content: center; }
+    .meme img { display: block; max-width: 100%; max-height: 100%; border: 10px solid #fff;
+                border-radius: 30px; box-shadow: 0 2px 6px rgba(20,12,12,.18), 0 18px 46px rgba(20,12,12,.28); }
+    .meme.c { left: 180px; top: 330px; width: 720px; height: 900px; }
+    .meme.l { left: 100px; top: 400px; width: 400px; height: 500px; }
+    .meme.r { left: 500px; top: 560px; width: 400px; height: 500px; }
+"""
+MEME_SLOTS = {"c": -2.5, "l": -4.0, "r": 3.0}      # slot -> resting tilt, degrees
+MEME_MAX = 3                                        # images per reel (her rule 2026-11-23)
+
+
 class G(object):
     def __init__(self, dur, reel, fps=30):
         self.dur, self.reel, self.fps = dur, reel, fps
         self.mattes = []
         self.cues = []
+        self.memes = []            # (file, start, end) — checked by meme(), copied by write()
+        self.cta_start = None      # set to the CTA line's start: no meme may touch it
+
+    # -- comic relief (assets/memes/MEMES.md for what to pick) ----------------
+    def meme(self, front, js, num, t, dur=1.1, slot="c", tilt=None, sfx="pop"):
+        """Put meme `num` (its NN in MEMES.md, e.g. "42") on screen at t for dur s.
+
+        Her rules (2026-11-23): at most MEME_MAX per reel; two at once only as a
+        pair (slot "l" + "r", the same t) and only when the stretch around it is
+        free of other animations — that part is YOUR call, check the beat table;
+        never on the CTA (set g.cta_start); first 3 s is allowed; profanity is
+        allowed. `front` / `js` are the build's F / J lists."""
+        if len(self.memes) >= MEME_MAX:
+            raise ValueError("meme %s: that is already %d memes; her cap is %d per reel" % (num, len(self.memes), MEME_MAX))
+        if slot not in MEME_SLOTS:
+            raise ValueError("meme slot must be one of %s" % sorted(MEME_SLOTS))
+        if self.cta_start is not None and t + dur > self.cta_start - 0.15:
+            raise ValueError("meme %s at %.2f..%.2f would touch the CTA (starts %.2f)" % (num, t, t + dur, self.cta_start))
+        if t < 0 or t + dur > self.dur:
+            raise ValueError("meme %s outside the reel (%.2f..%.2f of %.2f)" % (num, t, t + dur, self.dur))
+        for _, a, b in self.memes:               # overlap is only legal as an l+r pair
+            if t < b and t + dur > a and not (abs(t - a) < 0.01 and slot in "lr" and
+                                              self._slots_at(a) in ("l", "r") and self._slots_at(a) != slot):
+                raise ValueError("meme %s overlaps another meme; use slot l + r at the same t for a pair" % num)
+        files = glob.glob(os.path.join(ROOT, "assets", "memes", "%s-*.*" % num))
+        files = [f for f in files if not f.endswith(".md")]
+        if len(files) != 1:
+            raise ValueError("meme %s: expected one file in assets/memes/, found %d" % (num, len(files)))
+        src = os.path.basename(files[0])
+        slot_ids = sum(1 for m in self.memes) + 1
+        sid = "mm%d" % slot_ids
+        rest = MEME_SLOTS[slot] if tilt is None else tilt
+        self.memes.append((src, t, t + dur))
+        self._slot_log = getattr(self, "_slot_log", {})
+        self._slot_log[round(t, 2)] = slot
+        front.append(u'        <div id="%s" class="meme %s hid"><img src="assets/memes/%s"></div>' % (sid, slot, src))
+        js.append(u'  tl.fromTo("#%s", {autoAlpha: 0, scale: .72, rotation: %.1f}, X({autoAlpha: 1, scale: 1, rotation: %.1f, duration: .28, ease: POP}), %.3f);'
+                  % (sid, rest - 5, rest, t))
+        js.append(u'  tl.to("#%s", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, %.3f);' % (sid, t + dur - 0.18))
+        if sfx:
+            self.sfx(sfx, t)
+
+    def _slots_at(self, t):
+        return getattr(self, "_slot_log", {}).get(round(t, 2))
 
     # -- sound (tools/sfx.py mixes sfx.json under her voice) ----------------
     def sfx(self, name, t, db=0):
@@ -562,7 +622,7 @@ class G(object):
     <title>%(title)s</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="assets/js/rough-4.6.6.js"></script>
-    <style>%(css)s%(extra)s
+    <style>%(css)s%(memecss)s%(extra)s
     </style>
   </head>
   <body>
@@ -609,12 +669,18 @@ class G(object):
     </script>
   </body>
 </html>
-''' % {"title": esc(title), "css": CSS, "extra": extra_css, "dur": self.dur, "fps": self.fps,
+''' % {"title": esc(title), "css": CSS, "memecss": MEME_CSS if self.memes else "", "extra": extra_css, "dur": self.dur, "fps": self.fps,
        "plate": plate, "behind": behind, "panel": panel, "mattes": "\n".join(self.mattes),
        "front": front, "cover": cover, "caps": caps_html, "head": head,
        "capjs": caps_js, "js": js}
 
     def write(self, here, doc):
+        if self.memes:
+            dst = os.path.join(here, "assets", "memes")
+            if not os.path.isdir(dst):
+                os.makedirs(dst)
+            for f, _, _ in self.memes:
+                shutil.copy(os.path.join(ROOT, "assets", "memes", f), dst)
         io.open(os.path.join(here, "index.html"), "w", encoding="utf-8").write(doc)
         self.cues.sort(key=lambda c: c["t"])
         io.open(os.path.join(here, "sfx.json"), "w", encoding="utf-8").write(json.dumps(self.cues, indent=1))

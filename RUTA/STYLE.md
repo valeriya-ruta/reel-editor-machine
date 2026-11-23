@@ -33,6 +33,10 @@ The approved reference is her 4-layer mock, the artifact **«Reel Layer States»
 (claude.ai/artifact/8goY2j72LvmTdwND9mdvux): keep its motion and timing feel,
 with the changes below.
 
+**0 · Memes** — comic-relief reaction memes (max 3 per reel, never in the CTA), picked from
+`assets/memes/MEMES.md` and placed with `g.meme()`; see `BUILD-BRIEF.md`. They are the one thing
+here that is not "Google style" on purpose.
+
 **1 · No-go zones** — no text, captions or key graphics; background fills and
 panels may extend into them.
 - top y 0–270 · bottom y 1536–1920 (username, caption, music, progress bar) ·

@@ -4,20 +4,25 @@
 `Memes` folder; the NN is stable, don't renumber). Read this index, pick by **use**, never by
 browsing the images. Captions are transcribed exactly as burned into the image.
 
-## Rules for placing one
+## Rules for placing one (her rules, updated 2026-11-23)
 
-- **Comic relief only, after a beat lands.** A meme goes right *after* the line it reacts to, never
-  over a line she's still saying. 0.8-1.4 s, hard cut in, hard cut out, no animation beyond a 4%
-  scale-in. Max 2 per reel, never in the first 3 s (the hook is hers) and never on the CTA line.
-- **Match the emotion, not the topic.** Pick the meme whose caption/face *is* the feeling of the
-  sentence. If nothing fits, use none.
-- **Language:** all captions are Ukrainian (some surzhyk/profanity). For an **English reel** use
-  only the *caption-free* ones (tag `[no text]`) or faces that read without words.
-- **Profanity ones (🔞)** only if the reel's own register is already that loose. Default to the clean ones.
-- Near-duplicates exist (Цить ×2, «хоспаде» ×2, «грандіозна робота» ×2 in UA + RU): 01/37, 24/57, 36/62. Use the sharper copy
-  (01, 57, 62) and treat the other as a spare.
-- Image sizes are mixed (320 px up to ~1200 px). The small ones (01, 02, 37) are fine only as
-  a ≤40 %-frame sticker on screen, not full-bleed.
+- **Comic relief, after the beat lands.** A meme reacts to the line she just said; don't cover a
+  line she is still in the middle of. About 1-1.4 s: a quick pop in (0.28 s), a quick drop out.
+- **Max 3 per reel** (counted as images). **Two at once is allowed** (a pair, slots `l` + `r` in
+  `g.meme`), but only when it really makes sense AND there is a long break between animations
+  (no behind-me word, card, half or full screen for a few seconds either side).
+- **Never in the CTA.** Nothing from the CTA line's first word to the end (`g.cta_start`).
+  The first 3 seconds are allowed again, if it fits.
+- **Profanity is allowed, always.** No filter; the 🔞 tag below is only information.
+- **Match the feeling, not the topic.** If nothing fits a moment, put none; 3 is a cap, not a quota.
+  Aim for 1-3 per reel, spread out, not clumped.
+- **Language:** captions are Ukrainian; on an English reel use the `[no text]` ones (or 41).
+- Near-duplicates exist (Цить 01/37, «хоспаде» 24/57, «грандіозна робота» 36/62 RU, 62 UA).
+  Use the sharper copy (01, 57, 62); the other is a spare.
+- Image sizes are mixed (320 px up to ~1200 px). The small ones (01, 02, 37) get blurry in the
+  full slot: give them slot `l`/`r` or skip them.
+- In the build: `g.meme(F, J, "42", t_word_end + 0.1, dur=1.2)`, from `tools/gstyle.py`. It copies the file
+  into `reel-NN/assets/memes/` and refuses a 4th meme, one touching the CTA, or a stray overlap.
 
 ## Index
 
