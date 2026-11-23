@@ -16,12 +16,19 @@ TITLES = {
 SCHED = {57: "20 лис", 58: "20 лис", 59: "21 лис", 60: "21 лис", 61: "21 лис", 62: "22 лис", 63: "22 лис",
          64: "23 лис", 65: "24 лис", 66: "24 лис", 67: "24 лис", 68: "25 лис", 69: "25 лис", 70: "25 лис",
          71: "26 лис", 72: "26 лис"}
+import re
+POSTED = {}
+for line in open(os.path.join(ROOT, "work", "b1120", "POSTING.md"), encoding="utf-8"):
+    m = re.match(r"\| (\d\d) \| \w+ (\d+) Nov \|", line)
+    if m: POSTED[int(m.group(1))] = m.group(2) + " лис"
+SCHED.update(POSTED)
 os.makedirs(os.path.join(OUT, "v"), exist_ok=True)
 new, cards, done = [], [], 0
 for n in range(57, 73):
     full = os.path.join(ROOT, "reel-%d" % n, "renders", "REEL-%d.mp4" % n)
     prev = os.path.join(ROOT, "reel-%d" % n, "renders", "REEL-%d-preview.mp4" % n)
-    ok = os.path.exists(full)
+    # only reels that passed review and are scheduled (a row in POSTING.md)
+    ok = os.path.exists(full) and n in POSTED
     dur = ""
     if ok:
         done += 1

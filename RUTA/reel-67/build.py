@@ -194,20 +194,21 @@ EXTRA += u"""
 def cam(px, py, sc, cx=540, cy=830):
     return (round(cx - 480 - sc * (px - 480), 1), round(cy - 530 - sc * (py - 530), 1))
 WIDE = (1.0,) + cam(480, 530, 1.0)
-CHAT = (1.12,) + cam(480, 400, 1.12, cy=800)     # the chat: still the full width (1075 px)
-CARD = (1.3,) + cam(480, 800, 1.3, cy=860)       # the client card; its sides just past the frame (deliberate)
-BTN = (1.55,) + cam(480, 930, 1.55, cy=900)      # the hand-off button
+# every shot keeps the window's bottom above the caption band (y <= ~1390)
+CHAT = (1.1,) + cam(480, 400, 1.1, cy=664)       # the chat: full width (1056 px), bottom at 1390
+CARD = (1.16,) + cam(480, 850, 1.16, cy=1060)    # the client card, full width (1021 px)
+BTN = (1.22,) + cam(480, 960, 1.22, cy=1130)     # the hand-off button (1074 px wide)
 js(u"""
   gsap.set("#win", {transformOrigin: "480px 530px"});
   gsap.set("#win", {x: %(wx)s, y: %(wy)s + 220, scale: %(ws)s * .86, rotationX: 22, rotationY: -18, rotationZ: 4});
   tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 7, rotationY: -9, rotationZ: 1.5, duration: 1.2, ease: "power3.out"}, %(f0)s + .15);
-  tl.to("#win", {x: %(cx)s, y: %(cy)s, scale: %(cs)s, rotationX: 3, rotationY: 6, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, %(kval)s - .7);
+  tl.to("#win", {x: %(cx)s, y: %(cy)s, scale: %(cs)s, rotationX: 3, rotationY: 4, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, %(kval)s - .7);
   pop("#m1", %(kval)s);
   pop("#m2", %(kval)s + .6);
-  tl.to("#win", {x: %(dx)s, y: %(dy)s, scale: %(ds)s, rotationX: 2, rotationY: -6, duration: 1.0, ease: "power3.inOut"}, %(zbyr)s - .45);
+  tl.to("#win", {x: %(dx)s, y: %(dy)s, scale: %(ds)s, rotationX: 2, rotationY: -2, duration: 1.0, ease: "power3.inOut"}, %(zbyr)s - .45);
   tl.to("#v1", {opacity: 1, duration: .25}, %(info)s);
   tl.to("#v2", {opacity: 1, duration: .25}, %(info)s + .35);
-  tl.to("#win", {x: %(bx)s, y: %(by)s, scale: %(bs)s, rotationX: -3, rotationY: 5, duration: .9, ease: "power3.inOut"}, %(pered)s - .45);
+  tl.to("#win", {x: %(bx)s, y: %(by)s, scale: %(bs)s, rotationX: -2, rotationY: 1, duration: .9, ease: "power3.inOut"}, %(pered)s - .45);
   tl.to("#btn", {backgroundColor: "#1EA672", duration: .25}, %(men)s);
   tl.to("#bt0", {autoAlpha: 0, duration: .15}, %(men)s);
   tl.to("#bt1", {autoAlpha: 1, duration: .2}, %(men)s + .05);
