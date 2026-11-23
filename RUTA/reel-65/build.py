@@ -75,8 +75,9 @@ EXTRA = u'''
 # 1 · BEHIND — «Claude»: the hook word and the cover frame -------------------------
 t_cl = S(u"з Claude", 3.55)
 B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:490px; font-size:250px">Claude</div>')
-g.matte("b1", 0.0, 4.95)
-js(u'  rise("#bw1", 0.05); sink("#bw1", %.3f);' % (E(u"налаштувала", 4.51) + 0.05))
+t_sink = E(u"з Claude", 3.55) + 0.15
+g.matte("b1", 0.0, round(t_sink + 0.4, 3))
+js(u'  rise("#bw1", 0.05); sink("#bw1", %.3f);' % t_sink)
 g.sfx("whoosh-short", 0.05)
 BLACKOUT.append((t_cl - 0.03, E(u"з Claude", 3.55)))
 
@@ -238,19 +239,19 @@ k1 = E(u"у Lightroom.", 35.40) + 0.35
 HALF.append((k0, k1))
 t_foto, t_skr, t_cube, t_lr = S(u"фото,", 27.88), S(u"скрипт", 31.59), S(u".cube", 33.11), S(u"у Lightroom.", 35.40)
 js(u'''
-  sketch("a1", "skP"); box("a1", 70, 330, 250, 170, {seed: 3, fill: true});
-  label("a1", 195, 432, "фото", {size: 54});
+  sketch("a1", "skP"); box("a1", 100, 330, 220, 150, {seed: 3, fill: true});
+  label("a1", 210, 425, "фото", {size: 54});
   draw("a1", %.3f);
-  sketch("a2", "skP"); arrow("a2", 330, 415, 405, 415, {seed: 5, bend: 0});
-  box("a2", 415, 330, 250, 170, {seed: 7}); label("a2", 540, 432, "Claude", {size: 54});
+  sketch("a2", "skP"); arrow("a2", 335, 405, 495, 405, {seed: 5, bend: .06});
+  box("a2", 505, 330, 260, 150, {seed: 7}); label("a2", 635, 425, "Claude", {size: 54});
   draw("a2", %.3f);
-  sketch("a3", "skP"); label("a3", 540, 560, "пише скрипт", {size: 44, color: "#7A1424"});
+  sketch("a3", "skP"); label("a3", 635, 545, "пише скрипт", {size: 44, color: "#7A1424"});
   draw("a3", %.3f);
-  sketch("a4", "skP"); arrow("a4", 675, 415, 750, 415, {seed: 9, bend: 0});
-  box("a4", 760, 330, 250, 170, {seed: 11, fill: true}); label("a4", 885, 432, ".cube", {size: 58});
+  sketch("a4", "skP"); arrow("a4", 785, 400, 862, 612, {seed: 9, bend: -.18});
+  box("a4", 740, 625, 240, 135, {seed: 11, fill: true}); label("a4", 860, 712, ".cube", {size: 58});
   draw("a4", %.3f);
-  sketch("a5", "skP"); arrow("a5", 885, 510, 720, 680, {seed: 13, bend: -.2});
-  box("a5", 380, 630, 330, 130, {seed: 15}); label("a5", 545, 712, "Lightroom", {size: 54});
+  sketch("a5", "skP"); arrow("a5", 728, 692, 528, 692, {seed: 13, bend: .06});
+  box("a5", 180, 625, 335, 135, {seed: 15}); label("a5", 347, 712, "Lightroom", {size: 54});
   draw("a5", %.3f);
   erase("a1", %.3f); erase("a2", %.3f); erase("a3", %.3f); erase("a4", %.3f); erase("a5", %.3f);
 ''' % (t_foto - 0.45, t_foto + 0.35, t_skr - 0.2, t_cube - 0.55, t_lr - 1.05, k1, k1, k1, k1, k1))
@@ -260,7 +261,7 @@ g.sfx("whoosh-short", k0); g.sfx("click-soft", t_skr); g.sfx("pop", t_cube); g.s
 t_tr, t_ni = S(u"Третє", 36.00), S(u"ні", 39.82)
 t_af, t_im = S(u"Aftershoot", 42.27), S(u"Imagen,", 43.34)
 slot("l3", u'<b class="n">3</b>Відбір і обробка<span class="tag">Claude<i class="st"></i></span>',
-     t_tr - 0.05, S(u"але", 40.52) + 0.4)
+     t_tr - 0.05, E(u"чого.", 40.08) + 0.05)
 js(u'  tl.fromTo("#l3 .st", {scaleX: 0}, X({scaleX: 1, duration: .3, ease: "power2.out"}), %.3f);' % (t_ni - 0.1))
 js(u'  tl.to("#l3 .tag", {opacity: .55, duration: .3}, %.3f);' % (t_ni + 0.2))
 g.sfx("click", t_ni - 0.1)
@@ -279,15 +280,15 @@ t_form, t_cl2, t_mud = S(u"Form,", 52.42), S(u"Claude", 53.76), S(u"мудбор
 t_sp, t_den, t_vz = S(u"SendPulse,", 55.77), S(u"день", 56.93), S(u"що взяти", 58.03)
 t_pis, t_gal = S(u"після", 61.34), S(u"галерею", 63.42)
 js(u'''
-  sketch("b1", "skP"); box("b1", 80, 320, 270, 140, {seed: 21, fill: true});
-  label("b1", 215, 380, "бриф", {size: 50}); label("b1", 215, 430, "Google Form", {size: 34});
+  sketch("b1", "skP"); box("b1", 95, 320, 185, 135, {seed: 21, fill: true});
+  label("b1", 187, 380, "бриф", {size: 48}); label("b1", 187, 428, "Google Form", {size: 28});
   draw("b1", %.3f);
-  sketch("b2", "skP"); arrow("b2", 360, 390, 425, 390, {seed: 23, bend: 0});
-  box("b2", 435, 320, 220, 140, {seed: 25}); label("b2", 545, 405, "Claude", {size: 50});
+  sketch("b2", "skP"); arrow("b2", 290, 388, 440, 388, {seed: 23, bend: .06});
+  box("b2", 450, 320, 185, 135, {seed: 25}); label("b2", 542, 402, "Claude", {size: 46});
   draw("b2", %.3f);
-  sketch("b3", "skP"); arrow("b3", 665, 390, 725, 390, {seed: 27, bend: 0});
-  box("b3", 735, 320, 265, 140, {seed: 29, fill: true});
-  label("b3", 867, 380, "мудборд", {size: 46}); label("b3", 867, 432, "+ план зйомки", {size: 34});
+  sketch("b3", "skP"); arrow("b3", 645, 388, 795, 388, {seed: 27, bend: .06});
+  box("b3", 805, 320, 185, 135, {seed: 29, fill: true});
+  label("b3", 897, 380, "мудборд", {size: 40}); label("b3", 897, 428, "+ план", {size: 32});
   draw("b3", %.3f);
   sketch("b4", "skP"); ln("b4", 100, 600, 980, 600, {seed: 31, strokeWidth: 5});
   draw("b4", %.3f, .9);
@@ -328,6 +329,14 @@ EXTRA += u"""
 """
 js(u'  rise("#tk", %.3f); fadein("#tkr", %.3f); sink("#tk", %.3f);' % (t_zap - 0.3, t_dyv2 - 0.1, E(u"календар.", 70.0) + 0.2))
 g.sfx("pop", t_zap - 0.3); g.sfx("click-soft", t_dyv2)
+
+# MEMES (assets/memes/MEMES.md) — comic relief after the beat lands ---------------------
+g.cta_start = S(u"Тож", 70.53)
+# 56 «Цей во… Забув…»: she can't remember what the thing is called (рефлектор /
+# рефрактор); the full screen has cleared, the top band is free
+g.meme(F, J, "56", E(u"рефрактор,", 23.14) + 0.1, dur=0.95, slot="top")
+# 59 «алівідерчі»: «Claude вже ні до чого» — Claude leaves the list
+g.meme(F, J, "59", E(u"чого.", 40.08) + 0.1, dur=1.2, slot="r")
 
 # 10 · CTA — two chips through the slot, the pill in the subtitle band ----------------------
 t_zb, t_per = S(u"збережеш,", 70.82), S(u"перешли", 72.34)

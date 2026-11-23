@@ -218,7 +218,7 @@ js(u'''
   label("a2", 815, 640, "доредагувати", {size: 50});
   draw("a2", %.3f);
   erase("a1", %.3f); erase("a2", %.3f);
-''' % (t_nar - 0.2, t_dor - 0.5, k1, k1))
+''' % (t_nar - 0.4, t_nar + 0.8, k1, k1))
 g.sfx("whoosh-short", k0); g.sfx("click-soft", t_nar); g.sfx("click-soft", t_dor)
 g.matte("h1", round(S(u"Claude", 20.39) - 0.4, 3), round(k1 + 1.2 - (S(u"Claude", 20.39) - 0.4), 3))
 PLACE.append((k0 + 0.4, k1 + 0.2, "bottom", 938))
@@ -380,7 +380,7 @@ js(u'''
   sketch("c4", "skP"); label("c4", 870, 640, "як одна камера", {size: 44, stroke: "#7A1424", fill: "#7A1424"});
   draw("c4", %.3f);
   erase("c1", %.3f); erase("c2", %.3f); erase("c3", %.3f); erase("c4", %.3f);
-''' % (t_kad - 0.3, t_pyshe - 0.5, t_lut - 0.4, t_odn - 0.2, h1, h1, h1, h1))
+''' % (h0 + 0.5, t_kad + 0.2, t_lut - 0.6, t_odn - 0.2, h1, h1, h1, h1))
 g.sfx("whoosh-short", h0); g.sfx("click-soft", t_kad); g.sfx("click-soft", t_pyshe); g.sfx("click", t_lut)
 g.matte("h2", round(h0 - 0.1, 3), round(h1 - h0 + 1.2, 3))
 PLACE.append((h0 + 0.4, h1 + 0.2, "bottom", 938))
