@@ -1,0 +1,86 @@
+[
+ {
+  "t": 0.95,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 2.793,
+  "name": "pop"
+ },
+ {
+  "t": 5.453,
+  "name": "notification"
+ },
+ {
+  "t": 7.39,
+  "name": "click"
+ },
+ {
+  "t": 12.117,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 15.117,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 18.717,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 22.477,
+  "name": "click"
+ },
+ {
+  "t": 24.517,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 27.932,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 34.333,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 36.957,
+  "name": "click"
+ },
+ {
+  "t": 38.604,
+  "name": "click-soft"
+ },
+ {
+  "t": 46.026,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 48.177,
+  "name": "pop"
+ },
+ {
+  "t": 53.44,
+  "name": "notification"
+ },
+ {
+  "t": 55.582,
+  "name": "ping"
+ },
+ {
+  "t": 60.663,
+  "name": "pop"
+ },
+ {
+  "t": 62.223,
+  "name": "pop"
+ },
+ {
+  "t": 63.269,
+  "name": "pop"
+ },
+ {
+  "t": 65.803,
+  "name": "pop"
+ }
+]

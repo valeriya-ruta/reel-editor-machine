@@ -1,0 +1,51 @@
+CAPTIONS 199   script 93 | whisper-corrected 27 | her wording 79
+
+WHISPER MISHEARD -> script spelling restored (14)
+     0.00s  1.00  Як би                            <- Якби
+     3.55s  1.00  з клод                           <- склад
+     9.48s  1.00  Calendar                         <- Календар
+    12.94s  0.73  Claude дивиться локацію,         <- Дивіться лукацю!
+    27.76s  0.80  Claude                           <- клад
+    31.59s  0.91  скрипт                           <- скрип.
+    33.11s  0.86  .cube                            <- куб
+    34.81s  0.90  імпортуєш у                      <- импортуєш в
+    37.41s  1.00  обробка                          <- опробка
+    39.22s  0.38  Claude вже ні до                 <- що Клоджан не йде
+    52.42s  0.62  Form, Claude                     <- формах.
+    54.32s  0.82  мудборд і                        <- мудборний
+    57.47s  0.88  клієнтці,                        <- клієнтсі,
+    63.42s  0.86  галерею                          <- галереї
+
+SHE IMPROVISED -> her wording kept (29)
+     0.67s  script: була фотографкою нюд та роди said: фотографувала родини,
+     2.67s  script: —                            said: б
+     6.05s  script: —                            said: це
+     6.99s  script: дорогою                      said: дороги
+     7.59s  script: погодою.                     said: погоди. Ти
+     9.18s  script: —                            said: в
+    10.20s  script: запланована задача           said: плануєш задачу. яка
+    16.99s  script: пише                         said: пишу
+    17.77s  script: виїжджай о 13:20,            said: виїжджаю там в 13 .20,
+    20.55s  script: о 17:40, візьми              said: у 17 .40 Не забудь, взяти
+    23.14s  script: —                            said: рефрактор, як ви там називаєте.
+    25.33s  script: —                            said: це,
+    27.02s  script: —                            said: Ти
+    29.63s  script: —                            said: і
+    36.00s  script: Третя                        said: Третє це
+    38.47s  script: чесно                        said: часто
+    40.52s  script: Це роблять                   said: але є класні платформи.
+        -  script: чи Imagen, вони вчаться саме said: — (cut)
+    43.34s  script: четверта                     said: Imagine, і вони в чаті саме твої обробки
+    51.08s  script: —                            said: тобто це
+    53.46s  script: нього                        said: якого Клод
+    55.77s  script: SendPulse                    said: Синьпус, який
+    58.97s  script: —                            said: і взагалі що у вас... Захаліто зйомка. і
+    62.34s  script: надсилає                     said: нацилаю
+    64.43s  script: а через тиждень              said: Ачори, сніждень
+    65.56s  script: відгук.                      said: видок.
+    66.68s  script: одна запланована задача,     said: може бути однією запланованою задачою,
+    70.53s  script: Збережи,                     said: Тобі збережеш,
+    72.64s  script: знайомій фотографці.         said: своїх колезій.
+
+REVIEW -- could go either way (1)
+    14.95s  script: погоду й                   said: погоди і                   (0.77)

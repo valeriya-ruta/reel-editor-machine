@@ -1,0 +1,61 @@
+CAPTIONS 370   script 269 | whisper-corrected 31 | her wording 70
+
+WHISPER MISHEARD -> script spelling restored (16)
+    13.78s  1.00  мінусі,                          <- минусі,
+    21.40s  0.84  який з твоїх                     <- якийсь твій
+    24.50s  1.00  сторітели                        <- сторітелі
+    25.14s  0.83  декілька                         <- кілька
+    39.91s  0.83  для РДУГ,                        <- лярду,
+    41.76s  0.96  постити частіше,                 <- посити частіже
+    48.80s  1.00  По-перше,                        <- По перше,
+    49.75s  0.86  витрата                          <- витрати
+    55.88s  1.00  Клод                             <- клад
+    61.40s  0.83  оминаю.                          <- вминаю.
+    66.10s  0.82  Supabase                         <- SuperBase
+    69.82s  0.93  безкоштовному                    <- безкористовному
+    76.24s  1.00  Supabase                         <- Subabase
+   111.22s  0.90  скрейпером                       <- скрайпером
+   126.15s  0.83  оплатить                         <- плати
+   128.39s  0.51  напишеш слово "рута" в коментарі <- ти вгадала, то пишу Словерута, щоб
+
+SHE IMPROVISED -> her wording kept (37)
+     1.15s  script: більше 70                    said: більшість це видастся
+        -  script: зараз                        said: — (cut)
+     9.77s  script: Прямо зараз, в цьому моменті said: Але спочатку давай пограємо.
+    14.79s  script: нуль?                        said: ноль.
+    22.32s  script: твоїх                        said: твій
+    23.17s  script: переписує                    said: Перепустив
+    26.59s  script: —                            said: для зйомок.
+    27.82s  script: не                           said: на
+    28.22s  script: каруселі,                    said: коросалі.
+    30.04s  script: каруселей                    said: «Коросели»
+    31.95s  script: стилів та тредси. Ним корист said: ідеальних шаблонів. і ще по шатраці. Цим
+    42.85s  script: —                            said: що
+    44.96s  script: —                            said: своє блогерське
+    51.13s  script: на                           said: за
+    57.78s  script: повсякденної                 said: Взагалі,
+    59.17s  script: і                            said: Коротше,
+    68.00s  script: Vercel.                      said: Versal.
+        -  script: мені                         said: — (cut)
+    74.72s  script: стали недоступні.            said: мені не підходять. Тому
+    79.07s  script: —                            said: а
+    79.31s  script: Vercel                       said: Versal
+    80.25s  script: —                            said: І
+    88.16s  script: і                            said: є
+    92.50s  script: —                            said: За все існування додатку
+    93.93s  script: це я зараз витрачаю ще якусь said: штучне теле пішло десь 15 20 доларів
+   100.35s  script: долар пʼятдесят,             said: $1 .50,
+   109.69s  script: до                           said: на
+   110.33s  script: —                            said: Тому
+   112.48s  script: —                            said: я
+   114.34s  script: —                            said: дуже
+   118.29s  script: —                            said: це
+   123.19s  script: в                            said: у
+   124.43s  script: —                            said: б
+   126.95s  script: —                            said: то
+   127.90s  script: Ну що, вгадала чи ні? І      said: Тому
+        -  script: цей                          said: — (cut)
+   131.36s  script: —                            said: а якщо не вгадала, то шукай посилання в 
+
+REVIEW -- could go either way (1)
+   106.18s  script: акаунтів. Поки             said: аккаунтів. Це все, тому що (0.58)

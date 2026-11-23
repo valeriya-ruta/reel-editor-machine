@@ -1,0 +1,48 @@
+CAPTIONS 177   script 102 | whisper-corrected 20 | her wording 55
+
+WHISPER MISHEARD -> script spelling restored (13)
+     1.41s  0.89  китайської                       <- китайською
+     2.19s  0.90  англійської,                     <- англійською,
+     4.26s  1.00  з клод                           <- склад
+     9.98s  0.80  Claude                           <- Клод
+    13.68s  1.00  транскрипт уроку,                <- транскрипту року
+    14.76s  0.88  отримуєш                         <- отримаєш
+    20.78s  0.73  Fathom                           <- Фатум
+    22.02s  0.80  Claude                           <- Клот
+    22.93s  0.81  забирає транскрипт, скіл         <- забирай транскрип
+    38.71s  0.95  допомагати                       <- допомогти
+    39.55s  0.92  організовувати                   <- організувати
+    58.85s  1.00  лідмагніт,                       <- лід магнит,
+    64.75s  0.56  перешли знайомій викладачці.     <- перейшли своїй колезі.
+
+SHE IMPROVISED -> her wording kept (28)
+     6.03s  script: —                            said: По
+     6.76s  script: картки                       said: це звичайна картинка. таки
+    11.52s  script: Quizlet:                     said: квісла. ти
+    16.06s  script: —                            said: карток,
+    18.09s  script: в Quizlet. Anki теж можна, а said: впізлят.
+    19.49s  script: —                            said: це
+    27.40s  script: —                            said: для відпрацювання.
+    28.74s  script: через конектор               said: якщо ти підключиш ще
+    30.16s  script: усе                          said: то
+    30.48s  script: лягає                        said: все може лягти ще
+    33.12s  script: —                            said: це
+    35.03s  script: Тут сама перевірка це вже си said: Саму перевірку
+    36.32s  script: —                            said: мабуть,
+    36.94s  script: стала,                       said: віддавала повністю Клоду,
+    41.22s  script: їх                           said: це
+        -  script: головне нікого               said: — (cut)
+    43.69s  script: пропустила,                  said: витрачала час на їх пошук.
+    45.44s  script: абсолютно                    said: точно
+    46.41s  script: четверте                     said: чотверте, це
+    49.40s  script: Claude пише                  said: З колодом можна написати
+    51.37s  script: —                            said: в
+    51.99s  script: флоу                         said: Ланцюжок
+    53.45s  script: у SendPulse                  said: в Сенпусі
+    54.60s  script: а                            said: І всі ці
+    56.11s  script: —                            said: і
+    56.57s  script: у CRM.                       said: в Сьоромся з того. І
+    61.22s  script: флоу.                        said: місці. Тому обов'язково
+    63.92s  script: —                            said: ідей.
+
+REVIEW -- could go either way (0)

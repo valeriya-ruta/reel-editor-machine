@@ -1,0 +1,41 @@
+CAPTIONS 208   script 149 | whisper-corrected 20 | her wording 39
+
+WHISPER MISHEARD -> script spelling restored (10)
+     8.53s  1.00  10-15                            <- 10 15
+    26.60s  1.00  2-3                              <- 2 3
+    29.52s  1.00  15-20                            <- 15 20
+    31.43s  0.93  анімацій                         <- анімації,
+    35.34s  0.82  на 5-6, з купою                  <- 5 6, скупую
+    38.16s  0.92  частину,                         <- часину,
+    64.72s  0.89  кілька годин отримати            <- кілько худин... утримати
+    67.01s  0.83  рілсів,                          <- рівсів,
+    67.81s  0.92  займаюсь                         <- займаю
+    71.34s  0.84  прив'язана                       <- прив'язаний
+
+SHE IMPROVISED -> her wording kept (23)
+     0.00s  script: —                            said: підтримку!
+    10.76s  script: —                            said: не дуже продажна, я
+    13.39s  script: мушу                         said: я можу
+    14.27s  script: —                            said: що
+    16.78s  script: рілса.                       said: ділса.
+    21.18s  script: текст з суфлера,             said: тексту Флера, як зараз,
+    23.76s  script: помилок,                     said: понвілок
+    28.07s  script: —                            said: І
+    37.24s  script: ще                           said: що,
+    37.60s  script: —                            said: ж
+    40.03s  script: —                            said: то
+        -  script: даємо                        said: — (cut)
+    44.68s  script: —                            said: даємо
+    48.51s  script: навіть так                   said: не біддак!
+    50.19s  script: —                            said: як на мене,
+    57.79s  script: Клод.                        said: Клот. І якщо чесно, то
+    60.22s  script: ок                           said: окей
+    61.42s  script: десяток рілсів, віддати      said: 10 кривосів Ви дати
+    63.68s  script: —                            said: на Клоді?
+        -  script: роблю                        said: — (cut)
+    70.22s  script: —                            said: роблю
+        -  script: чи перегрів, бо все монтуєть said: — (cut)
+    74.01s  script: АІ-монтаж тобі підійде пиши  said: він перегріється. Повся монтується хмарі
+
+REVIEW -- could go either way (1)
+    38.76s  script: влізти в                   said: лізти всі                  (0.80)
