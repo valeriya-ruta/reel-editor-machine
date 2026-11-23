@@ -14,12 +14,12 @@ quiz tiles -> the whole list ticked + the CTA pill.
 | time | layer | what |
 |---|---|---|
 | 1.5–5.8 | above, glass | Threads card: «Які автоматизації можна використати репетиторці?» (captions off under it) |
-| 9.30–10.15 | meme 34, top | «хіханьки хаханьки закінчились» after «…якби я була репетиторкою з математики чи історії» — her as the strict maths teacher; free stretch, nothing else up |
-| 10.3–12.0 | behind | «Claude» |
+| 9.30–10.30 | meme 34, top | «хіханьки хаханьки закінчились» after «…якби я була репетиторкою з математики чи історії» — her as the strict maths teacher; free stretch, nothing else up |
+| 10.35–12.0 | behind | «Claude» |
 | 11.3–14.0 | above, shuffle | ① CRM учнів і фінанси |
 | 14.0–27.0 | FULL | Claude chat in 3D: Notion / Google Drive chips light on their words; «Оля заплатила за 4 уроки» types and sends; Notion row + tick on «вносить оплату»; «Скільки я заробила за листопад?» -> reply with a redacted sum (no money in UI) |
-| 28.41–29.21 | meme 05, top | «пу-пу-пу…» after «а не десь щось там приблизно» — the stalling non-answer she's mocking; the full screen now exits on «а не…» so this line plays on her face |
-| 29.2–31.2 | above, shuffle | ② Нагадування про урок і оплату (lands on «нагадування», after the meme) |
+| 28.41–29.41 | meme 05, top | «пу-пу-пу…» after «а не десь щось там приблизно» — the stalling non-answer she's mocking; the full screen now exits on «а не…» so this line plays on her face |
+| 29.45–31.2 | above, shuffle | ② Нагадування про урок і оплату (lands inside «нагадування», once the meme is gone) |
 | 31.2–40.7 | HALF 1 | Google Calendar + SendPulse -> Claude (clock «щоранку») -> учню / батькам |
 | 41.3–48.8 | above, glass | Telegram bot: «Оплачені уроки закінчились» on its word, «Оплатити · WayForPay» on «посилання», pressed on «відправляти» |
 | 49.2–51.0 | above, shuffle | ③ Афтеркер |

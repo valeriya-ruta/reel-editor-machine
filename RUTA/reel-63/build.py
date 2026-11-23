@@ -179,7 +179,7 @@ js(u"""
   gsap.set("#win", {transformOrigin: "400px 280px"});
   gsap.set(["#menu", "#ans", "#card"], {autoAlpha: 0});
   gsap.set("#win", {x: %(wx)s, y: %(wy)s + 220, scale: %(ws)s * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
-  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.1, ease: "power3.out"}, %(f0)s + .1);
+  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 9, rotationY: -12, rotationZ: 2, duration: .75, ease: "power3.out"}, %(f0)s + .1);
   tl.fromTo("#menu", {autoAlpha: 0, y: 12}, X({autoAlpha: 1, y: 0, duration: .3}), %(kon)s - .9);
   tl.to("#win", {x: %(mx)s, y: %(my)s, scale: %(ms)s, rotationX: 3, rotationY: 6, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, %(kon)s - .6);
   tl.to("#tq", {backgroundColor: "#4255FF", duration: .2}, %(quiz)s);

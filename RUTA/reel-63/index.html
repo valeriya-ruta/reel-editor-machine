@@ -846,7 +846,7 @@
   gsap.set("#win", {transformOrigin: "400px 280px"});
   gsap.set(["#menu", "#ans", "#card"], {autoAlpha: 0});
   gsap.set("#win", {x: 140.0, y: 480.0 + 220, scale: 1.2 * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
-  tl.to("#win", {x: 140.0, y: 480.0, scale: 1.2, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.1, ease: "power3.out"}, 9.683 + .1);
+  tl.to("#win", {x: 140.0, y: 480.0, scale: 1.2, rotationX: 9, rotationY: -12, rotationZ: 2, duration: .75, ease: "power3.out"}, 9.683 + .1);
   tl.fromTo("#menu", {autoAlpha: 0, y: 12}, X({autoAlpha: 1, y: 0, duration: .3}), 11.143 - .9);
   tl.to("#win", {x: 699.0, y: 311.0, scale: 2.6, rotationX: 3, rotationY: 6, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, 11.143 - .6);
   tl.to("#tq", {backgroundColor: "#4255FF", duration: .2}, 11.523);
