@@ -97,8 +97,9 @@ EXTRA = u'''
               display: flex; align-items: center; gap: 22px; font-size: 36px; color: #241919; }
     .gdots { display: flex; gap: 10px; margin-left: auto; }
     .gdots i { width: 14px; height: 14px; border-radius: 50%; background: #7A1424; display: block; }
-    .cta { left: 120px; top: 300px; width: 840px; padding: 30px 32px; display: flex; flex-direction: column;
-           align-items: center; gap: 20px; }
+    /* her note on v4: the 3-row card cut her forehead on the last clip — one row, ends ≈ y 500 */
+    .cta { left: 100px; top: 290px; width: 880px; padding: 24px 24px; display: flex; flex-direction: column;
+           align-items: center; gap: 16px; }
 '''
 
 # 1 · BEHIND — «СТРАХ» ----------------------------------------------------------
@@ -269,12 +270,12 @@ g.sfx("pop", t_pyt - 0.3); g.sfx("notification", t_skazhe); g.sfx("ping", t_men)
 t_mal, t_pyshy = S(u"малий", 60.76), S(u"пиши", 65.80)
 F.append(u'''
         <div id="ct" class="glass cta hid">
-          <div class="chips" style="justify-content:center">
-            <span class="chip"><i></i>малий і середній бізнес</span>
-            <span class="chip"><i></i>команда і менеджери</span>
-            <span class="chip"><i></i>багато заявок</span>
+          <div class="chips" style="justify-content:center; flex-wrap:nowrap; gap:12px">
+            <span class="chip" style="font-size:30px; padding:10px 18px"><i></i>малий і середній бізнес</span>
+            <span class="chip" style="font-size:30px; padding:10px 18px"><i></i>команда</span>
+            <span class="chip" style="font-size:30px; padding:10px 18px"><i></i>багато заявок</span>
           </div>
-          <div id="ctp" class="pill hid" style="position:relative">Пиши + в коментарях</div>
+          <div id="ctp" class="pill hid" style="position:relative; font-size:40px; padding:22px 46px">Пиши + в коментарях</div>
         </div>''')
 js(u'''
   rise("#ct", %.3f);
