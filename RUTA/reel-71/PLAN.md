@@ -1,27 +1,24 @@
 # Reel 71 — «Скільки хвилин займає один рілс, коли система вже налаштована?»
 
-Posts 2026-11-26 · 92.45 s plate (2774 frames, cut.py, no closeups) · expert reel ·
-Google × Excalidraw (STYLE.md §0b), layouts per §0c: near → HALF → MOVE → HALF → near → MOVE.
-`build.py` is the source of truth.
+Batch 2026-11-20 (raw 20261120_140447) · plate 76.583 s (2298 frames) · STYLE §00 + her
+review of reel 61 (natural editing). `build.py` is the source of truth.
+ТЕСТ CTA cut out (cut-fix.json drops raw 97.0 s → end): ends clean on her «…в хмарі».
 
-## The chain
-
-The one object is the **stopwatch** — how long one edit takes. It starts as «? хв» on a small
-card, gets her «10–15 хв» and is scribbled out, then appears next to every result on the boards
-(«15–20 хв», «30 хв / 1 год», «кілька годин»). Only numbers she says are on screen.
+## Chain
+behind «Монтаж» (cover) → card «10–15 хв», struck on «правдива», «?» on «залежить» →
+HALF 1 scheme: сире відео «2–3 хв» → Клод «15–20 хв» → HALF 2, the same scheme for the long
+video: «5–6 хв», crosses (помилки), a cut, «3 хв» → Клод «30 хв», «1 год» → shuffle of
+why it's worth it → FULL her phone as a platform-ad: 10 рілсів in, монтаж, 10 ready → her.
 
 ## Beats
-
-| time | where | beat |
+| time | layer | what |
 |---|---|---|
-| 0.3–17.0 | NEAR | card over the footage: stopwatch draws, needle spins, «? хв»; chip «система налаштована»; «10–15 хв» lands on her words, red scribble on «правдива», «залежить від рілса!» written |
-| 17.1–48.1 | HALF | board A drops, she moves down: «мої рілси / експертні відео», суфлер sketch, chip «мінімум помилок», film strip «сире відео» «2–3 хв» → Клод → «15–20 хв»; «анімації» slider (більше → довше, менше → швидше); pan down: long strip «5–6 хв», red crosses «купа помилок», red cut line «3 хв», tail hatched out → Клод → «30 хв», «1 год» circled; «погані вхідні дані ↑ → довше ↑»; board rolls up |
-| 47.9–58.9 | MOVE | Material sheet «час на один рілс»: bars Клод (short) / самій (long) / монтажер (long); chips «безкоштовно», «лише підписка на Клод» |
-| 60.1–77.5 | HALF | board B: sun «зранку», 10 raw thumbnails «10 рілсів» → Клод (four dots think), «кілька годин», 10 green ticks, «а я — своїми справами»; pan: phone ✓ vs laptop ✗, «пам'ять» / «перегрів» struck out, arrow into the cloud «хмара» |
-| 78.7–82.3 | NEAR | pill «АІ-монтаж» + a red handwritten «?» over the footage |
-| 82.1–end | MOVE | CTA mockup: comment field types «ТЕСТ», her DM «Привіт! Скинь одне сире відео», the raw video attachment, Claude thinks, «Готово: твій рілс» + green tick |
+| 0.1–3.5 | behind | «Монтаж», white 230 px, her hair over its lower edge |
+| 8.4–16.9 | above | card «10–15 хв»; struck 12.4 «правдива»; red «?» 15.4 «залежить» |
+| 24.1–31.0 | half 1 | сире відео → «2–3 хв» 26.6 → arrow → Клод 28.8 → «15–20 хв» 29.5 |
+| 33.4–43.4 | half 2 | сире відео «5–6 хв» 35.6, ××× 36.6, cut line 37.8, «3 хв» 39.3, → Клод, «30 хв» 41.4, «1 год» circled 42.5 |
+| 51.9–58.1 | above | shuffle: швидше, ніж самій / швидше, ніж чекати монтажера / безкоштовно / лише підписка на Клод |
+| 59.1–71.0 | full | phone (Claude): tilt in; zoom on list as 10 rows land 61.4; status «сире відео» → «монтаж» 63.3; zoom out 64.4; 10 ticks on «готових» 66.5; drifts through «з телефона» |
+| 71.0–76.6 | — | her alone to the end |
 
-Captions black out only where a graphic says her word (every number, «зранку», «безкоштовно»,
-«підписку на Клод», «АІ-монтаж», «ТЕСТ»). No invert spans (halfscreen keeps her captions on
-the plaque). Cut: three whisper hallucinations («Дякую за підтримку!») and her «Давайте так!»
-restart cue dropped by `work/r71/cut-fix.json`.
+BLACKOUT: «монтаж» 2.1 (behind word), «10-15» 8.5 (card).
