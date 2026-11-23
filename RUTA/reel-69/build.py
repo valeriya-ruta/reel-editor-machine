@@ -24,7 +24,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, os.path.join(ROOT, "tools"))
-from gstyle import G, Words, load_caps  # noqa: E402
+from gstyle import G, Words, load_caps, mark  # noqa: E402
 
 NN = "69"
 DUR = float(open(os.path.join(HERE, "DUR")).read())
@@ -34,7 +34,7 @@ g.PANEL_TOP = 820
 # whisper's token -> what she said (captions.json from tools/align.py)
 FIX = {
     u"до": u"До", u"речі": u"речі!", u"то": u"ти", u"колесі.": u"колезі.", u"Збережи,": u"збережи,",
-    u"кладі,": u"Claude,", u"капкад.": u"CapCut.", u"передплата,": u"передоплата,",
+    u"кладі,": u"Claude,", u"капкад.": u"CapCut.", u"передплата,": u"передоплата,", u"щось": u"його",
 }
 CAPS = load_caps(NN, FIX)
 
@@ -89,9 +89,8 @@ EXTRA = u'''
                     border-radius: 50%; background: #7A1424; color: #fff; font-size: 32px; font-weight: 700;
                     margin-left: -8px; }
     .shuf.cat .chip { font-size: 46px; padding: 18px 34px; }
-    #root .cover-bg { position: absolute; inset: 0;
-                      background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
-    .stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
+    #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
+    .stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2400px; }
     .win { position: absolute; left: 0; top: 0; border-radius: 14px; font-family: "Google Sans", sans-serif;
            box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
            transform-origin: 0 0; will-change: transform; overflow: hidden; }
@@ -125,74 +124,87 @@ def slot_out(sel, t):
 
 
 # ---------------------------------------------------------------- 2 · item 1 + FULL 1 Claude Code
+# Platform-ad sequence (reel-64 sizing): the terminal is 980 x 1000 at scale 1 on
+# the wide view (91 % of the frame width, y 330-1330, clear of the caption band);
+# body text 34-38 px, labels >= 26 px. «Skill(монтаж)» appears on «скіл», the
+# todos on «робить», each ticks on its word; the camera zooms into the todos.
 t_p1 = S(u"Перше", 6.40)
 heading(1, 1, u"AI-монтаж", t_p1 - 0.05, S(u"Claude", 8.87) - 0.45)
 
 f0 = S(u"Claude", 8.87) - 0.15
 f1 = E(u"відео.", 14.70) + 0.15
+t_skil, t_rob = S(u"скіл", 9.78), S(u"робить", 10.50)
 t_skl, t_sub, t_ril = S(u"склейку,", 11.36), S(u"субтитри", 12.34), S(u"рілси", 13.72)
 C.append(u"""
-        <div class="cover-bg" id="bg1"></div>
         <div class="stage" id="st1">
           <div id="cc" class="win">
             <div class="cc-bar"><i></i><i></i><i></i><span>claude — ~/projects/video</span></div>
-            <div class="cc-hi" style="left:26px;top:58px">
-              <b>✻</b> Welcome to <strong>Claude Code</strong>!</div>
-            <div class="cc-ln" style="left:26px;top:150px"><span class="cc-g">&gt;</span> /монтаж</div>
-            <div class="cc-ln" style="left:26px;top:198px"><span class="cc-o">⏺</span> Skill(монтаж)</div>
-            <div class="cc-ln" style="left:26px;top:240px"><span class="cc-o">⏺</span> Update Todos</div>
-            <div class="cc-td" id="td1" style="left:58px;top:282px"><u>☐</u><s>чорнова склейка</s></div>
-            <div class="cc-td" id="td2" style="left:58px;top:322px"><u>☐</u><s>субтитри</s></div>
-            <div class="cc-td" id="td3" style="left:58px;top:362px"><u>☐</u><s>рілси з довгого відео</s></div>
-            <div class="cc-in" style="left:20px;top:440px"><span class="cc-g">&gt;</span> <i class="cur"></i></div>
+            <div class="cc-hi" style="left:36px;top:92px">
+              <div><b>✻</b> Welcome to <strong>Claude Code</strong>!</div>
+              <div class="cc-dim">/help for help, /status for your current setup</div>
+              <div class="cc-dim">cwd: ~/projects/video</div></div>
+            <div class="cc-ln" style="left:40px;top:340px"><span class="cc-g">&gt;</span> /монтаж</div>
+            <div class="cc-ln" id="cs1" style="left:40px;top:418px"><span class="cc-o">⏺</span> Skill(монтаж)</div>
+            <div class="cc-ln" id="cs2" style="left:40px;top:496px"><span class="cc-o">⏺</span> Update Todos</div>
+            <div class="cc-td" id="td1" style="left:92px;top:568px"><u>☐</u><s>чорнова склейка</s></div>
+            <div class="cc-td" id="td2" style="left:92px;top:640px"><u>☐</u><s>субтитри</s></div>
+            <div class="cc-td" id="td3" style="left:92px;top:712px"><u>☐</u><s>рілси з довгого відео</s></div>
+            <div class="cc-in" style="left:36px;top:840px"><span class="cc-g">&gt;</span> <i class="cur"></i></div>
+            <div class="cc-hint" style="left:52px;top:944px">? for shortcuts</div>
           </div>
         </div>""")
 EXTRA += u"""
-    #cc { width: 800px; height: 520px; background: #262624; color: #E8E4DE;
-          font-family: "SF Mono", "DejaVu Sans Mono", Menlo, monospace; }
-    .cc-bar { left: 0; top: 0; width: 800px; height: 34px; background: #1E1D1B; }
-    .cc-bar i { position: absolute; top: 11px; width: 12px; height: 12px; border-radius: 50%; background: #4A4844; }
-    .cc-bar i:nth-child(1) { left: 14px; } .cc-bar i:nth-child(2) { left: 34px; } .cc-bar i:nth-child(3) { left: 54px; }
-    .cc-bar span { position: absolute; left: 0; right: 0; top: 8px; text-align: center; font-size: 13px; color: #8E8A84; }
-    .cc-hi { width: 748px; border: 1.5px solid #D97757; border-radius: 10px; padding: 18px 20px; font-size: 19px; }
-    .cc-hi b { color: #D97757; font-weight: 400; margin-right: 6px; } .cc-hi strong { font-weight: 700; }
-    .cc-ln { font-size: 19px; white-space: nowrap; } .cc-g { color: #8E8A84; } .cc-o { color: #D97757; }
-    .cc-td { font-size: 19px; white-space: nowrap; color: #E8E4DE; }
-    .cc-td u { text-decoration: none; display: inline-block; width: 30px; color: #8E8A84; }
+    #cc { width: 980px; height: 1000px; background: #262624; color: #E8E4DE; border-radius: 24px;
+          font-family: "DejaVu Sans Mono", Menlo, monospace; }
+    .cc-bar { left: 0; top: 0; width: 980px; height: 60px; background: #1E1D1B; }
+    .cc-bar i { position: absolute; top: 21px; width: 18px; height: 18px; border-radius: 50%; background: #4A4844; }
+    .cc-bar i:nth-child(1) { left: 24px; } .cc-bar i:nth-child(2) { left: 52px; } .cc-bar i:nth-child(3) { left: 80px; }
+    .cc-bar span { position: absolute; left: 0; right: 0; top: 14px; text-align: center; font-size: 26px; color: #9A958E;
+                   font-family: "Google Sans", sans-serif; }
+    .cc-hi { width: 908px; border: 2px solid #D97757; border-radius: 16px; padding: 22px 28px; font-size: 34px; line-height: 1.5; }
+    .cc-hi b { color: #D97757; font-weight: 400; margin-right: 8px; } .cc-hi strong { font-weight: 700; }
+    .cc-dim { font-size: 26px; color: #9A958E; }
+    .cc-ln { font-size: 36px; white-space: nowrap; } .cc-g { color: #9A958E; } .cc-o { color: #D97757; }
+    .cc-td { font-size: 36px; white-space: nowrap; color: #E8E4DE; }
+    .cc-td u { text-decoration: none; display: inline-block; width: 56px; color: #9A958E; }
     .cc-td s { text-decoration: none; }
-    .cc-td.on u { color: #D97757; } .cc-td.on s { color: #8E8A84; text-decoration: line-through; }
-    .cc-in { width: 760px; height: 46px; border: 1.5px solid #4A4844; border-radius: 10px; padding: 10px 14px; font-size: 19px; }
-    .cur { display: inline-block; width: 10px; height: 20px; background: #E8E4DE; vertical-align: -3px; }
+    .cc-td.on u { color: #D97757; } .cc-td.on s { color: #9A958E; text-decoration: line-through; }
+    .cc-in { width: 908px; height: 84px; border: 2px solid #4A4844; border-radius: 16px; padding: 18px 24px; font-size: 36px; }
+    .cc-hint { font-size: 26px; color: #9A958E; }
+    .cur { display: inline-block; width: 18px; height: 38px; background: #E8E4DE; vertical-align: -6px; }
 """
 
 
-def cam(px, py, sc, ox, oy, cx=540, cy=760):
-    # the window turns and scales about its own centre O: a point p of it lands
-    # at O + s*(p - O) + (x, y); place p at (cx, cy)
+def cam(px, py, sc, w, h, cx=540, cy=830):
+    # the window scales about its own centre O = (w/2, h/2): a point p lands at
+    # O + s*(p - O) + (x, y); put p at (cx, cy)
+    ox, oy = w / 2.0, h / 2.0
     return (sc, round(cx - ox - sc * (px - ox), 1), round(cy - oy - sc * (py - oy), 1))
 
 
-O1 = (400, 260)
-W1 = cam(400, 260, 1.25, *O1)
-T1 = cam(250, 325, 2.1, *O1, cx=540, cy=780)
+W1 = cam(490, 500, 1.0, 980, 1000)                    # wide: y 330-1330
+T1 = cam(330, 640, 1.55, 980, 1000, cx=540, cy=830)    # the todos
 js(u"""
-  gsap.set("#cc", {transformOrigin: "400px 260px"});
-  gsap.set("#cc", {x: %(wx)s, y: %(wy)s + 220, scale: %(ws)s * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
-  tl.to("#cc", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.2, ease: "power3.out"}, %(f0)s + .15);
-  tl.to("#cc", {x: %(tx)s, y: %(ty)s, scale: %(ts)s, rotationX: 3, rotationY: 7, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, %(skl)s - 1.25);
+  gsap.set("#cc", {transformOrigin: "490px 500px"});
+  gsap.set(["#cs1", "#cs2", "#td1", "#td2", "#td3"], {autoAlpha: 0});
+  gsap.set("#cc", {x: %(wx)s, y: %(wy)s + 240, scale: %(ws)s * .86, rotationX: 24, rotationY: -18, rotationZ: 4});
+  tl.to("#cc", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 6, rotationY: -8, rotationZ: 1, duration: 1.2, ease: "power3.out"}, %(f0)s + .1);
+  tl.fromTo("#cs1", {autoAlpha: 0, x: -20}, X({autoAlpha: 1, x: 0, duration: .3}), %(skil)s);
+  tl.fromTo(["#cs2", "#td1", "#td2", "#td3"], {autoAlpha: 0, y: 14}, X({autoAlpha: 1, y: 0, duration: .3, stagger: .08}), %(rob)s);
+  tl.to("#cc", {x: %(tx)s, y: %(ty)s, scale: %(ts)s, rotationX: 3, rotationY: 6, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, %(skl)s - 1.0);
   tl.set("#td1", {className: "cc-td on"}, %(skl)s);
   tl.fromTo("#td1 u", {scale: 1.6}, X({scale: 1, duration: .3, ease: "back.out(2)"}), %(skl)s);
   tl.set("#td2", {className: "cc-td on"}, %(sub)s);
   tl.fromTo("#td2 u", {scale: 1.6}, X({scale: 1, duration: .3, ease: "back.out(2)"}), %(sub)s);
   tl.set("#td3", {className: "cc-td on"}, %(ril)s);
   tl.fromTo("#td3 u", {scale: 1.6}, X({scale: 1, duration: .3, ease: "back.out(2)"}), %(ril)s);
-  tl.to("#cc", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.0, ease: "power3.inOut"}, %(ril)s + .45);
+  tl.to("#cc", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 7, rotationY: 10, rotationZ: -1, duration: .8, ease: "power3.inOut"}, %(ril)s + .35);
   full(%(f0)s, %(f1)s);
 """ % {"wx": W1[1], "wy": W1[2], "ws": W1[0], "tx": T1[1], "ty": T1[2], "ts": T1[0],
-       "f0": "%.3f" % f0, "f1": "%.3f" % f1, "skl": "%.3f" % t_skl, "sub": "%.3f" % t_sub, "ril": "%.3f" % t_ril})
-g.sfx("whoosh-short", f0); g.sfx("whoosh-short", t_skl - 1.25)
+       "f0": "%.3f" % f0, "f1": "%.3f" % f1, "skil": "%.3f" % t_skil, "rob": "%.3f" % t_rob,
+       "skl": "%.3f" % t_skl, "sub": "%.3f" % t_sub, "ril": "%.3f" % t_ril})
+g.sfx("whoosh-short", f0); g.sfx("click-soft", t_skil); g.sfx("whoosh-short", t_skl - 1.0)
 g.sfx("click", t_skl); g.sfx("click", t_sub); g.sfx("click", t_ril); g.sfx("whoosh-short", f1)
-
 # ---------------------------------------------------------------- MEME 01 «ЦИТЬ» after «Я про це рідко кажу,»
 # a clear stretch: FULL 1 is gone, «CapCut» rises at 20.3
 g.meme(F, J, "01", round(E(u"кажу,", 16.97) + 0.1, 3), dur=1.2, slot="r")
@@ -225,97 +237,101 @@ PLACE.append((k0 + 0.4, k1 + 0.2, "bottom", 938))
 js("  half(%.3f, %.3f);" % (k0, k1))
 
 # ---------------------------------------------------------------- 4 · item 2 + FULL 2 Google Drive -> phone
+# Drive: 980 x 740 at scale 1 (y 460-1200), text >= 30 px; «Шот-лист» lands in
+# the project folder on «кладе» (camera zoomed onto the file list). On «зйомці»
+# Drive flies off and a phone (600 x 1080, y 310-1390) brings the same shot list;
+# rows tick on «щоб нічого не забути».
 t_p2 = S(u"Друге", 29.97)
 d0 = S(u"скіл", 35.05) - 0.2
 heading(2, 2, u"бриф → сценарій і шот-лист", t_p2 - 0.05, S(u"Це", 34.30) + 0.1)
 d1 = E(u"забути.", 43.20) + 0.1
-t_kl, t_zy, t_tel = S(u"кладе", 37.93), S(u"зйомці", 40.64), S(u"телефона,", 42.14)
+t_gdr, t_kl, t_zy = S(u"Google", 36.89), S(u"кладе", 37.93), S(u"зйомці", 40.64)
 t_nich = S(u"щоб нічого", 42.60)
+ROWS = u"".join(u'<div class="ph-r"><span class="check" id="pc%d"></span><b>Кадр %d</b><i class="line"></i></div>' % (i, i)
+                for i in range(1, 7))
 C.append(u"""
         <div class="stage" id="st2">
           <div id="gd" class="win">
-            <div class="gd-top"><span class="gd-logo"></span>Диск<div class="gd-q">Пошук на Диску</div></div>
+            <div class="gd-top"><span class="gd-logo">%(drive)s</span>Диск<div class="gd-q">Пошук на Диску</div></div>
             <div class="gd-new">＋ Створити</div>
-            <div class="gd-nav on" style="top:128px">Мій диск</div>
-            <div class="gd-nav" style="top:166px">Спільні зі мною</div>
-            <div class="gd-nav" style="top:204px">Нещодавні</div>
+            <div class="gd-nav on" style="top:236px">Мій диск</div>
+            <div class="gd-nav" style="top:306px">Спільні зі мною</div>
+            <div class="gd-nav" style="top:376px">Нещодавні</div>
             <div class="gd-crumb">Мій диск <span>›</span> Проєкт</div>
             <div class="gd-head">Назва</div>
-            <div class="gd-row" style="top:198px"><i class="doc"></i>Бриф</div>
-            <div class="gd-row" style="top:246px"><i class="doc"></i>Сценарій</div>
-            <div class="gd-row gd-new-row" id="gsl" style="top:294px"><i class="doc"></i>Шот-лист</div>
+            <div class="gd-row" style="top:290px"><i class="doc"></i>Бриф</div>
+            <div class="gd-row" style="top:400px"><i class="doc"></i>Сценарій</div>
+            <div class="gd-row" id="gsl" style="top:510px"><i class="doc"></i>Шот-лист</div>
           </div>
           <div id="ph">
             <div class="ph-scr">
               <div class="ph-t">Шот-лист</div>
-              <div class="ph-r"><span class="check" id="pc1"></span><b>Кадр 1</b><i class="line"></i></div>
-              <div class="ph-r"><span class="check" id="pc2"></span><b>Кадр 2</b><i class="line"></i></div>
-              <div class="ph-r"><span class="check" id="pc3"></span><b>Кадр 3</b><i class="line"></i></div>
-              <div class="ph-r"><span class="check" id="pc4"></span><b>Кадр 4</b><i class="line"></i></div>
-              <div class="ph-r"><span class="check" id="pc5"></span><b>Кадр 5</b><i class="line"></i></div>
+              <div class="ph-s">%(drive2)s Проєкт</div>
+              %(rows)s
             </div>
           </div>
-        </div>""")
+        </div>""" % {"drive": mark("googledrive", 44), "drive2": mark("googledrive", 30), "rows": ROWS})
 EXTRA += u"""
-    #gd { width: 800px; height: 500px; background: #F8FAFD; color: #1F1F1F; }
-    .gd-top { left: 0; top: 0; width: 800px; height: 64px; padding: 18px 22px; font-size: 22px; color: #444746; }
-    .gd-logo { display: inline-block; width: 30px; height: 26px; margin-right: 12px; vertical-align: -5px;
-               background: conic-gradient(from 30deg, #7A1424 0 120deg, #B04A58 0 240deg, #D98C96 0);
-               clip-path: polygon(50% 0, 100% 86%, 0 86%); }
-    .gd-q { position: absolute; left: 220px; top: 12px; width: 520px; height: 40px; border-radius: 20px;
-            background: #E9EEF6; font-size: 15px; color: #5f6368; padding: 10px 20px; }
-    .gd-new { left: 16px; top: 72px; width: 130px; height: 44px; border-radius: 14px; background: #fff;
-              box-shadow: 0 1px 3px rgba(0,0,0,.18); font-size: 15px; font-weight: 500; padding: 12px 16px; }
-    .gd-nav { left: 8px; width: 180px; height: 32px; border-radius: 16px; font-size: 14px; padding: 7px 18px; color: #1f1f1f; }
+    #gd { width: 980px; height: 740px; background: #F8FAFD; color: #1F1F1F; border-radius: 28px; }
+    .gd-top { left: 0; top: 0; width: 980px; height: 104px; padding: 28px 30px; font-size: 38px; color: #444746;
+              display: flex; align-items: center; gap: 14px; }
+    .gd-logo .mark { color: #7A1424; }
+    .gd-q { position: absolute; left: 260px; top: 20px; width: 690px; height: 64px; border-radius: 32px;
+            background: #E9EEF6; font-size: 30px; color: #5f6368; padding: 14px 32px; }
+    .gd-new { left: 24px; top: 128px; height: 78px; border-radius: 22px; background: #fff;
+              box-shadow: 0 1px 3px rgba(0,0,0,.18); font-size: 30px; font-weight: 500; padding: 20px 28px; }
+    .gd-nav { left: 12px; width: 280px; height: 58px; border-radius: 29px; font-size: 30px; padding: 11px 26px;
+              color: #1f1f1f; white-space: nowrap; }
     .gd-nav.on { background: #F2DADD; font-weight: 700; }
-    .gd-crumb { left: 210px; top: 80px; font-size: 22px; color: #1f1f1f; } .gd-crumb span { color: #5f6368; margin: 0 6px; }
-    .gd-head { left: 210px; top: 156px; width: 570px; font-size: 13px; font-weight: 500; color: #444746;
-               border-bottom: 1px solid #E1E3E1; padding-bottom: 10px; }
-    .gd-row { left: 210px; width: 570px; height: 48px; font-size: 16px; padding: 14px 8px; border-bottom: 1px solid #E1E3E1;
+    .gd-crumb { left: 330px; top: 136px; font-size: 40px; color: #1f1f1f; } .gd-crumb span { color: #5f6368; margin: 0 8px; }
+    .gd-head { left: 330px; top: 222px; width: 620px; font-size: 26px; font-weight: 500; color: #444746;
+               border-bottom: 2px solid #E1E3E1; padding-bottom: 16px; }
+    .gd-row { left: 330px; width: 620px; height: 110px; font-size: 36px; padding: 32px 14px; border-bottom: 2px solid #E1E3E1;
               background: #F8FAFD; }
-    .gd-row i.doc { display: inline-block; width: 16px; height: 20px; border-radius: 3px; background: #7A1424;
-                    margin-right: 14px; vertical-align: -4px; }
-    #ph { position: absolute; left: 330px; top: 420px; width: 420px; height: 860px; border-radius: 64px;
-          background: #1F1B1B; padding: 18px; box-shadow: 0 2px 6px rgba(36,25,25,.12), 0 40px 90px rgba(36,25,25,.28);
+    .gd-row i.doc { display: inline-block; width: 30px; height: 38px; border-radius: 5px; background: #7A1424;
+                    margin-right: 24px; vertical-align: -6px; }
+    #ph { position: absolute; left: 240px; top: 310px; width: 600px; height: 1080px; border-radius: 80px;
+          background: #1F1B1B; padding: 20px; box-shadow: 0 2px 6px rgba(36,25,25,.12), 0 40px 90px rgba(36,25,25,.28);
           will-change: transform; }
-    .ph-scr { width: 384px; height: 824px; border-radius: 48px; background: #fff; padding: 84px 30px; }
-    .ph-t { font-size: 40px; font-weight: 700; color: #241919; margin-bottom: 34px; letter-spacing: -0.02em; }
-    .ph-r { display: flex; align-items: center; gap: 14px; height: 92px; border-bottom: 2px solid #F1E7E7; }
-    .ph-r b { font-size: 24px; font-weight: 500; color: #574142; white-space: nowrap; }
-    .ph-r .line { flex: 1; height: 14px; }
-    .ph-r .check { width: 38px; height: 38px; }
-    .ph-r .check.on::after { left: 11px; top: 3px; width: 9px; height: 19px; border-width: 0 4px 4px 0; }
+    .ph-scr { width: 560px; height: 1040px; border-radius: 62px; background: #fff; padding: 96px 44px 0; }
+    .ph-t { font-size: 58px; font-weight: 700; color: #241919; letter-spacing: -0.02em; }
+    .ph-s { display: flex; align-items: center; gap: 12px; font-size: 30px; color: #574142; margin: 10px 0 26px; }
+    .ph-s .mark { color: #7A1424; }
+    .ph-r { display: flex; align-items: center; gap: 22px; height: 118px; border-bottom: 2px solid #F1E7E7; }
+    .ph-r b { font-size: 38px; font-weight: 500; color: #241919; white-space: nowrap; }
+    .ph-r .line { flex: 1; height: 18px; }
+    .ph-r .check { width: 52px; height: 52px; }
+    .ph-r .check.on::after { left: 15px; top: 5px; width: 12px; height: 25px; border-width: 0 5px 5px 0; }
 """
-O2 = (400, 250)
-W2 = cam(400, 250, 1.3, *O2)
-R2 = cam(380, 318, 2.3, *O2, cx=560, cy=760)
+W2 = cam(490, 370, 1.0, 980, 740)                    # wide: y 460-1200
+R2 = cam(640, 420, 1.4, 980, 740, cx=540, cy=820)    # the file list
 js(u"""
-  gsap.set("#gd", {transformOrigin: "400px 250px"});
+  gsap.set("#gd", {transformOrigin: "490px 370px"});
   gsap.set("#gsl", {autoAlpha: 0, y: -30});
-  gsap.set("#ph", {autoAlpha: 0});
   gsap.set("#st2", {autoAlpha: 0});
-  gsap.set("#ph", {transformOrigin: "50%% 50%%", scale: 1.2});
+  gsap.set("#ph", {autoAlpha: 0, transformOrigin: "50%% 50%%"});
   tl.set("#st1", {autoAlpha: 0}, %(d0)s - .05);
   tl.set("#st2", {autoAlpha: 1}, %(d0)s - .05);
-  gsap.set("#gd", {x: %(wx)s, y: %(wy)s + 220, scale: %(ws)s * .86, rotationX: 24, rotationY: 20, rotationZ: -5});
-  tl.to("#gd", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 9, rotationY: 12, rotationZ: -2, duration: 1.2, ease: "power3.out"}, %(d0)s + .15);
-  tl.to("#gd", {x: %(rx)s, y: %(ry)s, scale: %(rs)s, rotationX: 3, rotationY: -6, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, %(kl)s - 1.0);
+  gsap.set("#gd", {x: %(wx)s, y: %(wy)s + 240, scale: %(ws)s * .86, rotationX: 24, rotationY: 18, rotationZ: -4});
+  tl.to("#gd", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 6, rotationY: 8, rotationZ: -1, duration: 1.2, ease: "power3.out"}, %(d0)s + .1);
+  tl.to("#gd", {x: %(rx)s, y: %(ry)s, scale: %(rs)s, rotationX: 3, rotationY: -5, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, %(kl)s - 1.15);
   tl.to("#gsl", {autoAlpha: 1, y: 0, duration: .45, ease: "back.out(1.6)", immediateRender: false}, %(kl)s);
   tl.fromTo("#gsl", {backgroundColor: "#F8FAFD"}, X({backgroundColor: "#F2DADD", duration: .3}), %(kl)s + .1);
-  tl.to("#gd", {x: %(wx)s - 260, y: %(wy)s - 120, scale: %(ws)s * .7, rotationY: 24, autoAlpha: 0, duration: .9, ease: "power3.inOut"}, %(zy)s - .3);
-  tl.fromTo("#ph", {autoAlpha: 0, y: 700, rotationX: 28, rotationY: -16}, X({autoAlpha: 1, y: 0, rotationX: 6, rotationY: -8, duration: 1.0, ease: "power3.out"}), %(zy)s - .2);
-  tl.to("#ph", {rotationX: 2, rotationY: 4, duration: 2.2, ease: "sine.inOut"}, %(zy)s + .8);
+  tl.to("#gd", {x: %(wx)s - 300, y: %(wy)s - 160, scale: %(ws)s * .7, rotationY: 24, autoAlpha: 0, duration: .8, ease: "power3.inOut"}, %(zy)s - .3);
+  tl.fromTo("#ph", {autoAlpha: 0, y: 800, rotationX: 26, rotationY: -14, scale: 1}, X({autoAlpha: 1, y: 0, rotationX: 5, rotationY: -7, duration: 1.0, ease: "power3.out"}), %(zy)s - .2);
+  tl.to("#ph", {rotationX: 2, rotationY: 5, scale: 1.04, duration: 2.0, ease: "sine.inOut"}, %(zy)s + .8);
   tl.set("#pc1", {className: "check on"}, %(n1)s);
   tl.set("#pc2", {className: "check on"}, %(n2)s);
   tl.set("#pc3", {className: "check on"}, %(n3)s);
+  tl.set("#pc4", {className: "check on"}, %(n4)s);
   full(%(d0)s, %(d1)s);
 """ % {"wx": W2[1], "wy": W2[2], "ws": W2[0], "rx": R2[1], "ry": R2[2], "rs": R2[0],
        "d0": "%.3f" % d0, "d1": "%.3f" % d1, "kl": "%.3f" % t_kl, "zy": "%.3f" % t_zy,
-       "n1": "%.3f" % (t_nich), "n2": "%.3f" % (t_nich + 0.3), "n3": "%.3f" % (t_nich + 0.6)})
-g.sfx("whoosh-short", d0); g.sfx("whoosh-short", t_kl - 1.0); g.sfx("pop", t_kl)
-g.sfx("whoosh-short", t_zy - 0.3); g.sfx("click-soft", t_nich); g.sfx("click-soft", t_nich + 0.3)
-g.sfx("click-soft", t_nich + 0.6); g.sfx("whoosh-short", d1)
-
+       "n1": "%.3f" % t_nich, "n2": "%.3f" % (t_nich + 0.22), "n3": "%.3f" % (t_nich + 0.44),
+       "n4": "%.3f" % (t_nich + 0.66)})
+g.sfx("whoosh-short", d0); g.sfx("whoosh-short", t_kl - 1.15); g.sfx("pop", t_kl)
+g.sfx("whoosh-short", t_zy - 0.3); g.sfx("click-soft", t_nich); g.sfx("click-soft", t_nich + 0.22)
+g.sfx("click-soft", t_nich + 0.44); g.sfx("click-soft", t_nich + 0.66); g.sfx("whoosh-short", d1)
 # ---------------------------------------------------------------- 5 · item 3: фінплан, the cost categories through the slot
 t_p3 = S(u"Третє", 43.63)
 CAT = [(u"техніка", S(u"техніка,", 47.67)), (u"дорога", S(u"дорога,", 48.37)),
