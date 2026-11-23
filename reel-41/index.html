@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 41 — Клод розсилає повідомлення</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+    @font-face {
+      font-family: "ProductSans";
+      src: url("assets/fonts/ProductSans-Black.woff") format("woff");
+      font-weight: 900; font-style: normal; font-display: block;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px;
+            overflow: hidden; background: #000;
+            font-family: "ProductSans", system-ui, sans-serif;
+      --surface:        #fffcfd;
+      --container:      #fbeef2;
+      --container-high: #f4dfe5;
+      --graphite:       rgba(23,20,28,0.13);
+      --accent:         #b4122f;
+      --accent-deep:    #8d0d24;
+      --pink:           #ff6e9c;
+      --ink:            #17141c;
+
+      --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
+      --lit-blush:  linear-gradient(115deg, #ffffff 0%, #fff7fa 100%);
+      --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
+      --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
+      --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
+
+      --rim: inset 0 1.5px 0 rgba(255,255,255,0.92),
+             inset 0 -1.5px 0 rgba(255,255,255,0.14),
+             inset 0 0 0 1px rgba(255,255,255,0.28);
+      --rim-dark: inset 0 1.5px 0 rgba(255,255,255,0.16),
+                  inset 0 0 0 1px rgba(255,255,255,0.08);
+      --rim-glass: inset 0 2px 0 rgba(255,255,255,0.70),
+                   inset 0 -2px 0 rgba(255,255,255,0.10),
+                   inset 0 0 0 1.5px rgba(255,255,255,0.30);
+
+      /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
+         Light coming off the object, not the object sitting on a surface. */
+      --glow: drop-shadow(0 0 10px rgba(255,196,218,0.95))
+              drop-shadow(0 0 26px rgba(255,110,156,0.85))
+              drop-shadow(0 0 64px rgba(255,110,156,0.55))
+              drop-shadow(0 0 120px rgba(255,110,156,0.32));
+      --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
+                   drop-shadow(0 0 60px rgba(255,110,156,0.30));
+
+      --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
+              drop-shadow(0 24px 48px rgba(26,30,39,0.14));
+      --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))
+                 drop-shadow(0 12px 24px rgba(26,30,39,0.12));
+ }
+    .plate { position: absolute; inset: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    #scrim { position: absolute; left: 20px; top: 1247px;
+             width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png");
+             background-size: 100% 100%; background-repeat: no-repeat;
+             opacity: 0; visibility: hidden; pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; top: 1413px;
+           height: 118px; line-height: 118px; text-align: center;
+           color: #fff; font-size: 90px; font-weight: 900;
+           letter-spacing: -0.015em; white-space: nowrap;
+           opacity: 0; visibility: hidden; }
+    .cap.inv { color: var(--ink); }
+    .g { position: absolute; left: 0; top: 40px; width: 1080px;
+         height: 600px; opacity: 0; visibility: hidden; }
+    .g.full { top: 0; height: 1920px; }
+
+    /* §5a.9 — glass over her footage is the house look. Panels only; an
+       edge-to-edge frosted ground blurs her out of her own reel. */
+    .glass { background: rgba(255,255,255,0.15);
+             -webkit-backdrop-filter: blur(24px) saturate(1.4);
+             backdrop-filter: blur(24px) saturate(1.4);
+             box-shadow: var(--rim); filter: var(--cast); }
+
+    /* A takeover: a tinted pane laid ON the footage, with a real margin so it
+       reads as an object rather than a blur applied to the video. */
+    /* The inset pane is a *pane*: 44/64 margin so the footage shows past it,
+       and corners, because a full-bleed hard-cornered rectangle is a bug she
+       has reported. base_css() squircles it; this radius is the fallback. */
+    .ground { position: absolute; left: 44px; top: 64px;
+              width: 992px; height: 1792px; border-radius: 68px;
+              background: linear-gradient(158deg, rgba(196,20,52,0.62) 0%,
+                          rgba(141,13,36,0.70) 100%);
+              -webkit-backdrop-filter: blur(30px) saturate(1.5);
+              backdrop-filter: blur(30px) saturate(1.5);
+              box-shadow: var(--rim-glass); filter: var(--cast); }
+
+    .card { position: absolute; background: var(--lit-blush);
+            filter: var(--cast); box-shadow: var(--rim); }
+    .card.ink { background: var(--lit-ink); box-shadow: var(--rim-dark); }
+    .card.accent { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+
+    .tile { position: absolute; display: grid; place-items: center;
+            background: var(--lit-blush); filter: var(--cast);
+            box-shadow: var(--rim); }
+
+    /* §5a.3 — bar rhythm. One thick heading, then ragged body. Uniform bars
+       read as a loading state; ragged ones read as an abstracted screen. */
+    .ph { display: block; height: 66px; border-radius: 18px;
+          background: var(--lit-accent); margin-bottom: 26px;
+          box-shadow: var(--rim-dark); }
+    .pr { display: block; height: 40px; border-radius: 12px;
+          background: var(--graphite); margin-bottom: 18px; }
+    .pr:nth-of-type(2) { width: 94%; }
+    .pr:nth-of-type(3) { width: 71%; }
+    .pr:nth-of-type(4) { width: 43%; }
+
+    .phone { position: absolute; background: var(--lit-blush);
+             overflow: hidden; filter: var(--cast); box-shadow: var(--rim); }
+    .phone video, .phone img { width: 100%; height: 100%; object-fit: cover;
+                               display: block; }
+
+    /* a value in its own card — her reference's "big number" pattern, minus
+       the label, because a graphic here carries no words */
+    .valcard { position: absolute; background: rgba(255,255,255,0.16);
+               -webkit-backdrop-filter: blur(16px) saturate(1.3);
+               backdrop-filter: blur(16px) saturate(1.3);
+               box-shadow: var(--rim-dark);
+               display: grid; place-items: center; }
+    .valcard span { color: #fff; font-weight: 900; letter-spacing: -0.04em; }
+
+    .wire { fill: none; stroke-width: 20; stroke-linecap: round;
+            filter: drop-shadow(0 8px 18px rgba(26,30,39,0.22)); }
+    .node { fill: #fdf6f6; stroke: #b4122f; stroke-width: 16;
+            filter: drop-shadow(0 10px 22px rgba(26,30,39,0.24)); }
+    .node.hub { fill: #b4122f; stroke: #fff; }
+
+    /* §5a.10 — the glow rides a WRAPPER, never the clipped element itself.
+       clip-path is applied *after* filter, so a drop-shadow declared on the
+       same element as the clip is cut away with everything else outside the
+       silhouette and the object ends up with no light at all. Put the clip on
+       the shape and the filter on its parent: the parent filters the already
+       clipped bitmap, so the light traces the squircle and survives. */
+    .lit { position: absolute; inset: 0; pointer-events: none;
+           filter: var(--glow); }
+    .lit.soft { filter: var(--glow-soft); }
+
+    /* Emoji are images, never glyphs. The render runs on someone else's
+       Chrome, so a literal 💩 in the HTML comes out in whatever emoji font
+       that machine has — Noto on the cloud renderer, Segoe on hers, Apple on
+       nobody's. She wants the Apple set, so the artwork ships in assets/emoji
+       and the glyph never appears in a composition. */
+    .emoji { display: block; width: auto; image-rendering: auto; }
+
+    .halo { position: absolute; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(255,110,156,0.5) 0%,
+                        rgba(255,110,156,0) 70%); }
+    .ring { position: absolute; border-radius: 50%; pointer-events: none;
+            border: 18px solid rgba(255,110,156,0.92);
+            filter: drop-shadow(0 0 40px rgba(255,110,156,0.55)); }
+
+    /* ---- takeovers (STYLE.md 2c) ----
+       The graphic owns the frame: the plate is gone, so none of the
+       over-footage rules apply — no glow budget, no band discipline, ink type
+       on a light ground. Lives here rather than per-reel because every reel
+       from 9 onwards needs it. A takeover that does not bleed off at least
+       two edges reads as a slide, not a takeover. */
+    .tk { position: absolute; inset: 0; }
+    .tk.paper { background: var(--surface); }
+    .tk.white { background: #ffffff; }
+    .tk.blush { background: linear-gradient(150deg,#ffffff 0%,#fffafc 55%,
+                                            #fdf4f8 100%); }
+    /* graph paper — the texture the reference takeovers all have. 60px cells
+       at 5.8% ink: visible, never a pattern you read. */
+    .gp { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px),
+            repeating-linear-gradient(90deg, rgba(23,20,28,.058) 0 1px,
+                                      transparent 1px 60px); }
+    /* horizontal rules only — a transcript or a list is ruled paper, not
+       graph paper, and the difference is what makes it read as an export. */
+    .gl { position: absolute; inset: 0;
+          background-image:
+            repeating-linear-gradient(0deg, rgba(23,20,28,.05) 0 1px,
+                                      transparent 1px 175px); }
+
+    /* the finished artefact, in her system — one class at any aspect ratio */
+    .dk { position: absolute; overflow: hidden; border-radius: 28px;
+          background: var(--lit-blush); box-shadow: var(--rim);
+          filter: var(--cast); }
+    .dk i { position: absolute; display: block; }
+    .dk .hb { left: 30px; top: 30px; height: 20px; border-radius: 6px;
+              background: var(--lit-accent); }
+    .dk .rr { left: 30px; height: 9px; border-radius: 4px;
+              background: rgba(23,20,28,0.22); }
+    .dk .pb { border-radius: 16px; background: var(--lit-pink);
+              box-shadow: var(--rim-dark); }
+
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Regular.ttf"); font-weight: 400; font-display: block; }
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Medium.ttf"); font-weight: 500; font-display: block; }
+@font-face { font-family: "ProductSans"; src: url("assets/fonts/ProductSans-Bold.ttf"); font-weight: 700; font-display: block; }
+
+
+/* one material for both: ink-burgundy glass, dense enough for AA over a white screen */
+.inkp { position: absolute; color: #fff;
+  background: linear-gradient(160deg, rgba(52,20,30,0.90) 0%, rgba(23,10,16,0.88) 100%);
+  -webkit-backdrop-filter: blur(26px) saturate(1.4); backdrop-filter: blur(26px) saturate(1.4);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,0.26), inset 0 -14px 28px -16px rgba(255,255,255,0.10),
+              0 36px 70px -28px rgba(10,0,4,0.55);
+  opacity: 0; visibility: hidden; }
+#explain { left: 90px; width: 900px; top: 1150px; border-radius: 48px; padding: 40px 48px 42px; }
+#explain p { font-family: "ProductSans"; font-weight: 500; font-size: 39px; line-height: 1.32;
+  letter-spacing: -0.005em; }
+#explain p + p { margin-top: 20px; }
+#explain b { font-weight: 700; color: #ff8db0; }
+#note { left: 0; right: 0; margin: 0 auto; width: max-content; top: 1318px;
+  border-radius: 30px; padding: 12px 30px 14px;
+  font-family: "ProductSans"; font-weight: 700; font-size: 44px; line-height: 1; }
+.cap { letter-spacing: -0.015em; }
+
+.bl { position: absolute; border-radius: 14px;
+  -webkit-backdrop-filter: blur(9px); backdrop-filter: blur(9px); opacity: 0; visibility: hidden; }
+    .ground { clip-path: path('M 883.2 0 c 36.293 0 54.439 0 70.765 8.318 a 68 68 0 0 1 29.717 29.717 c 8.318 16.325 8.318 34.472 8.318 70.765 L 992 1683.2 c 0 36.293 0 54.439 -8.318 70.765 a 68 68 0 0 1 -29.717 29.717 c -16.325 8.318 -34.472 8.318 -70.765 8.318 L 108.8 1792 c -36.293 0 -54.439 0 -70.765 -8.318 a 68 68 0 0 1 -29.717 -29.717 c -8.318 -16.325 -8.318 -34.472 -8.318 -70.765 L 0 108.8 c 0 -36.293 0 -54.439 8.318 -70.765 a 68 68 0 0 1 29.717 -29.717 c 16.325 -8.318 34.472 -8.318 70.765 -8.318 Z'); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="36.950" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="36.950" data-media-start="0"
+             muted playsinline></video>
+      <div class="bl" style="left:600px;top:88px;width:480px;height:182px"></div>
+      <div class="bl" style="left:312px;top:274px;width:166px;height:32px"></div>
+      <div class="bl" style="left:172px;top:420px;width:150px;height:32px"></div>
+      <div class="bl" style="left:0px;top:448px;width:96px;height:30px"></div>
+      <div id="explain" class="inkp"><p>По суті, Клод працює через вбудований браузер і робить паузу <b>мінімум 30 секунд</b> між повідомленнями, щоб інстаграм мене не заблокував.</p><p>До кожної людини він спершу заходить у профіль: дивиться контент, біо, ім'я і вже тоді пише персональне повідомлення за моїм правилом.</p></div>
+
+      <div id="scrim"></div>
+      <div id="note" class="inkp">*персоналізовані</div>
+      <div class="cap" id="cap0">МОЖЕТЕ,</div>
+      <div class="cap" id="cap1">БУДЬ</div>
+      <div class="cap" id="cap2">ЛАСКА,</div>
+      <div class="cap" id="cap3">ПРОСЛІДКУВАТИ</div>
+      <div class="cap" id="cap4">ЗА</div>
+      <div class="cap" id="cap5">МОЇМ</div>
+      <div class="cap" id="cap6">КЛОДОМ,</div>
+      <div class="cap" id="cap7">БО</div>
+      <div class="cap" id="cap8">ВІН</div>
+      <div class="cap" id="cap9">ЗАРАЗ</div>
+      <div class="cap" id="cap10">РОЗСИЛАЄ</div>
+      <div class="cap" id="cap11">ПОВІДОМЛЕННЯ*</div>
+      <div class="cap" id="cap12">ВСІМ</div>
+      <div class="cap" id="cap13">ТИМ,</div>
+      <div class="cap" id="cap14">ХТО</div>
+      <div class="cap" id="cap15">НАПИСАВ</div>
+      <div class="cap" id="cap16">МЕНІ</div>
+      <div class="cap" id="cap17">В</div>
+      <div class="cap" id="cap18">ДИРЕКТ,</div>
+      <div class="cap" id="cap19">А</div>
+      <div class="cap" id="cap20">МЕНІ</div>
+      <div class="cap" id="cap21">ТРЕБА</div>
+      <div class="cap" id="cap22">ПІТИ</div>
+      <div class="cap" id="cap23">ПОМИТИ</div>
+      <div class="cap" id="cap24">ОБЛИЧЧЯ.</div>
+      <div class="cap" id="cap25">ДОБРЕ?</div>
+      <div class="cap" id="cap26">ДИВІТЬСЯ!</div>
+      <div class="cap" id="cap27">ДУЖЕ,</div>
+      <div class="cap" id="cap28">Я</div>
+      <div class="cap" id="cap29">ВСТИГЛА</div>
+      <div class="cap" id="cap30">ПОМИТИСЯ.</div>
+      <div class="cap" id="cap31">ЗАРАЗ</div>
+      <div class="cap" id="cap32">СКАЖУ,</div>
+      <div class="cap" id="cap33">СКІЛЬКИ.</div>
+      <div class="cap" id="cap34">20</div>
+      <div class="cap" id="cap35">НОВИХ</div>
+      <div class="cap" id="cap36">ПОВІДОМЛЕНЬ</div>
+      <div class="cap" id="cap37">БУЛИ</div>
+      <div class="cap" id="cap38">РОЗІСЛАНО.</div>
+      <div class="cap" id="cap39">ЛИШИЛОСЬ</div>
+      <div class="cap" id="cap40">50,</div>
+      <div class="cap" id="cap41">Я</div>
+      <div class="cap" id="cap42">ТЕПЕР</div>
+      <div class="cap" id="cap43">ПІДУ</div>
+      <div class="cap" id="cap44">СПАТИ,</div>
+      <div class="cap" id="cap45">А</div>
+      <div class="cap" id="cap46">ВІН</div>
+      <div class="cap" id="cap47">БУДЕ</div>
+      <div class="cap" id="cap48">СПОКІЙНО</div>
+      <div class="cap" id="cap49">РОЗСИЛАТИ</div>
+      <div class="cap" id="cap50">ПОВІДОМЛЕННЯ,</div>
+      <div class="cap" id="cap51">ЩОБ</div>
+      <div class="cap" id="cap52">МЕНЕ</div>
+      <div class="cap" id="cap53">НЕ</div>
+      <div class="cap" id="cap54">ЗАБЛОКУВАЛИ</div>
+      <div class="cap" id="cap55">В</div>
+      <div class="cap" id="cap56">ІНСТАГРАМІ.</div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="36.950" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  tl.set("#cap0", {autoAlpha: 1}, 0.170);
+  tl.set("#cap0", {autoAlpha: 0}, 0.385);
+  tl.set("#cap1", {autoAlpha: 1}, 0.470);
+  tl.set("#cap1", {autoAlpha: 0}, 0.605);
+  tl.set("#cap2", {autoAlpha: 1}, 0.690);
+  tl.set("#cap2", {autoAlpha: 0}, 0.925);
+  tl.set("#cap3", {autoAlpha: 1}, 1.010);
+  tl.set("#cap3", {autoAlpha: 0}, 1.345);
+  tl.set("#cap4", {autoAlpha: 1}, 1.430);
+  tl.set("#cap4", {autoAlpha: 0}, 1.530);
+  tl.set("#cap5", {autoAlpha: 1}, 1.570);
+  tl.set("#cap5", {autoAlpha: 0}, 1.685);
+  tl.set("#cap6", {autoAlpha: 1}, 1.770);
+  tl.set("#cap6", {autoAlpha: 0}, 1.985);
+  tl.set("#cap7", {autoAlpha: 1}, 2.070);
+  tl.set("#cap7", {autoAlpha: 0}, 2.170);
+  tl.set("#cap8", {autoAlpha: 1}, 2.130);
+  tl.set("#cap8", {autoAlpha: 0}, 2.245);
+  tl.set("#cap9", {autoAlpha: 1}, 2.330);
+  tl.set("#cap9", {autoAlpha: 0}, 2.465);
+  tl.set("#cap10", {autoAlpha: 1}, 2.550);
+  tl.set("#cap10", {autoAlpha: 0}, 2.885);
+  tl.set("#cap11", {autoAlpha: 1}, 2.970);
+  tl.set("#cap11", {autoAlpha: 0}, 3.305);
+  tl.set("#cap12", {autoAlpha: 1}, 3.390);
+  tl.set("#cap12", {autoAlpha: 0}, 3.545);
+  tl.set("#cap13", {autoAlpha: 1}, 3.630);
+  tl.set("#cap13", {autoAlpha: 0}, 3.730);
+  tl.set("#cap14", {autoAlpha: 1}, 3.810);
+  tl.set("#cap14", {autoAlpha: 0}, 3.910);
+  tl.set("#cap15", {autoAlpha: 1}, 3.870);
+  tl.set("#cap15", {autoAlpha: 0}, 4.245);
+  tl.set("#cap16", {autoAlpha: 1}, 4.330);
+  tl.set("#cap16", {autoAlpha: 0}, 4.430);
+  tl.set("#cap17", {autoAlpha: 1}, 4.510);
+  tl.set("#cap17", {autoAlpha: 0}, 4.610);
+  tl.set("#cap18", {autoAlpha: 1}, 4.630);
+  tl.set("#cap18", {autoAlpha: 0}, 4.845);
+  tl.set("#cap19", {autoAlpha: 1}, 4.930);
+  tl.set("#cap19", {autoAlpha: 0}, 5.030);
+  tl.set("#cap20", {autoAlpha: 1}, 5.030);
+  tl.set("#cap20", {autoAlpha: 0}, 5.130);
+  tl.set("#cap21", {autoAlpha: 1}, 5.190);
+  tl.set("#cap21", {autoAlpha: 0}, 5.290);
+  tl.set("#cap22", {autoAlpha: 1}, 5.370);
+  tl.set("#cap22", {autoAlpha: 0}, 5.545);
+  tl.set("#cap23", {autoAlpha: 1}, 5.630);
+  tl.set("#cap23", {autoAlpha: 0}, 5.885);
+  tl.set("#cap24", {autoAlpha: 1}, 5.970);
+  tl.set("#cap24", {autoAlpha: 0}, 6.225);
+  tl.set("#cap25", {autoAlpha: 1}, 6.310);
+  tl.set("#cap25", {autoAlpha: 0}, 6.825);
+  tl.set("#cap26", {autoAlpha: 1}, 6.910);
+  tl.set("#cap26", {autoAlpha: 0}, 7.160);
+  tl.set("#cap27", {autoAlpha: 1}, 23.224);
+  tl.set("#cap27", {autoAlpha: 0}, 23.439);
+  tl.set("#cap28", {autoAlpha: 1}, 23.524);
+  tl.set("#cap28", {autoAlpha: 0}, 23.624);
+  tl.set("#cap29", {autoAlpha: 1}, 23.604);
+  tl.set("#cap29", {autoAlpha: 0}, 23.899);
+  tl.set("#cap30", {autoAlpha: 1}, 23.984);
+  tl.set("#cap30", {autoAlpha: 0}, 25.079);
+  tl.set("#cap31", {autoAlpha: 1}, 25.164);
+  tl.set("#cap31", {autoAlpha: 0}, 25.579);
+  tl.set("#cap32", {autoAlpha: 1}, 25.664);
+  tl.set("#cap32", {autoAlpha: 0}, 26.119);
+  tl.set("#cap33", {autoAlpha: 1}, 26.204);
+  tl.set("#cap33", {autoAlpha: 0}, 26.919);
+  tl.set("#cap34", {autoAlpha: 1}, 27.004);
+  tl.set("#cap34", {autoAlpha: 0}, 27.459);
+  tl.set("#cap35", {autoAlpha: 1}, 27.544);
+  tl.set("#cap35", {autoAlpha: 0}, 27.759);
+  tl.set("#cap36", {autoAlpha: 1}, 27.844);
+  tl.set("#cap36", {autoAlpha: 0}, 28.119);
+  tl.set("#cap37", {autoAlpha: 1}, 28.204);
+  tl.set("#cap37", {autoAlpha: 0}, 28.359);
+  tl.set("#cap38", {autoAlpha: 1}, 28.444);
+  tl.set("#cap38", {autoAlpha: 0}, 29.219);
+  tl.set("#cap39", {autoAlpha: 1}, 29.304);
+  tl.set("#cap39", {autoAlpha: 0}, 29.819);
+  tl.set("#cap40", {autoAlpha: 1}, 29.904);
+  tl.set("#cap40", {autoAlpha: 0}, 30.459);
+  tl.set("#cap41", {autoAlpha: 1}, 30.544);
+  tl.set("#cap41", {autoAlpha: 0}, 30.739);
+  tl.set("#cap42", {autoAlpha: 1}, 30.824);
+  tl.set("#cap42", {autoAlpha: 0}, 31.039);
+  tl.set("#cap43", {autoAlpha: 1}, 31.124);
+  tl.set("#cap43", {autoAlpha: 0}, 31.379);
+  tl.set("#cap44", {autoAlpha: 1}, 31.464);
+  tl.set("#cap44", {autoAlpha: 0}, 31.979);
+  tl.set("#cap45", {autoAlpha: 1}, 32.064);
+  tl.set("#cap45", {autoAlpha: 0}, 32.164);
+  tl.set("#cap46", {autoAlpha: 1}, 32.124);
+  tl.set("#cap46", {autoAlpha: 0}, 32.224);
+  tl.set("#cap47", {autoAlpha: 1}, 32.304);
+  tl.set("#cap47", {autoAlpha: 0}, 32.559);
+  tl.set("#cap48", {autoAlpha: 1}, 32.644);
+  tl.set("#cap48", {autoAlpha: 0}, 33.339);
+  tl.set("#cap49", {autoAlpha: 1}, 33.424);
+  tl.set("#cap49", {autoAlpha: 0}, 34.279);
+  tl.set("#cap50", {autoAlpha: 1}, 34.364);
+  tl.set("#cap50", {autoAlpha: 0}, 34.799);
+  tl.set("#cap51", {autoAlpha: 1}, 34.884);
+  tl.set("#cap51", {autoAlpha: 0}, 34.984);
+  tl.set("#cap52", {autoAlpha: 1}, 35.024);
+  tl.set("#cap52", {autoAlpha: 0}, 35.179);
+  tl.set("#cap53", {autoAlpha: 1}, 35.264);
+  tl.set("#cap53", {autoAlpha: 0}, 35.364);
+  tl.set("#cap54", {autoAlpha: 1}, 35.404);
+  tl.set("#cap54", {autoAlpha: 0}, 35.899);
+  tl.set("#cap55", {autoAlpha: 1}, 35.984);
+  tl.set("#cap55", {autoAlpha: 0}, 36.084);
+  tl.set("#cap56", {autoAlpha: 1}, 36.124);
+  tl.set("#cap56", {autoAlpha: 0}, 36.900);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 37.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 6.960);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 22.644);
+
+
+  tl.set("#note", {autoAlpha: 1}, 2.970);
+  tl.set("#note", {autoAlpha: 0}, 5.170);
+  tl.set(".bl", {autoAlpha: 1}, 7.160);
+  tl.set(".bl", {autoAlpha: 0}, 22.644);
+  tl.set("#explain", {autoAlpha: 1}, 7.160);
+  tl.set("#explain", {autoAlpha: 0}, 22.644);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>
