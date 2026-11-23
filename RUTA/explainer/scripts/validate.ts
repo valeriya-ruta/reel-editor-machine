@@ -5,7 +5,7 @@ import path from 'node:path';
 import {check, EPISODES_DIR, findEpisode, loadSpec, printReport} from './lib';
 
 const arg = process.argv[2];
-const files = arg ? [findEpisode(arg)] : fs.readdirSync(EPISODES_DIR).filter((f) => f.endsWith('.json')).map((f) => path.join(EPISODES_DIR, f));
+const files = arg ? [findEpisode(arg)] : fs.readdirSync(EPISODES_DIR).filter((f) => f.endsWith('.json') && !f.endsWith('.words.json')).map((f) => path.join(EPISODES_DIR, f));
 
 let failed = false;
 for (const file of files) {

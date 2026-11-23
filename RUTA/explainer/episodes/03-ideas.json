@@ -1,134 +1,98 @@
 {
   "id": "ep03-ideas",
-  "title": "Ідеї для контенту: від порожньої сторінки до скіла",
-  "status": "TODO-TOV",
+  "title": "Ідеї для контенту: від порожньої голови до нескінченних ідей",
+  "audio": "vo/03-ideas.mp3",
   "scene": {
     "floorY": 1300,
     "rooms": {
       "default": [60, 720, 1420, 1340],
-      "air": [60, 300, 1000, 1320],
-      "papers": [40, 300, 1040, 760],
-      "final": [0, 260, 1420, 1340]
+      "tiles": [0, 180, 1060, 900],
+      "final": [0, 240, 1420, 1340]
     },
     "objects": [
       {"id": "ruta", "type": "chibi", "x": 1120, "y": 1300, "scale": 1.05, "layer": "back", "props": {"pose": "neutral"}},
       {"id": "laptop", "type": "laptop", "x": 520, "y": 1300, "scale": 0.92, "props": {"window": "claude"}},
       {"id": "page", "type": "paper", "x": 540, "y": 560, "rot": -3, "layer": "air", "props": {"blank": true, "w": 420, "h": 520}},
-      {"id": "pile", "type": "notespile", "x": 320, "y": 560, "layer": "air", "hidden": true},
-      {"id": "saved", "type": "reels", "x": 820, "y": 580, "scale": 0.7, "layer": "air", "hidden": true, "props": {"title": "Збережене", "count": 12}},
+      {"id": "phone", "type": "phone", "x": 300, "y": 640, "scale": 2.1, "layer": "air", "hidden": true, "props": {"screen": "feed"}},
+      {"id": "clock", "type": "clock", "x": 900, "y": 540, "scale": 0.8, "layer": "air", "hidden": true, "props": {"label": "3:00"}},
       {"id": "chips", "type": "chips", "x": 540, "y": 580, "layer": "air", "hidden": true,
-        "props": {"items": ["5 порад продуктивності", "Мій ранок", "Топ-3 застосунки", "Як я все встигаю"]}},
-      {"id": "brand", "type": "paper", "x": 230, "y": 520, "rot": -8, "scale": 0.7, "layer": "air", "hidden": true, "props": {"title": "Бренд", "bars": 4, "w": 360, "h": 300}},
-      {"id": "audience", "type": "paper", "x": 540, "y": 470, "rot": 3, "scale": 0.7, "layer": "air", "hidden": true, "props": {"title": "Аудиторія", "bars": 4, "w": 360, "h": 300}},
-      {"id": "examples", "type": "paper", "x": 850, "y": 520, "rot": 8, "scale": 0.7, "layer": "air", "hidden": true, "props": {"title": "Приклади", "bars": 4, "w": 360, "h": 300}},
-      {"id": "skill", "type": "skill", "x": 520, "y": 1050, "layer": "air", "hidden": true, "props": {"name": "/сценарій", "sub": "скіл · твій голос"}},
-      {"id": "script", "type": "paper", "x": 480, "y": 590, "rot": -4, "scale": 0.85, "layer": "air", "hidden": true,
-        "props": {"title": "Сценарій", "sub": "рілс · твоїм голосом", "bars": 8, "w": 420, "h": 500, "folded": true}}
+        "props": {"items": ["5 порад для бізнесу", "Мій ранок", "Топ-3 застосунки", "Як я все встигаю"]}},
+      {"id": "calendar", "type": "calendar", "x": 320, "y": 580, "scale": 0.85, "layer": "air", "hidden": true, "props": {"title": "Щотижня нове"}},
+      {"id": "ig", "type": "app", "x": 180, "y": 360, "layer": "air", "hidden": true, "props": {"app": "instagram", "label": "Твій акаунт"}},
+      {"id": "fathom", "type": "app", "x": 180, "y": 680, "layer": "air", "hidden": true, "props": {"app": "fathom", "label": "Дзвінки"}},
+      {"id": "rivals", "type": "app", "x": 520, "y": 300, "layer": "air", "hidden": true, "props": {"glyph": "person", "bg": "#8E7CF0", "label": "Конкуренти"}},
+      {"id": "claude", "type": "app", "x": 880, "y": 560, "layer": "air", "hidden": true, "props": {"app": "claude", "label": "Claude"}},
+      {"id": "cable1", "type": "cable", "x": 0, "y": 0, "layer": "air", "props": {"from": "ig", "to": "claude"}},
+      {"id": "cable2", "type": "cable", "x": 0, "y": 0, "layer": "air", "props": {"from": "fathom", "to": "claude"}},
+      {"id": "cable3", "type": "cable", "x": 0, "y": 0, "layer": "air", "props": {"from": "rivals", "to": "claude"}},
+      {"id": "ideas", "type": "chips", "x": 540, "y": 600, "layer": "air", "hidden": true,
+        "props": {"items": ["питання клієнток", "що зайшло", "що в конкурентів", "твої кейси", "розбори"]}}
     ]
   },
   "steps": [
     {
-      "caption": "*Порожня* сторінка",
-      "vo": "Хочеш записати рілс, сідаєш — і дивишся в порожню сторінку.",
+      "caption": "Постити *регулярно*",
+      "vo": "Ти хочеш почати постити контент регулярно,",
       "beats": [
-        {"action": "page.pulse", "shot": "object_punch:page"},
-        {"action": "ruta.pose", "args": {"pose": "bored"}, "shot": "whip>character_close"},
-        {"action": "page.tilt", "args": {"to": -6}, "shot": "pull_back>room:air"}
+        {"action": "page.pulse", "shot": "object_punch:page"}
       ],
       "minus": {
-        "caption": "І *нічого* не приходить",
-        "vo": "І нічого не приходить у голову, хоч убий.",
+        "caption": "Але *жодної* ідеї",
+        "vo": "але жодна ідея не лізе в голову.",
         "beats": [
-          {"action": "page.shake", "shot": "punch>object_punch:page*1.2"},
-          {"action": "ruta.pose", "args": {"pose": "sad"}, "shot": "whip>character_close"},
-          {"action": "page.pulse", "shot": "whip>object_punch:page"}
+          {"action": "ruta.pose", "args": {"pose": "bored"}, "shot": "whip>character_close"},
+          {"action": "page.shake", "shot": "punch>object_punch:page*1.2"}
         ]
       }
     },
     {
-      "caption": "Ідеї — в *нотатки* й збережене",
-      "vo": "Тоді зберігаєш ідеї в нотатки, а чужі рілси — в збережене.",
+      "caption": "Шукаєш *натхнення*",
+      "vo": "Ти відкриваєш інстаграм, щоб надихнутись,",
       "beats": [
-        {"action": "pile.show", "shot": "whip>object_punch:pile", "also": [{"action": "page.hide"}, {"action": "pile.grow", "args": {"n": 10}, "at": 0.1}]},
-        {"action": "saved.show", "shot": "whip>object_punch:saved", "also": [{"action": "saved.fill", "at": 0.1}]},
+        {"action": "phone.show", "shot": "whip>phone_dive", "also": [{"action": "page.hide"}, {"action": "phone.swipe", "args": {"n": 2}, "at": 0.2}]},
         {"action": "ruta.pose", "args": {"pose": "phone"}, "shot": "whip>character_close"}
       ],
       "minus": {
-        "caption": "Нотатки — *кладовище* ідей",
-        "vo": "Але нотатки стають кладовищем, а збережене вже нереально передивитися.",
+        "caption": "*3:00* — шалаш у джунглях",
+        "vo": "і о третій ранку вже дивишся, як будують шалаш у джунглях.",
         "beats": [
-          {"action": "pile.grow", "args": {"n": 12, "dur": 0.8}, "shot": "whip>object_punch:pile", "also": [{"action": "pile.bury", "at": 0.6}]},
-          {"action": "saved.scroll", "args": {"rows": 8, "dur": 1.3}, "shot": "whip>object_punch:saved"},
-          {"action": "ruta.pose", "args": {"pose": "panicked"}, "shot": "whip>character_close"}
+          {"action": "clock.show", "shot": "whip>object_punch:clock", "also": [{"action": "clock.spin", "args": {"hours": 5}, "at": 0.1}]},
+          {"action": "phone.swipe", "args": {"n": 4}, "shot": "whip>phone_dive"},
+          {"action": "ruta.pose", "args": {"pose": "exhausted"}, "shot": "whip>character_close"}
         ]
       }
     },
     {
-      "caption": "Просиш *AI* накидати ідей",
-      "vo": "Просиш AI накидати тобі ідей для рілсів.",
+      "caption": "Ідеї від *Claude*",
+      "vo": "Тоді ти розповідаєш Клоду про свої послуги та цільову авдиторію і просиш його придумати тобі ідеї.",
       "beats": [
-        {"action": "laptop.ask", "args": {"text": "Дай 10 ідей для рілсів"}, "shot": "whip>screen", "also": [{"action": "pile.hide"}, {"action": "saved.hide"}]},
-        {"action": "laptop.reply", "args": {"title": "Ось 10 ідей для рілсів:"}, "shot": "punch>object_punch:laptop#chat"}
-      ],
-      "minus": {
-        "caption": "Але ідеї *загальні*",
-        "vo": "Але ідеї загальні, а українською звучать дуже неприродно.",
-        "beats": [
-          {"action": "chips.show", "shot": "whip>object_punch:chips", "also": [{"action": "chips.pop", "at": 0.1}]},
-          {"action": "ruta.pose", "args": {"pose": "confused"}, "shot": "whip>character_close"}
-        ]
-      }
-    },
-    {
-      "caption": "Даєш *контекст*: бренд і приклади",
-      "vo": "Даєш йому свій бренд, аудиторію і приклади хороших сценаріїв.",
-      "beats": [
-        {"action": "brand.show", "shot": "pull_back>room:papers",
-          "also": [{"action": "chips.hide"}, {"action": "audience.show", "at": 0.15}, {"action": "examples.show", "at": 0.3}]},
-        {"action": "brand.fly", "args": {"x": 520, "y": 1050, "scale": 0.1, "arc": 80}, "shot": "whip>screen",
-          "also": [{"action": "audience.fly", "args": {"x": 520, "y": 1050, "scale": 0.1, "arc": 80}, "at": 0.12},
-            {"action": "examples.fly", "args": {"x": 520, "y": 1050, "scale": 0.1, "arc": 80}, "at": 0.24},
-            {"action": "brand.hide", "at": 0.6}, {"action": "audience.hide", "at": 0.72}, {"action": "examples.hide", "at": 0.84}]},
+        {"action": "laptop.ask", "args": {"text": "Мої послуги й аудиторія. Дай ідеї"}, "shot": "whip>screen", "also": [{"action": "phone.hide"}, {"action": "clock.hide"}]},
+        {"action": "laptop.reply", "args": {"title": "10 ідей для рілсів"}, "shot": "punch>object_punch:laptop#chat"},
+        {"action": "chips.show", "shot": "whip>object_punch:chips", "also": [{"action": "chips.pop", "at": 0.1}]},
         {"action": "ruta.pose", "args": {"pose": "smug"}, "shot": "whip>character_close"}
       ],
       "minus": {
-        "caption": "Але звучить *не як ти*",
-        "vo": "Стало краще, але досі звучить не як ти.",
+        "caption": "Але *щотижня* — нове",
+        "vo": "Але кожного тижня треба придумувати щось нове!",
         "beats": [
-          {"action": "laptop.ask", "args": {"text": "Напиши сценарій рілса"}, "shot": "whip>screen",
-            "also": [{"action": "laptop.reply", "args": {"title": "Сценарій: «Привіт, друзі!..»"}, "at": 0.25}]},
+          {"action": "calendar.show", "shot": "whip>object_punch:calendar", "also": [{"action": "chips.hide"}, {"action": "calendar.flip", "args": {"weeks": 3}, "at": 0.1}]},
           {"action": "ruta.pose", "args": {"pose": "frustrated"}, "shot": "whip>character_close"}
         ]
       }
     },
     {
-      "caption": "Вчиш його *своєму голосу*",
-      "vo": "Тоді вчиш його своєму голосу й улюбленим словам.",
+      "caption": "Підключаєш *акаунт*",
+      "vo": "Тоді ти підключаєш свій акаунт, щоб знати, які теми заходять найкраще, підключаєш запис дзвінків з клієнтами, щоб знати, які питання тобі задають, та даєш посилання на своїх конкурентів, щоб красти як художниця. Тепер у тебе є нескінченна кількість ідей для контенту!",
       "beats": [
-        {"action": "laptop.type", "args": {"text": "Пиши як я: коротко, на «ти», без канцеляриту, з моїми словечками"}, "shot": "whip>input_close"},
-        {"action": "ruta.pose", "args": {"pose": "smug"}, "shot": "whip>character_close"},
-        {"action": "laptop.send", "shot": "whip>screen"}
-      ],
-      "minus": {
-        "caption": "І щоразу — *з нуля*",
-        "vo": "Але в кожному новому чаті пояснюєш усе з нуля.",
-        "beats": [
-          {"action": "laptop.newchat", "shot": "whip>screen",
-            "also": [{"action": "laptop.type", "args": {"text": "Пиши як я: коротко, на «ти», без канцеляриту…", "dur": 1.6}, "at": 0.35}]},
-          {"action": "ruta.pose", "args": {"pose": "exhausted"}, "shot": "whip>character_close"},
-          {"action": "laptop.pulse", "shot": "whip>input_close"}
-        ]
-      }
-    },
-    {
-      "caption": "Скіл: *сценарій* твоїм голосом",
-      "vo": "Тож робиш скіл: сценарій рілса твоїм голосом, поки ти п’єш каву.",
-      "beats": [
-        {"action": "skill.show", "shot": "whip>object_punch:skill", "also": [{"action": "laptop.clear"}, {"action": "ruta.pose", "args": {"pose": "neutral"}}]},
-        {"action": "skill.stamp", "shot": "punch>object_punch:skill*1.15", "w": 0.8},
-        {"action": "script.show", "shot": "whip>object_punch:script", "caption": "Сценарій — *твоїм голосом*",
-          "also": [{"action": "script.unfold", "at": 0.25}, {"action": "skill.fly", "args": {"x": 520, "y": 1225, "scale": 0.08, "arc": 40}}, {"action": "skill.hide", "at": 0.55}]},
-        {"action": "ruta.pose", "args": {"pose": "coffee"}, "shot": "pull_back>room:final", "caption": "А ти *п’єш каву*"},
+        {"action": "ig.show", "shot": "pull_back>room:tiles", "also": [{"action": "calendar.hide"}, {"action": "claude.show", "at": 0.15}, {"action": "ruta.pose", "args": {"pose": "neutral"}}]},
+        {"action": "cable1.plug", "shot": "follow>object_punch:cable1"},
+        {"action": "fathom.show", "shot": "whip>object_punch:fathom", "caption": "*Дзвінки* з клієнтками"},
+        {"action": "cable2.plug", "shot": "follow>object_punch:cable2"},
+        {"action": "rivals.show", "shot": "whip>object_punch:rivals", "caption": "Красти як *художниця*"},
+        {"action": "cable3.plug", "shot": "follow>object_punch:cable3"},
+        {"action": "ideas.show", "shot": "whip>object_punch:ideas", "caption": "*Нескінченні* ідеї",
+          "also": [{"action": "ig.hide"}, {"action": "fathom.hide"}, {"action": "rivals.hide"}, {"action": "claude.hide"}, {"action": "cable1.hide"}, {"action": "cable2.hide"}, {"action": "cable3.hide"}, {"action": "ideas.pop", "at": 0.1}]},
+        {"action": "ruta.pose", "args": {"pose": "ecstatic"}, "shot": "pull_back>room:final"},
         {"action": "ruta.pulse", "shot": "punch>character_close"}
       ]
     }

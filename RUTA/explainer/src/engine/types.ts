@@ -43,8 +43,15 @@ export type SceneObject = {
 
 export type Rect = [x0: number, y0: number, x1: number, y1: number];
 
+/** One word of the voiceover as Whisper heard it (seconds). */
+export type SpokenWord = {w: string; s: number; e: number};
+
 export type EpisodeSpec = {
   id: string;
+  /** Mode B: the voiceover file under public/, e.g. "vo/05-calls.mp3". */
+  audio?: string;
+  /** Mode B: its word timings, merged in from `<episode>.words.json` by the loaders. */
+  words?: SpokenWord[];
   title: string;
   /** TODO-TOV until Ruta rewrites captions and VO in her voice. */
   status?: string;
@@ -88,5 +95,7 @@ export type Timeline = {
   captions: CaptionEv[];
   parts: PartTiming[];
   words: number;
+  /** 'A' timed from the text, 'B' pinned to the voiceover. */
+  mode: 'A' | 'B';
   warnings: string[];
 };

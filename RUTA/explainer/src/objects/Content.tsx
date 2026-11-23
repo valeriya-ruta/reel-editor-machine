@@ -168,6 +168,7 @@ export const Sheet: ObjectDef = {
 
 const DAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
 const CalRender: React.FC<RenderProps> = ({o, s}) => {
+  const day = num(o.props?.day, 0); // the weekday that gets marked: 0 Monday … 6 Sunday
   const flip = num(s.flip, 0);
   const base = Math.floor(flip);
   const frac = flip - base;
@@ -176,7 +177,7 @@ const CalRender: React.FC<RenderProps> = ({o, s}) => {
       <div style={{height: 70, background: `linear-gradient(${C.skill[0]},${C.skill[1]})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 30, color: C.ink}}>{str(o.props?.title, 'Календар')}</div>
       <div style={{position: 'absolute', left: 22, right: 22, top: 84, display: 'flex', justifyContent: 'space-between'}}>
         {DAYS.map((d, i) => (
-          <div key={d} style={{width: 62, textAlign: 'center', fontWeight: 800, fontSize: 20, color: i === 0 ? C.terracotta : '#9AA0A6'}}>{d}</div>
+          <div key={d} style={{width: 62, textAlign: 'center', fontWeight: 800, fontSize: 20, color: i === day ? C.terracotta : '#9AA0A6'}}>{d}</div>
         ))}
       </div>
       <div style={{position: 'absolute', left: 22, right: 22, top: 122, height: 3 * 76, overflow: 'hidden'}}>
@@ -187,9 +188,9 @@ const CalRender: React.FC<RenderProps> = ({o, s}) => {
           return (
             <div key={week} style={{position: 'absolute', left: 0, right: 0, top: y, height: 68, display: 'flex', justifyContent: 'space-between'}}>
               {DAYS.map((_d, i) => (
-                <div key={i} style={{width: 62, height: 62, borderRadius: 16, background: i === 0 ? '#FFE3EC' : '#F1F3F6', display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: 22, color: '#6B6E76', position: 'relative'}}>
+                <div key={i} style={{width: 62, height: 62, borderRadius: 16, background: i === day ? '#FFE3EC' : '#F1F3F6', display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: 22, color: '#6B6E76', position: 'relative'}}>
                   {((week * 7 + i) % 30) + 1}
-                  {i === 0 && status ? (
+                  {i === day && status ? (
                     <div style={{position: 'absolute', inset: -4, borderRadius: 18, background: status === 'done' ? '#2DB47A' : '#FF5A5A', display: 'grid', placeItems: 'center', color: '#fff', fontSize: 34, fontWeight: 800}}>{status === 'done' ? '✓' : '×'}</div>
                   ) : null}
                 </div>
@@ -364,8 +365,9 @@ const PILE: [number, number, number][] = Array.from({length: 24}).map((_, i) => 
   return [(k - 2.5) * 62 + ((i * 29) % 30) - 15, 330 - ring * 70 - ((k * 17) % 26), ((i * 47) % 40) - 20];
 });
 
-const PileRender: React.FC<RenderProps> = ({s}) => {
+const PileRender: React.FC<RenderProps> = ({o, s}) => {
   const n = s.count;
+  const screens = o.props?.kind === 'screens';
   const bury = clamp(s.bury);
   return (
     <div style={{position: 'absolute', inset: 0, filter: bury > 0 ? `grayscale(${bury}) brightness(${1 - 0.18 * bury})` : undefined}}>
@@ -374,6 +376,17 @@ const PileRender: React.FC<RenderProps> = ({s}) => {
         if (v <= 0) return null;
         const [a, b] = tint(i + 2);
         const drop = (1 - outCubic(clamp(v * 1.3))) * 160;
+        if (screens) {
+          // phone screenshots: tall white cards with a coloured "reel" and grey rows
+          return (
+            <div key={i} style={{position: 'absolute', left: 260 + x - 55, top: y - 100 - drop, width: 110, height: 200, borderRadius: 16, background: '#fff', border: '5px solid #2B2D33', boxSizing: 'border-box', transform: `rotate(${r}deg)`, boxShadow: '0 10px 18px rgba(30,40,80,.2)', opacity: clamp(v * 3), overflow: 'hidden'}}>
+              <div style={{height: 78, background: `linear-gradient(${a},${b})`}} />
+              {[0, 1, 2, 3].map((k) => (
+                <i key={k} style={{display: 'block', margin: '9px 10px 0', height: 8, width: `${[80, 60, 70, 45][k]}%`, borderRadius: 4, background: '#D5D9E0'}} />
+              ))}
+            </div>
+          );
+        }
         return (
           <div key={i} style={{position: 'absolute', left: 260 + x - 75, top: y - 75 - drop + bury * 18, width: 150, height: 150, borderRadius: 10, background: `linear-gradient(${a},${b})`, transform: `rotate(${r}deg)`, boxShadow: '0 10px 18px rgba(60,50,30,.18)', opacity: clamp(v * 3)}}>
             {[0, 1, 2].map((k) => (

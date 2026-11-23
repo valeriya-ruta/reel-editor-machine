@@ -4,9 +4,16 @@
 import type {EpisodeSpec} from './engine/types';
 
 type Ctx = {keys(): string[]; (key: string): unknown};
-const ctx: Ctx = (require as unknown as {context: (dir: string, sub: boolean, re: RegExp) => Ctx}).context('../episodes', false, /\.json$/);
+type Req = {context: (dir: string, sub: boolean, re: RegExp) => Ctx};
+const specs: Ctx = (require as unknown as Req).context('../episodes', false, /^\.\/\d+-[a-z-]+\.json$/);
+const timings: Ctx = (require as unknown as Req).context('../episodes', false, /\.words\.json$/);
 
-export const EPISODES: EpisodeSpec[] = ctx
+// Mode B: an episode with a voiceover gets its word timings from <name>.words.json
+export const EPISODES: EpisodeSpec[] = specs
   .keys()
   .sort()
-  .map((k) => ctx(k) as EpisodeSpec);
+  .map((k) => {
+    const spec = specs(k) as EpisodeSpec;
+    const w = k.replace(/\.json$/, '.words.json');
+    return spec.audio && timings.keys().includes(w) ? {...spec, words: (timings(w) as {words: EpisodeSpec['words']}).words} : spec;
+  });

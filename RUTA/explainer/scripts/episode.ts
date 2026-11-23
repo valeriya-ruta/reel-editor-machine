@@ -13,9 +13,9 @@ const flag = (name: string) => {
   const i = args.indexOf(`--${name}`);
   return i >= 0 ? args[i + 1] : undefined;
 };
-const id = args.find((a, i) => !a.startsWith('--') && !(i > 0 && args[i - 1].startsWith('--')));
+const id = args.find((a, i) => !a.startsWith('--') && !(i > 0 && ['--out', '--frames'].includes(args[i - 1])));
 if (!id) {
-  console.error('usage: npm run episode -- <episode> [--out file.mp4] [--frames 0-90]');
+  console.error('usage: npm run episode -- <episode> [--out file.mp4] [--frames 0-90] [--preview]');
   process.exit(1);
 }
 
@@ -31,6 +31,8 @@ const browser = (): string | undefined => {
   return undefined;
 };
 
+const preview = args.includes('--preview');
+
 const main = async () => {
   const file = findEpisode(id);
   const spec = loadSpec(file);
@@ -38,7 +40,7 @@ const main = async () => {
   printReport(path.basename(file), report);
   if (report.errors.length) process.exit(1);
 
-  const out = path.resolve(flag('out') ?? path.join(ROOT, 'out', `${spec.id}.mp4`));
+  const out = path.resolve(flag('out') ?? path.join(ROOT, 'out', `${spec.id}${preview ? '-preview' : ''}.mp4`));
   fs.mkdirSync(path.dirname(out), {recursive: true});
   const range = flag('frames')?.split('-').map(Number) as [number, number] | undefined;
 
@@ -52,7 +54,8 @@ const main = async () => {
     composition,
     inputProps: {spec},
     codec: 'h264',
-    crf: 18,
+    crf: preview ? 23 : 18,
+    scale: preview ? 0.5 : 1,
     pixelFormat: 'yuv420p',
     colorSpace: 'bt709',
     imageFormat: 'jpeg',

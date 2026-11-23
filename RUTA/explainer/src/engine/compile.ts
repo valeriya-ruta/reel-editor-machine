@@ -5,6 +5,7 @@
 // transitions shrink first and the narration time is never cut.
 
 import {OBJECTS, verbFor} from '../objects/registry';
+import {alignWords} from './align';
 import type {ActionCall, Args, Beat, CaptionEv, EpisodeSpec, Ev, Part, PartTiming, Shot, ShotSpec, Timeline} from './types';
 
 export const FPS = 30;
@@ -19,7 +20,10 @@ const END_HOLD = 0.7; // the last frame state, so it ends on the result
 export const VIA: Record<string, number> = {cut: 0, punch: 0.2, whip: 0.32, follow: 0.45, ease: 0.5, pull_back: 0.62};
 export const PRESETS = ['room', 'screen', 'input_close', 'object_punch', 'character_close', 'phone_dive'] as const;
 
-export const countWords = (s: string) => (s.match(/[\p{L}\p{N}][\p{L}\p{N}'’ʼ-]*/gu) ?? []).length;
+const WORD_RE = /[\p{L}\p{N}][\p{L}\p{N}'’ʼ-]*/gu;
+export const countWords = (s: string) => (s.match(WORD_RE) ?? []).length;
+const wordsOf = (s: string) => s.match(WORD_RE) ?? [];
+const LEAD = 0.12; // a part (and its caption) starts just before its first word
 
 export type ParsedShot = {preset: string; target?: string; via: string; zoom: number; dx: number; dy: number};
 
@@ -123,6 +127,24 @@ export const compile = (spec: EpisodeSpec): Timeline => {
     warnings.push(`over ${LIMIT}s: tightened gaps, holds and transitions (now ${lay.total.toFixed(1)}s; voiceover untouched)`);
   }
 
+  // Mode B: every part starts on its first spoken word, beats share the part by weight
+  let starts: number[] | null = null;
+  let audioEnd = 0;
+  if (spec.audio && spec.words?.length) {
+    const specWords = parts.flatMap((fp) => wordsOf(fp.part.vo));
+    const {starts: ws, coverage} = alignWords(specWords, spec.words);
+    if (coverage < 0.8) warnings.push(`only ${Math.round(coverage * 100)}% of the script's words were found in the voiceover — check the text matches the audio`);
+    starts = [];
+    let k = 0;
+    for (const fp of parts) {
+      starts.push(starts.length === 0 ? 0 : Math.max(0, ws[k] - LEAD));
+      k += wordsOf(fp.part.vo).length;
+    }
+    audioEnd = spec.words[spec.words.length - 1].e + 0.25;
+    gap = 0;
+    if (audioEnd + END_HOLD > LIMIT) warnings.push(`the voiceover is ${audioEnd.toFixed(1)}s — over the ${LIMIT}s ceiling`);
+  }
+
   const events: Ev[] = [];
   const shots: Shot[] = [];
   const captions: CaptionEv[] = [];
@@ -132,9 +154,17 @@ export const compile = (spec: EpisodeSpec): Timeline => {
   parts.forEach((fp, pi) => {
     const d = lay.durs[pi];
     const beatsSum = d.reduce((a, b) => a + b, 0);
-    // a part never ends before its narration does
-    const stretch = lay.vo[pi] > beatsSum ? lay.vo[pi] / beatsSum : 1;
     const isLast = pi === parts.length - 1;
+    let stretch: number;
+    if (starts) {
+      // the part fills exactly the time until the next part's first word
+      const end = isLast ? audioEnd : starts[pi + 1];
+      t = starts[pi];
+      stretch = Math.max(0.05, end - t) / beatsSum;
+    } else {
+      // a part never ends before its narration does
+      stretch = lay.vo[pi] > beatsSum ? lay.vo[pi] / beatsSum : 1;
+    }
     const t0 = t;
     let capText = fp.part.caption;
     let capStart = t0;
@@ -172,8 +202,8 @@ export const compile = (spec: EpisodeSpec): Timeline => {
 
   const duration = t;
   const words = timings.reduce((a, p) => a + p.words, 0);
-  if (duration < TARGET[0] || duration > TARGET[1]) warnings.push(`estimated ${duration.toFixed(1)}s is outside the ${TARGET[0]}–${TARGET[1]}s target`);
+  if (!starts && (duration < TARGET[0] || duration > TARGET[1])) warnings.push(`estimated ${duration.toFixed(1)}s is outside the ${TARGET[0]}–${TARGET[1]}s target`);
   for (const o of spec.scene.objects) if (!OBJECTS[o.type]) warnings.push(`unknown object type "${o.type}"`);
 
-  return {fps: FPS, duration, frames: Math.ceil(duration * FPS), events, byObj, shots, captions, parts: timings, words, warnings};
+  return {fps: FPS, duration, frames: Math.ceil(duration * FPS), events, byObj, shots, captions, parts: timings, words, mode: starts ? 'B' : 'A', warnings};
 };

@@ -1,7 +1,7 @@
 {
   "id": "ep04-carousels",
   "title": "Каруселі: від Canva вручну до дизайн-системи",
-  "status": "TODO-TOV",
+  "audio": "vo/04-carousels.mp3",
   "scene": {
     "floorY": 1300,
     "rooms": {
@@ -17,93 +17,85 @@
       {"id": "clock", "type": "clock", "x": 260, "y": 540, "scale": 0.85, "layer": "air", "hidden": true, "props": {"label": "цілий вечір"}},
       {"id": "chips", "type": "chips", "x": 540, "y": 580, "layer": "air", "hidden": true,
         "props": {"items": ["У сучасному світі…", "Друзі, сьогодні…", "Не пропустіть!", "Топ-5 порад"]}},
-      {"id": "ds", "type": "dscard", "x": 330, "y": 560, "layer": "air", "hidden": true},
-      {"id": "skill", "type": "skill", "x": 520, "y": 1050, "layer": "air", "hidden": true, "props": {"name": "/карусель", "sub": "скіл · твій стиль"}},
-      {"id": "export", "type": "cable", "x": 0, "y": 0, "layer": "air", "props": {"from": "slides", "to": "canva"}}
+      {"id": "tov", "type": "skill", "x": 520, "y": 1050, "layer": "air", "hidden": true, "props": {"name": "/tov", "sub": "скіл · пише як ти"}},
+      {"id": "ds", "type": "dscard", "x": 540, "y": 560, "layer": "air", "hidden": true},
+      {"id": "phone", "type": "phone", "x": 300, "y": 640, "scale": 2.1, "layer": "air", "hidden": true, "props": {"screen": "claude"}}
     ]
   },
   "steps": [
     {
       "caption": "Карусель у *Canva* вручну",
-      "vo": "Робиш карусель у Canva вручну: слайд за слайдом, шрифт за шрифтом.",
+      "vo": "Ти робиш карусель у Канві вручну,",
       "beats": [
         {"action": "slides.build", "args": {"n": 2, "dur": 1.4}, "shot": "object_punch:slides"},
-        {"action": "canva.pulse", "shot": "whip>object_punch:canva"},
-        {"action": "slides.build", "args": {"n": 3, "dur": 1.6}, "shot": "whip>object_punch:slides"},
-        {"action": "ruta.pose", "args": {"pose": "frustrated"}, "shot": "whip>character_close"}
+        {"action": "canva.pulse", "shot": "whip>object_punch:canva"}
       ],
       "minus": {
-        "caption": "Одна карусель — *цілий вечір*",
-        "vo": "І одна карусель займає цілий вечір.",
+        "caption": "Це *цілий вечір*",
+        "vo": "і на неї йде цілий вечір.",
         "beats": [
-          {"action": "clock.show", "shot": "whip>object_punch:clock", "also": [{"action": "canva.hide"}, {"action": "clock.spin", "args": {"hours": 3}, "at": 0.15}]},
+          {"action": "clock.show", "shot": "whip>object_punch:clock", "also": [{"action": "canva.hide"}, {"action": "clock.spin", "args": {"hours": 3}, "at": 0.1}]},
           {"action": "ruta.pose", "args": {"pose": "exhausted"}, "shot": "whip>character_close"}
         ]
       }
     },
     {
       "caption": "Робиш *шаблон*",
-      "vo": "Тоді робиш собі шаблон, щоб наступного разу було швидше.",
+      "vo": "Тоді ти робиш собі шаблон,",
       "beats": [
-        {"action": "slides.style", "args": {"mode": "template"}, "shot": "whip>object_punch:slides", "also": [{"action": "clock.hide"}]},
-        {"action": "ruta.pose", "args": {"pose": "smug"}, "shot": "whip>character_close"},
-        {"action": "slides.pulse", "shot": "punch>object_punch:slides#front"}
+        {"action": "slides.style", "args": {"mode": "template"}, "shot": "whip>object_punch:slides", "also": [{"action": "clock.hide"}, {"action": "slides.build", "args": {"n": 3}}]}
       ],
       "minus": {
-        "caption": "Але *текст* — однаково сама",
-        "vo": "Але весь текст на кожному слайді однаково пишеш сама.",
+        "caption": "Але *текст* — сама",
+        "vo": "але весь текст все одно пишеш сама.",
         "beats": [
-          {"action": "slides.text", "args": {"to": 0.35, "dur": 1.6}, "shot": "punch>object_punch:slides#front"},
-          {"action": "ruta.pose", "args": {"pose": "bored"}, "shot": "whip>character_close"},
-          {"action": "slides.text", "args": {"to": 0.55, "dur": 1.4}, "shot": "whip>object_punch:slides"}
+          {"action": "slides.text", "args": {"to": 0.4, "dur": 1.6}, "shot": "punch>object_punch:slides#front"},
+          {"action": "ruta.pose", "args": {"pose": "bored"}, "shot": "whip>character_close"}
         ]
       }
     },
     {
-      "caption": "Текст пише *AI*",
-      "vo": "Просиш AI написати текст для всіх слайдів.",
+      "caption": "Текст пише *Claude*",
+      "vo": "Тоді ти просиш Клода написати текст,",
       "beats": [
-        {"action": "laptop.ask", "args": {"text": "Напиши текст для каруселі"}, "shot": "whip>screen",
-          "also": [{"action": "laptop.reply", "args": {"title": "Ось текст для 5 слайдів"}, "at": 0.25}]},
+        {"action": "laptop.ask", "args": {"text": "Напиши текст для каруселі"}, "shot": "whip>screen", "also": [{"action": "laptop.reply", "args": {"title": "Ось текст для 5 слайдів"}, "at": 0.25}]},
         {"action": "slides.text", "args": {"to": 1, "dur": 0.6}, "shot": "whip>object_punch:slides"}
       ],
       "minus": {
-        "caption": "Але звучить *як усі*",
-        "vo": "Але текст звучить не як ти, а як усі.",
+        "caption": "Але звучить *штучно*",
+        "vo": "але звучить штучно.",
         "beats": [
-          {"action": "chips.show", "shot": "whip>object_punch:chips", "also": [{"action": "chips.pop", "at": 0.1}]},
-          {"action": "ruta.pose", "args": {"pose": "confused"}, "shot": "whip>character_close"},
-          {"action": "chips.forget", "shot": "punch>object_punch:chips"}
+          {"action": "chips.show", "shot": "whip>object_punch:chips", "also": [{"action": "chips.pop", "at": 0.05}, {"action": "ruta.pose", "args": {"pose": "confused"}, "at": 0.5}]}
         ]
       }
     },
     {
-      "caption": "Вчиш його *своєму голосу*",
-      "vo": "Тоді вчиш його своєму голосу й словам.",
+      "caption": "Скіл */tov*",
+      "vo": "Тоді ти даєш йому приклади свого стилю і навчаєш його писати як ти — це скіл «тон оф войс».",
       "beats": [
-        {"action": "laptop.type", "args": {"text": "Пиши як я: коротко, на «ти», з моїми словами"}, "shot": "whip>input_close", "also": [{"action": "chips.hide"}]},
+        {"action": "laptop.type", "args": {"text": "Ось приклади мого стилю. Пиши як я"}, "shot": "whip>input_close", "also": [{"action": "chips.hide"}]},
+        {"action": "tov.show", "shot": "whip>object_punch:tov", "also": [{"action": "laptop.clear"}, {"action": "tov.stamp", "at": 0.4}]},
         {"action": "ruta.pose", "args": {"pose": "smug"}, "shot": "whip>character_close"}
       ],
       "minus": {
-        "caption": "Але *дизайн* — знову сама",
-        "vo": "Але дизайн однаково збираєш сама, руками.",
+        "caption": "Але *дизайн* — власноруч",
+        "vo": "Але дизайн ти все одно робиш власноруч!",
         "beats": [
-          {"action": "slides.shake", "shot": "whip>object_punch:slides", "also": [{"action": "canva.show", "at": 0.2}]},
+          {"action": "slides.shake", "shot": "whip>object_punch:slides", "also": [{"action": "tov.hide"}, {"action": "canva.show", "at": 0.2}]},
           {"action": "ruta.pose", "args": {"pose": "frustrated"}, "shot": "whip>character_close"}
         ]
       }
     },
     {
-      "caption": "Просиш *Claude* про дизайн",
-      "vo": "Просиш Claude ще й зробити дизайн.",
+      "caption": "Дизайн від *Claude*",
+      "vo": "Тоді ти просиш Клода зробити ще й дизайн.",
       "beats": [
-        {"action": "laptop.ask", "args": {"text": "Зроби дизайн каруселі"}, "shot": "whip>screen",
-          "also": [{"action": "laptop.clear"}, {"action": "canva.hide"}, {"action": "laptop.reply", "args": {"title": "Ось дизайн!"}, "at": 0.25}]},
+        {"action": "laptop.ask", "args": {"text": "Зроби дизайн каруселі"}, "shot": "whip>screen", "also": [{"action": "canva.hide"}, {"action": "laptop.reply", "args": {"title": "Ось дизайн!"}, "at": 0.25}]},
         {"action": "slides.style", "args": {"mode": "ugly"}, "shot": "whip>object_punch:slides"}
       ],
       "minus": {
         "caption": "*Негарно* і щоразу по-різному",
-        "vo": "Але виходить негарно, щоразу по-різному, і в новому чаті він усе забуває.",
+        "vo": "Він робить, але негарно, щоразу по-різному, а в новому чаті все забуває.",
         "beats": [
           {"action": "slides.shuffle", "args": {"times": 3}, "shot": "punch>object_punch:slides*1.15"},
           {"action": "ruta.pose", "args": {"pose": "waterworks"}, "shot": "whip>character_close"},
@@ -113,15 +105,16 @@
       }
     },
     {
-      "caption": "*Дизайн-система* + скіл",
-      "vo": "Тож робиш дизайн-систему і скіл: кожна карусель у твоєму стилі й одразу експортується в Canva.",
+      "caption": "*Дизайн-система*",
+      "vo": "Тоді ти збираєш свої кольори, шрифти й референси в один файл — дизайн-систему. Тепер ти кидаєш тему з телефона, а карусель у твоєму стилі вже чекає в Клоді!",
       "beats": [
         {"action": "ds.show", "shot": "whip>object_punch:ds", "also": [{"action": "slides.hide"}, {"action": "ruta.pose", "args": {"pose": "neutral"}}]},
-        {"action": "skill.show", "shot": "whip>object_punch:skill", "also": [{"action": "skill.stamp", "at": 0.35}]},
-        {"action": "slides.show", "shot": "whip>object_punch:slides", "caption": "Кожна карусель — *твій стиль*",
-          "also": [{"action": "ds.hide"}, {"action": "skill.hide"}, {"action": "slides.style", "args": {"mode": "mine"}, "at": 0.1}]},
-        {"action": "export.plug", "shot": "follow>object_punch:export", "caption": "І одразу в *Canva*", "also": [{"action": "canva.show"}]},
-        {"action": "ruta.pose", "args": {"pose": "coffee"}, "shot": "pull_back>room:final", "caption": "А ти *п’єш каву*"},
+        {"action": "ds.pulse", "shot": "punch>object_punch:ds*1.2"},
+        {"action": "phone.show", "shot": "whip>phone_dive", "caption": "Тема *з телефона*",
+          "also": [{"action": "ds.hide"}, {"action": "phone.type", "args": {"text": "карусель про ідеї"}, "at": 0.15}, {"action": "phone.send", "at": 0.75}]},
+        {"action": "slides.show", "shot": "whip>object_punch:slides", "caption": "Карусель — *твій стиль*",
+          "also": [{"action": "phone.hide"}, {"action": "slides.style", "args": {"mode": "mine"}, "at": 0.1}]},
+        {"action": "ruta.pose", "args": {"pose": "coffee"}, "shot": "pull_back>room:final"},
         {"action": "ruta.pulse", "shot": "punch>character_close"}
       ]
     }

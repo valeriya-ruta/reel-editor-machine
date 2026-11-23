@@ -64,9 +64,13 @@ holds drift in, and longer ones get an automatic punch-in. Over 58 s, gaps,
 holds and transitions shrink first and the voiceover is never cut, with a
 warning.
 
-**Mode B** (next, once there's a voiceover): `audio.mp3` + word timestamps
-(ElevenLabs "with timestamps" or Whisper) pin each part and caption to its
-spoken words.
+**Mode B** (when the spec has `"audio"`): the voiceover is ElevenLabs Matilda
+(`elevenlabs/eleven-v4`, voice `matilda`) generated through OpenRouter into
+`public/vo/NN-slug.mp3` (gitignored). `python scripts/words.py public/vo/NN-slug.mp3
+episodes/NN-slug.words.json` times every word with faster-whisper. The compiler
+matches the spec's words to those timings letter by letter, so each part and its
+caption start on the first spoken word and beats share the part by weight.
+`npm run episode -- N --preview` renders at half size.
 
 ## Objects (`src/objects/`)
 

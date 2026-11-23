@@ -1,7 +1,7 @@
 {
   "id": "ep01-editing",
   "title": "Монтаж: від сирого відео до хмари",
-  "status": "TODO-TOV",
+  "audio": "vo/01-editing.mp3",
   "scene": {
     "floorY": 1300,
     "rooms": {
@@ -13,10 +13,9 @@
       {"id": "laptop", "type": "laptop", "x": 520, "y": 1300, "scale": 0.92, "props": {"window": "claude"}},
       {"id": "phone", "type": "phone", "x": 300, "y": 640, "scale": 2.1, "layer": "air", "props": {"screen": "camera"}},
       {"id": "timeline", "type": "timeline", "x": 540, "y": 560, "layer": "air", "hidden": true},
-      {"id": "clock", "type": "clock", "x": 860, "y": 560, "layer": "air", "hidden": true, "props": {"label": "2 години"}},
+      {"id": "clock", "type": "clock", "x": 860, "y": 560, "layer": "air", "hidden": true, "props": {"label": "година"}},
       {"id": "editor", "type": "app", "x": 330, "y": 540, "layer": "air", "hidden": true, "props": {"glyph": "person", "bg": "#F49A6B", "label": "Монтажер"}},
-      {"id": "price", "type": "price", "x": 780, "y": 520, "layer": "air", "hidden": true, "props": {"text": "€€€", "sub": "щомісяця"}},
-      {"id": "ai", "type": "app", "x": 300, "y": 520, "layer": "air", "hidden": true, "props": {"glyph": "sparkle", "bg": "#6B7CFF", "label": "AI-монтаж"}},
+      {"id": "price", "type": "price", "x": 780, "y": 520, "layer": "air", "hidden": true, "props": {"text": "30 €", "sub": "за рілс"}},
       {"id": "skill", "type": "skill", "x": 520, "y": 1050, "layer": "air", "hidden": true, "props": {"name": "/монтаж", "sub": "скіл · твій стиль"}},
       {"id": "cloud", "type": "cloud", "x": 660, "y": 470, "layer": "air", "hidden": true},
       {"id": "reels", "type": "reels", "x": 250, "y": 610, "scale": 0.7, "layer": "air", "hidden": true, "props": {"title": "Готові рілси", "count": 9}}
@@ -24,106 +23,92 @@
   },
   "steps": [
     {
-      "caption": "Знімаєш і *одразу* викладаєш",
-      "vo": "Знімаєш рілс на телефон і одразу викладаєш, як є.",
+      "caption": "Записала й *виклала*",
+      "vo": "Ти записала відео та виклала його в інстаграм.",
       "beats": [
         {"action": "phone.record", "shot": "phone_dive"},
-        {"action": "ruta.pose", "args": {"pose": "phone"}, "shot": "whip>character_close"},
         {"action": "phone.post", "shot": "whip>phone_dive*0.8"}
       ],
       "minus": {
-        "caption": "А люди *гортають* далі",
-        "vo": "Але там паузи й запинки, і люди просто гортають далі.",
+        "caption": "Але *ніхто* не дивиться",
+        "vo": "Але воно з паузами та помилками, і його ніхто не дивиться.",
         "beats": [
           {"action": "phone.swipe", "args": {"n": 3}, "shot": "whip>phone_dive"},
-          {"action": "ruta.pose", "args": {"pose": "sad"}, "shot": "whip>character_close"},
-          {"action": "phone.swipe", "args": {"n": 3}, "shot": "pull_back>room"}
+          {"action": "ruta.pose", "args": {"pose": "sad"}, "shot": "whip>character_close"}
         ]
       }
     },
     {
-      "caption": "Монтуєш *сама*",
-      "vo": "Тоді монтуєш сама: ріжеш паузи, додаєш субтитри, анімації, музику.",
+      "caption": "Вирізаєш *зайве*",
+      "vo": "Тоді ти вирізаєш все непотрібне,",
       "beats": [
-        {"action": "timeline.show", "shot": "whip>object_punch:timeline", "also": [{"action": "phone.hide"}]},
-        {"action": "timeline.cut", "shot": "punch>object_punch:timeline#tracks"},
-        {"action": "timeline.subs", "shot": "whip>object_punch:timeline"},
-        {"action": "ruta.pose", "args": {"pose": "frustrated"}, "shot": "whip>character_close"}
+        {"action": "timeline.show", "shot": "whip>object_punch:timeline", "also": [{"action": "phone.hide"}, {"action": "timeline.cut", "at": 0.3}]}
       ],
       "minus": {
-        "caption": "*Дві години* на один рілс",
-        "vo": "Дві години на один рілс, і щодня вже не викладаєш.",
+        "caption": "Але все ще *нецікаво*",
+        "vo": "але воно все ще не цікаве.",
         "beats": [
-          {"action": "clock.show", "shot": "whip>object_punch:clock", "also": [{"action": "timeline.hide"}, {"action": "clock.spin", "args": {"hours": 2}, "at": 0.15}]},
-          {"action": "ruta.pose", "args": {"pose": "exhausted"}, "shot": "whip>character_close"},
-          {"action": "clock.shake", "shot": "pull_back>room"}
+          {"action": "ruta.pose", "args": {"pose": "bored"}, "shot": "whip>character_close"}
+        ]
+      }
+    },
+    {
+      "caption": "Додаєш *анімації* й субтитри",
+      "vo": "Ти додаєш туди анімації та субтитри.",
+      "beats": [
+        {"action": "timeline.subs", "shot": "whip>object_punch:timeline#tracks"}
+      ],
+      "minus": {
+        "caption": "*Година* на кожен рілс",
+        "vo": "Тепер кожен рілс займає в тебе годину монтажу, і ти вигоряєш.",
+        "beats": [
+          {"action": "clock.show", "shot": "whip>object_punch:clock", "also": [{"action": "timeline.hide"}, {"action": "clock.spin", "args": {"hours": 1}, "at": 0.15}]},
+          {"action": "ruta.pose", "args": {"pose": "exhausted"}, "shot": "whip>character_close"}
         ]
       }
     },
     {
       "caption": "Наймаєш *монтажера*",
-      "vo": "Окей, наймаєш монтажера.",
+      "vo": "Тоді ти наймаєш монтажера,",
       "beats": [
-        {"action": "editor.show", "shot": "whip>object_punch:editor", "also": [{"action": "clock.hide"}]},
+        {"action": "editor.show", "shot": "whip>object_punch:editor", "also": [{"action": "clock.hide"}]}
+      ],
+      "minus": {
+        "caption": "*30 €* за рілс",
+        "vo": "але кожен рілс коштує тридцять євро, і ти улітаєш в мінус.",
+        "beats": [
+          {"action": "price.show", "shot": "whip>object_punch:price"},
+          {"action": "ruta.pose", "args": {"pose": "panicked"}, "shot": "whip>character_close"}
+        ]
+      }
+    },
+    {
+      "caption": "Монтаж у *Claude*",
+      "vo": "Тоді ти налаштовуєш монтаж у Клоді: показуєш йому приклади рілсів, завантажуєш потрібні скіли та віддаєш своє відео.",
+      "beats": [
+        {"action": "laptop.ask", "args": {"text": "Ось приклади рілсів. Монтуй так"}, "shot": "whip>screen", "also": [{"action": "editor.hide"}, {"action": "price.hide"}]},
+        {"action": "skill.show", "shot": "whip>object_punch:skill", "also": [{"action": "skill.stamp", "at": 0.35}]},
+        {"action": "skill.fly", "args": {"x": 520, "y": 1225, "scale": 0.08, "arc": 40}, "shot": "whip>screen", "also": [{"action": "skill.hide", "at": 0.55}, {"action": "laptop.reply", "args": {"title": "Монтую твоє відео…"}, "at": 0.3}]},
         {"action": "ruta.pose", "args": {"pose": "smug"}, "shot": "whip>character_close"}
       ],
       "minus": {
-        "caption": "Але це *дорого*",
-        "vo": "Але це дорого, поки блог ще нічого не заробляє.",
+        "caption": "Але лише на *комп’ютері*",
+        "vo": "Він монтує самостійно, але лише на комп'ютері.",
         "beats": [
-          {"action": "price.show", "shot": "whip>object_punch:price"},
-          {"action": "ruta.pose", "args": {"pose": "panicked"}, "shot": "whip>character_close"},
-          {"action": "price.shake", "shot": "punch>object_punch:price*1.2"}
+          {"action": "laptop.window", "args": {"name": "render"}, "shot": "whip>object_punch:laptop", "also": [{"action": "laptop.render", "args": {"from": 0, "to": 0.4, "dur": 2}}]},
+          {"action": "ruta.pose", "args": {"pose": "frustrated"}, "shot": "whip>character_close"}
         ]
       }
     },
     {
-      "caption": "Ставиш *AI-монтаж*",
-      "vo": "Ставиш програму з AI-монтажем.",
+      "caption": "Усе — на *хмару*",
+      "vo": "Тоді ти виводиш це все на хмару, і тепер ти можеш монтувати з телефона коли завгодно.",
       "beats": [
-        {"action": "ai.show", "shot": "whip>object_punch:ai", "also": [{"action": "editor.hide"}, {"action": "price.hide"}]},
-        {"action": "timeline.show", "shot": "whip>object_punch:timeline", "also": [{"action": "ai.hide", "at": 0.3}]}
-      ],
-      "minus": {
-        "caption": "Але він *не знає* твого стилю",
-        "vo": "Але він не знає твого стилю, лишає повтори і збиває темп.",
-        "beats": [
-          {"action": "timeline.flag", "shot": "punch>object_punch:timeline#tracks"},
-          {"action": "ruta.pose", "args": {"pose": "furious"}, "shot": "whip>character_close"},
-          {"action": "timeline.shake", "shot": "whip>object_punch:timeline"}
-        ]
-      }
-    },
-    {
-      "caption": "Описуєш стиль *один раз*",
-      "vo": "Тож описуєш свій стиль один раз — як скіл.",
-      "beats": [
-        {"action": "skill.show", "shot": "whip>object_punch:skill", "also": [{"action": "timeline.hide"}]},
-        {"action": "skill.stamp", "shot": "punch>object_punch:skill*1.15", "w": 0.8},
-        {"action": "ruta.pose", "args": {"pose": "ecstatic"}, "shot": "whip>character_close"}
-      ],
-      "minus": {
-        "caption": "Але *рендер* вбиває ноут",
-        "vo": "Але рендер вбиває твій старий ноутбук, і він гуде, як літак.",
-        "beats": [
-          {"action": "laptop.window", "args": {"name": "render"}, "shot": "whip>screen",
-            "also": [{"action": "skill.hide"}, {"action": "laptop.render", "args": {"from": 0, "to": 0.03, "dur": 2.5}, "at": 0.2}]},
-          {"action": "laptop.overheat", "shot": "pull_back>room", "also": [{"action": "laptop.shake", "args": {"amp": 6, "dur": 2.6}}]},
-          {"action": "ruta.pose", "args": {"pose": "waterworks"}, "shot": "whip>character_close"},
-          {"action": "laptop.pulse", "shot": "whip>object_punch:laptop"}
-        ]
-      }
-    },
-    {
-      "caption": "Усе працює в *хмарі*",
-      "vo": "Тепер усе працює в хмарі: записуєш у понеділок, а готові рілси чекають, поки ти п’єш каву.",
-      "beats": [
-        {"action": "cloud.show", "shot": "whip>object_punch:cloud",
-          "also": [{"action": "laptop.cool"}, {"action": "laptop.window", "args": {"name": "claude"}}, {"action": "cloud.upload", "at": 0.2}]},
-        {"action": "phone.show", "shot": "whip>phone_dive", "caption": "Записуєш у *понеділок*", "also": [{"action": "phone.record", "at": 0.1}]},
-        {"action": "reels.show", "shot": "whip>object_punch:reels", "caption": "А рілси вже *готові*",
-          "also": [{"action": "phone.hide"}, {"action": "reels.fill", "at": 0.1}, {"action": "cloud.done"}]},
-        {"action": "ruta.pose", "args": {"pose": "coffee"}, "shot": "pull_back>room:final", "caption": "А ти *п’єш каву*"},
+        {"action": "cloud.show", "shot": "whip>object_punch:cloud", "also": [{"action": "laptop.window", "args": {"name": "claude"}}, {"action": "cloud.upload", "at": 0.15}]},
+        {"action": "phone.show", "shot": "whip>phone_dive", "caption": "Монтуєш *з телефона*",
+          "also": [{"action": "phone.screen", "args": {"name": "claude"}}, {"action": "phone.type", "args": {"text": "/монтаж"}, "at": 0.2}, {"action": "phone.send", "at": 0.8}]},
+        {"action": "reels.show", "shot": "whip>object_punch:reels", "caption": "Коли *завгодно*", "also": [{"action": "phone.hide"}, {"action": "reels.fill", "at": 0.1}, {"action": "cloud.done"}]},
+        {"action": "ruta.pose", "args": {"pose": "coffee"}, "shot": "pull_back>room:final"},
         {"action": "ruta.pulse", "shot": "punch>character_close"}
       ]
     }

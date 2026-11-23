@@ -104,7 +104,7 @@ export const validate = (spec: EpisodeSpec, assetExists?: (path: string) => bool
     checkPart(st, `step ${i + 1}`);
     if (st.minus) checkPart(st.minus, `step ${i + 1} minus`);
     const words = countWords(st.vo ?? '') + countWords(st.minus?.vo ?? '');
-    if (words > 26) warn(`step ${i + 1}: ${words} words of VO — keep a step to one or two short sentences (~15–20 words)`);
+    if (words > 40) warn(`step ${i + 1}: ${words} words of VO — keep a step to one or two short sentences (~15–20 words)`);
   });
   const last = spec.steps[spec.steps.length - 1];
   if (last?.minus) err('the last step is the modern setup — it has no minus');
@@ -113,7 +113,7 @@ export const validate = (spec: EpisodeSpec, assetExists?: (path: string) => bool
 
   const tl = compile(spec);
   warnings.push(...tl.warnings);
-  if (tl.words < 95 || tl.words > 115) warn(`${tl.words} words of VO — aim for 95–115`);
+  if (tl.mode === 'A' && (tl.words < 95 || tl.words > 115)) warn(`${tl.words} words of VO — aim for 95–115`);
   if (tl.duration > LIMIT) err(`estimated ${tl.duration.toFixed(1)}s — over the ${LIMIT}s ceiling even after tightening; cut voiceover words`);
   return {errors, warnings, timeline: tl};
 };

@@ -2,7 +2,7 @@
 // coordinates, a single camera over all of it, and captions on top.
 
 import React, {useMemo} from 'react';
-import {AbsoluteFill, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {cameraAt, FRAME_H, FRAME_W} from '../engine/camera';
 import {compile} from '../engine/compile';
 import type {EpisodeSpec, SceneObject} from '../engine/types';
@@ -100,6 +100,7 @@ export const Episode: React.FC<{spec: EpisodeSpec}> = ({spec}) => {
       {/* a soft wash under the captions so dark UI or a passing object never fights the text */}
       <div style={{position: 'absolute', left: 0, right: 0, top: 0, height: 540, background: 'linear-gradient(rgba(250,251,252,.9) 0,rgba(250,251,252,.78) 320px,rgba(250,251,252,0) 540px)'}} />
       <Captions captions={tl.captions} t={t} />
+      {spec.audio ? <Audio src={staticFile(spec.audio)} /> : null}
     </AbsoluteFill>
   );
 };

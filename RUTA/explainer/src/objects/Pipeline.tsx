@@ -20,6 +20,8 @@ const LOGOS: Record<string, {src?: string; bg: string; mark?: string}> = {
   fathom: {src: 'logos/fathom.jpg', bg: '#000'},
   clickup: {src: 'logos/clickup.jpg', bg: '#fff'},
   canva: {src: 'logos/canva.jpg', bg: '#fff'},
+  notion: {src: 'logos/notion.png', bg: '#fff'},
+  buffer: {bg: '#fff', mark: 'buffer'},
   claude: {bg: C.terracotta, mark: 'claude'},
   instagram: {bg: 'radial-gradient(circle at 30% 107%,#FDF497 0,#FDF497 5%,#FD5949 45%,#D6249F 60%,#285AEB 90%)', mark: 'instagram'},
   notes: {bg: 'linear-gradient(#FFFFFF,#F2F2F2)', mark: 'notes'},
@@ -58,6 +60,17 @@ const Mark: React.FC<{mark: string}> = ({mark}) => {
         <div style={{position: 'absolute', left: 25, top: 25, width: 54, height: 54, borderRadius: '50%', border: '12px solid #fff', boxSizing: 'border-box'}} />
         <div style={{position: 'absolute', right: 12, top: 12, width: 14, height: 14, borderRadius: '50%', background: '#fff'}} />
       </div>
+    );
+  if (mark === 'buffer')
+    // Buffer's mark: three stacked layers
+    return (
+      <svg width={130} height={130} viewBox="0 0 24 24">
+        <g fill="#231F20">
+          <path d="M12 2 22 7l-10 5L2 7z" />
+          <path d="M4.4 10.8 12 14.6l7.6-3.8L22 12l-10 5-10-5z" opacity=".85" />
+          <path d="M4.4 15.8 12 19.6l7.6-3.8L22 17l-10 5-10-5z" opacity=".7" />
+        </g>
+      </svg>
     );
   if (mark === 'notes')
     return (
