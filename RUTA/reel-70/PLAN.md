@@ -30,3 +30,13 @@ FULL 2 the CRM database in Notion, a new lead drops in → HALF the scheme
 - **34** @ E(«новини.»)+0.1 ≈ 10.18 s, 1.2 s, slot `top` — reacts to «у мене для тебе погані новини»: the fun part is over.
 - **50** @ E(«досвіду.»)+0.1 ≈ 17.95 s, 1.2 s, slot `r` — reacts to «точно не з власного досвіду»: the guilty smirk; she is laughing «ні, ні, ні», the dog sits right of her head.
 - No third: «І все, профіт» (53 s) is between the prompt card and FULL 2; nothing else fits outside the graphics and the CTA.
+
+## Fix pass (2026-11-23)
+
+- Both full screens rebuilt to the reel-64/67 bar: windows 960 px wide (~89 % of
+  the frame), body 32–36 px, labels ≥ 28 px; wide shots y ≈ 370–1290, above the
+  caption band; only the Customize and Notion-row close-ups crop on purpose.
+- Notion CRM: columns only Ім'я / Звідки / Статус; rows «Клієнтка 1–4»,
+  statuses «Клієнт» / «Лід» / «Новий лід» (her words) — no invented names/stats.
+- Claude UI in its real English labels (New chat, Chats, Projects, Customize,
+  Skills, Connectors, Connect → Connected).
