@@ -159,7 +159,7 @@ C.append(u"""
             <div style="left:32px;top:26px;display:flex;align-items:center;gap:14px;font-size:34px;font-weight:700;color:#7A1424">%(claude)s<span style="color:#1f1f1f">Claude</span></div>
             <div style="right:32px;top:34px;font-size:26px;color:#8a8580">Учні та оплати</div>
 
-            <div id="gr" style="left:0;top:640px;width:960px;display:flex;justify-content:center;align-items:center;gap:20px;font-size:48px;color:#3a3330">%(claudeL)s Чим допомогти?</div>
+            <div id="gr" style="left:64px;top:640px;display:flex;align-items:center;gap:20px;font-size:50px;color:#3a3330">%(claudeL)s Чим допомогти?</div>
 
             <div id="u1" class="ub" style="right:40px;top:132px">Оля заплатила за 4 уроки</div>
             <div id="r1" style="left:40px;top:236px;width:880px">
@@ -181,7 +181,7 @@ C.append(u"""
               <div id="snd" style="position:absolute;right:24px;top:128px;width:60px;height:60px;border-radius:18px;background:#D8B9BD;color:#fff;font-size:34px;text-align:center;line-height:60px">↑</div>
             </div>
           </div>
-        </div>""" % {"claude": mark("claude", 40), "claudeL": mark("claude", 56), "notion": mark("notion", 26),
+        </div>""" % {"claude": mark("claude", 40), "claudeL": mark("claude", 58), "notion": mark("notion", 26),
                      "drive": mark("googledrive", 26)})
 EXTRA += u"""
     .w1 { width: 960px; height: 1080px; background: #FBFAF7; border-radius: 32px; transform-origin: 480px 540px; }
@@ -215,25 +215,25 @@ def cam(px, py, sc, cx=540, cy=820, w=960, h=1080):
 t_notion, t_gd = S(u"Notion", 15.48), S(u"Google", 16.10)
 t_olia, t_uroky, t_vnos, t_opl = S(u"«Оля", 18.30), S(u"уроки».", 20.51), S(u"вносить", 21.81), S(u"оплату,", 22.29)
 t_skil, t_tsyf, t_ne = S(u"«скільки", 24.76), S(u"цифрою,", 26.22), S(u"не десь", 27.26)
-WIDE1 = cam(480, 540, 1.0)
+WIDE1 = cam(290, 840, 2.0, cy=800)    # opens already close on the input: no empty chat
 js(u"""
   gsap.set("#win1", %(wide)s, rotationX: 18, rotationY: -14, rotationZ: 3});
-  gsap.set("#win1", {y: "+=200", scale: .88});
+  gsap.set("#win1", {y: "+=200", scale: 2.0 * .88});
   gsap.set(["#u1", "#r1", "#u2", "#r2"], {autoAlpha: 0});
-  tl.to("#win1", %(wide)s, rotationX: 6, rotationY: -6, rotationZ: 1, duration: 1.1, ease: "power3.out"}, %(f0).3f + .12);
-  tl.to("#win1", %(chips)s, rotationX: 3, rotationY: 5, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, %(notion).3f - .75);
+  tl.to("#win1", %(wide)s, rotationX: 5, rotationY: -3, rotationZ: 1, duration: 1.1, ease: "power3.out"}, %(f0).3f + .12);
+  tl.to("#win1", %(chips)s, rotationX: 3, rotationY: 3, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, %(notion).3f - .75);
   tl.to("#cn", {borderColor: "#7A1424", backgroundColor: "#FBEFF0", color: "#7A1424", duration: .25}, %(notion).3f);
   tl.to("#cg", {borderColor: "#7A1424", backgroundColor: "#FBEFF0", color: "#7A1424", duration: .25}, %(gd).3f);
-  tl.to("#win1", %(type)s, rotationX: 2, rotationY: -4, duration: 1.0, ease: "power3.inOut"}, %(olia).3f - .6);
+  tl.to("#win1", %(type)s, rotationX: 2, rotationY: -2, duration: 1.0, ease: "power3.inOut"}, %(olia).3f - .6);
   tl.set("#ph", {autoAlpha: 0}, %(olia).3f - .1);
   tl.fromTo("#ty", {clipPath: "inset(0%% 100%% 0%% 0%%)"}, X({clipPath: "inset(0%% 0%% 0%% 0%%)", duration: %(tyd).3f, ease: "steps(24)"}), %(olia).3f - .1);
   tl.to("#snd", {backgroundColor: "#7A1424", duration: .15}, %(uroky).3f);
   tl.to("#snd", {keyframes: {scale: [1, .88, 1]}, duration: .25}, %(uroky).3f);
   tl.set("#ty", {autoAlpha: 0}, %(uroky).3f + .25); tl.set("#ph", {autoAlpha: 1}, %(uroky).3f + .25);
   tl.to("#gr", {autoAlpha: 0, duration: .25}, %(uroky).3f + .1);
-  tl.to("#win1", %(chat)s, rotationX: -2, rotationY: -5, duration: 1.0, ease: "power3.inOut"}, %(uroky).3f + .05);
-  tl.fromTo("#u1", {autoAlpha: 0, y: 30}, X({autoAlpha: 1, y: 0, duration: .4, ease: RISE}), %(uroky).3f + .25);
-  tl.fromTo("#r1", {autoAlpha: 0, y: 20}, X({autoAlpha: 1, y: 0, duration: .45, ease: RISE}), %(uroky).3f + .7);
+  tl.to("#win1", %(chat)s, rotationX: -2, rotationY: -5, duration: .5, ease: "power3.inOut"}, %(uroky).3f + .05);
+  tl.fromTo("#u1", {autoAlpha: 0, y: 30}, X({autoAlpha: 1, y: 0, duration: .4, ease: RISE}), %(uroky).3f + .15);
+  tl.fromTo("#r1", {autoAlpha: 0, y: 20}, X({autoAlpha: 1, y: 0, duration: .45, ease: RISE}), %(uroky).3f + .3);
   tl.to("#win1", %(row)s, rotationX: 2, rotationY: 4, duration: .9, ease: "power3.inOut"}, %(vnos).3f + .05);
   tl.fromTo("#row", {backgroundColor: "#FBEFF0"}, X({backgroundColor: "#FFFFFF", duration: 1.2}), %(vnos).3f + .3);
   tl.fromTo("#tk", {scale: 0}, X({scale: 1, duration: .4, ease: POP}), %(opl).3f);
@@ -243,7 +243,7 @@ js(u"""
   tl.to("#win1", %(ans)s, rotationX: 1, rotationY: 4, duration: .9, ease: "power3.inOut"}, %(tsyf).3f - .2);
   gsap.set("#st1", {autoAlpha: 1}); tl.set("#st1", {autoAlpha: 0}, %(f1).3f + .9);
   full(%(f0).3f, %(f1).3f);
-""" % {"wide": WIDE1, "chips": cam(360, 900, 1.7, cy=880), "type": cam(400, 860, 1.6, cy=880),
+""" % {"wide": WIDE1, "chips": cam(300, 840, 2.0, cy=800), "type": cam(340, 840, 1.85, cy=800),
        "chat": cam(430, 300, 1.45, cy=700), "row": cam(400, 400, 1.6, cy=1000),
        "q": cam(480, 560, 1.15, cy=820), "ans": cam(445, 560, 1.3, cy=820),
        "f0": f0, "f1": f1, "notion": t_notion, "gd": t_gd, "olia": t_olia,
