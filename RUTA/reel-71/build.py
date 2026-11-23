@@ -67,7 +67,7 @@ EXTRA = u'''
 # 1 · BEHIND — «Монтаж», the cover frame ----------------------------------------
 t_mon, e_mon = S(u"монтаж", 2.1), E(u"монтаж", 2.1)
 t_koly = S(u"коли", 3.5)
-B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:500px; font-size:230px">Монтаж</div>')
+B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:540px; font-size:230px">Монтаж</div>')
 g.matte("b1", 0.0, round(t_koly + 0.4, 3))
 js(u'  rise("#bw1", 0.10); sink("#bw1", %.3f);' % (t_koly - 0.05))
 g.sfx("whoosh-short", 0.10)
@@ -121,7 +121,7 @@ js(u'''
     ln("b3", x - 18, 468, x + 18, 504, {stroke: "#7A1424", strokeWidth: 6, seed: 40 + i});
     ln("b3", x + 18, 468, x - 18, 504, {stroke: "#7A1424", strokeWidth: 6, seed: 50 + i}); });
   draw("b3", %.3f, .22);
-  sketch("b4", "skP"); ln("b4", 380, 310, 380, 560, {stroke: "#7A1424", strokeWidth: 6, seed: 61});
+  sketch("b4", "skP"); ln("b4", 425, 310, 425, 560, {stroke: "#7A1424", strokeWidth: 6, seed: 61});
   draw("b4", %.3f, .45);
   sketch("b5", "skP"); ln("b5", 180, 600, 360, 600, {stroke: "#241919", strokeWidth: 6, seed: 63});
   label("b5", 270, 730, "3 хв", {size: 72, color: "#7A1424"}); draw("b5", %.3f, .3);
@@ -203,8 +203,8 @@ def cam(px, py, sc, cx=540, cy=800):
 
 
 WIDE = (1.3,) + cam(220, 410, 1.3)
-LIST = (2.0,) + cam(170, 300, 2.0)
-STAT = (2.3,) + cam(330, 430, 2.3)
+LIST = (1.8,) + cam(170, 300, 1.8, cy=900)
+STAT = (2.1,) + cam(330, 380, 2.1, cy=960)
 js(u"""
   gsap.set("#ph", {transformOrigin: "220px 410px"});
   gsap.set("#ph", {x: %(wx)s, y: %(wy)s + 240, scale: %(ws)s * .86, rotationX: 24, rotationY: 20, rotationZ: -5});
