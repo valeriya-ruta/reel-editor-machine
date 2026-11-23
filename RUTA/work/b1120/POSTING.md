@@ -37,3 +37,4 @@ today before scheduling, and the ТЕСТ cut-fixes for 60/66/71 are in place.
 | reel | RUTA date | IG (Kyiv) | TikTok | Cloudinary URL | caption |
 |---|---|---|---|---|---|
 | 71 | Sun 29 Nov | 21:00 | 21:30 | https://res.cloudinary.com/vi6dvmfv/video/upload/v1795464892/reels/REEL-71.mp4 | Реальний час монтажу рілса через Клод — від 15 хвилин до години, залежно від сирого відео. |
+| 70 | Sun 29 Nov | 19:00 | 20:00 | https://res.cloudinary.com/vi6dvmfv/video/upload/v1795465277/reels/REEL-70.mp4 | CRM за 5 хвилин через Notion і Клода — без коду, без таблиць Excel. / Напиши + в коментарях 👇 |
