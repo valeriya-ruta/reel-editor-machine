@@ -83,3 +83,8 @@ RUTA/work/inbox-1120/
 RUTA/work/scratch/
 RUTA/work/r*/utt/
 RUTA/reel-*/assets/
+
+# 5-years series: per-part render scratch and preview output
+RUTA/work/5y/p*/
+RUTA/work/5y/out/
+RUTA/work/5y/cards/
