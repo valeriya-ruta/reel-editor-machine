@@ -31,3 +31,9 @@ today before scheduling, and the ТЕСТ cut-fixes for 60/66/71 are in place.
 | 65 | Thu 26 Nov | 21:00 | 21:30 | reels/REEL-65.mp4 | 6b04933783d02a16338aa5b2 / 6b04933976f8581f1394e0ac | — |
 | 66 | Fri 27 Nov | 19:00 | 20:00 | reels/REEL-66.mp4 | 6b0497206dffe25404dc52a3 / 6b0497210191a6ffcb8c0531 | — |
 | 68 | Sat 28 Nov | 19:00 | 20:00 | reels/REEL-68.mp4 | 6b049a25f7265001e0cd26bd / 6b049a270191a6ffcb8d1e6c | — |
+
+## Pending — Buffer full (free plan: 10 scheduled per channel). Top up as posts go out.
+
+| reel | RUTA date | IG (Kyiv) | TikTok | Cloudinary URL | caption |
+|---|---|---|---|---|---|
+| 71 | Sun 29 Nov | 21:00 | 21:30 | https://res.cloudinary.com/vi6dvmfv/video/upload/v1795464892/reels/REEL-71.mp4 | Реальний час монтажу рілса через Клод — від 15 хвилин до години, залежно від сирого відео. |
