@@ -1,0 +1,33 @@
+CAPTIONS 172   script 103 | whisper-corrected 9 | her wording 60
+
+WHISPER MISHEARD -> script spelling restored (4)
+    10.04s  1.00  в чаті                           <- вчати
+    35.14s  1.00  робить плюс-мінус                <- робіт? Плюс мінус
+    38.80s  0.83  кваліфікує,                      <- каваліфікує, він
+    49.29s  0.90  менеджерці                       <- менеджерсі
+
+SHE IMPROVISED -> her wording kept (21)
+     3.49s  script: грошей                       said: гроші
+     5.71s  script: каже                         said: кажуть
+     7.18s  script: доросла,                     said: друсла! Я
+     8.43s  script: менеджерку, яка              said: собі мене журку, вона вона
+    11.06s  script: —                            said: і відповідати клієнтам.
+    15.29s  script: класна,                      said: суперкласна, вона
+    17.90s  script: А                            said: і вона супер топчик, я сподіваюся, що і 
+    27.46s  script: оцю                          said: третць в
+    33.74s  script: AI-агента,                   said: і яй агенти.
+    37.13s  script: —                            said: Він
+    45.87s  script: по-різному:                  said: по різному, наприклад,
+    47.53s  script: —                            said: або
+        -  script: вже                          said: — (cut)
+    52.37s  script: —                            said: то вже
+    55.37s  script: людей нема.                  said: всі сплять. Тому
+    56.83s  script: впізнала себе в цьому рілсі  said: тобі зацікавив такий ай ай агент і ти те
+    61.72s  script: —                            said: або пиши мені в дирекці.
+    63.07s  script: —                            said: ми поспілкуємось,
+        -  script: тобі персонально             said: — (cut)
+    64.33s  script: —                            said: тобі
+    64.75s  script: деталі.                      said: далі.
+
+REVIEW -- could go either way (1)
+    28.56s  script: «пробиває дно».            said: «Пробувай одно».           (0.78)

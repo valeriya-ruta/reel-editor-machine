@@ -11,7 +11,7 @@ You inspect. You do not fix, edit, or re-render — you report what is wrong and
 stop. The main session decides what to do about it.
 
 Run the checks below with `ffprobe` / `ffmpeg` / `./hf`. Prepend
-`/c/Users/Ruta/AppData/Roaming/npm` to `PATH`, or use the repo's `./hf` wrapper.
+`/c/Users/Ruta/AppData/Roaming/npm` to `PATH`, or use the `RUTA/hf` wrapper (Ruta's reels live in `RUTA/`).
 
 1. **Frame count.** Count real frames, not the container's claim:
    `ffprobe -v error -select_streams v:0 -count_frames -show_entries stream=nb_read_frames -of default=nw=1:nk=1 <mp4>`

@@ -1,0 +1,42 @@
+CAPTIONS 228   script 185 | whisper-corrected 22 | her wording 21
+
+WHISPER MISHEARD -> script spelling restored (10)
+     6.65s  0.92  змонтувала лідмагніт,            <- замонтувала лікмахніт,
+    19.87s  0.92  поріже                           <- поріжує
+    23.20s  0.92  граєшся                          <- іграєшся
+    30.84s  0.90  рендериться. Пояснюю,            <- рендереться. Пояснюй,
+    33.31s  1.00  Клод                             <- клот
+    36.62s  0.84  перетворюється у готове          <- перетворює цю готову
+    48.82s  0.83  заново.                          <- занову.
+    54.81s  0.89  промт,                           <- пром,
+    59.02s  0.91  вклеює                           <- вклею
+    65.70s  0.95  лідмагніт на                     <- лід Магніна
+
+SHE IMPROVISED -> her wording kept (25)
+     3.51s  script: чи                           said: що
+     4.13s  script: на ютуб                      said: найтип
+    12.22s  script: й                            said: я
+    16.34s  script: —                            said: і
+    22.72s  script: сама,                        said: саме,
+    23.72s  script: нею                          said: ним
+    26.29s  script: а                            said: це
+    27.55s  script: в                            said: у
+    29.59s  script: —                            said: і
+        -  script: вже й                        said: — (cut)
+    39.83s  script: —                            said: І
+    42.28s  script: —                            said: Тому
+    43.62s  script: у                            said: в
+    43.80s  script: —                            said: є
+    45.20s  script: —                            said: мені
+    50.19s  script: за звичайний рілс,           said: ніж заріз,
+    51.11s  script: все одно                     said: в другий раз довчно
+        -  script: за перший рендер.            said: — (cut)
+    60.77s  script: —                            said: Це
+    63.23s  script: по новій.                    said: поповній.
+    70.04s  script: дві-три                      said: 2 3
+    75.07s  script: —                            said: Тому
+    77.21s  script: довгих                       said: нових
+    79.43s  script: —                            said: то
+    79.83s  script: —                            said: плюс
+
+REVIEW -- could go either way (0)

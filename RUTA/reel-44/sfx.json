@@ -1,0 +1,126 @@
+[
+ {
+  "t": 0.59,
+  "name": "pop"
+ },
+ {
+  "t": 2.919,
+  "name": "click-soft"
+ },
+ {
+  "t": 4.69,
+  "name": "click-soft"
+ },
+ {
+  "t": 5.354,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 6.522,
+  "name": "pop"
+ },
+ {
+  "t": 9.272,
+  "name": "click-soft"
+ },
+ {
+  "t": 12.554,
+  "name": "notification"
+ },
+ {
+  "t": 15.314,
+  "name": "pop"
+ },
+ {
+  "t": 16.5,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 20.181,
+  "name": "click-soft"
+ },
+ {
+  "t": 21.858,
+  "name": "pop"
+ },
+ {
+  "t": 23.483,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 24.283,
+  "name": "pop"
+ },
+ {
+  "t": 26.183,
+  "name": "pop"
+ },
+ {
+  "t": 27.743,
+  "name": "click-soft"
+ },
+ {
+  "t": 29.715,
+  "name": "click-soft"
+ },
+ {
+  "t": 30.526,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 34.896,
+  "name": "click-soft"
+ },
+ {
+  "t": 35.954,
+  "name": "pop"
+ },
+ {
+  "t": 36.5,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 37.85,
+  "name": "click-soft"
+ },
+ {
+  "t": 38.95,
+  "name": "click-soft"
+ },
+ {
+  "t": 40.989,
+  "name": "pop"
+ },
+ {
+  "t": 42.889,
+  "name": "click-soft"
+ },
+ {
+  "t": 44.649,
+  "name": "pop"
+ },
+ {
+  "t": 46.139,
+  "name": "pop"
+ },
+ {
+  "t": 48.519,
+  "name": "kaching"
+ },
+ {
+  "t": 50.233,
+  "name": "click-soft"
+ },
+ {
+  "t": 54.188,
+  "name": "pop"
+ },
+ {
+  "t": 57.148,
+  "name": "pop"
+ },
+ {
+  "t": 58.317,
+  "name": "pop"
+ }
+]

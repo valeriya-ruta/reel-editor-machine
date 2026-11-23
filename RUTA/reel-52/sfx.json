@@ -1,0 +1,110 @@
+[
+ {
+  "t": 0.6,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 3.837,
+  "name": "pop"
+ },
+ {
+  "t": 4.767,
+  "name": "click-soft"
+ },
+ {
+  "t": 5.477,
+  "name": "pop"
+ },
+ {
+  "t": 6.467,
+  "name": "typing"
+ },
+ {
+  "t": 7.433,
+  "name": "click-soft"
+ },
+ {
+  "t": 9.262,
+  "name": "pop"
+ },
+ {
+  "t": 11.272,
+  "name": "click-soft"
+ },
+ {
+  "t": 12.812,
+  "name": "pop"
+ },
+ {
+  "t": 13.444,
+  "name": "pop"
+ },
+ {
+  "t": 19.147,
+  "name": "click-soft"
+ },
+ {
+  "t": 19.691,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 23.191,
+  "name": "click-soft"
+ },
+ {
+  "t": 28.861,
+  "name": "pop"
+ },
+ {
+  "t": 30.283,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 30.659,
+  "name": "pop"
+ },
+ {
+  "t": 32.811,
+  "name": "pop"
+ },
+ {
+  "t": 33.931,
+  "name": "typing"
+ },
+ {
+  "t": 34.831,
+  "name": "pop"
+ },
+ {
+  "t": 39.878,
+  "name": "click-soft"
+ },
+ {
+  "t": 40.718,
+  "name": "click-soft"
+ },
+ {
+  "t": 41.771,
+  "name": "click-soft"
+ },
+ {
+  "t": 44.397,
+  "name": "pop"
+ },
+ {
+  "t": 46.387,
+  "name": "pop"
+ },
+ {
+  "t": 48.347,
+  "name": "notification"
+ },
+ {
+  "t": 51.831,
+  "name": "pop"
+ },
+ {
+  "t": 53.711,
+  "name": "click-soft"
+ }
+]

@@ -5,10 +5,16 @@ description: Build one of Ruta's Instagram reels end to end, from her delivered 
 
 # Reel
 
+**Whose reel?** This skill and `RUTA/STYLE.md` are Ruta's, and everything of
+hers lives under `RUTA/`: run every path below from inside it. If the footage, the
+request or the path says Nika (anything under `Nika/`, UNLOCK ads), drop this
+skill's look and work from `Nika/README.md`. If nothing says whose it is, ask
+one line before touching anything. That counts as *her input alone* below.
+
 She records, cuts and colour-grades. This builds everything on top — animations,
 word-by-word captions, the render — and hands her back a finished file.
 
-**Read [`STYLE.md`](../../../STYLE.md) before authoring anything.** It is the
+**Read [`RUTA/STYLE.md`](../../../RUTA/STYLE.md) before authoring anything.** It is the
 design contract and it wins over instinct every time. This skill is the *run*;
 STYLE.md is the *look*.
 
@@ -38,7 +44,7 @@ A design question is not her input. Pick the answer STYLE.md implies.
 
 ## The run
 
-Reel N lives in `reel-0N/`, its intermediates in `work/rN/`.
+Reel N lives in `RUTA/reel-0N/`, its intermediates in `RUTA/work/rN/`.
 
 ```bash
 export PATH="/c/Users/Ruta/AppData/Roaming/npm:$PATH"   # or use ./hf
@@ -60,13 +66,21 @@ cd reel-0N && python build.py && ../hf check
 ../hf cloud render
 ```
 
-`tools/kit.py` holds the shared surfaces, tokens and squircles — build beats out
-of it rather than hand-rolling CSS, and it keeps STYLE.md §5a satisfied for free.
-**`tools/glass.py` is the look since 2026-09-28 (STYLE.md §0)** — the refined-glass
-materials, the monochrome tile family and the spring motion helpers. Every new
-reel builds its beats from it; `style-test/build.py` is the worked example.
-`tools/matte.py` cuts her out of a span so a **big** graphic can sit behind her
-(§1) — per beat only, ~3.3 s/frame on CPU.
+**The look is locked (2026-11-23): STYLE.md §00 + "Her review of reel 61".**
+One look only — `tools/gstyle.py`, white + `#7A1424`, Google Sans; big white words
+behind her (matte), the half screen for schemes (Excalidraw only there), full-screen
+platform-ad sequences for real UI (3D tilt, smooth zooms, the UI rebuilt in HTML),
+a little glass, lists as a card `shuffle`, the CTA pill in the subtitle band. Not
+every phrase gets a graphic. **`reel-61/build.py` is the worked example and
+`BUILD-BRIEF.md` the standing brief** (a builder subagent gets that file and its
+reel number). Every other look is in `archive/` and never used unless she asks for
+it by name. `tools/matte.py` cuts her out (≈1 s/frame on the cloud box with
+`MATTE_REMBG=1`). The ТЕСТ CTA is always cut out of the reel.
+
+**Render locally, never HeyGen** (her call, 2026-11-20): from `RUTA/`,
+`sh work/b1021/heavy.sh <hyperframes> render reel-NN -o reel-NN/renders/REEL-NN.mp4 --workers 3 --low-memory-mode`.
+Every heavy step (cut, sound mix, matte, render) goes through `heavy.sh` — two
+overlapping sound mixes corrupted a plate on 2026-11-23 (frozen, out-of-sync render).
 
 ## Verify before delivering
 
@@ -77,11 +91,23 @@ Non-negotiable, and cheap:
   truncated tail, which is the one failure she will notice immediately
 - no black tail, no missing audio
 - spot-check one frame per beat
+- the plate (`assets/base.mp4`) and the render decode with zero errors, and the
+  render is in sync with the plate (face-crop PSNR peaks at the same time, not
+  ±0.4 s — `BUILD-BRIEF.md` step 10)
 
 ## Deliver
 
-Her Desktop, then `SendUserFile` both files. Once rclone has write scope, also
+Post through Buffer from her Cloudinary (see `BUILD-BRIEF.md`, "After the
+render"), keep RUTA's status and dates in step, add the reel to the review
+artifact. Her Desktop, then `SendUserFile` both files. Once rclone has write scope, also
 `rclone copy` to `gdrive:Reels inbox/Done`. Commit the reel and push.
+
+**The full-quality 1080p file is what she posts, so it always reaches her.**
+A review page (artifact) can only hold ~15 MB per file, so it carries 720p
+previews: every label, button and download filename on it says *preview, not
+for posting* (`REEL-NN-PREVIEW-720p.mp4`), and the full files go to her in the
+same message via `SendUserFile`. On 2026-10-21 she posted the 720p copies from
+the 41–52 page because the page only said "review copies" in small print.
 
 One closing message: it's done, here it is, and anything that changed about
 *her* side — a line she improvised, a beat that needed a different treatment.
@@ -112,6 +138,6 @@ tokens — the last hour cost ~15× the first for the same kind of work.
 - **npm in `C:\Program Files\nodejs` is broken.** Use `./hf`, or prepend
   `/c/Users/Ruta/AppData/Roaming/npm` to `PATH`.
 - Local renders need `--low-memory-mode`; her disk runs near full.
-- Cloud renders bill to the **free** HeyGen plan via OAuth, not the API wallet.
+- No HeyGen at all — not for renders, not for hosting (her call, 2026-11-20). Render locally; host for Buffer on her Cloudinary.
 - Emoji must be `<img>`, never glyphs — the cloud renderer has Noto, so a literal
   emoji ships as the Android one. `Kit.emoji()` + `assets/emoji/`.
