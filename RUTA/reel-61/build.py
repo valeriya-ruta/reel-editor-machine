@@ -98,7 +98,10 @@ EXTRA = u'''
     .gdots { display: flex; gap: 10px; margin-left: auto; }
     .gdots i { width: 14px; height: 14px; border-radius: 50%; background: #7A1424; display: block; }
     /* her note on v4: the 3-row card cut her forehead on the last clip — one row, ends ≈ y 500 */
-    .cta { left: 100px; top: 290px; width: 880px; padding: 24px 24px; display: flex; flex-direction: column;
+    /* her notes on v4: the card cut her forehead — short chips up top, one row
+       (ends ≈ y 400); the CTA pill sits down in the subtitle band, which the
+       blackout from «пиши» leaves free */
+    .cta { left: 0; right: 0; margin: auto; width: max-content; top: 300px; padding: 20px 22px; display: flex; flex-direction: column;
            align-items: center; gap: 16px; }
 '''
 
@@ -271,12 +274,13 @@ t_mal, t_pyshy = S(u"малий", 60.76), S(u"пиши", 65.80)
 F.append(u'''
         <div id="ct" class="glass cta hid">
           <div class="chips" style="justify-content:center; flex-wrap:nowrap; gap:12px">
-            <span class="chip" style="font-size:30px; padding:10px 18px"><i></i>малий і середній бізнес</span>
+            <span class="chip" style="font-size:30px; padding:10px 18px"><i></i>малий бізнес</span>
             <span class="chip" style="font-size:30px; padding:10px 18px"><i></i>команда</span>
             <span class="chip" style="font-size:30px; padding:10px 18px"><i></i>багато заявок</span>
           </div>
-          <div id="ctp" class="pill hid" style="position:relative; font-size:40px; padding:22px 46px">Пиши + в коментарях</div>
-        </div>''')
+        </div>
+        <div id="ctp" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:1404px;
+             font-size:46px; padding:28px 56px">Пиши + в коментарях</div>''')
 js(u'''
   rise("#ct", %.3f);
   pop("#ctp", %.3f);
