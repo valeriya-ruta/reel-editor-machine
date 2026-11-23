@@ -225,10 +225,10 @@
   </head>
   <body>
     <div id="root" data-composition-id="main" data-start="0"
-         data-width="1080" data-height="1920" data-duration="66.116" data-fps="30">
+         data-width="1080" data-height="1920" data-duration="66.150" data-fps="30">
 
       <video id="vid" class="plate" src="assets/base.mp4"
-             data-start="0" data-duration="66.116" data-media-start="0"
+             data-start="0" data-duration="66.150" data-media-start="0"
              muted playsinline></video>
       <div id="behind" class="L">
         <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:420px; font-size:230px">Claude</div>
@@ -475,7 +475,7 @@
       </div>
 
       <audio id="vo" src="assets/base.mp4"
-             data-start="0" data-duration="66.116" data-media-start="0"></audio>
+             data-start="0" data-duration="66.150" data-media-start="0"></audio>
     </div>
 
     <script>
@@ -666,7 +666,7 @@
   function erase(name, t) { tl.to("#sk-" + name, {autoAlpha: 0, duration: .3, ease: "power2.in"}, t); }
 
   gsap.set(PUSH, {transformOrigin: "540px 900px"});
-  tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 66.116, ease: "none"}, 0);
+  tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 66.150, ease: "none"}, 0);
 
   tl.set("#w0", {autoAlpha: 1}, 0.000); tl.set("#w0", {autoAlpha: 0}, 0.345);
   tl.set("#w1", {autoAlpha: 1}, 0.430); tl.set("#w1", {autoAlpha: 0}, 0.530);
@@ -841,7 +841,7 @@
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 53.222);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 53.947);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 62.206);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 66.116);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 66.150);
 
   rise("#bw1", 0.15); sink("#bw1", 4.470);
   shuffle(["#l0"], [6.033], 9.633);
@@ -922,7 +922,7 @@
   pop("#tg1", 58.855); pop("#tg2", 59.515);
   sink("#crm", 61.767);
 
-  shuffle(["#ct1", "#ct2"], [62.456, 64.647], 67.116);
+  shuffle(["#ct1", "#ct2"], [62.456, 64.647], 67.150);
   pop("#ctp", 62.456);
   half(20.432, 31.917);
 

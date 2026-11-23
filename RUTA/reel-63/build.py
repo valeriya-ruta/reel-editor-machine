@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 from gstyle import G, Words, load_caps, mark  # noqa: E402
 
 NN = "63"
-DUR = 66.116           # (1985 plate frames - 0.5) / 30
+DUR = 66.150           # (1985 plate frames - 0.5) / 30
 g = G(dur=DUR, reel=NN)
 g.PANEL_TOP = 740      # panel captions end ≈ y 858; her pushed hair ≈ y 890 on the punch-in
 

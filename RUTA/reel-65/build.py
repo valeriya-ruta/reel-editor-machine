@@ -99,105 +99,94 @@ slot("l1", u'<b class="n">1</b>Розклад: дорога + погода', t_p
 # «ввечері перед зйомкою», локація / погода / золота година, the message).
 f0 = S(u"Ти", 8.17) - 0.05
 f1 = E(u"рефлектор,", 22.32) + 0.15      # out before her «рефрактор» joke
-CLM = mark("claude", 22)
-CAL = mark("googlecalendar", 20)
+# Sizing as reel-60 (the quality bar): a 900x1150 window, ~88 % of the frame
+# width zoomed out and y 240-1450, body text 40-46 px, labels 28 px (x1.05 on
+# screen). The camera never leaves background below the window: every shot
+# keeps the window from the top zone down to the caption band.
+CLM = mark("claude", 46)
+CAL = mark("googlecalendar", 40)
+CLK = (u'<svg class="ck" viewBox="0 0 24 24" width="40" height="40"><circle cx="12" cy="12" r="9" fill="none" '
+       u'stroke="#7A1424" stroke-width="2.2"/><path d="M12 7v5l3.5 2" fill="none" stroke="#7A1424" '
+       u'stroke-width="2.2" stroke-linecap="round"/></svg>')
+STEPS = [u"Дивиться локацію", u"Шукає погоду", u"Золота година"]
 C.append(u"""
         <div id="stage">
           <div id="win">
-            <div class="cw-bar"><i></i><i></i><i></i><span>%(clm)s Claude</span></div>
-            <div class="cw-side">
-              <div class="cw-card" id="cA">
-                <div class="cw-h">Конектори</div>
-                <div class="cw-row" id="rCal"><span class="cw-ic">%(cal)s</span>Google Calendar<em id="tgc"><u></u></em></div>
-              </div>
-              <div class="cw-card" id="cB">
-                <div class="cw-h">Запланована задача</div>
-                <div class="cw-tt">Перед зйомкою</div>
-                <div class="cw-l">Коли</div>
-                <div class="cw-f" id="fW">Ввечері перед зйомкою</div>
-                <div class="cw-l">Звідки</div>
-                <div class="cw-f"><span class="cw-ic">%(cal)s</span>Google Calendar</div>
-              </div>
+            <div class="cw-bar">%(clm)s<span>Claude</span></div>
+            <div class="cw-card" id="cA" style="top:120px">
+              <div class="cw-h">Конектор</div>
+              <div class="cw-row" id="rCal"><span class="cw-ic">%(cal)s</span>Google Calendar<em id="tgc"><u></u></em></div>
             </div>
-            <div class="cw-chat">
-              <div class="cw-ct">Перед зйомкою <span>· запланована задача</span></div>
-              <div class="cw-step hid" id="st1"><b></b>Дивиться локацію<s></s></div>
-              <div class="cw-step hid" id="st2"><b></b>Шукає погоду<s></s></div>
-              <div class="cw-step hid" id="st3"><b></b>Золота година<s></s></div>
-              <div class="cw-msg hid" id="msg">
-                <div class="cw-who">%(clm)s Claude</div>
-                <div class="cw-ln hid" id="m1">Виїжджай о 13:20</div>
-                <div class="cw-ln hid" id="m2">Найкраще світло о 17:40</div>
-                <div class="cw-ln hid" id="m3">Візьми рефлектор</div>
-              </div>
+            <div class="cw-card" id="cB" style="top:300px">
+              <div class="cw-h">Запланована задача</div>
+              <div class="cw-row" id="fW"><span class="cw-ic">%(clk)s</span>Ввечері перед зйомкою</div>
+            </div>
+            <div class="cw-steps">%(steps)s</div>
+            <div class="cw-msg" id="msg">
+              <div class="cw-who">%(clm2)s Claude</div>
+              <div class="cw-ln hid" id="m1">Виїжджай о 13:20</div>
+              <div class="cw-ln hid" id="m2">Найкраще світло о 17:40</div>
+              <div class="cw-ln hid" id="m3">Візьми рефлектор</div>
             </div>
           </div>
-        </div>""" % {"clm": CLM, "cal": CAL})
+        </div>""" % {"clm": CLM, "cal": CAL, "clk": CLK, "clm2": mark("claude", 32),
+                     "steps": u"".join(u'<div class="cw-step" id="st%d"><b><i></i></b><span>%s</span></div>' % (i + 1, s)
+                                       for i, s in enumerate(STEPS))})
 EXTRA += u"""
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
     #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
-    #win { position: absolute; left: 0; top: 0; width: 800px; height: 520px; background: #FAF9F5;
-           border-radius: 14px; font-family: "Google Sans", sans-serif; color: #1F1E1D; overflow: hidden;
+    #win { position: absolute; left: 0; top: 0; width: 900px; height: 1150px; background: #fff;
+           border-radius: 28px; font-family: "Google Sans", sans-serif; color: #241919; overflow: hidden;
            box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
            transform-origin: 0 0; will-change: transform; }
-    #win .mark path { fill: #D97757; }
-    .cw-bar { height: 38px; border-bottom: 1px solid #E8E4DA; display: flex; align-items: center;
-              padding: 0 14px; gap: 7px; background: #F3F1EA; }
-    .cw-bar i { width: 11px; height: 11px; border-radius: 50%; background: #DAD6CC; display: block; }
-    .cw-bar span { margin-left: 260px; display: inline-flex; align-items: center; gap: 8px;
-                   font-size: 15px; font-weight: 700; }
-    .cw-side { position: absolute; left: 16px; top: 54px; width: 340px; }
-    .cw-card { background: #fff; border: 1px solid #E8E4DA; border-radius: 12px; padding: 14px 16px;
-               margin-bottom: 14px; }
-    .cw-h { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #6B6A65;
-            margin-bottom: 10px; }
-    .cw-row { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500;
-              padding: 8px 10px; border-radius: 9px; background: #F6F4EE; position: relative; }
-    .cw-ic { width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; }
-    .cw-ic .mark path { fill: #1F1E1D !important; }
-    .cw-row em { margin-left: auto; width: 34px; height: 19px; border-radius: 10px; background: #C9C6BD;
+    #win .mark path { fill: #7A1424; }
+    .cw-bar { position: absolute; left: 0; top: 0; width: 900px; height: 96px; box-sizing: border-box;
+              border-bottom: 2px solid #F1E7E7; display: flex; align-items: center; gap: 16px; padding: 0 40px;
+              font-size: 44px; font-weight: 700; }
+    .cw-card { position: absolute; left: 40px; width: 820px; height: 160px; box-sizing: border-box;
+               padding: 20px 24px; border: 3px solid #ECE6E6; border-radius: 24px; }
+    .cw-h { font-size: 28px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #574142;
+            margin-bottom: 12px; }
+    .cw-row { display: flex; align-items: center; gap: 18px; font-size: 42px; font-weight: 500; height: 76px;
+              padding: 0 18px; border-radius: 16px; background: #FBF6F6; position: relative; }
+    .cw-ic { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+    .cw-row em { margin-left: auto; width: 88px; height: 50px; border-radius: 25px; background: #C9C1C1;
                  position: relative; flex: none; }
-    .cw-row em u { position: absolute; left: 2px; top: 2px; width: 15px; height: 15px; border-radius: 50%;
-                   background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.25); }
-    .cw-tt { font-size: 19px; font-weight: 700; margin-bottom: 10px; }
-    .cw-l { font-size: 11px; font-weight: 700; color: #6B6A65; margin: 8px 0 5px; }
-    .cw-f { font-size: 14px; border: 1px solid #DAD6CC; border-radius: 8px; padding: 8px 10px;
-            display: flex; align-items: center; gap: 8px; background: #fff; }
-    .cw-chat { position: absolute; left: 372px; top: 54px; width: 412px; height: 450px; background: #fff;
-               border: 1px solid #E8E4DA; border-radius: 12px; padding: 16px 18px; }
-    .cw-ct { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
-    .cw-ct span { font-weight: 400; color: #6B6A65; }
-    .cw-step { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #3D3C38;
-               padding: 7px 10px; border: 1px solid #E8E4DA; border-radius: 9px; margin-bottom: 8px;
-               background: #FAF9F5; }
-    .cw-step b { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #D97757; flex: none; }
-    .cw-step s { margin-left: auto; width: 16px; height: 16px; border-radius: 50%; background: #1EA672;
-                 position: relative; opacity: 0; text-decoration: none; }
-    .cw-step s::after { content: ""; position: absolute; left: 5px; top: 2px; width: 4px; height: 8px;
-                        border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
-    .cw-msg { margin-top: 16px; background: #F6F4EE; border-radius: 14px; padding: 14px 16px 10px; }
-    .cw-who { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700;
-              color: #6B6A65; margin-bottom: 8px; }
-    .cw-ln { font-size: 20px; font-weight: 500; line-height: 1.35; padding: 5px 0; color: #1F1E1D; }
+    .cw-row em u { position: absolute; left: 5px; top: 5px; width: 40px; height: 40px; border-radius: 50%;
+                   background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
+    .cw-steps { position: absolute; left: 40px; top: 490px; width: 820px; }
+    .cw-step { display: flex; align-items: center; gap: 20px; height: 74px; box-sizing: border-box; padding: 0 22px;
+               margin-bottom: 14px; border: 3px solid #ECE6E6; border-radius: 18px; font-size: 40px; color: #A8999A; }
+    .cw-step b { width: 34px; height: 34px; border-radius: 50%; border: 3px solid #DEBFBF; flex: none;
+                 box-sizing: border-box; position: relative; }
+    .cw-step b i { position: absolute; left: 9px; top: 3px; width: 8px; height: 16px; display: block;
+                   border: solid #fff; border-width: 0 4px 4px 0; transform: rotate(45deg); opacity: 0; }
+    .cw-msg { position: absolute; left: 40px; top: 770px; width: 820px; height: 340px; box-sizing: border-box;
+              background: #FFF0F0; border-radius: 24px; padding: 26px 32px; }
+    .cw-who { display: flex; align-items: center; gap: 12px; font-size: 32px; font-weight: 700; color: #574142;
+              height: 56px; margin-bottom: 8px; }
+    .cw-ln { font-size: 48px; font-weight: 500; line-height: 76px; color: #241919; }
 """
 t_kon, t_goo = S(u"конектор", 8.80), S(u"Google", 9.34)
 t_plan, t_vve = S(u"плануєш", 10.20), S(u"ввечері", 11.55)
 t_dyv, t_pog, t_zol = S(u"дивиться", 13.31), S(u"погоду", 14.95), S(u"і золоту", 15.31)
 t_sam, t_vy, t_svit, t_vzia = S(u"сам", 16.67), S(u"виїжджай", 17.77), S(u"найкраще", 19.77), S(u"взяти", 21.98)
-OX, OY = 400, 260   # the window's own centre
+OX, OY = 450, 575   # the window's own centre
 
 
-def cam(px, py, sc, cx=540, cy=760):
-    """the window turns and scales about its centre: a point p of it lands at
-    O + s*(p - O) + (x, y); this centres p at (cx, cy)"""
-    return (sc, round(cx - OX - sc * (px - OX), 1), round(cy - OY - sc * (py - OY), 1))
+def cam(sc, top):
+    """the window turns and scales about its centre O; centred in x, its top
+    edge lands at y = top (so a push is a scale + a vertical travel)"""
+    return (sc, 540 - OX, round(top - OY + sc * OY, 1))
 
 
-WIDE = cam(400, 260, 1.22)
-CON = cam(190, 118, 2.4)       # the connector row
-TSK = cam(190, 300, 2.1)       # the scheduled task card
-STP = cam(560, 170, 2.05)      # the steps
-MSG = cam(578, 330, 2.0)       # the message
+WIDE = cam(1.05, 240)    # 945 x 1208: ~88 % of the width, y 240-1448
+# pushes stay <= 1.14: with the tilt's perspective the near edge grows ~5 %,
+# and the rows' text must never touch the frame edge
+CON = cam(1.12, 250)     # the connector card at y 385-565, window down to 1538
+TSK = cam(1.14, 170)     # the scheduled task card at y 510-695
+STP = cam(1.14, 60)      # the three steps at y 620-890, window down to 1371
+MSG = cam(1.12, 112)     # Claude's message at y 975-1355, window bottom 1400
 
 
 def at(c, rx, ry, rz, d, ease, t):
@@ -208,30 +197,34 @@ def at(c, rx, ry, rz, d, ease, t):
 js(u'  gsap.set("#win", {transformOrigin: "%dpx %dpx"});' % (OX, OY))
 js(u'  gsap.set("#win", {x: %s, y: %s, scale: %s, rotationX: 24, rotationY: -20, rotationZ: 5});'
    % (WIDE[1], WIDE[2] + 220, WIDE[0] * 0.86))
-js(at(WIDE, 9, -12, 2, 0.9, "power3.out", f0 + 0.12))
-js(at(CON, 4, 8, 0, 1.0, "power3.inOut", t_kon - 0.25))
-js(u'  tl.to("#tgc", {backgroundColor: "#D97757", duration: .2}, %.3f);' % t_goo)
-js(u'  tl.to("#tgc u", {x: 15, duration: .3, ease: "back.out(2)"}, %.3f);' % t_goo)
-js(u'  tl.fromTo("#rCal", {boxShadow: "0 0 0 0 rgba(217,119,87,0)"}, X({boxShadow: "0 0 0 4px rgba(217,119,87,.28)", duration: .35, yoyo: true, repeat: 1}), %.3f);' % (t_goo + 0.1))
-js(at(TSK, -3, -8, 0, 1.1, "power3.inOut", t_plan - 0.35))
-js(u'  tl.to("#fW", {borderColor: "#D97757", boxShadow: "0 0 0 3px rgba(217,119,87,.20)", duration: .3}, %.3f);' % t_vve)
-js(at(STP, 3, 9, -1, 1.1, "power3.inOut", t_dyv - 0.45))
+js(at(WIDE, 6, -6, 1, 0.75, "power3.out", f0 + 0.1))
+js(at(CON, 4, 4, 0, 0.9, "power3.inOut", f0 + 0.75))
+js(u'  tl.to("#tgc", {backgroundColor: "#7A1424", duration: .2}, %.3f);' % t_goo)
+js(u'  tl.to("#tgc u", {x: 38, duration: .3, ease: "back.out(2)"}, %.3f);' % t_goo)
+js(u'  tl.fromTo("#rCal", {boxShadow: "0 0 0 0 rgba(122,20,36,0)"}, X({boxShadow: "0 0 0 6px rgba(122,20,36,.18)", duration: .35, yoyo: true, repeat: 1}), %.3f);' % (t_goo + 0.1))
+js(at(TSK, -3, -4, 0, 1.0, "power3.inOut", t_plan - 0.35))
+js(u'  tl.fromTo("#cB", {borderColor: "#ECE6E6"}, X({borderColor: "#7A1424", duration: .3}), %.3f);' % t_vve)
+js(at(STP, 3, 4, -1, 1.0, "power3.inOut", t_dyv - 0.6))
 for i, t in enumerate((t_dyv, t_pog, t_zol)):
-    js(u'  rise("#st%d", %.3f, 16); tl.to("#st%d s", {opacity: 1, duration: .2}, %.3f);' % (i + 1, t, i + 1, t + 0.45))
-    g.sfx("click-soft", t + 0.45)
-js(at(MSG, -2, -7, 0, 1.0, "power3.inOut", t_sam - 0.35))
-js(u'  rise("#msg", %.3f, 20);' % (t_sam - 0.1))
+    js(u'  tl.to("#st%d", {color: "#241919", borderColor: "#DEBFBF", duration: .2}, %.3f);' % (i + 1, t + 0.25))
+    js(u'  tl.to("#st%d b", {backgroundColor: "#7A1424", borderColor: "#7A1424", duration: .2}, %.3f);' % (i + 1, t + 0.25))
+    js(u'  tl.to("#st%d b i", {opacity: 1, duration: .2}, %.3f);' % (i + 1, t + 0.3))
+    js(u'  tl.fromTo("#st%d b", {scale: .6}, X({scale: 1, duration: .35, ease: POP}), %.3f);' % (i + 1, t + 0.25))
+    g.sfx("click-soft", t + 0.25)
+js(at(MSG, -2, -4, 0, 1.0, "power3.inOut", t_sam - 0.4))
+js(u'  tl.fromTo("#msg", {backgroundColor: "#FBF6F6"}, X({backgroundColor: "#FFF0F0", duration: .3}), %.3f);' % (t_sam - 0.1))
 for i, t in enumerate((t_vy, t_svit, t_vzia)):
     js(u'  rise("#m%d", %.3f, 14);' % (i + 1, t - 0.05))
-js(at(WIDE, 10, 14, -2, 1.0, "power3.inOut", t_vzia + 0.3))
+js(at(WIDE, 6, 6, -1, 0.8, "power3.inOut", t_vzia + 0.15))
 js(u'  full(%.3f, %.3f);' % (f0, f1))
-g.sfx("whoosh-short", f0); g.sfx("whoosh-short", t_kon - 0.25); g.sfx("click", t_goo)
-g.sfx("whoosh-short", t_plan - 0.35); g.sfx("whoosh-short", t_dyv - 0.45)
+g.sfx("whoosh-short", f0); g.sfx("click", t_goo)
+g.sfx("whoosh-short", t_plan - 0.35); g.sfx("whoosh-short", t_dyv - 0.6)
 g.sfx("notification", t_sam - 0.1); g.sfx("whoosh-short", f1)
 
 # 4 · list 2 -----------------------------------------------------------------------
 t_dr = S(u"Друга", 24.80)
-slot("l2", u'<b class="n">2</b>LUT з референсу', t_dr - 0.05, S(u"Ти", 27.02) - 0.1)
+# on «LUT»: the meme for «як він там називається» has the top band until then
+slot("l2", u'<b class="n">2</b>LUT з референсу', S(u"LUT", 25.85) - 0.05, S(u"Ти", 27.02) - 0.1)
 
 # 5 · HALF 1 — the LUT scheme ----------------------------------------------------------
 k0 = S(u"Ти", 27.02) - 0.05
@@ -333,8 +326,8 @@ g.sfx("pop", t_zap - 0.3); g.sfx("click-soft", t_dyv2)
 # MEMES (assets/memes/MEMES.md) — comic relief after the beat lands ---------------------
 g.cta_start = S(u"Тож", 70.53)
 # 56 «Цей во… Забув…»: she can't remember what the thing is called (рефлектор /
-# рефрактор); the full screen has cleared, the top band is free
-g.meme(F, J, "56", E(u"рефрактор,", 23.14) + 0.1, dur=0.95, slot="top")
+# рефрактор, як він там називається); right after the line, before list card 2
+g.meme(F, J, "56", E(u"називається.", 24.1) + 0.1, dur=1.0, slot="top")
 # 59 «алівідерчі»: «Claude вже ні до чого» — Claude leaves the list
 g.meme(F, J, "59", E(u"чого.", 40.08) + 0.1, dur=1.2, slot="r")
 
