@@ -37,7 +37,8 @@ don't ship a reel with none unless truly nothing fits.
   The kit refuses a 4th image, one touching the CTA, or an unplanned overlap, and
   copies the files into `reel-NN/assets/memes/`.
 - Place it just after the word/phrase it reacts to (`E(word) + 0.1`), never mid-line.
-- A pair only with a long clear stretch around it. Memes sit under captions and over her footage;
+- Slapped straight on, no frame or card, in her zones: slot `top` (above her head), `r` (right of
+  her head), `l` (low left). A pair only with a long clear stretch around it. Memes sit under captions and over her footage;
   keep them off beats that already have a behind-me word, card, half or full screen.
 - First 3 s allowed if it fits; profanity allowed; English reel -> caption-free memes only.
 - Write the picks into `PLAN.md` (meme NN, time, the line it reacts to, why).

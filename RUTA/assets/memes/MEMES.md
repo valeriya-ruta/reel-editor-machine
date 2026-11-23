@@ -6,6 +6,10 @@ browsing the images. Captions are transcribed exactly as burned into the image.
 
 ## Rules for placing one (her rules, updated 2026-11-23)
 
+- **Slapped straight onto the reel — no plaque, no white frame, no glass card**, in the zones she
+  marked: `top` (the band above her head), `r` (beside her head, right), `l` (low left, over her
+  shoulder). Never over her face, never over the captions.
+
 - **Comic relief, after the beat lands.** A meme reacts to the line she just said; don't cover a
   line she is still in the middle of. About 1-1.4 s: a quick pop in (0.28 s), a quick drop out.
 - **Max 3 per reel** (counted as images). **Two at once is allowed** (a pair, slots `l` + `r` in
@@ -20,7 +24,7 @@ browsing the images. Captions are transcribed exactly as burned into the image.
 - Near-duplicates exist (Цить 01/37, «хоспаде» 24/57, «грандіозна робота» 36/62 RU, 62 UA).
   Use the sharper copy (01, 57, 62); the other is a spare.
 - Image sizes are mixed (320 px up to ~1200 px). The small ones (01, 02, 37) get blurry in the
-  full slot: give them slot `l`/`r` or skip them.
+  `top` slot: give them slot `l`/`r` or skip them.
 - In the build: `g.meme(F, J, "42", t_word_end + 0.1, dur=1.2)`, from `tools/gstyle.py`. It copies the file
   into `reel-NN/assets/memes/` and refuses a 4th meme, one touching the CTA, or a stray overlap.
 
