@@ -143,31 +143,32 @@
 
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
     #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
-    #win { position: absolute; left: 0; top: 0; width: 720px; height: 1080px; background: #fff;
+    #win { position: absolute; left: 0; top: 0; width: 760px; height: 1100px; background: #fff;
            border-radius: 26px; font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
            box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
            transform-origin: 0 0; will-change: transform; }
     #win > div { position: absolute; }
-    .cw-top { left: 0; top: 0; width: 720px; height: 64px; background: #F7F4F2; border-bottom: 1px solid #ECE6E6; }
+    .cw-top { left: 0; top: 0; width: 760px; height: 70px; background: #F7F4F2; border-bottom: 1px solid #ECE6E6; }
     .cw-dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: #DDD5D3;
-              margin: 25px 0 0 12px; vertical-align: top; }
+              margin: 28px 0 0 12px; vertical-align: top; }
     .cw-dot:first-child { margin-left: 26px; }
-    .cw-app { position: absolute; left: 0; right: 0; top: 16px; text-align: center; font-size: 26px; font-weight: 500; color: #3c3c3c; }
-    .cw-h { left: 40px; top: 96px; font-size: 48px; font-weight: 700; letter-spacing: -0.02em; }
-    .cw-search { left: 40px; top: 176px; width: 560px; height: 64px; border-radius: 32px; background: #F4F1F0;
-                 font-size: 26px; color: #8a8080; line-height: 64px; padding-left: 34px; }
-    .cw-add { left: 616px; top: 176px; width: 64px; height: 64px; border-radius: 50%; background: #7A1424;
-              color: #fff; font-size: 40px; line-height: 60px; text-align: center; }
-    #lv { left: 0; top: 270px; width: 720px; height: 810px; overflow: hidden; }
-    #ls { position: absolute; left: 0; top: 0; width: 720px; }
-    .sr { position: absolute; left: 40px; width: 640px; height: 96px; border-bottom: 1px solid #F0EBEA; }
-    .sr i { position: absolute; left: 0; top: 22px; width: 52px; height: 52px; border-radius: 14px; }
-    .sr b { position: absolute; left: 76px; top: 28px; height: 16px; border-radius: 8px; background: #D9D2D1; }
-    .sr s { position: absolute; left: 76px; top: 56px; height: 12px; border-radius: 6px; background: #ECE7E6; text-decoration: none; }
-    .sr em { position: absolute; left: 572px; top: 32px; width: 64px; height: 34px; border-radius: 17px; background: #CFC8C7; }
-    .sr em u { position: absolute; left: 3px; top: 3px; width: 28px; height: 28px; border-radius: 50%; background: #fff;
+    .cw-app { position: absolute; left: 0; right: 0; top: 17px; text-align: center; font-size: 30px; font-weight: 500; color: #3c3c3c; }
+    .cw-h { left: 40px; top: 100px; font-size: 56px; font-weight: 700; letter-spacing: -0.02em; }
+    .cw-search { left: 40px; top: 188px; width: 590px; height: 72px; border-radius: 36px; background: #F4F1F0;
+                 font-size: 32px; color: #7a7070; line-height: 72px; padding-left: 34px; }
+    .cw-add { left: 648px; top: 188px; width: 72px; height: 72px; border-radius: 50%; background: #7A1424;
+              color: #fff; font-size: 44px; line-height: 68px; text-align: center; }
+    #lv { left: 0; top: 290px; width: 760px; height: 810px; overflow: hidden; }
+    #ls { position: absolute; left: 0; top: 0; width: 760px; }
+    .sr { position: absolute; left: 40px; width: 680px; height: 104px; border-bottom: 1px solid #F0EBEA; }
+    .sr i { position: absolute; left: 0; top: 24px; width: 56px; height: 56px; border-radius: 14px; }
+    .sr b { position: absolute; left: 80px; top: 30px; height: 20px; border-radius: 10px; background: #D3CBCA; }
+    .sr s { position: absolute; left: 80px; top: 62px; height: 14px; border-radius: 6px; background: #ECE7E6; text-decoration: none; }
+    .sr em { position: absolute; left: 600px; top: 34px; width: 72px; height: 38px; border-radius: 19px; background: #CFC8C7; }
+    .sr em u { position: absolute; left: 4px; top: 4px; width: 30px; height: 30px; border-radius: 50%; background: #fff;
                box-shadow: 0 1px 3px rgba(0,0,0,.25); }
 
+    .shuf .chip { font-size: 48px; padding: 18px 34px; }   /* as reel-60: a size up */
     .hfrow { gap: 20px !important; }
     .hfrow .hi { width: 46px; height: 46px; border-radius: 13px; background: #F3E6E6; display: inline-block; }
     .hfrow em { position: relative; width: 64px; height: 34px; border-radius: 17px; background: #CFC8C7; margin-left: 10px; }
@@ -223,7 +224,7 @@
             <div class="cw-h">Skills</div>
             <div class="cw-search">Search</div>
             <div class="cw-add">+</div>
-            <div id="lv"><div id="ls"><div class="sr" style="top:0px"><i style="background:#F3E6E6"></i><b style="width:269px"></b><s style="width:436px"></s><em id="t0"><u></u></em></div><div class="sr" style="top:96px"><i style="background:#EFE9E8"></i><b style="width:278px"></b><s style="width:288px"></s><em id="t1"><u></u></em></div><div class="sr" style="top:192px"><i style="background:#F6EDED"></i><b style="width:298px"></b><s style="width:322px"></s><em id="t2"><u></u></em></div><div class="sr" style="top:288px"><i style="background:#EAE3E3"></i><b style="width:260px"></b><s style="width:380px"></s><em id="t3"><u></u></em></div><div class="sr" style="top:384px"><i style="background:#F1E8E6"></i><b style="width:217px"></b><s style="width:432px"></s><em id="t4"><u></u></em></div><div class="sr" style="top:480px"><i style="background:#F3E6E6"></i><b style="width:234px"></b><s style="width:372px"></s><em id="t5"><u></u></em></div><div class="sr" style="top:576px"><i style="background:#EFE9E8"></i><b style="width:291px"></b><s style="width:352px"></s><em id="t6"><u></u></em></div><div class="sr" style="top:672px"><i style="background:#F6EDED"></i><b style="width:192px"></b><s style="width:401px"></s><em id="t7"><u></u></em></div><div class="sr" style="top:768px"><i style="background:#EAE3E3"></i><b style="width:181px"></b><s style="width:270px"></s><em id="t8"><u></u></em></div><div class="sr" style="top:864px"><i style="background:#F1E8E6"></i><b style="width:289px"></b><s style="width:383px"></s><em id="t9"><u></u></em></div><div class="sr" style="top:960px"><i style="background:#F3E6E6"></i><b style="width:177px"></b><s style="width:347px"></s><em id="t10"><u></u></em></div><div class="sr" style="top:1056px"><i style="background:#EFE9E8"></i><b style="width:164px"></b><s style="width:283px"></s><em id="t11"><u></u></em></div><div class="sr" style="top:1152px"><i style="background:#F6EDED"></i><b style="width:195px"></b><s style="width:309px"></s><em id="t12"><u></u></em></div><div class="sr" style="top:1248px"><i style="background:#EAE3E3"></i><b style="width:199px"></b><s style="width:261px"></s><em id="t13"><u></u></em></div><div class="sr" style="top:1344px"><i style="background:#F1E8E6"></i><b style="width:285px"></b><s style="width:368px"></s><em id="t14"><u></u></em></div><div class="sr" style="top:1440px"><i style="background:#F3E6E6"></i><b style="width:262px"></b><s style="width:397px"></s><em id="t15"><u></u></em></div><div class="sr" style="top:1536px"><i style="background:#EFE9E8"></i><b style="width:246px"></b><s style="width:394px"></s><em id="t16"><u></u></em></div><div class="sr" style="top:1632px"><i style="background:#F6EDED"></i><b style="width:182px"></b><s style="width:439px"></s><em id="t17"><u></u></em></div><div class="sr" style="top:1728px"><i style="background:#EAE3E3"></i><b style="width:293px"></b><s style="width:266px"></s><em id="t18"><u></u></em></div><div class="sr" style="top:1824px"><i style="background:#F1E8E6"></i><b style="width:300px"></b><s style="width:420px"></s><em id="t19"><u></u></em></div><div class="sr" style="top:1920px"><i style="background:#F3E6E6"></i><b style="width:187px"></b><s style="width:411px"></s><em id="t20"><u></u></em></div><div class="sr" style="top:2016px"><i style="background:#EFE9E8"></i><b style="width:295px"></b><s style="width:348px"></s><em id="t21"><u></u></em></div><div class="sr" style="top:2112px"><i style="background:#F6EDED"></i><b style="width:186px"></b><s style="width:291px"></s><em id="t22"><u></u></em></div><div class="sr" style="top:2208px"><i style="background:#EAE3E3"></i><b style="width:152px"></b><s style="width:382px"></s><em id="t23"><u></u></em></div><div class="sr" style="top:2304px"><i style="background:#F1E8E6"></i><b style="width:247px"></b><s style="width:415px"></s><em id="t24"><u></u></em></div><div class="sr" style="top:2400px"><i style="background:#F3E6E6"></i><b style="width:223px"></b><s style="width:280px"></s><em id="t25"><u></u></em></div></div></div>
+            <div id="lv"><div id="ls"><div class="sr" style="top:0px"><i style="background:#F3E6E6"></i><b style="width:269px"></b><s style="width:436px"></s><em id="t0"><u></u></em></div><div class="sr" style="top:104px"><i style="background:#EFE9E8"></i><b style="width:278px"></b><s style="width:288px"></s><em id="t1"><u></u></em></div><div class="sr" style="top:208px"><i style="background:#F6EDED"></i><b style="width:298px"></b><s style="width:322px"></s><em id="t2"><u></u></em></div><div class="sr" style="top:312px"><i style="background:#EAE3E3"></i><b style="width:260px"></b><s style="width:380px"></s><em id="t3"><u></u></em></div><div class="sr" style="top:416px"><i style="background:#F1E8E6"></i><b style="width:217px"></b><s style="width:432px"></s><em id="t4"><u></u></em></div><div class="sr" style="top:520px"><i style="background:#F3E6E6"></i><b style="width:234px"></b><s style="width:372px"></s><em id="t5"><u></u></em></div><div class="sr" style="top:624px"><i style="background:#EFE9E8"></i><b style="width:291px"></b><s style="width:352px"></s><em id="t6"><u></u></em></div><div class="sr" style="top:728px"><i style="background:#F6EDED"></i><b style="width:192px"></b><s style="width:401px"></s><em id="t7"><u></u></em></div><div class="sr" style="top:832px"><i style="background:#EAE3E3"></i><b style="width:181px"></b><s style="width:270px"></s><em id="t8"><u></u></em></div><div class="sr" style="top:936px"><i style="background:#F1E8E6"></i><b style="width:289px"></b><s style="width:383px"></s><em id="t9"><u></u></em></div><div class="sr" style="top:1040px"><i style="background:#F3E6E6"></i><b style="width:177px"></b><s style="width:347px"></s><em id="t10"><u></u></em></div><div class="sr" style="top:1144px"><i style="background:#EFE9E8"></i><b style="width:164px"></b><s style="width:283px"></s><em id="t11"><u></u></em></div><div class="sr" style="top:1248px"><i style="background:#F6EDED"></i><b style="width:195px"></b><s style="width:309px"></s><em id="t12"><u></u></em></div><div class="sr" style="top:1352px"><i style="background:#EAE3E3"></i><b style="width:199px"></b><s style="width:261px"></s><em id="t13"><u></u></em></div><div class="sr" style="top:1456px"><i style="background:#F1E8E6"></i><b style="width:285px"></b><s style="width:368px"></s><em id="t14"><u></u></em></div><div class="sr" style="top:1560px"><i style="background:#F3E6E6"></i><b style="width:262px"></b><s style="width:397px"></s><em id="t15"><u></u></em></div><div class="sr" style="top:1664px"><i style="background:#EFE9E8"></i><b style="width:246px"></b><s style="width:394px"></s><em id="t16"><u></u></em></div><div class="sr" style="top:1768px"><i style="background:#F6EDED"></i><b style="width:182px"></b><s style="width:439px"></s><em id="t17"><u></u></em></div><div class="sr" style="top:1872px"><i style="background:#EAE3E3"></i><b style="width:293px"></b><s style="width:266px"></s><em id="t18"><u></u></em></div><div class="sr" style="top:1976px"><i style="background:#F1E8E6"></i><b style="width:300px"></b><s style="width:420px"></s><em id="t19"><u></u></em></div><div class="sr" style="top:2080px"><i style="background:#F3E6E6"></i><b style="width:187px"></b><s style="width:411px"></s><em id="t20"><u></u></em></div><div class="sr" style="top:2184px"><i style="background:#EFE9E8"></i><b style="width:295px"></b><s style="width:348px"></s><em id="t21"><u></u></em></div><div class="sr" style="top:2288px"><i style="background:#F6EDED"></i><b style="width:186px"></b><s style="width:291px"></s><em id="t22"><u></u></em></div><div class="sr" style="top:2392px"><i style="background:#EAE3E3"></i><b style="width:152px"></b><s style="width:382px"></s><em id="t23"><u></u></em></div><div class="sr" style="top:2496px"><i style="background:#F1E8E6"></i><b style="width:247px"></b><s style="width:415px"></s><em id="t24"><u></u></em></div><div class="sr" style="top:2600px"><i style="background:#F3E6E6"></i><b style="width:223px"></b><s style="width:280px"></s><em id="t25"><u></u></em></div></div></div>
           </div>
         </div>
       </div>
@@ -724,43 +725,44 @@
 
   rise("#bw1", 0.25); sink("#bw1", 3.486);
 
-  gsap.set("#win", {transformOrigin: "360px 540px"});
-  gsap.set("#win", {x: 180.0, y: 360.0 + 240, scale: 1.3 * .86, rotationX: 26, rotationY: -20, rotationZ: 5});
-  tl.to("#win", {x: 180.0, y: 360.0, scale: 1.3, rotationX: 10, rotationY: -12, rotationZ: 2, duration: 1.0, ease: "power3.out"}, 3.686 + .1);
-  tl.to("#win", {x: 180.0, y: 200.0, scale: 1.6, rotationX: 4, rotationY: 8, rotationZ: 0, duration: 1.6, ease: "power3.inOut"}, 4.396 + .4);
-  tl.fromTo("#ls", {y: 0}, X({y: -1686, duration: 5.369, ease: "power1.in"}), 4.396);
-  tl.to("#win", {x: 180.0, y: 360.0, scale: 1.3 * .96, rotationX: 12, rotationY: 14, rotationZ: -2, duration: 1.3, ease: "power3.inOut"}, 8.733 - .9);
+  gsap.set("#win", {transformOrigin: "380px 550px"});
+  gsap.set("#win", {x: 160.0, y: 400.0 + 240, scale: 1.26 * .86, rotationX: 26, rotationY: -20, rotationZ: 5});
+  tl.to("#win", {x: 160.0, y: 400.0, scale: 1.26, rotationX: 10, rotationY: -12, rotationZ: 2, duration: 1.0, ease: "power3.out"}, 3.686 + .1);
+  tl.to("#win", {x: 160.0, y: 319.5, scale: 1.45, rotationX: 4, rotationY: 8, rotationZ: 0, duration: 1.6, ease: "power3.inOut"}, 4.396 + .4);
+  tl.fromTo("#ls", {y: 0}, X({y: -1894, duration: 5.369, ease: "power1.in"}), 4.396);
+  tl.to("#win", {x: 160.0, y: 400.0, scale: 1.26, rotationX: 7, rotationY: 8, rotationZ: -1, duration: 1.3, ease: "power3.inOut"}, 8.733 - .9);
   full(3.686, 9.765);
 
-  tl.to("#t0", {backgroundColor: "#7A1424", duration: .15}, 5.738); tl.to("#t0 u", {x: 30, duration: .2, ease: "back.out(2)"}, 5.738);
-  tl.to("#t1", {backgroundColor: "#7A1424", duration: .15}, 6.383); tl.to("#t1 u", {x: 30, duration: .2, ease: "back.out(2)"}, 6.383);
-  tl.to("#t2", {backgroundColor: "#7A1424", duration: .15}, 7.027); tl.to("#t2 u", {x: 30, duration: .2, ease: "back.out(2)"}, 7.027);
-  tl.to("#t3", {backgroundColor: "#7A1424", duration: .15}, 7.671); tl.to("#t3 u", {x: 30, duration: .2, ease: "back.out(2)"}, 7.671);
-  tl.to("#t4", {backgroundColor: "#7A1424", duration: .15}, 8.315); tl.to("#t4 u", {x: 30, duration: .2, ease: "back.out(2)"}, 8.315);
-  tl.to("#t5", {backgroundColor: "#7A1424", duration: .15}, 5.566); tl.to("#t5 u", {x: 30, duration: .2, ease: "back.out(2)"}, 5.566);
-  tl.to("#t6", {backgroundColor: "#7A1424", duration: .15}, 6.131); tl.to("#t6 u", {x: 30, duration: .2, ease: "back.out(2)"}, 6.131);
-  tl.to("#t7", {backgroundColor: "#7A1424", duration: .15}, 6.552); tl.to("#t7 u", {x: 30, duration: .2, ease: "back.out(2)"}, 6.552);
-  tl.to("#t8", {backgroundColor: "#7A1424", duration: .15}, 6.904); tl.to("#t8 u", {x: 30, duration: .2, ease: "back.out(2)"}, 6.904);
-  tl.to("#t9", {backgroundColor: "#7A1424", duration: .15}, 7.213); tl.to("#t9 u", {x: 30, duration: .2, ease: "back.out(2)"}, 7.213);
-  tl.to("#t10", {backgroundColor: "#7A1424", duration: .15}, 7.490); tl.to("#t10 u", {x: 30, duration: .2, ease: "back.out(2)"}, 7.490);
-  tl.to("#t11", {backgroundColor: "#7A1424", duration: .15}, 7.745); tl.to("#t11 u", {x: 30, duration: .2, ease: "back.out(2)"}, 7.745);
-  tl.to("#t12", {backgroundColor: "#7A1424", duration: .15}, 7.982); tl.to("#t12 u", {x: 30, duration: .2, ease: "back.out(2)"}, 7.982);
-  tl.to("#t13", {backgroundColor: "#7A1424", duration: .15}, 8.204); tl.to("#t13 u", {x: 30, duration: .2, ease: "back.out(2)"}, 8.204);
-  tl.to("#t14", {backgroundColor: "#7A1424", duration: .15}, 8.413); tl.to("#t14 u", {x: 30, duration: .2, ease: "back.out(2)"}, 8.413);
-  tl.to("#t15", {backgroundColor: "#7A1424", duration: .15}, 8.613); tl.to("#t15 u", {x: 30, duration: .2, ease: "back.out(2)"}, 8.613);
-  tl.to("#t16", {backgroundColor: "#7A1424", duration: .15}, 8.803); tl.to("#t16 u", {x: 30, duration: .2, ease: "back.out(2)"}, 8.803);
-  tl.to("#t17", {backgroundColor: "#7A1424", duration: .15}, 8.986); tl.to("#t17 u", {x: 30, duration: .2, ease: "back.out(2)"}, 8.986);
-  tl.to("#t18", {backgroundColor: "#7A1424", duration: .15}, 9.161); tl.to("#t18 u", {x: 30, duration: .2, ease: "back.out(2)"}, 9.161);
-  tl.to("#t19", {backgroundColor: "#7A1424", duration: .15}, 9.330); tl.to("#t19 u", {x: 30, duration: .2, ease: "back.out(2)"}, 9.330);
-  tl.to("#t20", {backgroundColor: "#7A1424", duration: .15}, 9.494); tl.to("#t20 u", {x: 30, duration: .2, ease: "back.out(2)"}, 9.494);
-  tl.to("#t21", {backgroundColor: "#7A1424", duration: .15}, 9.652); tl.to("#t21 u", {x: 30, duration: .2, ease: "back.out(2)"}, 9.652);
+  tl.to("#t0", {backgroundColor: "#7A1424", duration: .15}, 5.738); tl.to("#t0 u", {x: 34, duration: .2, ease: "back.out(2)"}, 5.738);
+  tl.to("#t1", {backgroundColor: "#7A1424", duration: .15}, 6.383); tl.to("#t1 u", {x: 34, duration: .2, ease: "back.out(2)"}, 6.383);
+  tl.to("#t2", {backgroundColor: "#7A1424", duration: .15}, 7.027); tl.to("#t2 u", {x: 34, duration: .2, ease: "back.out(2)"}, 7.027);
+  tl.to("#t3", {backgroundColor: "#7A1424", duration: .15}, 7.671); tl.to("#t3 u", {x: 34, duration: .2, ease: "back.out(2)"}, 7.671);
+  tl.to("#t4", {backgroundColor: "#7A1424", duration: .15}, 4.889); tl.to("#t4 u", {x: 34, duration: .2, ease: "back.out(2)"}, 4.889);
+  tl.to("#t5", {backgroundColor: "#7A1424", duration: .15}, 5.747); tl.to("#t5 u", {x: 34, duration: .2, ease: "back.out(2)"}, 5.747);
+  tl.to("#t6", {backgroundColor: "#7A1424", duration: .15}, 6.242); tl.to("#t6 u", {x: 34, duration: .2, ease: "back.out(2)"}, 6.242);
+  tl.to("#t7", {backgroundColor: "#7A1424", duration: .15}, 6.630); tl.to("#t7 u", {x: 34, duration: .2, ease: "back.out(2)"}, 6.630);
+  tl.to("#t8", {backgroundColor: "#7A1424", duration: .15}, 6.960); tl.to("#t8 u", {x: 34, duration: .2, ease: "back.out(2)"}, 6.960);
+  tl.to("#t9", {backgroundColor: "#7A1424", duration: .15}, 7.252); tl.to("#t9 u", {x: 34, duration: .2, ease: "back.out(2)"}, 7.252);
+  tl.to("#t10", {backgroundColor: "#7A1424", duration: .15}, 7.517); tl.to("#t10 u", {x: 34, duration: .2, ease: "back.out(2)"}, 7.517);
+  tl.to("#t11", {backgroundColor: "#7A1424", duration: .15}, 7.761); tl.to("#t11 u", {x: 34, duration: .2, ease: "back.out(2)"}, 7.761);
+  tl.to("#t12", {backgroundColor: "#7A1424", duration: .15}, 7.989); tl.to("#t12 u", {x: 34, duration: .2, ease: "back.out(2)"}, 7.989);
+  tl.to("#t13", {backgroundColor: "#7A1424", duration: .15}, 8.202); tl.to("#t13 u", {x: 34, duration: .2, ease: "back.out(2)"}, 8.202);
+  tl.to("#t14", {backgroundColor: "#7A1424", duration: .15}, 8.405); tl.to("#t14 u", {x: 34, duration: .2, ease: "back.out(2)"}, 8.405);
+  tl.to("#t15", {backgroundColor: "#7A1424", duration: .15}, 8.598); tl.to("#t15 u", {x: 34, duration: .2, ease: "back.out(2)"}, 8.598);
+  tl.to("#t16", {backgroundColor: "#7A1424", duration: .15}, 8.782); tl.to("#t16 u", {x: 34, duration: .2, ease: "back.out(2)"}, 8.782);
+  tl.to("#t17", {backgroundColor: "#7A1424", duration: .15}, 8.959); tl.to("#t17 u", {x: 34, duration: .2, ease: "back.out(2)"}, 8.959);
+  tl.to("#t18", {backgroundColor: "#7A1424", duration: .15}, 9.129); tl.to("#t18 u", {x: 34, duration: .2, ease: "back.out(2)"}, 9.129);
+  tl.to("#t19", {backgroundColor: "#7A1424", duration: .15}, 9.294); tl.to("#t19 u", {x: 34, duration: .2, ease: "back.out(2)"}, 9.294);
+  tl.to("#t20", {backgroundColor: "#7A1424", duration: .15}, 9.453); tl.to("#t20 u", {x: 34, duration: .2, ease: "back.out(2)"}, 9.453);
+  tl.to("#t21", {backgroundColor: "#7A1424", duration: .15}, 9.607); tl.to("#t21 u", {x: 34, duration: .2, ease: "back.out(2)"}, 9.607);
+  tl.to("#t22", {backgroundColor: "#7A1424", duration: .15}, 9.756); tl.to("#t22 u", {x: 34, duration: .2, ease: "back.out(2)"}, 9.756);
   tl.fromTo("#mm1", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 14.615);
   tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 15.635);
   rise("#bw2", 19.913); sink("#bw2", 22.098);
-  shuffle(["#sh0", "#sh1", "#sh2", "#sh3", "#sh4", "#sh5", "#shH"], [22.979, 24.233, 25.249, 26.329, 28.146, 29.226, 31.839], 33.715);
+  shuffle(["#sh0", "#sh1", "#sh2", "#sh3", "#sh4", "#sh5", "#shH"], [22.979, 24.233, 25.249, 26.329, 28.146, 29.226, 31.839], 33.465);
   tl.to("#tH", {backgroundColor: "#7A1424", duration: .15}, 32.414); tl.to("#tH u", {x: 30, duration: .25, ease: "back.out(2)"}, 32.414);
-  tl.fromTo("#mm2", {autoAlpha: 0, scale: .72, rotation: -3.5}, X({autoAlpha: 1, scale: 1, rotation: 1.5, duration: .28, ease: POP}), 33.515);
-  tl.to("#mm2", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 34.535);
+  tl.fromTo("#mm2", {autoAlpha: 0, scale: .72, rotation: -3.5}, X({autoAlpha: 1, scale: 1, rotation: 1.5, duration: .28, ease: POP}), 33.815);
+  tl.to("#mm2", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 34.835);
 
   sketch("s1", "skP");
   box("s1", 90, 310, 430, 230, {seed: 3}); label("s1", 128, 372, "1", {size: 60, anchor: "start", color: "#7A1424"});

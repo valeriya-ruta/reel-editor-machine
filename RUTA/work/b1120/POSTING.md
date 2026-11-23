@@ -26,3 +26,4 @@ today before scheduling, and the ТЕСТ cut-fixes for 60/66/71 are in place.
 | 63 | Wed 25 Nov | 21:00 | 21:30 | reels/REEL-63.mp4 | 6b047762e3def5d8b75069db / 6b047765e3def5d8b7506ae5 | — |
 | 59 | Tue 24 Nov | 19:00 | 20:00 | reels/REEL-59.mp4 | 6b047c41b61d3bfe62350b55 / 6b047c43ff0a846b7fadcc4a | — |
 | 64 | Thu 26 Nov | 19:00 | 20:00 | reels/REEL-64.mp4 | 6b0486fd0191a6ffcb84f15e / 6b0487010191a6ffcb84f28c | — |
+| 62 | Wed 25 Nov | 19:00 | 20:00 | reels/REEL-62.mp4 | 6b048a7c83d02a16338672fa / 6b048a7f768ab8d8e406f502 | — |

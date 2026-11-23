@@ -11,7 +11,7 @@ the scheduled task returns as a glass card («все це — одна зада�
 
 | time | layer | what |
 |---|---|---|
-| 0.05–3.9 | behind | «Claude» (matte b1, ≤ 4.3 s) — hook word + cover frame |
+| 0.05–3.9 | behind | «Claude» top 420 (matte b1, ≤ 4.3 s; her hair over its lower ~20 %) — hook word + cover frame |
 | 5.2–8.1 | slot | «1 Розклад: дорога + погода» |
 | 8.1–22.7 | FULL | Claude window 900×1150 (≈88 % width, y 240–1450, text ≥ 40 px, labels 28 px), 3D camera pushes ≤ 1.14 (connector → task → steps → message → wide): Google Calendar connector on «Google»; task card «Ввечері перед зйомкою» lights; steps локація / погода / золота година tick; message: Виїжджай о 13:20 / Найкраще світло о 17:40 / Візьми рефлектор; out before «рефрактор» |
 | 24.81–25.81 | meme top | **56** «Цей во… Забув…» |

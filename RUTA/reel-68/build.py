@@ -71,7 +71,7 @@ g.sfx("whoosh-short", 0.25)
 f0 = S(u"шалений", 3.9) - 0.25
 f1 = E(u"відео.", 9.2) + 0.05
 ROWS = 26
-ROW_H = 96
+ROW_H = 104
 import random
 rnd = random.Random(68)
 rows = []
@@ -94,49 +94,49 @@ C.append(u"""
 EXTRA += u"""
     #cover { background: radial-gradient(120%% 80%% at 50%% 35%%, #FFFFFF 0%%, #F6EFEF 70%%, #F1E7E7 100%%); }
     #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
-    #win { position: absolute; left: 0; top: 0; width: 720px; height: 1080px; background: #fff;
+    #win { position: absolute; left: 0; top: 0; width: 760px; height: 1100px; background: #fff;
            border-radius: 26px; font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
            box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
            transform-origin: 0 0; will-change: transform; }
     #win > div { position: absolute; }
-    .cw-top { left: 0; top: 0; width: 720px; height: 64px; background: #F7F4F2; border-bottom: 1px solid #ECE6E6; }
+    .cw-top { left: 0; top: 0; width: 760px; height: 70px; background: #F7F4F2; border-bottom: 1px solid #ECE6E6; }
     .cw-dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%%; background: #DDD5D3;
-              margin: 25px 0 0 12px; vertical-align: top; }
+              margin: 28px 0 0 12px; vertical-align: top; }
     .cw-dot:first-child { margin-left: 26px; }
-    .cw-app { position: absolute; left: 0; right: 0; top: 16px; text-align: center; font-size: 26px; font-weight: 500; color: #3c3c3c; }
-    .cw-h { left: 40px; top: 96px; font-size: 48px; font-weight: 700; letter-spacing: -0.02em; }
-    .cw-search { left: 40px; top: 176px; width: 560px; height: 64px; border-radius: 32px; background: #F4F1F0;
-                 font-size: 26px; color: #8a8080; line-height: 64px; padding-left: 34px; }
-    .cw-add { left: 616px; top: 176px; width: 64px; height: 64px; border-radius: 50%%; background: #7A1424;
-              color: #fff; font-size: 40px; line-height: 60px; text-align: center; }
-    #lv { left: 0; top: 270px; width: 720px; height: 810px; overflow: hidden; }
-    #ls { position: absolute; left: 0; top: 0; width: 720px; }
-    .sr { position: absolute; left: 40px; width: 640px; height: %(rh)dpx; border-bottom: 1px solid #F0EBEA; }
-    .sr i { position: absolute; left: 0; top: 22px; width: 52px; height: 52px; border-radius: 14px; }
-    .sr b { position: absolute; left: 76px; top: 28px; height: 16px; border-radius: 8px; background: #D9D2D1; }
-    .sr s { position: absolute; left: 76px; top: 56px; height: 12px; border-radius: 6px; background: #ECE7E6; text-decoration: none; }
-    .sr em { position: absolute; left: 572px; top: 32px; width: 64px; height: 34px; border-radius: 17px; background: #CFC8C7; }
-    .sr em u { position: absolute; left: 3px; top: 3px; width: 28px; height: 28px; border-radius: 50%%; background: #fff;
+    .cw-app { position: absolute; left: 0; right: 0; top: 17px; text-align: center; font-size: 30px; font-weight: 500; color: #3c3c3c; }
+    .cw-h { left: 40px; top: 100px; font-size: 56px; font-weight: 700; letter-spacing: -0.02em; }
+    .cw-search { left: 40px; top: 188px; width: 590px; height: 72px; border-radius: 36px; background: #F4F1F0;
+                 font-size: 32px; color: #7a7070; line-height: 72px; padding-left: 34px; }
+    .cw-add { left: 648px; top: 188px; width: 72px; height: 72px; border-radius: 50%%; background: #7A1424;
+              color: #fff; font-size: 44px; line-height: 68px; text-align: center; }
+    #lv { left: 0; top: 290px; width: 760px; height: 810px; overflow: hidden; }
+    #ls { position: absolute; left: 0; top: 0; width: 760px; }
+    .sr { position: absolute; left: 40px; width: 680px; height: %(rh)dpx; border-bottom: 1px solid #F0EBEA; }
+    .sr i { position: absolute; left: 0; top: 24px; width: 56px; height: 56px; border-radius: 14px; }
+    .sr b { position: absolute; left: 80px; top: 30px; height: 20px; border-radius: 10px; background: #D3CBCA; }
+    .sr s { position: absolute; left: 80px; top: 62px; height: 14px; border-radius: 6px; background: #ECE7E6; text-decoration: none; }
+    .sr em { position: absolute; left: 600px; top: 34px; width: 72px; height: 38px; border-radius: 19px; background: #CFC8C7; }
+    .sr em u { position: absolute; left: 4px; top: 4px; width: 30px; height: 30px; border-radius: 50%%; background: #fff;
                box-shadow: 0 1px 3px rgba(0,0,0,.25); }
 """ % {"rh": ROW_H}
 SCROLL = ROWS * ROW_H - 810
 
 
 def cam(px, py, sc, cx=540, cy=900):
-    # the window turns and scales about its own centre (360, 540)
-    return (round(cx - 360 - sc * (px - 360), 1), round(cy - 540 - sc * (py - 540), 1))
+    # the window turns and scales about its own centre (380, 550)
+    return (round(cx - 380 - sc * (px - 380), 1), round(cy - 550 - sc * (py - 550), 1))
 
 
-WIDE = (1.3,) + cam(360, 540, 1.3)
-LIST = (1.6,) + cam(360, 640, 1.6)
+WIDE = (1.26,) + cam(380, 550, 1.26, cy=950)        # 958 px wide (~89 %), y ≈ 260-1640
+LIST = (1.45,) + cam(380, 640, 1.45, cy=1000)       # a push into the list; header stays in frame
 t_spys, t_klod, t_mont = S(u"список", 4.4), S(u"Клода,", 7.1), S(u"монтувати", 8.7)
 js(u"""
-  gsap.set("#win", {transformOrigin: "360px 540px"});
+  gsap.set("#win", {transformOrigin: "380px 550px"});
   gsap.set("#win", {x: %(wx)s, y: %(wy)s + 240, scale: %(ws)s * .86, rotationX: 26, rotationY: -20, rotationZ: 5});
   tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 10, rotationY: -12, rotationZ: 2, duration: 1.0, ease: "power3.out"}, %(f0)s + .1);
   tl.to("#win", {x: %(lx)s, y: %(ly)s, scale: %(ls)s, rotationX: 4, rotationY: 8, rotationZ: 0, duration: 1.6, ease: "power3.inOut"}, %(spys)s + .4);
   tl.fromTo("#ls", {y: 0}, X({y: -%(scroll)d, duration: %(sd).3f, ease: "power1.in"}), %(spys)s);
-  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s * .96, rotationX: 12, rotationY: 14, rotationZ: -2, duration: 1.3, ease: "power3.inOut"}, %(mont)s - .9);
+  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 7, rotationY: 8, rotationZ: -1, duration: 1.3, ease: "power3.inOut"}, %(mont)s - .9);
   full(%(f0)s, %(f1)s);
 """ % {"wx": WIDE[1], "wy": WIDE[2], "ws": WIDE[0], "lx": LIST[1], "ly": LIST[2], "ls": LIST[0],
        "f0": "%.3f" % f0, "f1": "%.3f" % f1, "spys": "%.3f" % t_spys, "mont": "%.3f" % t_mont,
@@ -150,7 +150,7 @@ for i in range(ROWS):
     if u > 1:
         continue
     t = t_spys + u * sd
-    js(u'  tl.to("#t%d", {backgroundColor: "#7A1424", duration: .15}, %.3f); tl.to("#t%d u", {x: 30, duration: .2, ease: "back.out(2)"}, %.3f);'
+    js(u'  tl.to("#t%d", {backgroundColor: "#7A1424", duration: .15}, %.3f); tl.to("#t%d u", {x: 34, duration: .2, ease: "back.out(2)"}, %.3f);'
        % (i, t, i, t))
 g.sfx("whoosh-short", f0); g.sfx("whoosh-short", t_spys + 0.4); g.sfx("whoosh-short", f1)
 for k in range(5):
@@ -182,13 +182,14 @@ t_odyn2 = S(u"один", 32.4)
 F.append(u'''        <div id="shH" class="shuf hid"><span class="chip hfrow"><b class="hi"></b>hyperframes<em id="tH"><u></u></em></span></div>''')
 sels.append("#shH"); times.append(S(u"робить", 31.9) - 0.1)
 EXTRA += u"""
+    .shuf .chip { font-size: 48px; padding: 18px 34px; }   /* as reel-60: a size up */
     .hfrow { gap: 20px !important; }
     .hfrow .hi { width: 46px; height: 46px; border-radius: 13px; background: #F3E6E6; display: inline-block; }
     .hfrow em { position: relative; width: 64px; height: 34px; border-radius: 17px; background: #CFC8C7; margin-left: 10px; }
     .hfrow em u { position: absolute; left: 3px; top: 3px; width: 28px; height: 28px; border-radius: 50%; background: #fff;
                   box-shadow: 0 1px 3px rgba(0,0,0,.25); }
 """
-shuf_end = E(u"скіл.", 32.8) + 0.3
+shuf_end = E(u"скіл.", 32.8) + 0.05
 js(u'  shuffle(%s, [%s], %.3f);' % (str(sels).replace("'", '"'), ", ".join("%.3f" % t for t in times), shuf_end))
 js(u'  tl.to("#tH", {backgroundColor: "#7A1424", duration: .15}, %.3f); tl.to("#tH u", {x: 30, duration: .25, ease: "back.out(2)"}, %.3f);'
    % (t_odyn2, t_odyn2))
@@ -196,7 +197,7 @@ g.sfx("pop", times[-1]); g.sfx("click", t_odyn2)
 
 # MEME 2 — «…все це робить один скіл.» -> 35 the hamster in sunglasses (deal with it);
 # slot r, clear of the shuffle slot above her head; the half screen opens at «це дві частини»
-g.meme(F, J, "35", E(u"скіл.", 32.83) + 0.1, dur=1.2, slot="r")   # beside her head: the row is still leaving the slot above it
+g.meme(F, J, "35", round(shuf_end + 0.35, 3), dur=1.2, slot="r")   # beside her head: the row is still leaving the slot above it
 
 # 5 · HALF — the scheme: two parts. 1 стиль; 2 хмара -> телефон, the laptop struck --
 k0 = S(u"це", 35.6) - 0.15

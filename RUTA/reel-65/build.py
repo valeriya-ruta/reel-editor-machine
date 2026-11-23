@@ -74,7 +74,7 @@ EXTRA = u'''
 
 # 1 · BEHIND — «Claude»: the hook word and the cover frame -------------------------
 t_cl = S(u"з Claude", 3.55)
-B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:490px; font-size:250px">Claude</div>')
+B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:420px; font-size:250px">Claude</div>')
 t_sink = E(u"з Claude", 3.55) + 0.15
 g.matte("b1", 0.0, round(t_sink + 0.4, 3))
 js(u'  rise("#bw1", 0.05); sink("#bw1", %.3f);' % t_sink)
