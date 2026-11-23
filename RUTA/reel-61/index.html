@@ -208,7 +208,7 @@
              data-start="0" data-duration="68.417" data-media-start="0"
              muted playsinline></video>
       <div id="behind" class="L">
-        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:430px; font-size:250px">СТРАХ</div>
+        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:450px; font-size:200px">AI-агент</div>
         <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:440px; font-size:200px">SendPulse</div>
       </div>
       <div id="panel">
@@ -277,10 +277,9 @@
       <div id="scrim"></div>
       <div id="caps">
       <div class="wc" id="w0">НАЙБІЛЬШИЙ</div>
+      <div class="wc" id="w1">СТРАХ</div>
       <div class="wc" id="w2">З</div>
       <div class="wc" id="w3">БУДЬ-ЯКИМ</div>
-      <div class="wc" id="w4">AI</div>
-      <div class="wc" id="w5">АГЕНТОМ,</div>
       <div class="wc" id="w6">ЯКИЙ</div>
       <div class="wc" id="w7">САМ</div>
       <div class="wc" id="w8">СПІЛКУЄТЬСЯ</div>
@@ -651,10 +650,9 @@
   tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 68.417, ease: "none"}, 0);
 
   tl.set("#w0", {autoAlpha: 1}, 0.000); tl.set("#w0", {autoAlpha: 0}, 0.665);
+  tl.set("#w1", {autoAlpha: 1}, 0.750); tl.set("#w1", {autoAlpha: 0}, 0.985);
   tl.set("#w2", {autoAlpha: 1}, 1.070); tl.set("#w2", {autoAlpha: 0}, 1.265);
   tl.set("#w3", {autoAlpha: 1}, 1.350); tl.set("#w3", {autoAlpha: 0}, 1.805);
-  tl.set("#w4", {autoAlpha: 1}, 1.890); tl.set("#w4", {autoAlpha: 0}, 2.025);
-  tl.set("#w5", {autoAlpha: 1}, 2.110); tl.set("#w5", {autoAlpha: 0}, 2.528);
   tl.set("#w6", {autoAlpha: 1}, 2.613); tl.set("#w6", {autoAlpha: 0}, 2.713);
   tl.set("#w7", {autoAlpha: 1}, 2.793); tl.set("#w7", {autoAlpha: 0}, 3.008);
   tl.set("#w8", {autoAlpha: 1}, 3.093); tl.set("#w8", {autoAlpha: 0}, 3.488);
@@ -830,8 +828,8 @@
   tl.set("#w179", {autoAlpha: 1}, 65.533); tl.set("#w179", {autoAlpha: 0}, 65.718);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 67.790);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 0.520);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 0.985);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 1.660);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 2.528);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 12.367);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 28.332);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 34.583);
@@ -841,7 +839,7 @@
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 65.553);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 68.417);
 
-  rise("#bw1", 0.500); sink("#bw1", 2.713);
+  rise("#bw1", 0.950); sink("#bw1", 2.863);
 
   rise("#d1", 2.793);
   pop("#d1a", 5.453);

@@ -105,13 +105,14 @@ EXTRA = u'''
            align-items: center; gap: 16px; }
 '''
 
-# 1 · BEHIND — «СТРАХ» ----------------------------------------------------------
-t_strakh, e_strakh = S(u"страх", 0.75), E(u"страх", 0.75)
-B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:430px; font-size:250px">СТРАХ</div>')
+# 1 · BEHIND — «AI-агент» (her call: it attracts more than «страх», and it is
+# the cover frame) ------------------------------------------------------------------
+t_ai, e_ai = S(u"AI", 1.89), E(u"агентом,", 2.11)
+B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:450px; font-size:200px">AI-агент</div>')
 g.matte("b1", 0.3, round(S(u"який", 2.61) + 0.6 - 0.3, 3))
-js(u'  rise("#bw1", %.3f); sink("#bw1", %.3f);' % (t_strakh - 0.25, S(u"який", 2.61) + 0.1))
-g.sfx("whoosh-short", t_strakh - 0.25)
-BLACKOUT.append((t_strakh - 0.03, e_strakh))
+js(u'  rise("#bw1", %.3f); sink("#bw1", %.3f);' % (S(u"страх", 0.75) + 0.2, S(u"який", 2.61) + 0.25))
+g.sfx("whoosh-short", S(u"страх", 0.75) + 0.2)
+BLACKOUT.append((t_ai - 0.03, e_ai))
 
 # 2 · ABOVE — a glass DM: the reply is made up ----------------------------------
 t_prydum, t_durn, t_skladno = S(u"придумає", 5.45), S(u"дурницю.", 7.39), S(u"складно", 8.97)
