@@ -1,0 +1,22 @@
+CAPTIONS 136   script 100 | whisper-corrected 11 | her wording 25
+
+WHISPER MISHEARD -> script spelling restored (4)
+     0.99s  0.85  АІ систему під ключ,             <- і я і застаму підключ,
+     5.98s  1.00  акаунтів.                        <- аккаунтів.
+     7.67s  0.86  яких                             <- які
+    34.42s  0.86  аналіз твого контенту,           <- аналізово контент,
+
+SHE IMPROVISED -> her wording kept (11)
+     4.56s  script: Доступи                      said: Перше це Доступы
+     7.03s  script: блогерок,                    said: блогерів,
+    12.46s  script: —                            said: то
+    13.62s  script: —                            said: разом.
+    18.57s  script: мають писатися сценарії,     said: має писати цей сценарій, то
+    22.95s  script: використовую.                said: додаю в потрібні скіли. І
+        -  script: цього                        said: — (cut)
+    30.19s  script: —                            said: цього
+    38.95s  script: тільки                       said: лише
+    41.93s  script: Став плюс,                   said: Тому
+    42.88s  script: хочеш таку систему собі.     said: ця система тебе цікавить, то встав плюс 
+
+REVIEW -- could go either way (0)

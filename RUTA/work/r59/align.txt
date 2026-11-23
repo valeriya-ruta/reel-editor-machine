@@ -1,0 +1,48 @@
+CAPTIONS 226   script 112 | whisper-corrected 24 | her wording 90
+
+WHISPER MISHEARD -> script spelling restored (8)
+     0.00s  0.83  Ваша улюблена                    <- Ваше улюблене
+     2.15s  0.83  з тредс!                         <- стрецт».
+    13.68s  0.78  фінанси. Підключаєш до Claude    <- фінацій. Пилічаєш доклад
+    41.75s  0.92  закінчились оплачені             <- закінчилися уплачення
+    54.54s  0.73  Fathom                           <- Фатум
+    55.40s  0.94  транскрипт у Claude,             <- транскрипту Клод.
+    57.18s  1.00  конспект і                       <- конспекти
+    76.70s  0.73  Claude                           <- вклод
+
+SHE IMPROVISED -> her wording kept (32)
+     8.24s  script: чи історії,                  said: через асторію, то
+     9.60s  script: що                           said: щоб
+    10.70s  script: —                            said: складом. По
+    12.22s  script: —                            said: це
+    15.86s  script: чи                           said: або
+    19.63s  script: —                            said: гривень
+    22.89s  script: —                            said: всі дані,
+    27.26s  script: не «ну десь так».            said: надеюсь щось там приблизно
+    29.13s  script: —                            said: це
+        -  script: Конектор Google Calendar плю said: — (cut)
+    31.51s  script: Claude                       said: конектору гугл календар плюс син пульс і
+    35.21s  script: щоранку:                     said: шранку. який
+    36.48s  script: в кого сьогодні              said: якийсь
+    38.26s  script: батькам у телеграм-бот «нага said: батькану з нагадуванням про те, що це
+    40.46s  script: о 17:00»,                    said: буде.
+    43.21s  script: —                            said: він
+    44.77s  script: —                            said: І йому, до речі, можна прям дати посилан
+    49.74s  script: афтеркер.                    said: це aftercare. Тобто
+    51.74s  script: у Zoom                       said: в зумі
+    52.36s  script: Meet                         said: мід
+    53.02s  script: Fathom,                      said: Фатум. Потім цей же
+    58.54s  script: SendPulse                    said: син пусть
+    59.16s  script: летить                       said: ледить все назад учню чи
+        -  script: разом із записом.            said: — (cut)
+    62.56s  script: —                            said: це
+    63.94s  script: НМТ. Скіл «тест              said: NMT. Тобто нам треба налаштувати скилл т
+    67.30s  script: —                            said: який буде натренований на власну формаці
+    70.58s  script: —                            said: в
+    72.97s  script: —                            said: це
+    74.53s  script: є                            said: То іде?
+    75.90s  script: Kahoot,                      said: Кахут
+    78.14s  script: вікторину.                   said: бікторину в цьому кахуті. Тому
+
+REVIEW -- could go either way (1)
+    81.69s  script: перешли знайомій репетитор said: перейшли своїй колезі.     (0.58)
