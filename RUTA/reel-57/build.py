@@ -7,9 +7,9 @@ The one object is HER GUESS: плюс / мінус / нуль at the start, answ
 end («мінус» behind her, «нуль» with one more paying user). Only numbers she
 says: 70, 100, 35, 20, 55, 15–20, 1,50, 70, 60.
 
-Beats: behind «RUTA» (cover) -> shuffle плюс / мінус / нуль -> FULL 1 her real
-RUTA home screen rebuilt 1:1 as a platform ad (zoom to «+» on «голосових»,
-«Сторіс» on «сторітели», «Рілс» on «рілси») -> shuffle каруселі / 8 шаблонів /
+Beats: behind «RUTA» (cover) -> shuffle плюс / мінус / нуль -> FULL 1 her
+current app: her real site screen recordings in a phone, cut on her words
+(home, braindump, stories, reel, carousels) -> behind: the 10 real reviews pile up -> shuffle каруселі / 8 шаблонів /
 тредси -> glass «70+ людей» -> HALF 1 scheme: Claude $100 struck, розробка /
 робота -> glass hosting card: Supabase / Vercel, Free struck, $35 $20 = $55 ->
 HALF 2 scheme: голосове -> текст; голосове / памʼять / аналітика -> сценарій ->
@@ -127,157 +127,85 @@ for i, (sg, txt, t) in enumerate(GUESS):
 js(u'  shuffle(["#gs0", "#gs1", "#gs2"], [%s], %.3f);'
    % (", ".join("%.3f" % (t - 0.1) for _, _, t in GUESS), S(u"Запамʼятай", 15.09) + 0.9))
 
-# 3 · FULL 1 — her RUTA home screen as a platform ad ---------------------------
-# Rebuilt 1:1 from app-screenshots/app-ruta.jpg (coordinates are the screenshot's
-# own pixels at 1028 x 2000), so the zooms stay crisp. Nothing on it is invented:
-# the texts, the two reels and their numbers are her real screen.
+# 3 · FULL 1 — her CURRENT RUTA app as a platform ad ----------------------------
+# The UI is her own screen recordings from ruta.media/ruta-app
+# (app-screenshots/site-2026-11/vid-*.mp4, re-encoded by work/r57/appvids.sh to
+# reel-57/assets/app/: 30 fps, a keyframe every 15 frames, sped up as named).
+# A clean phone floats in 3D; each recording cuts in on her word:
+#   home («продюсер в телефоні») -> braindump («думок, голосових») ->
+#   stories («сторітели») -> reel («рілси») -> carousel types («каруселі»).
+# Nothing is rebuilt or invented: the recordings ARE the UI.
 f0 = S(u"Для", 17.93) - 0.15
 f1 = E(u"каруселі,", 28.22) + 0.25
-NAV_ICONS = {
-    "home": u'<path d="M4 11 L14 3 L24 11 V24 H17 V16 H11 V24 H4 Z"/>',
-    "cal": u'<rect x="4" y="6" width="20" height="18" rx="3"/><path d="M4 11 H24 M9 3 V8 M19 3 V8"/>',
-    "bars": u'<path d="M5 24 H25 M8 20 V12 M13 20 V6 M18 20 V10 M23 20 V14"/>',
-    "user": u'<circle cx="14" cy="9" r="5"/><path d="M4 25 C5 18 23 18 24 25"/>',
-}
-
-
-def ico(k, col):
-    return (u'<svg width="52" height="52" viewBox="0 0 28 28" fill="none" stroke="%s" stroke-width="2.2" '
-            u'stroke-linecap="round" stroke-linejoin="round">%s</svg>' % (col, NAV_ICONS[k]))
-
-
+c1 = S(u"думок,", 21.78) - 0.08
+c2 = S(u"сторітели", 24.50) - 0.08
+c3 = S(u"рілси", 26.23) - 0.08
+c4 = S(u"каруселі,", 28.22) - 0.08
+f_end = f1 + 0.9
+# (name, cut in, cut out, where in the re-encoded file it starts)
+APPV = [("home", f0, c1, 0.0), ("braindump", c1, c2, 1.6), ("stories", c2, c3, 0.4),
+        ("reel", c3, c4, 0.8), ("car-types", c4, f_end, 0.4)]
+_LEN = {"home": 7.0, "braindump": 7.9, "stories": 8.03, "reel": 4.83, "car-types": 6.0}
+for n, a, b, m in APPV:
+    assert m + (b - a) + 0.05 <= _LEN[n], (n, m, b - a)
+vids = u"\n".join(
+    u'              <video id="av-%s" class="av" src="assets/app/%s.mp4" data-start="%.3f" data-duration="%.3f" '
+    u'data-media-start="%.3f" muted playsinline></video>' % (n, n, a, b - a + 0.04, m) for n, a, b, m in APPV)
 C.append(u"""
         <div id="stage">
-          <div id="win" class="app" data-layout-allow-overlap data-layout-allow-overflow>
-            <div class="a-h1" style="left:44px;top:52px">Добрий день, Рута</div>
-            <div class="a-sub" style="left:44px;top:150px">Готова створювати?</div>
-            <div class="a-ring" style="left:838px;top:58px">15</div>
-            <div class="a-cap" style="left:48px;top:300px">СЬОГОДНІ</div>
-            <div class="a-plus" style="left:905px;top:280px">+</div>
-            <div class="a-card" style="left:44px;top:383px;width:939px;height:207px">
-              <i class="pie" style="left:46px;top:50px;background:conic-gradient(#C87533 0 62%%, #F6E3D3 62%% 100%%)"></i>
-              <div class="a-t" style="left:162px;top:42px">Ти шукаєш ідею для свого</div>
-              <div class="a-m" style="left:162px;top:120px"><span style="color:#C87533">Змонтувати</span> · <span id="lbR" class="a-tag">Рілс</span></div>
-              <div class="a-date" style="left:741px;top:112px">▦&nbsp; 8 ВЕР</div>
+          <div id="win" data-layout-allow-overflow>
+            <div id="scr">
+%s
             </div>
-            <div class="a-card" style="left:44px;top:620px;width:939px;height:307px">
-              <i class="pie" style="left:46px;top:50px;background:conic-gradient(#7BBF5A 0 70%%, #E4F2DA 70%% 100%%)"></i>
-              <div class="a-t" style="left:162px;top:42px">Система, яка сама розбирає дз...</div>
-              <div class="a-badge" style="left:828px;top:48px">1/2</div>
-              <div class="a-body" style="left:162px;top:98px;width:640px">Знаєте, що займає в мене мінімум 30%% робочого часу?</div>
-              <div class="a-m" style="left:162px;top:220px"><span style="color:#6BB04A">Готово</span> · <span id="lbS" class="a-tag">Сторіс</span></div>
-              <div class="a-date" style="left:741px;top:212px">▦&nbsp; 8 ВЕР</div>
-            </div>
-            <div class="a-btn" style="left:43px;top:1004px;width:724px">✦&nbsp; Дай мені ідеї</div>
-            <div class="a-ghost" style="left:790px;top:1004px;width:193px">Глянути</div>
-            <div class="a-cap" style="left:48px;top:1228px">СТАТИСТИКА</div>
-            <div class="a-more" style="left:822px;top:1222px">більше ›</div>
-            <div class="a-card" style="left:44px;top:1302px;width:939px;height:455px">
-              <img src="assets/shots/thumb1.jpg" style="left:44px;top:48px;width:117px;height:147px">
-              <div class="a-t2" style="left:194px;top:40px">А на годиннику перша ночі і ...</div>
-              <div class="a-hit" style="left:786px;top:33px">↗ ХІТ</div>
-              <div class="a-st" style="left:196px;top:92px"><b>14 752</b> переглядів&nbsp;&nbsp; 58 вподобань</div>
-              <div class="a-m2" style="left:194px;top:166px">9 коментарів</div>
-              <div style="left:44px;top:241px;width:852px;height:2px;background:#ECEAEA"></div>
-              <img src="assets/shots/thumb2.jpg" style="left:44px;top:276px;width:117px;height:144px">
-              <div class="a-t2" style="left:194px;top:290px">Підписуйся, щоб не пропуст...</div>
-              <div class="a-hit" style="left:786px;top:288px">↗ ХІТ</div>
-              <div class="a-st" style="left:196px;top:344px"><b>3 178</b> переглядів&nbsp; 53 вподобань&nbsp; 3 коментарів</div>
-            </div>
-            <div class="a-card" style="left:44px;top:1945px;width:939px;height:200px">
-              <i class="pie" style="left:46px;top:30px;background:#fff;border:3px solid #DADADA"></i>
-              <div class="a-t" style="left:162px;top:18px">Є одна система, яку я налаштувала ...</div></div>
-            <div class="a-nav" style="left:35px;top:1818px;width:958px;height:147px">
-              <div class="a-ni" style="left:46px;color:#1F4FA3">%(home)s<span>Головна</span></div>
-              <div class="a-ni" style="left:248px">%(cal)s<span>План</span></div>
-              <div class="a-ni" style="left:600px">%(bars)s<span>Інсайти</span></div>
-              <div class="a-ni" style="left:790px">%(user)s<span>Профіль</span></div>
-            </div>
-            <div id="fab" class="a-fab" style="left:449px;top:1821px">+</div>
-            <div id="rip" class="a-rip" style="left:449px;top:1821px"></div>
           </div>
-        </div>""" % {"home": ico("home", "#1F4FA3"), "cal": ico("cal", "#6b6b6b"),
-                     "bars": ico("bars", "#6b6b6b"), "user": ico("user", "#6b6b6b")})
-# her real screen layers on purpose (the last card scrolls under the nav bar; the
-# 3D tilt projects rows over each other) — tell the layout check it is intended
-C[-1] = C[-1].replace(u'<div class="', u'<div data-layout-allow-overlap class="').replace(
-    u'<div id="', u'<div data-layout-allow-overlap id="').replace(u'<span class="', u'<span data-layout-allow-overlap class="')
+        </div>""" % vids)
 EXTRA += u"""
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
     #stage, #stage2 { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2600px; }
-    #win { position: absolute; left: 0; top: 0; width: 1028px; height: 2000px; background: #F6F6F4; overflow: hidden;
-           border-radius: 64px; font-family: "Google Sans", sans-serif; color: #1f1f1f;
-           box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 40px 110px rgba(36,25,25,.26);
-           transform-origin: 514px 1000px; }
-    #win div, #win img, #win i { position: absolute; }
-    #win img { border-radius: 16px; object-fit: cover; }
-    .a-h1 { font-size: 66px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
-    .a-sub { font-size: 33px; color: #6f6f6f; }
-    .a-ring { width: 146px; height: 146px; border-radius: 50%; border: 8px solid #1F4FA3; text-align: center;
-              line-height: 130px; font-size: 52px; font-weight: 700; }
-    .a-cap { font-size: 30px; font-weight: 500; letter-spacing: .12em; color: #7a7a7a; }
-    .a-plus { width: 74px; height: 74px; border-radius: 50%; background: #1F4FA3; color: #fff; text-align: center;
-              line-height: 70px; font-size: 56px; }
-    .a-card { background: #fff; border-radius: 42px; border: 1px solid #ECE6E6; box-shadow: 0 2px 6px rgba(0,0,0,.05); }
-    .pie { width: 78px; height: 78px; border-radius: 50%; }
-    .a-t { font-size: 38px; font-weight: 700; white-space: nowrap; }
-    .a-t2 { font-size: 36px; font-weight: 500; white-space: nowrap; }
-    .a-m { font-size: 31px; color: #8a8a8a; white-space: nowrap; }
-    .a-m2 { font-size: 30px; color: #8a8a8a; white-space: nowrap; }
-    .a-tag { position: relative !important; border-radius: 12px; padding: 2px 8px; margin-left: -8px; }
-    .a-body { font-size: 31px; color: #6f6f6f; line-height: 1.55; }
-    .a-date { height: 56px; padding: 0 22px; border-radius: 28px; background: #F1F1F1; color: #6f6f6f;
-              font-size: 28px; line-height: 56px; white-space: nowrap; }
-    .a-badge { padding: 2px 16px; border-radius: 10px; background: #F1F1F1; font-size: 27px; color: #6f6f6f; }
-    .a-btn { height: 138px; border-radius: 30px; background: #1F4FA3; color: #fff; text-align: center;
-             line-height: 138px; font-size: 36px; font-weight: 500; }
-    .a-ghost { height: 138px; border-radius: 69px; background: #fff; border: 1px solid #E6E6E6; text-align: center;
-               line-height: 136px; font-size: 33px; color: #3c3c3c; }
-    .a-more { font-size: 33px; font-weight: 500; color: #1F4FA3; }
-    .a-hit { padding: 6px 16px; border-radius: 26px; background: #E5F3E8; color: #3D9A55; font-size: 26px; font-weight: 700; }
-    .a-st { font-size: 28px; color: #8a8a8a; white-space: nowrap; }
-    .a-st b { font-size: 50px; color: #1f1f1f; font-weight: 700; margin-right: 8px; }
-    .a-nav { background: #fff; border-radius: 74px; box-shadow: 0 6px 24px rgba(0,0,0,.10); }
-    .a-ni { top: 26px; width: 140px; text-align: center; font-size: 27px; color: #6b6b6b; }
-    .a-ni svg { display: block; margin: 0 auto 6px; }
-    .a-fab { width: 128px; height: 128px; border-radius: 50%; background: #2A5BB0; color: #fff; text-align: center;
-             line-height: 118px; font-size: 84px; box-shadow: 0 10px 30px rgba(31,79,163,.35); }
-    .a-rip { width: 128px; height: 128px; border-radius: 50%; border: 6px solid #7A1424; opacity: 0; }
+    /* a clean phone: thin dark bezel, rounded screen, soft cast */
+    #win { position: absolute; left: 0; top: 0; width: 780px; height: 1688px; padding: 16px; border-radius: 104px;
+           background: #1d1818; transform-origin: 406px 860px;
+           box-shadow: 0 0 0 2px rgba(255,255,255,.35) inset, 0 3px 8px rgba(36,25,25,.14),
+                       0 40px 110px rgba(36,25,25,.30); }
+    #scr { position: relative; width: 780px; height: 1688px; border-radius: 88px; overflow: hidden; background: #fff; }
+    .av { position: absolute; left: 0; top: 0; width: 780px; height: 1688px; object-fit: cover; }
 """
-t_dumok, t_hol = S(u"думок,", 21.78), S(u"голосових,", 22.48)
-t_stor, t_rils, t_navit = S(u"сторітели", 24.50), S(u"рілси", 26.23), S(u"навіть", 27.60)
+for n, a, b, m in APPV:
+    js(u'  tl.set("#av-%s", {autoAlpha: 0}, 0); tl.set("#av-%s", {autoAlpha: 1}, %.3f); tl.set("#av-%s", {autoAlpha: 0}, %.3f);'
+       % (n, n, a, n, b + 0.02))
 
 
 def cam(px, py, sc, cx=540, cy=830):
-    # the window turns and scales about its own centre (514, 1000): a point p
-    # of it lands at O + s*(p - O) + (x, y)
-    return (round(cx - 514 - sc * (px - 514), 1), round(cy - 1000 - sc * (py - 1000), 1))
+    # the phone turns and scales about its own centre (406, 860): a point p of
+    # it lands at O + s*(p - O) + (x, y)
+    return (sc, round(cx - 406 - sc * (px - 406), 1), round(cy - 860 - sc * (py - 860), 1))
 
 
-WIDE = (0.55,) + cam(514, 1000, 0.55)
-FAB = (1.25,) + cam(513, 1830, 1.25, cy=1040)
-STO = (1.15,) + cam(520, 770, 1.15, cy=760)
-RIL = (1.15,) + cam(520, 490, 1.15, cy=760)
-js(u"""
-  gsap.set("#win", {x: %(wx)s, y: %(wy)s + 260, scale: %(ws)s * .86, rotationX: 26, rotationY: -22, rotationZ: 5});
-  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 10, rotationY: -14, rotationZ: 2, duration: 1.3, ease: "power3.out"}, %(f0)s + .12);
-  tl.to("#win", {rotationX: 6, rotationY: -8, rotationZ: 1, duration: 2.2, ease: "sine.inOut"}, %(f0)s + 1.42);
-  tl.to("#win", {x: %(ax)s, y: %(ay)s, scale: %(as)s, rotationX: 4, rotationY: 6, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, %(dumok)s - .55);
-  tl.fromTo("#fab", {scale: 1}, X({scale: .86, duration: .14, yoyo: true, repeat: 1, ease: "power2.out"}), %(hol)s);
-  tl.fromTo("#rip", {autoAlpha: .9, scale: 1}, X({autoAlpha: 0, scale: 1.9, duration: .6, ease: "power2.out"}), %(hol)s + .05);
-  tl.to("#win", {x: %(sx)s, y: %(sy)s, scale: %(ss)s, rotationX: -3, rotationY: -6, duration: 1.1, ease: "power3.inOut"}, %(stor)s - .6);
-  tl.to("#lbS", {backgroundColor: "#7A1424", color: "#fff", duration: .25}, %(stor)s);
-  tl.to("#win", {x: %(rx)s, y: %(ry)s, scale: %(rs)s, rotationX: 4, rotationY: 5, duration: .9, ease: "power3.inOut"}, %(rils)s - .55);
-  tl.to("#lbR", {backgroundColor: "#7A1424", color: "#fff", duration: .25}, %(rils)s);
-  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.1, ease: "power3.inOut"}, %(navit)s - .3);
-  full(%(f0)s, %(f1)s);
-""" % {"wx": WIDE[1], "wy": WIDE[2], "ws": WIDE[0], "ax": FAB[1], "ay": FAB[2], "as": FAB[0],
-       "sx": STO[1], "sy": STO[2], "ss": STO[0], "rx": RIL[1], "ry": RIL[2], "rs": RIL[0],
-       "f0": "%.3f" % f0, "f1": "%.3f" % f1, "dumok": "%.3f" % t_dumok, "hol": "%.3f" % t_hol,
-       "stor": "%.3f" % t_stor, "rils": "%.3f" % t_rils, "navit": "%.3f" % t_navit})
-g.sfx("whoosh-short", f0); g.sfx("whoosh-short", t_dumok - 0.55); g.sfx("click", t_hol)
-g.sfx("whoosh-short", t_stor - 0.6); g.sfx("click-soft", t_stor); g.sfx("click-soft", t_rils)
-g.sfx("whoosh-short", f1)
+def to(t, c, rx, ry, rz, d, ease="power3.inOut"):
+    js(u'  tl.to("#win", {x: %s, y: %s, scale: %s, rotationX: %s, rotationY: %s, rotationZ: %s, duration: %s, ease: "%s"}, %.3f);'
+       % (c[1], c[2], c[0], rx, ry, rz, d, ease, t))
+
+
+def bot(sc, cx=540, b=1380):
+    # the phone's bottom edge rests at y b, just above the caption band, so a
+    # zoom crops its top and never puts her captions over the app
+    return cam(406, 860, sc, cx=cx, cy=b - 860 * sc)
+
+
+WIDE = bot(0.64)
+js(u'  gsap.set("#win", {x: %s, y: %s, scale: %s, rotationX: 26, rotationY: -24, rotationZ: 6});'
+   % (WIDE[1], WIDE[2] + 300, round(WIDE[0] * .86, 3)))
+to(f0 + 0.12, WIDE, 10, -14, 2, 1.3, "power3.out")
+to(f0 + 1.45, bot(0.72), 6, -8, 1, 2.0, "sine.inOut")                    # drift in on her home
+to(c1 - 0.45, bot(0.92), 3, 7, 0, 0.9)                                    # into the text she speaks
+to(c1 + 0.6, bot(0.98), 2, 4, 0, 1.6, "sine.inOut")
+to(c2 - 0.45, bot(0.88, cx=560), 5, -9, 1, 0.85)                          # the stories, swing left
+to(c3 - 0.45, bot(0.94, cx=520), 3, 8, -1, 0.85)                          # the reel script, swing right
+to(c4 - 0.35, bot(0.76), 9, 13, -2, 0.85)                                 # out on the carousel templates
+js(u'  full(%.3f, %.3f);' % (f0, f1))
+g.sfx("whoosh-short", f0); g.sfx("whoosh-short", c1 - 0.45); g.sfx("click-soft", c1)
+g.sfx("whoosh-short", c2 - 0.45); g.sfx("click-soft", c2); g.sfx("click-soft", c3)
+g.sfx("click-soft", c4); g.sfx("whoosh-short", f1)
 
 # 4 · ABOVE — the rest of the list through the slot ----------------------------
 OUT = [(u"дизайн каруселей", S(u"дизайн", 29.58)), (u"8 шаблонів", S(u"восьми", 31.26)),
@@ -295,6 +223,31 @@ F.append(u'''        <div id="us" class="glass gl hid" style="top:320px; left:0;
           <span class="bn">70+</span><span style="font-size:36px; font-weight:500">людей у RUTA</span></div>''')
 js(u'  pop("#us", %.3f); sink("#us", %.3f);' % (t_70 - 0.05, S(u"одноголосно", 38.09) + 0.6))
 g.sfx("pop", t_70 - 0.05)
+
+# 5b · BEHIND — her ask: "on second 40 just add the reviews behind me so it looks
+# like a lot". The 10 real replies (app-screenshots/site-2026-11/r01-r10.webp,
+# untouched) pile up behind her head and shoulders from «одноголосно», one every
+# ≈0.3 s, and clear before «То скільки ж коштує». Her matte keeps her in front.
+t_odn = S(u"одноголосно", 38.09)
+t_rv_out = S(u"То", 46.33) - 0.85
+# (file, centre x, centre y, width, rotation) — the first ones land clear of the «70+» card
+RV = [("r03", 230, 560, 440, -5), ("r04", 840, 520, 470, 4), ("r06", 190, 960, 420, 3),
+      ("r07", 880, 900, 410, -4), ("r02", 540, 450, 500, -2), ("r01", 300, 370, 450, 5),
+      ("r05", 860, 1170, 420, 6), ("r10", 175, 1250, 380, -6), ("r08", 760, 370, 540, -3),
+      ("r09", 540, 600, 560, 2)]
+for i, (f, cx, cy, w, rot) in enumerate(RV):
+    B.append(u'        <img id="rv%d" class="rv hid" data-layout-allow-occlusion data-layout-allow-overlap src="assets/reviews/%s.webp" '
+             u'style="left:%dpx; top:%dpx; width:%dpx">' % (i, f, cx - w // 2, cy, w))
+    t = t_odn + 0.02 + i * 0.3
+    js(u'  gsap.set("#rv%d", {yPercent: -50, rotation: %d});' % (i, rot))
+    js(u'  tl.fromTo("#rv%d", {autoAlpha: 0, scale: .72}, X({autoAlpha: 1, scale: 1, duration: .45, ease: POP}), %.3f);' % (i, t))
+    js(u'  tl.to("#rv%d", {autoAlpha: 0, scale: .9, duration: .25, ease: "power2.in"}, %.3f);' % (i, t_rv_out + (9 - i) * 0.035))
+    g.sfx("pop", t, db=-6)
+EXTRA += u"""
+    .rv { position: absolute; border-radius: 18px; background: #fff;
+          box-shadow: 0 2px 6px rgba(36,25,25,.12), 0 18px 44px rgba(36,25,25,.22); }
+"""
+g.matte("rv", round(t_odn - 0.1, 3), round(t_rv_out + 0.65 - (t_odn - 0.1), 3))
 
 # 6 · HALF 1 — Claude: $100 a month, not counted --------------------------------
 h0 = S(u"Клод,", 50.6) - 0.3

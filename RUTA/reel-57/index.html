@@ -176,44 +176,16 @@
 
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
     #stage, #stage2 { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2600px; }
-    #win { position: absolute; left: 0; top: 0; width: 1028px; height: 2000px; background: #F6F6F4; overflow: hidden;
-           border-radius: 64px; font-family: "Google Sans", sans-serif; color: #1f1f1f;
-           box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 40px 110px rgba(36,25,25,.26);
-           transform-origin: 514px 1000px; }
-    #win div, #win img, #win i { position: absolute; }
-    #win img { border-radius: 16px; object-fit: cover; }
-    .a-h1 { font-size: 66px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
-    .a-sub { font-size: 33px; color: #6f6f6f; }
-    .a-ring { width: 146px; height: 146px; border-radius: 50%; border: 8px solid #1F4FA3; text-align: center;
-              line-height: 130px; font-size: 52px; font-weight: 700; }
-    .a-cap { font-size: 30px; font-weight: 500; letter-spacing: .12em; color: #7a7a7a; }
-    .a-plus { width: 74px; height: 74px; border-radius: 50%; background: #1F4FA3; color: #fff; text-align: center;
-              line-height: 70px; font-size: 56px; }
-    .a-card { background: #fff; border-radius: 42px; border: 1px solid #ECE6E6; box-shadow: 0 2px 6px rgba(0,0,0,.05); }
-    .pie { width: 78px; height: 78px; border-radius: 50%; }
-    .a-t { font-size: 38px; font-weight: 700; white-space: nowrap; }
-    .a-t2 { font-size: 36px; font-weight: 500; white-space: nowrap; }
-    .a-m { font-size: 31px; color: #8a8a8a; white-space: nowrap; }
-    .a-m2 { font-size: 30px; color: #8a8a8a; white-space: nowrap; }
-    .a-tag { position: relative !important; border-radius: 12px; padding: 2px 8px; margin-left: -8px; }
-    .a-body { font-size: 31px; color: #6f6f6f; line-height: 1.55; }
-    .a-date { height: 56px; padding: 0 22px; border-radius: 28px; background: #F1F1F1; color: #6f6f6f;
-              font-size: 28px; line-height: 56px; white-space: nowrap; }
-    .a-badge { padding: 2px 16px; border-radius: 10px; background: #F1F1F1; font-size: 27px; color: #6f6f6f; }
-    .a-btn { height: 138px; border-radius: 30px; background: #1F4FA3; color: #fff; text-align: center;
-             line-height: 138px; font-size: 36px; font-weight: 500; }
-    .a-ghost { height: 138px; border-radius: 69px; background: #fff; border: 1px solid #E6E6E6; text-align: center;
-               line-height: 136px; font-size: 33px; color: #3c3c3c; }
-    .a-more { font-size: 33px; font-weight: 500; color: #1F4FA3; }
-    .a-hit { padding: 6px 16px; border-radius: 26px; background: #E5F3E8; color: #3D9A55; font-size: 26px; font-weight: 700; }
-    .a-st { font-size: 28px; color: #8a8a8a; white-space: nowrap; }
-    .a-st b { font-size: 50px; color: #1f1f1f; font-weight: 700; margin-right: 8px; }
-    .a-nav { background: #fff; border-radius: 74px; box-shadow: 0 6px 24px rgba(0,0,0,.10); }
-    .a-ni { top: 26px; width: 140px; text-align: center; font-size: 27px; color: #6b6b6b; }
-    .a-ni svg { display: block; margin: 0 auto 6px; }
-    .a-fab { width: 128px; height: 128px; border-radius: 50%; background: #2A5BB0; color: #fff; text-align: center;
-             line-height: 118px; font-size: 84px; box-shadow: 0 10px 30px rgba(31,79,163,.35); }
-    .a-rip { width: 128px; height: 128px; border-radius: 50%; border: 6px solid #7A1424; opacity: 0; }
+    /* a clean phone: thin dark bezel, rounded screen, soft cast */
+    #win { position: absolute; left: 0; top: 0; width: 780px; height: 1688px; padding: 16px; border-radius: 104px;
+           background: #1d1818; transform-origin: 406px 860px;
+           box-shadow: 0 0 0 2px rgba(255,255,255,.35) inset, 0 3px 8px rgba(36,25,25,.14),
+                       0 40px 110px rgba(36,25,25,.30); }
+    #scr { position: relative; width: 780px; height: 1688px; border-radius: 88px; overflow: hidden; background: #fff; }
+    .av { position: absolute; left: 0; top: 0; width: 780px; height: 1688px; object-fit: cover; }
+
+    .rv { position: absolute; border-radius: 18px; background: #fff;
+          box-shadow: 0 2px 6px rgba(36,25,25,.12), 0 18px 44px rgba(36,25,25,.22); }
 
     #win2 { position: absolute; left: 90px; top: 430px; width: 900px; padding: 56px 60px 64px; background: #fff;
             border-radius: 48px; font-family: "Google Sans", sans-serif; color: #241919;
@@ -239,6 +211,16 @@
              muted playsinline></video>
       <div id="behind" class="L">
         <div id="bw1" class="big" data-layout-allow-occlusion style="top:440px; font-size:250px">RUTA</div>
+        <img id="rv0" class="rv hid" data-layout-allow-occlusion data-layout-allow-overlap src="assets/reviews/r03.webp" style="left:10px; top:560px; width:440px">
+        <img id="rv1" class="rv hid" data-layout-allow-occlusion data-layout-allow-overlap src="assets/reviews/r04.webp" style="left:605px; top:520px; width:470px">
+        <img id="rv2" class="rv hid" data-layout-allow-occlusion data-layout-allow-overlap src="assets/reviews/r06.webp" style="left:-20px; top:960px; width:420px">
+        <img id="rv3" class="rv hid" data-layout-allow-occlusion data-layout-allow-overlap src="assets/reviews/r07.webp" style="left:675px; top:900px; width:410px">
+        <img id="rv4" class="rv hid" data-layout-allow-occlusion data-layout-allow-overlap src="assets/reviews/r02.webp" style="left:290px; top:450px; width:500px">
+        <img id="rv5" class="rv hid" data-layout-allow-occlusion data-layout-allow-overlap src="assets/reviews/r01.webp" style="left:75px; top:370px; width:450px">
+        <img id="rv6" class="rv hid" data-layout-allow-occlusion data-layout-allow-overlap src="assets/reviews/r05.webp" style="left:650px; top:1170px; width:420px">
+        <img id="rv7" class="rv hid" data-layout-allow-occlusion data-layout-allow-overlap src="assets/reviews/r10.webp" style="left:-15px; top:1250px; width:380px">
+        <img id="rv8" class="rv hid" data-layout-allow-occlusion data-layout-allow-overlap src="assets/reviews/r08.webp" style="left:490px; top:370px; width:540px">
+        <img id="rv9" class="rv hid" data-layout-allow-occlusion data-layout-allow-overlap src="assets/reviews/r09.webp" style="left:260px; top:600px; width:560px">
         <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:440px; font-size:250px">мінус</div>
       </div>
       <div id="panel">
@@ -246,6 +228,9 @@
       </div>
       <video id="matte-b1" class="plate matte" src="assets/mattes/b1.webm"
              data-start="0.000" data-duration="3.667" data-media-start="0"
+             muted playsinline></video>
+      <video id="matte-rv" class="plate matte" src="assets/mattes/rv.webm"
+             data-start="37.967" data-duration="8.200" data-media-start="0"
              muted playsinline></video>
       <video id="matte-b2" class="plate matte" src="assets/mattes/b2.webm"
              data-start="122.600" data-duration="1.767" data-media-start="0"
@@ -301,54 +286,15 @@
       </div>
       <div id="cover">
 
-        <div data-layout-allow-overlap id="stage">
-          <div data-layout-allow-overlap id="win" class="app" data-layout-allow-overlap data-layout-allow-overflow>
-            <div data-layout-allow-overlap class="a-h1" style="left:44px;top:52px">Добрий день, Рута</div>
-            <div data-layout-allow-overlap class="a-sub" style="left:44px;top:150px">Готова створювати?</div>
-            <div data-layout-allow-overlap class="a-ring" style="left:838px;top:58px">15</div>
-            <div data-layout-allow-overlap class="a-cap" style="left:48px;top:300px">СЬОГОДНІ</div>
-            <div data-layout-allow-overlap class="a-plus" style="left:905px;top:280px">+</div>
-            <div data-layout-allow-overlap class="a-card" style="left:44px;top:383px;width:939px;height:207px">
-              <i class="pie" style="left:46px;top:50px;background:conic-gradient(#C87533 0 62%, #F6E3D3 62% 100%)"></i>
-              <div data-layout-allow-overlap class="a-t" style="left:162px;top:42px">Ти шукаєш ідею для свого</div>
-              <div data-layout-allow-overlap class="a-m" style="left:162px;top:120px"><span style="color:#C87533">Змонтувати</span> · <span id="lbR" class="a-tag">Рілс</span></div>
-              <div data-layout-allow-overlap class="a-date" style="left:741px;top:112px">▦&nbsp; 8 ВЕР</div>
+        <div id="stage">
+          <div id="win" data-layout-allow-overflow>
+            <div id="scr">
+              <video id="av-home" class="av" src="assets/app/home.mp4" data-start="17.783" data-duration="3.960" data-media-start="0.000" muted playsinline></video>
+              <video id="av-braindump" class="av" src="assets/app/braindump.mp4" data-start="21.703" data-duration="2.754" data-media-start="1.600" muted playsinline></video>
+              <video id="av-stories" class="av" src="assets/app/stories.mp4" data-start="24.417" data-duration="1.775" data-media-start="0.400" muted playsinline></video>
+              <video id="av-reel" class="av" src="assets/app/reel.mp4" data-start="26.152" data-duration="2.030" data-media-start="0.800" muted playsinline></video>
+              <video id="av-car-types" class="av" src="assets/app/car-types.mp4" data-start="28.142" data-duration="1.863" data-media-start="0.400" muted playsinline></video>
             </div>
-            <div data-layout-allow-overlap class="a-card" style="left:44px;top:620px;width:939px;height:307px">
-              <i class="pie" style="left:46px;top:50px;background:conic-gradient(#7BBF5A 0 70%, #E4F2DA 70% 100%)"></i>
-              <div data-layout-allow-overlap class="a-t" style="left:162px;top:42px">Система, яка сама розбирає дз...</div>
-              <div data-layout-allow-overlap class="a-badge" style="left:828px;top:48px">1/2</div>
-              <div data-layout-allow-overlap class="a-body" style="left:162px;top:98px;width:640px">Знаєте, що займає в мене мінімум 30% робочого часу?</div>
-              <div data-layout-allow-overlap class="a-m" style="left:162px;top:220px"><span style="color:#6BB04A">Готово</span> · <span id="lbS" class="a-tag">Сторіс</span></div>
-              <div data-layout-allow-overlap class="a-date" style="left:741px;top:212px">▦&nbsp; 8 ВЕР</div>
-            </div>
-            <div data-layout-allow-overlap class="a-btn" style="left:43px;top:1004px;width:724px">✦&nbsp; Дай мені ідеї</div>
-            <div data-layout-allow-overlap class="a-ghost" style="left:790px;top:1004px;width:193px">Глянути</div>
-            <div data-layout-allow-overlap class="a-cap" style="left:48px;top:1228px">СТАТИСТИКА</div>
-            <div data-layout-allow-overlap class="a-more" style="left:822px;top:1222px">більше ›</div>
-            <div data-layout-allow-overlap class="a-card" style="left:44px;top:1302px;width:939px;height:455px">
-              <img src="assets/shots/thumb1.jpg" style="left:44px;top:48px;width:117px;height:147px">
-              <div data-layout-allow-overlap class="a-t2" style="left:194px;top:40px">А на годиннику перша ночі і ...</div>
-              <div data-layout-allow-overlap class="a-hit" style="left:786px;top:33px">↗ ХІТ</div>
-              <div data-layout-allow-overlap class="a-st" style="left:196px;top:92px"><b>14 752</b> переглядів&nbsp;&nbsp; 58 вподобань</div>
-              <div data-layout-allow-overlap class="a-m2" style="left:194px;top:166px">9 коментарів</div>
-              <div style="left:44px;top:241px;width:852px;height:2px;background:#ECEAEA"></div>
-              <img src="assets/shots/thumb2.jpg" style="left:44px;top:276px;width:117px;height:144px">
-              <div data-layout-allow-overlap class="a-t2" style="left:194px;top:290px">Підписуйся, щоб не пропуст...</div>
-              <div data-layout-allow-overlap class="a-hit" style="left:786px;top:288px">↗ ХІТ</div>
-              <div data-layout-allow-overlap class="a-st" style="left:196px;top:344px"><b>3 178</b> переглядів&nbsp; 53 вподобань&nbsp; 3 коментарів</div>
-            </div>
-            <div data-layout-allow-overlap class="a-card" style="left:44px;top:1945px;width:939px;height:200px">
-              <i class="pie" style="left:46px;top:30px;background:#fff;border:3px solid #DADADA"></i>
-              <div data-layout-allow-overlap class="a-t" style="left:162px;top:18px">Є одна система, яку я налаштувала ...</div></div>
-            <div data-layout-allow-overlap class="a-nav" style="left:35px;top:1818px;width:958px;height:147px">
-              <div data-layout-allow-overlap class="a-ni" style="left:46px;color:#1F4FA3"><svg width="52" height="52" viewBox="0 0 28 28" fill="none" stroke="#1F4FA3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 L14 3 L24 11 V24 H17 V16 H11 V24 H4 Z"/></svg><span>Головна</span></div>
-              <div data-layout-allow-overlap class="a-ni" style="left:248px"><svg width="52" height="52" viewBox="0 0 28 28" fill="none" stroke="#6b6b6b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="20" height="18" rx="3"/><path d="M4 11 H24 M9 3 V8 M19 3 V8"/></svg><span>План</span></div>
-              <div data-layout-allow-overlap class="a-ni" style="left:600px"><svg width="52" height="52" viewBox="0 0 28 28" fill="none" stroke="#6b6b6b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 24 H25 M8 20 V12 M13 20 V6 M18 20 V10 M23 20 V14"/></svg><span>Інсайти</span></div>
-              <div data-layout-allow-overlap class="a-ni" style="left:790px"><svg width="52" height="52" viewBox="0 0 28 28" fill="none" stroke="#6b6b6b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="9" r="5"/><path d="M4 25 C5 18 23 18 24 25"/></svg><span>Профіль</span></div>
-            </div>
-            <div data-layout-allow-overlap id="fab" class="a-fab" style="left:449px;top:1821px">+</div>
-            <div data-layout-allow-overlap id="rip" class="a-rip" style="left:449px;top:1821px"></div>
           </div>
         </div>
 
@@ -1275,22 +1221,52 @@
 
   tl.set("#bw1", {autoAlpha: 1}, 0); sink("#bw1", 3.095);
   shuffle(["#gs0", "#gs1", "#gs2"], [12.838, 13.678, 14.690], 15.993);
-
-  gsap.set("#win", {x: 26.0, y: -170.0 + 260, scale: 0.55 * .86, rotationX: 26, rotationY: -22, rotationZ: 5});
-  tl.to("#win", {x: 26.0, y: -170.0, scale: 0.55, rotationX: 10, rotationY: -14, rotationZ: 2, duration: 1.3, ease: "power3.out"}, 17.783 + .12);
-  tl.to("#win", {rotationX: 6, rotationY: -8, rotationZ: 1, duration: 2.2, ease: "sine.inOut"}, 17.783 + 1.42);
-  tl.to("#win", {x: 27.2, y: -997.5, scale: 1.25, rotationX: 4, rotationY: 6, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, 21.783 - .55);
-  tl.fromTo("#fab", {scale: 1}, X({scale: .86, duration: .14, yoyo: true, repeat: 1, ease: "power2.out"}), 22.483);
-  tl.fromTo("#rip", {autoAlpha: .9, scale: 1}, X({autoAlpha: 0, scale: 1.9, duration: .6, ease: "power2.out"}), 22.483 + .05);
-  tl.to("#win", {x: 19.1, y: 24.5, scale: 1.15, rotationX: -3, rotationY: -6, duration: 1.1, ease: "power3.inOut"}, 24.497 - .6);
-  tl.to("#lbS", {backgroundColor: "#7A1424", color: "#fff", duration: .25}, 24.497);
-  tl.to("#win", {x: 19.1, y: 346.5, scale: 1.15, rotationX: 4, rotationY: 5, duration: .9, ease: "power3.inOut"}, 26.232 - .55);
-  tl.to("#lbR", {backgroundColor: "#7A1424", color: "#fff", duration: .25}, 26.232);
-  tl.to("#win", {x: 26.0, y: -170.0, scale: 0.55, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.1, ease: "power3.inOut"}, 27.602 - .3);
+  tl.set("#av-home", {autoAlpha: 0}, 0); tl.set("#av-home", {autoAlpha: 1}, 17.783); tl.set("#av-home", {autoAlpha: 0}, 21.723);
+  tl.set("#av-braindump", {autoAlpha: 0}, 0); tl.set("#av-braindump", {autoAlpha: 1}, 21.703); tl.set("#av-braindump", {autoAlpha: 0}, 24.437);
+  tl.set("#av-stories", {autoAlpha: 0}, 0); tl.set("#av-stories", {autoAlpha: 1}, 24.417); tl.set("#av-stories", {autoAlpha: 0}, 26.172);
+  tl.set("#av-reel", {autoAlpha: 0}, 0); tl.set("#av-reel", {autoAlpha: 1}, 26.152); tl.set("#av-reel", {autoAlpha: 0}, 28.162);
+  tl.set("#av-car-types", {autoAlpha: 0}, 0); tl.set("#av-car-types", {autoAlpha: 1}, 28.142); tl.set("#av-car-types", {autoAlpha: 0}, 29.985);
+  gsap.set("#win", {x: 134.0, y: 269.6, scale: 0.55, rotationX: 26, rotationY: -24, rotationZ: 6});
+  tl.to("#win", {x: 134.0, y: -30.4, scale: 0.64, rotationX: 10, rotationY: -14, rotationZ: 2, duration: 1.3, ease: "power3.out"}, 17.903);
+  tl.to("#win", {x: 134.0, y: -99.2, scale: 0.72, rotationX: 6, rotationY: -8, rotationZ: 1, duration: 2.0, ease: "sine.inOut"}, 19.233);
+  tl.to("#win", {x: 134.0, y: -271.2, scale: 0.92, rotationX: 3, rotationY: 7, rotationZ: 0, duration: 0.9, ease: "power3.inOut"}, 21.253);
+  tl.to("#win", {x: 134.0, y: -322.8, scale: 0.98, rotationX: 2, rotationY: 4, rotationZ: 0, duration: 1.6, ease: "sine.inOut"}, 22.303);
+  tl.to("#win", {x: 154.0, y: -236.8, scale: 0.88, rotationX: 5, rotationY: -9, rotationZ: 1, duration: 0.85, ease: "power3.inOut"}, 23.967);
+  tl.to("#win", {x: 114.0, y: -288.4, scale: 0.94, rotationX: 3, rotationY: 8, rotationZ: -1, duration: 0.85, ease: "power3.inOut"}, 25.702);
+  tl.to("#win", {x: 134.0, y: -133.6, scale: 0.76, rotationX: 9, rotationY: 13, rotationZ: -2, duration: 0.85, ease: "power3.inOut"}, 27.792);
   full(17.783, 29.065);
-
   shuffle(["#ou0", "#ou1", "#ou2"], [29.481, 31.161, 33.803], 34.900);
   pop("#us", 36.500); sink("#us", 38.690);
+  gsap.set("#rv0", {yPercent: -50, rotation: -5});
+  tl.fromTo("#rv0", {autoAlpha: 0, scale: .72}, X({autoAlpha: 1, scale: 1, duration: .45, ease: POP}), 38.110);
+  tl.to("#rv0", {autoAlpha: 0, scale: .9, duration: .25, ease: "power2.in"}, 45.798);
+  gsap.set("#rv1", {yPercent: -50, rotation: 4});
+  tl.fromTo("#rv1", {autoAlpha: 0, scale: .72}, X({autoAlpha: 1, scale: 1, duration: .45, ease: POP}), 38.410);
+  tl.to("#rv1", {autoAlpha: 0, scale: .9, duration: .25, ease: "power2.in"}, 45.763);
+  gsap.set("#rv2", {yPercent: -50, rotation: 3});
+  tl.fromTo("#rv2", {autoAlpha: 0, scale: .72}, X({autoAlpha: 1, scale: 1, duration: .45, ease: POP}), 38.710);
+  tl.to("#rv2", {autoAlpha: 0, scale: .9, duration: .25, ease: "power2.in"}, 45.728);
+  gsap.set("#rv3", {yPercent: -50, rotation: -4});
+  tl.fromTo("#rv3", {autoAlpha: 0, scale: .72}, X({autoAlpha: 1, scale: 1, duration: .45, ease: POP}), 39.010);
+  tl.to("#rv3", {autoAlpha: 0, scale: .9, duration: .25, ease: "power2.in"}, 45.693);
+  gsap.set("#rv4", {yPercent: -50, rotation: -2});
+  tl.fromTo("#rv4", {autoAlpha: 0, scale: .72}, X({autoAlpha: 1, scale: 1, duration: .45, ease: POP}), 39.310);
+  tl.to("#rv4", {autoAlpha: 0, scale: .9, duration: .25, ease: "power2.in"}, 45.658);
+  gsap.set("#rv5", {yPercent: -50, rotation: 5});
+  tl.fromTo("#rv5", {autoAlpha: 0, scale: .72}, X({autoAlpha: 1, scale: 1, duration: .45, ease: POP}), 39.610);
+  tl.to("#rv5", {autoAlpha: 0, scale: .9, duration: .25, ease: "power2.in"}, 45.623);
+  gsap.set("#rv6", {yPercent: -50, rotation: 6});
+  tl.fromTo("#rv6", {autoAlpha: 0, scale: .72}, X({autoAlpha: 1, scale: 1, duration: .45, ease: POP}), 39.910);
+  tl.to("#rv6", {autoAlpha: 0, scale: .9, duration: .25, ease: "power2.in"}, 45.588);
+  gsap.set("#rv7", {yPercent: -50, rotation: -6});
+  tl.fromTo("#rv7", {autoAlpha: 0, scale: .72}, X({autoAlpha: 1, scale: 1, duration: .45, ease: POP}), 40.210);
+  tl.to("#rv7", {autoAlpha: 0, scale: .9, duration: .25, ease: "power2.in"}, 45.553);
+  gsap.set("#rv8", {yPercent: -50, rotation: -3});
+  tl.fromTo("#rv8", {autoAlpha: 0, scale: .72}, X({autoAlpha: 1, scale: 1, duration: .45, ease: POP}), 40.510);
+  tl.to("#rv8", {autoAlpha: 0, scale: .9, duration: .25, ease: "power2.in"}, 45.518);
+  gsap.set("#rv9", {yPercent: -50, rotation: 2});
+  tl.fromTo("#rv9", {autoAlpha: 0, scale: .72}, X({autoAlpha: 1, scale: 1, duration: .45, ease: POP}), 40.810);
+  tl.to("#rv9", {autoAlpha: 0, scale: .9, duration: .25, ease: "power2.in"}, 45.483);
 
   sketch("c1", "skP"); box("c1", 370, 320, 340, 140, {seed: 3, fill: true});
   label("c1", 540, 410, "Claude", {size: 64});

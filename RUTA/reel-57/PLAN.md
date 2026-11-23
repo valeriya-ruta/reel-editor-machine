@@ -15,9 +15,10 @@ her, then «+1 людина → нуль». Only numbers she says: 70, 100, 35, 
 | 0.0–2.9 | BEHIND | «RUTA» (cover frame) |
 | 9.8–11.0 | MEME top | 52 marmots |
 | 12.8–15.9 | ABOVE shuffle | плюс → мінус → нуль, each on her word |
-| 17.8–28.8 | FULL | her real RUTA home screen rebuilt 1:1, 3D tilt-in; zoom to «+» (press) on «голосових», «Сторіс» lights on «сторітели», «Рілс» on «рілси», zoom out |
+| 17.8–28.8 | FULL | her CURRENT app: real ruta.media/ruta-app screen recordings (`assets/app/`, re-encoded by `work/r57/appvids.sh`) in a clean phone, 3D tilt-in, bottom edge held above the captions; cuts on her words: home («продюсер в телефоні») → braindump on «думок, голосових» (zoom in) → stories on «сторітели» → reel script on «рілси» → carousel types on «каруселі», zoom out |
 | 29.5–34.9 | ABOVE shuffle | дизайн каруселей → 8 шаблонів → тредси |
 | 36.5–38.7 | ABOVE glass | «70+ людей у RUTA» |
+| 38.1–45.7 | BEHIND (matte `rv`) | her ask: the 10 real reviews (`assets/reviews/r01–r10`, untouched) pile up behind her, one every 0.3 s from «одноголосно», ±6°, 380–560 px; clear before «То скільки ж коштує» |
 | 48.8–50.0 | MEME r | 14 shocked cat |
 | 50.1–62.0 | HALF (sketch) | Claude box, «$100 / міс» struck on «не рахую», arrows to розробка / робота |
 | 65.8–82.3 | ABOVE glass | Supabase · база даних / Vercel · хостинг; Free chips struck on «не підходять»; $35, $20, разом $55 |
