@@ -138,6 +138,6 @@ tokens — the last hour cost ~15× the first for the same kind of work.
 - **npm in `C:\Program Files\nodejs` is broken.** Use `./hf`, or prepend
   `/c/Users/Ruta/AppData/Roaming/npm` to `PATH`.
 - Local renders need `--low-memory-mode`; her disk runs near full.
-- Cloud renders bill to the **free** HeyGen plan via OAuth, not the API wallet.
+- No HeyGen at all — not for renders, not for hosting (her call, 2026-11-20). Render locally; host for Buffer on her Cloudinary.
 - Emoji must be `<img>`, never glyphs — the cloud renderer has Noto, so a literal
   emoji ships as the Android one. `Kit.emoji()` + `assets/emoji/`.
