@@ -156,7 +156,7 @@ C.append(u"""
               <span id="sv1">GPT-6 Luna</span><span id="sv2">%(HAIKU)s</span></div>
             <div id="kl" class="sp-l o" style="left:486px;top:552px">Ключ API</div>
             <div id="kv" class="sp-box sp-sel o" style="left:486px;top:600px;width:450px;height:62px;padding:0 18px;line-height:58px">Наслідувати з налаштувань…</div>
-            <div class="sp-card o" style="left:486px;top:684px"><i style="background:#DDEBFB"></i><b>ВЕБ-ПОШУК</b>
+            <div id="cw" class="sp-card o" style="left:486px;top:684px"><i style="background:#DDEBFB"></i><b>ВЕБ-ПОШУК</b>
               <span>Пошук актуальної інформації в інтернеті перед формуванням відповіді.</span><em><u></u></em></div>
             <div class="sp-card o" style="left:486px;top:864px"><i style="background:#ECEFF3"></i><b>СЕРВЕРИ MCP</b>
               <span>Підключення сторонніх інструментів і джерел даних.</span><em><u></u></em></div>
@@ -260,9 +260,9 @@ js(u"""
   tl.to("#win", %(m1)s, %(mod).3f - .55);
   tl.fromTo("#dd", {autoAlpha: 0, scaleY: .6}, X({autoAlpha: 1, scaleY: 1, duration: .3, ease: "power2.out"}), %(obyr).3f);
   tl.to("#opH", {backgroundColor: "#F3E7E8", duration: .15}, %(haiku).3f - .25);
-  tl.to("#kl, #kv", {autoAlpha: 0, duration: .15}, %(obyr).3f);
+  tl.to("#kl, #kv, #cw", {autoAlpha: 0, duration: .15}, %(obyr).3f);
   tl.to("#dd", {autoAlpha: 0, duration: .2}, %(haiku).3f + .35);
-  tl.to("#kl, #kv", {autoAlpha: 1, duration: .2}, %(haiku).3f + .5);
+  tl.to("#kl, #kv, #cw", {autoAlpha: 1, duration: .2}, %(haiku).3f + .5);
   tl.to("#sv1", {opacity: 0, duration: .1}, %(haiku).3f + .35);
   tl.to("#sv2", {opacity: 1, duration: .1}, %(haiku).3f + .4);
   tl.to("#sel", {%(ring)s, duration: .3}, %(haiku).3f + .4);
@@ -272,8 +272,8 @@ js(u"""
        "haiku": t_haiku, "ring": RING, "unring": UNRING,
        "f0": FLD(sc=0.95, rotationX=10, rotationY=-8, rotationZ=2),
        "f1": FLD(rotationX=3, rotationY=-2, rotationZ=0.5)[:-1] + ", duration: 1.6, ease: \"power3.out\"}",
-       "m1": MOD(rotationX=-3, rotationY=9)[:-1] + ", duration: 1.2, ease: \"power3.inOut\"}",
-       "m2": WIDE(rotationX=2, rotationY=3)[:-1] + ", duration: 1.6, ease: \"sine.inOut\"}"})
+       "m1": MOD(rotationX=0, rotationY=9)[:-1] + ", duration: 1.2, ease: \"power3.inOut\"}",
+       "m2": WIDE(rotationX=0, rotationY=3)[:-1] + ", duration: 1.6, ease: \"sine.inOut\"}"})
 g.sfx("whoosh-short", b0); g.sfx("typing", t_skr - 0.1); g.sfx("typing", t_kon - 0.1)
 g.sfx("whoosh-short", t_mod - 0.55); g.sfx("click-soft", t_obyr); g.sfx("click", t_haiku + 0.35)
 g.sfx("whoosh-short", b1)
@@ -311,10 +311,10 @@ js(u"""
   tl.to("#fld", {%(ring)s, duration: .3}, %(mozh).3f + .9);
   full(%(c0).3f, %(c1).3f);
 """ % {"c0": c0, "c1": c1, "zav": t_zav, "prop": t_prop, "mozh": t_mozh, "ring": RING, "unring": UNRING,
-       "w0": WIDE(sc=0.9, dy=200, rotationX=-12, rotationY=12, rotationZ=-2),
-       "w1": WIDE(rotationX=-4, rotationY=6, rotationZ=-1)[:-1] + ", duration: 1.0, ease: \"power3.out\"}",
-       "f1": FIL(rotationX=2, rotationY=-5)[:-1] + ", duration: 1.2, ease: \"power3.inOut\"}",
-       "f2": FLD(rotationX=2, rotationY=2, rotationZ=-0.5)[:-1] + ", duration: 1.3, ease: \"power3.inOut\"}"})
+       "w0": WIDE(sc=0.9, dy=200, rotationX=0, rotationY=12, rotationZ=-2),
+       "w1": WIDE(rotationX=0, rotationY=6, rotationZ=-1)[:-1] + ", duration: 1.0, ease: \"power3.out\"}",
+       "f1": FIL(rotationX=0, rotationY=-5)[:-1] + ", duration: 1.2, ease: \"power3.inOut\"}",
+       "f2": FLD(rotationX=0, rotationY=2, rotationZ=-0.5)[:-1] + ", duration: 1.3, ease: \"power3.inOut\"}"})
 g.sfx("whoosh-short", c0); g.sfx("whoosh-short", t_zav - 0.45); g.sfx("click-soft", t_prop)
 g.sfx("whoosh-short", t_mozh - 0.3); g.sfx("whoosh-short", c1)
 
@@ -366,10 +366,10 @@ js(u"""
   tl.to("#win", %(t3)s, %(vpl).3f - .6);
   full(%(d0).3f, %(d1).3f);
 """ % {"d0": d0, "d1": d1, "t2k": t_2000, "adek": t_adek, "vpl": t_vpl, "ring": RING, "unring": UNRING,
-       "t0": TOK(sc=1.6, rotationX=14, rotationY=12, rotationZ=-2),
-       "t1": TOK(rotationX=3, rotationY=4)[:-1] + ", duration: 1.2, ease: \"power3.out\"}",
-       "t2": TOK(sc=1.85, rotationX=2, rotationY=-6)[:-1] + ", duration: 2.6, ease: \"sine.inOut\"}",
-       "t3": WIDE(rotationX=4, rotationY=-6, rotationZ=1)[:-1] + ", duration: 1.4, ease: \"power3.inOut\"}"})
+       "t0": TOK(sc=1.6, rotationX=0, rotationY=12, rotationZ=-2),
+       "t1": TOK(rotationX=0, rotationY=4)[:-1] + ", duration: 1.2, ease: \"power3.out\"}",
+       "t2": TOK(sc=1.85, rotationX=0, rotationY=-6)[:-1] + ", duration: 2.6, ease: \"sine.inOut\"}",
+       "t3": WIDE(rotationX=0, rotationY=-6, rotationZ=1)[:-1] + ", duration: 1.4, ease: \"power3.inOut\"}"})
 g.sfx("whoosh-short", d0); g.sfx("click", t_2000); g.sfx("whoosh-short", t_vpl - 0.6); g.sfx("whoosh-short", d1)
 
 # 7 · ABOVE — «Пиши коротко.» into the instruction, then again and again -------

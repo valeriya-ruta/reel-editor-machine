@@ -1,0 +1,22 @@
+[INFO] [Render] Pipeline started {"renderJobId":"c5972229-2117-4e47-aee7-e4b98adae97b","platform":"linux","arch":"x64","nodeVersion":"v22.23.5","fps":{"num":30,"den":1},"format":"mp4","quality":"standard","browserGpuMode":"auto","forceScreenshot":false,"protocolTimeout":300000,"browserTimeout":120000,"pageNavigationTimeout":60000,"playerReadyTimeout":45000}
+[INFO] [Render:trace] {"renderJobId":"c5972229-2117-4e47-aee7-e4b98adae97b","phase":"pipeline","status":"checkpoint","elapsedMs":3,"message":"started","format":"mp4","quality":"standard","browserGpuMode":"auto","forceScreenshot":false,"protocolTimeoutMs":300000,"pageNavigationTimeoutMs":60000,"playerReadyTimeoutMs":45000,"requestedWorkers":3}
+[INFO] [Render:trace] {"renderJobId":"c5972229-2117-4e47-aee7-e4b98adae97b","phase":"compile","status":"start","elapsedMs":4,"needsAlpha":false}
+[INFO] [Compiler] Inlined CDN script: https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js
+[INFO] [Compiler] Embedded local font file: assets/fonts/GoogleSans-400.ttf (70 KB → data URI)
+[INFO] [Compiler] Embedded local font file: assets/fonts/GoogleSans-500.ttf (70 KB → data URI)
+[INFO] [Compiler] Embedded local font file: assets/fonts/GoogleSans-700.ttf (70 KB → data URI)
+[fontCompression] woff2 compression failed for woff font, embedding raw format
+[INFO] [Compiler] Embedded local font file: assets/fonts/ProductSans-Black.woff (41 KB → data URI)
+[INFO] [Compiler] Embedded local font file: assets/fonts/Pangolin.ttf (314 KB → data URI)
+[INFO] Compiled composition metadata {"renderJobId":"c5972229-2117-4e47-aee7-e4b98adae97b","entryFile":"index.html","staticDuration":76.183,"width":1080,"height":1920,"videoCount":3,"audioCount":1,"renderModeHints":{"recommendScreenshot":false,"reasons":[]}}
+[INFO] [Render:trace] {"renderJobId":"c5972229-2117-4e47-aee7-e4b98adae97b","phase":"compile","status":"end","elapsedMs":424,"durationMs":420,"needsAlpha":false}
+[INFO] [Render:trace] {"renderJobId":"c5972229-2117-4e47-aee7-e4b98adae97b","phase":"compile","status":"checkpoint","elapsedMs":426,"message":"composition metadata resolved","width":1080,"height":1920,"videoCount":3,"audioCount":1,"imageCount":2,"deviceScaleFactor":1,"forceScreenshot":false,"compositionHash":"941d0a98b5339aea"}
+[INFO] [Render] Low-memory render profile active — screenshot capture, auto-worker calibration skipped. Override with --no-low-memory-mode or PRODUCER_LOW_MEMORY_MODE=false. {"renderJobId":"c5972229-2117-4e47-aee7-e4b98adae97b","totalMemMb":16087,"thresholdMb":8192}
+[INFO] [Render:trace] {"renderJobId":"c5972229-2117-4e47-aee7-e4b98adae97b","phase":"browser_probe","status":"start","elapsedMs":426,"forceScreenshot":true,"stagePhase":"calibrating"}
+[INFO] [Render:trace] {"renderJobId":"c5972229-2117-4e47-aee7-e4b98adae97b","phase":"browser_probe","status":"end","elapsedMs":500,"durationMs":74,"forceScreenshot":true,"stagePhase":"calibrating"}
+[INFO] [Render:trace] {"renderJobId":"c5972229-2117-4e47-aee7-e4b98adae97b","phase":"browser_probe","status":"checkpoint","elapsedMs":501,"message":"duration resolved","durationSeconds":76.183,"totalFrames":2286,"compositionHash":"941d0a98b5339aea","beginFrameStalled":false}
+[INFO] [Render:trace] {"renderJobId":"c5972229-2117-4e47-aee7-e4b98adae97b","phase":"video_extract","status":"start","elapsedMs":501,"videoCount":3}
+[INFO] Probing video color spaces... {"renderJobId":"c5972229-2117-4e47-aee7-e4b98adae97b","videoCount":3}
+[INFO] Extracting frames from video 1/3 {"renderJobId":"c5972229-2117-4e47-aee7-e4b98adae97b","sourceType":"local"}
+[INFO] Extracting frames from video 2/3 {"renderJobId":"c5972229-2117-4e47-aee7-e4b98adae97b","sourceType":"local"}
+[INFO] Extracting frames from video 3/3 {"renderJobId":"c5972229-2117-4e47-aee7-e4b98adae97b","sourceType":"local"}

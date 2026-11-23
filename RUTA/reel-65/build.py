@@ -320,7 +320,7 @@ EXTRA += u"""
     .tk-r { display: flex; align-items: center; gap: 14px; margin-top: 16px; font-size: 34px; font-weight: 500;
             color: #574142; }
 """
-js(u'  rise("#tk", %.3f); fadein("#tkr", %.3f); sink("#tk", %.3f);' % (t_zap - 0.3, t_dyv2 - 0.1, E(u"календар.", 70.0) + 0.2))
+js(u'  rise("#tk", %.3f); fadein("#tkr", %.3f); sink("#tk", %.3f);' % (t_zap - 0.3, t_dyv2 - 0.1, E(u"календар.", 70.0) + 0.02))
 g.sfx("pop", t_zap - 0.3); g.sfx("click-soft", t_dyv2)
 
 # MEMES (assets/memes/MEMES.md) — comic relief after the beat lands ---------------------
