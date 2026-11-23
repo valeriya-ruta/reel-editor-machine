@@ -1,0 +1,117 @@
+[
+ {
+  "t": 0.25,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 3.686,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 4.796,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 4.896,
+  "name": "click-soft",
+  "db": -4
+ },
+ {
+  "t": 5.746,
+  "name": "click-soft",
+  "db": -4
+ },
+ {
+  "t": 6.596,
+  "name": "click-soft",
+  "db": -4
+ },
+ {
+  "t": 7.446,
+  "name": "click-soft",
+  "db": -4
+ },
+ {
+  "t": 8.296,
+  "name": "click-soft",
+  "db": -4
+ },
+ {
+  "t": 9.765,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 19.913,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 22.979,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 24.233,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 25.249,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 26.329,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 28.146,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 29.226,
+  "name": "pop",
+  "db": -2
+ },
+ {
+  "t": 31.839,
+  "name": "pop"
+ },
+ {
+  "t": 32.414,
+  "name": "click"
+ },
+ {
+  "t": 35.401,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 35.671,
+  "name": "click-soft"
+ },
+ {
+  "t": 37.212,
+  "name": "click-soft"
+ },
+ {
+  "t": 42.113,
+  "name": "click-soft"
+ },
+ {
+  "t": 43.833,
+  "name": "click-soft"
+ },
+ {
+  "t": 45.787,
+  "name": "click"
+ },
+ {
+  "t": 50.686,
+  "name": "kaching"
+ },
+ {
+  "t": 54.6,
+  "name": "pop"
+ }
+]

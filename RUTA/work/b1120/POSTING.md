@@ -10,3 +10,13 @@ RUTA `mark_posted` with the Instagram link.
 | reel | RUTA date | IG (Kyiv) | TikTok | Cloudinary | Buffer IG / TT | posted link |
 |---|---|---|---|---|---|---|
 | 61 | Tue 24 Nov | 22:00 | 22:30 | reels/REEL-61.mp4 | 6b041ff301adccb6f5369631 / 6b04200001adccb6f536a142 | — |
+
+## Paused 2026-11-23 (her call — out of her usage limit)
+
+Done: reel 61 (rendered, verified, in the review artifact, scheduled in Buffer for
+Tue 24 Nov IG 22:00 / TikTok 22:30 Kyiv, RUTA status `ready`).
+Stopped mid-build: 57, 58, 59, 60, 62–72 — partial work is committed under
+`RUTA/reel-NN/` and `RUTA/work/rNN/` (cuts, captions, plans, some build.py).
+Resume: a fresh session on `main`, `/reel` with `RUTA/BUILD-BRIEF.md`, one builder per
+reel; their RUTA dates are already shifted (+3 days); re-check the dates against
+today before scheduling, and the ТЕСТ cut-fixes for 60/66/71 are in place.

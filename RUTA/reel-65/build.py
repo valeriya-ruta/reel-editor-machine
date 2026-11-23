@@ -39,9 +39,10 @@ FIX = {
     u"в 13": u"в 13:20,", u".20,": None, u"у 17": u"у 17:40.", u".40": None,
     u"рефлектор.": u"рефлектор,", u"Кидаєш": u"кидаєш", u"часто": u"чесно",
     u"І": u"і", u"Imagine,": u"Imagen,", (u"в", 44.4): u"вчаться", (u"чаті", 44.6): None,
-    u"твої": u"твоєї", u"обробки,": u"обробки,", u"Бриф": u"бриф", (u"Claude", 52.6): None,
-    u"Клод": u"Claude", u"Синьпус,": u"SendPulse,", u"Захаліто": u"запланована",
-    u"нацилаю": u"надсилає", u"Ачори,": u"а через", u"сніждень": u"тиждень", u"видок.": u"відгук.", u"збережеш,": u"збережи,",
+    u"твої": u"твоєї", u"Бриф": u"бриф", (u"Claude", 52.6): None,
+    u"Клод": u"Claude", u"Синьпус,": u"SendPulse,", u"Захаліто": u"за",
+    u"нацилаю": u"надсилає", u"Ачори,": u"а через", u"сніждень": u"тиждень", u"видок.": u"відгук.", u"Тобі": u"Тож", u"своїх": u"своїй", u"колезій.": u"колезі.", u"як ви": u"як він", u"називаєте.": u"називається.",
+    (u"в", 47.7): u"всі", u"сеті": u"ці",
 }
 CAPS = load_caps(NN, FIX)
 W = Words(CAPS)
@@ -329,7 +330,7 @@ js(u'  rise("#tk", %.3f); fadein("#tkr", %.3f); sink("#tk", %.3f);' % (t_zap - 0
 g.sfx("pop", t_zap - 0.3); g.sfx("click-soft", t_dyv2)
 
 # 10 · CTA — two chips through the slot, the pill in the subtitle band ----------------------
-t_zb, t_per = S(u"збережи,", 70.82), S(u"перешли", 72.34)
+t_zb, t_per = S(u"збережеш,", 70.82), S(u"перешли", 72.34)
 BM = (u'<svg class="ic" viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.5L5 21V4a1 1 0 0 1 1-1z" '
       u'fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>')
 PL = (u'<svg class="ic" viewBox="0 0 24 24"><path d="M21.5 2.5 10.5 13.5M21.5 2.5 14.5 21.5l-4-8-8-4z" '
@@ -338,8 +339,8 @@ slot("c1", BM + u'Збережи', t_zb - 0.1, t_per - 0.1)
 slot("c2", PL + u'Перешли колезі', t_per - 0.1, DUR + 1)
 F.append(u'''        <div id="ctp" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:1404px;
              font-size:46px; padding:28px 56px">Збережи і перешли колезі</div>''')
-js(u'  pop("#ctp", %.3f);' % (S(u"Тобі", 70.53) - 0.05))
-BLACKOUT.append((S(u"Тобі", 70.53) - 0.08, DUR))
+js(u'  pop("#ctp", %.3f);' % (S(u"Тож", 70.53) - 0.05))
+BLACKOUT.append((S(u"Тож", 70.53) - 0.08, DUR))
 
 # ---------------------------------------------------------------- half screens + their mattes
 for i, (a, b) in enumerate(HALF):
