@@ -174,6 +174,18 @@
     .shuf .chip .cb b::after { content: ""; position: absolute; left: 14px; top: 6px; width: 10px; height: 20px;
                                border: solid #fff; border-width: 0 5px 5px 0; transform: rotate(45deg); }
 
+    .ph { position: absolute; width: 220px; height: 391px; border-radius: 22px; overflow: hidden;
+          box-shadow: 0 2px 6px rgba(36,25,25,.12), 0 14px 30px rgba(36,25,25,.16); }
+    .ph img { width: 220px; height: 391px; object-fit: cover; display: block; }
+    .ph .mk { position: absolute; inset: 0; background: #262626; }
+    .mk i { position: absolute; display: block; border-radius: 8px; background: #fff; }
+    .mk .h1 { left: 22px; top: 40px; width: 176px; height: 26px; }
+    .mk .h2 { left: 22px; top: 78px; width: 120px; height: 26px; }
+    .mk .vd { position: absolute; left: 22px; top: 130px; width: 176px; height: 150px; border-radius: 14px;
+              background: linear-gradient(160deg, #6d6d6d, #4a4a4a); }
+    .mk .sb { left: 22px; top: 304px; width: 176px; height: 20px; background: #9a9a9a; border-radius: 10px; }
+    .mk .s2 { top: 334px; width: 110px; }
+
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); overflow: hidden; }
     #wall { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2000px; }
     #grid { position: absolute; left: 42px; top: -230px; width: 996px; display: grid;
@@ -189,39 +201,41 @@
             box-shadow: inset 0 0 0 6px #7A1424; opacity: 0; }
 
     #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
-    #win { position: absolute; left: 0; top: 0; width: 800px; height: 520px; background: #fff;
-           border-radius: 16px; font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
+    #win { position: absolute; left: 0; top: 0; width: 900px; height: 1020px; background: #fff;
+           border-radius: 28px; font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
            box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
-           transform-origin: 400px 260px; will-change: transform; }
-    .mt-bar { position: absolute; left: 0; top: 0; width: 800px; height: 46px; border-bottom: 1px solid #EEE6E6;
-              display: flex; align-items: center; padding: 0 16px; gap: 7px; font-size: 15px; font-weight: 500; }
-    .mt-bar > i { width: 11px; height: 11px; border-radius: 50%; background: #E3D5D5; display: block; }
-    .mt-bar > span { margin-left: 14px; }
-    .mt-acc { margin-left: auto; display: flex; align-items: center; gap: 10px; font-size: 13px; color: #574142; }
-    .mt-acc em { width: 34px; height: 18px; border-radius: 9px; background: #C9C1C1; position: relative; display: block; }
-    .mt-acc em u { position: absolute; left: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%;
-                   background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.25); }
-    .mt-side { position: absolute; left: 0; top: 46px; width: 184px; height: 474px; background: #FBF7F7;
-               border-right: 1px solid #EEE6E6; padding: 14px 10px; }
-    .si { height: 34px; line-height: 34px; padding: 0 12px; border-radius: 17px; font-size: 13px; color: #3c3434;
-          margin-bottom: 6px; position: relative; }
-    .si b { position: absolute; right: 10px; top: 8px; height: 18px; min-width: 18px; padding: 0 5px; border-radius: 9px;
-            background: #7A1424; color: #fff; font-size: 11px; line-height: 18px; text-align: center; opacity: 0; }
-    .tl { position: absolute; width: 132px; height: 128px; }
-    .tl .im { width: 132px; height: 98px; border-radius: 10px; position: relative; overflow: hidden; }
-    .tl .im s { position: absolute; left: 22px; bottom: -6px; border-style: solid; border-width: 0 34px 46px 34px;
-                border-color: transparent transparent rgba(255,255,255,.75) transparent; }
-    .tl .im em { position: absolute; right: 22px; top: 18px; width: 20px; height: 20px; border-radius: 50%;
-                 background: rgba(255,255,255,.8); }
-    .tl .ok { position: absolute; left: 8px; top: 8px; width: 22px; height: 22px; border-radius: 50%;
+           transform-origin: 450px 510px; will-change: transform; }
+    .mt-hd { position: absolute; left: 40px; top: 40px; height: 70px; display: flex; align-items: center; gap: 18px;
+             font-size: 46px; font-weight: 700; color: #241919; }
+    .mt-hd .dot { width: 22px; height: 22px; border-radius: 50%; background: #7A1424; display: block; }
+    .mt-acc { position: absolute; left: 40px; top: 136px; width: 820px; height: 100px; box-sizing: border-box;
+              padding: 0 30px; background: #FBF6F6; border-radius: 22px; display: flex; align-items: center; gap: 18px;
+              font-size: 38px; font-weight: 500; color: #241919; }
+    .mt-acc svg path { fill: #D97757; }
+    .mt-acc span { flex: 1; }
+    .mt-acc em { width: 96px; height: 54px; border-radius: 27px; background: #C9C1C1; position: relative; display: block; flex: none; }
+    .mt-acc em u { position: absolute; left: 6px; top: 6px; width: 42px; height: 42px; border-radius: 50%;
+                   background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
+    .mt-tabs { position: absolute; left: 40px; top: 262px; display: flex; gap: 16px; }
+    .tb { height: 64px; line-height: 64px; padding: 0 26px; border-radius: 32px; font-size: 30px; color: #3c3434;
+          border: 2px solid #ECE3E3; box-sizing: border-box; display: flex; align-items: center; gap: 12px; }
+    .tb.on { background: #F6E3E4; border-color: #F6E3E4; color: #7A1424; font-weight: 500; }
+    .tb b { height: 38px; min-width: 38px; padding: 0 8px; box-sizing: border-box; border-radius: 19px; background: #7A1424;
+            color: #fff; font-size: 26px; line-height: 38px; text-align: center; opacity: 0; }
+    .tl { position: absolute; width: 260px; height: 200px; }
+    .tl .im { width: 260px; height: 150px; border-radius: 16px; position: relative; overflow: hidden; }
+    .tl .im s { position: absolute; left: 50px; bottom: -8px; border-style: solid; border-width: 0 60px 80px 60px;
+                border-color: transparent transparent rgba(255,255,255,.78) transparent; }
+    .tl .im em { position: absolute; right: 50px; top: 28px; width: 34px; height: 34px; border-radius: 50%;
+                 background: rgba(255,255,255,.82); }
+    .tl .ok { position: absolute; left: 12px; top: 12px; width: 40px; height: 40px; border-radius: 50%;
               background: #7A1424; opacity: 0; }
-    .tl .ok::after { content: ""; position: absolute; left: 8px; top: 4px; width: 5px; height: 10px;
-                     border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
-    .tl .im::after { content: ""; position: absolute; inset: 0; border-radius: 10px; box-shadow: inset 0 0 0 0 #7A1424; }
-    .tl .nm { position: relative; height: 24px; margin-top: 6px; font-size: 11.5px; color: #3c3434; }
-    .tl .nm span { position: absolute; left: 0; top: 0; white-space: nowrap; }
+    .tl .ok::after { content: ""; position: absolute; left: 14px; top: 7px; width: 9px; height: 18px;
+                     border: solid #fff; border-width: 0 4px 4px 0; transform: rotate(45deg); }
+    .tl .nm { position: relative; height: 40px; margin-top: 8px; font-size: 30px; color: #3c3434; }
+    .tl .nm span { position: absolute; left: 2px; top: 0; white-space: nowrap; }
     .tl .n1 { opacity: 0; color: #241919; font-weight: 500; }
-    .car { display: inline-block; width: 1.5px; height: 13px; background: #7A1424; margin-left: 1px; vertical-align: -2px; }
+    .car { display: inline-block; width: 3px; height: 32px; background: #7A1424; margin-left: 2px; vertical-align: -5px; }
 
     </style>
   </head>
@@ -238,6 +252,10 @@
       </div>
       <div id="panel">
 <svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
+
+<div id="ph1" class="ph hid" style="left:175px; top:305px"><img src="assets/r61.jpg"></div>
+<div id="ph2" class="ph hid" style="left:665px; top:305px"><div class="mk"><i class="h1"></i><i class="h2"></i>
+  <div class="vd"></div><i class="sb"></i><i class="sb s2"></i></div></div>
       </div>
       <video id="matte-b1" class="plate matte" src="assets/mattes/b1.webm"
              data-start="0.000" data-duration="2.967" data-media-start="0"
@@ -273,24 +291,19 @@
 
         <div id="stage" class="hid">
           <div id="win">
-            <div class="mt-bar"><i></i><i></i><i></i><span>Медіа для монтажу</span>
-              <div class="mt-acc">Доступ для Claude<em id="acc"><u></u></em></div></div>
-            <div class="mt-side">
-              <div class="si">Усі файли</div><div class="si">Картинки</div><div class="si">Меми</div>
-              <div class="si" id="lib">Бібліотека стилю<b id="libn">3</b></div>
-            </div>
-            <div class="tl" id="tl0" style="left:200px;top:64px"><div class="im" style="background:#E8D3D4"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2041.png</span></div></div>
-            <div class="tl" id="tl1" style="left:346px;top:64px"><div class="im" style="background:#D9C7C8"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2042.png</span></div></div>
-            <div class="tl" id="tl2" style="left:492px;top:64px"><div class="im" style="background:#F0E3E3"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2043.png</span></div></div>
-            <div class="tl" id="tl3" style="left:638px;top:64px"><div class="im" style="background:#CDB6B8"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2044.png</span></div></div>
-            <div class="tl" id="tl4" style="left:200px;top:204px"><div class="im" style="background:#E2CFCF"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2045.png</span></div></div>
-            <div class="tl" id="tl5" style="left:346px;top:204px"><div class="im" style="background:#D4BEBF"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2046.png</span><span class="n1">реакція-вау.png<i class="car"></i></span></div></div>
-            <div class="tl" id="tl6" style="left:492px;top:204px"><div class="im" style="background:#E8D3D4"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2047.png</span></div></div>
-            <div class="tl" id="tl7" style="left:638px;top:204px"><div class="im" style="background:#D9C7C8"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2048.png</span></div></div>
-            <div class="tl" id="tl8" style="left:200px;top:344px"><div class="im" style="background:#F0E3E3"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2049.png</span></div></div>
-            <div class="tl" id="tl9" style="left:346px;top:344px"><div class="im" style="background:#CDB6B8"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2050.png</span></div></div>
-            <div class="tl" id="tl10" style="left:492px;top:344px"><div class="im" style="background:#E2CFCF"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2051.png</span></div></div>
-            <div class="tl" id="tl11" style="left:638px;top:344px"><div class="im" style="background:#D4BEBF"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2052.png</span></div></div>
+            <div class="mt-hd"><i class="dot"></i><span>Медіа для монтажу</span></div>
+            <div class="mt-acc"><svg class="mark" width="40" height="40" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><span>Доступ для Claude</span><em id="acc"><u></u></em></div>
+            <div class="mt-tabs"><span class="tb on">Усі файли</span><span class="tb">Меми</span>
+              <span class="tb" id="lib">Бібліотека стилю<b id="libn">3</b></span></div>
+            <div class="tl" id="tl0" style="left:40px;top:356px"><div class="im" style="background:#E8D3D4"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2041.png</span></div></div>
+            <div class="tl" id="tl1" style="left:320px;top:356px"><div class="im" style="background:#D9C7C8"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2042.png</span></div></div>
+            <div class="tl" id="tl2" style="left:600px;top:356px"><div class="im" style="background:#F0E3E3"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2043.png</span></div></div>
+            <div class="tl" id="tl3" style="left:40px;top:568px"><div class="im" style="background:#CDB6B8"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2044.png</span></div></div>
+            <div class="tl" id="tl4" style="left:320px;top:568px"><div class="im" style="background:#E2CFCF"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2045.png</span><span class="n1">реакція-вау.png<i class="car"></i></span></div></div>
+            <div class="tl" id="tl5" style="left:600px;top:568px"><div class="im" style="background:#D4BEBF"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2046.png</span></div></div>
+            <div class="tl" id="tl6" style="left:40px;top:780px"><div class="im" style="background:#E8D3D4"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2047.png</span></div></div>
+            <div class="tl" id="tl7" style="left:320px;top:780px"><div class="im" style="background:#D9C7C8"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2048.png</span></div></div>
+            <div class="tl" id="tl8" style="left:600px;top:780px"><div class="im" style="background:#F0E3E3"><s></s><em></em><b class="ok"></b></div><div class="nm"><span class="n0">IMG_2049.png</span></div></div>
           </div>
         </div>
       </div>
@@ -446,7 +459,8 @@
       <div class="wc" id="w148">БУВ</div>
       <div class="wc" id="w151">А</div>
       <div class="wc" id="w152">НЕ</div>
-      <div class="wc" id="w153">ПОВНО-КЛОДІВСЬКИЙ.</div>
+      <div class="wc" id="w153">ДЕФОЛТНИЙ</div>
+      <div class="wc" id="w154">КЛОДІВСЬКИЙ.</div>
       </div>
 
       <audio id="vo" src="assets/base.mp4"
@@ -794,8 +808,9 @@
   tl.set("#w151", {autoAlpha: 1}, 58.935); tl.set("#w151", {autoAlpha: 0}, 59.090);
   tl.set("#w152", {autoAlpha: 1}, 59.175); tl.set("#w152", {autoAlpha: 0}, 59.275);
   tl.set("#w153", {autoAlpha: 1}, 59.355); tl.set("#w153", {autoAlpha: 0}, 59.510);
+  tl.set("#w154", {autoAlpha: 1}, 59.595); tl.set("#w154", {autoAlpha: 0}, 60.115);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 59.610);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 60.215);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 0.916);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 1.561);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 7.250);
@@ -810,33 +825,32 @@
   rise("#bw1", 0.05); sink("#bw1", 2.697);
 
   rise("#c1", 2.682);
+  gsap.set("#c1a", {height: 0, marginTop: 0, overflow: "hidden"});
+  tl.to("#c1a", {height: "auto", marginTop: 16, duration: .3, ease: "power2.out"}, 3.802 - .05);
   pop("#c1a", 3.802);
   sink("#c1", 6.850);
 
 
-  sketch("p1", "skP"); box("p1", 170, 300, 260, 430, {seed: 3});
-  ln("p1", 215, 380, 385, 380, {seed: 4, strokeWidth: 14, stroke: "#7A1424"});
-  ell("p1", 300, 540, 120, 120, {seed: 5, fill: false});
-  box("p1", 210, 640, 180, 46, {seed: 6, r: 14, fill: true});
-  label("p1", 300, 790, "мої", {size: 52});
-  draw("p1", 7.860, .45);
-  sketch("p2", "skP"); box("p2", 650, 300, 260, 430, {seed: 7});
-  box("p2", 670, 320, 220, 190, {seed: 8, r: 18, fill: true});
-  ell("p2", 780, 610, 100, 100, {seed: 9, fill: false});
-  ln("p2", 690, 680, 870, 680, {seed: 10}); ln("p2", 720, 708, 840, 708, {seed: 11});
-  label("p2", 780, 790, "клієнтки", {size: 52});
-  draw("p2", 10.584, .45);
-  erase("p1", 13.941); erase("p2", 13.941);
+  sketch("p1", "skP"); box("p1", 160, 290, 250, 421, {seed: 3, r: 30});
+  label("p1", 285, 772, "мої", {size: 52});
+  draw("p1", 7.860, .45); fadein("#ph1", 7.960, .35);
+  sketch("p2", "skP"); box("p2", 650, 290, 250, 421, {seed: 7, r: 30});
+  label("p2", 775, 772, "клієнтки", {size: 52});
+  draw("p2", 10.584, .45); fadein("#ph2", 10.684, .35);
+  erase("p1", 13.941); erase("p2", 13.941); out("#ph1", 13.941); out("#ph2", 13.941);
+
+
   sketch("r1", "skP"); box("r1", 80, 400, 320, 140, {seed: 21, fill: true});
   label("r1", 240, 485, "референс", {size: 50});
   arrow("r1", 410, 470, 660, 470, {seed: 22, bend: .12});
-  box("r1", 670, 400, 320, 140, {seed: 23}); label("r1", 830, 485, "Claude", {size: 54});
-  draw("r1", 14.191, .5);
+  draw("r1", 14.191, .45);
+  sketch("r1b", "skP"); box("r1b", 670, 400, 320, 140, {seed: 23}); label("r1b", 830, 485, "Claude", {size: 54});
+  draw("r1b", 14.841, .45);
   sketch("r2", "skP"); label("r2", 540, 640, "«зроби як тут»", {size: 54});
   draw("r2", 15.401);
   sketch("r3", "skP"); ln("r3", 340, 650, 740, 610, {stroke: "#7A1424", strokeWidth: 8, seed: 27});
   draw("r3", 15.851, .3);
-  erase("r1", 16.417); erase("r2", 16.417); erase("r3", 16.417);
+  erase("r1", 16.417); erase("r1b", 16.417); erase("r2", 16.417); erase("r3", 16.417);
 
 
   tl.set("#wall", {autoAlpha: 1}, 25.832);
@@ -854,30 +868,30 @@
   tl.fromTo("#ck2 .cb b", {opacity: 0, scale: .5}, X({opacity: 1, scale: 1, duration: .35, ease: POP}), 35.656);
 
   tl.set("#stage", {autoAlpha: 1}, 36.446);
-  gsap.set("#win", {x: 140.0, y: 500.0 + 240, scale: 1.22 * .85, rotationX: 26, rotationY: -20, rotationZ: 5});
-  tl.to("#win", {x: 140.0, y: 500.0, scale: 1.22, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.2, ease: "power3.out"}, 36.446 + .15);
+  gsap.set("#win", {x: 90.0, y: 310.0 + 240, scale: 1.05 * .85, rotationX: 24, rotationY: -20, rotationZ: 5});
+  tl.to("#win", {x: 90.0, y: 310.0, scale: 1.05, rotationX: 8, rotationY: -10, rotationZ: 2, duration: 1.1, ease: "power3.out"}, 36.446 + .15);
 
-  tl.to("#win", {x: -614.0, y: 1113.6, scale: 2.6, rotationX: 4, rotationY: 8, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, 36.996);
-  tl.to("#acc", {backgroundColor: "#7A1424", duration: .2}, 37.846); tl.to("#acc u", {x: 16, duration: .3, ease: "back.out(2)"}, 37.846);
-  tl.to("#win", {x: -15.0, y: 515.5, scale: 1.55, rotationX: 6, rotationY: -6, rotationZ: 1, duration: 1.2, ease: "power3.inOut"}, 38.496);
-  tl.to("#win", {x: -132.0, y: 432.0, scale: 1.7, rotationX: 3, rotationY: 7, rotationZ: -1, duration: 1.6, ease: "sine.inOut"}, 41.156);
-  tl.to("#tl0 .ok", {opacity: 1, duration: .2}, 42.630); tl.fromTo("#tl0 .im", {boxShadow: "inset 0 0 0 0 #7A1424"}, X({boxShadow: "inset 0 0 0 4px #7A1424", duration: .25}), 42.630);
+  tl.to("#win", {x: 90.0, y: 458.8, scale: 1.28, rotationX: 4, rotationY: 6, rotationZ: 0, duration: 0.9, ease: "power3.inOut"}, 37.046);
+  tl.to("#acc", {backgroundColor: "#7A1424", duration: .2}, 37.846); tl.to("#acc u", {x: 42, duration: .3, ease: "back.out(2)"}, 37.846);
+  tl.to("#win", {x: 90.0, y: 167.0, scale: 1.1, rotationX: 5, rotationY: -6, rotationZ: 1, duration: 1.1, ease: "power3.inOut"}, 38.646);
+  tl.to("#win", {x: 90.0, y: 310.0, scale: 1.05, rotationX: 3, rotationY: 7, rotationZ: -1, duration: 1.4, ease: "sine.inOut"}, 41.056);
+  tl.to("#tl0 .ok", {opacity: 1, duration: .2}, 42.630); tl.fromTo("#tl0 .im", {boxShadow: "inset 0 0 0 0 #7A1424"}, X({boxShadow: "inset 0 0 0 6px #7A1424", duration: .25}), 42.630);
   tl.fromTo("#tl0", {scale: 1}, X({scale: .94, duration: .12, yoyo: true, repeat: 1}), 42.630);
-  tl.to("#tl5 .ok", {opacity: 1, duration: .2}, 42.910); tl.fromTo("#tl5 .im", {boxShadow: "inset 0 0 0 0 #7A1424"}, X({boxShadow: "inset 0 0 0 4px #7A1424", duration: .25}), 42.910);
-  tl.fromTo("#tl5", {scale: 1}, X({scale: .94, duration: .12, yoyo: true, repeat: 1}), 42.910);
-  tl.to("#tl10 .ok", {opacity: 1, duration: .2}, 43.190); tl.fromTo("#tl10 .im", {boxShadow: "inset 0 0 0 0 #7A1424"}, X({boxShadow: "inset 0 0 0 4px #7A1424", duration: .25}), 43.190);
-  tl.fromTo("#tl10", {scale: 1}, X({scale: .94, duration: .12, yoyo: true, repeat: 1}), 43.190);
-  tl.to("#win", {x: 109.0, y: 493.8, scale: 3.1, rotationX: 2, rotationY: -5, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, 43.370);
+  tl.to("#tl4 .ok", {opacity: 1, duration: .2}, 42.910); tl.fromTo("#tl4 .im", {boxShadow: "inset 0 0 0 0 #7A1424"}, X({boxShadow: "inset 0 0 0 6px #7A1424", duration: .25}), 42.910);
+  tl.fromTo("#tl4", {scale: 1}, X({scale: .94, duration: .12, yoyo: true, repeat: 1}), 42.910);
+  tl.to("#tl8 .ok", {opacity: 1, duration: .2}, 43.190); tl.fromTo("#tl8 .im", {boxShadow: "inset 0 0 0 0 #7A1424"}, X({boxShadow: "inset 0 0 0 6px #7A1424", duration: .25}), 43.190);
+  tl.fromTo("#tl8", {scale: 1}, X({scale: .94, duration: .12, yoyo: true, repeat: 1}), 43.190);
+  tl.to("#win", {x: 90.0, y: 14.0, scale: 2.0, rotationX: 2, rotationY: -5, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, 43.370);
 
-  tl.to("#tl5 .n0", {opacity: 0, duration: .12}, 44.180);
-  tl.fromTo("#tl5 .n1", {opacity: 0, clipPath: "inset(0 100% 0 0)"}, X({opacity: 1, clipPath: "inset(0 0% 0 0)", duration: .55, ease: "steps(14)"}), 44.180 + .05);
-  tl.to("#tl5 .car", {opacity: 0, duration: .05, repeat: 3, yoyo: true}, 44.180 + .65);
+  tl.to("#tl4 .n0", {opacity: 0, duration: .12}, 44.180);
+  tl.fromTo("#tl4 .n1", {opacity: 0, clipPath: "inset(0 100% 0 0)"}, X({opacity: 1, clipPath: "inset(0 0% 0 0)", duration: .55, ease: "steps(14)"}), 44.180 + .05);
+  tl.to("#tl4 .car", {opacity: 0, duration: .05, repeat: 3, yoyo: true}, 44.180 + .65);
 
-  tl.to("#win", {x: 320.0, y: 530.0, scale: 1.5, rotationX: 6, rotationY: 4, rotationZ: -1, duration: 0.9, ease: "power3.inOut"}, 44.720);
-  tl.to("#tl0", {x: -174, y: 84, scale: .18, autoAlpha: 0, duration: .55, ease: "power2.in"}, 45.270);
-  tl.to("#tl5", {x: -320, y: -56, scale: .18, autoAlpha: 0, duration: .55, ease: "power2.in"}, 45.390);
-  tl.to("#tl10", {x: -466, y: -196, scale: .18, autoAlpha: 0, duration: .55, ease: "power2.in"}, 45.510);
-  tl.to("#lib", {backgroundColor: "#F6E3E4", color: "#7A1424", duration: .25}, 45.670);
+  tl.to("#win", {x: 90.0, y: 333.2, scale: 1.08, rotationX: 6, rotationY: 4, rotationZ: -1, duration: 0.9, ease: "power3.inOut"}, 44.670);
+  tl.to("#tl0", {x: 394, y: -137, scale: .2, autoAlpha: 0, duration: .55, ease: "power2.in"}, 45.270);
+  tl.to("#tl4", {x: 114, y: -349, scale: .2, autoAlpha: 0, duration: .55, ease: "power2.in"}, 45.390);
+  tl.to("#tl8", {x: -166, y: -561, scale: .2, autoAlpha: 0, duration: .55, ease: "power2.in"}, 45.510);
+  tl.to("#lib", {backgroundColor: "#F6E3E4", borderColor: "#7A1424", color: "#7A1424", duration: .25}, 45.670);
   tl.fromTo("#libn", {opacity: 0, scale: .4}, X({opacity: 1, scale: 1, duration: .4, ease: POP}), 45.720);
   tl.set("#stage", {autoAlpha: 0}, 47.948);
   full(36.446, 47.048);
