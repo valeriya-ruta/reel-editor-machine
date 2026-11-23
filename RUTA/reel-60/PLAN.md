@@ -18,7 +18,7 @@ Only her numbers: $20, 5 годин, 5 рілсів, 2–3 хв, 5–6 хв, 3 �
 | 8.85–10.05 | MEME top | 12 hamster praying, after «юсадж це штука непередбачувана» |
 | 10.1–12.9 | — | her |
 | 13.0–18.6 | HALF 1 | задача = задача; token bars short vs long; «токени» |
-| 20.0–25.9 | FULL 1 | Claude window rises in 3D, $20 rings, zoom into «Ліміт · 5 годин», 5 reel slots fill, «5 рілсів» |
+| 20.0–25.9 | FULL 1 | Claude window (900×1000 → ~945 px wide, y ≈ 290–1350) rises in 3D, $20 rings, zoom into «Ліміт · 5 годин», 5 reel slots fill, «5 рілсів» |
 | 27.1–32.8 | ABOVE shuffle | експертні відео · з суфлера · 2–3 хвилини |
 | 33.95–35.15 | MEME top | 35 hamster in sunglasses, after «тоді можна навіть і більше, ніж пʼять» |
 | 35.5–38.3 | ABOVE shuffle | 5–6 хвилин · багато вставок · помилки |
@@ -39,3 +39,10 @@ Only her numbers: $20, 5 годин, 5 рілсів, 2–3 хв, 5–6 хв, 3 �
   list starts 35.5 — clear either side.
 - No CTA line remains (ТЕСТ cut), so `g.cta_start = DUR − 2`: nothing in the last 2 s. The
   ending («10–15» behind her, the limit card) had no free stretch for a third, so none.
+
+## Fixes 2026-11-23 (second builder)
+
+- Full screens: the window was 840×600 (frame mostly empty, left edge cropped on the zoom). Now 900×1000,
+  wide pose ~88 % of the width, text ≥ 34 px; the push to $20 keeps its top at y 290; the zoom into the
+  limit block crosses the sides on purpose.
+- Shuffle chips 48 px (as reel-57).

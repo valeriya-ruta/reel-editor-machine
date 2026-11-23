@@ -180,41 +180,42 @@
 
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
     #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2400px; }
-    #win { position: absolute; left: 0; top: 0; width: 900px; height: 1240px; transform-origin: 0 0;
+    #win { position: absolute; left: 0; top: 0; width: 980px; height: 1110px; transform-origin: 490px 555px;
            font-family: "Google Sans", sans-serif; color: #1f1f1f; will-change: transform; }
-    .pn { position: absolute; background: #fff; border-radius: 22px; overflow: hidden;
+    .pn { position: absolute; background: #fff; border-radius: 26px; overflow: hidden;
           box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 24px 60px rgba(36,25,25,.18); }
-    .gf-band { height: 14px; background: #7A1424; }
-    .gf-t { font-size: 30px; font-weight: 700; line-height: 1.15; padding: 22px 26px 8px; }
-    .gf-q { font-size: 20px; font-weight: 500; color: #3c4043; padding: 16px 26px 6px; }
-    .gf-f { margin: 0 26px; height: 2px; background: #DADCE0; margin-top: 26px; }
-    .gf-b { position: absolute; left: 26px; bottom: 26px; padding: 12px 26px; border-radius: 8px;
-            background: #7A1424; color: #fff; font-size: 20px; font-weight: 500; }
-    .sh-top { display: flex; align-items: center; gap: 12px; padding: 20px 22px; font-size: 22px; font-weight: 500;
-              border-bottom: 1px solid #E3E3E3; }
-    .sh-top i { width: 28px; height: 34px; border-radius: 4px; background: #7A1424; display: block; }
-    .sh-r { display: grid; grid-template-columns: 1fr 1.3fr 1.3fr; height: 56px; border-bottom: 1px solid #E3E3E3; }
-    .sh-r span { border-right: 1px solid #E3E3E3; padding: 0 12px; display: flex; align-items: center;
-                 font-size: 17px; font-weight: 700; color: #3c4043; }
-    .sh-r u { display: block; height: 10px; width: 80%; border-radius: 5px; background: #E8EAED; }
+    .gf-band { height: 16px; background: #7A1424; }
+    .gf-t { font-size: 38px; font-weight: 700; line-height: 1.12; padding: 24px 30px 4px; }
+    .gf-q { font-size: 30px; font-weight: 500; color: #3c4043; padding: 22px 30px 0; }
+    .gf-f { margin: 30px 30px 0; height: 3px; background: #DADCE0; }
+    .gf-b { position: absolute; left: 30px; bottom: 28px; padding: 14px 32px; border-radius: 12px;
+            background: #7A1424; color: #fff; font-size: 30px; font-weight: 500; }
+    .sh-top { display: flex; align-items: center; gap: 14px; padding: 24px 26px; font-size: 32px; font-weight: 500;
+              border-bottom: 2px solid #E3E3E3; }
+    .sh-top i { width: 32px; height: 40px; border-radius: 5px; background: #7A1424; display: block; flex: none; }
+    .sh-r { display: grid; grid-template-columns: 1fr 1fr 1.25fr; height: 70px; border-bottom: 2px solid #E3E3E3; }
+    .sh-r span { border-right: 2px solid #E3E3E3; padding: 0 14px; display: flex; align-items: center;
+                 font-size: 26px; font-weight: 700; color: #3c4043; }
+    .sh-r u { display: block; height: 14px; width: 80%; border-radius: 7px; background: #E8EAED; }
     .sh-h { background: #F8F9FA; }
     .sh-n u { background: #F2C7CA; }
-    .ct-hd { display: flex; align-items: center; gap: 14px; padding: 26px 30px 12px; font-size: 30px; }
+    .ct-hd { display: flex; align-items: center; gap: 16px; padding: 26px 32px 10px; font-size: 38px; }
     .ct-hd .mark { color: #7A1424; }
-    .ct-ch { margin-left: auto; font-size: 24px; padding: 8px 20px; border-radius: 999px; background: #F3EEEE; color: #574142; }
-    .ct-p { margin: 8px 30px; padding: 18px 22px; border: 2px solid #E6DEDE; border-radius: 16px;
-            font-size: 24px; line-height: 1.4; color: #3c4043; }
-    .ct-c { padding: 14px 30px; }
-    .ct-k { display: inline-flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 500;
-            background: #F6F7F9; border-radius: 14px; padding: 12px 18px; }
+    .ct-ch { margin-left: auto; font-size: 30px; padding: 8px 24px; border-radius: 999px; background: #F3EEEE; color: #574142; }
+    .ct-p { margin: 8px 32px; padding: 14px 22px; border: 2px solid #E6DEDE; border-radius: 18px;
+            font-size: 30px; line-height: 1.3; color: #3c4043; }
+    .ct-c { padding: 10px 32px; }
+    .ct-k { display: inline-flex; align-items: center; gap: 14px; font-size: 30px; font-weight: 500;
+            background: #F6F7F9; border-radius: 16px; padding: 10px 20px; }
     .ct-k .mark { color: #3c4043; }
-    .ct-k em { position: relative; width: 52px; height: 28px; border-radius: 14px; background: #C4C7C5; margin-left: 16px; }
-    .ct-k em u { position: absolute; left: 3px; top: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff;
+    .ct-k em { position: relative; width: 64px; height: 36px; border-radius: 18px; background: #C4C7C5; margin-left: 18px; }
+    .ct-k em u { position: absolute; left: 4px; top: 4px; width: 28px; height: 28px; border-radius: 50%; background: #fff;
                  box-shadow: 0 1px 2px rgba(0,0,0,.25); }
-    .rs-t { font-size: 32px; font-weight: 700; padding: 28px 32px 10px; }
-    .rs-r { display: flex; align-items: center; gap: 18px; padding: 16px 32px; }
-    .rs-r b { font-size: 26px; font-weight: 500; white-space: nowrap; }
-    .rs-r .line { flex: 1; height: 14px; }
+    .rs-t { font-size: 36px; font-weight: 700; padding: 24px 32px 6px; }
+    .rs-r { display: flex; align-items: center; gap: 20px; padding: 10px 32px; }
+    .rs-r .check { width: 40px; height: 40px; flex: none; }
+    .rs-r b { font-size: 32px; font-weight: 500; white-space: nowrap; }
+    .rs-r .line { flex: 1; height: 16px; }
 
     </style>
   </head>
@@ -258,8 +259,8 @@
 
         <div id="ls" class="glass gc hid">
           <div class="hd"><svg class="mark" width="30" height="30" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg> Тобі · клієнтки, які зникли</div>
-          <div id="ls0" class="pp hid"><span class="av">О</span><span>Олена<br><span class="why">не відповідає кілька днів</span></span><span id="lb0" class="gbtn">Нагадати</span></div>
-          <div id="ls1" class="pp hid"><span class="av">І</span><span>Ірина<br><span class="why">застрягла на одному кроці</span></span><span id="lb1" class="gbtn">Нагадати</span></div>
+          <div id="ls0" class="pp hid"><span class="av">К</span><span>Клієнтка<br><span class="why">не відповідає кілька днів</span></span><span id="lb0" class="gbtn">Нагадати</span></div>
+          <div id="ls1" class="pp hid"><span class="av">К</span><span>Клієнтка<br><span class="why">застрягла на одному кроці</span></span><span id="lb1" class="gbtn">Нагадати</span></div>
         </div>
         <div id="ctp" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:1404px;
              font-size:44px; padding:28px 50px">Збережи і перешли знайомій коучці</div>
@@ -268,30 +269,31 @@
 
         <div id="stage">
           <div id="win">
-            <div id="gf" class="pn" style="left:0;top:0;width:430px;height:520px">
+            <div id="gf" class="pn" style="left:0;top:590px;width:470px;height:520px">
               <div class="gf-band"></div>
               <div class="gf-t">Анкета перед першою сесією</div>
               <div class="gf-q">Чого ти хочеш насправді?</div><div class="gf-f"></div>
               <div class="gf-q">Що тобі заважає?</div><div class="gf-f"></div>
-              <div class="gf-q">З чого хочеш почати?</div><div class="gf-f"></div>
+              <div class="gf-q">З чого почати?</div><div class="gf-f"></div>
               <div id="gfb" class="gf-b">Надіслати</div>
             </div>
-            <div id="sh" class="pn" style="left:470px;top:0;width:430px;height:520px">
+            <div id="sh" class="pn" style="left:510px;top:590px;width:470px;height:520px">
               <div class="sh-top"><i></i>Відповіді анкети</div>
               <div class="sh-g">
-                <div class="sh-r sh-h"><span>Ім'я</span><span>Чого хоче</span><span>Що заважає</span></div>
+                <div class="sh-r sh-h"><span>Ім'я</span><span>Хоче</span><span>Заважає</span></div>
                 <div class="sh-r"><span><u></u></span><span><u></u></span><span><u></u></span></div>
                 <div class="sh-r"><span><u></u></span><span><u></u></span><span><u></u></span></div>
                 <div id="shn" class="sh-r sh-n"><span><u></u></span><span><u></u></span><span><u></u></span></div>
-                <div class="sh-r"></div><div class="sh-r"></div>
+                <div class="sh-r"><span></span><span></span><span></span></div>
+                <div class="sh-r"><span></span><span></span><span></span></div>
               </div>
             </div>
-            <div id="ct" class="pn" style="left:0;top:560px;width:900px;height:300px">
-              <div class="ct-hd"><svg class="mark" width="40" height="40" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><b>Запланована задача</b><span id="ctw" class="ct-ch">Щоранку</span></div>
+            <div id="ct" class="pn" style="left:0;top:0;width:980px;height:270px">
+              <div class="ct-hd"><svg class="mark" width="44" height="44" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><b>Запланована задача</b><span id="ctw" class="ct-ch">Щоранку</span></div>
               <div class="ct-p">Прочитай нові відповіді анкети й зроби коротке резюме по кожній новій клієнтці.</div>
-              <div class="ct-c"><span class="ct-k"><svg class="mark" width="30" height="30" viewBox="0 0 24 24"><path d="M12.01 1.485c-2.082 0-3.754.02-3.743.047.01.02 1.708 3.001 3.774 6.62l3.76 6.574h3.76c2.081 0 3.753-.02 3.742-.047-.005-.02-1.708-3.001-3.775-6.62l-3.76-6.574zm-4.76 1.73a789.828 789.861 0 0 0-3.63 6.319L0 15.868l1.89 3.298 1.885 3.297 3.62-6.335 3.618-6.33-1.88-3.287C8.1 4.704 7.255 3.22 7.25 3.214zm2.259 12.653-.203.348c-.114.198-.96 1.672-1.88 3.287a423.93 423.948 0 0 1-1.698 2.97c-.01.026 3.24.042 7.222.042h7.244l1.796-3.157c.992-1.734 1.85-3.23 1.906-3.323l.104-.167h-7.249z"/></svg> Google Drive<em id="ctg"><u></u></em></span></div>
+              <div class="ct-c"><span class="ct-k"><svg class="mark" width="34" height="34" viewBox="0 0 24 24"><path d="M12.01 1.485c-2.082 0-3.754.02-3.743.047.01.02 1.708 3.001 3.774 6.62l3.76 6.574h3.76c2.081 0 3.753-.02 3.742-.047-.005-.02-1.708-3.001-3.775-6.62l-3.76-6.574zm-4.76 1.73a789.828 789.861 0 0 0-3.63 6.319L0 15.868l1.89 3.298 1.885 3.297 3.62-6.335 3.618-6.33-1.88-3.287C8.1 4.704 7.255 3.22 7.25 3.214zm2.259 12.653-.203.348c-.114.198-.96 1.672-1.88 3.287a423.93 423.948 0 0 1-1.698 2.97c-.01.026 3.24.042 7.222.042h7.244l1.796-3.157c.992-1.734 1.85-3.23 1.906-3.323l.104-.167h-7.249z"/></svg> Google Drive<em id="ctg"><u></u></em></span></div>
             </div>
-            <div id="rs" class="pn" style="left:0;top:900px;width:900px;height:340px">
+            <div id="rs" class="pn" style="left:0;top:300px;width:980px;height:260px">
               <div class="rs-t">Резюме · нова клієнтка</div>
               <div class="rs-r"><span id="rc0" class="check"></span><b>Чого хоче насправді</b><i class="line"></i></div>
               <div class="rs-r"><span id="rc1" class="check"></span><b>Що їй заважає</b><i class="line"></i></div>
@@ -387,7 +389,7 @@
       <div class="wc" id="w83">ТОБІ</div>
       <div class="wc" id="w84">ЛИШАЄТЬСЯ</div>
       <div class="wc" id="w85">ТІЛЬКИ</div>
-      <div class="wc" id="w86">ПЕРЕВІРИТИ,</div>
+      <div class="wc" id="w86">ПОДИВИТИСЯ,</div>
       <div class="wc" id="w87">ПОПРАВИТИ</div>
       <div class="wc" id="w88">І</div>
       <div class="wc" id="w89">ВІДПРАВИТИ.</div>
@@ -872,32 +874,31 @@
   rise("#bw1", 4.653); sink("#bw1", 6.498);
   shuffle(["#pt0"], [6.563], 8.992);
   shuffle(["#pt1"], [24.333], 27.583);
-  shuffle(["#pt2"], [37.267], 39.767);
+  shuffle(["#pt2"], [38.477], 39.767);
   shuffle(["#pt3"], [47.117], 49.770);
   shuffle(["#pt4"], [60.497], 62.473);
 
-  gsap.set("#win", {transformOrigin: "450px 620px"});
-  gsap.set("#win", {x: 90.0, y: 220.0 + 240, scale: 0.8 * .86, rotationX: 26, rotationY: -18, rotationZ: 5});
-  tl.to("#win", {x: 90.0, y: 220.0, scale: 0.8, rotationX: 10, rotationY: -10, rotationZ: 2, duration: 1.2, ease: "power3.out"}, 9.142);
+  gsap.set("#win", {x: 50.0, y: 285.0 + 240, scale: 1.0 * .86, rotationX: 24, rotationY: -18, rotationZ: 4});
+  tl.to("#win", {x: 50.0, y: 285.0, scale: 1.0, rotationX: 8, rotationY: -8, rotationZ: 1.5, duration: 1.2, ease: "power3.out"}, 9.142);
   full(9.042, 22.715);
 
-  tl.to("#win", {x: 454.2, y: 778.0, scale: 1.55, rotationX: 4, rotationY: 8, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, 9.292);
+  tl.to("#win", {x: 458.0, y: -197.0, scale: 1.6, rotationX: 4, rotationY: 8, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, 9.292);
   tl.fromTo("#gfb", {scale: 1}, X({scale: .92, duration: .15, yoyo: true, repeat: 1}), 10.488);
-  tl.to("#win", {x: -274.2, y: 824.5, scale: 1.55, rotationX: 3, rotationY: -8, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, 10.688);
+  tl.to("#win", {x: -358.0, y: -197.0, scale: 1.6, rotationX: 3, rotationY: -8, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, 10.688);
   tl.fromTo("#shn", {autoAlpha: 0, y: -30}, X({autoAlpha: 1, y: 0, duration: .45, ease: "back.out(1.6)"}), 11.568);
   tl.fromTo("#shn", {backgroundColor: "rgba(122,20,36,.14)"}, X({backgroundColor: "rgba(122,20,36,0)", duration: 1.2}), 11.868);
-  tl.to("#win", {x: 90.0, y: 116.5, scale: 1.15, rotationX: 3, rotationY: 2, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, 12.488);
+  tl.to("#win", {x: 50.0, y: 295.0, scale: 1.04, rotationX: 4, rotationY: 3, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, 12.488);
   tl.to("#ctg", {backgroundColor: "#7A1424", duration: .2}, 13.088);
-  tl.to("#ctg u", {x: 24, duration: .3, ease: "back.out(2)"}, 13.088);
+  tl.to("#ctg u", {x: 28, duration: .3, ease: "back.out(2)"}, 13.088);
   tl.to("#ctw", {backgroundColor: "#7A1424", color: "#fff", duration: .25}, 16.343);
-  tl.to("#win", {x: 90.0, y: -297.5, scale: 1.15, rotationX: -2, rotationY: -3, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, 17.223);
+  tl.to("#win", {x: 50.0, y: 275.0, scale: 1.04, rotationX: -3, rotationY: -4, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, 17.223);
   tl.set("#rc0", {className: "check on"}, 19.469);
   tl.fromTo("#rc0", {scale: .6}, X({scale: 1, duration: .4, ease: POP}), 19.469);
   tl.set("#rc1", {className: "check on"}, 21.049);
   tl.fromTo("#rc1", {scale: .6}, X({scale: 1, duration: .4, ease: POP}), 21.049);
   tl.set("#rc2", {className: "check on"}, 21.829);
   tl.fromTo("#rc2", {scale: .6}, X({scale: 1, duration: .4, ease: POP}), 21.829);
-  tl.to("#win", {x: 90.0, y: 220.0, scale: 0.8, rotationX: 8, rotationY: 10, rotationZ: -1, duration: 0.9, ease: "power3.inOut"}, 21.815);
+  tl.to("#win", {x: 50.0, y: 285.0, scale: 1.0, rotationX: 7, rotationY: 9, rotationZ: -1, duration: 0.9, ease: "power3.inOut"}, 21.815);
 
   rise("#pl", 27.633);
   tl.fromTo("#pl .col", {autoAlpha: 0, y: 24}, X({autoAlpha: 1, y: 0, duration: .45, stagger: .25, ease: RISE}), 30.883);
@@ -907,10 +908,10 @@
   sink("#pl", 35.682);
 
   tl.fromTo("#mm1", {autoAlpha: 0, scale: .72, rotation: -3.5}, X({autoAlpha: 1, scale: 1, rotation: 1.5, duration: .28, ease: POP}), 37.382);
-  tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 38.402);
+  tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 38.202);
   rise("#tg", 42.356); sink("#tg", 46.282);
   tl.fromTo("#mm2", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 50.374);
-  tl.to("#mm2", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 51.294);
+  tl.to("#mm2", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 51.194);
 
   rise("#ls", 51.459);
   rise("#ls0", 53.185, 30); rise("#ls1", 54.085, 30);

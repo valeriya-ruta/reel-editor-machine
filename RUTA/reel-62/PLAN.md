@@ -31,3 +31,13 @@ the half-screen scheme of a token budget -> «Пиши коротко.» typed �
 - **35** @ 35.10 (slot r, 0.85 s): «…а гроші зекономиш.». Deal-with-it cool after a win. It lands in the clear stretch between FULL 2 and the Sonnet | Haiku card.
 - **44** @ 93.71 (slot top, 0.85 s): «Тому що сам він про це не здогадається». The clueless goat, between the instruction card and the DM (the DM's rise moved to 94.57).
 - No third meme. «дивним?» collides with the behind word «Токени», and «просто забити» collides with FULL 1's exit. `g.cta_start` = 99.9 («Тому, якщо в тебе…»).
+
+## Pass 2 (2026-11-23)
+
+- Full screens: her SendPulse window keeps every label and text of
+  `app-screenshots/sendpulse-ai-agent-settings.png` but is laid out as a portrait version (972 px = 90 %
+  of the frame at scale 1, y 236–1470; labels/hints 26 px, body 30 px), so the wide shots read without a
+  zoom. Zooms: the field whole-width (×1.06), Модель + list (×1.7), the file cards (×1.6), the token
+  field (×2.0). The token field and the Sonnet/Haiku list entries are not on her screenshot (added, her wording).
+- Head room: the «Інструкція для бота» card (bottom ≈ y 540) and the DM (bottom y 548) moved up off her hair (≈ 600).
+- Caption: «і ти бачиш» -> «І ти бачиш».

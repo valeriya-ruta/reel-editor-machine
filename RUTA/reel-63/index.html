@@ -152,46 +152,50 @@
     .glass .hd small { font-weight: 500; color: #574142; font-size: 24px; margin-left: auto; }
 
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
-    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
-    #win { position: absolute; left: 0; top: 0; width: 800px; height: 560px; background: #FAF9F5;
-           border-radius: 18px; font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
-           box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22); will-change: transform; }
+    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2600px; }
+    #win { position: absolute; left: 0; top: 0; width: 980px; height: 1060px; background: #FAF9F5;
+           border-radius: 36px; font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
+           box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 40px 100px rgba(36,25,25,.22); will-change: transform; }
     #win > div { position: absolute; }
     .cm { fill: #D97757; }
-    .c-top { left: 22px; top: 18px; display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 500; }
-    .qz { display: inline-flex; width: 26px; height: 26px; border-radius: 7px; background: #4255FF; color: #fff;
-          font-style: normal; font-size: 15px; font-weight: 700; align-items: center; justify-content: center; }
-    .c-menu { left: 40px; top: 300px; width: 290px; background: #fff; border-radius: 14px; padding: 10px;
-              box-shadow: 0 6px 24px rgba(0,0,0,.14); }
-    .c-mt { font-size: 12px; color: #6b6b6b; padding: 4px 8px 6px; }
-    .c-row { display: flex; align-items: center; gap: 10px; font-size: 16px; padding: 8px; border-radius: 8px; position: relative; }
-    .c-row i { width: 26px; height: 26px; border-radius: 7px; font-style: normal; font-size: 14px; font-weight: 700;
+    .c-top { left: 40px; top: 34px; display: flex; align-items: center; gap: 14px; font-size: 36px; font-weight: 500; }
+    .c-hero { left: 0; right: 0; top: 180px; display: flex; justify-content: center; }
+    .qz { display: inline-flex; width: 44px; height: 44px; border-radius: 12px; background: #4255FF; color: #fff;
+          font-style: normal; font-size: 26px; font-weight: 700; align-items: center; justify-content: center; flex: none; }
+    .c-menu { left: 40px; top: 430px; width: 600px; background: #fff; border-radius: 26px; padding: 18px;
+              box-shadow: 0 10px 40px rgba(0,0,0,.16); }
+    .c-mt { font-size: 28px; color: #6b6b6b; padding: 6px 14px 12px; }
+    .c-row { display: flex; align-items: center; gap: 18px; font-size: 36px; padding: 16px 14px; border-radius: 14px; position: relative; }
+    .c-row i { width: 48px; height: 48px; border-radius: 12px; font-style: normal; font-size: 26px; font-weight: 700;
                display: inline-flex; align-items: center; justify-content: center; }
-    .c-row em { position: absolute; right: 10px; top: 13px; width: 32px; height: 18px; border-radius: 9px; background: #C4C7C5; }
-    .c-row em u { position: absolute; left: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
-    .c-inp { left: 40px; top: 446px; width: 720px; height: 82px; background: #fff; border: 1px solid #E3DED6;
-             border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
-    .c-plus { position: absolute; left: 14px; top: 24px; width: 34px; height: 34px; border-radius: 50%;
-              border: 1px solid #DDD; text-align: center; line-height: 32px; font-size: 22px; color: #555; }
-    .c-txt { position: absolute; left: 62px; top: 28px; width: 590px; font-size: 18px; color: #1f1f1f; white-space: nowrap; overflow: hidden; }
-    #typ { display: inline-block; clip-path: inset(0 100% 0 0); }
-    .c-send { position: absolute; right: 14px; top: 22px; width: 38px; height: 38px; border-radius: 10px;
-              background: #D97757; color: #fff; text-align: center; line-height: 38px; font-size: 20px; font-weight: 700; }
-    .c-ans { left: 40px; top: 74px; width: 720px; }
-    .c-ah { display: flex; align-items: center; gap: 10px; font-size: 18px; margin-bottom: 14px; }
-    .c-set { background: #fff; border: 1px solid #E3DED6; border-radius: 16px; padding: 18px 20px; width: 480px; }
-    .c-sh { display: flex; align-items: center; gap: 10px; font-size: 18px; margin-bottom: 14px; }
-    .c-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-    .c-mini span { border: 1px solid #E6E8F0; border-radius: 10px; padding: 14px 12px; font-size: 16px; text-align: center;
-                   box-shadow: 0 1px 2px rgba(0,0,0,.05); }
-    .c-btn { display: inline-block; background: #4255FF; color: #fff; border-radius: 22px; padding: 10px 22px; font-size: 15px; font-weight: 500; }
-    .qcard { position: absolute; left: 190px; top: 560px; width: 700px; height: 440px; transform-style: preserve-3d; }
-    .qcard > div { position: absolute; inset: 0; background: #fff; border-radius: 36px; backface-visibility: hidden;
+    .c-row em { position: absolute; right: 16px; top: 28px; width: 64px; height: 36px; border-radius: 18px; background: #C4C7C5; }
+    .c-row em u { position: absolute; left: 4px; top: 4px; width: 28px; height: 28px; border-radius: 50%; background: #fff; }
+    .c-inp { left: 40px; top: 720px; width: 900px; height: 300px; background: #fff; border: 2px solid #E3DED6;
+             border-radius: 34px; box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+    .c-txt { position: absolute; left: 36px; top: 34px; width: 830px; font-size: 38px; line-height: 1.4; color: #1f1f1f; }
+    .c-txt span { display: inline-block; white-space: nowrap; clip-path: inset(0 100% 0 0); }
+    .c-plus { position: absolute; left: 30px; bottom: 28px; width: 64px; height: 64px; border-radius: 50%;
+              border: 2px solid #DDD; text-align: center; line-height: 60px; font-size: 40px; color: #555; }
+    .c-chip { position: absolute; left: 112px; bottom: 30px; display: flex; align-items: center; gap: 12px; font-size: 30px;
+              padding: 8px 20px 8px 10px; border-radius: 30px; background: #EEF0FF; color: #2E3BBF; }
+    .c-send { position: absolute; right: 30px; bottom: 28px; width: 68px; height: 68px; border-radius: 18px;
+              background: #D97757; color: #fff; text-align: center; line-height: 68px; font-size: 38px; font-weight: 700; }
+    .c-ans { left: 40px; top: 120px; width: 900px; }
+    .c-ah { display: flex; align-items: center; gap: 14px; font-size: 34px; margin-bottom: 22px; }
+    .c-set { background: #fff; border: 2px solid #E3DED6; border-radius: 30px; padding: 30px 32px; }
+    .c-sh { display: flex; align-items: center; gap: 16px; font-size: 36px; margin-bottom: 24px; }
+    .c-sh small { margin-left: auto; font-size: 28px; color: #6b6b6b; }
+    .c-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 26px; }
+    .c-mini span { border: 2px solid #E6E8F0; border-radius: 18px; padding: 30px 16px; font-size: 36px; text-align: center;
+                   box-shadow: 0 2px 4px rgba(0,0,0,.05); }
+    .c-btn { display: inline-block; background: #4255FF; color: #fff; border-radius: 40px; padding: 18px 40px; font-size: 32px; font-weight: 500; }
+    .qcard { position: absolute; left: 110px; top: 720px; width: 860px; height: 540px; transform-style: preserve-3d; }
+    .qcard > div { position: absolute; inset: 0; background: #fff; border-radius: 44px; backface-visibility: hidden;
                    display: flex; align-items: center; justify-content: center; font-family: "Google Sans", sans-serif;
-                   font-size: 76px; font-weight: 500; color: #241919; text-align: center; padding: 0 40px;
-                   box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22); }
-    .qcard .qb { transform: rotateY(180deg); font-size: 64px; }
-    .qcard small { position: absolute; left: 34px; top: 26px; font-size: 26px; color: #4255FF; font-weight: 700; }
+                   font-size: 96px; font-weight: 500; color: #241919; text-align: center; padding: 0 50px;
+                   box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 40px 100px rgba(36,25,25,.24); }
+    .qcard .qb { transform: rotateY(180deg); font-size: 80px; }
+    .qcard small { position: absolute; left: 44px; top: 34px; font-size: 32px; color: #4255FF; font-weight: 700; }
 
     .hr { display: flex; align-items: center; gap: 18px; font-size: 32px; font-weight: 500; color: #241919;
           padding: 9px 12px; border-top: 1px solid rgba(36,25,25,.08); border-radius: 14px; }
@@ -277,27 +281,29 @@
 
         <div id="stage">
           <div id="win">
-            <div class="c-top"><svg class="cm" width="30" height="30" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><span>Claude</span></div>
+            <div class="c-top"><svg class="cm" width="44" height="44" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><span>Claude</span></div>
+            <div id="hero" class="c-hero"><svg class="cm" width="190" height="190" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg></div>
+            <div id="ans" class="c-ans">
+              <div class="c-ah"><svg class="cm" width="44" height="44" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><span>Готово — сет у Quizlet</span></div>
+              <div class="c-set">
+                <div class="c-sh"><i class="qz">Q</i><b>Нові слова уроку</b><small>4 картки</small></div>
+                <div class="c-mini" data-layout-allow-occlusion><span data-layout-allow-occlusion>homework</span><span data-layout-allow-occlusion>deadline</span><span data-layout-allow-occlusion>to borrow</span><span data-layout-allow-occlusion>rehearsal</span></div>
+                <div id="opn" class="c-btn" data-layout-allow-occlusion>Відкрити в Quizlet</div>
+              </div>
+            </div>
             <div id="menu" class="c-menu">
               <div class="c-mt">Конектори</div>
               <div id="mq" class="c-row"><i class="qz">Q</i>Quizlet<em id="tq"><u></u></em></div>
               <div class="c-row"><i style="background:#ECE6E6;color:#574142">N</i>Notion<em><u></u></em></div>
             </div>
-            <div id="ans" class="c-ans">
-              <div class="c-ah"><svg class="cm" width="30" height="30" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><span>Готово — сет у Quizlet</span></div>
-              <div class="c-set">
-                <div class="c-sh"><i class="qz">Q</i><b>Нові слова уроку</b></div>
-                <div class="c-mini"><span>homework</span><span>deadline</span><span>to borrow</span><span>rehearsal</span></div>
-                <div id="opn" class="c-btn" data-layout-allow-occlusion>Відкрити в Quizlet</div>
-              </div>
-            </div>
             <div id="inp" class="c-inp">
+              <div class="c-txt"><span id="typ1">Зроби сет карток:</span><br><span id="typ2">homework, deadline, to borrow, rehearsal</span></div>
               <div class="c-plus">+</div>
-              <div class="c-txt"><span id="typ">Зроби сет карток: homework, deadline, to borrow, rehearsal</span></div>
+              <div id="qchip" class="c-chip"><i class="qz">Q</i>Quizlet</div>
               <div class="c-send">↑</div>
             </div>
           </div>
-          <div id="card" class="qcard" data-layout-allow-occlusion><div class="qf" data-layout-allow-occlusion><small>Quizlet</small>homework</div><div class="qb" data-layout-allow-occlusion><small>Quizlet</small>домашнє завдання</div></div>
+          <div id="card" class="qcard" data-layout-allow-occlusion><div class="qf" data-layout-allow-occlusion><small data-layout-allow-occlusion>Quizlet</small>homework</div><div class="qb" data-layout-allow-occlusion><small data-layout-allow-occlusion>Quizlet</small>домашнє завдання</div></div>
         </div>
       </div>
       <div id="scrim"></div>
@@ -843,23 +849,25 @@
   shuffle(["#l2"], [32.467], 35.433);
   shuffle(["#l3"], [46.210], 49.400);
 
-  gsap.set("#win", {transformOrigin: "400px 280px"});
-  gsap.set(["#menu", "#ans", "#card"], {autoAlpha: 0});
-  gsap.set("#win", {x: 140.0, y: 480.0 + 220, scale: 1.2 * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
-  tl.to("#win", {x: 140.0, y: 480.0, scale: 1.2, rotationX: 9, rotationY: -12, rotationZ: 2, duration: .75, ease: "power3.out"}, 9.683 + .1);
-  tl.fromTo("#menu", {autoAlpha: 0, y: 12}, X({autoAlpha: 1, y: 0, duration: .3}), 11.143 - .9);
-  tl.to("#win", {x: 699.0, y: 311.0, scale: 2.6, rotationX: 3, rotationY: 6, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, 11.143 - .6);
+  gsap.set("#win", {transformOrigin: "490px 530px"});
+  gsap.set(["#menu", "#ans", "#card", "#qchip"], {autoAlpha: 0});
+  gsap.set("#win", {x: 50.0, y: 240.0 + 220, scale: 1.0 * .86, rotationX: 22, rotationY: -18, rotationZ: 4});
+  tl.to("#win", {x: 50.0, y: 240.0, scale: 1.0, rotationX: 4, rotationY: -8, rotationZ: 1.5, duration: .75, ease: "power3.out"}, 9.683 + .1);
+  tl.fromTo("#menu", {autoAlpha: 0, y: 16}, X({autoAlpha: 1, y: 0, duration: .3}), 11.143 - .9);
+  tl.to("#win", {x: 260.0, y: 184.0, scale: 1.4, rotationX: 3, rotationY: 5, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, 11.143 - .6);
   tl.to("#tq", {backgroundColor: "#4255FF", duration: .2}, 11.523);
-  tl.to("#tq u", {x: 14, duration: .3, ease: "back.out(2)"}, 11.523);
+  tl.to("#tq u", {x: 28, duration: .3, ease: "back.out(2)"}, 11.523);
   tl.to("#menu", {autoAlpha: 0, duration: .25}, 12.363 - .35);
-  tl.to("#win", {x: 140.0, y: 128.1, scale: 1.7, rotationX: -3, rotationY: -6, duration: 1.0, ease: "power3.inOut"}, 12.363 - .5);
-  tl.fromTo("#typ", {clipPath: "inset(0 100% 0 0)"}, X({clipPath: "inset(0 0% 0 0)", duration: 1.9, ease: "steps(28)"}), 12.363);
-  tl.to("#typ", {autoAlpha: 0, duration: .2}, 14.763 - .2);
-  tl.fromTo("#ans", {autoAlpha: 0, y: 30}, X({autoAlpha: 1, y: 0, duration: .5, ease: "power3.out"}), 14.763);
-  tl.to("#win", {x: 341.2, y: 553.8, scale: 1.75, rotationX: 6, rotationY: 8, rotationZ: -1, duration: 1.1, ease: "power3.inOut"}, 14.763 - .2);
+  tl.fromTo("#qchip", {autoAlpha: 0, scale: .6}, X({autoAlpha: 1, scale: 1, duration: .35, ease: "back.out(2)"}), 12.363 - .3);
+  tl.to("#win", {x: 50.0, y: 56.4, scale: 1.08, rotationX: -3, rotationY: -5, duration: 1.0, ease: "power3.inOut"}, 12.363 - .5);
+  tl.fromTo("#typ1", {clipPath: "inset(0 100% 0 0)"}, X({clipPath: "inset(0 0% 0 0)", duration: .6, ease: "steps(14)"}), 12.363);
+  tl.fromTo("#typ2", {clipPath: "inset(0 100% 0 0)"}, X({clipPath: "inset(0 0% 0 0)", duration: 1.3, ease: "steps(26)"}), 12.363 + .6);
+  tl.to(["#typ1", "#typ2", "#hero"], {autoAlpha: 0, duration: .2}, 14.763 - .2);
+  tl.fromTo("#ans", {autoAlpha: 0, y: 40}, X({autoAlpha: 1, y: 0, duration: .5, ease: "power3.out"}), 14.763);
+  tl.to("#win", {x: 50.0, y: 272.4, scale: 1.04, rotationX: 3, rotationY: 6, rotationZ: -1, duration: 1.1, ease: "power3.inOut"}, 14.763 - .2);
   tl.to("#opn", {scale: .92, backgroundColor: "#2E3BBF", duration: .12, yoyo: true, repeat: 1}, 16.732 + .3);
-  tl.to("#win", {y: "-=260", scale: 1.75 * .8, rotationX: 14, duration: .9, ease: "power3.inOut"}, 16.732 + .4);
-  tl.fromTo("#card", {autoAlpha: 0, y: 220, rotationX: -30}, X({autoAlpha: 1, y: 0, rotationX: 0, duration: .7, ease: "power3.out"}), 16.732 + .5);
+  tl.to("#win", {y: "-=150", scale: 1.04 * .96, rotationX: 10, duration: .9, ease: "power3.inOut"}, 16.732 + .4);
+  tl.fromTo("#card", {autoAlpha: 0, y: 260, rotationX: -30}, X({autoAlpha: 1, y: 0, rotationX: 0, duration: .7, ease: "power3.out"}), 16.732 + .5);
   gsap.set("#card .qb", {autoAlpha: 0});
   tl.to("#card", {rotationY: 180, duration: .7, ease: "power2.inOut"}, 17.572 + .15);
   tl.set("#card .qf", {autoAlpha: 0}, 17.572 + .5); tl.set("#card .qb", {autoAlpha: 1}, 17.572 + .5);

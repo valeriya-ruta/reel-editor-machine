@@ -125,7 +125,7 @@ t_20, t_5h, t_zmon, t_5r = S(u"20", 21.20), S(u"пʼятигодинний", 22.
 g0 = S(u"Тоді", 38.47) - 0.2
 g1 = E(u"ліміт.", 40.85) + 0.1
 t_tri, t_5h2 = S(u"три", 39.11), S(u"пʼятигодинний", 40.27)
-REEL = u'<i class="rl"><svg viewBox="0 0 24 24" width="40" height="40"><path d="M8 5v14l11-7z" fill="#fff"/></svg></i>'
+REEL = u'<i class="rl"><svg viewBox="0 0 24 24" width="64" height="64"><path d="M8 5v14l11-7z" fill="#fff"/></svg></i>'
 SEGA = u"".join(u'<div class="sg" id="sa%d">%s</div>' % (i, REEL) for i in range(5))
 SEGB = u"".join(u'<div class="sg" id="sb%d">%s</div>' % (i, REEL) for i in range(3))
 C.append(u"""
@@ -139,42 +139,42 @@ C.append(u"""
               <div class="cw-n"><span id="nA">5 рілсів</span><span id="nB">3 рілси</span></div>
             </div>
           </div>
-        </div>""" % {"mk": mark("claude", 54), "a": SEGA, "b": SEGB})
+        </div>""" % {"mk": mark("claude", 64), "a": SEGA, "b": SEGB})
 EXTRA += u"""
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
     #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
-    #win { position: absolute; left: 0; top: 0; width: 840px; height: 600px; background: #fff;
-           border-radius: 22px; font-family: "Google Sans", sans-serif; color: #1f1f1f;
+    #win { position: absolute; left: 0; top: 0; width: 900px; height: 1000px; background: #fff;
+           border-radius: 28px; font-family: "Google Sans", sans-serif; color: #1f1f1f;
            box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
-           transform-origin: 0 0; will-change: transform; padding: 36px 42px; }
-    .cw-top { display: flex; align-items: center; gap: 14px; font-size: 42px; font-weight: 700; }
+           transform-origin: 0 0; will-change: transform; padding: 44px 44px; }
+    .cw-top { display: flex; align-items: center; gap: 16px; font-size: 52px; font-weight: 700; height: 70px; }
     .cw-top svg path { fill: #7A1424; }
-    .cw-plan { margin-top: 28px; display: flex; align-items: baseline; gap: 14px; padding: 18px 22px;
-               border: 2px solid #ECE6E6; border-radius: 16px; }
-    .cw-l { font-size: 32px; color: #574142; flex: 1; }
-    .cw-plan b { font-size: 66px; color: #241919; letter-spacing: -0.02em; }
-    .cw-m { font-size: 28px; color: #574142; }
-    .cw-lim { margin-top: 26px; padding: 20px 22px; background: #FBF6F6; border-radius: 16px; }
-    .cw-l2 { font-size: 36px; font-weight: 700; color: #241919; margin-bottom: 16px; }
-    .cw-bar { position: relative; height: 92px; border-radius: 14px; background: #EFE3E3; overflow: hidden; }
-    .segs { position: absolute; inset: 4px; display: flex; gap: 4px; }
-    .sg { flex: 1; border-radius: 10px; background: #7A1424; transform-origin: 0 50%; transform: scaleX(0);
+    .cw-plan { margin-top: 36px; display: flex; align-items: baseline; gap: 16px; padding: 26px 30px;
+               border: 3px solid #ECE6E6; border-radius: 22px; height: 150px; box-sizing: border-box; }
+    .cw-l { font-size: 40px; color: #574142; flex: 1; }
+    .cw-plan b { font-size: 88px; color: #241919; letter-spacing: -0.02em; line-height: 1; }
+    .cw-m { font-size: 34px; color: #574142; }
+    .cw-lim { margin-top: 36px; padding: 34px 30px; background: #FBF6F6; border-radius: 22px; height: 580px; box-sizing: border-box; }
+    .cw-l2 { font-size: 50px; font-weight: 700; color: #241919; margin-bottom: 30px; }
+    .cw-bar { position: relative; height: 280px; border-radius: 20px; background: #EFE3E3; overflow: hidden; }
+    .segs { position: absolute; inset: 6px; display: flex; gap: 6px; }
+    .sg { flex: 1; border-radius: 14px; background: #7A1424; transform-origin: 0 50%; transform: scaleX(0);
           display: flex; align-items: center; justify-content: center; }
     .rl { display: block; line-height: 0; }
-    .cw-n { position: relative; height: 54px; margin-top: 14px; font-size: 42px; font-weight: 700; color: #7A1424; }
+    .cw-n { position: relative; height: 90px; margin-top: 30px; font-size: 76px; font-weight: 700; color: #7A1424; }
     .cw-n span { position: absolute; left: 0; top: 0; opacity: 0; }
 """
-# camera: the window turns and scales about its centre (380, 260); a point p of
+# camera: the window (900x1000) turns and scales about its centre (450, 500); a point p of
 # it lands at O + s*(p - O) + (x, y). Wide = whole window; BAR = the limit block.
-def cam(px, py, sc, cx=540, cy=830):
-    return (round(cx - 420 - sc * (px - 420), 1), round(cy - 300 - sc * (py - 300), 1))
-WIDE = (1.08,) + cam(420, 300, 1.08)
-PLAN = (1.22,) + cam(420, 200, 1.22)
-BAR = (1.26,) + cam(420, 420, 1.26)
+def cam(px, py, sc, cx=540, cy=820):
+    return (round(cx - 450 - sc * (px - 450), 1), round(cy - 500 - sc * (py - 500), 1))
+WIDE = (1.05,) + cam(450, 500, 1.05)          # 945 x 1050: ~88 % of the width, y 295-1345
+PLAN = (1.12,) + cam(450, 330, 1.12, cy=660)   # a push toward the $20 plan, top at y 290
+BAR = (1.22,) + cam(450, 650, 1.22, cy=1010)   # the 5-hour limit block; sides just past the frame (deliberate)
 seg_a = u"\n".join(u'  tl.to("#sa%d", {scaleX: 1, duration: .25, ease: "power2.out"}, %.3f);' % (i, t_zmon + 0.12 * i + 0.15) for i in range(5))
 seg_b = u"\n".join(u'  tl.to("#sb%d", {scaleX: 1, duration: .35, ease: "power2.out"}, %.3f);' % (i, t_tri + 0.22 * i) for i in range(3))
 js(u"""
-  gsap.set("#win", {transformOrigin: "420px 300px"});
+  gsap.set("#win", {transformOrigin: "450px 500px"});
   gsap.set("#segB, #nB", {autoAlpha: 0});
   gsap.set("#win", {x: %(wx)s, y: %(wy)s + 220, scale: %(ws)s * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
   tl.to("#win", {x: %(px)s, y: %(py)s, scale: %(ps)s, rotationX: 8, rotationY: -10, rotationZ: 2, duration: 1.2, ease: "power3.out"}, %(f0)s + .15);

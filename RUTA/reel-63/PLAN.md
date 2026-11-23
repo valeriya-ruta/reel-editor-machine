@@ -8,7 +8,7 @@ Chain: behind «Claude» (cover) → a running list through one slot (1 Карт
 |---|---|---|
 | 0.15–4.5 | behind | «Claude» (matte b1) |
 | 6.0–9.6 | above | list card 1 «Картки з нових слів» |
-| 9.7–18.2 | full | Claude chat 3D: connectors menu, Quizlet toggles on «Quizlet»; zoom to input, words type on «кидаєш»; set card on «отримуєш»; «Відкрити в Quizlet» pressed on «учень», flashcard homework → домашнє завдання flips on «відкриває» |
+| 9.7–18.2 | full | Claude chat 3D (window 980×1060, ~90 % width, body ≥ 30 px): connectors menu, Quizlet toggles on «Quizlet»; zoom to input, words type on «кидаєш»; set card on «отримуєш»; «Відкрити в Quizlet» pressed on «учень», flashcard homework → домашнє завдання flips on «відкриває» |
 | 18.95–20.4 | above | list card 2 «Щоденник помилок» |
 | 20.4–31.9 | half | Excalidraw scheme, each box on its word (matte half1) |
 | 32.5–35.4 | above | list card 3 «Перевірка домашок» |
