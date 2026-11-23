@@ -10,7 +10,7 @@ for s,e,sp in plan:
 cap=[]
 for w in words:
     for s,e,sp,o in segs:
-        if s-0.05<=w['s']<e:
+        if w['s']<e and w['e']>s+0.08:
             a=o+max(0,w['s']-s)/sp; b=o+(min(w['e'],e)-s)/sp
             cap.append([a,b,w['w'].upper()]); break
 for i in range(len(cap)-1):

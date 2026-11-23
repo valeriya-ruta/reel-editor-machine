@@ -17,3 +17,6 @@ Her brief: no animations, only cuts + subtitles, under 3 min, must not look rigg
 - `subs_cup.ass`: Product Sans Black, ASS size 74 (= PIL 58; the ASS size is the win-ascent+descent box, 1.272 em). `\an4` at (130,286), word starts about 30% into the cup and runs out to the right, plus a blurred black shadow layer at 57% opacity.
   The tops of the letters sit right on the 250 px top safe line; the cup pokes above it on purpose.
 - Burn: `ffmpeg -i cut.mp4 -i cup-layer.png -filter_complex "[0:v][1:v]overlay,ass=subs_cup.ass:fontsdir=<fonts>"`.
+
+## v2 (2026-11-23)
+CTA cut (src 425.2–452.3, "Якщо ти тепер впевнена… чи ні."), sign-off kept. 2:34. Plain captions again, 66px, centred at y=1560 (`subs_v2.ass`). The cup look was posted once as v1 and then dropped.
