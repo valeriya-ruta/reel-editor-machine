@@ -277,6 +277,30 @@ Two mechanical traps, both hit:
    on a permanent caption rail — which is why every graphic was small, low and
    out of the way. If the reels look samey, check this first.
 
+### 2c. Phrase captions — opt-in (her call, 2026-11-23)
+
+**Default stays §2b: one word at a time.** Switch to phrase captions only when
+she says so: "2-3 word / 3-4 word subtitles", "phrase subtitles", "not one word
+at a time", or "just put subtitles, nothing else".
+
+Same look as §2b — nothing changes but the grouping and the size:
+
+```
+3-4 words at a time, UPPERCASE, punctuation kept
+font        Product Sans Black, 68px (≈25% smaller than 90, so the line fits)
+colour      #ffffff flat, tracking -0.015em, centred, vertical centre y = 1472
+plaque      the usual dark underlay behind them (1040x450 at 20,1247)
+grouping    ≤ 4 words, line ≤ 880 px; break after . ? ! and after a comma at 3 words
+pauses      gentle: trim dead air at start/end only; mid-gaps over 0.9 s → 0.4 s
+```
+
+Not ASS/libass, not Google Sans, not small sentence-case text with an outline —
+that was tried and rejected. One command does the whole run and is the reference:
+
+```bash
+python3 tools/phrasecaps.py <in.mp4> <out.mp4> [--words words.json] [--fix fix.json]
+```
+
 ---
 
 ## 3. Frame geometry (measured off reel 2, 1080×1920 @ 60fps)
