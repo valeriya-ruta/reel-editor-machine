@@ -79,7 +79,7 @@ EXTRA = u'''
 
 # 1 · BEHIND — «менеджерка» (the hire) ------------------------------------------------
 t_men, e_klient = S(u"менеджерку,", 8.9), E(u"клієнтам.", 11.6)
-B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:440px; font-size:200px">менеджерка</div>')
+B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:545px; font-size:165px">менеджерка</div>')
 js(u'  rise("#bw1", %.3f); sink("#bw1", %.3f);' % (t_men - 0.15, e_klient + 0.1))
 g.matte("b1", round(t_men - 0.4, 3), round(e_klient + 0.5 - (t_men - 0.4), 3))
 g.sfx("whoosh-short", t_men - 0.15)
@@ -122,7 +122,7 @@ g.sfx("click", t_fign + 0.45); g.sfx("whoosh-short", t_dno - 0.35)
 # 4 · BEHIND — «AI-агент» (the cover frame) ---------------------------------------------
 t_ai, e_ai = S(u"AI-агента.", 34.0), E(u"AI-агента.", 34.0)
 t_rob = E(u"роботу.", 36.7)
-B.append(u'        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:440px; font-size:240px">AI-агент</div>')
+B.append(u'        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:470px; font-size:240px">AI-агент</div>')
 js(u'  rise("#bw2", %.3f); sink("#bw2", %.3f);' % (t_ai - 0.25, t_rob - 0.2))
 g.matte("b2", round(t_ai - 0.5, 3), round(t_rob + 0.3 - (t_ai - 0.5), 3))
 g.sfx("whoosh-short", t_ai - 0.25)

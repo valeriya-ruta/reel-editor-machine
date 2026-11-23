@@ -1,272 +1,110 @@
 [
  {
-  "t": 0.13,
-  "name": "whoosh-short",
-  "db": -4
+  "t": 0.1,
+  "name": "whoosh-short"
  },
  {
-  "t": 0.53,
-  "name": "pop",
-  "db": 0
+  "t": 16.33,
+  "name": "whoosh-short"
  },
  {
-  "t": 2.47,
-  "name": "pop",
-  "db": 0
+  "t": 19.138,
+  "name": "whoosh-short"
  },
  {
-  "t": 4.41,
-  "name": "pencil",
-  "db": -3
+  "t": 20.317,
+  "name": "pop"
  },
  {
-  "t": 7.834,
-  "name": "pop",
-  "db": 0
+  "t": 21.596,
+  "name": "pop"
  },
  {
-  "t": 10.19,
-  "name": "click",
-  "db": 0
+  "t": 22.572,
+  "name": "click"
  },
  {
-  "t": 12.834,
-  "name": "pencil",
-  "db": -3
+  "t": 24.272,
+  "name": "click"
  },
  {
-  "t": 14.197,
-  "name": "whoosh-short",
-  "db": -3
+  "t": 25.133,
+  "name": "whoosh-short"
  },
  {
-  "t": 16.257,
-  "name": "pencil",
-  "db": -2
+  "t": 27.482,
+  "name": "whoosh-short"
  },
  {
-  "t": 20.017,
-  "name": "pop",
-  "db": 0
+  "t": 34.13,
+  "name": "pop"
  },
  {
-  "t": 21.116,
-  "name": "pop",
-  "db": 0
+  "t": 34.83,
+  "name": "pop"
  },
  {
-  "t": 22.033,
-  "name": "click",
-  "db": 0
+  "t": 36.19,
+  "name": "pop"
  },
  {
-  "t": 23.732,
-  "name": "click",
-  "db": 0
+  "t": 52.867,
+  "name": "whoosh-short"
  },
  {
-  "t": 25.3,
-  "name": "click-soft",
-  "db": 0
+  "t": 55.223,
+  "name": "notification"
  },
  {
-  "t": 25.845,
-  "name": "pencil",
-  "db": -3
+  "t": 57.143,
+  "name": "pop"
  },
  {
-  "t": 26.533,
-  "name": "whoosh-short",
-  "db": 0
+  "t": 58.203,
+  "name": "pop"
  },
  {
-  "t": 27.593,
-  "name": "whoosh-short",
-  "db": -4
+  "t": 60.963,
+  "name": "ping"
  },
  {
-  "t": 28.043,
-  "name": "pop",
-  "db": 0
+  "t": 61.267,
+  "name": "whoosh-short"
  },
  {
-  "t": 32.103,
-  "name": "pop",
-  "db": 0
+  "t": 66.232,
+  "name": "whoosh-short"
  },
  {
-  "t": 33.897,
-  "name": "pencil",
-  "db": -4
+  "t": 68.117,
+  "name": "pop"
  },
  {
-  "t": 35.957,
-  "name": "pop",
-  "db": 0
+  "t": 69.397,
+  "name": "pop"
  },
  {
-  "t": 38.288,
-  "name": "pop",
-  "db": 0
+  "t": 72.28,
+  "name": "whoosh-short"
  },
  {
-  "t": 39.248,
-  "name": "click",
-  "db": 0
+  "t": 74.859,
+  "name": "click-soft"
  },
  {
-  "t": 40.606,
-  "name": "pop",
-  "db": 0
+  "t": 79.337,
+  "name": "click-soft"
  },
  {
-  "t": 44.203,
-  "name": "pop",
-  "db": 0
+  "t": 83.822,
+  "name": "click-soft"
  },
  {
-  "t": 45.043,
-  "name": "pop",
-  "db": 0
+  "t": 96.89,
+  "name": "pop"
  },
  {
-  "t": 46.832,
-  "name": "pencil",
-  "db": -3
- },
- {
-  "t": 50.222,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 51.533,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 54.89,
-  "name": "notification",
-  "db": 0
- },
- {
-  "t": 56.81,
-  "name": "ping",
-  "db": 0
- },
- {
-  "t": 57.45,
-  "name": "ping",
-  "db": -3
- },
- {
-  "t": 58.01,
-  "name": "pencil",
-  "db": -3
- },
- {
-  "t": 59.57,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 63.423,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 64.863,
-  "name": "pencil",
-  "db": -3
- },
- {
-  "t": 65.533,
-  "name": "whoosh-short",
-  "db": -4
- },
- {
-  "t": 67.883,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 69.163,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 70.157,
-  "name": "whoosh-short",
-  "db": -3
- },
- {
-  "t": 71.537,
-  "name": "pencil",
-  "db": -3
- },
- {
-  "t": 74.359,
-  "name": "pencil",
-  "db": -3
- },
- {
-  "t": 77.497,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 79.978,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 82.822,
-  "name": "click-soft",
-  "db": 0
- },
- {
-  "t": 83.882,
-  "name": "pencil",
-  "db": -3
- },
- {
-  "t": 85.523,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 86.743,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 88.439,
-  "name": "pencil",
-  "db": -2
- },
- {
-  "t": 96.04,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 96.39,
-  "name": "key-press",
-  "db": 0
- },
- {
-  "t": 97.49,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 98.333,
-  "name": "typing",
-  "db": -4
- },
- {
-  "t": 100.003,
-  "name": "chime",
-  "db": 0
+  "t": 98.29,
+  "name": "pop"
  }
 ]

@@ -66,17 +66,21 @@ cd reel-0N && python build.py && ../hf check
 ../hf cloud render
 ```
 
-`tools/kit.py` holds the shared surfaces, tokens and squircles — build beats out
-of it rather than hand-rolling CSS, and it keeps STYLE.md §5a satisfied for free.
-**`tools/gstyle.py` is the look (STYLE.md §00, the default since 2026-10-28)** —
-Google style + Excalidraw sketches: white cards and chips above her, big white
-words behind her, the white half-screen panel (the video pushes down 330 px),
-the white full-screen cover, rough.js sketches, Google Sans, white and
-`#7A1424` only. `reel-54/build.py` is the latest worked example. The refined-glass
-look (`tools/glass.py`, burgundy ground, iris takeovers) is **archived** —
-`archive/STYLE-refined-glass.md` — and never used for a new reel unless she asks.
-`tools/matte.py` cuts her out of a span so a **big** graphic can sit behind her
-(§1) — per beat only, ~3.3 s/frame on CPU.
+**The look is locked (2026-11-23): STYLE.md §00 + "Her review of reel 61".**
+One look only — `tools/gstyle.py`, white + `#7A1424`, Google Sans; big white words
+behind her (matte), the half screen for schemes (Excalidraw only there), full-screen
+platform-ad sequences for real UI (3D tilt, smooth zooms, the UI rebuilt in HTML),
+a little glass, lists as a card `shuffle`, the CTA pill in the subtitle band. Not
+every phrase gets a graphic. **`reel-61/build.py` is the worked example and
+`BUILD-BRIEF.md` the standing brief** (a builder subagent gets that file and its
+reel number). Every other look is in `archive/` and never used unless she asks for
+it by name. `tools/matte.py` cuts her out (≈1 s/frame on the cloud box with
+`MATTE_REMBG=1`). The ТЕСТ CTA is always cut out of the reel.
+
+**Render locally, never HeyGen** (her call, 2026-11-20): from `RUTA/`,
+`sh work/b1021/heavy.sh <hyperframes> render reel-NN -o reel-NN/renders/REEL-NN.mp4 --workers 3 --low-memory-mode`.
+Every heavy step (cut, sound mix, matte, render) goes through `heavy.sh` — two
+overlapping sound mixes corrupted a plate on 2026-11-23 (frozen, out-of-sync render).
 
 ## Verify before delivering
 
@@ -87,10 +91,15 @@ Non-negotiable, and cheap:
   truncated tail, which is the one failure she will notice immediately
 - no black tail, no missing audio
 - spot-check one frame per beat
+- the plate (`assets/base.mp4`) and the render decode with zero errors, and the
+  render is in sync with the plate (face-crop PSNR peaks at the same time, not
+  ±0.4 s — `BUILD-BRIEF.md` step 10)
 
 ## Deliver
 
-Her Desktop, then `SendUserFile` both files. Once rclone has write scope, also
+Post through Buffer from her Cloudinary (see `BUILD-BRIEF.md`, "After the
+render"), keep RUTA's status and dates in step, add the reel to the review
+artifact. Her Desktop, then `SendUserFile` both files. Once rclone has write scope, also
 `rclone copy` to `gdrive:Reels inbox/Done`. Commit the reel and push.
 
 **The full-quality 1080p file is what she posts, so it always reaches her.**

@@ -1,5 +1,13 @@
 # Ruta — reel animation spec
 
+> **THE LOOK IS LOCKED (2026-11-23).** There is one look: **§00** below,
+> including *"Her review of reel 61"* — it wins over every older section.
+> Kit `tools/gstyle.py` · worked example **`reel-61/build.py`** · standing brief
+> **`BUILD-BRIEF.md`** · render locally, never HeyGen · post via Buffer from a
+> Cloudinary link. Any other look lives in `archive/` and is never used unless
+> she asks for it by name. If a session starts on a branch without this banner,
+> it is on a stale branch — stop and find the current one.
+
 > **Ruta's reels only** (everything under `RUTA/`). Anything under `Nika/` is
 > another person with her own contract: read `Nika/README.md` and nothing here.
 > If you can't tell whose reel it is, ask before building.

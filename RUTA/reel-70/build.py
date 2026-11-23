@@ -128,6 +128,7 @@ js(u"""
   tl.fromTo("#cl-row", {boxShadow: "0 0 0 0 rgba(122,20,36,0)"}, X({boxShadow: "0 0 0 5px rgba(122,20,36,.18)", duration: .35, yoyo: true, repeat: 1}), %(pidk).3f + .1);
   tl.to("#win1", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.1, ease: "power3.inOut"}, %(pidk).3f + .8);
   full(%(f0).3f, %(f1).3f);
+  tl.set("#stage1", {autoAlpha: 0}, %(f1).3f + .9);
 """ % {"wx": WIDE[1], "wy": WIDE[2], "ws": WIDE[0], "sx": SIDE[1], "sy": SIDE[2], "ss": SIDE[0],
        "qx": SRCH[1], "qy": SRCH[2], "qs": SRCH[0], "rx": ROW[1], "ry": ROW[2], "rs": ROW[0],
        "f0": f0, "f1": f1, "cust": t_cust, "conn": t_conn, "shuk": t_shuk, "not": t_not, "pidk": t_pidk})
@@ -159,9 +160,10 @@ g1 = e_lid + 0.1
 C.append(ui.NOTION % {"notion": NOTION_MARK, "rows": ui.notion_rows()})
 O2 = (430, 235)
 W2 = (1.15,) + cam(*O2, px=430, py=235, sc=1.15)
-ST = (1.9,) + cam(*O2, px=470, py=300, sc=1.9)
+ST = (1.45,) + cam(*O2, px=400, py=290, sc=1.45)
 js(u"""
   gsap.set("#win2", {transformOrigin: "430px 235px"});
+  gsap.set("#stage2", {autoAlpha: 0}); tl.set("#stage2", {autoAlpha: 1}, %(g0).3f - .05);
   gsap.set("#win2", {x: %(wx)s, y: %(wy)s + 240, scale: %(ws)s * .85, rotationX: 26, rotationY: 18, rotationZ: -5});
   tl.to("#win2", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 9, rotationY: 12, rotationZ: -2, duration: 1.2, ease: "power3.out"}, %(g0).3f + .1);
   tl.fromTo(["#nr0", "#nr1", "#nr2"], {autoAlpha: 0, y: 14}, X({autoAlpha: 1, y: 0, duration: .35, stagger: .12, ease: "power2.out"}), %(g0).3f + .45);

@@ -2,1071 +2,900 @@
 <html lang="uk">
   <head>
     <meta charset="utf-8">
-    <title>Reel 63 — автоматизації викладачки мови</title>
+    <title>Reel 63 — автоматизації для викладачки мови</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="assets/js/rough-4.6.6.js"></script>
     <style>
-    @font-face {
-      font-family: "ProductSans";
-      src: url("assets/fonts/ProductSans-Bold.ttf");
-      font-weight: 900; font-style: normal; font-display: block;
-    }
+    @font-face { font-family: "Google Sans"; font-weight: 400; font-display: block;
+                 src: url("assets/fonts/GoogleSans-400.ttf") format("truetype"); }
+    @font-face { font-family: "Google Sans"; font-weight: 500; font-display: block;
+                 src: url("assets/fonts/GoogleSans-500.ttf") format("truetype"); }
+    @font-face { font-family: "Google Sans"; font-weight: 700; font-display: block;
+                 src: url("assets/fonts/GoogleSans-700.ttf") format("truetype"); }
+    @font-face { font-family: "ProductSans"; font-weight: 900; font-display: block;
+                 src: url("assets/fonts/ProductSans-Black.woff") format("woff"); }
+    @font-face { font-family: "Pangolin"; font-weight: 400; font-display: block;
+                 src: url("assets/fonts/Pangolin.ttf") format("truetype"); }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    #root { position: relative; width: 1080px; height: 1920px;
-            overflow: hidden; background: #000;
-            font-family: "ProductSans", system-ui, sans-serif;
-      --surface:        #fffcfd;
-      --container:      #fbeef2;
-      --container-high: #f4dfe5;
-      --graphite:       rgba(23,20,28,0.13);
-      --accent:         #b4122f;
-      --accent-deep:    #8d0d24;
-      --pink:           #ff6e9c;
-      --ink:            #17141c;
-
-      --lit:        linear-gradient(115deg, #ffffff 0%, #fafafb 100%);
-      --lit-blush:  linear-gradient(115deg, #ffffff 0%, #fff7fa 100%);
-      --lit-accent: linear-gradient(115deg, #c41434 0%, #8d0d24 100%);
-      --lit-pink:   linear-gradient(115deg, #ff8ab0 0%, #ff5c8f 100%);
-      --lit-ink:    linear-gradient(115deg, #241f2c 0%, #17141c 100%);
-
-      --rim: inset 0 1.5px 0 rgba(255,255,255,0.92),
-             inset 0 -1.5px 0 rgba(255,255,255,0.14),
-             inset 0 0 0 1px rgba(255,255,255,0.28);
-      --rim-dark: inset 0 1.5px 0 rgba(255,255,255,0.16),
-                  inset 0 0 0 1px rgba(255,255,255,0.08);
-      --rim-glass: inset 0 2px 0 rgba(255,255,255,0.70),
-                   inset 0 -2px 0 rgba(255,255,255,0.10),
-                   inset 0 0 0 1.5px rgba(255,255,255,0.30);
-
-      /* §5a.10 — glow wraps the silhouette, zero offset, three layers.
-         Light coming off the object, not the object sitting on a surface. */
-      --glow: drop-shadow(0 0 10px rgba(255,196,218,0.95))
-              drop-shadow(0 0 26px rgba(255,110,156,0.85))
-              drop-shadow(0 0 64px rgba(255,110,156,0.55))
-              drop-shadow(0 0 120px rgba(255,110,156,0.32));
-      --glow-soft: drop-shadow(0 0 22px rgba(255,110,156,0.55))
-                   drop-shadow(0 0 60px rgba(255,110,156,0.30));
-
-      --cast: drop-shadow(0 1px 2px rgba(26,30,39,0.10))
-              drop-shadow(0 24px 48px rgba(26,30,39,0.14));
-      --cast-sm: drop-shadow(0 1px 2px rgba(26,30,39,0.08))
-                 drop-shadow(0 12px 24px rgba(26,30,39,0.12));
- }
-    .plate { position: absolute; inset: 0; width: 1080px; height: 1920px;
+    #root { position: relative; width: 1080px; height: 1920px; overflow: hidden;
+            background: #fff; font-family: "Google Sans", system-ui, sans-serif;
+            color: #241919;
+            --primary: #7A1424; --on-surface: #241919; --on-surface-var: #574142;
+            --outline-var: #DEBFBF; --container-low: #FFF0F0; --chip: #FFF8F7; }
+    .plate { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
              object-fit: cover; }
-    /* the plate's own frame: moved as a whole (move-down, halfscreen —
-       STYLE.md §0c) while #vid inside it keeps its slow push */
-    #platebox { position: absolute; inset: 0; transform-origin: 540px 0; }
-    #scrim { position: absolute; left: 20px; top: 1247px;
-             width: 1040px; height: 450px;
-             background-image: url("assets/underlay.png");
-             background-size: 100% 100%; background-repeat: no-repeat;
-             opacity: 0; visibility: hidden; pointer-events: none; }
-    .cap { position: absolute; left: 0; width: 1080px; top: 1413px;
-           height: 118px; line-height: 118px; text-align: center;
-           color: #fff; font-size: 90px; font-weight: 900;
-           letter-spacing: -0.015em; white-space: nowrap;
-           opacity: 0; visibility: hidden; }
-    .cap.inv { color: var(--ink); }
-    .g { position: absolute; left: 0; top: 40px; width: 1080px;
-         height: 600px; opacity: 0; visibility: hidden; }
-    .g.full { top: 0; height: 1920px; }
+    .L { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+         pointer-events: none; }
+    .hid { opacity: 0; visibility: hidden; }
 
-    /* §5a.9 — glass over her footage is the house look. Panels only; an
-       edge-to-edge frosted ground blurs her out of her own reel. */
-    .glass { background: rgba(255,255,255,0.15);
-             -webkit-backdrop-filter: blur(24px) saturate(1.4);
-             backdrop-filter: blur(24px) saturate(1.4);
-             box-shadow: var(--rim); filter: var(--cast); }
+    /* §00.3.1 above me */
+    .card { position: absolute; background: #FFFFFF; border-radius: 40px;
+            box-shadow: 0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.10);
+            padding: 36px 40px; }
+    .card .lbl { display: block; font-weight: 500; font-size: 28px;
+                 color: var(--on-surface-var); margin-bottom: 20px; }
+    .card .ttl { display: block; font-weight: 700; font-size: 56px; line-height: 1.08;
+                 letter-spacing: -0.02em; color: var(--on-surface); }
+    .chips { display: flex; flex-wrap: wrap; gap: 14px; }
+    .chip { display: inline-flex; align-items: center; gap: 12px;
+            border: 2px solid var(--outline-var); border-radius: 16px;
+            padding: 14px 24px; font-weight: 500; font-size: 36px;
+            color: var(--on-surface); background: var(--chip); }
+    .chip i { width: 16px; height: 16px; border-radius: 50%; background: var(--primary);
+              display: inline-block; flex: none; }
+    .chip.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .chip.on i { background: #fff; }
+    .pill { position: absolute; display: inline-flex; align-items: center; gap: 16px;
+            background: var(--primary); color: #fff; border-radius: 999px;
+            padding: 30px 54px; font-weight: 500; font-size: 46px; white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(36,25,25,.12), 0 10px 30px rgba(122,20,36,.22); }
+    .pill.light { background: #fff; color: var(--on-surface);
+                  box-shadow: 0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.10); }
+    .num { font-weight: 700; letter-spacing: -0.04em; color: var(--primary); line-height: 1; }
+    .row { display: flex; align-items: center; gap: 18px; }
+    .check { width: 44px; height: 44px; border-radius: 12px; flex: none;
+             border: 3px solid var(--outline-var); background: #fff; position: relative; }
+    .check.on { background: var(--primary); border-color: var(--primary); }
+    .check.on::after { content: ""; position: absolute; left: 13px; top: 5px; width: 11px;
+                       height: 22px; border: solid #fff; border-width: 0 5px 5px 0;
+                       transform: rotate(45deg); }
+    .line { display: block; height: 18px; border-radius: 9px; background: #EFE3E3; }
+    .logo { width: 64px; height: 64px; flex: none; }
+    .logo path { fill: var(--primary); }
+    .mark { display: block; }
+    .mark path { fill: currentColor; }
 
-    /* A takeover: a tinted pane laid ON the footage, with a real margin so it
-       reads as an object rather than a blur applied to the video. */
-    /* The inset pane is a *pane*: 44/64 margin so the footage shows past it,
-       and corners, because a full-bleed hard-cornered rectangle is a bug she
-       has reported. base_css() squircles it; this radius is the fallback. */
-    .ground { position: absolute; left: 44px; top: 64px;
-              width: 992px; height: 1792px; border-radius: 68px;
-              background: linear-gradient(158deg, rgba(196,20,52,0.62) 0%,
-                          rgba(141,13,36,0.70) 100%);
-              -webkit-backdrop-filter: blur(30px) saturate(1.5);
-              backdrop-filter: blur(30px) saturate(1.5);
-              box-shadow: var(--rim-glass); filter: var(--cast); }
+    /* glass (her review of 61): frosted white over her footage, a hairline rim */
+    .glass { position: absolute; border-radius: 36px; background: rgba(255,255,255,.62);
+             -webkit-backdrop-filter: blur(22px) saturate(1.5); backdrop-filter: blur(22px) saturate(1.5);
+             box-shadow: inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 1px rgba(255,255,255,.45),
+                         0 12px 36px rgba(36,25,25,.16); }
+    /* shuffle slot: one item at a time, centred above her head */
+    /* her note: a plain white card, no glass around it */
+    .shuf { position: absolute; left: 0; right: 0; margin: auto; width: max-content; top: 340px;
+            transform-origin: 50% 100%; }
+    .shuf .chip { font-size: 40px; padding: 16px 28px; background: #fff; border-color: #fff;
+                  box-shadow: 0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.14); }
 
-    .card { position: absolute; background: var(--lit-blush);
-            filter: var(--cast); box-shadow: var(--rim); }
-    .card.ink { background: var(--lit-ink); box-shadow: var(--rim-dark); }
-    .card.accent { background: var(--lit-accent); box-shadow: var(--rim-dark); }
+    /* §00.3.2 behind me */
+    .big { position: absolute; left: 0; width: 1080px; text-align: center;
+           font-weight: 700; line-height: 0.9; letter-spacing: -0.04em;
+           /* white, her call 2026-10-21: the red read badly over the room */
+           color: #FFFFFF; white-space: nowrap;
+           text-shadow: 0 6px 40px rgba(20,12,12,.30), 0 2px 8px rgba(20,12,12,.22); }
 
-    .tile { position: absolute; display: grid; place-items: center;
-            background: var(--lit-blush); filter: var(--cast);
-            box-shadow: var(--rim); }
+    /* §00.3.3 half screen. Its parked position (up, off frame) is set from JS
+       with gsap.set: a CSS translate here would be parsed by GSAP as a px offset
+       and then stacked under yPercent, and the panel stalls a quarter of the
+       way in (reel 41's first snapshot). Same for #cover. */
+    #panel { position: absolute; left: 0; top: 0; width: 1080px; height: 1240px;
+             background: #FFFFFF; }
+    /* §00.3.4 full screen */
+    #cover { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+             background: #FFFFFF; }
 
-    /* §5a.3 — bar rhythm. One thick heading, then ragged body. Uniform bars
-       read as a loading state; ragged ones read as an abstracted screen. */
-    .ph { display: block; height: 66px; border-radius: 18px;
-          background: var(--lit-accent); margin-bottom: 26px;
-          box-shadow: var(--rim-dark); }
-    .pr { display: block; height: 40px; border-radius: 12px;
-          background: var(--graphite); margin-bottom: 18px; }
-    .pr:nth-of-type(2) { width: 94%; }
-    .pr:nth-of-type(3) { width: 71%; }
-    .pr:nth-of-type(4) { width: 43%; }
-
-    .phone { position: absolute; background: var(--lit-blush);
-             overflow: hidden; filter: var(--cast); box-shadow: var(--rim); }
-    .phone video, .phone img { width: 100%; height: 100%; object-fit: cover;
-                               display: block; }
-
-    /* a value in its own card — her reference's "big number" pattern, minus
-       the label, because a graphic here carries no words */
-    .valcard { position: absolute; background: rgba(255,255,255,0.16);
-               -webkit-backdrop-filter: blur(16px) saturate(1.3);
-               backdrop-filter: blur(16px) saturate(1.3);
-               box-shadow: var(--rim-dark);
-               display: grid; place-items: center; }
-    .valcard span { color: #fff; font-weight: 900; letter-spacing: -0.04em; }
-
-    .wire { fill: none; stroke-width: 20; stroke-linecap: round;
-            filter: drop-shadow(0 8px 18px rgba(26,30,39,0.22)); }
-    .node { fill: #fdf6f6; stroke: #b4122f; stroke-width: 16;
-            filter: drop-shadow(0 10px 22px rgba(26,30,39,0.24)); }
-    .node.hub { fill: #b4122f; stroke: #fff; }
-
-    /* §5a.10 — the glow rides a WRAPPER, never the clipped element itself.
-       clip-path is applied *after* filter, so a drop-shadow declared on the
-       same element as the clip is cut away with everything else outside the
-       silhouette and the object ends up with no light at all. Put the clip on
-       the shape and the filter on its parent: the parent filters the already
-       clipped bitmap, so the light traces the squircle and survives. */
-    .lit { position: absolute; inset: 0; pointer-events: none;
-           filter: var(--glow); }
-    .lit.soft { filter: var(--glow-soft); }
-
-    /* Emoji are images, never glyphs. The render runs on someone else's
-       Chrome, so a literal 💩 in the HTML comes out in whatever emoji font
-       that machine has — Noto on the cloud renderer, Segoe on hers, Apple on
-       nobody's. She wants the Apple set, so the artwork ships in assets/emoji
-       and the glyph never appears in a composition. */
-    .emoji { display: block; width: auto; image-rendering: auto; }
-
-    .halo { position: absolute; border-radius: 50%; pointer-events: none;
-            background: radial-gradient(circle, rgba(255,110,156,0.5) 0%,
-                        rgba(255,110,156,0) 70%); }
-    .ring { position: absolute; border-radius: 50%; pointer-events: none;
-            border: 18px solid rgba(255,110,156,0.92);
-            filter: drop-shadow(0 0 40px rgba(255,110,156,0.55)); }
-
-    /* ---- takeovers (STYLE.md 2c) ----
-       The graphic owns the frame: the plate is gone, so none of the
-       over-footage rules apply — no glow budget, no band discipline, ink type
-       on a light ground. Lives here rather than per-reel because every reel
-       from 9 onwards needs it. A takeover that does not bleed off at least
-       two edges reads as a slide, not a takeover. */
-    .tk { position: absolute; inset: 0; }
-    .tk.paper { background: var(--surface); }
-    .tk.white { background: #ffffff; }
-    .tk.blush { background: linear-gradient(150deg,#ffffff 0%,#fffafc 55%,
-                                            #fdf4f8 100%); }
-    /* graph paper — the texture the reference takeovers all have. 60px cells
-       at 5.8% ink: visible, never a pattern you read. */
-    .gp { position: absolute; inset: 0;
-          background-image:
-            repeating-linear-gradient(0deg, rgba(23,20,28,.058) 0 1px,
-                                      transparent 1px 60px),
-            repeating-linear-gradient(90deg, rgba(23,20,28,.058) 0 1px,
-                                      transparent 1px 60px); }
-    /* horizontal rules only — a transcript or a list is ruled paper, not
-       graph paper, and the difference is what makes it read as an export. */
-    .gl { position: absolute; inset: 0;
-          background-image:
-            repeating-linear-gradient(0deg, rgba(23,20,28,.05) 0 1px,
-                                      transparent 1px 175px); }
-
-    /* the finished artefact, in her system — one class at any aspect ratio */
-    .dk { position: absolute; overflow: hidden; border-radius: 28px;
-          background: var(--lit-blush); box-shadow: var(--rim);
-          filter: var(--cast); }
-    .dk i { position: absolute; display: block; }
-    .dk .hb { left: 30px; top: 30px; height: 20px; border-radius: 6px;
-              background: var(--lit-accent); }
-    .dk .rr { left: 30px; height: 9px; border-radius: 4px;
-              background: rgba(23,20,28,0.22); }
-    .dk .pb { border-radius: 16px; background: var(--lit-pink);
-              box-shadow: var(--rim-dark); }
-
-    @font-face { font-family: "Hand"; src: url("assets/fonts/Excalifont.ttf") format("truetype");
-                 font-display: block; }
-    @font-face { font-family: "Cap"; src: url("assets/fonts/ProductSans-Bold.ttf") format("truetype");
-                 font-weight: 900; font-display: block; }
-    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-cyrillic-ext.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
-    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-cyrillic.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
-    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-symbols.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0001-000C, U+000E-001F, U+007F-009F, U+20DD-20E0, U+20E2-20E4, U+2150-218F, U+2190, U+2192, U+2194-2199, U+21AF, U+21E6-21F0, U+21F3, U+2218-2219, U+2299, U+22C4-22C6, U+2300-243F, U+2440-244A, U+2460-24FF, U+25A0-27BF, U+2800-28FF, U+2921-2922, U+2981, U+29BF, U+29EB, U+2B00-2BFF, U+4DC0-4DFF, U+FFF9-FFFB, U+10140-1018E, U+10190-1019C, U+101A0, U+101D0-101FD, U+102E0-102FB, U+10E60-10E7E, U+1D2C0-1D2D3, U+1D2E0-1D37F, U+1F000-1F0FF, U+1F100-1F1AE, U+1F1E6-1F1FF, U+1F30D-1F30F, U+1F315, U+1F31C, U+1F31E, U+1F320-1F32C, U+1F336, U+1F378, U+1F37D, U+1F382, U+1F393-1F39F, U+1F3A7-1F3A8, U+1F3AC-1F3AF, U+1F3C2, U+1F3C4-1F3C6, U+1F3CA-1F3CE, U+1F3D4-1F3E0, U+1F3ED, U+1F3F1-1F3F3, U+1F3F5-1F3F7, U+1F408, U+1F415, U+1F41F, U+1F426, U+1F43F, U+1F441-1F442, U+1F444, U+1F446-1F449, U+1F44C-1F44E, U+1F453, U+1F46A, U+1F47D, U+1F4A3, U+1F4B0, U+1F4B3, U+1F4B9, U+1F4BB, U+1F4BF, U+1F4C8-1F4CB, U+1F4D6, U+1F4DA, U+1F4DF, U+1F4E3-1F4E6, U+1F4EA-1F4ED, U+1F4F7, U+1F4F9-1F4FB, U+1F4FD-1F4FE, U+1F503, U+1F507-1F50B, U+1F50D, U+1F512-1F513, U+1F53E-1F54A, U+1F54F-1F5FA, U+1F610, U+1F650-1F67F, U+1F687, U+1F68D, U+1F691, U+1F694, U+1F698, U+1F6AD, U+1F6B2, U+1F6B9-1F6BA, U+1F6BC, U+1F6C6-1F6CF, U+1F6D3-1F6D7, U+1F6E0-1F6EA, U+1F6F0-1F6F3, U+1F6F7-1F6FC, U+1F700-1F80B, U+1F810-1F847, U+1F850-1F859, U+1F860-1F887, U+1F890-1F8AD, U+1F8B0-1F8BB, U+1F8C0-1F8C1, U+1F8D0-1F8D8, U+1F900-1F90B, U+1F93B, U+1F946, U+1F984, U+1F996, U+1F9E9, U+1FA00-1FA6F, U+1FA70-1FA7C, U+1FA80-1FAC6, U+1FAC8, U+1FACC-1FADD, U+1FADF-1FAEB, U+1FAEF-1FAFA, U+1FB00-1FBFF; }
-    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-latin-ext.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
-    @font-face { font-family: "GSans"; src: url("assets/fonts/GoogleSans-latin.woff2") format("woff2"); font-weight: 400 700; font-display: block; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-    
-    #root { --ink: #1e1e1e; --gb: #4285F4; --gr: #EA4335; --gy: #FBBC04; --gg: #34A853;
-            --pb: #a5d8ff; --pr: #ffc9c9; --py: #ffec99; --pg: #b2f2bb;
-            --paper: #ffffff; --line: #dadce0; --sub: #5f6368;
-            --e1: 0 1px 2px rgba(60,64,67,.30), 0 1px 3px 1px rgba(60,64,67,.15);
-            --e3: 0 4px 8px 3px rgba(60,64,67,.15), 0 1px 3px rgba(60,64,67,.30);
-            --e5: 0 8px 12px 6px rgba(60,64,67,.15), 0 4px 4px rgba(60,64,67,.30); }
-    .cap { font-family: "Cap", system-ui, sans-serif !important; }
-    .hand { font-family: "Hand", "Cap", sans-serif; color: var(--ink); line-height: 1.12;
-            letter-spacing: 0; }
-    .gs { font-family: "GSans", "Cap", sans-serif; color: #202124; letter-spacing: -0.01em; }
+    /* §00.5 sketches */
     .sk { position: absolute; left: 0; top: 0; overflow: visible; }
-    .sk .dr { stroke-dasharray: 1 2; stroke-dashoffset: 1.05; }
-    .sk .dr.dash { stroke-dasharray: 0.03 0.025; stroke-dashoffset: 0; }
+    .sk text, .hand { font-family: "Pangolin", cursive; fill: #1E1E1E; color: #1E1E1E; }
+    #front .sk { filter: drop-shadow(0 3px 10px rgba(20,12,12,.22)); }
+    .hand { position: absolute; white-space: nowrap; }
 
-    /* a Material card: white, 28px corners, elevation shadow — Google's side */
-    .gcard { position: absolute; background: #fff; border-radius: 28px; box-shadow: var(--e3); }
-    .gcard.flat { box-shadow: var(--e1); }
-    /* paper: the Excalidraw side — a white sheet with a hand-drawn edge (draw the
-       edge with sk.rect inside it), a whisker of tilt, a soft cast shadow */
-    .paper { position: absolute; background: #fff; border-radius: 22px;
-             box-shadow: 0 18px 40px rgba(0,0,0,.22), 0 2px 6px rgba(0,0,0,.12); }
-    .pill { position: absolute; display: flex; align-items: center; gap: 18px;
-            background: #fff; border-radius: 999px; box-shadow: var(--e3);
-            font-family: "GSans", sans-serif; color: #202124; }
-    .chip { display: inline-flex; align-items: center; gap: 12px; padding: 0 30px;
-            height: 72px; border-radius: 20px; border: 2px solid var(--line); background: #fff;
-            font-family: "GSans", sans-serif; font-weight: 500; font-size: 34px; color: #3c4043; }
-    .chip.on { background: #d3e3fd; border-color: #d3e3fd; color: #041e49; }
-    .chip.cg { background: #c4eed0; border-color: #c4eed0; color: #072711; }
-    .chip.cr { background: #ffdad6; border-color: #ffdad6; color: #410002; }
-    .chip.cy { background: #ffefc2; border-color: #ffefc2; color: #3d2e00; }
-    /* the four-dot loader, Google's "thinking" */
-    .dots { position: absolute; display: flex; gap: 18px; }
-    .dots i { display: block; width: 30px; height: 30px; border-radius: 50%; }
-    .dots i:nth-child(1) { background: var(--gb); } .dots i:nth-child(2) { background: var(--gr); }
-    .dots i:nth-child(3) { background: var(--gy); } .dots i:nth-child(4) { background: var(--gg); }
-    /* Material toggle */
-    .tgl { position: absolute; width: 104px; height: 64px; border-radius: 32px; background: #e1e3e1;
-           border: 4px solid #747775; }
-    .tgl b { position: absolute; left: 10px; top: 10px; width: 36px; height: 36px; border-radius: 50%;
-             background: #747775; }
-    /* §0c layouts. A .sheet is a full-width panel from the top edge down to
-       its own height; her plate is pushed down under it (plateDown), so the
-       panel never covers her head. .sheet.board-bg = halfscreen (a scheme on
-       the whiteboard); a plain .sheet holds a mockup (browser, app screen). */
-    .sheet { position: absolute; left: 0; top: 0; width: 1080px; overflow: hidden;
-             box-shadow: 0 10px 30px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.18); }
-    .sheet.board-bg { background-color: #fff;
-             background-image: radial-gradient(circle, rgba(30,30,30,.16) 2px, transparent 2.6px);
-             background-size: 44px 44px; background-position: 11px 11px; }
-    .sheet .edge { position: absolute; left: 0; right: 0; bottom: 0; height: 6px; }
-    /* whiteboard: Excalidraw's canvas — white with a faint dot grid */
-    .board { position: absolute; inset: 0; background-color: #fff;
-             background-image: radial-gradient(circle, rgba(30,30,30,.16) 2px, transparent 2.6px);
-             background-size: 44px 44px; background-position: 11px 11px; }
-    /* free strokes over her footage need to survive a busy background */
-    .over-plate .dr, .over-plate .hand { filter: drop-shadow(0 2px 5px rgba(0,0,0,.35)); }
-    .wbox { position: absolute; }
-    .num { font-family: "GSans", sans-serif; font-weight: 700; letter-spacing: -0.04em; color: #202124; }
+    /* captions — exactly as before §00 (her call 2026-10-21, over the boxed
+       phrases of the spec): kit.py's rail, word by word, upper case */
+    #scrim { position: absolute; left: 20px; top: 1247px; width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png"); background-size: 100% 100%;
+             background-repeat: no-repeat; opacity: 0; visibility: hidden; pointer-events: none; }
+    .wc { position: absolute; left: 0; width: 1080px; top: 1413px; height: 118px;
+          line-height: 118px; text-align: center; color: #fff;
+          font-family: "ProductSans", system-ui, sans-serif; font-size: 90px; font-weight: 900;
+          letter-spacing: -0.015em; white-space: nowrap; opacity: 0; visibility: hidden; }
+    .wc.inv { color: #241919; }
+    /* §00.2 boxed phrase captions (spec; not in use — see .wc) */
+    #caps { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+            pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; display: flex;
+           justify-content: center; opacity: 0; visibility: hidden; }
+    .cap .box { display: inline-block; max-width: 720px; text-align: center;
+                background: rgba(255,255,255,.94); border-radius: 28px; padding: 16px 30px;
+                font-weight: 500; font-size: 54px; line-height: 1.25; letter-spacing: -0.01em;
+                color: #241919; box-shadow: 0 2px 10px rgba(36,25,25,.10);
+                text-wrap: balance; }
+    .cap .k { position: relative; display: inline-block; padding: 0 .32em; }
+    .cap .kb { position: absolute; inset: 0; border-radius: 999px; background: #7A1424;
+               opacity: 0; }
+    .cap .kt { position: relative; }
 
+    /* the running list: a number badge on a plain white card (her note: no glass around it) */
+    .shuf .chip b.n { width: 50px; height: 50px; border-radius: 50%; background: #7A1424; color: #fff;
+                      display: inline-flex; align-items: center; justify-content: center; font-size: 30px;
+                      font-weight: 700; margin-left: -8px; }
+    .shuf .chip.ic { padding: 22px; }
+    .shuf .chip.ic svg { display: block; }
+    .glass .hd { display: flex; align-items: center; gap: 14px; font-size: 28px; font-weight: 700;
+                 color: #241919; margin-bottom: 14px; }
+    .glass .hd small { font-weight: 500; color: #574142; font-size: 24px; margin-left: auto; }
 
-.hide { opacity: 0; visibility: hidden; }
-.sk .sf { opacity: 0; visibility: hidden; }
-.ab { position: absolute; }
-.av { position: absolute; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
-      font-family: "GSans", sans-serif; font-weight: 700; font-size: 30px; color: #fff; }
-.lbl { font-family: "GSans", sans-serif; font-size: 26px; font-weight: 700; letter-spacing: .14em;
-       color: #5f6368; text-transform: uppercase; position: absolute; }
-.field { position: absolute; border-radius: 16px; border: 2px solid #747775; background: #fff; }
-.field .fl { position: absolute; left: 22px; top: -20px; background: #fff; padding: 0 10px;
-             font-family: "GSans", sans-serif; font-size: 28px; color: #0b57d0; font-weight: 500; }
-.row { position: absolute; display: flex; align-items: center; gap: 26px; font-family: "GSans", sans-serif; }
-.bpill { position: absolute; height: 96px; padding: 0 34px; font-size: 38px; font-weight: 700; }
-.dot { display: inline-block; width: 30px; height: 30px; border-radius: 50%; }
-.hd { position: absolute; left: 122px; top: 34px; font-size: 34px; font-weight: 700; }
-.hs { position: absolute; left: 122px; top: 76px; font-size: 24px; color: #5f6368; }
-.sep { position: absolute; left: 0; right: 0; top: 124px; height: 2px; background: #e8eaed; }
-.idx { position: absolute; width: 300px; height: 190px; background: #fff; border-radius: 14px;
-       box-shadow: 0 10px 24px rgba(0,0,0,.18), 0 2px 5px rgba(0,0,0,.12); }
-.fc { position: absolute; width: 180px; height: 140px; background: #fff; border-radius: 16px;
-      box-shadow: var(--e3); display: grid; place-items: center; font-family: "GSans", sans-serif;
-      font-size: 31px; font-weight: 700; color: #202124; }
-.fc .bk { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 16px;
-          background: #d3e3fd; color: #041e49; }
-.st { position: absolute; left: 60px; width: 900px; height: 84px; display: flex; align-items: center; gap: 24px;
-      border-bottom: 2px solid #e8eaed; font-family: "GSans", sans-serif; font-size: 38px; color: #202124; }
-.st .av { position: relative; width: 58px; height: 58px; font-size: 26px; }
-.st .nm { flex: 1; }
-.st .chip { height: 60px; font-size: 28px; padding: 0 22px; }
-.node { position: absolute; height: 74px; padding: 0 26px; border-radius: 18px; background: #fff;
-        border: 3px solid #1e1e1e; display: flex; align-items: center; font-family: "GSans", sans-serif;
-        font-size: 30px; font-weight: 500; color: #202124; }
-.lv { display: inline-grid; place-items: center; width: 70px; height: 52px; border-radius: 12px;
-      font-family: "GSans", sans-serif; font-size: 26px; font-weight: 700; color: #fff; }
+    #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
+    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
+    #win { position: absolute; left: 0; top: 0; width: 800px; height: 560px; background: #FAF9F5;
+           border-radius: 18px; font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
+           box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22); will-change: transform; }
+    #win > div { position: absolute; }
+    .cm { fill: #D97757; }
+    .c-top { left: 22px; top: 18px; display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 500; }
+    .qz { display: inline-flex; width: 26px; height: 26px; border-radius: 7px; background: #4255FF; color: #fff;
+          font-style: normal; font-size: 15px; font-weight: 700; align-items: center; justify-content: center; }
+    .c-menu { left: 40px; top: 300px; width: 290px; background: #fff; border-radius: 14px; padding: 10px;
+              box-shadow: 0 6px 24px rgba(0,0,0,.14); }
+    .c-mt { font-size: 12px; color: #6b6b6b; padding: 4px 8px 6px; }
+    .c-row { display: flex; align-items: center; gap: 10px; font-size: 16px; padding: 8px; border-radius: 8px; position: relative; }
+    .c-row i { width: 26px; height: 26px; border-radius: 7px; font-style: normal; font-size: 14px; font-weight: 700;
+               display: inline-flex; align-items: center; justify-content: center; }
+    .c-row em { position: absolute; right: 10px; top: 13px; width: 32px; height: 18px; border-radius: 9px; background: #C4C7C5; }
+    .c-row em u { position: absolute; left: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
+    .c-inp { left: 40px; top: 446px; width: 720px; height: 82px; background: #fff; border: 1px solid #E3DED6;
+             border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+    .c-plus { position: absolute; left: 14px; top: 24px; width: 34px; height: 34px; border-radius: 50%;
+              border: 1px solid #DDD; text-align: center; line-height: 32px; font-size: 22px; color: #555; }
+    .c-txt { position: absolute; left: 62px; top: 28px; width: 590px; font-size: 18px; color: #1f1f1f; white-space: nowrap; overflow: hidden; }
+    #typ { display: inline-block; clip-path: inset(0 100% 0 0); }
+    .c-send { position: absolute; right: 14px; top: 22px; width: 38px; height: 38px; border-radius: 10px;
+              background: #D97757; color: #fff; text-align: center; line-height: 38px; font-size: 20px; font-weight: 700; }
+    .c-ans { left: 40px; top: 74px; width: 720px; }
+    .c-ah { display: flex; align-items: center; gap: 10px; font-size: 18px; margin-bottom: 14px; }
+    .c-set { background: #fff; border: 1px solid #E3DED6; border-radius: 16px; padding: 18px 20px; width: 480px; }
+    .c-sh { display: flex; align-items: center; gap: 10px; font-size: 18px; margin-bottom: 14px; }
+    .c-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .c-mini span { border: 1px solid #E6E8F0; border-radius: 10px; padding: 14px 12px; font-size: 16px; text-align: center;
+                   box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+    .c-btn { display: inline-block; background: #4255FF; color: #fff; border-radius: 22px; padding: 10px 22px; font-size: 15px; font-weight: 500; }
+    .qcard { position: absolute; left: 190px; top: 560px; width: 700px; height: 440px; transform-style: preserve-3d; }
+    .qcard > div { position: absolute; inset: 0; background: #fff; border-radius: 36px; backface-visibility: hidden;
+                   display: flex; align-items: center; justify-content: center; font-family: "Google Sans", sans-serif;
+                   font-size: 76px; font-weight: 500; color: #241919; text-align: center; padding: 0 40px;
+                   box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22); }
+    .qcard .qb { transform: rotateY(180deg); font-size: 64px; }
+    .qcard small { position: absolute; left: 34px; top: 26px; font-size: 26px; color: #4255FF; font-weight: 700; }
 
-    .ground { clip-path: path('M 883.2 0 c 36.293 0 54.439 0 70.765 8.318 a 68 68 0 0 1 29.717 29.717 c 8.318 16.325 8.318 34.472 8.318 70.765 L 992 1683.2 c 0 36.293 0 54.439 -8.318 70.765 a 68 68 0 0 1 -29.717 29.717 c -16.325 8.318 -34.472 8.318 -70.765 8.318 L 108.8 1792 c -36.293 0 -54.439 0 -70.765 -8.318 a 68 68 0 0 1 -29.717 -29.717 c -8.318 -16.325 -8.318 -34.472 -8.318 -70.765 L 0 108.8 c 0 -36.293 0 -54.439 8.318 -70.765 a 68 68 0 0 1 29.717 -29.717 c 16.325 -8.318 34.472 -8.318 70.765 -8.318 Z'); }
+    .hr { display: flex; align-items: center; gap: 18px; font-size: 32px; font-weight: 500; color: #241919;
+          padding: 9px 12px; border-top: 1px solid rgba(36,25,25,.08); border-radius: 14px; }
+    .hr span { flex: 1; }
+    .cb { width: 34px; height: 34px; border-radius: 9px; border: 3px solid #574142; position: relative; flex: none; }
+    .hr em { font-style: normal; font-size: 26px; color: #574142; opacity: 0; }
+    .hr em.wait { color: #7A1424; font-weight: 700; }
+    .tick { position: absolute; left: 4px; top: -2px; width: 22px; height: 12px; border-left: 5px solid #fff;
+            border-bottom: 5px solid #fff; transform: rotate(-45deg); transform-origin: 50% 50%; }
+
+    .q { font-size: 32px; color: #241919; margin-bottom: 14px; }
+    .opts { display: flex; gap: 12px; }
+    .opts span { font-size: 28px; padding: 8px 20px; border-radius: 14px; border: 2px solid #DEBFBF; background: rgba(255,255,255,.8); }
+    .scale { display: flex; gap: 8px; margin-top: 16px; }
+    .scale span { flex: 1; text-align: center; font-size: 28px; font-weight: 700; padding: 8px 0; border-radius: 12px;
+                  background: #FFF0F0; color: #574142; }
+
+    .lead { display: flex; align-items: center; gap: 18px; background: rgba(255,255,255,.85); border-radius: 20px; padding: 14px 18px; }
+    .lead b { width: 56px; height: 56px; border-radius: 50%; background: #7A1424; flex: none; }
+    .lead span { flex: 1; font-size: 32px; font-weight: 500; color: #241919; line-height: 1.15; }
+    .lead small { font-size: 24px; color: #574142; font-weight: 400; }
+    .lead em { font-style: normal; font-size: 30px; font-weight: 700; color: #fff; background: #7A1424; border-radius: 14px; padding: 8px 16px; }
+    .tags { display: flex; gap: 12px; margin-top: 14px; }
+    .tags span { font-size: 26px; padding: 8px 18px; border-radius: 14px; border: 2px solid #DEBFBF; background: #FFF8F7; color: #574142; }
+
     </style>
   </head>
   <body>
     <div id="root" data-composition-id="main" data-start="0"
-         data-width="1080" data-height="1920" data-duration="66.117" data-fps="30">
+         data-width="1080" data-height="1920" data-duration="66.150" data-fps="30">
 
-      <div id="platebox">
       <video id="vid" class="plate" src="assets/base.mp4"
-             data-start="0" data-duration="66.117" data-media-start="0"
+             data-start="0" data-duration="66.150" data-media-start="0"
              muted playsinline></video>
+      <div id="behind" class="L">
+        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:420px; font-size:230px">Claude</div>
+        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:430px; font-size:200px">SendPulse</div>
       </div>
-<div class="g full hide" id="g1"><div class="sheet board-bg hide" id="s1" style="height:720px"><div class="lbl hide" id="s1L" style="left:80px;top:60px">якби я була викладачкою</div><div class="ab hide" id="c1" style="left:150px;top:130px"><span class="chip cr">китайська</span></div><div class="ab hide" id="c2" style="left:560px;top:130px"><span class="chip on">англійська</span></div><div class="idx" id="dk1" style="left:390px;top:300px"><svg class="sk" viewBox="0 0 300 190" width="300" height="190"><path class="dr" pathLength="1" d="M28.3 69.6 C76.3 70.5 124.4 68.7 198.5 66.4" fill="none" stroke="#9aa0a6" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M32.5 109.8 C91.0 111.4 151.0 110.6 249.8 111.8" fill="none" stroke="#9aa0a6" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M31.1 150.5 C70.3 150.7 106.4 149.4 169.1 148.6" fill="none" stroke="#9aa0a6" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="idx" id="dk2" style="left:390px;top:300px"><svg class="sk" viewBox="0 0 300 190" width="300" height="190"><path class="dr" pathLength="1" d="M30.9 69.6 C72.3 71.5 114.2 70.6 200.6 66.1" fill="none" stroke="#9aa0a6" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M32.2 110.5 C117.1 111.4 202.0 110.3 250.2 112.5" fill="none" stroke="#9aa0a6" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M30.2 150.5 C59.7 151.6 89.6 150.1 170.8 148.3" fill="none" stroke="#9aa0a6" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="idx" id="dk3" style="left:390px;top:300px"><svg class="sk" viewBox="0 0 300 190" width="300" height="190"><path class="dr" pathLength="1" d="M27.8 70.5 C87.3 70.8 144.0 70.6 198.5 68.4" fill="none" stroke="#9aa0a6" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M28.6 108.9 C80.7 107.1 131.3 106.1 249.6 111.5" fill="none" stroke="#9aa0a6" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M29.7 150.1 C65.3 151.2 100.5 151.5 168.4 147.8" fill="none" stroke="#9aa0a6" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="idx" id="dk4" style="left:390px;top:300px"><div class="hand" style="position:absolute;left:0;right:0;top:66px;text-align:center;font-size:44px">автоматизації</div><svg class="sk" id="dkU" viewBox="0 0 300 190" width="300" height="190"><path class="dr" pathLength="1" d="M51.0 132.5 C67.9 132.2 118.8 131.3 152.0 130.6 C185.1 129.9 233.6 128.6 250.0 128.2" fill="none" stroke="#4285F4" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="pill hide" id="cl0" style="left:390px;top:560px;height:90px;padding:0 34px;font-size:38px;font-weight:700"><span class="dot" style="background:#FBBC04"></span>з Claude</div><div class="gcard hide" id="app" style="left:40px;top:40px;width:1000px;height:640px"><div class="av" style="left:36px;top:30px;background:#1e1e1e">C</div><div class="gs hd">Claude</div><div class="gs hs">картки з нових слів уроку</div><div class="sep"></div><div class="row hide" id="qz" style="left:36px;top:150px;width:928px;height:96px"><span class="chip cy" style="font-weight:700">Quizlet</span><span class="gs" style="font-size:32px;color:#5f6368;flex:1">офіційний конектор</span></div><div class="tgl hide" id="qzT" style="left:860px;top:166px"><b></b></div><div class="field hide" id="wf" style="left:36px;top:280px;width:928px;height:96px"><span class="fl">Слова</span><span class="gs" id="wfT" data-text="apple, homework, teacher, school" style="position:absolute;left:28px;top:24px;font-size:36px"></span></div><div class="ab hide" id="trc" style="left:36px;top:410px"><span class="chip on">або транскрипт уроку</span></div><div class="dots hide" id="ad" style="left:430px;top:450px"><i></i><i></i><i></i><i></i></div><div class="fc hide" id="f3" style="left:800px;top:440px">teacher</div><div class="fc hide" id="f2" style="left:620px;top:430px">homework</div><div class="fc hide" id="f1" style="left:440px;top:420px"><span id="f1a">apple</span><div class="bk hide" id="f1b">яблуко</div></div><div class="av hide" id="stu" style="left:60px;top:520px;background:#34A853">У</div><div class="hand hide" id="stuT" style="position:absolute;left:140px;top:526px;font-size:44px">учень</div><svg class="sk" id="stuA" viewBox="0 0 1000 640" width="1000" height="640"><path class="dr" pathLength="1" d="M251.1 559.8 C265.8 559.7 309.7 566.2 339.6 559.5 C369.6 552.9 415.6 526.6 430.8 520.0" fill="none" stroke="#34A853" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M429.2 519.9 C424.2 527.7 419.0 534.2 415.8 539.5 M430.0 519.2 C420.8 518.3 412.1 518.5 405.5 518.9" fill="none" stroke="#34A853" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
-<div class="g full hide" id="g3"><div class="sheet hide" id="s3" style="height:760px;background:#fff"><div class="lbl" style="left:60px;top:56px">третє</div><div class="gs hide" id="s3T" style="position:absolute;left:60px;top:92px;font-size:62px;font-weight:700">Перевірка домашок</div><div class="pill hide" id="clx" style="left:60px;top:190px;height:86px;padding:0 32px;font-size:34px;font-weight:700"><span class="dot" style="background:#FBBC04"></span>Claude перевіряє сам</div><svg class="sk" id="clxS" viewBox="0 0 1080 760" width="1080" height="760"><path class="dr" pathLength="1" d="M70.9 209.9 C75.3 217.4 88.0 254.6 97.2 254.8 C106.5 255.0 117.2 210.4 126.2 211.1 C135.2 211.7 142.3 258.6 151.3 258.9 C160.2 259.2 170.4 212.6 180.0 212.8 C189.6 212.9 199.8 260.9 208.9 259.8 C218.0 258.8 225.4 206.6 234.6 206.3 C243.7 206.1 254.4 258.6 263.8 258.5 C273.2 258.4 281.9 206.5 290.7 205.9 C299.6 205.4 307.8 254.5 317.0 255.2 C326.3 255.9 337.2 210.9 346.3 210.3 C355.4 209.7 363.0 251.2 371.8 251.7 C380.6 252.2 389.7 211.9 399.1 213.3 C408.6 214.8 419.2 260.5 428.5 260.4 C437.7 260.3 445.9 213.0 454.8 212.5 C463.8 212.0 472.9 257.7 482.0 257.3 C491.0 256.9 504.5 218.1 509.0 210.2" fill="none" stroke="#EA4335" stroke-width="8.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="st hide" id="st1" style="top:300px"><span class="av" style="background:#4285F4">О</span><span class="nm">Оля</span><span class="chip cg hide" id="sc1">здано</span></div><div class="st hide" id="st2" style="top:392px"><span class="av" style="background:#EA4335">М</span><span class="nm">Марк</span><span class="chip cr hide" id="sc2">не здано</span></div><div class="st hide" id="st3" style="top:484px"><span class="av" style="background:#34A853">С</span><span class="nm">Софія</span><span class="chip cy hide" id="sc3">чекає</span></div><div class="st hide" id="st4" style="top:576px"><span class="av" style="background:#FBBC04">Д</span><span class="nm">Денис</span><span class="chip cg hide" id="sc4">здано</span></div><div class="pill hide" id="srch" style="left:460px;top:190px;width:540px;height:86px;padding:0 30px;font-size:32px"><span style="color:#5f6368">Пошук:</span><span id="srT" data-text="де домашка Марка?"></span></div><svg class="sk" id="srX" viewBox="0 0 1080 760" width="1080" height="760"><path class="dr" pathLength="1" d="M680.1 178.5 C721.5 219.5 763.1 258.9 791.4 287.2 M790.1 177.3 C757.2 211.3 724.3 243.3 678.1 288.4" fill="none" stroke="#EA4335" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="mkO" viewBox="0 0 1080 760" width="1080" height="760"><path class="dr" pathLength="1" d="M46.8 417.5 C52.0 415.5 64.8 409.3 78.1 405.5 C91.4 401.8 109.0 397.7 126.5 394.9 C143.9 392.1 162.0 391.0 182.8 388.9 C203.5 386.8 227.6 383.3 251.1 382.2 C274.5 381.0 299.9 381.4 323.4 382.2 C346.9 383.0 370.2 385.4 392.1 386.8 C414.1 388.2 435.6 388.2 455.1 390.5 C474.6 392.8 493.1 396.8 508.8 400.7 C524.6 404.5 538.9 409.3 549.6 413.6 C560.4 417.9 568.7 422.4 573.2 426.3 C577.7 430.1 578.2 432.3 576.4 436.5 C574.7 440.6 570.5 447.0 562.8 451.2 C555.1 455.4 544.1 457.6 530.3 461.6 C516.5 465.7 498.9 472.5 480.2 475.7 C461.6 478.8 440.0 479.2 418.4 480.7 C396.7 482.2 374.2 483.9 350.4 484.7 C326.6 485.5 299.6 486.0 275.5 485.6 C251.4 485.2 228.2 483.9 205.6 482.2 C182.9 480.4 159.8 477.5 139.5 475.1 C119.2 472.6 99.9 471.2 83.9 467.7 C67.8 464.2 53.9 458.0 43.2 454.3 C32.5 450.6 24.1 450.1 19.4 445.5 C14.7 441.0 12.8 432.3 14.8 427.0 C16.9 421.7 23.6 417.6 31.7 413.8 C39.8 410.0 49.7 407.5 63.6 404.2 C77.5 401.0 106.6 395.9 115.2 394.3" fill="none" stroke="#EA4335" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="okC" viewBox="0 0 1080 760" width="1080" height="760"><path class="dr" pathLength="1" d="M860.8 114.4 C867.3 121.3 881.9 164.8 899.9 155.8 C917.9 146.9 957.2 76.5 968.7 60.7" fill="none" stroke="#34A853" stroke-width="12.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="okT" style="position:absolute;left:820px;top:640px;font-size:54px;color:#34A853">можна!</div></div></div>
-<div class="g full hide" id="g5"><div class="sheet hide" id="s5" style="height:640px;background:#fff"><div class="gcard flat" style="left:110px;top:60px;width:860px;height:520px"><div class="av" style="left:30px;top:26px;background:#EA4335">R</div><div class="gs hd" style="left:112px;top:40px">reel</div><div class="ab" style="left:30px;top:110px;width:800px;height:220px;border-radius:18px;background:#f1f3f4"></div><div class="hand" style="position:absolute;left:60px;top:160px;font-size:52px">автоматизації</div><div class="hand" style="position:absolute;left:60px;top:226px;font-size:52px">для викладачки мови</div><svg class="sk" id="icons" viewBox="0 0 860 520" width="860" height="520"><g transform="translate(-60,270)"><path class="dr" pathLength="1" d="M150 92 C 130 62, 92 78, 100 108 C 106 128, 150 156, 150 156 C 150 156, 194 128, 200 108 C 208 78, 170 62, 150 92" fill="none" stroke="#1e1e1e" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M300 120 C 300 88, 324 70, 350 70 C 378 70, 400 90, 400 116 C 400 144, 376 162, 350 162 C 340 162, 330 160, 322 156 L 298 164 L 306 142 C 302 136, 300 128, 300 120" fill="none" stroke="#1e1e1e" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M460 76 L 560 76 L 500 160 L 492 110 L 460 76 M 492 110 L 560 76" fill="none" stroke="#1e1e1e" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></g></svg><svg class="sk" viewBox="0 0 860 520" width="860" height="520"><path id="bmF" d="M745 345 L 805 345 L 805 435 L 775 410 L 745 435 Z" fill="#1e1e1e" opacity="0"/></svg><svg class="sk" id="bm" viewBox="0 0 860 520" width="860" height="520"><path class="dr" pathLength="1" d="M745 345 L 805 345 L 805 435 L 775 410 L 745 435 Z" fill="none" stroke="#1e1e1e" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="bmT" style="position:absolute;left:690px;top:450px;font-size:38px">зберегти</div><div class="hand hide" id="shT" style="position:absolute;left:370px;top:450px;font-size:38px">переслати</div></div><div class="pill hide" id="share" style="left:250px;top:200px;height:110px;padding:0 20px 0 18px;font-size:36px;font-weight:700"><span class="av" style="position:relative;background:#34A853">К</span>Колега<span class="chip on" style="height:64px;font-size:30px">Надіслати</span></div></div></div>
-<div class="g full hide" id="g2"><div class="sheet board-bg hide" id="s2" style="height:930px"><div class="lbl" style="left:70px;top:50px">друге</div><div class="hand hide" id="s2T" style="position:absolute;left:66px;top:82px;font-size:76px">Щоденник помилок</div><svg class="sk" id="s2U" viewBox="0 0 1080 930" width="1080" height="930"><path class="dr" pathLength="1" d="M69.0 182.4 C115.5 182.6 254.4 184.1 348.0 183.4 C441.6 182.8 583.4 179.3 630.4 178.5" fill="none" stroke="#EA4335" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="pill bpill hide" id="pf" style="left:60px;top:232px"><span class="dot" style="background:#EA4335"></span>Fathom</div><div class="hand hide" id="pfT" style="position:absolute;left:76px;top:338px;font-size:40px;color:#EA4335">запис уроку</div><svg class="sk" id="a1" viewBox="0 0 1080 930" width="1080" height="930"><path class="dr" pathLength="1" d="M340.1 280.7 C356.6 277.4 405.7 261.2 439.1 261.0 C472.4 260.7 523.4 276.3 540.2 279.4" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M540.0 280.4 C533.5 281.4 528.5 283.3 510.6 288.4 M539.7 279.2 C532.8 273.0 523.9 268.4 516.1 260.5" fill="none" stroke="#4285F4" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="a1T" style="position:absolute;left:330px;top:300px;font-size:38px;color:#4285F4">транскрипт</div><svg class="sk" id="cE" viewBox="0 0 1080 930" width="1080" height="930"><path class="sf" d="M751.2 211.7 C779.8 226.0 784.6 231.9 789.5 236.9 C794.3 241.9 799.2 246.2 802.5 251.7 C805.7 257.2 807.6 263.5 808.8 269.7 C809.9 275.9 810.0 283.1 809.4 289.0 C808.9 294.8 807.7 299.2 805.4 304.7 C803.1 310.1 799.8 315.8 795.5 321.6 C791.1 327.3 785.7 334.6 779.3 339.4 C772.9 344.1 765.0 347.1 757.1 350.2 C749.3 353.2 740.2 355.9 732.1 357.8 C724.0 359.7 716.7 360.4 708.5 361.5 C700.2 362.7 691.2 364.8 682.4 364.7 C673.7 364.6 664.6 362.6 655.8 360.9 C647.0 359.2 637.6 357.4 629.6 354.4 C621.7 351.4 614.9 346.8 608.2 342.7 C601.5 338.5 594.5 335.0 589.3 329.5 C584.1 324.1 580.1 315.8 577.1 310.1 C574.1 304.4 572.3 301.1 571.3 295.5 C570.3 290.0 570.5 282.8 571.0 276.7 C571.4 270.5 571.1 264.6 573.9 258.5 C576.7 252.4 582.9 245.3 587.7 240.1 C592.5 234.9 597.2 231.8 602.7 227.3 C608.3 222.9 613.8 217.4 620.9 213.6 C628.0 209.8 636.5 206.9 645.3 204.6 C654.2 202.2 664.6 200.2 673.8 199.6 C683.1 198.9 692.1 199.8 700.9 200.7 C709.7 201.5 718.3 203.0 726.7 204.8 C735.1 206.7 743.4 208.8 751.2 211.7 C759.0 214.5 767.0 217.6 773.4 221.8 C779.8 226.0 784.6 231.9 789.5 236.9" fill="#ffec99" stroke="none"/><path class="dr" pathLength="1" d="M751.2 211.7 C779.8 226.0 784.6 231.9 789.5 236.9 C794.3 241.9 799.2 246.2 802.5 251.7 C805.7 257.2 807.6 263.5 808.8 269.7 C809.9 275.9 810.0 283.1 809.4 289.0 C808.9 294.8 807.7 299.2 805.4 304.7 C803.1 310.1 799.8 315.8 795.5 321.6 C791.1 327.3 785.7 334.6 779.3 339.4 C772.9 344.1 765.0 347.1 757.1 350.2 C749.3 353.2 740.2 355.9 732.1 357.8 C724.0 359.7 716.7 360.4 708.5 361.5 C700.2 362.7 691.2 364.8 682.4 364.7 C673.7 364.6 664.6 362.6 655.8 360.9 C647.0 359.2 637.6 357.4 629.6 354.4 C621.7 351.4 614.9 346.8 608.2 342.7 C601.5 338.5 594.5 335.0 589.3 329.5 C584.1 324.1 580.1 315.8 577.1 310.1 C574.1 304.4 572.3 301.1 571.3 295.5 C570.3 290.0 570.5 282.8 571.0 276.7 C571.4 270.5 571.1 264.6 573.9 258.5 C576.7 252.4 582.9 245.3 587.7 240.1 C592.5 234.9 597.2 231.8 602.7 227.3 C608.3 222.9 613.8 217.4 620.9 213.6 C628.0 209.8 636.5 206.9 645.3 204.6 C654.2 202.2 664.6 200.2 673.8 199.6 C683.1 198.9 692.1 199.8 700.9 200.7 C709.7 201.5 718.3 203.0 726.7 204.8 C735.1 206.7 743.4 208.8 751.2 211.7 C759.0 214.5 767.0 217.6 773.4 221.8 C779.8 226.0 784.6 231.9 789.5 236.9" fill="none" stroke="#1e1e1e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M788.1 237.0 C804.7 257.5 806.4 265.9 808.2 271.5 C810.1 277.2 813.0 279.6 812.4 285.6 C811.9 291.6 808.1 301.5 805.0 307.5 C801.9 313.5 798.7 317.2 793.7 321.8 C788.7 326.4 781.5 330.5 775.1 335.1 C768.7 339.7 762.4 345.6 755.5 349.4 C748.6 353.1 741.2 354.8 733.7 357.5 C726.2 360.1 718.7 364.1 710.4 365.3 C702.1 366.5 693.1 365.0 683.7 364.5 C674.3 364.0 662.5 364.7 654.0 362.3 C645.5 359.9 640.4 354.1 632.7 350.3 C625.0 346.5 615.3 343.3 608.0 339.4 C600.7 335.4 593.7 330.7 588.7 326.4 C583.6 322.1 580.8 319.3 577.7 313.5 C574.6 307.8 571.2 298.5 570.1 291.7 C568.9 284.9 569.8 278.4 570.7 272.7 C571.7 267.1 573.1 262.7 575.6 257.8 C578.2 253.0 581.8 248.5 586.0 243.6 C590.3 238.7 595.0 233.4 601.2 228.6 C607.5 223.7 616.3 218.2 623.7 214.7 C631.0 211.1 637.2 209.4 645.4 207.5 C653.5 205.6 664.0 204.7 672.6 203.3 C681.2 201.9 688.5 199.3 696.9 199.1 C705.3 198.9 713.7 200.0 722.9 202.0 C732.1 204.0 743.9 208.4 752.2 211.2 C760.4 214.1 766.5 214.9 772.5 219.2 C778.5 223.5 783.3 231.6 788.1 237.0 C792.9 242.4 798.0 246.0 801.3 251.8 C804.7 257.5 806.4 265.9 808.2 271.5" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="gs hide" id="cT" style="position:absolute;left:570px;top:258px;width:240px;text-align:center;font-size:42px;font-weight:700">Claude</div><div class="ab hide" id="skl" style="left:840px;top:246px"><span class="chip on">скіл</span></div><svg class="sk" id="a2" viewBox="0 0 1080 930" width="1080" height="930"><path class="dr" pathLength="1" d="M640.1 370.9 C613.6 379.1 532.8 403.5 480.9 419.9 C429.1 436.3 354.3 461.2 329.0 469.5" fill="none" stroke="#1e1e1e" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M329.8 469.7 C337.3 462.1 344.5 455.8 351.4 447.9 M329.2 470.7 C337.1 471.2 345.1 471.9 360.5 474.7" fill="none" stroke="#1e1e1e" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="paper hide" id="pE" style="left:70px;top:480px;width:420px;height:220px"><div class="hand" style="position:absolute;left:26px;top:14px;font-size:44px">помилки учня</div><div class="gs" style="position:absolute;left:30px;top:96px;font-size:36px">I goed</div><div class="gs hide" id="pEf" style="position:absolute;left:30px;top:150px;font-size:36px;color:#188038">→ I went</div><svg class="sk" id="pEx" viewBox="0 0 420 220" width="420" height="220"><path class="dr" pathLength="1" d="M22.8 120.3 C54.1 119.8 86.8 119.5 151.5 119.6" fill="none" stroke="#EA4335" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div><svg class="sk" id="a3" viewBox="0 0 1080 930" width="1080" height="930"><path class="dr" pathLength="1" d="M498.6 589.7 C514.8 589.7 528.0 589.5 561.7 588.5" fill="none" stroke="#1e1e1e" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M560.1 590.8 C552.6 594.0 543.8 598.4 540.7 601.3 M560.3 589.3 C554.7 586.3 547.7 584.0 540.0 578.9" fill="none" stroke="#1e1e1e" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="paper hide" id="pV" style="left:580px;top:480px;width:430px;height:220px"><div class="hand" style="position:absolute;left:26px;top:14px;font-size:44px">вправи</div><svg class="sk" id="pVL" viewBox="0 0 430 220" width="430" height="220"><path class="dr" pathLength="1" d="M28.3 87.8 C38.2 87.8 50.6 88.9 59.0 87.9 M57.7 87.5 C58.8 95.3 58.6 104.3 59.0 117.7 M58.9 118.4 C51.7 119.0 45.2 118.2 28.2 117.7 M27.2 118.9 C28.3 109.6 28.8 102.5 28.7 87.8" fill="none" stroke="#1e1e1e" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M29.1 88.4 C36.2 88.5 41.9 88.6 57.2 88.9 M59.1 87.7 C58.1 98.9 58.8 111.8 59.0 119.0 M58.7 118.1 C49.0 118.8 43.1 117.0 28.7 117.4 M28.5 119.0 C28.5 107.5 28.2 97.3 27.3 88.7" fill="none" stroke="#1e1e1e" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M72.5 103.3 C148.7 103.7 225.3 102.9 301.5 101.4" fill="none" stroke="#9aa0a6" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M28.5 135.6 C36.9 135.7 48.3 135.4 56.9 137.1 M58.9 137.0 C57.6 146.2 57.7 156.3 57.6 165.0 M58.0 165.7 C48.1 165.3 37.6 167.2 26.9 166.6 M27.0 166.3 C27.3 156.7 27.8 144.7 28.9 135.3" fill="none" stroke="#1e1e1e" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M27.9 136.6 C37.8 135.9 49.5 136.4 58.4 136.1 M58.7 136.6 C57.9 142.9 57.6 151.2 58.7 165.4 M57.8 167.2 C50.6 165.6 42.9 166.9 28.3 166.8 M28.6 164.9 C29.2 159.1 28.8 151.2 28.3 136.0" fill="none" stroke="#1e1e1e" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M73.8 152.5 C130.3 150.9 185.9 152.2 260.7 151.4" fill="none" stroke="#9aa0a6" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="pVT" style="position:absolute;left:150px;top:172px;font-size:34px;color:#4285F4">на наступний урок</div></div><div class="pill bpill hide" id="pn" style="left:90px;top:760px"><span class="dot" style="background:#1e1e1e"></span>Notion</div><svg class="sk" id="a4" viewBox="0 0 1080 930" width="1080" height="930"><path class="dr" pathLength="1" d="M400.5 807.5 C413.6 806.3 452.4 800.2 479.0 800.3 C505.6 800.5 546.5 807.0 560.0 808.3" fill="none" stroke="#34A853" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M560.4 808.6 C552.3 810.2 544.8 813.7 533.1 820.1 M559.5 807.6 C553.0 803.3 547.6 800.4 534.5 791.5" fill="none" stroke="#34A853" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="paper hide" id="pK" style="left:580px;top:730px;width:430px;height:150px"><div class="av" style="left:26px;top:20px;background:#4285F4">О</div><div class="gs" style="position:absolute;left:108px;top:28px;font-size:36px;font-weight:700">Оля</div><div class="hand" style="position:absolute;left:108px;top:76px;font-size:38px">картка учня</div></div></div></div>
-<div class="g full hide" id="g4"><div class="sheet board-bg hide" id="s4" style="height:930px"><div class="lbl" style="left:70px;top:50px">четверте</div><div class="hand hide" id="s4T" style="position:absolute;left:66px;top:82px;font-size:76px">Тест на рівень</div><svg class="sk" id="s4U" viewBox="0 0 1080 930" width="1080" height="930"><path class="dr" pathLength="1" d="M71.7 181.8 C110.3 182.4 225.0 185.7 303.2 185.2 C381.4 184.7 501.3 180.0 540.9 178.9" fill="none" stroke="#4285F4" stroke-width="7.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="s4N" style="position:absolute;left:640px;top:104px;font-size:46px;color:#4285F4">для нових учнів</div><svg class="sk" id="c4E" viewBox="0 0 1080 930" width="1080" height="930"><path class="sf" d="M78.9 374.4 C65.3 354.1 61.1 346.2 59.8 340.1 C58.5 334.0 59.4 329.4 60.6 323.4 C61.7 317.3 64.3 309.5 66.7 303.8 C69.1 298.1 70.6 294.4 75.0 289.2 C79.5 284.0 87.6 277.3 93.6 272.8 C99.7 268.3 104.4 265.3 111.4 262.2 C118.4 259.1 127.5 256.2 135.8 254.1 C144.1 252.0 153.0 250.1 161.2 249.5 C169.4 249.0 176.4 249.7 184.8 250.9 C193.3 252.1 204.1 254.0 212.0 256.5 C219.9 259.0 225.6 262.8 232.0 265.9 C238.4 269.1 244.5 270.9 250.4 275.4 C256.2 279.9 262.9 287.6 267.4 293.2 C271.8 298.8 274.7 303.1 276.9 308.9 C279.2 314.8 280.7 322.3 280.7 328.5 C280.7 334.7 278.9 340.0 277.2 346.2 C275.4 352.3 273.9 359.8 270.3 365.3 C266.7 370.7 260.7 374.1 255.4 378.8 C250.2 383.6 245.3 389.9 238.9 393.7 C232.4 397.5 224.2 399.1 216.8 401.6 C209.4 404.2 202.8 408.0 194.3 409.2 C185.7 410.4 174.6 409.0 165.6 408.9 C156.6 408.7 148.3 409.4 140.2 408.3 C132.1 407.1 124.0 405.0 116.9 402.0 C109.8 398.9 103.9 394.7 97.6 390.1 C91.3 385.5 83.8 379.5 78.9 374.4 C74.1 369.4 71.7 365.5 68.5 359.8 C65.3 354.1 61.1 346.2 59.8 340.1" fill="#ffec99" stroke="none"/><path class="dr" pathLength="1" d="M78.9 374.4 C65.3 354.1 61.1 346.2 59.8 340.1 C58.5 334.0 59.4 329.4 60.6 323.4 C61.7 317.3 64.3 309.5 66.7 303.8 C69.1 298.1 70.6 294.4 75.0 289.2 C79.5 284.0 87.6 277.3 93.6 272.8 C99.7 268.3 104.4 265.3 111.4 262.2 C118.4 259.1 127.5 256.2 135.8 254.1 C144.1 252.0 153.0 250.1 161.2 249.5 C169.4 249.0 176.4 249.7 184.8 250.9 C193.3 252.1 204.1 254.0 212.0 256.5 C219.9 259.0 225.6 262.8 232.0 265.9 C238.4 269.1 244.5 270.9 250.4 275.4 C256.2 279.9 262.9 287.6 267.4 293.2 C271.8 298.8 274.7 303.1 276.9 308.9 C279.2 314.8 280.7 322.3 280.7 328.5 C280.7 334.7 278.9 340.0 277.2 346.2 C275.4 352.3 273.9 359.8 270.3 365.3 C266.7 370.7 260.7 374.1 255.4 378.8 C250.2 383.6 245.3 389.9 238.9 393.7 C232.4 397.5 224.2 399.1 216.8 401.6 C209.4 404.2 202.8 408.0 194.3 409.2 C185.7 410.4 174.6 409.0 165.6 408.9 C156.6 408.7 148.3 409.4 140.2 408.3 C132.1 407.1 124.0 405.0 116.9 402.0 C109.8 398.9 103.9 394.7 97.6 390.1 C91.3 385.5 83.8 379.5 78.9 374.4 C74.1 369.4 71.7 365.5 68.5 359.8 C65.3 354.1 61.1 346.2 59.8 340.1" fill="none" stroke="#1e1e1e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M61.9 340.5 C62.7 315.0 63.2 307.9 65.2 302.6 C67.2 297.4 70.0 294.1 74.4 289.7 C78.9 285.3 86.1 280.3 92.0 276.1 C97.9 272.0 103.1 268.2 109.9 264.7 C116.8 261.2 124.3 257.7 133.0 255.4 C141.7 253.1 153.7 251.5 162.2 251.0 C170.8 250.4 175.8 251.2 184.2 252.2 C192.7 253.3 205.2 255.7 213.1 257.4 C221.0 259.1 224.9 259.4 231.7 262.5 C238.6 265.7 248.9 271.2 254.4 276.3 C260.0 281.4 262.0 288.0 265.3 293.0 C268.6 298.0 271.8 300.6 274.3 306.2 C276.9 311.9 280.5 320.0 280.8 326.9 C281.0 333.8 278.0 341.5 275.9 347.7 C273.7 353.9 271.4 358.8 267.9 364.2 C264.4 369.7 259.5 375.2 254.8 380.1 C250.0 385.1 245.6 390.5 239.4 394.0 C233.1 397.5 224.8 398.8 217.5 401.3 C210.1 403.7 203.3 406.9 195.4 408.7 C187.4 410.4 178.8 411.7 169.6 411.8 C160.4 411.9 149.1 411.1 140.2 409.3 C131.3 407.5 123.0 404.3 116.1 400.8 C109.2 397.4 104.7 393.2 98.8 388.6 C92.9 384.1 86.1 378.7 80.7 373.4 C75.4 368.1 69.9 362.5 66.7 357.0 C63.6 351.5 62.6 346.5 61.9 340.5 C61.1 334.6 61.6 327.7 62.2 321.4 C62.7 315.0 63.2 307.9 65.2 302.6" fill="none" stroke="#1e1e1e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="gs hide" id="c4T" style="position:absolute;left:60px;top:306px;width:220px;text-align:center;font-size:40px;font-weight:700">Claude</div><svg class="sk" id="b1" viewBox="0 0 1080 930" width="1080" height="930"><path class="dr" pathLength="1" d="M290.9 310.3 C297.4 308.6 318.4 301.8 329.8 300.0 C341.1 298.3 354.3 299.8 359.2 299.7" fill="none" stroke="#1e1e1e" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M359.8 299.9 C353.8 304.0 348.9 306.1 341.2 309.7 M359.5 299.0 C352.8 297.3 346.0 293.4 340.7 288.7" fill="none" stroke="#1e1e1e" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="paper hide" id="qP" style="left:370px;top:230px;width:340px;height:210px"><div class="hand" style="position:absolute;left:24px;top:12px;font-size:42px">питання</div><div class="gs" style="position:absolute;left:24px;top:84px;font-size:32px">She ___ to school.</div><div class="row" style="left:24px;top:140px;gap:12px"><span class="chip" style="height:50px;font-size:26px;padding:0 16px">go</span><span class="chip on" style="height:50px;font-size:26px;padding:0 16px">goes</span><span class="chip" style="height:50px;font-size:26px;padding:0 16px">going</span></div></div><div class="paper hide" id="sP" style="left:730px;top:230px;width:290px;height:210px"><div class="hand" style="position:absolute;left:24px;top:12px;font-size:42px">шкала</div><div class="ab" style="left:20px;top:90px;width:260px;display:flex;flex-wrap:wrap;gap:10px"><span class="lv" style="background:#34A853">A1</span><span class="lv" style="background:#34A853">A2</span><span class="lv" style="background:#4285F4">B1</span><span class="lv" style="background:#4285F4">B2</span><span class="lv" style="background:#EA4335">C1</span></div></div><div class="pill bpill hide" id="psp" style="left:60px;top:490px"><span class="dot" style="background:#34A853"></span>SendPulse</div><div class="ab hide" id="bk" style="left:470px;top:502px"><span class="chip cg">без коду</span></div><div class="node hide" id="n1" style="left:60px;top:620px">старт</div><div class="node hide" id="n2" style="left:290px;top:620px">питання</div><div class="node hide" id="n3" style="left:560px;top:620px">результат</div><svg class="sk" id="na1" viewBox="0 0 1080 930" width="1080" height="930"><path class="dr" pathLength="1" d="M199.4 655.4 C215.6 656.5 233.8 656.2 279.2 655.5" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M279.8 657.5 C275.4 658.5 271.3 661.0 264.9 664.9 M279.3 657.3 C273.9 655.1 269.2 652.4 263.6 649.1" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="na2" viewBox="0 0 1080 930" width="1080" height="930"><path class="dr" pathLength="1" d="M469.0 656.5 C490.6 656.6 509.4 656.3 550.6 657.3" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M550.1 656.5 C545.3 660.2 542.4 661.9 535.0 665.8 M550.5 657.5 C544.4 654.6 540.3 651.0 533.2 649.3" fill="none" stroke="#1e1e1e" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="sk" id="na3" viewBox="0 0 1080 930" width="1080" height="930"><path class="dr" pathLength="1" d="M799.7 660.8 C816.6 663.9 884.4 667.5 901.2 679.2 C917.9 691.0 900.4 722.5 900.2 731.1" fill="none" stroke="#34A853" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr ah" pathLength="1" d="M900.9 729.8 C896.9 723.8 893.4 718.6 890.2 710.4 M899.0 730.1 C903.1 724.4 906.4 718.8 909.9 710.2" fill="none" stroke="#34A853" stroke-width="5.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="gcard hide" id="crm" style="left:620px;top:745px;width:400px;height:140px"><span class="chip cy" style="position:absolute;left:20px;top:16px;height:52px;font-size:28px;font-weight:700">CRM</span><div class="gs" style="position:absolute;left:20px;top:84px;font-size:30px">нова учениця · <b style="color:#4285F4">B1</b></div></div><svg class="sk" id="mag" viewBox="0 0 1080 930" width="1080" height="930"><path class="dr" pathLength="1" d="M90 740 L 90 790 C 90 830, 160 830, 160 790 L 160 740" fill="none" stroke="#EA4335" stroke-width="18.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M80.0 748.1 C85.2 748.2 93.2 746.7 100.2 747.0" fill="none" stroke="#1e1e1e" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round"/><path class="dr" pathLength="1" d="M149.5 749.1 C159.2 747.8 166.1 748.8 171.6 746.4" fill="none" stroke="#1e1e1e" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hand hide" id="magT" style="position:absolute;left:190px;top:746px;font-size:48px">лідмагніт</div><div class="ab hide" id="kv" style="left:70px;top:832px"><span class="chip on">кваліфікація лідів</span></div><svg class="sk" id="loop" viewBox="0 0 1080 930" width="1080" height="930"><path class="dr" pathLength="1" d="M62.3 780.6 C71.9 776.8 95.3 765.3 119.9 757.6 C144.5 749.9 175.8 740.4 209.8 734.3 C243.9 728.2 283.7 724.0 324.0 720.9 C364.4 717.8 408.3 717.3 451.9 715.9 C495.5 714.4 542.0 711.4 585.8 712.0 C629.7 712.6 672.5 716.3 714.9 719.7 C757.2 723.1 803.0 728.0 840.0 732.5 C877.1 737.0 908.1 740.5 937.2 746.9 C966.3 753.2 995.0 763.0 1014.4 770.8 C1033.8 778.7 1045.9 785.4 1053.6 793.8 C1061.4 802.2 1064.3 812.8 1060.8 821.4 C1057.3 830.0 1047.4 837.3 1032.5 845.4 C1017.6 853.4 997.3 862.8 971.5 869.9 C945.6 877.0 911.9 882.6 877.5 887.9 C843.2 893.2 806.7 897.7 765.4 901.7 C724.1 905.8 675.0 910.3 629.9 912.3 C584.7 914.4 539.7 914.5 494.4 913.9 C449.2 913.3 401.7 911.8 358.1 908.9 C314.5 906.0 271.2 901.5 232.9 896.4 C194.6 891.3 158.1 885.0 128.2 878.4 C98.3 871.8 73.2 864.9 53.4 857.0 C33.7 849.1 18.0 839.7 9.8 831.0 C1.5 822.3 -0.2 814.1 3.7 804.8 C7.6 795.5 17.9 783.9 33.4 775.1 C48.8 766.4 70.3 759.5 96.5 752.3 C122.7 745.1 174.7 735.2 190.3 731.8" fill="none" stroke="#34A853" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div id="panel">
+<svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
+      </div>
+      <video id="matte-b1" class="plate matte" src="assets/mattes/b1.webm"
+             data-start="0.000" data-duration="4.433" data-media-start="0"
+             muted playsinline></video>
+      <video id="matte-b2" class="plate matte" src="assets/mattes/b2.webm"
+             data-start="52.733" data-duration="2.400" data-media-start="0"
+             muted playsinline></video>
+      <video id="matte-half1" class="plate matte" src="assets/mattes/half1.webm"
+             data-start="20.300" data-duration="12.567" data-media-start="0"
+             muted playsinline></video>
+      <div id="front" class="L">
+        <div id="l0" class="shuf hid"><span class="chip"><b class="n">1</b>Картки з нових слів</span></div>
+        <div id="l1" class="shuf hid"><span class="chip"><b class="n">2</b>Щоденник помилок</span></div>
+        <div id="l2" class="shuf hid"><span class="chip"><b class="n">3</b>Перевірка домашок</span></div>
+        <div id="l3" class="shuf hid"><span class="chip"><b class="n">4</b>Тест на рівень</span></div>
 
+        <div id="hw" class="glass hid" style="left:190px; top:290px; width:700px; padding:22px 30px">
+          <div class="hd">Домашки<small>цей тиждень</small></div>
+          <div class="hr"><i id="c1" class="cb"></i><span>Оля</span><em id="e1">здано</em></div>
+          <div class="hr"><i id="c2" class="cb"></i><span>Марко</span><em id="e2">здано</em></div>
+          <div class="hr" id="r3"><i class="cb"></i><span>Іра</span><em id="e3" class="wait">ще не здала</em></div>
+        </div>
+
+        <div id="lt" class="glass hid" style="left:170px; top:290px; width:740px; padding:22px 30px">
+          <div class="hd">Тест на рівень</div>
+          <div class="q">She ___ to school every day.</div>
+          <div class="opts"><span>go</span><span id="ok">goes</span><span>going</span></div>
+          <div id="sc" class="scale"><span>A1</span><span>A2</span><span id="b1">B1</span><span>B2</span><span>C1</span><span>C2</span></div>
+        </div>
+
+        <div id="crm" class="glass hid" style="left:170px; top:290px; width:740px; padding:22px 30px">
+          <div class="hd">CRM<small>нові ліди</small></div>
+          <div id="ld" class="lead"><b></b><span>Нова учениця<br><small>тест на рівень</small></span><em id="lv">B1</em></div>
+          <div class="tags"><span id="tg1">лідмагніт</span><span id="tg2">кваліфікація</span></div>
+        </div>
+        <div id="ct1" class="shuf hid"><span class="chip ic"><svg width="72" height="72" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4.5L6 21z" fill="#7A1424"/></svg></span></div>
+        <div id="ct2" class="shuf hid"><span class="chip ic"><svg width="72" height="72" viewBox="0 0 24 24"><path d="M2 11.5 22 3l-8.5 19-2.6-8.1z" fill="#7A1424"/></svg></span></div>
+        <div id="ctp" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:1404px;
+             font-size:46px; padding:28px 56px">Збережи і перешли колезі</div>
+      </div>
+      <div id="cover">
+
+        <div id="stage">
+          <div id="win">
+            <div class="c-top"><svg class="cm" width="30" height="30" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><span>Claude</span></div>
+            <div id="menu" class="c-menu">
+              <div class="c-mt">Конектори</div>
+              <div id="mq" class="c-row"><i class="qz">Q</i>Quizlet<em id="tq"><u></u></em></div>
+              <div class="c-row"><i style="background:#ECE6E6;color:#574142">N</i>Notion<em><u></u></em></div>
+            </div>
+            <div id="ans" class="c-ans">
+              <div class="c-ah"><svg class="cm" width="30" height="30" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><span>Готово — сет у Quizlet</span></div>
+              <div class="c-set">
+                <div class="c-sh"><i class="qz">Q</i><b>Нові слова уроку</b></div>
+                <div class="c-mini"><span>homework</span><span>deadline</span><span>to borrow</span><span>rehearsal</span></div>
+                <div id="opn" class="c-btn">Відкрити в Quizlet</div>
+              </div>
+            </div>
+            <div id="inp" class="c-inp">
+              <div class="c-plus">+</div>
+              <div class="c-txt"><span id="typ">Зроби сет карток: homework, deadline, to borrow, rehearsal</span></div>
+              <div class="c-send">↑</div>
+            </div>
+          </div>
+          <div id="card" class="qcard"><div class="qf"><small>Quizlet</small>homework</div><div class="qb"><small>Quizlet</small>домашнє завдання</div></div>
+        </div>
+      </div>
       <div id="scrim"></div>
-      <div class="cap" id="cap0">ЯКБИ</div>
-      <div class="cap" id="cap1">Я</div>
-      <div class="cap" id="cap2">БУЛА</div>
-      <div class="cap" id="cap3">ВИКЛАДАЧКОЮ</div>
-      <div class="cap" id="cap7">ТО ОСЬ</div>
-      <div class="cap" id="cap8">ЯКІ</div>
-      <div class="cap" id="cap9">АВТОМАТИЗАЦІЇ</div>
-      <div class="cap" id="cap10">З КЛОД</div>
-      <div class="cap" id="cap11">Я</div>
-      <div class="cap" id="cap12">Б</div>
-      <div class="cap" id="cap13">СОБІ</div>
-      <div class="cap" id="cap14">НАЛАШТУВАЛА.</div>
-      <div class="cap" id="cap15">ПО-ПЕРШЕ,</div>
-      <div class="cap" id="cap16">ЦЕ</div>
-      <div class="cap" id="cap17">ЗВИЧАЙНІ</div>
-      <div class="cap" id="cap18">КАРТКИ</div>
-      <div class="cap" id="cap19">З</div>
-      <div class="cap" id="cap20">НОВИХ</div>
-      <div class="cap" id="cap21">СЛІВ</div>
-      <div class="cap" id="cap22">УРОКУ.</div>
-      <div class="cap" id="cap23">У</div>
-      <div class="cap" id="cap24">CLAUDE</div>
-      <div class="cap" id="cap25">Є</div>
-      <div class="cap" id="cap26">ОФІЦІЙНИЙ</div>
-      <div class="cap" id="cap27">КОНЕКТОР</div>
-      <div class="cap" id="cap28">QUIZLET:</div>
-      <div class="cap" id="cap29">ТИ</div>
-      <div class="cap" id="cap30">КИДАЄШ</div>
-      <div class="cap" id="cap31">СПИСОК</div>
-      <div class="cap" id="cap32">СЛІВ</div>
-      <div class="cap" id="cap33">АБО</div>
-      <div class="cap" id="cap34">ТРАНСКРИПТ</div>
-      <div class="cap" id="cap35">УРОКУ,</div>
-      <div class="cap" id="cap36">І</div>
-      <div class="cap" id="cap37">ОТРИМУЄШ</div>
-      <div class="cap" id="cap38">ГОТОВИЙ</div>
-      <div class="cap" id="cap39">СЕТ</div>
-      <div class="cap" id="cap40">КАРТОК,</div>
-      <div class="cap" id="cap41">ЯКИЙ</div>
-      <div class="cap" id="cap42">УЧЕНЬ</div>
-      <div class="cap" id="cap43">ОДРАЗУ</div>
-      <div class="cap" id="cap44">ВІДКРИВАЄ</div>
-      <div class="cap" id="cap45">В QUIZLET.</div>
-      <div class="cap" id="cap49">FATHOM</div>
-      <div class="cap" id="cap50">ЗАПИСУЄ</div>
-      <div class="cap" id="cap51">УРОК,</div>
-      <div class="cap" id="cap52">CLAUDE</div>
-      <div class="cap" id="cap53">ЧЕРЕЗ</div>
-      <div class="cap" id="cap54">КОНЕКТОР</div>
-      <div class="cap" id="cap55">ЗАБИРАЄ</div>
-      <div class="cap" id="cap56">ТРАНСКРИПТ,</div>
-      <div class="cap" id="cap57">СКІЛ</div>
-      <div class="cap" id="cap58">ВИПИСУЄ</div>
-      <div class="cap" id="cap59">ПОМИЛКИ</div>
-      <div class="cap" id="cap60">УЧНЯ</div>
-      <div class="cap" id="cap61">І</div>
-      <div class="cap" id="cap62">СКЛАДАЄ</div>
-      <div class="cap" id="cap63">ВПРАВИ</div>
-      <div class="cap" id="cap64">НА</div>
-      <div class="cap" id="cap65">НАСТУПНИЙ</div>
-      <div class="cap" id="cap66">УРОК</div>
-      <div class="cap" id="cap67">ДЛЯ</div>
-      <div class="cap" id="cap68">ВІДПРАЦЮВАННЯ.</div>
-      <div class="cap" id="cap69">А</div>
-      <div class="cap" id="cap70">ЯКЩО</div>
-      <div class="cap" id="cap71">ТИ</div>
-      <div class="cap" id="cap72">ПІДКЛЮЧИШ</div>
-      <div class="cap" id="cap73">ЩЕ</div>
-      <div class="cap" id="cap74">NOTION,</div>
-      <div class="cap" id="cap75">ТО</div>
-      <div class="cap" id="cap76">ЦЕ</div>
-      <div class="cap" id="cap77">ВСЕ</div>
-      <div class="cap" id="cap78">МОЖЕ</div>
-      <div class="cap" id="cap79">ЛЯГТИ</div>
-      <div class="cap" id="cap80">ЩЕ</div>
-      <div class="cap" id="cap81">В</div>
-      <div class="cap" id="cap82">КАРТКУ</div>
-      <div class="cap" id="cap83">УЧНЯ.</div>
-      <div class="cap" id="cap89">САМУ</div>
-      <div class="cap" id="cap90">ПЕРЕВІРКУ</div>
-      <div class="cap" id="cap91">Я</div>
-      <div class="cap" id="cap92">Б,</div>
-      <div class="cap" id="cap93">МАБУТЬ,</div>
-      <div class="cap" id="cap94">НЕ</div>
-      <div class="cap" id="cap95">ВІДДАВАЛА</div>
-      <div class="cap" id="cap96">ПОВНІСТЮ</div>
-      <div class="cap" id="cap97">КЛОДУ,</div>
-      <div class="cap" id="cap98">А ОТ</div>
-      <div class="cap" id="cap99">ДОПОМАГАТИ</div>
-      <div class="cap" id="cap100">ТОБІ</div>
-      <div class="cap" id="cap101">ОРГАНІЗОВУВАТИ</div>
-      <div class="cap" id="cap102">ЦІ</div>
-      <div class="cap" id="cap103">ПЕРЕВІРКИ,</div>
-      <div class="cap" id="cap104">ЩОБ ЦЕ</div>
-      <div class="cap" id="cap105">БУЛО</div>
-      <div class="cap" id="cap106">МАКСИМАЛЬНО</div>
-      <div class="cap" id="cap107">ЛЕГКО</div>
-      <div class="cap" id="cap108">ЗРОБИТИ,</div>
-      <div class="cap" id="cap109">І</div>
-      <div class="cap" id="cap110">ЩОБ</div>
-      <div class="cap" id="cap111">ТИ</div>
-      <div class="cap" id="cap112">НЕ</div>
-      <div class="cap" id="cap113">ВИТРАЧАЛА</div>
-      <div class="cap" id="cap114">ЧАС</div>
-      <div class="cap" id="cap115">НА</div>
-      <div class="cap" id="cap116">ЇХ</div>
-      <div class="cap" id="cap117">ПОШУК.</div>
-      <div class="cap" id="cap118">ЦЕ</div>
-      <div class="cap" id="cap119">ТОЧНО</div>
-      <div class="cap" id="cap120">МОЖНА.</div>
-      <div class="cap" id="cap121">І</div>
-      <div class="cap" id="cap127">ДЛЯ</div>
-      <div class="cap" id="cap128">НОВИХ</div>
-      <div class="cap" id="cap129">УЧНІВ.</div>
-      <div class="cap" id="cap130">З</div>
-      <div class="cap" id="cap131">CLAUDE</div>
-      <div class="cap" id="cap132">МОЖНА</div>
-      <div class="cap" id="cap133">НАПИСАТИ</div>
-      <div class="cap" id="cap134">ПИТАННЯ</div>
-      <div class="cap" id="cap135">І</div>
-      <div class="cap" id="cap136">В</div>
-      <div class="cap" id="cap137">ШКАЛУ.</div>
-      <div class="cap" id="cap138">ЛАНЦЮЖОК</div>
-      <div class="cap" id="cap139">ТИ</div>
-      <div class="cap" id="cap140">ЗБИРАЄШ</div>
-      <div class="cap" id="cap141">В SENDPULSE</div>
-      <div class="cap" id="cap144">І</div>
-      <div class="cap" id="cap145">ВСІ</div>
-      <div class="cap" id="cap146">ЦІ</div>
-      <div class="cap" id="cap147">РЕЗУЛЬТАТИ</div>
-      <div class="cap" id="cap148">ОДРАЗУ</div>
-      <div class="cap" id="cap149">І</div>
-      <div class="cap" id="cap150">ПАДАЮТЬ</div>
-      <div class="cap" id="cap151">В</div>
-      <div class="cap" id="cap152">CRM-СИСТЕМУ.</div>
-      <div class="cap" id="cap153">І</div>
-      <div class="cap" id="cap154">ЦЕ</div>
-      <div class="cap" id="cap155">І</div>
-      <div class="cap" id="cap157">І КВАЛІФІКАЦІЯ</div>
-      <div class="cap" id="cap158">ЛІДІВ</div>
-      <div class="cap" id="cap159">В</div>
-      <div class="cap" id="cap160">ОДНОМУ</div>
-      <div class="cap" id="cap161">МІСЦІ.</div>
-      <div class="cap" id="cap162">ТОМУ</div>
-      <div class="cap" id="cap163">ОБОВ'ЯЗКОВО</div>
-      <div class="cap" id="cap164">ЗБЕРЕЖИ</div>
-      <div class="cap" id="cap165">СОБІ,</div>
-      <div class="cap" id="cap166">ЩОБ НЕ ЗАГУБИТИ</div>
-      <div class="cap" id="cap167">ІДЕЙ</div>
-      <div class="cap" id="cap168">І</div>
-      <div class="cap" id="cap169">ПЕРЕШЛИ</div>
-      <div class="cap" id="cap170">СВОЇЙ</div>
-      <div class="cap" id="cap171">КОЛЕЗІ.</div>
+      <div id="caps">
+      <div class="wc" id="w0">ЯКБИ</div>
+      <div class="wc" id="w1">Я</div>
+      <div class="wc" id="w2">БУЛА</div>
+      <div class="wc" id="w3">ВИКЛАДАЧКОЮ</div>
+      <div class="wc" id="w4">КИТАЙСЬКОЇ</div>
+      <div class="wc" id="w5">ЧИ</div>
+      <div class="wc" id="w6">АНГЛІЙСЬКОЇ,</div>
+      <div class="wc" id="w7">ТО ОСЬ</div>
+      <div class="wc" id="w8">ЯКІ</div>
+      <div class="wc" id="w9">АВТОМАТИЗАЦІЇ</div>
+      <div class="wc" id="w10">З CLAUDE</div>
+      <div class="wc" id="w11">Я</div>
+      <div class="wc" id="w12">Б</div>
+      <div class="wc" id="w13">СОБІ</div>
+      <div class="wc" id="w14">НАЛАШТУВАЛА</div>
+      <div class="wc" id="w15">ПО-ПЕРШЕ,</div>
+      <div class="wc" id="w16">ЦЕ</div>
+      <div class="wc" id="w17">ЗВИЧАЙНІ</div>
+      <div class="wc" id="w18">КАРТКИ</div>
+      <div class="wc" id="w19">З</div>
+      <div class="wc" id="w20">НОВИХ</div>
+      <div class="wc" id="w21">СЛІВ</div>
+      <div class="wc" id="w22">УРОКУ.</div>
+      <div class="wc" id="w23">У</div>
+      <div class="wc" id="w24">CLAUDE</div>
+      <div class="wc inv" id="w25">Є</div>
+      <div class="wc inv" id="w26">ОФІЦІЙНИЙ</div>
+      <div class="wc inv" id="w27">КОНЕКТОР</div>
+      <div class="wc inv" id="w28">QUIZLET.</div>
+      <div class="wc inv" id="w29">ТИ</div>
+      <div class="wc inv" id="w30">КИДАЄШ</div>
+      <div class="wc inv" id="w31">СПИСОК</div>
+      <div class="wc inv" id="w32">СЛІВ</div>
+      <div class="wc inv" id="w33">АБО</div>
+      <div class="wc inv" id="w34">ТРАНСКРИПТ</div>
+      <div class="wc inv" id="w35">УРОКУ,</div>
+      <div class="wc inv" id="w36">І</div>
+      <div class="wc inv" id="w37">ОТРИМУЄШ</div>
+      <div class="wc inv" id="w38">ГОТОВИЙ</div>
+      <div class="wc inv" id="w39">СЕТ</div>
+      <div class="wc inv" id="w40">КАРТОК,</div>
+      <div class="wc inv" id="w41">ЯКИЙ</div>
+      <div class="wc inv" id="w42">УЧЕНЬ</div>
+      <div class="wc inv" id="w43">ОДРАЗУ</div>
+      <div class="wc inv" id="w44">ВІДКРИВАЄ</div>
+      <div class="wc inv" id="w45">В QUIZLET.</div>
+      <div class="wc" id="w46">ДРУГЕ</div>
+      <div class="wc" id="w47">ЦЕ</div>
+      <div class="wc" id="w48">ЩОДЕННИК</div>
+      <div class="wc" id="w49">ПОМИЛОК.</div>
+      <div class="wc" id="w50">FATHOM</div>
+      <div class="wc inv" id="w51" style="top:740px">ЗАПИСУЄ</div>
+      <div class="wc inv" id="w52" style="top:740px">УРОК,</div>
+      <div class="wc inv" id="w53" style="top:740px">CLAUDE</div>
+      <div class="wc inv" id="w54" style="top:740px">ЧЕРЕЗ</div>
+      <div class="wc inv" id="w55" style="top:740px">КОНЕКТОР</div>
+      <div class="wc inv" id="w56" style="top:740px">ЗАБИРАЄ</div>
+      <div class="wc inv" id="w57" style="top:740px">ТРАНСКРИПТ,</div>
+      <div class="wc inv" id="w58" style="top:740px">СКІЛ</div>
+      <div class="wc inv" id="w59" style="top:740px">ВИПИСУЄ</div>
+      <div class="wc inv" id="w60" style="top:740px">ПОМИЛКИ</div>
+      <div class="wc inv" id="w61" style="top:740px">УЧНЯ</div>
+      <div class="wc inv" id="w62" style="top:740px">І</div>
+      <div class="wc inv" id="w63" style="top:740px">СКЛАДАЄ</div>
+      <div class="wc inv" id="w64" style="top:740px">ВПРАВИ</div>
+      <div class="wc inv" id="w65" style="top:740px">НА</div>
+      <div class="wc inv" id="w66" style="top:740px">НАСТУПНИЙ</div>
+      <div class="wc inv" id="w67" style="top:740px">УРОК,</div>
+      <div class="wc inv" id="w68" style="top:740px">ДЛЯ</div>
+      <div class="wc inv" id="w69" style="top:740px">ВІДПРАЦЮВАННЯ.</div>
+      <div class="wc inv" id="w70" style="top:740px">А</div>
+      <div class="wc inv" id="w71" style="top:740px">ЯКЩО</div>
+      <div class="wc inv" id="w72" style="top:740px">ТИ</div>
+      <div class="wc inv" id="w73" style="top:740px">ПІДКЛЮЧИШ</div>
+      <div class="wc inv" id="w74" style="top:740px">ЩЕ</div>
+      <div class="wc inv" id="w75" style="top:740px">NOTION,</div>
+      <div class="wc inv" id="w76" style="top:740px">ТО</div>
+      <div class="wc inv" id="w77" style="top:740px">ЦЕ</div>
+      <div class="wc inv" id="w78" style="top:740px">ВСЕ</div>
+      <div class="wc inv" id="w79" style="top:740px">МОЖЕ</div>
+      <div class="wc inv" id="w80" style="top:740px">ЛЯГТИ</div>
+      <div class="wc inv" id="w81" style="top:740px">ЩЕ</div>
+      <div class="wc inv" id="w82" style="top:740px">В</div>
+      <div class="wc inv" id="w83" style="top:740px">КАРТКУ</div>
+      <div class="wc inv" id="w84" style="top:740px">УЧНЯ.</div>
+      <div class="wc" id="w85">ТРЕТЄ</div>
+      <div class="wc" id="w86">ЦЕ</div>
+      <div class="wc" id="w87">ОРГАНІЗАЦІЯ</div>
+      <div class="wc" id="w88">ПЕРЕВІРОК</div>
+      <div class="wc" id="w89">ДОМАШОК.</div>
+      <div class="wc" id="w90">САМУ</div>
+      <div class="wc" id="w91">ПЕРЕВІРКУ</div>
+      <div class="wc" id="w92">Я</div>
+      <div class="wc" id="w93">Б</div>
+      <div class="wc" id="w94">МАБУТЬ,</div>
+      <div class="wc" id="w95">НЕ</div>
+      <div class="wc" id="w96">ВІДДАВАЛА</div>
+      <div class="wc" id="w97">ПОВНІСТЮ</div>
+      <div class="wc" id="w98">КЛОДУ,</div>
+      <div class="wc" id="w99">А</div>
+      <div class="wc" id="w100">ОТ</div>
+      <div class="wc" id="w101">ДОПОМАГАТИ</div>
+      <div class="wc" id="w102">ТОБІ</div>
+      <div class="wc" id="w103">ОРГАНІЗОВУВАТИ</div>
+      <div class="wc" id="w104">ЦІ</div>
+      <div class="wc" id="w105">ПЕРЕВІРКИ,</div>
+      <div class="wc" id="w106">ЩОБ ЦЕ</div>
+      <div class="wc" id="w107">БУЛО</div>
+      <div class="wc" id="w108">МАКСИМАЛЬНО</div>
+      <div class="wc" id="w109">ЛЕГКО</div>
+      <div class="wc" id="w110">ЗРОБИТИ,</div>
+      <div class="wc" id="w111">І</div>
+      <div class="wc" id="w112">ЩОБ</div>
+      <div class="wc" id="w113">ТИ</div>
+      <div class="wc" id="w114">НЕ</div>
+      <div class="wc" id="w115">ВИТРАЧАЛА</div>
+      <div class="wc" id="w116">ЧАС</div>
+      <div class="wc" id="w117">НА</div>
+      <div class="wc" id="w118">ЇХ</div>
+      <div class="wc" id="w119">ПОШУК.</div>
+      <div class="wc" id="w120">ЦЕ</div>
+      <div class="wc" id="w121">ТОЧНО</div>
+      <div class="wc" id="w122">МОЖНА.</div>
+      <div class="wc" id="w123">І</div>
+      <div class="wc" id="w124">ЧЕТВЕРТЕ,</div>
+      <div class="wc" id="w125">ЦЕ</div>
+      <div class="wc" id="w126">ТЕСТ</div>
+      <div class="wc" id="w127">НА</div>
+      <div class="wc" id="w128">РІВЕНЬ</div>
+      <div class="wc" id="w129">ДЛЯ</div>
+      <div class="wc" id="w130">НОВИХ</div>
+      <div class="wc" id="w131">УЧНІВ.</div>
+      <div class="wc" id="w132">З</div>
+      <div class="wc" id="w133">CLAUDE</div>
+      <div class="wc" id="w134">МОЖНА</div>
+      <div class="wc" id="w135">НАПИСАТИ</div>
+      <div class="wc" id="w136">ПИТАННЯ</div>
+      <div class="wc" id="w137">І</div>
+      <div class="wc" id="w138">ШКАЛУ.</div>
+      <div class="wc" id="w139">ЛАНЦЮЖОК</div>
+      <div class="wc" id="w140">ТИ</div>
+      <div class="wc" id="w141">ЗБИРАЄШ</div>
+      <div class="wc" id="w143">БЕЗ</div>
+      <div class="wc" id="w144">КОДУ.</div>
+      <div class="wc" id="w145">І</div>
+      <div class="wc" id="w146">ВСІ</div>
+      <div class="wc" id="w147">ЦІ</div>
+      <div class="wc" id="w148">РЕЗУЛЬТАТИ</div>
+      <div class="wc" id="w149">ОДРАЗУ</div>
+      <div class="wc" id="w150">І</div>
+      <div class="wc" id="w151">ПАДАЮТЬ</div>
+      <div class="wc" id="w152">В</div>
+      <div class="wc" id="w153">CRM-СИСТЕМУ.</div>
+      <div class="wc" id="w154">І</div>
+      <div class="wc" id="w155">ЦЕ</div>
+      <div class="wc" id="w156">І</div>
+      <div class="wc" id="w157">ЛІДМАГНІТ,</div>
+      <div class="wc" id="w158">І КВАЛІФІКАЦІЯ</div>
+      <div class="wc" id="w159">ЛІДІВ</div>
+      <div class="wc" id="w160">В</div>
+      <div class="wc" id="w161">ОДНОМУ</div>
+      <div class="wc" id="w162">МІСЦІ.</div>
+      <div class="wc" id="w163">ТОМУ</div>
+      <div class="wc" id="w164">ОБОВ'ЯЗКОВО</div>
+      </div>
 
       <audio id="vo" src="assets/base.mp4"
-             data-start="0" data-duration="66.117" data-media-start="0"></audio>
+             data-start="0" data-duration="66.150" data-media-start="0"></audio>
     </div>
 
     <script>
       function build() {
         var tl = gsap.timeline({paused: true});
 
-  tl.set("#cap0", {autoAlpha: 1}, 0.000);
-  tl.set("#cap0", {autoAlpha: 0}, 0.345);
-  tl.set("#cap1", {autoAlpha: 1}, 0.430);
-  tl.set("#cap1", {autoAlpha: 0}, 0.530);
-  tl.set("#cap2", {autoAlpha: 1}, 0.530);
-  tl.set("#cap2", {autoAlpha: 0}, 0.705);
-  tl.set("#cap3", {autoAlpha: 1}, 0.790);
-  tl.set("#cap3", {autoAlpha: 0}, 1.325);
-  tl.set("#cap7", {autoAlpha: 1}, 3.000);
-  tl.set("#cap7", {autoAlpha: 0}, 3.315);
-  tl.set("#cap8", {autoAlpha: 1}, 3.400);
-  tl.set("#cap8", {autoAlpha: 0}, 3.500);
-  tl.set("#cap9", {autoAlpha: 1}, 3.500);
-  tl.set("#cap9", {autoAlpha: 0}, 4.175);
-  tl.set("#cap10", {autoAlpha: 1}, 4.260);
-  tl.set("#cap10", {autoAlpha: 0}, 4.515);
-  tl.set("#cap11", {autoAlpha: 1}, 4.600);
-  tl.set("#cap11", {autoAlpha: 0}, 4.875);
-  tl.set("#cap12", {autoAlpha: 1}, 4.960);
-  tl.set("#cap12", {autoAlpha: 0}, 5.060);
-  tl.set("#cap13", {autoAlpha: 1}, 5.080);
-  tl.set("#cap13", {autoAlpha: 0}, 5.235);
-  tl.set("#cap14", {autoAlpha: 1}, 5.320);
-  tl.set("#cap14", {autoAlpha: 0}, 5.948);
-  tl.set("#cap15", {autoAlpha: 1}, 6.033);
-  tl.set("#cap15", {autoAlpha: 0}, 6.678);
-  tl.set("#cap16", {autoAlpha: 1}, 6.763);
-  tl.set("#cap16", {autoAlpha: 0}, 6.863);
-  tl.set("#cap17", {autoAlpha: 1}, 6.943);
-  tl.set("#cap17", {autoAlpha: 0}, 7.398);
-  tl.set("#cap18", {autoAlpha: 1}, 7.483);
-  tl.set("#cap18", {autoAlpha: 0}, 8.052);
-  tl.set("#cap19", {autoAlpha: 1}, 8.137);
-  tl.set("#cap19", {autoAlpha: 0}, 8.237);
-  tl.set("#cap20", {autoAlpha: 1}, 8.317);
-  tl.set("#cap20", {autoAlpha: 0}, 8.732);
-  tl.set("#cap21", {autoAlpha: 1}, 8.817);
-  tl.set("#cap21", {autoAlpha: 0}, 9.072);
-  tl.set("#cap22", {autoAlpha: 1}, 9.157);
-  tl.set("#cap22", {autoAlpha: 0}, 9.615);
-  tl.set("#cap23", {autoAlpha: 1}, 9.700);
-  tl.set("#cap23", {autoAlpha: 0}, 9.865);
-  tl.set("#cap24", {autoAlpha: 1}, 9.950);
-  tl.set("#cap24", {autoAlpha: 0}, 10.105);
-  tl.set("#cap25", {autoAlpha: 1}, 10.190);
-  tl.set("#cap25", {autoAlpha: 0}, 10.365);
-  tl.set("#cap26", {autoAlpha: 1}, 10.450);
-  tl.set("#cap26", {autoAlpha: 0}, 11.025);
-  tl.set("#cap27", {autoAlpha: 1}, 11.110);
-  tl.set("#cap27", {autoAlpha: 0}, 11.405);
-  tl.set("#cap28", {autoAlpha: 1}, 11.490);
-  tl.set("#cap28", {autoAlpha: 0}, 12.015);
-  tl.set("#cap29", {autoAlpha: 1}, 12.100);
-  tl.set("#cap29", {autoAlpha: 0}, 12.245);
-  tl.set("#cap30", {autoAlpha: 1}, 12.330);
-  tl.set("#cap30", {autoAlpha: 0}, 12.685);
-  tl.set("#cap31", {autoAlpha: 1}, 12.770);
-  tl.set("#cap31", {autoAlpha: 0}, 13.045);
-  tl.set("#cap32", {autoAlpha: 1}, 13.130);
-  tl.set("#cap32", {autoAlpha: 0}, 13.285);
-  tl.set("#cap33", {autoAlpha: 1}, 13.370);
-  tl.set("#cap33", {autoAlpha: 0}, 13.565);
-  tl.set("#cap34", {autoAlpha: 1}, 13.650);
-  tl.set("#cap34", {autoAlpha: 0}, 14.152);
-  tl.set("#cap35", {autoAlpha: 1}, 14.237);
-  tl.set("#cap35", {autoAlpha: 0}, 14.445);
-  tl.set("#cap36", {autoAlpha: 1}, 14.530);
-  tl.set("#cap36", {autoAlpha: 0}, 14.645);
-  tl.set("#cap37", {autoAlpha: 1}, 14.730);
-  tl.set("#cap37", {autoAlpha: 0}, 15.145);
-  tl.set("#cap38", {autoAlpha: 1}, 15.230);
-  tl.set("#cap38", {autoAlpha: 0}, 15.705);
-  tl.set("#cap39", {autoAlpha: 1}, 15.790);
-  tl.set("#cap39", {autoAlpha: 0}, 15.945);
-  tl.set("#cap40", {autoAlpha: 1}, 16.030);
-  tl.set("#cap40", {autoAlpha: 0}, 16.473);
-  tl.set("#cap41", {autoAlpha: 1}, 16.558);
-  tl.set("#cap41", {autoAlpha: 0}, 16.658);
-  tl.set("#cap42", {autoAlpha: 1}, 16.698);
-  tl.set("#cap42", {autoAlpha: 0}, 17.013);
-  tl.set("#cap43", {autoAlpha: 1}, 17.098);
-  tl.set("#cap43", {autoAlpha: 0}, 17.453);
-  tl.set("#cap44", {autoAlpha: 1}, 17.538);
-  tl.set("#cap44", {autoAlpha: 0}, 17.973);
-  tl.set("#cap45", {autoAlpha: 1}, 18.058);
-  tl.set("#cap45", {autoAlpha: 0}, 18.582);
-  tl.set("#cap49", {autoAlpha: 1}, 20.749);
-  tl.set("#cap49", {autoAlpha: 0}, 21.144);
-  tl.set("#cap50", {autoAlpha: 1}, 21.229);
-  tl.set("#cap50", {autoAlpha: 0}, 21.604);
-  tl.set("#cap51", {autoAlpha: 1}, 21.689);
-  tl.set("#cap51", {autoAlpha: 0}, 21.897);
-  tl.set("#cap52", {autoAlpha: 1}, 21.982);
-  tl.set("#cap52", {autoAlpha: 0}, 22.257);
-  tl.set("#cap53", {autoAlpha: 1}, 22.342);
-  tl.set("#cap53", {autoAlpha: 0}, 22.457);
-  tl.set("#cap54", {autoAlpha: 1}, 22.542);
-  tl.set("#cap54", {autoAlpha: 0}, 22.817);
-  tl.set("#cap55", {autoAlpha: 1}, 22.902);
-  tl.set("#cap55", {autoAlpha: 0}, 23.110);
-  tl.set("#cap56", {autoAlpha: 1}, 23.195);
-  tl.set("#cap56", {autoAlpha: 0}, 23.529);
-  tl.set("#cap57", {autoAlpha: 1}, 23.614);
-  tl.set("#cap57", {autoAlpha: 0}, 23.815);
-  tl.set("#cap58", {autoAlpha: 1}, 23.900);
-  tl.set("#cap58", {autoAlpha: 0}, 24.565);
-  tl.set("#cap59", {autoAlpha: 1}, 24.650);
-  tl.set("#cap59", {autoAlpha: 0}, 25.025);
-  tl.set("#cap60", {autoAlpha: 1}, 25.110);
-  tl.set("#cap60", {autoAlpha: 0}, 25.305);
-  tl.set("#cap61", {autoAlpha: 1}, 25.390);
-  tl.set("#cap61", {autoAlpha: 0}, 25.505);
-  tl.set("#cap62", {autoAlpha: 1}, 25.590);
-  tl.set("#cap62", {autoAlpha: 0}, 25.865);
-  tl.set("#cap63", {autoAlpha: 1}, 25.950);
-  tl.set("#cap63", {autoAlpha: 0}, 26.265);
-  tl.set("#cap64", {autoAlpha: 1}, 26.350);
-  tl.set("#cap64", {autoAlpha: 0}, 26.505);
-  tl.set("#cap65", {autoAlpha: 1}, 26.590);
-  tl.set("#cap65", {autoAlpha: 0}, 27.085);
-  tl.set("#cap66", {autoAlpha: 1}, 27.170);
-  tl.set("#cap66", {autoAlpha: 0}, 27.285);
-  tl.set("#cap67", {autoAlpha: 1}, 27.370);
-  tl.set("#cap67", {autoAlpha: 0}, 27.505);
-  tl.set("#cap68", {autoAlpha: 1}, 27.590);
-  tl.set("#cap68", {autoAlpha: 0}, 28.415);
-  tl.set("#cap69", {autoAlpha: 1}, 28.500);
-  tl.set("#cap69", {autoAlpha: 0}, 28.625);
-  tl.set("#cap70", {autoAlpha: 1}, 28.710);
-  tl.set("#cap70", {autoAlpha: 0}, 28.845);
-  tl.set("#cap71", {autoAlpha: 1}, 28.930);
-  tl.set("#cap71", {autoAlpha: 0}, 29.030);
-  tl.set("#cap72", {autoAlpha: 1}, 29.070);
-  tl.set("#cap72", {autoAlpha: 0}, 29.405);
-  tl.set("#cap73", {autoAlpha: 1}, 29.490);
-  tl.set("#cap73", {autoAlpha: 0}, 29.605);
-  tl.set("#cap74", {autoAlpha: 1}, 29.690);
-  tl.set("#cap74", {autoAlpha: 0}, 30.045);
-  tl.set("#cap75", {autoAlpha: 1}, 30.130);
-  tl.set("#cap75", {autoAlpha: 0}, 30.230);
-  tl.set("#cap76", {autoAlpha: 1}, 30.250);
-  tl.set("#cap76", {autoAlpha: 0}, 30.365);
-  tl.set("#cap77", {autoAlpha: 1}, 30.450);
-  tl.set("#cap77", {autoAlpha: 0}, 30.550);
-  tl.set("#cap78", {autoAlpha: 1}, 30.630);
-  tl.set("#cap78", {autoAlpha: 0}, 30.805);
-  tl.set("#cap79", {autoAlpha: 1}, 30.890);
-  tl.set("#cap79", {autoAlpha: 0}, 31.165);
-  tl.set("#cap80", {autoAlpha: 1}, 31.250);
-  tl.set("#cap80", {autoAlpha: 0}, 31.350);
-  tl.set("#cap81", {autoAlpha: 1}, 31.410);
-  tl.set("#cap81", {autoAlpha: 0}, 31.510);
-  tl.set("#cap82", {autoAlpha: 1}, 31.590);
-  tl.set("#cap82", {autoAlpha: 0}, 31.805);
-  tl.set("#cap83", {autoAlpha: 1}, 31.890);
-  tl.set("#cap83", {autoAlpha: 0}, 32.348);
-  tl.set("#cap89", {autoAlpha: 1}, 35.000);
-  tl.set("#cap89", {autoAlpha: 0}, 35.445);
-  tl.set("#cap90", {autoAlpha: 1}, 35.530);
-  tl.set("#cap90", {autoAlpha: 0}, 35.865);
-  tl.set("#cap91", {autoAlpha: 1}, 35.950);
-  tl.set("#cap91", {autoAlpha: 0}, 36.065);
-  tl.set("#cap92", {autoAlpha: 1}, 36.150);
-  tl.set("#cap92", {autoAlpha: 0}, 36.250);
-  tl.set("#cap93", {autoAlpha: 1}, 36.290);
-  tl.set("#cap93", {autoAlpha: 0}, 36.665);
-  tl.set("#cap94", {autoAlpha: 1}, 36.750);
-  tl.set("#cap94", {autoAlpha: 0}, 36.850);
-  tl.set("#cap95", {autoAlpha: 1}, 36.910);
-  tl.set("#cap95", {autoAlpha: 0}, 37.365);
-  tl.set("#cap96", {autoAlpha: 1}, 37.450);
-  tl.set("#cap96", {autoAlpha: 0}, 37.905);
-  tl.set("#cap97", {autoAlpha: 1}, 37.990);
-  tl.set("#cap97", {autoAlpha: 0}, 38.356);
-  tl.set("#cap98", {autoAlpha: 1}, 38.441);
-  tl.set("#cap98", {autoAlpha: 0}, 38.596);
-  tl.set("#cap99", {autoAlpha: 1}, 38.681);
-  tl.set("#cap99", {autoAlpha: 0}, 39.076);
-  tl.set("#cap100", {autoAlpha: 1}, 39.161);
-  tl.set("#cap100", {autoAlpha: 0}, 39.436);
-  tl.set("#cap101", {autoAlpha: 1}, 39.521);
-  tl.set("#cap101", {autoAlpha: 0}, 40.236);
-  tl.set("#cap102", {autoAlpha: 1}, 40.321);
-  tl.set("#cap102", {autoAlpha: 0}, 40.436);
-  tl.set("#cap103", {autoAlpha: 1}, 40.521);
-  tl.set("#cap103", {autoAlpha: 0}, 41.046);
-  tl.set("#cap104", {autoAlpha: 1}, 41.131);
-  tl.set("#cap104", {autoAlpha: 0}, 41.286);
-  tl.set("#cap105", {autoAlpha: 1}, 41.371);
-  tl.set("#cap105", {autoAlpha: 0}, 41.526);
-  tl.set("#cap106", {autoAlpha: 1}, 41.611);
-  tl.set("#cap106", {autoAlpha: 0}, 42.106);
-  tl.set("#cap107", {autoAlpha: 1}, 42.191);
-  tl.set("#cap107", {autoAlpha: 0}, 42.326);
-  tl.set("#cap108", {autoAlpha: 1}, 42.411);
-  tl.set("#cap108", {autoAlpha: 0}, 42.990);
-  tl.set("#cap109", {autoAlpha: 1}, 43.075);
-  tl.set("#cap109", {autoAlpha: 0}, 43.190);
-  tl.set("#cap110", {autoAlpha: 1}, 43.275);
-  tl.set("#cap110", {autoAlpha: 0}, 43.375);
-  tl.set("#cap111", {autoAlpha: 1}, 43.395);
-  tl.set("#cap111", {autoAlpha: 0}, 43.495);
-  tl.set("#cap112", {autoAlpha: 1}, 43.555);
-  tl.set("#cap112", {autoAlpha: 0}, 43.655);
-  tl.set("#cap113", {autoAlpha: 1}, 43.655);
-  tl.set("#cap113", {autoAlpha: 0}, 44.030);
-  tl.set("#cap114", {autoAlpha: 1}, 44.115);
-  tl.set("#cap114", {autoAlpha: 0}, 44.270);
-  tl.set("#cap115", {autoAlpha: 1}, 44.355);
-  tl.set("#cap115", {autoAlpha: 0}, 44.455);
-  tl.set("#cap116", {autoAlpha: 1}, 44.495);
-  tl.set("#cap116", {autoAlpha: 0}, 44.595);
-  tl.set("#cap117", {autoAlpha: 1}, 44.595);
-  tl.set("#cap117", {autoAlpha: 0}, 45.048);
-  tl.set("#cap118", {autoAlpha: 1}, 45.133);
-  tl.set("#cap118", {autoAlpha: 0}, 45.318);
-  tl.set("#cap119", {autoAlpha: 1}, 45.403);
-  tl.set("#cap119", {autoAlpha: 0}, 45.578);
-  tl.set("#cap120", {autoAlpha: 1}, 45.663);
-  tl.set("#cap120", {autoAlpha: 0}, 46.082);
-  tl.set("#cap121", {autoAlpha: 1}, 46.167);
-  tl.set("#cap121", {autoAlpha: 0}, 46.292);
-  tl.set("#cap127", {autoAlpha: 1}, 48.177);
-  tl.set("#cap127", {autoAlpha: 0}, 48.332);
-  tl.set("#cap128", {autoAlpha: 1}, 48.417);
-  tl.set("#cap128", {autoAlpha: 0}, 48.752);
-  tl.set("#cap129", {autoAlpha: 1}, 48.837);
-  tl.set("#cap129", {autoAlpha: 0}, 49.282);
-  tl.set("#cap130", {autoAlpha: 1}, 49.367);
-  tl.set("#cap130", {autoAlpha: 0}, 49.512);
-  tl.set("#cap131", {autoAlpha: 1}, 49.597);
-  tl.set("#cap131", {autoAlpha: 0}, 49.752);
-  tl.set("#cap132", {autoAlpha: 1}, 49.837);
-  tl.set("#cap132", {autoAlpha: 0}, 50.032);
-  tl.set("#cap133", {autoAlpha: 1}, 50.117);
-  tl.set("#cap133", {autoAlpha: 0}, 50.552);
-  tl.set("#cap134", {autoAlpha: 1}, 50.637);
-  tl.set("#cap134", {autoAlpha: 0}, 51.012);
-  tl.set("#cap135", {autoAlpha: 1}, 51.097);
-  tl.set("#cap135", {autoAlpha: 0}, 51.252);
-  tl.set("#cap136", {autoAlpha: 1}, 51.337);
-  tl.set("#cap136", {autoAlpha: 0}, 51.437);
-  tl.set("#cap137", {autoAlpha: 1}, 51.497);
-  tl.set("#cap137", {autoAlpha: 0}, 51.874);
-  tl.set("#cap138", {autoAlpha: 1}, 51.959);
-  tl.set("#cap138", {autoAlpha: 0}, 52.774);
-  tl.set("#cap139", {autoAlpha: 1}, 52.859);
-  tl.set("#cap139", {autoAlpha: 0}, 52.959);
-  tl.set("#cap140", {autoAlpha: 1}, 52.999);
-  tl.set("#cap140", {autoAlpha: 0}, 53.334);
-  tl.set("#cap141", {autoAlpha: 1}, 53.419);
-  tl.set("#cap141", {autoAlpha: 0}, 53.914);
-  tl.set("#cap144", {autoAlpha: 1}, 54.567);
-  tl.set("#cap144", {autoAlpha: 0}, 54.772);
-  tl.set("#cap145", {autoAlpha: 1}, 54.857);
-  tl.set("#cap145", {autoAlpha: 0}, 54.957);
-  tl.set("#cap146", {autoAlpha: 1}, 55.037);
-  tl.set("#cap146", {autoAlpha: 0}, 55.137);
-  tl.set("#cap147", {autoAlpha: 1}, 55.177);
-  tl.set("#cap147", {autoAlpha: 0}, 55.592);
-  tl.set("#cap148", {autoAlpha: 1}, 55.677);
-  tl.set("#cap148", {autoAlpha: 0}, 55.992);
-  tl.set("#cap149", {autoAlpha: 1}, 56.077);
-  tl.set("#cap149", {autoAlpha: 0}, 56.177);
-  tl.set("#cap150", {autoAlpha: 1}, 56.217);
-  tl.set("#cap150", {autoAlpha: 0}, 56.452);
-  tl.set("#cap151", {autoAlpha: 1}, 56.537);
-  tl.set("#cap151", {autoAlpha: 0}, 57.225);
-  tl.set("#cap152", {autoAlpha: 1}, 57.310);
-  tl.set("#cap152", {autoAlpha: 0}, 57.897);
-  tl.set("#cap153", {autoAlpha: 1}, 57.982);
-  tl.set("#cap153", {autoAlpha: 0}, 58.277);
-  tl.set("#cap154", {autoAlpha: 1}, 58.362);
-  tl.set("#cap154", {autoAlpha: 0}, 58.462);
-  tl.set("#cap155", {autoAlpha: 1}, 58.542);
-  tl.set("#cap155", {autoAlpha: 0}, 58.737);
-  tl.set("#cap157", {autoAlpha: 1}, 59.382);
-  tl.set("#cap157", {autoAlpha: 0}, 60.037);
-  tl.set("#cap158", {autoAlpha: 1}, 60.122);
-  tl.set("#cap158", {autoAlpha: 0}, 60.417);
-  tl.set("#cap159", {autoAlpha: 1}, 60.502);
-  tl.set("#cap159", {autoAlpha: 0}, 60.617);
-  tl.set("#cap160", {autoAlpha: 1}, 60.702);
-  tl.set("#cap160", {autoAlpha: 0}, 61.097);
-  tl.set("#cap161", {autoAlpha: 1}, 61.182);
-  tl.set("#cap161", {autoAlpha: 0}, 61.748);
-  tl.set("#cap162", {autoAlpha: 1}, 61.833);
-  tl.set("#cap162", {autoAlpha: 0}, 62.057);
-  tl.set("#cap163", {autoAlpha: 1}, 62.142);
-  tl.set("#cap163", {autoAlpha: 0}, 62.437);
-  tl.set("#cap164", {autoAlpha: 1}, 62.522);
-  tl.set("#cap164", {autoAlpha: 0}, 62.797);
-  tl.set("#cap165", {autoAlpha: 1}, 62.882);
-  tl.set("#cap165", {autoAlpha: 0}, 63.177);
-  tl.set("#cap166", {autoAlpha: 1}, 63.262);
-  tl.set("#cap166", {autoAlpha: 0}, 63.797);
-  tl.set("#cap167", {autoAlpha: 1}, 63.882);
-  tl.set("#cap167", {autoAlpha: 0}, 64.228);
-  tl.set("#cap168", {autoAlpha: 1}, 64.313);
-  tl.set("#cap168", {autoAlpha: 0}, 64.628);
-  tl.set("#cap169", {autoAlpha: 1}, 64.713);
-  tl.set("#cap169", {autoAlpha: 0}, 64.981);
-  tl.set("#cap170", {autoAlpha: 1}, 65.066);
-  tl.set("#cap170", {autoAlpha: 0}, 65.384);
-  tl.set("#cap171", {autoAlpha: 1}, 65.469);
-  tl.set("#cap171", {autoAlpha: 0}, 65.973);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 66.073);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 1.210);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 2.740);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 18.467);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 20.157);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 32.233);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 34.813);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 45.977);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 47.877);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 53.799);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 54.399);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 58.622);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 59.322);
+  function bez(x1, y1, x2, y2) {
+    function a(p1, p2) { return 1 - 3 * p2 + 3 * p1; }
+    function b(p1, p2) { return 3 * p2 - 6 * p1; }
+    function c(p1) { return 3 * p1; }
+    function at(t, p1, p2) { return ((a(p1, p2) * t + b(p1, p2)) * t + c(p1)) * t; }
+    function slope(t, p1, p2) { return 3 * a(p1, p2) * t * t + 2 * b(p1, p2) * t + c(p1); }
+    return function (x) {
+      if (x <= 0) return 0; if (x >= 1) return 1;
+      var t = x;
+      for (var i = 0; i < 8; i++) {
+        var s = slope(t, x1, x2); if (Math.abs(s) < 1e-6) break;
+        t -= (at(t, x1, x2) - x) / s;
+      }
+      t = Math.min(1, Math.max(0, t));
+      return at(t, y1, y2);
+    };
+  }
+  var POP = bez(.34, 1.56, .64, 1), RISE = bez(.2, .9, .25, 1), SLIDE = bez(.65, 0, .25, 1);
+  var PUSH = "#vid, .matte";
+  gsap.set("#panel", {yPercent: -101}); gsap.set("#cover", {yPercent: 101});
+  var NO = {immediateRender: false};
+  function X(o) { for (var k in NO) o[k] = NO[k]; return o; }
 
+  // arrivals (§00.7): pops 0.5-0.6 s, rise-ins 0.7 s; exits quicker, easing in
+  function pop(sel, t, d) {
+    tl.fromTo(sel, {autoAlpha: 0, scale: .6}, X({autoAlpha: 1, scale: 1, duration: d || .55, ease: POP}), t);
+  }
+  function rise(sel, t, dy) {
+    tl.fromTo(sel, {autoAlpha: 0, y: dy || 60}, X({autoAlpha: 1, y: 0, duration: .7, ease: RISE}), t);
+  }
+  function fadein(sel, t, d) { tl.fromTo(sel, {autoAlpha: 0}, X({autoAlpha: 1, duration: d || .4}), t); }
+  function out(sel, t) { tl.to(sel, {autoAlpha: 0, scale: .9, duration: .3, ease: "power2.in"}, t); }
+  function sink(sel, t) { tl.to(sel, {autoAlpha: 0, y: 40, duration: .35, ease: "power2.in"}, t); }
 
-function spring(z, w) {
-  var wd = w * Math.sqrt(1 - z * z);
-  function f(t) { return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + (z * w / wd) * Math.sin(wd * t)); }
-  var e = f(1);
-  return function (t) { return t >= 1 ? 1 : f(t) / e; };
-}
-var SP = spring(0.62, 13), POP = spring(0.46, 14), SOFT = spring(0.84, 11);
-
-function sketchHelpers(tl) {
-  var Q = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
-  // draw every stroke inside sel in document order — a hand drawing it.
-  // d is the total time; hachure strokes go faster than outlines.
-  function draw(sel, t, d) {
-    var ps = Q(sel + " .dr").filter(function (p) { return !p.classList.contains("dash"); });
-    if (!ps.length && document.querySelector(sel) && document.querySelector(sel).classList.contains("dr")) ps = Q(sel);
-    var w = ps.map(function (p) { return p.classList.contains("hz") ? 0.6 : (p.classList.contains("ah") ? 0.25 : 1); });
-    var sum = w.reduce(function (a, b) { return a + b; }, 0) || 1, at = t;
-    d = d || 0.7;
-    ps.forEach(function (p, i) {
-      var dd = d * w[i] / sum;
-      tl.fromTo(p, {strokeDashoffset: 1.05}, {strokeDashoffset: 0, duration: dd, ease: "power1.inOut", immediateRender: false}, at);
-      at += dd;
+  // shuffle (her idea on reel 61, 2026-11-23): a list through ONE slot, like
+  // cards — each item rises in from below on its word, the last one leaves
+  // upward as the next arrives. sels: ["#a", "#b", ...], times: their words,
+  // end: when the last one goes. Markup: '<div id="a" class="shuf hid">
+  // <span class="chip"><i></i>…</span></div>' (any element works).
+  function shuffle(sels, times, end) {
+    sels.forEach(function (sel, i) {
+      tl.fromTo(sel, {autoAlpha: 0, y: 90, scale: .92, rotationX: -35},
+                X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), times[i]);
+      var out = i + 1 < sels.length ? times[i + 1] : end;
+      tl.to(sel, {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, out - .05);
     });
-    Q(sel + " .dr.dash").forEach(function (p) { tl.fromTo(p, {autoAlpha: 0}, {autoAlpha: 1, duration: 0.25, immediateRender: false}, t); });
-    Q(sel + " .sf, " + sel + " .mk").forEach(function (p) {
-      tl.fromTo(p, {autoAlpha: 0}, {autoAlpha: 1, duration: 0.3, ease: "power1.out", immediateRender: false}, t + d * 0.5);
+  }
+
+  // §00.3.3 half screen: the panel comes down as the video goes down
+  function half(t0, t1) {
+    tl.fromTo("#panel", {yPercent: -101}, X({yPercent: 0, duration: .85, ease: SLIDE}), t0);
+    tl.fromTo(PUSH, {y: 0}, X({y: 330, duration: .85, ease: SLIDE}), t0);
+    tl.to("#panel", {yPercent: -101, duration: .85, ease: SLIDE}, t1);
+    tl.to(PUSH, {y: 0, duration: .85, ease: SLIDE}, t1);
+  }
+  // §00.3.4 full screen: white up from the bottom over everything
+  function full(t0, t1) {
+    tl.fromTo("#cover", {yPercent: 101}, X({yPercent: 0, duration: .85, ease: SLIDE}), t0);
+    tl.to("#cover", {yPercent: 101, duration: .85, ease: SLIDE}, t1);
+  }
+
+  // ---- §00.5 Excalidraw sketches (rough.js), drawn on stroke by stroke ----
+  // roughness 1 ≈ Excalidraw's own default — 2.4 was "too sloppy" (her review of 41)
+  var SKO = {roughness: 1.0, bowing: 1.0, strokeWidth: 4.5, stroke: "#1E1E1E",
+             disableMultiStroke: false, preserveVertices: false};
+  var HACH = {fill: "#F2C7CA", fillStyle: "hachure", hachureGap: 16, hachureAngle: -41,
+              fillWeight: 2.5};
+  var _ink = "#1E1E1E";
+  function opt(o, seed) { var r = {}; for (var k in SKO) r[k] = SKO[k]; r.stroke = _ink;
+    for (var k2 in (o || {})) r[k2] = o[k2]; r.seed = seed; return r; }
+  function hatch(o) { var r = {}; for (var k in HACH) r[k] = HACH[k];
+    for (var k2 in (o || {})) r[k2] = o[k2]; return r; }
+  function rrectD(x, y, w, h, r) {
+    return "M" + (x + r) + " " + y + " H" + (x + w - r) + " A" + r + " " + r + " 0 0 1 " + (x + w) + " " + (y + r) +
+           " V" + (y + h - r) + " A" + r + " " + r + " 0 0 1 " + (x + w - r) + " " + (y + h) +
+           " H" + (x + r) + " A" + r + " " + r + " 0 0 1 " + x + " " + (y + h - r) +
+           " V" + (y + r) + " A" + r + " " + r + " 0 0 1 " + (x + r) + " " + y + " Z";
+  }
+  var SK = {};
+  // a sketch is a named group of rough shapes inside one <svg class="sk">
+  function sketch(name, svgId) {
+    var svg = document.getElementById(svgId);
+    var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("id", "sk-" + name); svg.appendChild(g);
+    // Over her footage (her review of 41, "not passing even AA"): a thin line
+    // of any one colour fails against her light room — white included. So
+    // over the footage closed shapes are solid white stickers with the dark
+    // Excalidraw outline, and open strokes and free labels are dark ink with a
+    // thick white halo, which reads on light and dark ground alike. On the
+    // white panel and cover nothing changes. Explicit colours win.
+    var foot = !!(svg.closest && svg.closest("#front"));
+    SK[name] = {g: g, rc: rough.svg(svg), shapes: [], foot: foot, boxes: [], ink: "#1E1E1E"};
+    return SK[name];
+  }
+  function _add(s, node, kind, o) {   // o.halo === false: a stroke over a white card / pill (a strike-through) needs none
+    s.g.appendChild(node);
+    var paths = [].slice.call(node.querySelectorAll ? node.querySelectorAll("path") : []);
+    if (node.tagName === "path") paths = [node];
+    paths.forEach(function (p) {
+      var f = p.getAttribute("fill");
+      if (f && f !== "none") { p.style.opacity = 0; p.dataset.fill = "1"; return; }  // a solid fill fades in
+      var L = 0; try { L = p.getTotalLength(); } catch (e) {}
+      if (s.foot && !(o && o.halo === false)) {   // the white halo under a stroke over the footage
+        var h = p.cloneNode(false);
+        h.setAttribute("stroke", "#FFFFFF");
+        h.setAttribute("stroke-width", (parseFloat(p.getAttribute("stroke-width")) || 4.5) + 8);
+        p.parentNode.insertBefore(h, p);
+        p._halo = h;
+      }
+      [p, p._halo].forEach(function (q) { if (!q) return;
+        q.style.strokeDasharray = L + " " + (L + 2); q.style.strokeDashoffset = L + 1;
+        q.style.strokeLinecap = "round"; q.style.strokeLinejoin = "round"; });
+    });
+    s.shapes.push({paths: paths, kind: kind || "stroke"});
+  }
+  // a closed shape over the footage: solid white with a dark outline (see sketch())
+  function _closed(s, oo, o, x, y, w, h) {
+    if (s.foot && !(o && o.fill === false)) {
+      oo.fill = "#FFFFFF"; oo.fillStyle = "solid";
+      if (!(o && o.stroke)) oo.stroke = "#1E1E1E";
+      s.boxes.push([x, y, x + w, y + h]);
+    }
+    return oo;
+  }
+  function box(name, x, y, w, h, o) { _ink = SK[name].ink;      // rounded rough box, radius 28 (§00.5.2)
+    var s = SK[name], r = (o && o.r) || 28;
+    var oo = opt(o, (o && o.seed) || 7);
+    if (o && o.fill) { var f = hatch(o.fill === true ? {} : {fill: o.fill}); for (var k in f) oo[k] = f[k]; }
+    else _closed(s, oo, o, x, y, w, h);
+    _add(s, s.rc.path(rrectD(x, y, w, h, r), oo));
+  }
+  function ell(name, cx, cy, w, h, o) { _ink = SK[name].ink; var s = SK[name];
+    _add(s, s.rc.ellipse(cx, cy, w, h, _closed(s, opt(o, (o && o.seed) || 11), o, cx - w / 2, cy - h / 2, w, h))); }
+  // any closed hand-drawn outline (a cloud…): d is an SVG path, bbox its bounds
+  function blob(name, d, bbox, o) { _ink = SK[name].ink; var s = SK[name];
+    _add(s, s.rc.path(d, _closed(s, opt(o, (o && o.seed) || 23), o, bbox[0], bbox[1], bbox[2], bbox[3]))); }
+  function ln(name, x1, y1, x2, y2, o) { _ink = SK[name].ink; var s = SK[name];
+    _add(s, s.rc.line(x1, y1, x2, y2, opt(o, (o && o.seed) || 13)), null, o); }
+  function under(name, x1, y, x2, o) { _ink = SK[name].ink; var s = SK[name];      // a hand underline
+    _add(s, s.rc.curve([[x1, y + 4], [(x1 + x2) / 2, y - 6], [x2, y + 2]], opt(o, (o && o.seed) || 17)), null, o); }
+  function arrow(name, x1, y1, x2, y2, o) { _ink = SK[name].ink;
+    var s = SK[name], oo = opt(o, (o && o.seed) || 19), bend = (o && o.bend != null) ? o.bend : .12;
+    var mx = (x1 + x2) / 2 + (y2 - y1) * bend, my = (y1 + y2) / 2 - (x2 - x1) * bend;
+    _add(s, s.rc.curve([[x1, y1], [mx, my], [x2, y2]], oo), null, o);
+    var ang = Math.atan2(y2 - my, x2 - mx), L = 38, sp = .5;
+    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang - sp), y2 - L * Math.sin(ang - sp), oo), "head", o);
+    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang + sp), y2 - L * Math.sin(ang + sp), oo), "head", o);
+  }
+  function label(name, x, y, txt, o) {   // Pangolin, fades in after its shapes
+    var s = SK[name], t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    t.setAttribute("x", x); t.setAttribute("y", y);
+    t.setAttribute("text-anchor", (o && o.anchor) || "middle");
+    t.setAttribute("font-size", (o && o.size) || 50);
+    var inside = s.boxes.some(function (b) { return x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3] + 20; });
+    t.style.fill = (o && o.color) || "#1E1E1E";
+    if (s.foot && !inside) {         // a free label over the footage gets the white halo too
+      t.style.stroke = "#FFFFFF"; t.style.strokeWidth = "12px"; t.style.paintOrder = "stroke";
+      t.style.strokeLinejoin = "round";
+    }
+    t.textContent = txt; t.style.opacity = 0; s.g.appendChild(t);
+    s.shapes.push({text: t});
+  }
+  // draw a sketch on from time t: each stroke 0.7 s, in sequence (the next one
+  // starts as the last is two-thirds done); a label fades in after its box.
+  function draw(name, t, per) {
+    var s = SK[name], at = t; per = per || .7;
+    s.shapes.forEach(function (sh) {
+      if (sh.text) { tl.to(sh.text, {opacity: 1, duration: .35}, at + .05); return; }
+      // an arrowhead is a flick, not a stroke: the arrow reads as one gesture
+      if (sh.kind === "head") {
+        sh.paths.forEach(function (p) { tl.to([p, p._halo].filter(Boolean), {strokeDashoffset: 0, duration: .18, ease: "power1.out"}, at); });
+        at += .12; return;
+      }
+      sh.paths.forEach(function (p, i) {
+        if (p.dataset.fill) { tl.to(p, {opacity: 1, duration: .3}, at); return; }
+        tl.to([p, p._halo].filter(Boolean), {strokeDashoffset: 0, duration: per, ease: "power1.inOut"}, at + i * .12);
+      });
+      at += per * .66 + (sh.paths.length - 1) * .12;
     });
     return at;
   }
-  // erase: the strokes un-draw backwards, fast
-  function undraw(sel, t, d) {
-    var ps = Q(sel + " .dr").reverse(); d = d || 0.35;
-    ps.forEach(function (p, i) { tl.to(p, {strokeDashoffset: 1.05, duration: d, ease: "power1.in"}, t); });
-    Q(sel + " .sf, " + sel + " .mk").forEach(function (p) { tl.to(p, {autoAlpha: 0, duration: d}, t); });
-  }
-  // handwriting: the text is revealed left to right, like ink going down
-  function write(sel, t, d) {
-    tl.set(sel, {autoAlpha: 1}, t);
-    tl.fromTo(sel, {clipPath: "inset(-20% 100% -20% 0%)"},
-              {clipPath: "inset(-20% -2% -20% 0%)", duration: d || 0.55, ease: "power1.inOut", immediateRender: false}, t);
-  }
-  // a Material object lands: scale with a spring, a whisker of tilt that settles
-  function pop(sel, t, o) {
-    o = o || {};
-    tl.fromTo(sel, {autoAlpha: 0, scale: o.s == null ? 0.6 : o.s, rotation: o.r == null ? -4 : o.r, y: o.y == null ? 24 : o.y},
-              {autoAlpha: 1, scale: 1, rotation: o.to || 0, y: 0, duration: o.d || 0.7, ease: o.ease || POP, immediateRender: true}, t);
-  }
-  function show(sel, t) { tl.set(sel, {autoAlpha: 1}, t); }
-  function out(sel, t, d) { tl.to(sel, {autoAlpha: 0, scale: 0.92, duration: d || 0.25, ease: "power2.in"}, t); }
-  function fadeOut(sel, t, d) { tl.to(sel, {autoAlpha: 0, duration: d || 0.25, ease: "power1.in"}, t); }
-  function bump(sel, t) {
-    tl.to(sel, {scale: 1.08, duration: 0.1, ease: "power2.out"}, t);
-    tl.to(sel, {scale: 1, duration: 0.45, ease: SP}, t + 0.1);
-  }
-  function wiggle(sel, t) { tl.to(sel, {keyframes: {rotation: [0, -5, 4, -2.5, 1, 0]}, duration: 0.5, ease: "none"}, t); }
-  // the four Google dots bounce in sequence while something "thinks"
-  function think(sel, t, d) {
-    var dots = Q(sel + " i"), n = Math.max(1, Math.floor((d || 1.2) / 0.6));
-    dots.forEach(function (el, i) {
-      for (var k = 0; k < n; k++)
-        tl.to(el, {keyframes: {y: [0, -22, 0]}, duration: 0.42, ease: "sine.inOut"}, t + k * 0.6 + i * 0.09);
-    });
-  }
-  function toggle(sel, t, color) {
-    tl.to(sel, {backgroundColor: color || "#0b57d0", borderColor: color || "#0b57d0", duration: 0.18}, t);
-    tl.to(sel + " b", {x: 40, scale: 1.18, backgroundColor: "#fff", duration: 0.45, ease: SP}, t);
-  }
-  // typing into a Google search pill / input: chars appear one by one
-  function type(sel, t, cps) {
-    var el = document.querySelector(sel), txt = el.getAttribute("data-text") || "", o = {n: 0};
-    cps = cps || 22;
-    tl.fromTo(o, {n: 0}, {n: txt.length, duration: txt.length / cps, ease: "none", immediateRender: true,
-      onUpdate: function () { el.textContent = txt.slice(0, Math.round(o.n)); }}, t);
-  }
-  function count(sel, t, to, d, fmt) {
-    var o = {v: 0}, el = document.querySelector(sel);
-    tl.fromTo(o, {v: 0}, {v: to, duration: d || 1.0, ease: "power2.out", immediateRender: false,
-              onUpdate: function () { el.textContent = fmt ? fmt(o.v) : Math.round(o.v); }}, t);
-  }
-  // the whiteboard takes over: it is wiped in by a marker sweep from a point
-  function boardIn(sel, t, x, y, d) {
-    tl.set(sel, {autoAlpha: 1}, t);
-    tl.fromTo(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)"},
-              {clipPath: "circle(2300px at " + x + "px " + y + "px)", duration: d || 0.75, ease: "power3.inOut", immediateRender: false}, t);
-  }
-  function boardOut(sel, t, x, y, d) {
-    tl.to(sel, {clipPath: "circle(0px at " + x + "px " + y + "px)", duration: d || 0.55, ease: "power3.inOut"}, t);
-    tl.set(sel, {autoAlpha: 0}, t + (d || 0.55) + 0.02);
-  }
-  // infinite canvas: pan/zoom the board's camera layer to frame the next idea
-  function pan(sel, t, x, y, s, d) {
-    tl.to(sel, {x: x, y: y, scale: s == null ? 1 : s, duration: d || 0.8, ease: "power3.inOut"}, t);
-  }
-  // §0c — her plate moves. plateDown: push her down by d px (spring), so a
-  // panel/card above her never sits on her head. plateUp: back to full frame.
-  function plateDown(t, d, dur) {
-    tl.to("#platebox", {y: d, duration: dur || 0.75, ease: SP}, t);
-  }
-  function plateUp(t, dur) {
-    tl.to("#platebox", {y: 0, duration: dur || 0.6, ease: "power3.inOut"}, t);
-  }
-  // halfscreen / mockup sheet: the panel drops in from the top edge while she
-  // is pushed down by the same move; out = the panel rolls back up and she
-  // rises. h = panel height, d = how far she moves (default h - 560: her
-  // hairline sits ~40 px under the panel's edge).
-  function sheetIn(sel, t, h, d, dur) {
-    dur = dur || 0.7; d = d == null ? Math.max(0, h - 580) : d;
-    tl.set(sel, {autoAlpha: 1}, t);
-    tl.fromTo(sel, {y: -h - 40}, {y: 0, duration: dur, ease: SOFT, immediateRender: false}, t);
-    plateDown(t, d, dur + 0.1);
-  }
-  function sheetOut(sel, t, h, dur) {
-    dur = dur || 0.55;
-    tl.to(sel, {y: -h - 40, duration: dur, ease: "power3.in"}, t);
-    tl.set(sel, {autoAlpha: 0}, t + dur + 0.02);
-    plateUp(t + 0.05, dur + 0.1);
-  }
-  return {plateDown: plateDown, plateUp: plateUp, sheetIn: sheetIn, sheetOut: sheetOut,
-          draw: draw, undraw: undraw, write: write, pop: pop, show: show, out: out, fadeOut: fadeOut,
-          bump: bump, wiggle: wiggle, think: think, toggle: toggle, type: type, count: count,
-          boardIn: boardIn, boardOut: boardOut, pan: pan};
-}
+  function erase(name, t) { tl.to("#sk-" + name, {autoAlpha: 0, duration: .3, ease: "power2.in"}, t); }
 
-  var h = sketchHelpers(tl);
-  gsap.set("#vid", {transformOrigin: "540px 900px"});
-  tl.fromTo("#vid", {scale: 1}, {scale: 1.045, duration: 66.117, ease: "none"}, 0);
-  /* b_s1 */
+  gsap.set(PUSH, {transformOrigin: "540px 900px"});
+  tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 66.150, ease: "none"}, 0);
 
-  h.show("#g1", 0.0);
-  h.sheetIn("#s1", 0.05, 720, 140);
-  h.write("#s1L", 0.5, 0.5);
-  h.pop("#c1", 1.360, {s: 0.5, r: -5});
-  h.pop("#c2", 2.140, {s: 0.5, r: 5});
-  h.pop("#dk1", 3.200, {s: 0.6, r: 0});
-  h.pop("#dk2", 3.250, {s: 0.6, r: 0});
-  h.pop("#dk3", 3.300, {s: 0.6, r: 0});
-  h.pop("#dk4", 3.350, {s: 0.6, r: 0});
-  tl.to("#dk1", {x: -210, rotation: -12, duration: 0.6, ease: SP}, 3.650);
-  tl.to("#dk2", {x: -70, rotation: -4, duration: 0.6, ease: SP}, 3.700);
-  tl.to("#dk3", {x: 70, rotation: 4, duration: 0.6, ease: SP}, 3.750);
-  tl.to("#dk4", {x: 210, rotation: 12, duration: 0.6, ease: SP}, 3.800);
-  h.draw("#dkU", 4.100, 0.4);
-  h.pop("#cl0", 4.210, {s: 0.5, r: 3});
-  /* the first card grows into the Claude app */
-  h.fadeOut("#c1, #c2, #s1L, #cl0, #dk1, #dk2, #dk3", 5.933, 0.25);
-  tl.to("#dk4", {x: 0, rotation: 0, scale: 2.2, autoAlpha: 0, duration: 0.4, ease: "power2.in"}, 5.933);
-  h.pop("#app", 6.133, {s: 0.45, r: 0, y: 0});
-  h.pop("#qz", 9.950, {s: 0.9, r: 0, y: 14});
-  h.pop("#qzT", 11.110, {s: 0.5, r: 0, y: 0});
-  h.toggle("#qzT", 11.490, "#0b57d0");
-  h.pop("#wf", 12.180, {s: 0.95, r: 0, y: 14});
-  h.type("#wfT", 12.430, 24);
-  h.pop("#trc", 13.600, {s: 0.5, r: -3});
-  h.pop("#ad", 14.630, {s: 0.5, r: 0});
-  h.think("#ad", 14.730, 0.6);
-  h.out("#ad", 15.130, 0.15);
-  h.pop("#f3", 15.230, {s: 0.4, r: 10, to: 6});
-  h.pop("#f2", 15.350, {s: 0.4, r: 6, to: 2});
-  h.pop("#f1", 15.470, {s: 0.4, r: -6, to: -3});
-  h.pop("#stu", 16.648, {s: 0.4, r: 0});
-  h.write("#stuT", 16.798, 0.35);
-  h.draw("#stuA", 16.998, 0.4);
-  tl.to("#f1", {scaleX: 0, duration: 0.14, ease: "power2.in"}, 17.538);
-  tl.set("#f1a", {autoAlpha: 0}, 17.678);
-  tl.set("#f1b", {autoAlpha: 1}, 17.678);
-  tl.to("#f1", {scaleX: 1, duration: 0.3, ease: SP}, 17.678);
-  /* b_s2 */
+  tl.set("#w0", {autoAlpha: 1}, 0.000); tl.set("#w0", {autoAlpha: 0}, 0.345);
+  tl.set("#w1", {autoAlpha: 1}, 0.430); tl.set("#w1", {autoAlpha: 0}, 0.530);
+  tl.set("#w2", {autoAlpha: 1}, 0.530); tl.set("#w2", {autoAlpha: 0}, 0.705);
+  tl.set("#w3", {autoAlpha: 1}, 0.790); tl.set("#w3", {autoAlpha: 0}, 1.325);
+  tl.set("#w4", {autoAlpha: 1}, 1.410); tl.set("#w4", {autoAlpha: 0}, 1.945);
+  tl.set("#w5", {autoAlpha: 1}, 2.030); tl.set("#w5", {autoAlpha: 0}, 2.130);
+  tl.set("#w6", {autoAlpha: 1}, 2.190); tl.set("#w6", {autoAlpha: 0}, 2.915);
+  tl.set("#w7", {autoAlpha: 1}, 3.000); tl.set("#w7", {autoAlpha: 0}, 3.315);
+  tl.set("#w8", {autoAlpha: 1}, 3.400); tl.set("#w8", {autoAlpha: 0}, 3.500);
+  tl.set("#w9", {autoAlpha: 1}, 3.500); tl.set("#w9", {autoAlpha: 0}, 4.175);
+  tl.set("#w10", {autoAlpha: 1}, 4.260); tl.set("#w10", {autoAlpha: 0}, 4.515);
+  tl.set("#w11", {autoAlpha: 1}, 4.600); tl.set("#w11", {autoAlpha: 0}, 4.875);
+  tl.set("#w12", {autoAlpha: 1}, 4.960); tl.set("#w12", {autoAlpha: 0}, 5.060);
+  tl.set("#w13", {autoAlpha: 1}, 5.080); tl.set("#w13", {autoAlpha: 0}, 5.235);
+  tl.set("#w14", {autoAlpha: 1}, 5.320); tl.set("#w14", {autoAlpha: 0}, 5.948);
+  tl.set("#w15", {autoAlpha: 1}, 6.033); tl.set("#w15", {autoAlpha: 0}, 6.678);
+  tl.set("#w16", {autoAlpha: 1}, 6.763); tl.set("#w16", {autoAlpha: 0}, 6.863);
+  tl.set("#w17", {autoAlpha: 1}, 6.943); tl.set("#w17", {autoAlpha: 0}, 7.398);
+  tl.set("#w18", {autoAlpha: 1}, 7.483); tl.set("#w18", {autoAlpha: 0}, 8.052);
+  tl.set("#w19", {autoAlpha: 1}, 8.137); tl.set("#w19", {autoAlpha: 0}, 8.237);
+  tl.set("#w20", {autoAlpha: 1}, 8.317); tl.set("#w20", {autoAlpha: 0}, 8.732);
+  tl.set("#w21", {autoAlpha: 1}, 8.817); tl.set("#w21", {autoAlpha: 0}, 9.072);
+  tl.set("#w22", {autoAlpha: 1}, 9.157); tl.set("#w22", {autoAlpha: 0}, 9.648);
+  tl.set("#w23", {autoAlpha: 1}, 9.733); tl.set("#w23", {autoAlpha: 0}, 9.898);
+  tl.set("#w24", {autoAlpha: 1}, 9.983); tl.set("#w24", {autoAlpha: 0}, 10.138);
+  tl.set("#w25", {autoAlpha: 1}, 10.223); tl.set("#w25", {autoAlpha: 0}, 10.398);
+  tl.set("#w26", {autoAlpha: 1}, 10.483); tl.set("#w26", {autoAlpha: 0}, 11.058);
+  tl.set("#w27", {autoAlpha: 1}, 11.143); tl.set("#w27", {autoAlpha: 0}, 11.438);
+  tl.set("#w28", {autoAlpha: 1}, 11.523); tl.set("#w28", {autoAlpha: 0}, 12.048);
+  tl.set("#w29", {autoAlpha: 1}, 12.133); tl.set("#w29", {autoAlpha: 0}, 12.278);
+  tl.set("#w30", {autoAlpha: 1}, 12.363); tl.set("#w30", {autoAlpha: 0}, 12.718);
+  tl.set("#w31", {autoAlpha: 1}, 12.803); tl.set("#w31", {autoAlpha: 0}, 13.078);
+  tl.set("#w32", {autoAlpha: 1}, 13.163); tl.set("#w32", {autoAlpha: 0}, 13.318);
+  tl.set("#w33", {autoAlpha: 1}, 13.403); tl.set("#w33", {autoAlpha: 0}, 13.598);
+  tl.set("#w34", {autoAlpha: 1}, 13.683); tl.set("#w34", {autoAlpha: 0}, 14.185);
+  tl.set("#w35", {autoAlpha: 1}, 14.270); tl.set("#w35", {autoAlpha: 0}, 14.478);
+  tl.set("#w36", {autoAlpha: 1}, 14.563); tl.set("#w36", {autoAlpha: 0}, 14.678);
+  tl.set("#w37", {autoAlpha: 1}, 14.763); tl.set("#w37", {autoAlpha: 0}, 15.178);
+  tl.set("#w38", {autoAlpha: 1}, 15.263); tl.set("#w38", {autoAlpha: 0}, 15.738);
+  tl.set("#w39", {autoAlpha: 1}, 15.823); tl.set("#w39", {autoAlpha: 0}, 15.978);
+  tl.set("#w40", {autoAlpha: 1}, 16.063); tl.set("#w40", {autoAlpha: 0}, 16.507);
+  tl.set("#w41", {autoAlpha: 1}, 16.592); tl.set("#w41", {autoAlpha: 0}, 16.692);
+  tl.set("#w42", {autoAlpha: 1}, 16.732); tl.set("#w42", {autoAlpha: 0}, 17.047);
+  tl.set("#w43", {autoAlpha: 1}, 17.132); tl.set("#w43", {autoAlpha: 0}, 17.487);
+  tl.set("#w44", {autoAlpha: 1}, 17.572); tl.set("#w44", {autoAlpha: 0}, 18.007);
+  tl.set("#w45", {autoAlpha: 1}, 18.092); tl.set("#w45", {autoAlpha: 0}, 18.615);
+  tl.set("#w46", {autoAlpha: 1}, 18.700); tl.set("#w46", {autoAlpha: 0}, 19.405);
+  tl.set("#w47", {autoAlpha: 1}, 19.490); tl.set("#w47", {autoAlpha: 0}, 19.590);
+  tl.set("#w48", {autoAlpha: 1}, 19.590); tl.set("#w48", {autoAlpha: 0}, 20.065);
+  tl.set("#w49", {autoAlpha: 1}, 20.150); tl.set("#w49", {autoAlpha: 0}, 20.697);
+  tl.set("#w50", {autoAlpha: 1}, 20.782); tl.set("#w50", {autoAlpha: 0}, 21.177);
+  tl.set("#w51", {autoAlpha: 1}, 21.262); tl.set("#w51", {autoAlpha: 0}, 21.637);
+  tl.set("#w52", {autoAlpha: 1}, 21.722); tl.set("#w52", {autoAlpha: 0}, 21.930);
+  tl.set("#w53", {autoAlpha: 1}, 22.015); tl.set("#w53", {autoAlpha: 0}, 22.290);
+  tl.set("#w54", {autoAlpha: 1}, 22.375); tl.set("#w54", {autoAlpha: 0}, 22.490);
+  tl.set("#w55", {autoAlpha: 1}, 22.575); tl.set("#w55", {autoAlpha: 0}, 22.850);
+  tl.set("#w56", {autoAlpha: 1}, 22.935); tl.set("#w56", {autoAlpha: 0}, 23.143);
+  tl.set("#w57", {autoAlpha: 1}, 23.228); tl.set("#w57", {autoAlpha: 0}, 23.562);
+  tl.set("#w58", {autoAlpha: 1}, 23.647); tl.set("#w58", {autoAlpha: 0}, 23.848);
+  tl.set("#w59", {autoAlpha: 1}, 23.933); tl.set("#w59", {autoAlpha: 0}, 24.598);
+  tl.set("#w60", {autoAlpha: 1}, 24.683); tl.set("#w60", {autoAlpha: 0}, 25.058);
+  tl.set("#w61", {autoAlpha: 1}, 25.143); tl.set("#w61", {autoAlpha: 0}, 25.338);
+  tl.set("#w62", {autoAlpha: 1}, 25.423); tl.set("#w62", {autoAlpha: 0}, 25.538);
+  tl.set("#w63", {autoAlpha: 1}, 25.623); tl.set("#w63", {autoAlpha: 0}, 25.898);
+  tl.set("#w64", {autoAlpha: 1}, 25.983); tl.set("#w64", {autoAlpha: 0}, 26.298);
+  tl.set("#w65", {autoAlpha: 1}, 26.383); tl.set("#w65", {autoAlpha: 0}, 26.538);
+  tl.set("#w66", {autoAlpha: 1}, 26.623); tl.set("#w66", {autoAlpha: 0}, 27.118);
+  tl.set("#w67", {autoAlpha: 1}, 27.203); tl.set("#w67", {autoAlpha: 0}, 27.318);
+  tl.set("#w68", {autoAlpha: 1}, 27.403); tl.set("#w68", {autoAlpha: 0}, 27.538);
+  tl.set("#w69", {autoAlpha: 1}, 27.623); tl.set("#w69", {autoAlpha: 0}, 28.448);
+  tl.set("#w70", {autoAlpha: 1}, 28.533); tl.set("#w70", {autoAlpha: 0}, 28.658);
+  tl.set("#w71", {autoAlpha: 1}, 28.743); tl.set("#w71", {autoAlpha: 0}, 28.878);
+  tl.set("#w72", {autoAlpha: 1}, 28.963); tl.set("#w72", {autoAlpha: 0}, 29.063);
+  tl.set("#w73", {autoAlpha: 1}, 29.103); tl.set("#w73", {autoAlpha: 0}, 29.438);
+  tl.set("#w74", {autoAlpha: 1}, 29.523); tl.set("#w74", {autoAlpha: 0}, 29.638);
+  tl.set("#w75", {autoAlpha: 1}, 29.723); tl.set("#w75", {autoAlpha: 0}, 30.078);
+  tl.set("#w76", {autoAlpha: 1}, 30.163); tl.set("#w76", {autoAlpha: 0}, 30.263);
+  tl.set("#w77", {autoAlpha: 1}, 30.283); tl.set("#w77", {autoAlpha: 0}, 30.398);
+  tl.set("#w78", {autoAlpha: 1}, 30.483); tl.set("#w78", {autoAlpha: 0}, 30.583);
+  tl.set("#w79", {autoAlpha: 1}, 30.663); tl.set("#w79", {autoAlpha: 0}, 30.838);
+  tl.set("#w80", {autoAlpha: 1}, 30.923); tl.set("#w80", {autoAlpha: 0}, 31.198);
+  tl.set("#w81", {autoAlpha: 1}, 31.283); tl.set("#w81", {autoAlpha: 0}, 31.383);
+  tl.set("#w82", {autoAlpha: 1}, 31.443); tl.set("#w82", {autoAlpha: 0}, 31.543);
+  tl.set("#w83", {autoAlpha: 1}, 31.623); tl.set("#w83", {autoAlpha: 0}, 31.838);
+  tl.set("#w84", {autoAlpha: 1}, 31.923); tl.set("#w84", {autoAlpha: 0}, 32.382);
+  tl.set("#w85", {autoAlpha: 1}, 32.467); tl.set("#w85", {autoAlpha: 0}, 33.032);
+  tl.set("#w86", {autoAlpha: 1}, 33.117); tl.set("#w86", {autoAlpha: 0}, 33.217);
+  tl.set("#w87", {autoAlpha: 1}, 33.277); tl.set("#w87", {autoAlpha: 0}, 33.892);
+  tl.set("#w88", {autoAlpha: 1}, 33.977); tl.set("#w88", {autoAlpha: 0}, 34.312);
+  tl.set("#w89", {autoAlpha: 1}, 34.397); tl.set("#w89", {autoAlpha: 0}, 34.948);
+  tl.set("#w90", {autoAlpha: 1}, 35.033); tl.set("#w90", {autoAlpha: 0}, 35.478);
+  tl.set("#w91", {autoAlpha: 1}, 35.563); tl.set("#w91", {autoAlpha: 0}, 35.898);
+  tl.set("#w92", {autoAlpha: 1}, 35.983); tl.set("#w92", {autoAlpha: 0}, 36.098);
+  tl.set("#w93", {autoAlpha: 1}, 36.183); tl.set("#w93", {autoAlpha: 0}, 36.283);
+  tl.set("#w94", {autoAlpha: 1}, 36.323); tl.set("#w94", {autoAlpha: 0}, 36.698);
+  tl.set("#w95", {autoAlpha: 1}, 36.783); tl.set("#w95", {autoAlpha: 0}, 36.883);
+  tl.set("#w96", {autoAlpha: 1}, 36.943); tl.set("#w96", {autoAlpha: 0}, 37.398);
+  tl.set("#w97", {autoAlpha: 1}, 37.483); tl.set("#w97", {autoAlpha: 0}, 37.938);
+  tl.set("#w98", {autoAlpha: 1}, 38.023); tl.set("#w98", {autoAlpha: 0}, 38.389);
+  tl.set("#w99", {autoAlpha: 1}, 38.474); tl.set("#w99", {autoAlpha: 0}, 38.574);
+  tl.set("#w100", {autoAlpha: 1}, 38.574); tl.set("#w100", {autoAlpha: 0}, 38.674);
+  tl.set("#w101", {autoAlpha: 1}, 38.714); tl.set("#w101", {autoAlpha: 0}, 39.109);
+  tl.set("#w102", {autoAlpha: 1}, 39.194); tl.set("#w102", {autoAlpha: 0}, 39.469);
+  tl.set("#w103", {autoAlpha: 1}, 39.554); tl.set("#w103", {autoAlpha: 0}, 40.269);
+  tl.set("#w104", {autoAlpha: 1}, 40.354); tl.set("#w104", {autoAlpha: 0}, 40.469);
+  tl.set("#w105", {autoAlpha: 1}, 40.554); tl.set("#w105", {autoAlpha: 0}, 41.079);
+  tl.set("#w106", {autoAlpha: 1}, 41.164); tl.set("#w106", {autoAlpha: 0}, 41.319);
+  tl.set("#w107", {autoAlpha: 1}, 41.404); tl.set("#w107", {autoAlpha: 0}, 41.559);
+  tl.set("#w108", {autoAlpha: 1}, 41.644); tl.set("#w108", {autoAlpha: 0}, 42.139);
+  tl.set("#w109", {autoAlpha: 1}, 42.224); tl.set("#w109", {autoAlpha: 0}, 42.359);
+  tl.set("#w110", {autoAlpha: 1}, 42.444); tl.set("#w110", {autoAlpha: 0}, 43.023);
+  tl.set("#w111", {autoAlpha: 1}, 43.108); tl.set("#w111", {autoAlpha: 0}, 43.223);
+  tl.set("#w112", {autoAlpha: 1}, 43.308); tl.set("#w112", {autoAlpha: 0}, 43.408);
+  tl.set("#w113", {autoAlpha: 1}, 43.428); tl.set("#w113", {autoAlpha: 0}, 43.528);
+  tl.set("#w114", {autoAlpha: 1}, 43.588); tl.set("#w114", {autoAlpha: 0}, 43.688);
+  tl.set("#w115", {autoAlpha: 1}, 43.688); tl.set("#w115", {autoAlpha: 0}, 44.063);
+  tl.set("#w116", {autoAlpha: 1}, 44.148); tl.set("#w116", {autoAlpha: 0}, 44.303);
+  tl.set("#w117", {autoAlpha: 1}, 44.388); tl.set("#w117", {autoAlpha: 0}, 44.488);
+  tl.set("#w118", {autoAlpha: 1}, 44.528); tl.set("#w118", {autoAlpha: 0}, 44.628);
+  tl.set("#w119", {autoAlpha: 1}, 44.628); tl.set("#w119", {autoAlpha: 0}, 45.082);
+  tl.set("#w120", {autoAlpha: 1}, 45.167); tl.set("#w120", {autoAlpha: 0}, 45.352);
+  tl.set("#w121", {autoAlpha: 1}, 45.437); tl.set("#w121", {autoAlpha: 0}, 45.612);
+  tl.set("#w122", {autoAlpha: 1}, 45.697); tl.set("#w122", {autoAlpha: 0}, 46.115);
+  tl.set("#w123", {autoAlpha: 1}, 46.200); tl.set("#w123", {autoAlpha: 0}, 46.325);
+  tl.set("#w124", {autoAlpha: 1}, 46.410); tl.set("#w124", {autoAlpha: 0}, 46.985);
+  tl.set("#w125", {autoAlpha: 1}, 47.070); tl.set("#w125", {autoAlpha: 0}, 47.170);
+  tl.set("#w126", {autoAlpha: 1}, 47.210); tl.set("#w126", {autoAlpha: 0}, 47.505);
+  tl.set("#w127", {autoAlpha: 1}, 47.590); tl.set("#w127", {autoAlpha: 0}, 47.785);
+  tl.set("#w128", {autoAlpha: 1}, 47.870); tl.set("#w128", {autoAlpha: 0}, 48.125);
+  tl.set("#w129", {autoAlpha: 1}, 48.210); tl.set("#w129", {autoAlpha: 0}, 48.365);
+  tl.set("#w130", {autoAlpha: 1}, 48.450); tl.set("#w130", {autoAlpha: 0}, 48.785);
+  tl.set("#w131", {autoAlpha: 1}, 48.870); tl.set("#w131", {autoAlpha: 0}, 49.315);
+  tl.set("#w132", {autoAlpha: 1}, 49.400); tl.set("#w132", {autoAlpha: 0}, 49.545);
+  tl.set("#w133", {autoAlpha: 1}, 49.630); tl.set("#w133", {autoAlpha: 0}, 49.785);
+  tl.set("#w134", {autoAlpha: 1}, 49.870); tl.set("#w134", {autoAlpha: 0}, 50.065);
+  tl.set("#w135", {autoAlpha: 1}, 50.150); tl.set("#w135", {autoAlpha: 0}, 50.585);
+  tl.set("#w136", {autoAlpha: 1}, 50.670); tl.set("#w136", {autoAlpha: 0}, 51.045);
+  tl.set("#w137", {autoAlpha: 1}, 51.130); tl.set("#w137", {autoAlpha: 0}, 51.445);
+  tl.set("#w138", {autoAlpha: 1}, 51.530); tl.set("#w138", {autoAlpha: 0}, 51.907);
+  tl.set("#w139", {autoAlpha: 1}, 51.992); tl.set("#w139", {autoAlpha: 0}, 52.807);
+  tl.set("#w140", {autoAlpha: 1}, 52.892); tl.set("#w140", {autoAlpha: 0}, 52.992);
+  tl.set("#w141", {autoAlpha: 1}, 53.032); tl.set("#w141", {autoAlpha: 0}, 53.367);
+  tl.set("#w143", {autoAlpha: 1}, 54.032); tl.set("#w143", {autoAlpha: 0}, 54.187);
+  tl.set("#w144", {autoAlpha: 1}, 54.272); tl.set("#w144", {autoAlpha: 0}, 54.515);
+  tl.set("#w145", {autoAlpha: 1}, 54.600); tl.set("#w145", {autoAlpha: 0}, 54.805);
+  tl.set("#w146", {autoAlpha: 1}, 54.890); tl.set("#w146", {autoAlpha: 0}, 54.990);
+  tl.set("#w147", {autoAlpha: 1}, 55.070); tl.set("#w147", {autoAlpha: 0}, 55.170);
+  tl.set("#w148", {autoAlpha: 1}, 55.210); tl.set("#w148", {autoAlpha: 0}, 55.625);
+  tl.set("#w149", {autoAlpha: 1}, 55.710); tl.set("#w149", {autoAlpha: 0}, 56.025);
+  tl.set("#w150", {autoAlpha: 1}, 56.110); tl.set("#w150", {autoAlpha: 0}, 56.210);
+  tl.set("#w151", {autoAlpha: 1}, 56.250); tl.set("#w151", {autoAlpha: 0}, 56.485);
+  tl.set("#w152", {autoAlpha: 1}, 56.570); tl.set("#w152", {autoAlpha: 0}, 57.258);
+  tl.set("#w153", {autoAlpha: 1}, 57.343); tl.set("#w153", {autoAlpha: 0}, 57.930);
+  tl.set("#w154", {autoAlpha: 1}, 58.015); tl.set("#w154", {autoAlpha: 0}, 58.310);
+  tl.set("#w155", {autoAlpha: 1}, 58.395); tl.set("#w155", {autoAlpha: 0}, 58.495);
+  tl.set("#w156", {autoAlpha: 1}, 58.575); tl.set("#w156", {autoAlpha: 0}, 58.770);
+  tl.set("#w157", {autoAlpha: 1}, 58.855); tl.set("#w157", {autoAlpha: 0}, 59.330);
+  tl.set("#w158", {autoAlpha: 1}, 59.415); tl.set("#w158", {autoAlpha: 0}, 60.070);
+  tl.set("#w159", {autoAlpha: 1}, 60.155); tl.set("#w159", {autoAlpha: 0}, 60.450);
+  tl.set("#w160", {autoAlpha: 1}, 60.535); tl.set("#w160", {autoAlpha: 0}, 60.650);
+  tl.set("#w161", {autoAlpha: 1}, 60.735); tl.set("#w161", {autoAlpha: 0}, 61.130);
+  tl.set("#w162", {autoAlpha: 1}, 61.215); tl.set("#w162", {autoAlpha: 0}, 61.782);
+  tl.set("#w163", {autoAlpha: 1}, 61.867); tl.set("#w163", {autoAlpha: 0}, 62.091);
+  tl.set("#w164", {autoAlpha: 1}, 62.176); tl.set("#w164", {autoAlpha: 0}, 62.471);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 66.107);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 9.933);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 18.600);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 20.682);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 32.317);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 53.222);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 53.947);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 62.206);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 66.150);
 
-  /* the flipped card opens into the halfscreen board */
-  tl.to("#f1", {scale: 1.25, duration: 0.3, ease: "power2.in"}, 18.517);
-  h.show("#g2", 18.517);
-  h.boardIn("#s2", 18.517, 570, 530, 0.75);
-  h.plateDown(18.517, 350, 0.8);
-  tl.set("#g1", {autoAlpha: 0}, 19.367);
-  h.write("#s2T", 19.017, 0.8);
-  h.draw("#s2U", 19.857, 0.35);
-  h.pop("#pf", 20.699, {s: 0.5, r: -4});
-  h.write("#pfT", 21.229, 0.45);
-  h.draw("#cE", 21.832, 0.5);
-  h.write("#cT", 22.082, 0.3);
-  h.draw("#a1", 22.802, 0.4);
-  h.write("#a1T", 23.052, 0.4);
-  h.pop("#skl", 23.564, {s: 0.5, r: 4});
-  h.draw("#a2", 23.800, 0.35);
-  h.pop("#pE", 24.000, {s: 0.6, r: -4, to: 0});
-  h.draw("#pEx", 24.500, 0.25);
-  h.write("#pEf", 24.750, 0.35);
-  h.draw("#a3", 25.440, 0.25);
-  h.pop("#pV", 25.590, {s: 0.6, r: 4, to: 0});
-  h.draw("#pVL", 25.790, 0.5);
-  h.write("#pVT", 26.590, 0.6);
-  h.pop("#pn", 29.640, {s: 0.5, r: -4});
-  h.draw("#a4", 30.690, 0.4);
-  h.pop("#pK", 31.490, {s: 0.5, r: 3, to: 0});
-  h.bump("#pK", 31.990);
-  /* b_s3 */
+  rise("#bw1", 0.15); sink("#bw1", 4.470);
+  shuffle(["#l0"], [6.033], 9.633);
+  shuffle(["#l1"], [18.950], 20.332);
+  shuffle(["#l2"], [32.467], 35.433);
+  shuffle(["#l3"], [46.210], 49.400);
 
-  /* the board closes onto the student card: the homework app is under it */
-  h.show("#g3", 32.233);
-  h.show("#s3", 32.233);
-  h.boardOut("#s2", 32.233, 795, 805, 0.6);
-  h.plateDown(32.233, 180, 0.75);
-  h.pop("#s3T", 32.733, {s: 0.85, r: 0, y: 16});
-  h.pop("#clx", 35.000, {s: 0.5, r: -3});
-  h.draw("#clxS", 36.910, 0.45);
-  h.wiggle("#clx", 37.210);
-  h.fadeOut("#clx, #clxS", 38.441, 0.25);
-  h.pop("#st1", 39.321, {s: 0.9, r: 0, y: 20});
-  h.pop("#st2", 39.471, {s: 0.9, r: 0, y: 20});
-  h.pop("#st3", 39.621, {s: 0.9, r: 0, y: 20});
-  h.pop("#st4", 39.771, {s: 0.9, r: 0, y: 20});
-  h.pop("#sc1", 41.511, {s: 0.5, r: 0});
-  h.pop("#sc2", 41.711, {s: 0.5, r: 0});
-  h.pop("#sc3", 41.911, {s: 0.5, r: 0});
-  h.pop("#sc4", 42.111, {s: 0.5, r: 0});
-  h.draw("#mkO", 42.511, 0.5);
-  h.pop("#srch", 43.455, {s: 0.8, r: 0, y: 12});
-  h.type("#srT", 43.655, 22);
-  h.draw("#srX", 44.595, 0.3);
-  h.draw("#okC", 45.303, 0.35);
-  h.write("#okT", 45.613, 0.35);
-  /* b_s4 */
+  gsap.set("#win", {transformOrigin: "400px 280px"});
+  gsap.set(["#menu", "#ans", "#card"], {autoAlpha: 0});
+  gsap.set("#win", {x: 140.0, y: 480.0 + 220, scale: 1.2 * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
+  tl.to("#win", {x: 140.0, y: 480.0, scale: 1.2, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.1, ease: "power3.out"}, 9.683 + .1);
+  tl.fromTo("#menu", {autoAlpha: 0, y: 12}, X({autoAlpha: 1, y: 0, duration: .3}), 11.143 - .9);
+  tl.to("#win", {x: 699.0, y: 311.0, scale: 2.6, rotationX: 3, rotationY: 6, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, 11.143 - .6);
+  tl.to("#tq", {backgroundColor: "#4255FF", duration: .2}, 11.523);
+  tl.to("#tq u", {x: 14, duration: .3, ease: "back.out(2)"}, 11.523);
+  tl.to("#menu", {autoAlpha: 0, duration: .25}, 12.363 - .35);
+  tl.to("#win", {x: 140.0, y: 128.1, scale: 1.7, rotationX: -3, rotationY: -6, duration: 1.0, ease: "power3.inOut"}, 12.363 - .5);
+  tl.fromTo("#typ", {clipPath: "inset(0 100% 0 0)"}, X({clipPath: "inset(0 0% 0 0)", duration: 1.9, ease: "steps(28)"}), 12.363);
+  tl.to("#typ", {autoAlpha: 0, duration: .2}, 14.763 - .2);
+  tl.fromTo("#ans", {autoAlpha: 0, y: 30}, X({autoAlpha: 1, y: 0, duration: .5, ease: "power3.out"}), 14.763);
+  tl.to("#win", {x: 341.2, y: 553.8, scale: 1.75, rotationX: 6, rotationY: 8, rotationZ: -1, duration: 1.1, ease: "power3.inOut"}, 14.763 - .2);
+  tl.to("#opn", {scale: .92, backgroundColor: "#2E3BBF", duration: .12, yoyo: true, repeat: 1}, 16.732 + .3);
+  tl.to("#win", {y: "-=260", scale: 1.75 * .8, rotationX: 14, duration: .9, ease: "power3.inOut"}, 16.732 + .4);
+  tl.fromTo("#card", {autoAlpha: 0, y: 220, rotationX: -30}, X({autoAlpha: 1, y: 0, rotationX: 0, duration: .7, ease: "power3.out"}), 16.732 + .5);
+  tl.to("#card", {rotationY: 180, duration: .7, ease: "power2.inOut"}, 17.572 + .15);
+  full(9.683, 18.200);
 
-  /* the tick opens the second board */
-  h.show("#g4", 46.027);
-  h.boardIn("#s4", 46.027, 915, 120, 0.75);
-  h.plateDown(46.027, 350, 0.8);
-  tl.set("#g3", {autoAlpha: 0}, 46.877);
-  h.write("#s4T", 46.677, 0.7);
-  h.draw("#s4U", 47.627, 0.35);
-  h.write("#s4N", 48.317, 0.6);
-  h.draw("#c4E", 49.397, 0.45);
-  h.write("#c4T", 49.597, 0.3);
-  h.draw("#b1", 50.337, 0.2);
-  h.pop("#qP", 50.537, {s: 0.6, r: -4, to: 0});
-  h.pop("#sP", 51.397, {s: 0.6, r: 4, to: 0});
-  h.pop("#n1", 51.959, {s: 0.6, r: 0});
-  h.draw("#na1", 52.209, 0.2);
-  h.pop("#n2", 52.359, {s: 0.6, r: 0});
-  h.draw("#na2", 52.609, 0.2);
-  h.pop("#n3", 52.759, {s: 0.6, r: 0});
-  h.pop("#psp", 53.369, {s: 0.5, r: -4});
-  h.pop("#bk", 53.949, {s: 0.5, r: 4});
-  h.bump("#n3", 55.177);
-  h.draw("#na3", 56.017, 0.35);
-  h.pop("#crm", 56.317, {s: 0.5, r: 3, to: 0});
-  h.draw("#mag", 58.672, 0.4);
-  h.write("#magT", 58.822, 0.4);
-  h.pop("#kv", 59.332, {s: 0.5, r: -3});
-  h.draw("#loop", 60.602, 0.7);
-  /* b_s5 */
 
-  /* the board closes onto the CRM card: the post with its action bar is under it */
-  h.show("#g5", 61.533);
-  h.show("#s5", 61.533);
-  h.boardOut("#s4", 61.533, 820, 815, 0.6);
-  h.plateDown(61.533, 60, 0.75);
-  h.draw("#icons", 62.033, 0.6);
-  h.draw("#bm", 62.133, 0.3);
-  tl.fromTo("#bmF", {opacity: 0}, {opacity: 1, duration: 0.2, immediateRender: false}, 62.522);
-  h.bump("#bm", 62.522);
-  h.write("#bmT", 62.622, 0.4);
-  h.write("#shT", 64.613, 0.4);
-  h.pop("#share", 64.863, {s: 0.6, r: 0, y: 20});
-  h.bump("#share", 65.469);
+  sketch("s1", "skP"); box("s1", 90, 300, 210, 112, {seed: 3}); label("s1", 195, 372, "Fathom", {size: 50});
+  draw("s1", 20.682);
+  sketch("s2", "skP"); arrow("s2", 305, 356, 425, 356, {seed: 5, bend: -.12});
+  box("s2", 435, 300, 210, 112, {seed: 7, fill: true}); label("s2", 540, 372, "Claude", {size: 50});
+  draw("s2", 21.515);
+  sketch("s3", "skP"); label("s3", 540, 462, "+ скіл", {size: 44}); draw("s3", 23.547);
+  sketch("s4", "skP"); arrow("s4", 520, 480, 340, 560, {seed: 9, bend: .15});
+  box("s4", 120, 540, 260, 130, {seed: 11}); label("s4", 250, 593, "помилки", {size: 44});
+  draw("s4", 24.183);
+  sketch("s5", "skP"); label("s5", 250, 648, "вправи", {size: 44}); draw("s5", 25.883);
+  sketch("s6", "skP"); arrow("s6", 650, 356, 770, 356, {seed: 13, bend: .12});
+  box("s6", 780, 300, 210, 112, {seed: 15}); label("s6", 885, 372, "Notion", {size: 50});
+  draw("s6", 29.223, .35);
+  sketch("s7", "skP"); arrow("s7", 885, 420, 835, 545, {seed: 17, bend: -.2});
+  box("s7", 660, 550, 320, 112, {seed: 19, fill: true}); label("s7", 820, 622, "картка учня", {size: 46});
+  draw("s7", 30.123, .35);
+  erase("s1", 31.917); erase("s2", 31.917); erase("s3", 31.917); erase("s4", 31.917); erase("s5", 31.917); erase("s6", 31.917); erase("s7", 31.917);
+
+
+  rise("#hw", 39.354);
+  ["#c1", "#c2"].forEach(function (s, i) {
+    document.querySelector(s).innerHTML = '<b class="tick"></b>';
+    tl.to(s, {backgroundColor: "#7A1424", borderColor: "#7A1424", duration: .2}, 41.644 + i * .35);
+    tl.fromTo(s + " .tick", {scale: 0}, X({scale: 1, duration: .3, ease: "back.out(2)"}), 41.644 + i * .35);
+    tl.to("#e" + (i + 1), {opacity: 1, duration: .25}, 41.644 + i * .35);
+  });
+  tl.to("#r3", {backgroundColor: "rgba(122,20,36,.10)", duration: .3}, 43.688);
+  tl.to("#e3", {opacity: 1, duration: .25}, 43.688);
+  tl.to("#r3", {keyframes: {x: [0, -8, 7, -4, 2, 0]}, duration: .35, ease: "none"}, 43.688 + .1);
+  sink("#hw", 45.997);
+
+
+  rise("#lt", 50.370);
+  tl.to("#ok", {backgroundColor: "#7A1424", borderColor: "#7A1424", color: "#fff", duration: .2}, 51.170);
+  tl.fromTo("#sc span", {autoAlpha: 0, y: 14}, X({autoAlpha: 1, y: 0, duration: .3, stagger: .06, ease: "power3.out"}), 51.330);
+  tl.to("#b1", {backgroundColor: "#7A1424", color: "#fff", duration: .2}, 51.930);
+  sink("#lt", 52.592);
+
+  rise("#bw2", 53.002); sink("#bw2", 54.715);
+
+  rise("#crm", 55.950);
+  tl.fromTo("#ld", {autoAlpha: 0, y: -40}, X({autoAlpha: 1, y: 0, duration: .5, ease: "back.out(1.6)"}), 57.243);
+  tl.set(["#tg1", "#tg2"], {autoAlpha: 0}, 0);
+  pop("#tg1", 58.855); pop("#tg2", 59.515);
+  sink("#crm", 61.767);
+
+  shuffle(["#ct1", "#ct2"], [62.456, 64.647], 67.150);
+  pop("#ctp", 62.456);
+  half(20.432, 31.917);
 
         window.__timelines["main"] = tl;
       }

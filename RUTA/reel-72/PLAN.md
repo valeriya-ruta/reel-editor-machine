@@ -1,28 +1,21 @@
-# Reel 72 — «Чим AI-агент відрізняється від чат-бота з кнопками»
+# Reel 72 — «Чим АІ-агент відрізняється від звичайного чат-бота з кнопками?»
 
-101.017 s plate (3031 frames, cut.py, no closeups) · Google × Excalidraw (STYLE.md §0b) ·
-halfscreen board → move-down sheet (form, agent, DM) → chips over footage → halfscreen board (chain, funnel, CTA) — STYLE.md §0c, her head is never covered. `build.py` is the source of truth.
+Plate 101.617 s (3049 frames, cut.py 2026-11-23). STYLE §00 + her review of reel 61; skeleton from reel-61.
 
-## The chain
+Chain: behind «AI-агент» (cover) -> behind «хардкод-бот» -> FULL 1: the button bot as a 3D chat
+window (message, two buttons, А pressed -> its branch, Б -> its branch, zoom out on «самодіяльності»)
+-> shuffle ім'я / номер телефону / інфо про вебінар -> FULL 2: the same window as the bag shop's
+AI agent (client writes, agent asks back, client answers, handed to a manager) -> shuffle послуги /
+продукти -> HALF: scheme кнопки -> AI-агент in one chain, базові дані / деталі запиту -> CTA pill
+in the subtitle band, then the Direct pill.
 
-The one object is **the two bots as two cards**: «Чат-бот» (two buttons) and «AI-агент»
-(the four Google dots). They start as a «=?» pair, split into two worlds (board 1 is the
-button bot's rails, the DM is the agent's freedom) and come back together in one chain
-on board 2. No numbers on screen (she says none).
-
-## Beats
-
-| time | where | beat |
+| time | layer | what |
 |---|---|---|
-| 0.1–13.9 | HALF (board sheet drops, she moves down) | AI-агент card (dots think), Чат-бот card with chips А/Б; «?» between on «наєбують»; «=» on «те саме»; «+AI» sticker on «додати AI», price tag + red arrow up on «задрати ціну»; red cross on «ні»; «≠» on «різні речі» |
-| 14.3–26.5 | HALF | same sheet; the cards clear, the Чат-бот card folds into its own flow: «хардкод-бот», a «Повідомлення» bubble, two buttons, А clicks → arrow «туди», Б clicks → arrow «сюди»; a stray dashed arrow out of the rails is crossed out on «самодіяльності», a green fence closes; sheet rolls up |
-| 27.6–40.0 | MOVE-DOWN (white sheet 700) | spark on «суперкорисно»; a Material form: «Реєстрація на вебінар», Ім'я / Телефон fields fill and tick, «Інфо про вебінар» chip; a bot bubble with scribble text is crossed out on «від себе» |
-| 40.3–51.3 | MOVE-DOWN (same sheet) | the AI-агент card returns; chips «скрипт», «інформація» feed in; a bubble writes itself on «дописувати самостійно»; a person appears, the bubble bends towards her |
-| 51.5–65.5 | MOVE-DOWN (same sheet, rolls up) | the DM of a bag shop: client asks, dots, agent asks back, client answers, a bag is sketched on «яка сумка», arrow to «менеджер»; grey chips А/Б scribbled on «заготовлених кнопках» |
-| 65.7–70.1 | over footage (chips, bottom y 370) | chips «послуги», «продукти» with ticks |
-| 69.9–85.0 | HALF (board sheet drops, chips fly up) | Чат-бот box «або» AI-агент box; «або» crossed on «замість», arrow joins them on «разом»; under the bot: buttons + Ім'я/Телефон ticks; a person dot rides the arrow to the agent; dots think; a checklist draws itself; the chain folds away |
-| 85.2–95.5 | HALF (same sheet) | «або» → «+» between the two chips; a hand-drawn funnel, top zone «кнопки», bottom «AI-агент»; «?» on «не розумієш» |
-| 95.6–end | HALF (same sheet; she is zoomed in) | CTA: comment pill types «+», Direct pill types «Мій бізнес — …», green tick on «разом» |
-
-Captions: blackout only where the graphic says her word («хардкод-бот», «Реєстрація на
-вебінар», «послуги/продукти», «один ланцюжок», «+»); no `invert=` (halfscreen keeps captions over her).
+| 0.0–3.2 | behind (matte b1) | «AI-агент» |
+| 16.0–17.9 | behind (matte b2) | «хардкод-бот» |
+| 19.1–26.9 | full | button-bot chat: dots -> message (повідомлення) -> 2 buttons (кнопки) -> А pressed, Сценарій А (туди) -> Б pressed, Сценарій Б (сюди) -> zoom out (Ніякої) |
+| 34.1–37.5 | above (shuffle) | Ім'я / Номер телефону / Інфо про вебінар |
+| 52.9–66.0 | full | bag shop AI agent DM: client (пише в дірект), dots, agent asks (опитає), client answers (яка сумка), handover + «Менеджерка приєдналась» (менеджеру), zoom out (Тобто) |
+| 68.1–70.5 | above (shuffle) | Послуги / Продукти |
+| 72.3–84.8 | half (matte half1) | scheme: кнопки, AI-агент, arrow on «разом», базові дані, деталі запиту |
+| 96.8–end | subtitle band | pill «Пиши + у коментарях» -> «або в Direct: розкажи про свій бізнес» |

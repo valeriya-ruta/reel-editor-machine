@@ -186,7 +186,7 @@
     .ask { left: 120px; top: 300px; width: 840px; padding: 24px 28px; }
     .ask .who { display: flex; align-items: center; gap: 10px; font-size: 24px; color: #574142; margin-bottom: 12px; }
     .ask .who .st { color: #C15F3C; font-size: 28px; }
-    .ask .in { background: rgba(255,255,255,.95); border-radius: 22px; padding: 18px 22px; font-size: 30px; line-height: 1.35;
+    .ask .in { background: rgba(255,255,255,.95); border-radius: 22px; padding: 16px 22px; font-size: 28px; line-height: 1.32;
                color: #241919; min-height: 128px; position: relative; }
     .ask .send { position: absolute; right: 16px; bottom: 14px; width: 48px; height: 48px; border-radius: 14px;
                  background: #DEBFBF; color: #fff; font-size: 28px; text-align: center; line-height: 48px; }
@@ -934,6 +934,7 @@
   tl.fromTo("#cl-row", {boxShadow: "0 0 0 0 rgba(122,20,36,0)"}, X({boxShadow: "0 0 0 5px rgba(122,20,36,.18)", duration: .35, yoyo: true, repeat: 1}), 36.172 + .1);
   tl.to("#win1", {x: 140.0, y: 500.0, scale: 1.2, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.1, ease: "power3.inOut"}, 36.172 + .8);
   full(30.417, 38.448);
+  tl.set("#stage1", {autoAlpha: 0}, 38.448 + .9);
 
   rise("#ask", 40.243);
   tl.set("#pw0", {autoAlpha: 1}, 41.517);
@@ -970,10 +971,11 @@
   sink("#ask", 52.362);
 
   gsap.set("#win2", {transformOrigin: "430px 235px"});
+  gsap.set("#stage2", {autoAlpha: 0}); tl.set("#stage2", {autoAlpha: 1}, 52.452 - .05);
   gsap.set("#win2", {x: 110.0, y: 525.0 + 240, scale: 1.15 * .85, rotationX: 26, rotationY: 18, rotationZ: -5});
   tl.to("#win2", {x: 110.0, y: 525.0, scale: 1.15, rotationX: 9, rotationY: 12, rotationZ: -2, duration: 1.2, ease: "power3.out"}, 52.452 + .1);
   tl.fromTo(["#nr0", "#nr1", "#nr2"], {autoAlpha: 0, y: 14}, X({autoAlpha: 1, y: 0, duration: .35, stagger: .12, ease: "power2.out"}), 52.452 + .45);
-  tl.to("#win2", {x: 34.0, y: 401.5, scale: 1.9, rotationX: 3, rotationY: -6, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, 54.603 - .6);
+  tl.to("#win2", {x: 153.5, y: 445.2, scale: 1.45, rotationX: 3, rotationY: -6, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, 54.603 - .6);
   tl.fromTo("#nr3", {autoAlpha: 0, y: -24, backgroundColor: "rgba(122,20,36,.10)"}, X({autoAlpha: 1, y: 0, duration: .45, ease: "back.out(1.6)"}), 56.163);
   tl.to("#nr3", {backgroundColor: "rgba(122,20,36,0)", duration: .8}, 56.163 + .6);
   tl.to("#win2", {x: 110.0, y: 525.0, scale: 1.15, rotationX: 8, rotationY: -12, rotationZ: 2, duration: 1.1, ease: "power3.inOut"}, 56.163 + .6);

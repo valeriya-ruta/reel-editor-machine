@@ -172,14 +172,14 @@
   </head>
   <body>
     <div id="root" data-composition-id="main" data-start="0"
-         data-width="1080" data-height="1920" data-duration="63.916" data-fps="30">
+         data-width="1080" data-height="1920" data-duration="65.250" data-fps="30">
 
       <video id="vid" class="plate" src="assets/base.mp4"
-             data-start="0" data-duration="63.916" data-media-start="0"
+             data-start="0" data-duration="65.250" data-media-start="0"
              muted playsinline></video>
       <div id="behind" class="L">
-        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:440px; font-size:200px">менеджерка</div>
-        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:440px; font-size:240px">AI-агент</div>
+        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:545px; font-size:165px">менеджерка</div>
+        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:470px; font-size:240px">AI-агент</div>
       </div>
       <div id="panel">
 <svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
@@ -388,14 +388,10 @@
       <div class="wc" id="w149">РЕАЛЬНО</div>
       <div class="wc" id="w150">ДОПОМОЖЕ,</div>
       <div class="wc" id="w151">ТО</div>
-      <div class="wc" id="w161">Я РОЗКАЖУ</div>
-      <div class="wc" id="w162">ТОБІ</div>
-      <div class="wc" id="w163">ВСІ</div>
-      <div class="wc" id="w164">ДЕТАЛІ.</div>
       </div>
 
       <audio id="vo" src="assets/base.mp4"
-             data-start="0" data-duration="63.916" data-media-start="0"></audio>
+             data-start="0" data-duration="65.250" data-media-start="0"></audio>
     </div>
 
     <script>
@@ -586,7 +582,7 @@
   function erase(name, t) { tl.to("#sk-" + name, {autoAlpha: 0, duration: .3, ease: "power2.in"}, t); }
 
   gsap.set(PUSH, {transformOrigin: "540px 900px"});
-  tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 63.916, ease: "none"}, 0);
+  tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 65.250, ease: "none"}, 0);
 
   tl.set("#w0", {autoAlpha: 1}, 0.000); tl.set("#w0", {autoAlpha: 0}, 0.285);
   tl.set("#w1", {autoAlpha: 1}, 0.370); tl.set("#w1", {autoAlpha: 0}, 0.585);
@@ -738,10 +734,6 @@
   tl.set("#w149", {autoAlpha: 1}, 59.830); tl.set("#w149", {autoAlpha: 0}, 59.985);
   tl.set("#w150", {autoAlpha: 1}, 60.070); tl.set("#w150", {autoAlpha: 0}, 60.879);
   tl.set("#w151", {autoAlpha: 1}, 60.964); tl.set("#w151", {autoAlpha: 0}, 61.064);
-  tl.set("#w161", {autoAlpha: 1}, 63.991); tl.set("#w161", {autoAlpha: 0}, 64.246);
-  tl.set("#w162", {autoAlpha: 1}, 64.331); tl.set("#w162", {autoAlpha: 0}, 64.506);
-  tl.set("#w163", {autoAlpha: 1}, 64.591); tl.set("#w163", {autoAlpha: 0}, 64.691);
-  tl.set("#w164", {autoAlpha: 1}, 64.751); tl.set("#w164", {autoAlpha: 0}, 65.051);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 65.151);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 8.684);
@@ -751,7 +743,7 @@
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 37.228);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 56.765);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 60.894);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 63.916);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 65.250);
 
   rise("#bw1", 8.764); sink("#bw1", 12.348);
 

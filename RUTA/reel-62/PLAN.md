@@ -1,22 +1,25 @@
 # Reel 62 — «Які налаштування є в АІ-агентах SendPulse і які з них справді важливі?»
 
-115.55 s plate (3467 frames, cut.py + cut-fix: kept the «по скрипту … зекономиш» line the cutter dropped,
-dropped «Сек! Кис-кіс!» and the false start «Тому, якщо в тебе бачу…»). Google × Excalidraw (STYLE §0b).
-`build.py` is the source of truth.
+116.016 s plate (3481 frames; cut.py + cut-fix: «по скрипту … а гроші зекономиш» kept, «Сек! Кис-кіс!»
+and the false start «Тому, якщо в тебе бачу…» dropped). STYLE §00 + her review of reel 61 (natural
+editing). `build.py` is the source of truth.
 
-The one object: **the SendPulse agent's settings card** — four rows (Інструкції, Модель,
-Завантаження файлів, Макс. токенів). Every beat opens one of its rows. Only her numbers: 5.5 (caption only), ×3–4, 500, 2000.
+Chain: behind «AI-агент» (cover) -> what the agent does (shuffle) -> her SendPulse window (reel-61's 1:1
+rebuild) as a platform ad, four visits: only two settings matter / what goes in the instruction + pick
+Haiku / files go grey / token field 500 -> 2000 -> between visits: Sonnet | Haiku card, behind «Токени»,
+the half-screen scheme of a token budget -> «Пиши коротко.» typed ×3 -> the DM essay -> CTA.
 
-| time | where | beat |
+| time | layer | beat |
 |---|---|---|
-| 0–6.9 | NEAR | agent card: SendPulse pill bumps; chips кваліфікує → спілкується → продаж, arrows drawn between |
-| 6.9–12.6 | NEAR | chips clear, card becomes the 4-row settings list; «два»: green loops 1 and 2 on Інструкції and Токени; the other two struck out |
-| 12.5–24.3 | OVER | board 1 wipes from the Інструкції row: title, «№1» looped; field stretches long («майже без ліміту»), the hand fills it; chips drop in (скрипти, цільова аудиторія, контекст про бізнес); closes |
-| 24.3–43.8 | NEAR | «Модель» dropdown types Haiku, «найдешевша», «йде по скрипту» arrow, «гроші зекономиш» (kaching) → Sonnet \| Haiku: Sonnet's price bar towers, «×3–4», two equal reply bubbles and a drawn «=» |
-| 44.5–53.4 | NEAR | Завантаження файлів: button scribbled out; a sketched «файл» slides along an arrow into «Інструкції», «без ліміту» |
-| 53.6–57.0 | NEAR | «Макс. токенів» pill, red «?» on «дивним» |
-| 57.0–84.4 | OVER | board 2 from the pill: «Токени»; slider slides down, short «Ок» bubble, «дешевше?» → the four Google dots «думає» / «відповідь»; 500: short box all yellow, reply bubble crossed; 2000: long box yellow + blue, tick, a real reply; «вартість ≈ та сама»; closes |
-| 84.0–99.3 | NEAR | instruction field types «Пиши коротко.» ×3, red underline; dots think; then a Direct reply bubble grows huge, «про всі послуги…», scribbled |
-| 99.2–end | NEAR | CTA: chips немає менеджера / менеджер не справляється; four Direct notifications stack, go grey, «без відповіді»; hand-drawn «+», comment field types «+» |
-
-Captions run inverted over both boards; no blackouts (no graphic repeats her word long enough).
+| 0–3.0 | behind | «AI-agent» white behind her (cover frame), sinks on «який» |
+| 3.1–6.9 | above | shuffle: кваліфікує людей → спілкується → доводить до продажу |
+| 7.1–12.5 | FULL 1 | window flies in tilted; «два»: Інструкція field + token field ringed; «забити»: the rest greys |
+| 17.8–29.1 | FULL 2 | zoomed in the field: Скрипт / Цільова аудиторія / Контекст type in on their words; camera to «Модель», list opens on «обирати», Claude Haiku picked on «Haiku» |
+| 36.0–44.0 | above | card Sonnet \| Haiku; «×3–4» on «три чи чотири», «=» on «різниці» |
+| 44.3–51.0 | FULL 3 | zoom to ПОШУК У ФАЙЛАХ, greys on «пропустити»; camera back to the instruction field on «можна дати» |
+| 56.9–59.9 | behind | «Токени» |
+| 64.5–76.0 | HALF | Excalidraw: token budget = думає + відповідь; «500»: a small box all думає; відповідь struck |
+| 76.3–84.2 | FULL 4 | token field 500 → 2000 on «2000», zoom out on «не впливає» |
+| 85.8–91.8 | above | «Інструкція для бота» card: «Пиши коротко.» on «прописати», twice more on «декілька разів» |
+| 94.3–99.6 | above | glass DM: the agent's reply keeps growing (великі / розширені / послуги) |
+| 100.8–end | above + band | shuffle: немає менеджера / не справляється / купа заявок / губляться без відповіді; pill «Став + в коментарях» from «став», captions black out |

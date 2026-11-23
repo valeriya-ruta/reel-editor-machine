@@ -60,7 +60,7 @@ EXTRA = u'''
 
 # 1 · BEHIND — «Без бану», the cover frame ------------------------------------------
 t_zhod, e_zabl = S(u"жодного", 4.93), E(u"заблокував.", 7.05)
-B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:470px; font-size:210px">Без бану</div>')
+B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:495px; font-size:210px">Без бану</div>')
 g.matte("b1", round(t_zhod - 0.45, 3), round(e_zabl - t_zhod + 0.9, 3))
 js(u'  rise("#bw1", %.3f); sink("#bw1", %.3f);' % (t_zhod - 0.15, e_zabl + 0.05))
 g.sfx("whoosh-short", t_zhod - 0.15)
@@ -94,10 +94,10 @@ C.append(u"""
           <div id="win">
             <div class="tb"><i></i><i></i><i></i><span>%(claude)s Claude</span></div>
             <div class="chat">
-              <div id="ubub" class="ub hid">Розішли повідомлення лідам зі списку</div>
+              <div id="ubub" class="ub hid">Розішли повідомлення лідам</div>
               <div id="ans" class="ans hid">%(claude)s<span>Працюю у браузері…</span></div>
               <div id="scr" class="file hid"><b>≡</b>мій скрипт</div>
-              <div class="inp"><span id="ph">Напиши Claude…</span><span id="typ" class="typ">Розішли повідомлення лідам зі списку</span><u id="sendc">↑</u></div>
+              <div class="inp"><span id="ph">Напиши Claude…</span><span id="typ" class="typ">Розішли повідомлення лідам</span><u id="sendc">↑</u></div>
             </div>
             <div class="br">
               <div class="tabs"><div class="tab"><span id="tabt0">Нова вкладка</span><span id="tabt1" class="hid">%(ig)s Instagram</span></div></div>
@@ -278,11 +278,11 @@ js(u'  gsap.set("#win", {transformOrigin: "%dpx %dpx"});' % (OX, OY))
 js(u'  gsap.set("#win", {x: %s, y: %s, scale: %s});' % (WIDE["x"], WIDE["y"], WIDE["scale"]))
 
 # 4 · FULL A — Claude's own browser: «той же хром» ------------------------------------
-a0 = S(u"внутрішньому", 23.03) - 0.15
+a0 = S(u"завдяки", 22.50) - 0.05   # «внутрішньому» lands in ink
 a1 = S(u"просто", 29.93) - 0.1
 enter(a0 + 0.15, WIDE)
 to(S(u"браузеру", 24.18) - 0.3, cam(531, 230, 1.75), 6, 8, 1)                 # onto the browser pane
-to(S(u"той", 27.56) - 0.5, cam(450, 80, 2.7), 3, -6, 0)                      # tab strip + omnibox
+to(S(u"той", 27.56) - 0.5, cam(500, 75, 2.2), 3, -6, 0)                      # tab strip + omnibox
 js(u'  tl.fromTo("#omni", {boxShadow: "0 0 0 0 rgba(122,20,36,0)"}, X({boxShadow: "0 0 0 2px rgba(122,20,36,.55)", duration: .3}), %.3f);' % S(u"хром,", 28.12))
 to(S(u"звичайний", 28.90) - 0.2, WIDE, 10, 14, -2, 1.1)
 js(u'  tl.to("#omni", {boxShadow: "0 0 0 0 rgba(122,20,36,0)", duration: .3}, %.3f);' % (a1 + 0.9))
@@ -291,7 +291,7 @@ g.sfx("whoosh-short", a0); g.sfx("whoosh-short", S(u"той", 27.56) - 0.5); g.s
 g.sfx("whoosh-short", a1)
 
 # 5 · FULL B — open it, log in, ask, and it walks Direct -----------------------------
-b0 = S(u"Відкриваєш", 34.23) - 0.15
+b0 = S(u"швидше.", 33.85) - 0.1     # «Відкриваєш» lands in ink
 b1 = S(u"Але", 44.27) - 0.12
 t_vkh, t_akk = S(u"входиш", 35.57), S(u"акаунт", 36.21)
 t_pros, t_povid = S(u"просиш", 37.37), S(u"повідомлення.", 38.61)
@@ -364,7 +364,7 @@ g.sfx("whoosh-short", k0); g.sfx("click-soft", t_30 - 0.4); g.sfx("click-soft", 
 g.sfx("click", t_obyr)
 
 # 8 · FULL C — rule 2, personalisation: name only -> her profile -> the message ------
-c0 = k1 + 0.15
+c0 = k1 - 0.4      # the cover rises over the leaving panel; «Друге» lands in ink
 c1 = S(u"Тому", 81.10) - 0.15
 t_pers, t_imya, t_same = S(u"персоналізація,", 68.68), S(u"ім'я,", 72.15), S(u"саме", 72.75)
 t_tut, t_profil, t_podyv = S(u"тут", 74.28), S(u"профіль", 76.50), S(u"чим", 77.73)
@@ -377,7 +377,7 @@ for sel in ("#p2", "#url1", "#tabt1", "#ubub"):
 js(u'  tl.set("#r0", {backgroundColor: "#EFEFEF"}, %.3f);' % (c0 + 0.05))
 enter(c0 + 0.15, WIDE)
 hide("#c0", t_pers); typ("#c1", t_pers, .7, 14)
-to(S(u"глибша,", 70.10) - 0.3, cam(430, 454, 2.5), 3, -8, 0, 1.1)               # onto the message
+to(S(u"глибша,", 70.10) - 0.3, cam(629, 488, 2.4), 3, -8, 0, 1.1)               # onto the message
 hide("#c1", t_imya - 0.1); show("#c2", t_imya - 0.1); hl("#nm", t_imya)
 hl("#gen", t_same)
 to(t_tut - 0.2, WIDE, 9, 12, -2, 1.1)
@@ -386,7 +386,7 @@ to(t_podyv - 0.55, cam(390, 165, 2.6), 3, 7, 0, 1.0)                           #
 hl("#bio", t_podyv)
 hide("#p3", t_vpys - 0.05); show("#p2", t_vpys - 0.05); hide("#c2", t_vpys - 0.05); show("#c3", t_vpys - 0.05)
 js(u'  tl.set("#pers", {backgroundColor: "rgba(122,20,36,.18)"}, %.3f);' % (t_vpys - 0.05))
-to(t_vpys - 0.5, cam(430, 454, 2.5), 3, -8, 0, 0.9)
+to(t_vpys - 0.5, cam(629, 488, 2.4), 3, -8, 0, 0.9)
 show("#scr", t_skr - 0.6)
 to(t_skr - 0.45, cam(140, 150, 2.3), 4, 10, 0, 0.8)                             # «мій скрипт»
 js(u'  tl.fromTo("#scr", {boxShadow: "0 0 0 0 rgba(122,20,36,0)"}, X({boxShadow: "0 0 0 3px rgba(122,20,36,.5)", duration: .3}), %.3f);' % t_skr)

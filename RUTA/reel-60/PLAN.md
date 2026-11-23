@@ -1,23 +1,28 @@
-# Reel 60 — «Скільки насправді коштує монтаж з Клодом на місяць?»
+# Reel 60 — «Скільки ти насправді платиш за монтаж за місяць?» (монтаж з Клодом)
 
-Posts 2026-11-21 · 87.55 s plate (2627 frames, cut.py + cut-fix.json, no closeups) ·
-Google × Excalidraw (STYLE.md §0b). `build.py` is the source of truth.
+Batch 2026-11-20 · plate 68.55 s (2057 frames, tools/cut.py + cut-fix.json; the
+ТЕСТ CTA is cut, raw 123.4 s → end) · STYLE §00 + her review of reel 61.
+`build.py` is the source of truth.
 
-The one object: **the limit bar** (usage). It is a "?" at the start, two different
-token bars for two identical tasks, the $20 five-hour limit that fills with reels,
-the €100 limit that barely moves. Only her numbers: 20 доларів, 5 годин, 5 рілсів,
-2-3 хв, 5-6 хв, три рілси, 100 євро, 10-15 рілсів.
+Chain: the one object is **the 5-hour limit bar**. Two equal tasks eat different
+token amounts (scheme) → the Claude window: $20, the 5-hour bar, five reels fill
+it → which videos (shuffle) → longer videos (shuffle) → the same bar, only three
+reels → token optimisation switches on → template straight into the reel
+(scheme) → Claude · €100 → «10–15» behind her → the bar is a sliver → her.
+Only her numbers: $20, 5 годин, 5 рілсів, 2–3 хв, 5–6 хв, 3 рілси, €100, 10–15.
 
-| time | where | beat |
+| time | layer | what |
 |---|---|---|
-| 0.9–8.7 | NEAR | card «Монтаж з Клодом · за місяць» + red hand «?»; «рілси × юсадж = ?» written on «порахувати», scribbled out on «неможливо»; a jagged usage line «юсадж» draws, wiggles on «непередбачувана» |
-| 8.8–18.8 | NEAR | card shrinks into task card A (checkboxes, token bar «?»); identical card B on «дві», «=» on «однакові», a person drawn in each on «людей», bars fill to very different levels on «різну кількість токенів» |
-| 19.2–20.0 | NEAR | pill «орієнтир» |
-| 20.0–44.7 | OVER | board wipes out of the pill: «$20» + «Ліміт на 5 годин» bar; 5 reel tiles draw on «5», bar fills; left column chips експертні / на камеру / суфлер / 2-3 хв, dashed «+ більше»; bar resets, right column довші / 5-6 хв / вставки / помилки, 3 tiles on «три»; loops around both columns on «впирається»; board closes |
-| 46.2–51.0 | NEAR | card «Система для клієнтки»: toggle «Оптимізація токенів» flips on «оптимізую», the token bar shrinks |
-| 51.1–58.2 | OVER | board wipes out of the toggle: «шаблони анімації» (3 template cards); a sheet of code «з нуля» crossed out; one template card flies into the reel phone on «взяти і вставити», green tick; board closes onto the phone |
-| 58.3–67.9 | NEAR | plan card «Клод · €100» (kaching), a strip of reel tiles runs off the card «10-15 рілсів», limit bar is a sliver, a magnifier on «не бачу» |
-| 68.1–74.1 | NEAR | card «Система для себе», red «?» on «не впевнена», chips «на твоєму рівні?» «так швидко?» |
-| 74.2–87.5 | NEAR CTA | comment field types «ТЕСТ»; DM: Ruta «скинь одне сире відео», file bubble «сире відео.mp4», Google dots + Клод chip, «Готово — ось результат» + tick; comment field «ТЕСТ» again |
-
-Captions inverted over both boards; blacked out only on «$20», «5 годин», «€100» and «ТЕСТ».
+| 0.05–3.2 | BEHIND | «Claude» (cover frame) |
+| 3.5–12.9 | — | her own cut / punch-ins |
+| 13.0–18.6 | HALF 1 | задача = задача; token bars short vs long; «токени» |
+| 20.0–25.9 | FULL 1 | Claude window rises in 3D, $20 rings, zoom into «Ліміт · 5 годин», 5 reel slots fill, «5 рілсів» |
+| 27.1–33.7 | ABOVE shuffle | експертні відео · з суфлера · 2–3 хвилини · більше ніж 5 |
+| 35.5–38.3 | ABOVE shuffle | 5–6 хвилин · багато вставок · помилки |
+| 38.3–41.0 | FULL 2 | same window at the bar, 3 wide slots fill, «3 рілси», zoom out |
+| 41.3–46.3 | — | her |
+| 46.4–51.2 | ABOVE glass | «Оптимізація токенів» switch flips on «оптимізую» |
+| 51.5–58.4 | HALF 2 | шаблон анімації · «з нуля» struck · arrow → рілс on «просто взяти» |
+| 61.0–62.5 | ABOVE glass | pill «Claude · €100» (kaching) |
+| 63.6–65.6 | BEHIND | «10–15» |
+| 66.1–68.1 | ABOVE glass | «Ліміт · 5 годин» bar: a sliver that barely moves; ends on her |

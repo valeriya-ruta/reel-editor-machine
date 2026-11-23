@@ -119,7 +119,7 @@ CSS = u"""
     .ask { left: 120px; top: 300px; width: 840px; padding: 24px 28px; }
     .ask .who { display: flex; align-items: center; gap: 10px; font-size: 24px; color: #574142; margin-bottom: 12px; }
     .ask .who .st { color: #C15F3C; font-size: 28px; }
-    .ask .in { background: rgba(255,255,255,.95); border-radius: 22px; padding: 18px 22px; font-size: 30px; line-height: 1.35;
+    .ask .in { background: rgba(255,255,255,.95); border-radius: 22px; padding: 16px 22px; font-size: 28px; line-height: 1.32;
                color: #241919; min-height: 128px; position: relative; }
     .ask .send { position: absolute; right: 16px; bottom: 14px; width: 48px; height: 48px; border-radius: 14px;
                  background: #DEBFBF; color: #fff; font-size: 28px; text-align: center; line-height: 48px; }
