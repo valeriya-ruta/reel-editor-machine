@@ -26,8 +26,9 @@ for n in range(57, 73):
     if ok:
         done += 1
         if not os.path.exists(prev):
-            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", full, "-vf", "scale=540:960", "-c:v", "libx264",
-                            "-crf", "30", "-preset", "fast", "-c:a", "aac", "-b:a", "96k", prev], check=True)
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", full, "-c:v", "libx264",
+                            "-crf", "27", "-preset", "slow", "-c:a", "aac", "-b:a", "128k",
+                            "-movflags", "+faststart", prev], check=True)
         dst = os.path.join(OUT, "v", "REEL-%d.mp4" % n)
         if not os.path.exists(dst) or os.path.getmtime(dst) < os.path.getmtime(prev):
             shutil.copy2(prev, dst); new.append("v/REEL-%d.mp4" % n)
