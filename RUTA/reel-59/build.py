@@ -221,9 +221,10 @@ js(u"""
   tl.fromTo("#u2", {autoAlpha: 0, y: 30}, X({autoAlpha: 1, y: 0, duration: .4, ease: RISE}), %(skil).3f);
   tl.fromTo("#r2", {autoAlpha: 0, y: 20}, X({autoAlpha: 1, y: 0, duration: .45, ease: RISE}), %(tsyf).3f - .1);
   tl.to("#win1", %(wide)s, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.2, ease: "power3.inOut"}, %(ne).3f - .2);
+  gsap.set("#st1", {autoAlpha: 1}); tl.set("#st1", {autoAlpha: 0}, %(f1).3f + .9);
   full(%(f0).3f, %(f1).3f);
-""" % {"wide": WIDE1, "wy": "%.1f" % 0, "inp": cam(330, 500, 2.3), "chat": cam(330, 170, 1.9),
-       "q": cam(400, 300, 1.9), "f0": f0, "f1": f1, "notion": t_notion, "gd": t_gd, "olia": t_olia,
+""" % {"wide": WIDE1, "wy": "%.1f" % 0, "inp": cam(250, 500, 2.2), "chat": cam(400, 190, 1.4),
+       "q": cam(400, 290, 1.45), "f0": f0, "f1": f1, "notion": t_notion, "gd": t_gd, "olia": t_olia,
        "uroky": t_uroky, "tyd": t_uroky - t_olia - 0.1, "vnos": t_vnos, "opl": t_opl, "skil": t_skil,
        "tsyf": t_tsyf, "ne": t_ne})
 g.sfx("whoosh-short", f0); g.sfx("click-soft", t_notion); g.sfx("click-soft", t_gd)
@@ -353,9 +354,10 @@ js(u"""
   tl.to("#op1", {borderColor: "#7A1424", backgroundColor: "#FBEFF0", duration: .2}, %(porish).3f);
   tl.to("#op1 b", {backgroundColor: "#7A1424", borderColor: "#7A1424", color: "#fff", duration: .2}, %(porish).3f);
   tl.to("#op1", {keyframes: {scale: [1, .96, 1]}, duration: .3}, %(porish).3f);
+  gsap.set("#st2", {autoAlpha: 0}); tl.set("#st2", {autoAlpha: 1}, %(g0).3f - .05);
   full(%(g0).3f, %(g1).3f);
 """ % {"wide": WIDE2, "g0": g0, "g1": g1, "sk": cam(560, 40, 2.4), "qq": cam(240, 200, 2.0),
-       "sk2": cam(640, 40, 2.4), "ops": cam(400, 360, 1.7), "test": t_test, "nmt": t_nmt,
+       "sk2": cam(640, 40, 2.4), "ops": cam(400, 330, 1.3), "test": t_test, "nmt": t_nmt,
        "gd2": t_gd2, "porish": t_porish})
 g.sfx("whoosh-short", g0); g.sfx("click-soft", t_test); g.sfx("click-soft", t_gd2)
 g.sfx("click", t_porish); g.sfx("whoosh-short", g1)
