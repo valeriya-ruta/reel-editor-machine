@@ -4,7 +4,7 @@ Reel pipelines, one folder per person. The path says whose reel it is.
 
 | folder | whose | contract |
 |---|---|---|
-| [`RUTA/`](RUTA/README.md) | **Ruta's own reels** (`RUTA/reel-NN/`). Default look: Google style + Excalidraw sketches | `RUTA/STYLE.md` |
+| [`RUTA/`](RUTA/README.md) | **Ruta's own reels** (`RUTA/reel-NN/`). The look is **locked** (STYLE §00 + her reel-61 review) — see `CLAUDE.md` | `RUTA/STYLE.md` |
 | [`Nika/`](Nika/README.md) | Nika's UNLOCK ad reels. A different person and a different style | `Nika/README.md` |
 
 Nothing crosses between them: Ruta's tools live in `RUTA/tools/`, Nika's in

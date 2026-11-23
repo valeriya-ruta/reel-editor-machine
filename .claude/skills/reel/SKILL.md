@@ -21,7 +21,7 @@ STYLE.md is the *look*.
 ## The deal
 
 - She delivers a cut, graded, **subtitle-free** plate. Never re-cut her footage.
-- Captions come from `SCRIPTS.md`, never from ASR. Whisper supplies timing only.
+- Captions take their spelling from her script (the RUTA app), never from ASR. Whisper supplies timing only.
 - Product Sans Black, white only, word by word, unless an animation replaces the
   words entirely.
 - 30 fps from reel 4 onward.
@@ -46,25 +46,15 @@ A design question is not her input. Pick the answer STYLE.md implies.
 
 Reel N lives in `RUTA/reel-0N/`, its intermediates in `RUTA/work/rN/`.
 
-```bash
-export PATH="/c/Users/Ruta/AppData/Roaming/npm:$PATH"   # or use ./hf
+The steps are in **`RUTA/BUILD-BRIEF.md`** (script from the RUTA app → cut →
+captions → plan → `build.py` from reel-61's skeleton → sound mix → cut-outs →
+check → local render → verify → post). For a batch, give each reel to a builder
+subagent with that file and its number; keep posting, RUTA and the review
+artifact here.
 
-# 1. plate — hers, untouched. Normalise only if it is 4K/HEVC.
-ffmpeg -i <hers> -c:v libx264 -crf 18 -vf scale=1080:1920 -r 30 reel-0N/assets/base.mp4
-
-# 2. words — whisper is in Python 3.13, not bare `python`
-~/AppData/Local/Programs/Python/Python313/python.exe tools/asr.py \
-    work/rN/audio.wav work/rN/words.json medium
-
-# 3. captions — script spelling onto her real timing; settle any REVIEW lines
-python tools/align.py work/rN/words.json work/rN/script.txt work/rN/captions.json
-
-# 4. author — build.py is the source of truth; index.html is generated
-cd reel-0N && python build.py && ../hf check
-
-# 5. render
-../hf cloud render
-```
+On her laptop: `./hf` instead of `npx hyperframes`, Python 3.13 for whisper.
+In a cloud session: `tools/asr_fw.py` / faster-whisper, `MATTE_REMBG=1` for
+cut-outs, the hyperframes CLI installed with `npm i --ignore-scripts`.
 
 **The look is locked (2026-11-23): STYLE.md §00 + "Her review of reel 61".**
 One look only — `tools/gstyle.py`, white + `#7A1424`, Google Sans; big white words
