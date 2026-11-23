@@ -123,14 +123,14 @@ g.sfx("pop", t_pyt)
 BLACKOUT.append((t_yaki - 0.03, t_kor - 0.05))
 
 # ---------------------------------------------------------------- meme 34: «якби я була репетиторкою з математики чи історії»
-g.meme(F, J, "34", E(u"історії,", 8.56) + 0.1, dur=0.85, slot="top")
+g.meme(F, J, "34", E(u"історії,", 8.56) + 0.1, dur=1.0, slot="top")
 
 # ---------------------------------------------------------------- behind «Claude»
 t_cl = S(u"з Claude.", 10.70)
 B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:440px; font-size:220px">Claude</div>')
 g.matte("b1", round(t_cl - 0.7, 3), 2.4)
-js(u'  rise("#bw1", %.3f); sink("#bw1", %.3f);' % (t_cl - 0.45, t_cl + 1.3))
-g.sfx("whoosh-short", t_cl - 0.45)
+js(u'  rise("#bw1", %.3f); sink("#bw1", %.3f);' % (t_cl - 0.35, t_cl + 1.3))
+g.sfx("whoosh-short", t_cl - 0.35)
 BLACKOUT.append((t_cl - 0.03, E(u"з Claude.", 10.70)))
 
 # ---------------------------------------------------------------- the list slot
@@ -227,8 +227,8 @@ js(u"""
   tl.fromTo("#r2", {autoAlpha: 0, y: 20}, X({autoAlpha: 1, y: 0, duration: .45, ease: RISE}), %(tsyf).3f - .1);
   gsap.set("#st1", {autoAlpha: 1}); tl.set("#st1", {autoAlpha: 0}, %(f1).3f + .9);
   full(%(f0).3f, %(f1).3f);
-""" % {"wide": WIDE1, "wy": "%.1f" % 0, "inp": cam(250, 500, 2.2), "chat": cam(400, 190, 1.4),
-       "q": cam(400, 290, 1.45), "f0": f0, "f1": f1, "notion": t_notion, "gd": t_gd, "olia": t_olia,
+""" % {"wide": WIDE1, "wy": "%.1f" % 0, "inp": cam(250, 500, 2.2), "chat": cam(290, 170, 2.0),
+       "q": cam(400, 285, 1.6), "f0": f0, "f1": f1, "notion": t_notion, "gd": t_gd, "olia": t_olia,
        "uroky": t_uroky, "tyd": t_uroky - t_olia - 0.1, "vnos": t_vnos, "opl": t_opl, "skil": t_skil,
        "tsyf": t_tsyf, "ne": t_ne})
 g.sfx("whoosh-short", f0); g.sfx("click-soft", t_notion); g.sfx("click-soft", t_gd)
@@ -236,10 +236,10 @@ g.sfx("typing", t_olia - 0.1); g.sfx("click", t_uroky); g.sfx("pop", t_opl)
 g.sfx("notification", t_tsyf - 0.1); g.sfx("whoosh-short", f1)
 
 # ---------------------------------------------------------------- meme 05: «а не десь щось там приблизно»
-g.meme(F, J, "05", E(u"приблизно.", 28.06) + 0.1, dur=0.8, slot="top")
+g.meme(F, J, "05", E(u"приблизно.", 28.06) + 0.1, dur=1.0, slot="top")
 
 # ---------------------------------------------------------------- 2 · reminders
-t_druhe = S(u"нагадування", 29.20)   # the card lands on its own word, after the meme
+t_druhe = S(u"нагадування", 29.20) + 0.22   # the card lands inside its word, once the meme has gone
 h1a = S(u"В", 31.35) - 0.15
 item(1, t_druhe, h1a)
 h1b = S(u"А", 40.93) - 0.2
@@ -329,8 +329,8 @@ C.append(u"""
           <div id="win2" class="win">
             <div style="left:0;top:0;width:800px;height:54px;border-bottom:1px solid #EEE"></div>
             <div style="left:24px;top:15px;font-size:17px;font-weight:700">Тест НМТ · Математика</div>
-            <div id="ks" class="cn" style="left:418px;top:14px">✦ скіл «тест за темою»</div>
-            <div id="kg" class="cn" style="left:606px;top:14px">%(drive)s Google Drive</div>
+            <div id="ks" class="cn" style="left:250px;top:14px">✦ скіл «тест за темою»</div>
+            <div id="kg" class="cn" style="left:440px;top:14px">%(drive)s Google Drive</div>
             <div style="left:40px;top:84px;font-size:13px;color:#6b6560">Завдання 7 з 20</div>
             <div style="left:40px;top:106px;width:720px;height:6px;border-radius:3px;background:#F1E7E7"></div>
             <div style="left:40px;top:106px;width:252px;height:6px;border-radius:3px;background:#7A1424"></div>
@@ -363,8 +363,8 @@ js(u"""
   tl.to("#op1", {keyframes: {scale: [1, .96, 1]}, duration: .3}, %(porish).3f);
   gsap.set("#st2", {autoAlpha: 0}); tl.set("#st2", {autoAlpha: 1}, %(g0).3f - .05);
   full(%(g0).3f, %(g1).3f);
-""" % {"wide": WIDE2, "g0": g0, "g1": g1, "sk": cam(560, 40, 2.4), "qq": cam(240, 200, 2.0),
-       "sk2": cam(640, 40, 2.4), "ops": cam(400, 330, 1.3), "test": t_test, "nmt": t_nmt,
+""" % {"wide": WIDE2, "g0": g0, "g1": g1, "sk": cam(330, 120, 1.9, cy=700), "qq": cam(240, 200, 2.0),
+       "sk2": cam(360, 130, 1.9, cy=700), "ops": cam(400, 370, 1.55), "test": t_test, "nmt": t_nmt,
        "gd2": t_gd2, "porish": t_porish})
 g.sfx("whoosh-short", g0); g.sfx("click-soft", t_test); g.sfx("click-soft", t_gd2)
 g.sfx("click", t_porish); g.sfx("whoosh-short", g1)

@@ -157,6 +157,8 @@
            border-radius: 999px; }
     .eur svg path { fill: #7A1424; }
     .eur b { color: #7A1424; }
+    /* as reel-57: the plain white card in the shuffle slot, a size up */
+    .shuf .chip { font-size: 48px; padding: 18px 34px; }
 
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
     #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
@@ -829,7 +831,7 @@
   gsap.set("#win", {x: 120.0, y: 530.0 + 220, scale: 1.08 * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
   tl.to("#win", {x: 120.0, y: 652.0, scale: 1.22, rotationX: 8, rotationY: -10, rotationZ: 2, duration: 1.2, ease: "power3.out"}, 19.983 + .15);
   tl.fromTo("#plan", {borderColor: "#ECE6E6"}, X({borderColor: "#7A1424", duration: .25}), 21.203);
-  tl.to("#win", {x: 120.0, y: 371.6, scale: 1.32, rotationX: 3, rotationY: 7, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, 22.503 - .45);
+  tl.to("#win", {x: 120.0, y: 378.8, scale: 1.26, rotationX: 3, rotationY: 7, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, 22.503 - .45);
   tl.to("#sa0", {scaleX: 1, duration: .25, ease: "power2.out"}, 25.000);
   tl.to("#sa1", {scaleX: 1, duration: .25, ease: "power2.out"}, 25.120);
   tl.to("#sa2", {scaleX: 1, duration: .25, ease: "power2.out"}, 25.240);
@@ -840,8 +842,8 @@
   // between the two: the bar empties, three wider slots instead of five
   tl.set("#segA, #nA", {autoAlpha: 0}, 32.316); tl.set("#segB, #nB", {autoAlpha: 1}, 32.316);
   tl.set("#nB", {opacity: 0}, 32.316);
-  tl.set("#win", {x: 120.0, y: 371.6 + 200, scale: 1.32 * .88, rotationX: -18, rotationY: 16, rotationZ: -3}, 32.316);
-  tl.to("#win", {x: 120.0, y: 371.6, scale: 1.32, rotationX: -3, rotationY: -6, rotationZ: 0, duration: 1.1, ease: "power3.out"}, 38.267 + .15);
+  tl.set("#win", {x: 120.0, y: 378.8 + 200, scale: 1.26 * .88, rotationX: -18, rotationY: 16, rotationZ: -3}, 32.316);
+  tl.to("#win", {x: 120.0, y: 378.8, scale: 1.26, rotationX: -3, rotationY: -6, rotationZ: 0, duration: 1.1, ease: "power3.out"}, 38.267 + .15);
   tl.to("#sb0", {scaleX: 1, duration: .35, ease: "power2.out"}, 39.110);
   tl.to("#sb1", {scaleX: 1, duration: .35, ease: "power2.out"}, 39.330);
   tl.to("#sb2", {scaleX: 1, duration: .35, ease: "power2.out"}, 39.550);

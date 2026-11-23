@@ -1,6 +1,6 @@
 # Reel 63 — «Які автоматизації зробити викладачці мови?»
 
-Plate 66.150 s (1985 frames; cut.py + cut-fix drop of the false start «З Клодом можна написати»). STYLE §00 + her review of reel 61; skeleton from reel-61/build.py. `build.py` is the source of truth.
+Plate 66.116 s (1985 frames; cut.py + cut-fix drop of the false start «З Клодом можна написати»). STYLE §00 + her review of reel 61; skeleton from reel-61/build.py. `build.py` is the source of truth.
 
 Chain: behind «Claude» (cover) → a running list through one slot (1 Картки з нових слів · 2 Щоденник помилок · 3 Перевірка домашок · 4 Тест на рівень) → FULL: Claude chat platform-ad (Quizlet connector on, word list types, the set comes back, a card flips) → HALF: Fathom → Claude + скіл → помилки/вправи; → Notion → картка учня → glass homework checklist → glass level test → behind «SendPulse» → glass CRM lead → CTA icons + pill.
 

@@ -54,7 +54,7 @@ FIX = {
     (u"Якщо", 100.1): u"якщо", u"справляється.": u"справляється,", u"Купи": u"купа",
     u"гугляться": u"губляться", (u"саме", 83.1): u"це", (u"ж", 83.3): u"майже",
     u"не впливає.": u"не впливає", (u"ваш", 84.1): u"вартість.", (u"тість.", 84.3): None, u"відповіді": u"відповіді,", u"ставь": u"став", u"вдові": u"в тебе", (u"що вони", 107.1): u"вони",
-    u"налаштувати.": u"налаштувати,", (u"5", 27.9): u"5.5,", (u".5.", 28.4): None,
+    u"налаштувати.": u"налаштувати,", (u"і", 106.3): u"І", (u"5", 27.9): u"5.5,", (u".5.", 28.4): None,
 }
 FIX.update(globals().get("FIX_HEARD", {}))
 CAPS = load_caps(NN, FIX)
@@ -73,7 +73,7 @@ def js(s):
 P.append(u'<svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
 
 EXTRA = u'''
-    .dm { left: 130px; width: 820px; padding: 18px 22px; bottom: 1322px; }
+    .dm { left: 130px; width: 820px; padding: 18px 22px; bottom: 1372px; }   /* bottom y 548: clear of her hair (≈ 600 here) */
     .bub { display: inline-block; border-radius: 26px; padding: 12px 20px; font-size: 27px;
            font-weight: 500; line-height: 1.3; position: relative; max-width: 720px; }
     .bub.in { background: rgba(255,255,255,.92); color: #241919; border-bottom-left-radius: 8px; }
@@ -92,10 +92,10 @@ EXTRA = u'''
     .cmp .eq { font-size: 96px; font-weight: 700; color: #7A1424; line-height: 1; margin-top: 24px; }
 
     /* her instruction, typed: «Пиши коротко.» */
-    .ins { left: 0; right: 0; margin: auto; width: 680px; top: 300px; padding: 26px 30px; }
+    .ins { left: 0; right: 0; margin: auto; width: 680px; top: 290px; padding: 24px 30px; }
     .ins .t { font-size: 26px; font-weight: 700; color: #1f1f1f; margin-bottom: 14px; }
-    .ins .f { border: 2px solid #D9D9D9; border-radius: 16px; padding: 14px 20px; font-size: 34px;
-              line-height: 1.4; color: #241919; height: 172px; }
+    .ins .f { border: 2px solid #D9D9D9; border-radius: 16px; padding: 12px 20px; font-size: 30px;
+              line-height: 1.38; color: #241919; height: 146px; }   /* card bottom ≈ y 540, her hair ≈ 600 */
     .ins .f div { white-space: nowrap; overflow: hidden; }
 '''
 

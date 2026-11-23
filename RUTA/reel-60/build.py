@@ -79,6 +79,8 @@ EXTRA = u'''
            border-radius: 999px; }
     .eur svg path { fill: #7A1424; }
     .eur b { color: #7A1424; }
+    /* as reel-57: the plain white card in the shuffle slot, a size up */
+    .shuf .chip { font-size: 48px; padding: 18px 34px; }
 '''
 
 # 1 · BEHIND — «Claude» (the cover frame: the hook word that attracts) -------------
@@ -168,7 +170,7 @@ def cam(px, py, sc, cx=540, cy=830):
     return (round(cx - 420 - sc * (px - 420), 1), round(cy - 300 - sc * (py - 300), 1))
 WIDE = (1.08,) + cam(420, 300, 1.08)
 PLAN = (1.22,) + cam(420, 200, 1.22)
-BAR = (1.32,) + cam(420, 420, 1.32)
+BAR = (1.26,) + cam(420, 420, 1.26)
 seg_a = u"\n".join(u'  tl.to("#sa%d", {scaleX: 1, duration: .25, ease: "power2.out"}, %.3f);' % (i, t_zmon + 0.12 * i + 0.15) for i in range(5))
 seg_b = u"\n".join(u'  tl.to("#sb%d", {scaleX: 1, duration: .35, ease: "power2.out"}, %.3f);' % (i, t_tri + 0.22 * i) for i in range(3))
 js(u"""
