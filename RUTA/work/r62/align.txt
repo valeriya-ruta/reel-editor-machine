@@ -1,0 +1,60 @@
+CAPTIONS 322   script 155 | whisper-corrected 17 | her wording 150
+
+WHISPER MISHEARD -> script spelling restored (6)
+     0.00s  0.88  Налаштовувала                    <- Я ноштовувала
+     1.43s  0.93  AI-агента                        <- і я агента
+     3.19s  0.95  кваліфікує                       <- кваліфікую
+     6.42s  0.84  продажу. І ось з                 <- протежу. Із
+    61.32s  0.86  коротші                          <- коротше
+   107.80s  0.88  гугляться                        <- губляться
+
+SHE IMPROVISED -> her wording kept (45)
+     2.21s  script: SendPulse,                   said: пульс,
+     4.21s  script: дірект,                      said: Дирекції.
+     7.68s  script: налаштувань                  said: налаштовань, які
+     8.56s  script: —                            said: є,
+     9.26s  script: важлива половина, а          said: важливо тільки два.
+    10.98s  script: другу                        said: все інше
+    11.80s  script: взагалі                      said: Просто
+    13.66s  script: —                            said: звичайно,
+        -  script: ліміту                       said: — (cut)
+    15.90s  script: майже немає. Туди            said: ліміту… У суті, я не маю. Тобто
+    18.46s  script: —                            said: туди
+    20.67s  script: цільову аудиторію, і         said: челюбова аудиторія,
+    22.55s  script: —                            said: про бізнес,
+    23.57s  script: —                            said: взагалі
+    25.93s  script: —                            said: до речі,
+    27.57s  script: хайку,                       said: Haiku 5 .5.
+    32.90s  script: —                            said: реально
+    34.55s  script: зекономиш. Вихід в веб       said: закономиш
+    35.46s  script: —                            said: тестувала на Сонеті і на Хайку. Sonnet в
+    43.81s  script: вмикаю, щоб він не відходив  said: побачила І, до речі,
+    47.08s  script: бо                           said: тому що
+    49.33s  script: простіше одразу прописати    said: можна дати
+    50.92s  script: А ось                        said: знову ж таки, там немає ліміту, нам не т
+    55.86s  script: це кількість токенів.        said: і було для мене дуже дивним? Токені. Том
+    63.78s  script: —                            said: це
+    65.12s  script: —                            said: виявляється, що
+    66.34s  script: токенів                      said: цих токінів
+    70.82s  script: —                            said: тільки не в максимум. то
+    72.74s  script: —                            said: витратить все на подумати і
+    74.58s  script: встигне                      said: зможе
+    75.40s  script: відповісти.                  said: написати текст.
+    82.76s  script: а на вартість це майже       said: і саме ж
+    83.94s  script: —                            said: на ваш тість.
+    87.31s  script: —                            said: то
+        -  script: теж                          said: — (cut)
+    87.91s  script: прямо                        said: просто
+    88.89s  script: —                            said: дуже чітко
+    90.00s  script: —                            said: Я навіть декілька разів це написала. Том
+    92.73s  script: на                           said: про
+    93.75s  script: —                            said: і він дійсно буде писати Великі! розшире
+   100.41s  script: в тебе                       said: вдові ще немає менеджера або
+   102.79s  script: купа                         said: і він не справляється. Купи
+   104.60s  script: в діректі,                   said: у Директі, це суперпопулярно.
+   111.38s  script: —                            said: тобі
+   113.26s  script: —                            said: і що тобі це взагалі допоможе. Побачимос
+
+REVIEW -- could go either way (2)
+    69.29s  script: даси                       said: ти доси                    (0.80)
+   109.40s  script: онлайн ставь               said: то став.                   (0.62)

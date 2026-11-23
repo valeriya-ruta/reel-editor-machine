@@ -1,0 +1,33 @@
+CAPTIONS 179   script 142 | whisper-corrected 13 | her wording 24
+
+WHISPER MISHEARD -> script spelling restored (10)
+     1.38s  1.00  акаунти                          <- аккаунти
+     5.37s  0.89  ти думаєш налаштувати            <- тут умеш наложитувати
+     6.69s  0.89  AI-систему                       <- і я систему
+    17.93s  0.96  дизайн-систему.                  <- дизайн систему. І
+    42.29s  0.85  над AI-системою                  <- надаєй систему,
+    48.02s  0.86  трошки                           <- трошечки
+    52.54s  0.88  особисте                         <- особисто
+    53.24s  0.90  професійне                       <- професійно
+    54.92s  0.94  особистий                        <- особисти
+    61.92s  0.91  мрієш                            <- мріжеш
+
+SHE IMPROVISED -> her wording kept (16)
+     0.00s  script: У                            said: Уявимо, що в
+     0.98s  script: —                            said: є
+     4.15s  script: від                          said: твоєї
+    19.35s  script: —                            said: звичайно,
+        -  script: куди                         said: — (cut)
+    23.04s  script: постити.                     said: куди буде постати.
+    24.66s  script: по суті два окремих налаштув said: в основі всього це дві окремі системи.
+    33.75s  script: особистий блог               said: особистеблух
+    36.90s  script: —                            said: ці
+    49.37s  script: грошей. І                    said: Але
+    54.50s  script: й                            said: і
+    57.68s  script: відноситься.                 said: стосується.
+        -  script: СММниця                      said: — (cut)
+    60.14s  script: підприємиця                  said: есемемниця, або підприємниця,
+    64.72s  script: —                            said: то
+    64.92s  script: —                            said: плюс
+
+REVIEW -- could go either way (0)

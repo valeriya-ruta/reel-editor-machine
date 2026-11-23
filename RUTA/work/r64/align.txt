@@ -1,0 +1,46 @@
+CAPTIONS 190   script 105 | whisper-corrected 27 | her wording 58
+
+WHISPER MISHEARD -> script spelling restored (14)
+     0.00s  1.00  Якби                             <- Як би
+     0.94s  0.83  коучем                           <- коучом
+     2.38s  1.00  або                              <- оба
+     5.00s  1.00  з клод                           <- склад
+    13.73s  0.83  Claude її                        <- Клодії
+    30.32s  0.73  Fathom                           <- фатум
+    31.94s  0.86  який                             <- як і
+    39.47s  0.91  Запланована                      <- Ця планована
+    40.72s  0.88  щовечора                         <- щовечори
+    42.62s  0.95  клієнткам у телеграм-бот         <- клієнт комутелограм бот
+    54.09s  0.86  застряг                          <- застряв
+    62.66s  0.87  сесії. Fathom записує дзвінок, C <- сесій. Фазом запишуть звінок. Кло 
+    69.35s  0.93  клієнтці.                        <- клієнті.
+    74.84s  0.92  знайомій коучці.                 <- знайомі. Кучці!
+
+SHE IMPROVISED -> her wording kept (25)
+     5.60s  script: —                            said: собі
+     6.33s  script: —                            said: По
+     7.24s  script: —                            said: це
+     9.14s  script: —                            said: Звичайна
+    10.00s  script: Form,                        said: Форума.
+    11.57s  script: таблицю, конектор            said: таблецію, а контактеру
+    22.60s  script: Резюме лягає в Notion.       said: Ну і, власне, які краще продати?
+    25.18s  script: —                            said: це
+    28.10s  script: бере                         said: бирає
+    29.02s  script: транскрипт                   said: транскритує з
+    33.30s  script: —                            said: противитися,
+    34.48s  script: —                            said: і відправити. Мені здається, що це взага
+    38.10s  script: —                            said: це
+    41.84s  script: SendPulse                    said: симпульс
+    46.07s  script: —                            said: І виходячи з цього,
+    48.06s  script: —                            said: це
+    48.80s  script: що                           said: ще
+    50.36s  script: —                            said: Тобто
+    52.24s  script: три дні                      said: вже декілька днів
+    55.50s  script: шле                          said: шли
+    56.26s  script: —                            said: цих людей? і можливо навіть Пушить їх. В
+    60.98s  script: —                            said: окремо .ц
+    67.33s  script: SendPulse надсилає           said: і через син пульс націлається
+        -  script: нотатки писати               said: — (cut)
+    71.52s  script: Збережи, щоб не              said: робити нотатки. Збережеся ми
+
+REVIEW -- could go either way (0)

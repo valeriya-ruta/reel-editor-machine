@@ -1,0 +1,29 @@
+CAPTIONS 181   script 104 | whisper-corrected 7 | her wording 70
+
+WHISPER MISHEARD -> script spelling restored (6)
+    10.83s  0.86  акаунти,                         <- акаунта,
+    16.01s  0.86  система                          <- систему
+    28.51s  1.00  акаунті.                         <- аккаунті. І
+    30.24s  1.00  акаунт:                          <- аккаунт
+    37.26s  0.94  акаунтів                         <- у аккаунтів
+    39.18s  0.89  монтажеру,                       <- монтажери,
+
+SHE IMPROVISED -> her wording kept (15)
+     4.65s  script: —                            said: то
+        -  script: Знайоме?                     said: — (cut)
+     7.52s  script: говорила                     said: я проводила консультацію
+     9.20s  script: у якої                       said: якою
+    10.65s  script: й                            said: і
+    18.23s  script: —                            said: то
+    18.90s  script: Так, цифра більша,           said: Ну, і типу, да, цифри більше,
+    23.15s  script: —                            said: Тобто
+    24.65s  script: —                            said: 1300,
+    28.05s  script: у                            said: в
+    29.46s  script: порахувати                   said: переховати
+    32.37s  script: Claude,                      said: клоун, бла бла бла,
+    44.00s  script: залежиш. Ну і виходить реаль said: А найцікавіше для мене, що твій процес н
+    60.63s  script: те Хочеш порахувати під себе said: таку систему то пиши
+    62.01s  script: у                            said: в
+
+REVIEW -- could go either way (1)
+     0.21s  script: платиш СММниці             said: платишся мене              (0.73)

@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 63 — автоматизації для викладачки мови</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="assets/js/rough-4.6.6.js"></script>
+    <style>
+    @font-face { font-family: "Google Sans"; font-weight: 400; font-display: block;
+                 src: url("assets/fonts/GoogleSans-400.ttf") format("truetype"); }
+    @font-face { font-family: "Google Sans"; font-weight: 500; font-display: block;
+                 src: url("assets/fonts/GoogleSans-500.ttf") format("truetype"); }
+    @font-face { font-family: "Google Sans"; font-weight: 700; font-display: block;
+                 src: url("assets/fonts/GoogleSans-700.ttf") format("truetype"); }
+    @font-face { font-family: "ProductSans"; font-weight: 900; font-display: block;
+                 src: url("assets/fonts/ProductSans-Black.woff") format("woff"); }
+    @font-face { font-family: "Pangolin"; font-weight: 400; font-display: block;
+                 src: url("assets/fonts/Pangolin.ttf") format("truetype"); }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px; overflow: hidden;
+            background: #fff; font-family: "Google Sans", system-ui, sans-serif;
+            color: #241919;
+            --primary: #7A1424; --on-surface: #241919; --on-surface-var: #574142;
+            --outline-var: #DEBFBF; --container-low: #FFF0F0; --chip: #FFF8F7; }
+    .plate { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    .L { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+         pointer-events: none; }
+    .hid { opacity: 0; visibility: hidden; }
+
+    /* §00.3.1 above me */
+    .card { position: absolute; background: #FFFFFF; border-radius: 40px;
+            box-shadow: 0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.10);
+            padding: 36px 40px; }
+    .card .lbl { display: block; font-weight: 500; font-size: 28px;
+                 color: var(--on-surface-var); margin-bottom: 20px; }
+    .card .ttl { display: block; font-weight: 700; font-size: 56px; line-height: 1.08;
+                 letter-spacing: -0.02em; color: var(--on-surface); }
+    .chips { display: flex; flex-wrap: wrap; gap: 14px; }
+    .chip { display: inline-flex; align-items: center; gap: 12px;
+            border: 2px solid var(--outline-var); border-radius: 16px;
+            padding: 14px 24px; font-weight: 500; font-size: 36px;
+            color: var(--on-surface); background: var(--chip); }
+    .chip i { width: 16px; height: 16px; border-radius: 50%; background: var(--primary);
+              display: inline-block; flex: none; }
+    .chip.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .chip.on i { background: #fff; }
+    .pill { position: absolute; display: inline-flex; align-items: center; gap: 16px;
+            background: var(--primary); color: #fff; border-radius: 999px;
+            padding: 30px 54px; font-weight: 500; font-size: 46px; white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(36,25,25,.12), 0 10px 30px rgba(122,20,36,.22); }
+    .pill.light { background: #fff; color: var(--on-surface);
+                  box-shadow: 0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.10); }
+    .num { font-weight: 700; letter-spacing: -0.04em; color: var(--primary); line-height: 1; }
+    .row { display: flex; align-items: center; gap: 18px; }
+    .check { width: 44px; height: 44px; border-radius: 12px; flex: none;
+             border: 3px solid var(--outline-var); background: #fff; position: relative; }
+    .check.on { background: var(--primary); border-color: var(--primary); }
+    .check.on::after { content: ""; position: absolute; left: 13px; top: 5px; width: 11px;
+                       height: 22px; border: solid #fff; border-width: 0 5px 5px 0;
+                       transform: rotate(45deg); }
+    .line { display: block; height: 18px; border-radius: 9px; background: #EFE3E3; }
+    .logo { width: 64px; height: 64px; flex: none; }
+    .logo path { fill: var(--primary); }
+    .mark { display: block; }
+    .mark path { fill: currentColor; }
+
+    /* glass (her review of 61): frosted white over her footage, a hairline rim */
+    .glass { position: absolute; border-radius: 36px; background: rgba(255,255,255,.62);
+             -webkit-backdrop-filter: blur(22px) saturate(1.5); backdrop-filter: blur(22px) saturate(1.5);
+             box-shadow: inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 1px rgba(255,255,255,.45),
+                         0 12px 36px rgba(36,25,25,.16); }
+    /* shuffle slot: one item at a time, centred above her head */
+    /* her note: a plain white card, no glass around it */
+    .shuf { position: absolute; left: 0; right: 0; margin: auto; width: max-content; top: 340px;
+            transform-origin: 50% 100%; }
+    .shuf .chip { font-size: 40px; padding: 16px 28px; background: #fff; border-color: #fff;
+                  box-shadow: 0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.14); }
+
+    /* §00.3.2 behind me */
+    .big { position: absolute; left: 0; width: 1080px; text-align: center;
+           font-weight: 700; line-height: 0.9; letter-spacing: -0.04em;
+           /* white, her call 2026-10-21: the red read badly over the room */
+           color: #FFFFFF; white-space: nowrap;
+           text-shadow: 0 6px 40px rgba(20,12,12,.30), 0 2px 8px rgba(20,12,12,.22); }
+
+    /* §00.3.3 half screen. Its parked position (up, off frame) is set from JS
+       with gsap.set: a CSS translate here would be parsed by GSAP as a px offset
+       and then stacked under yPercent, and the panel stalls a quarter of the
+       way in (reel 41's first snapshot). Same for #cover. */
+    #panel { position: absolute; left: 0; top: 0; width: 1080px; height: 1240px;
+             background: #FFFFFF; }
+    /* §00.3.4 full screen */
+    #cover { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+             background: #FFFFFF; }
+
+    /* §00.5 sketches */
+    .sk { position: absolute; left: 0; top: 0; overflow: visible; }
+    .sk text, .hand { font-family: "Pangolin", cursive; fill: #1E1E1E; color: #1E1E1E; }
+    #front .sk { filter: drop-shadow(0 3px 10px rgba(20,12,12,.22)); }
+    .hand { position: absolute; white-space: nowrap; }
+
+    /* captions — exactly as before §00 (her call 2026-10-21, over the boxed
+       phrases of the spec): kit.py's rail, word by word, upper case */
+    #scrim { position: absolute; left: 20px; top: 1247px; width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png"); background-size: 100% 100%;
+             background-repeat: no-repeat; opacity: 0; visibility: hidden; pointer-events: none; }
+    .wc { position: absolute; left: 0; width: 1080px; top: 1413px; height: 118px;
+          line-height: 118px; text-align: center; color: #fff;
+          font-family: "ProductSans", system-ui, sans-serif; font-size: 90px; font-weight: 900;
+          letter-spacing: -0.015em; white-space: nowrap; opacity: 0; visibility: hidden; }
+    .wc.inv { color: #241919; }
+    /* §00.2 boxed phrase captions (spec; not in use — see .wc) */
+    #caps { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+            pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; display: flex;
+           justify-content: center; opacity: 0; visibility: hidden; }
+    .cap .box { display: inline-block; max-width: 720px; text-align: center;
+                background: rgba(255,255,255,.94); border-radius: 28px; padding: 16px 30px;
+                font-weight: 500; font-size: 54px; line-height: 1.25; letter-spacing: -0.01em;
+                color: #241919; box-shadow: 0 2px 10px rgba(36,25,25,.10);
+                text-wrap: balance; }
+    .cap .k { position: relative; display: inline-block; padding: 0 .32em; }
+    .cap .kb { position: absolute; inset: 0; border-radius: 999px; background: #7A1424;
+               opacity: 0; }
+    .cap .kt { position: relative; }
+
+    /* the running list: a number badge on a plain white card (her note: no glass around it) */
+    .shuf .chip b.n { width: 50px; height: 50px; border-radius: 50%; background: #7A1424; color: #fff;
+                      display: inline-flex; align-items: center; justify-content: center; font-size: 30px;
+                      font-weight: 700; margin-left: -8px; }
+    .shuf .chip.ic { padding: 22px; }
+    .shuf .chip.ic svg { display: block; }
+    .glass .hd { display: flex; align-items: center; gap: 14px; font-size: 28px; font-weight: 700;
+                 color: #241919; margin-bottom: 14px; }
+    .glass .hd small { font-weight: 500; color: #574142; font-size: 24px; margin-left: auto; }
+
+    #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
+    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
+    #win { position: absolute; left: 0; top: 0; width: 800px; height: 560px; background: #FAF9F5;
+           border-radius: 18px; font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
+           box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22); will-change: transform; }
+    #win > div { position: absolute; }
+    .cm { fill: #D97757; }
+    .c-top { left: 22px; top: 18px; display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 500; }
+    .qz { display: inline-flex; width: 26px; height: 26px; border-radius: 7px; background: #4255FF; color: #fff;
+          font-style: normal; font-size: 15px; font-weight: 700; align-items: center; justify-content: center; }
+    .c-menu { left: 40px; top: 300px; width: 290px; background: #fff; border-radius: 14px; padding: 10px;
+              box-shadow: 0 6px 24px rgba(0,0,0,.14); }
+    .c-mt { font-size: 12px; color: #6b6b6b; padding: 4px 8px 6px; }
+    .c-row { display: flex; align-items: center; gap: 10px; font-size: 16px; padding: 8px; border-radius: 8px; position: relative; }
+    .c-row i { width: 26px; height: 26px; border-radius: 7px; font-style: normal; font-size: 14px; font-weight: 700;
+               display: inline-flex; align-items: center; justify-content: center; }
+    .c-row em { position: absolute; right: 10px; top: 13px; width: 32px; height: 18px; border-radius: 9px; background: #C4C7C5; }
+    .c-row em u { position: absolute; left: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
+    .c-inp { left: 40px; top: 446px; width: 720px; height: 82px; background: #fff; border: 1px solid #E3DED6;
+             border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+    .c-plus { position: absolute; left: 14px; top: 24px; width: 34px; height: 34px; border-radius: 50%;
+              border: 1px solid #DDD; text-align: center; line-height: 32px; font-size: 22px; color: #555; }
+    .c-txt { position: absolute; left: 62px; top: 28px; width: 590px; font-size: 18px; color: #1f1f1f; white-space: nowrap; overflow: hidden; }
+    #typ { display: inline-block; clip-path: inset(0 100% 0 0); }
+    .c-send { position: absolute; right: 14px; top: 22px; width: 38px; height: 38px; border-radius: 10px;
+              background: #D97757; color: #fff; text-align: center; line-height: 38px; font-size: 20px; font-weight: 700; }
+    .c-ans { left: 40px; top: 74px; width: 720px; }
+    .c-ah { display: flex; align-items: center; gap: 10px; font-size: 18px; margin-bottom: 14px; }
+    .c-set { background: #fff; border: 1px solid #E3DED6; border-radius: 16px; padding: 18px 20px; width: 480px; }
+    .c-sh { display: flex; align-items: center; gap: 10px; font-size: 18px; margin-bottom: 14px; }
+    .c-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .c-mini span { border: 1px solid #E6E8F0; border-radius: 10px; padding: 14px 12px; font-size: 16px; text-align: center;
+                   box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+    .c-btn { display: inline-block; background: #4255FF; color: #fff; border-radius: 22px; padding: 10px 22px; font-size: 15px; font-weight: 500; }
+    .qcard { position: absolute; left: 190px; top: 560px; width: 700px; height: 440px; transform-style: preserve-3d; }
+    .qcard > div { position: absolute; inset: 0; background: #fff; border-radius: 36px; backface-visibility: hidden;
+                   display: flex; align-items: center; justify-content: center; font-family: "Google Sans", sans-serif;
+                   font-size: 76px; font-weight: 500; color: #241919; text-align: center; padding: 0 40px;
+                   box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22); }
+    .qcard .qb { transform: rotateY(180deg); font-size: 64px; }
+    .qcard small { position: absolute; left: 34px; top: 26px; font-size: 26px; color: #4255FF; font-weight: 700; }
+
+    .hr { display: flex; align-items: center; gap: 18px; font-size: 32px; font-weight: 500; color: #241919;
+          padding: 9px 12px; border-top: 1px solid rgba(36,25,25,.08); border-radius: 14px; }
+    .hr span { flex: 1; }
+    .cb { width: 34px; height: 34px; border-radius: 9px; border: 3px solid #574142; position: relative; flex: none; }
+    .hr em { font-style: normal; font-size: 26px; color: #574142; opacity: 0; }
+    .hr em.wait { color: #7A1424; font-weight: 700; }
+    .tick { position: absolute; left: 4px; top: -2px; width: 22px; height: 12px; border-left: 5px solid #fff;
+            border-bottom: 5px solid #fff; transform: rotate(-45deg); transform-origin: 50% 50%; }
+
+    .q { font-size: 32px; color: #241919; margin-bottom: 14px; }
+    .opts { display: flex; gap: 12px; }
+    .opts span { font-size: 28px; padding: 8px 20px; border-radius: 14px; border: 2px solid #DEBFBF; background: rgba(255,255,255,.8); }
+    .scale { display: flex; gap: 8px; margin-top: 16px; }
+    .scale span { flex: 1; text-align: center; font-size: 28px; font-weight: 700; padding: 8px 0; border-radius: 12px;
+                  background: #FFF0F0; color: #574142; }
+
+    .lead { display: flex; align-items: center; gap: 18px; background: rgba(255,255,255,.85); border-radius: 20px; padding: 14px 18px; }
+    .lead b { width: 56px; height: 56px; border-radius: 50%; background: #7A1424; flex: none; }
+    .lead span { flex: 1; font-size: 32px; font-weight: 500; color: #241919; line-height: 1.15; }
+    .lead small { font-size: 24px; color: #574142; font-weight: 400; }
+    .lead em { font-style: normal; font-size: 30px; font-weight: 700; color: #fff; background: #7A1424; border-radius: 14px; padding: 8px 16px; }
+    .tags { display: flex; gap: 12px; margin-top: 14px; }
+    .tags span { font-size: 26px; padding: 8px 18px; border-radius: 14px; border: 2px solid #DEBFBF; background: #FFF8F7; color: #574142; }
+
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="66.150" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="66.150" data-media-start="0"
+             muted playsinline></video>
+      <div id="behind" class="L">
+        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:420px; font-size:230px">Claude</div>
+        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:430px; font-size:200px">SendPulse</div>
+      </div>
+      <div id="panel">
+<svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
+      </div>
+      <video id="matte-b1" class="plate matte" src="assets/mattes/b1.webm"
+             data-start="0.000" data-duration="4.433" data-media-start="0"
+             muted playsinline></video>
+      <video id="matte-b2" class="plate matte" src="assets/mattes/b2.webm"
+             data-start="52.733" data-duration="2.400" data-media-start="0"
+             muted playsinline></video>
+      <video id="matte-half1" class="plate matte" src="assets/mattes/half1.webm"
+             data-start="20.300" data-duration="12.567" data-media-start="0"
+             muted playsinline></video>
+      <div id="front" class="L">
+        <div id="l0" class="shuf hid"><span class="chip"><b class="n">1</b>Картки з нових слів</span></div>
+        <div id="l1" class="shuf hid"><span class="chip"><b class="n">2</b>Щоденник помилок</span></div>
+        <div id="l2" class="shuf hid"><span class="chip"><b class="n">3</b>Перевірка домашок</span></div>
+        <div id="l3" class="shuf hid"><span class="chip"><b class="n">4</b>Тест на рівень</span></div>
+
+        <div id="hw" class="glass hid" style="left:190px; top:290px; width:700px; padding:22px 30px">
+          <div class="hd">Домашки<small>цей тиждень</small></div>
+          <div class="hr"><i id="c1" class="cb"></i><span>Оля</span><em id="e1">здано</em></div>
+          <div class="hr"><i id="c2" class="cb"></i><span>Марко</span><em id="e2">здано</em></div>
+          <div class="hr" id="r3"><i class="cb"></i><span>Іра</span><em id="e3" class="wait">ще не здала</em></div>
+        </div>
+
+        <div id="lt" class="glass hid" style="left:170px; top:290px; width:740px; padding:22px 30px">
+          <div class="hd">Тест на рівень</div>
+          <div class="q">She ___ to school every day.</div>
+          <div class="opts"><span>go</span><span id="ok">goes</span><span>going</span></div>
+          <div id="sc" class="scale"><span>A1</span><span>A2</span><span id="b1">B1</span><span>B2</span><span>C1</span><span>C2</span></div>
+        </div>
+
+        <div id="crm" class="glass hid" style="left:170px; top:290px; width:740px; padding:22px 30px">
+          <div class="hd">CRM<small>нові ліди</small></div>
+          <div id="ld" class="lead"><b></b><span>Нова учениця<br><small>тест на рівень</small></span><em id="lv">B1</em></div>
+          <div class="tags"><span id="tg1">лідмагніт</span><span id="tg2">кваліфікація</span></div>
+        </div>
+        <div id="ct1" class="shuf hid"><span class="chip ic"><svg width="72" height="72" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4.5L6 21z" fill="#7A1424"/></svg></span></div>
+        <div id="ct2" class="shuf hid"><span class="chip ic"><svg width="72" height="72" viewBox="0 0 24 24"><path d="M2 11.5 22 3l-8.5 19-2.6-8.1z" fill="#7A1424"/></svg></span></div>
+        <div id="ctp" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:1404px;
+             font-size:46px; padding:28px 56px">Збережи і перешли колезі</div>
+      </div>
+      <div id="cover">
+
+        <div id="stage">
+          <div id="win">
+            <div class="c-top"><svg class="cm" width="30" height="30" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><span>Claude</span></div>
+            <div id="menu" class="c-menu">
+              <div class="c-mt">Конектори</div>
+              <div id="mq" class="c-row"><i class="qz">Q</i>Quizlet<em id="tq"><u></u></em></div>
+              <div class="c-row"><i style="background:#ECE6E6;color:#574142">N</i>Notion<em><u></u></em></div>
+            </div>
+            <div id="ans" class="c-ans">
+              <div class="c-ah"><svg class="cm" width="30" height="30" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><span>Готово — сет у Quizlet</span></div>
+              <div class="c-set">
+                <div class="c-sh"><i class="qz">Q</i><b>Нові слова уроку</b></div>
+                <div class="c-mini"><span>homework</span><span>deadline</span><span>to borrow</span><span>rehearsal</span></div>
+                <div id="opn" class="c-btn">Відкрити в Quizlet</div>
+              </div>
+            </div>
+            <div id="inp" class="c-inp">
+              <div class="c-plus">+</div>
+              <div class="c-txt"><span id="typ">Зроби сет карток: homework, deadline, to borrow, rehearsal</span></div>
+              <div class="c-send">↑</div>
+            </div>
+          </div>
+          <div id="card" class="qcard"><div class="qf"><small>Quizlet</small>homework</div><div class="qb"><small>Quizlet</small>домашнє завдання</div></div>
+        </div>
+      </div>
+      <div id="scrim"></div>
+      <div id="caps">
+      <div class="wc" id="w0">ЯКБИ</div>
+      <div class="wc" id="w1">Я</div>
+      <div class="wc" id="w2">БУЛА</div>
+      <div class="wc" id="w3">ВИКЛАДАЧКОЮ</div>
+      <div class="wc" id="w4">КИТАЙСЬКОЇ</div>
+      <div class="wc" id="w5">ЧИ</div>
+      <div class="wc" id="w6">АНГЛІЙСЬКОЇ,</div>
+      <div class="wc" id="w7">ТО ОСЬ</div>
+      <div class="wc" id="w8">ЯКІ</div>
+      <div class="wc" id="w9">АВТОМАТИЗАЦІЇ</div>
+      <div class="wc" id="w10">З CLAUDE</div>
+      <div class="wc" id="w11">Я</div>
+      <div class="wc" id="w12">Б</div>
+      <div class="wc" id="w13">СОБІ</div>
+      <div class="wc" id="w14">НАЛАШТУВАЛА</div>
+      <div class="wc" id="w15">ПО-ПЕРШЕ,</div>
+      <div class="wc" id="w16">ЦЕ</div>
+      <div class="wc" id="w17">ЗВИЧАЙНІ</div>
+      <div class="wc" id="w18">КАРТКИ</div>
+      <div class="wc" id="w19">З</div>
+      <div class="wc" id="w20">НОВИХ</div>
+      <div class="wc" id="w21">СЛІВ</div>
+      <div class="wc" id="w22">УРОКУ.</div>
+      <div class="wc" id="w23">У</div>
+      <div class="wc" id="w24">CLAUDE</div>
+      <div class="wc inv" id="w25">Є</div>
+      <div class="wc inv" id="w26">ОФІЦІЙНИЙ</div>
+      <div class="wc inv" id="w27">КОНЕКТОР</div>
+      <div class="wc inv" id="w28">QUIZLET.</div>
+      <div class="wc inv" id="w29">ТИ</div>
+      <div class="wc inv" id="w30">КИДАЄШ</div>
+      <div class="wc inv" id="w31">СПИСОК</div>
+      <div class="wc inv" id="w32">СЛІВ</div>
+      <div class="wc inv" id="w33">АБО</div>
+      <div class="wc inv" id="w34">ТРАНСКРИПТ</div>
+      <div class="wc inv" id="w35">УРОКУ,</div>
+      <div class="wc inv" id="w36">І</div>
+      <div class="wc inv" id="w37">ОТРИМУЄШ</div>
+      <div class="wc inv" id="w38">ГОТОВИЙ</div>
+      <div class="wc inv" id="w39">СЕТ</div>
+      <div class="wc inv" id="w40">КАРТОК,</div>
+      <div class="wc inv" id="w41">ЯКИЙ</div>
+      <div class="wc inv" id="w42">УЧЕНЬ</div>
+      <div class="wc inv" id="w43">ОДРАЗУ</div>
+      <div class="wc inv" id="w44">ВІДКРИВАЄ</div>
+      <div class="wc inv" id="w45">В QUIZLET.</div>
+      <div class="wc" id="w46">ДРУГЕ</div>
+      <div class="wc" id="w47">ЦЕ</div>
+      <div class="wc" id="w48">ЩОДЕННИК</div>
+      <div class="wc" id="w49">ПОМИЛОК.</div>
+      <div class="wc" id="w50">FATHOM</div>
+      <div class="wc inv" id="w51" style="top:740px">ЗАПИСУЄ</div>
+      <div class="wc inv" id="w52" style="top:740px">УРОК,</div>
+      <div class="wc inv" id="w53" style="top:740px">CLAUDE</div>
+      <div class="wc inv" id="w54" style="top:740px">ЧЕРЕЗ</div>
+      <div class="wc inv" id="w55" style="top:740px">КОНЕКТОР</div>
+      <div class="wc inv" id="w56" style="top:740px">ЗАБИРАЄ</div>
+      <div class="wc inv" id="w57" style="top:740px">ТРАНСКРИПТ,</div>
+      <div class="wc inv" id="w58" style="top:740px">СКІЛ</div>
+      <div class="wc inv" id="w59" style="top:740px">ВИПИСУЄ</div>
+      <div class="wc inv" id="w60" style="top:740px">ПОМИЛКИ</div>
+      <div class="wc inv" id="w61" style="top:740px">УЧНЯ</div>
+      <div class="wc inv" id="w62" style="top:740px">І</div>
+      <div class="wc inv" id="w63" style="top:740px">СКЛАДАЄ</div>
+      <div class="wc inv" id="w64" style="top:740px">ВПРАВИ</div>
+      <div class="wc inv" id="w65" style="top:740px">НА</div>
+      <div class="wc inv" id="w66" style="top:740px">НАСТУПНИЙ</div>
+      <div class="wc inv" id="w67" style="top:740px">УРОК,</div>
+      <div class="wc inv" id="w68" style="top:740px">ДЛЯ</div>
+      <div class="wc inv" id="w69" style="top:740px">ВІДПРАЦЮВАННЯ.</div>
+      <div class="wc inv" id="w70" style="top:740px">А</div>
+      <div class="wc inv" id="w71" style="top:740px">ЯКЩО</div>
+      <div class="wc inv" id="w72" style="top:740px">ТИ</div>
+      <div class="wc inv" id="w73" style="top:740px">ПІДКЛЮЧИШ</div>
+      <div class="wc inv" id="w74" style="top:740px">ЩЕ</div>
+      <div class="wc inv" id="w75" style="top:740px">NOTION,</div>
+      <div class="wc inv" id="w76" style="top:740px">ТО</div>
+      <div class="wc inv" id="w77" style="top:740px">ЦЕ</div>
+      <div class="wc inv" id="w78" style="top:740px">ВСЕ</div>
+      <div class="wc inv" id="w79" style="top:740px">МОЖЕ</div>
+      <div class="wc inv" id="w80" style="top:740px">ЛЯГТИ</div>
+      <div class="wc inv" id="w81" style="top:740px">ЩЕ</div>
+      <div class="wc inv" id="w82" style="top:740px">В</div>
+      <div class="wc inv" id="w83" style="top:740px">КАРТКУ</div>
+      <div class="wc inv" id="w84" style="top:740px">УЧНЯ.</div>
+      <div class="wc" id="w85">ТРЕТЄ</div>
+      <div class="wc" id="w86">ЦЕ</div>
+      <div class="wc" id="w87">ОРГАНІЗАЦІЯ</div>
+      <div class="wc" id="w88">ПЕРЕВІРОК</div>
+      <div class="wc" id="w89">ДОМАШОК.</div>
+      <div class="wc" id="w90">САМУ</div>
+      <div class="wc" id="w91">ПЕРЕВІРКУ</div>
+      <div class="wc" id="w92">Я</div>
+      <div class="wc" id="w93">Б</div>
+      <div class="wc" id="w94">МАБУТЬ,</div>
+      <div class="wc" id="w95">НЕ</div>
+      <div class="wc" id="w96">ВІДДАВАЛА</div>
+      <div class="wc" id="w97">ПОВНІСТЮ</div>
+      <div class="wc" id="w98">КЛОДУ,</div>
+      <div class="wc" id="w99">А</div>
+      <div class="wc" id="w100">ОТ</div>
+      <div class="wc" id="w101">ДОПОМАГАТИ</div>
+      <div class="wc" id="w102">ТОБІ</div>
+      <div class="wc" id="w103">ОРГАНІЗОВУВАТИ</div>
+      <div class="wc" id="w104">ЦІ</div>
+      <div class="wc" id="w105">ПЕРЕВІРКИ,</div>
+      <div class="wc" id="w106">ЩОБ ЦЕ</div>
+      <div class="wc" id="w107">БУЛО</div>
+      <div class="wc" id="w108">МАКСИМАЛЬНО</div>
+      <div class="wc" id="w109">ЛЕГКО</div>
+      <div class="wc" id="w110">ЗРОБИТИ,</div>
+      <div class="wc" id="w111">І</div>
+      <div class="wc" id="w112">ЩОБ</div>
+      <div class="wc" id="w113">ТИ</div>
+      <div class="wc" id="w114">НЕ</div>
+      <div class="wc" id="w115">ВИТРАЧАЛА</div>
+      <div class="wc" id="w116">ЧАС</div>
+      <div class="wc" id="w117">НА</div>
+      <div class="wc" id="w118">ЇХ</div>
+      <div class="wc" id="w119">ПОШУК.</div>
+      <div class="wc" id="w120">ЦЕ</div>
+      <div class="wc" id="w121">ТОЧНО</div>
+      <div class="wc" id="w122">МОЖНА.</div>
+      <div class="wc" id="w123">І</div>
+      <div class="wc" id="w124">ЧЕТВЕРТЕ,</div>
+      <div class="wc" id="w125">ЦЕ</div>
+      <div class="wc" id="w126">ТЕСТ</div>
+      <div class="wc" id="w127">НА</div>
+      <div class="wc" id="w128">РІВЕНЬ</div>
+      <div class="wc" id="w129">ДЛЯ</div>
+      <div class="wc" id="w130">НОВИХ</div>
+      <div class="wc" id="w131">УЧНІВ.</div>
+      <div class="wc" id="w132">З</div>
+      <div class="wc" id="w133">CLAUDE</div>
+      <div class="wc" id="w134">МОЖНА</div>
+      <div class="wc" id="w135">НАПИСАТИ</div>
+      <div class="wc" id="w136">ПИТАННЯ</div>
+      <div class="wc" id="w137">І</div>
+      <div class="wc" id="w138">ШКАЛУ.</div>
+      <div class="wc" id="w139">ЛАНЦЮЖОК</div>
+      <div class="wc" id="w140">ТИ</div>
+      <div class="wc" id="w141">ЗБИРАЄШ</div>
+      <div class="wc" id="w143">БЕЗ</div>
+      <div class="wc" id="w144">КОДУ.</div>
+      <div class="wc" id="w145">І</div>
+      <div class="wc" id="w146">ВСІ</div>
+      <div class="wc" id="w147">ЦІ</div>
+      <div class="wc" id="w148">РЕЗУЛЬТАТИ</div>
+      <div class="wc" id="w149">ОДРАЗУ</div>
+      <div class="wc" id="w150">І</div>
+      <div class="wc" id="w151">ПАДАЮТЬ</div>
+      <div class="wc" id="w152">В</div>
+      <div class="wc" id="w153">CRM-СИСТЕМУ.</div>
+      <div class="wc" id="w154">І</div>
+      <div class="wc" id="w155">ЦЕ</div>
+      <div class="wc" id="w156">І</div>
+      <div class="wc" id="w157">ЛІДМАГНІТ,</div>
+      <div class="wc" id="w158">І КВАЛІФІКАЦІЯ</div>
+      <div class="wc" id="w159">ЛІДІВ</div>
+      <div class="wc" id="w160">В</div>
+      <div class="wc" id="w161">ОДНОМУ</div>
+      <div class="wc" id="w162">МІСЦІ.</div>
+      <div class="wc" id="w163">ТОМУ</div>
+      <div class="wc" id="w164">ОБОВ'ЯЗКОВО</div>
+      </div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="66.150" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  function bez(x1, y1, x2, y2) {
+    function a(p1, p2) { return 1 - 3 * p2 + 3 * p1; }
+    function b(p1, p2) { return 3 * p2 - 6 * p1; }
+    function c(p1) { return 3 * p1; }
+    function at(t, p1, p2) { return ((a(p1, p2) * t + b(p1, p2)) * t + c(p1)) * t; }
+    function slope(t, p1, p2) { return 3 * a(p1, p2) * t * t + 2 * b(p1, p2) * t + c(p1); }
+    return function (x) {
+      if (x <= 0) return 0; if (x >= 1) return 1;
+      var t = x;
+      for (var i = 0; i < 8; i++) {
+        var s = slope(t, x1, x2); if (Math.abs(s) < 1e-6) break;
+        t -= (at(t, x1, x2) - x) / s;
+      }
+      t = Math.min(1, Math.max(0, t));
+      return at(t, y1, y2);
+    };
+  }
+  var POP = bez(.34, 1.56, .64, 1), RISE = bez(.2, .9, .25, 1), SLIDE = bez(.65, 0, .25, 1);
+  var PUSH = "#vid, .matte";
+  gsap.set("#panel", {yPercent: -101}); gsap.set("#cover", {yPercent: 101});
+  var NO = {immediateRender: false};
+  function X(o) { for (var k in NO) o[k] = NO[k]; return o; }
+
+  // arrivals (§00.7): pops 0.5-0.6 s, rise-ins 0.7 s; exits quicker, easing in
+  function pop(sel, t, d) {
+    tl.fromTo(sel, {autoAlpha: 0, scale: .6}, X({autoAlpha: 1, scale: 1, duration: d || .55, ease: POP}), t);
+  }
+  function rise(sel, t, dy) {
+    tl.fromTo(sel, {autoAlpha: 0, y: dy || 60}, X({autoAlpha: 1, y: 0, duration: .7, ease: RISE}), t);
+  }
+  function fadein(sel, t, d) { tl.fromTo(sel, {autoAlpha: 0}, X({autoAlpha: 1, duration: d || .4}), t); }
+  function out(sel, t) { tl.to(sel, {autoAlpha: 0, scale: .9, duration: .3, ease: "power2.in"}, t); }
+  function sink(sel, t) { tl.to(sel, {autoAlpha: 0, y: 40, duration: .35, ease: "power2.in"}, t); }
+
+  // shuffle (her idea on reel 61, 2026-11-23): a list through ONE slot, like
+  // cards — each item rises in from below on its word, the last one leaves
+  // upward as the next arrives. sels: ["#a", "#b", ...], times: their words,
+  // end: when the last one goes. Markup: '<div id="a" class="shuf hid">
+  // <span class="chip"><i></i>…</span></div>' (any element works).
+  function shuffle(sels, times, end) {
+    sels.forEach(function (sel, i) {
+      tl.fromTo(sel, {autoAlpha: 0, y: 90, scale: .92, rotationX: -35},
+                X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), times[i]);
+      var out = i + 1 < sels.length ? times[i + 1] : end;
+      tl.to(sel, {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, out - .05);
+    });
+  }
+
+  // §00.3.3 half screen: the panel comes down as the video goes down
+  function half(t0, t1) {
+    tl.fromTo("#panel", {yPercent: -101}, X({yPercent: 0, duration: .85, ease: SLIDE}), t0);
+    tl.fromTo(PUSH, {y: 0}, X({y: 330, duration: .85, ease: SLIDE}), t0);
+    tl.to("#panel", {yPercent: -101, duration: .85, ease: SLIDE}, t1);
+    tl.to(PUSH, {y: 0, duration: .85, ease: SLIDE}, t1);
+  }
+  // §00.3.4 full screen: white up from the bottom over everything
+  function full(t0, t1) {
+    tl.fromTo("#cover", {yPercent: 101}, X({yPercent: 0, duration: .85, ease: SLIDE}), t0);
+    tl.to("#cover", {yPercent: 101, duration: .85, ease: SLIDE}, t1);
+  }
+
+  // ---- §00.5 Excalidraw sketches (rough.js), drawn on stroke by stroke ----
+  // roughness 1 ≈ Excalidraw's own default — 2.4 was "too sloppy" (her review of 41)
+  var SKO = {roughness: 1.0, bowing: 1.0, strokeWidth: 4.5, stroke: "#1E1E1E",
+             disableMultiStroke: false, preserveVertices: false};
+  var HACH = {fill: "#F2C7CA", fillStyle: "hachure", hachureGap: 16, hachureAngle: -41,
+              fillWeight: 2.5};
+  var _ink = "#1E1E1E";
+  function opt(o, seed) { var r = {}; for (var k in SKO) r[k] = SKO[k]; r.stroke = _ink;
+    for (var k2 in (o || {})) r[k2] = o[k2]; r.seed = seed; return r; }
+  function hatch(o) { var r = {}; for (var k in HACH) r[k] = HACH[k];
+    for (var k2 in (o || {})) r[k2] = o[k2]; return r; }
+  function rrectD(x, y, w, h, r) {
+    return "M" + (x + r) + " " + y + " H" + (x + w - r) + " A" + r + " " + r + " 0 0 1 " + (x + w) + " " + (y + r) +
+           " V" + (y + h - r) + " A" + r + " " + r + " 0 0 1 " + (x + w - r) + " " + (y + h) +
+           " H" + (x + r) + " A" + r + " " + r + " 0 0 1 " + x + " " + (y + h - r) +
+           " V" + (y + r) + " A" + r + " " + r + " 0 0 1 " + (x + r) + " " + y + " Z";
+  }
+  var SK = {};
+  // a sketch is a named group of rough shapes inside one <svg class="sk">
+  function sketch(name, svgId) {
+    var svg = document.getElementById(svgId);
+    var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("id", "sk-" + name); svg.appendChild(g);
+    // Over her footage (her review of 41, "not passing even AA"): a thin line
+    // of any one colour fails against her light room — white included. So
+    // over the footage closed shapes are solid white stickers with the dark
+    // Excalidraw outline, and open strokes and free labels are dark ink with a
+    // thick white halo, which reads on light and dark ground alike. On the
+    // white panel and cover nothing changes. Explicit colours win.
+    var foot = !!(svg.closest && svg.closest("#front"));
+    SK[name] = {g: g, rc: rough.svg(svg), shapes: [], foot: foot, boxes: [], ink: "#1E1E1E"};
+    return SK[name];
+  }
+  function _add(s, node, kind, o) {   // o.halo === false: a stroke over a white card / pill (a strike-through) needs none
+    s.g.appendChild(node);
+    var paths = [].slice.call(node.querySelectorAll ? node.querySelectorAll("path") : []);
+    if (node.tagName === "path") paths = [node];
+    paths.forEach(function (p) {
+      var f = p.getAttribute("fill");
+      if (f && f !== "none") { p.style.opacity = 0; p.dataset.fill = "1"; return; }  // a solid fill fades in
+      var L = 0; try { L = p.getTotalLength(); } catch (e) {}
+      if (s.foot && !(o && o.halo === false)) {   // the white halo under a stroke over the footage
+        var h = p.cloneNode(false);
+        h.setAttribute("stroke", "#FFFFFF");
+        h.setAttribute("stroke-width", (parseFloat(p.getAttribute("stroke-width")) || 4.5) + 8);
+        p.parentNode.insertBefore(h, p);
+        p._halo = h;
+      }
+      [p, p._halo].forEach(function (q) { if (!q) return;
+        q.style.strokeDasharray = L + " " + (L + 2); q.style.strokeDashoffset = L + 1;
+        q.style.strokeLinecap = "round"; q.style.strokeLinejoin = "round"; });
+    });
+    s.shapes.push({paths: paths, kind: kind || "stroke"});
+  }
+  // a closed shape over the footage: solid white with a dark outline (see sketch())
+  function _closed(s, oo, o, x, y, w, h) {
+    if (s.foot && !(o && o.fill === false)) {
+      oo.fill = "#FFFFFF"; oo.fillStyle = "solid";
+      if (!(o && o.stroke)) oo.stroke = "#1E1E1E";
+      s.boxes.push([x, y, x + w, y + h]);
+    }
+    return oo;
+  }
+  function box(name, x, y, w, h, o) { _ink = SK[name].ink;      // rounded rough box, radius 28 (§00.5.2)
+    var s = SK[name], r = (o && o.r) || 28;
+    var oo = opt(o, (o && o.seed) || 7);
+    if (o && o.fill) { var f = hatch(o.fill === true ? {} : {fill: o.fill}); for (var k in f) oo[k] = f[k]; }
+    else _closed(s, oo, o, x, y, w, h);
+    _add(s, s.rc.path(rrectD(x, y, w, h, r), oo));
+  }
+  function ell(name, cx, cy, w, h, o) { _ink = SK[name].ink; var s = SK[name];
+    _add(s, s.rc.ellipse(cx, cy, w, h, _closed(s, opt(o, (o && o.seed) || 11), o, cx - w / 2, cy - h / 2, w, h))); }
+  // any closed hand-drawn outline (a cloud…): d is an SVG path, bbox its bounds
+  function blob(name, d, bbox, o) { _ink = SK[name].ink; var s = SK[name];
+    _add(s, s.rc.path(d, _closed(s, opt(o, (o && o.seed) || 23), o, bbox[0], bbox[1], bbox[2], bbox[3]))); }
+  function ln(name, x1, y1, x2, y2, o) { _ink = SK[name].ink; var s = SK[name];
+    _add(s, s.rc.line(x1, y1, x2, y2, opt(o, (o && o.seed) || 13)), null, o); }
+  function under(name, x1, y, x2, o) { _ink = SK[name].ink; var s = SK[name];      // a hand underline
+    _add(s, s.rc.curve([[x1, y + 4], [(x1 + x2) / 2, y - 6], [x2, y + 2]], opt(o, (o && o.seed) || 17)), null, o); }
+  function arrow(name, x1, y1, x2, y2, o) { _ink = SK[name].ink;
+    var s = SK[name], oo = opt(o, (o && o.seed) || 19), bend = (o && o.bend != null) ? o.bend : .12;
+    var mx = (x1 + x2) / 2 + (y2 - y1) * bend, my = (y1 + y2) / 2 - (x2 - x1) * bend;
+    _add(s, s.rc.curve([[x1, y1], [mx, my], [x2, y2]], oo), null, o);
+    var ang = Math.atan2(y2 - my, x2 - mx), L = 38, sp = .5;
+    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang - sp), y2 - L * Math.sin(ang - sp), oo), "head", o);
+    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang + sp), y2 - L * Math.sin(ang + sp), oo), "head", o);
+  }
+  function label(name, x, y, txt, o) {   // Pangolin, fades in after its shapes
+    var s = SK[name], t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    t.setAttribute("x", x); t.setAttribute("y", y);
+    t.setAttribute("text-anchor", (o && o.anchor) || "middle");
+    t.setAttribute("font-size", (o && o.size) || 50);
+    var inside = s.boxes.some(function (b) { return x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3] + 20; });
+    t.style.fill = (o && o.color) || "#1E1E1E";
+    if (s.foot && !inside) {         // a free label over the footage gets the white halo too
+      t.style.stroke = "#FFFFFF"; t.style.strokeWidth = "12px"; t.style.paintOrder = "stroke";
+      t.style.strokeLinejoin = "round";
+    }
+    t.textContent = txt; t.style.opacity = 0; s.g.appendChild(t);
+    s.shapes.push({text: t});
+  }
+  // draw a sketch on from time t: each stroke 0.7 s, in sequence (the next one
+  // starts as the last is two-thirds done); a label fades in after its box.
+  function draw(name, t, per) {
+    var s = SK[name], at = t; per = per || .7;
+    s.shapes.forEach(function (sh) {
+      if (sh.text) { tl.to(sh.text, {opacity: 1, duration: .35}, at + .05); return; }
+      // an arrowhead is a flick, not a stroke: the arrow reads as one gesture
+      if (sh.kind === "head") {
+        sh.paths.forEach(function (p) { tl.to([p, p._halo].filter(Boolean), {strokeDashoffset: 0, duration: .18, ease: "power1.out"}, at); });
+        at += .12; return;
+      }
+      sh.paths.forEach(function (p, i) {
+        if (p.dataset.fill) { tl.to(p, {opacity: 1, duration: .3}, at); return; }
+        tl.to([p, p._halo].filter(Boolean), {strokeDashoffset: 0, duration: per, ease: "power1.inOut"}, at + i * .12);
+      });
+      at += per * .66 + (sh.paths.length - 1) * .12;
+    });
+    return at;
+  }
+  function erase(name, t) { tl.to("#sk-" + name, {autoAlpha: 0, duration: .3, ease: "power2.in"}, t); }
+
+  gsap.set(PUSH, {transformOrigin: "540px 900px"});
+  tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 66.150, ease: "none"}, 0);
+
+  tl.set("#w0", {autoAlpha: 1}, 0.000); tl.set("#w0", {autoAlpha: 0}, 0.345);
+  tl.set("#w1", {autoAlpha: 1}, 0.430); tl.set("#w1", {autoAlpha: 0}, 0.530);
+  tl.set("#w2", {autoAlpha: 1}, 0.530); tl.set("#w2", {autoAlpha: 0}, 0.705);
+  tl.set("#w3", {autoAlpha: 1}, 0.790); tl.set("#w3", {autoAlpha: 0}, 1.325);
+  tl.set("#w4", {autoAlpha: 1}, 1.410); tl.set("#w4", {autoAlpha: 0}, 1.945);
+  tl.set("#w5", {autoAlpha: 1}, 2.030); tl.set("#w5", {autoAlpha: 0}, 2.130);
+  tl.set("#w6", {autoAlpha: 1}, 2.190); tl.set("#w6", {autoAlpha: 0}, 2.915);
+  tl.set("#w7", {autoAlpha: 1}, 3.000); tl.set("#w7", {autoAlpha: 0}, 3.315);
+  tl.set("#w8", {autoAlpha: 1}, 3.400); tl.set("#w8", {autoAlpha: 0}, 3.500);
+  tl.set("#w9", {autoAlpha: 1}, 3.500); tl.set("#w9", {autoAlpha: 0}, 4.175);
+  tl.set("#w10", {autoAlpha: 1}, 4.260); tl.set("#w10", {autoAlpha: 0}, 4.515);
+  tl.set("#w11", {autoAlpha: 1}, 4.600); tl.set("#w11", {autoAlpha: 0}, 4.875);
+  tl.set("#w12", {autoAlpha: 1}, 4.960); tl.set("#w12", {autoAlpha: 0}, 5.060);
+  tl.set("#w13", {autoAlpha: 1}, 5.080); tl.set("#w13", {autoAlpha: 0}, 5.235);
+  tl.set("#w14", {autoAlpha: 1}, 5.320); tl.set("#w14", {autoAlpha: 0}, 5.948);
+  tl.set("#w15", {autoAlpha: 1}, 6.033); tl.set("#w15", {autoAlpha: 0}, 6.678);
+  tl.set("#w16", {autoAlpha: 1}, 6.763); tl.set("#w16", {autoAlpha: 0}, 6.863);
+  tl.set("#w17", {autoAlpha: 1}, 6.943); tl.set("#w17", {autoAlpha: 0}, 7.398);
+  tl.set("#w18", {autoAlpha: 1}, 7.483); tl.set("#w18", {autoAlpha: 0}, 8.052);
+  tl.set("#w19", {autoAlpha: 1}, 8.137); tl.set("#w19", {autoAlpha: 0}, 8.237);
+  tl.set("#w20", {autoAlpha: 1}, 8.317); tl.set("#w20", {autoAlpha: 0}, 8.732);
+  tl.set("#w21", {autoAlpha: 1}, 8.817); tl.set("#w21", {autoAlpha: 0}, 9.072);
+  tl.set("#w22", {autoAlpha: 1}, 9.157); tl.set("#w22", {autoAlpha: 0}, 9.648);
+  tl.set("#w23", {autoAlpha: 1}, 9.733); tl.set("#w23", {autoAlpha: 0}, 9.898);
+  tl.set("#w24", {autoAlpha: 1}, 9.983); tl.set("#w24", {autoAlpha: 0}, 10.138);
+  tl.set("#w25", {autoAlpha: 1}, 10.223); tl.set("#w25", {autoAlpha: 0}, 10.398);
+  tl.set("#w26", {autoAlpha: 1}, 10.483); tl.set("#w26", {autoAlpha: 0}, 11.058);
+  tl.set("#w27", {autoAlpha: 1}, 11.143); tl.set("#w27", {autoAlpha: 0}, 11.438);
+  tl.set("#w28", {autoAlpha: 1}, 11.523); tl.set("#w28", {autoAlpha: 0}, 12.048);
+  tl.set("#w29", {autoAlpha: 1}, 12.133); tl.set("#w29", {autoAlpha: 0}, 12.278);
+  tl.set("#w30", {autoAlpha: 1}, 12.363); tl.set("#w30", {autoAlpha: 0}, 12.718);
+  tl.set("#w31", {autoAlpha: 1}, 12.803); tl.set("#w31", {autoAlpha: 0}, 13.078);
+  tl.set("#w32", {autoAlpha: 1}, 13.163); tl.set("#w32", {autoAlpha: 0}, 13.318);
+  tl.set("#w33", {autoAlpha: 1}, 13.403); tl.set("#w33", {autoAlpha: 0}, 13.598);
+  tl.set("#w34", {autoAlpha: 1}, 13.683); tl.set("#w34", {autoAlpha: 0}, 14.185);
+  tl.set("#w35", {autoAlpha: 1}, 14.270); tl.set("#w35", {autoAlpha: 0}, 14.478);
+  tl.set("#w36", {autoAlpha: 1}, 14.563); tl.set("#w36", {autoAlpha: 0}, 14.678);
+  tl.set("#w37", {autoAlpha: 1}, 14.763); tl.set("#w37", {autoAlpha: 0}, 15.178);
+  tl.set("#w38", {autoAlpha: 1}, 15.263); tl.set("#w38", {autoAlpha: 0}, 15.738);
+  tl.set("#w39", {autoAlpha: 1}, 15.823); tl.set("#w39", {autoAlpha: 0}, 15.978);
+  tl.set("#w40", {autoAlpha: 1}, 16.063); tl.set("#w40", {autoAlpha: 0}, 16.507);
+  tl.set("#w41", {autoAlpha: 1}, 16.592); tl.set("#w41", {autoAlpha: 0}, 16.692);
+  tl.set("#w42", {autoAlpha: 1}, 16.732); tl.set("#w42", {autoAlpha: 0}, 17.047);
+  tl.set("#w43", {autoAlpha: 1}, 17.132); tl.set("#w43", {autoAlpha: 0}, 17.487);
+  tl.set("#w44", {autoAlpha: 1}, 17.572); tl.set("#w44", {autoAlpha: 0}, 18.007);
+  tl.set("#w45", {autoAlpha: 1}, 18.092); tl.set("#w45", {autoAlpha: 0}, 18.615);
+  tl.set("#w46", {autoAlpha: 1}, 18.700); tl.set("#w46", {autoAlpha: 0}, 19.405);
+  tl.set("#w47", {autoAlpha: 1}, 19.490); tl.set("#w47", {autoAlpha: 0}, 19.590);
+  tl.set("#w48", {autoAlpha: 1}, 19.590); tl.set("#w48", {autoAlpha: 0}, 20.065);
+  tl.set("#w49", {autoAlpha: 1}, 20.150); tl.set("#w49", {autoAlpha: 0}, 20.697);
+  tl.set("#w50", {autoAlpha: 1}, 20.782); tl.set("#w50", {autoAlpha: 0}, 21.177);
+  tl.set("#w51", {autoAlpha: 1}, 21.262); tl.set("#w51", {autoAlpha: 0}, 21.637);
+  tl.set("#w52", {autoAlpha: 1}, 21.722); tl.set("#w52", {autoAlpha: 0}, 21.930);
+  tl.set("#w53", {autoAlpha: 1}, 22.015); tl.set("#w53", {autoAlpha: 0}, 22.290);
+  tl.set("#w54", {autoAlpha: 1}, 22.375); tl.set("#w54", {autoAlpha: 0}, 22.490);
+  tl.set("#w55", {autoAlpha: 1}, 22.575); tl.set("#w55", {autoAlpha: 0}, 22.850);
+  tl.set("#w56", {autoAlpha: 1}, 22.935); tl.set("#w56", {autoAlpha: 0}, 23.143);
+  tl.set("#w57", {autoAlpha: 1}, 23.228); tl.set("#w57", {autoAlpha: 0}, 23.562);
+  tl.set("#w58", {autoAlpha: 1}, 23.647); tl.set("#w58", {autoAlpha: 0}, 23.848);
+  tl.set("#w59", {autoAlpha: 1}, 23.933); tl.set("#w59", {autoAlpha: 0}, 24.598);
+  tl.set("#w60", {autoAlpha: 1}, 24.683); tl.set("#w60", {autoAlpha: 0}, 25.058);
+  tl.set("#w61", {autoAlpha: 1}, 25.143); tl.set("#w61", {autoAlpha: 0}, 25.338);
+  tl.set("#w62", {autoAlpha: 1}, 25.423); tl.set("#w62", {autoAlpha: 0}, 25.538);
+  tl.set("#w63", {autoAlpha: 1}, 25.623); tl.set("#w63", {autoAlpha: 0}, 25.898);
+  tl.set("#w64", {autoAlpha: 1}, 25.983); tl.set("#w64", {autoAlpha: 0}, 26.298);
+  tl.set("#w65", {autoAlpha: 1}, 26.383); tl.set("#w65", {autoAlpha: 0}, 26.538);
+  tl.set("#w66", {autoAlpha: 1}, 26.623); tl.set("#w66", {autoAlpha: 0}, 27.118);
+  tl.set("#w67", {autoAlpha: 1}, 27.203); tl.set("#w67", {autoAlpha: 0}, 27.318);
+  tl.set("#w68", {autoAlpha: 1}, 27.403); tl.set("#w68", {autoAlpha: 0}, 27.538);
+  tl.set("#w69", {autoAlpha: 1}, 27.623); tl.set("#w69", {autoAlpha: 0}, 28.448);
+  tl.set("#w70", {autoAlpha: 1}, 28.533); tl.set("#w70", {autoAlpha: 0}, 28.658);
+  tl.set("#w71", {autoAlpha: 1}, 28.743); tl.set("#w71", {autoAlpha: 0}, 28.878);
+  tl.set("#w72", {autoAlpha: 1}, 28.963); tl.set("#w72", {autoAlpha: 0}, 29.063);
+  tl.set("#w73", {autoAlpha: 1}, 29.103); tl.set("#w73", {autoAlpha: 0}, 29.438);
+  tl.set("#w74", {autoAlpha: 1}, 29.523); tl.set("#w74", {autoAlpha: 0}, 29.638);
+  tl.set("#w75", {autoAlpha: 1}, 29.723); tl.set("#w75", {autoAlpha: 0}, 30.078);
+  tl.set("#w76", {autoAlpha: 1}, 30.163); tl.set("#w76", {autoAlpha: 0}, 30.263);
+  tl.set("#w77", {autoAlpha: 1}, 30.283); tl.set("#w77", {autoAlpha: 0}, 30.398);
+  tl.set("#w78", {autoAlpha: 1}, 30.483); tl.set("#w78", {autoAlpha: 0}, 30.583);
+  tl.set("#w79", {autoAlpha: 1}, 30.663); tl.set("#w79", {autoAlpha: 0}, 30.838);
+  tl.set("#w80", {autoAlpha: 1}, 30.923); tl.set("#w80", {autoAlpha: 0}, 31.198);
+  tl.set("#w81", {autoAlpha: 1}, 31.283); tl.set("#w81", {autoAlpha: 0}, 31.383);
+  tl.set("#w82", {autoAlpha: 1}, 31.443); tl.set("#w82", {autoAlpha: 0}, 31.543);
+  tl.set("#w83", {autoAlpha: 1}, 31.623); tl.set("#w83", {autoAlpha: 0}, 31.838);
+  tl.set("#w84", {autoAlpha: 1}, 31.923); tl.set("#w84", {autoAlpha: 0}, 32.382);
+  tl.set("#w85", {autoAlpha: 1}, 32.467); tl.set("#w85", {autoAlpha: 0}, 33.032);
+  tl.set("#w86", {autoAlpha: 1}, 33.117); tl.set("#w86", {autoAlpha: 0}, 33.217);
+  tl.set("#w87", {autoAlpha: 1}, 33.277); tl.set("#w87", {autoAlpha: 0}, 33.892);
+  tl.set("#w88", {autoAlpha: 1}, 33.977); tl.set("#w88", {autoAlpha: 0}, 34.312);
+  tl.set("#w89", {autoAlpha: 1}, 34.397); tl.set("#w89", {autoAlpha: 0}, 34.948);
+  tl.set("#w90", {autoAlpha: 1}, 35.033); tl.set("#w90", {autoAlpha: 0}, 35.478);
+  tl.set("#w91", {autoAlpha: 1}, 35.563); tl.set("#w91", {autoAlpha: 0}, 35.898);
+  tl.set("#w92", {autoAlpha: 1}, 35.983); tl.set("#w92", {autoAlpha: 0}, 36.098);
+  tl.set("#w93", {autoAlpha: 1}, 36.183); tl.set("#w93", {autoAlpha: 0}, 36.283);
+  tl.set("#w94", {autoAlpha: 1}, 36.323); tl.set("#w94", {autoAlpha: 0}, 36.698);
+  tl.set("#w95", {autoAlpha: 1}, 36.783); tl.set("#w95", {autoAlpha: 0}, 36.883);
+  tl.set("#w96", {autoAlpha: 1}, 36.943); tl.set("#w96", {autoAlpha: 0}, 37.398);
+  tl.set("#w97", {autoAlpha: 1}, 37.483); tl.set("#w97", {autoAlpha: 0}, 37.938);
+  tl.set("#w98", {autoAlpha: 1}, 38.023); tl.set("#w98", {autoAlpha: 0}, 38.389);
+  tl.set("#w99", {autoAlpha: 1}, 38.474); tl.set("#w99", {autoAlpha: 0}, 38.574);
+  tl.set("#w100", {autoAlpha: 1}, 38.574); tl.set("#w100", {autoAlpha: 0}, 38.674);
+  tl.set("#w101", {autoAlpha: 1}, 38.714); tl.set("#w101", {autoAlpha: 0}, 39.109);
+  tl.set("#w102", {autoAlpha: 1}, 39.194); tl.set("#w102", {autoAlpha: 0}, 39.469);
+  tl.set("#w103", {autoAlpha: 1}, 39.554); tl.set("#w103", {autoAlpha: 0}, 40.269);
+  tl.set("#w104", {autoAlpha: 1}, 40.354); tl.set("#w104", {autoAlpha: 0}, 40.469);
+  tl.set("#w105", {autoAlpha: 1}, 40.554); tl.set("#w105", {autoAlpha: 0}, 41.079);
+  tl.set("#w106", {autoAlpha: 1}, 41.164); tl.set("#w106", {autoAlpha: 0}, 41.319);
+  tl.set("#w107", {autoAlpha: 1}, 41.404); tl.set("#w107", {autoAlpha: 0}, 41.559);
+  tl.set("#w108", {autoAlpha: 1}, 41.644); tl.set("#w108", {autoAlpha: 0}, 42.139);
+  tl.set("#w109", {autoAlpha: 1}, 42.224); tl.set("#w109", {autoAlpha: 0}, 42.359);
+  tl.set("#w110", {autoAlpha: 1}, 42.444); tl.set("#w110", {autoAlpha: 0}, 43.023);
+  tl.set("#w111", {autoAlpha: 1}, 43.108); tl.set("#w111", {autoAlpha: 0}, 43.223);
+  tl.set("#w112", {autoAlpha: 1}, 43.308); tl.set("#w112", {autoAlpha: 0}, 43.408);
+  tl.set("#w113", {autoAlpha: 1}, 43.428); tl.set("#w113", {autoAlpha: 0}, 43.528);
+  tl.set("#w114", {autoAlpha: 1}, 43.588); tl.set("#w114", {autoAlpha: 0}, 43.688);
+  tl.set("#w115", {autoAlpha: 1}, 43.688); tl.set("#w115", {autoAlpha: 0}, 44.063);
+  tl.set("#w116", {autoAlpha: 1}, 44.148); tl.set("#w116", {autoAlpha: 0}, 44.303);
+  tl.set("#w117", {autoAlpha: 1}, 44.388); tl.set("#w117", {autoAlpha: 0}, 44.488);
+  tl.set("#w118", {autoAlpha: 1}, 44.528); tl.set("#w118", {autoAlpha: 0}, 44.628);
+  tl.set("#w119", {autoAlpha: 1}, 44.628); tl.set("#w119", {autoAlpha: 0}, 45.082);
+  tl.set("#w120", {autoAlpha: 1}, 45.167); tl.set("#w120", {autoAlpha: 0}, 45.352);
+  tl.set("#w121", {autoAlpha: 1}, 45.437); tl.set("#w121", {autoAlpha: 0}, 45.612);
+  tl.set("#w122", {autoAlpha: 1}, 45.697); tl.set("#w122", {autoAlpha: 0}, 46.115);
+  tl.set("#w123", {autoAlpha: 1}, 46.200); tl.set("#w123", {autoAlpha: 0}, 46.325);
+  tl.set("#w124", {autoAlpha: 1}, 46.410); tl.set("#w124", {autoAlpha: 0}, 46.985);
+  tl.set("#w125", {autoAlpha: 1}, 47.070); tl.set("#w125", {autoAlpha: 0}, 47.170);
+  tl.set("#w126", {autoAlpha: 1}, 47.210); tl.set("#w126", {autoAlpha: 0}, 47.505);
+  tl.set("#w127", {autoAlpha: 1}, 47.590); tl.set("#w127", {autoAlpha: 0}, 47.785);
+  tl.set("#w128", {autoAlpha: 1}, 47.870); tl.set("#w128", {autoAlpha: 0}, 48.125);
+  tl.set("#w129", {autoAlpha: 1}, 48.210); tl.set("#w129", {autoAlpha: 0}, 48.365);
+  tl.set("#w130", {autoAlpha: 1}, 48.450); tl.set("#w130", {autoAlpha: 0}, 48.785);
+  tl.set("#w131", {autoAlpha: 1}, 48.870); tl.set("#w131", {autoAlpha: 0}, 49.315);
+  tl.set("#w132", {autoAlpha: 1}, 49.400); tl.set("#w132", {autoAlpha: 0}, 49.545);
+  tl.set("#w133", {autoAlpha: 1}, 49.630); tl.set("#w133", {autoAlpha: 0}, 49.785);
+  tl.set("#w134", {autoAlpha: 1}, 49.870); tl.set("#w134", {autoAlpha: 0}, 50.065);
+  tl.set("#w135", {autoAlpha: 1}, 50.150); tl.set("#w135", {autoAlpha: 0}, 50.585);
+  tl.set("#w136", {autoAlpha: 1}, 50.670); tl.set("#w136", {autoAlpha: 0}, 51.045);
+  tl.set("#w137", {autoAlpha: 1}, 51.130); tl.set("#w137", {autoAlpha: 0}, 51.445);
+  tl.set("#w138", {autoAlpha: 1}, 51.530); tl.set("#w138", {autoAlpha: 0}, 51.907);
+  tl.set("#w139", {autoAlpha: 1}, 51.992); tl.set("#w139", {autoAlpha: 0}, 52.807);
+  tl.set("#w140", {autoAlpha: 1}, 52.892); tl.set("#w140", {autoAlpha: 0}, 52.992);
+  tl.set("#w141", {autoAlpha: 1}, 53.032); tl.set("#w141", {autoAlpha: 0}, 53.367);
+  tl.set("#w143", {autoAlpha: 1}, 54.032); tl.set("#w143", {autoAlpha: 0}, 54.187);
+  tl.set("#w144", {autoAlpha: 1}, 54.272); tl.set("#w144", {autoAlpha: 0}, 54.515);
+  tl.set("#w145", {autoAlpha: 1}, 54.600); tl.set("#w145", {autoAlpha: 0}, 54.805);
+  tl.set("#w146", {autoAlpha: 1}, 54.890); tl.set("#w146", {autoAlpha: 0}, 54.990);
+  tl.set("#w147", {autoAlpha: 1}, 55.070); tl.set("#w147", {autoAlpha: 0}, 55.170);
+  tl.set("#w148", {autoAlpha: 1}, 55.210); tl.set("#w148", {autoAlpha: 0}, 55.625);
+  tl.set("#w149", {autoAlpha: 1}, 55.710); tl.set("#w149", {autoAlpha: 0}, 56.025);
+  tl.set("#w150", {autoAlpha: 1}, 56.110); tl.set("#w150", {autoAlpha: 0}, 56.210);
+  tl.set("#w151", {autoAlpha: 1}, 56.250); tl.set("#w151", {autoAlpha: 0}, 56.485);
+  tl.set("#w152", {autoAlpha: 1}, 56.570); tl.set("#w152", {autoAlpha: 0}, 57.258);
+  tl.set("#w153", {autoAlpha: 1}, 57.343); tl.set("#w153", {autoAlpha: 0}, 57.930);
+  tl.set("#w154", {autoAlpha: 1}, 58.015); tl.set("#w154", {autoAlpha: 0}, 58.310);
+  tl.set("#w155", {autoAlpha: 1}, 58.395); tl.set("#w155", {autoAlpha: 0}, 58.495);
+  tl.set("#w156", {autoAlpha: 1}, 58.575); tl.set("#w156", {autoAlpha: 0}, 58.770);
+  tl.set("#w157", {autoAlpha: 1}, 58.855); tl.set("#w157", {autoAlpha: 0}, 59.330);
+  tl.set("#w158", {autoAlpha: 1}, 59.415); tl.set("#w158", {autoAlpha: 0}, 60.070);
+  tl.set("#w159", {autoAlpha: 1}, 60.155); tl.set("#w159", {autoAlpha: 0}, 60.450);
+  tl.set("#w160", {autoAlpha: 1}, 60.535); tl.set("#w160", {autoAlpha: 0}, 60.650);
+  tl.set("#w161", {autoAlpha: 1}, 60.735); tl.set("#w161", {autoAlpha: 0}, 61.130);
+  tl.set("#w162", {autoAlpha: 1}, 61.215); tl.set("#w162", {autoAlpha: 0}, 61.782);
+  tl.set("#w163", {autoAlpha: 1}, 61.867); tl.set("#w163", {autoAlpha: 0}, 62.091);
+  tl.set("#w164", {autoAlpha: 1}, 62.176); tl.set("#w164", {autoAlpha: 0}, 62.471);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 66.107);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 9.933);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 18.600);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 20.682);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 32.317);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 53.222);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 53.947);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 62.206);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 66.150);
+
+  rise("#bw1", 0.15); sink("#bw1", 4.470);
+  shuffle(["#l0"], [6.033], 9.633);
+  shuffle(["#l1"], [18.950], 20.332);
+  shuffle(["#l2"], [32.467], 35.433);
+  shuffle(["#l3"], [46.210], 49.400);
+
+  gsap.set("#win", {transformOrigin: "400px 280px"});
+  gsap.set(["#menu", "#ans", "#card"], {autoAlpha: 0});
+  gsap.set("#win", {x: 140.0, y: 480.0 + 220, scale: 1.2 * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
+  tl.to("#win", {x: 140.0, y: 480.0, scale: 1.2, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.1, ease: "power3.out"}, 9.683 + .1);
+  tl.fromTo("#menu", {autoAlpha: 0, y: 12}, X({autoAlpha: 1, y: 0, duration: .3}), 11.143 - .9);
+  tl.to("#win", {x: 699.0, y: 311.0, scale: 2.6, rotationX: 3, rotationY: 6, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, 11.143 - .6);
+  tl.to("#tq", {backgroundColor: "#4255FF", duration: .2}, 11.523);
+  tl.to("#tq u", {x: 14, duration: .3, ease: "back.out(2)"}, 11.523);
+  tl.to("#menu", {autoAlpha: 0, duration: .25}, 12.363 - .35);
+  tl.to("#win", {x: 140.0, y: 128.1, scale: 1.7, rotationX: -3, rotationY: -6, duration: 1.0, ease: "power3.inOut"}, 12.363 - .5);
+  tl.fromTo("#typ", {clipPath: "inset(0 100% 0 0)"}, X({clipPath: "inset(0 0% 0 0)", duration: 1.9, ease: "steps(28)"}), 12.363);
+  tl.to("#typ", {autoAlpha: 0, duration: .2}, 14.763 - .2);
+  tl.fromTo("#ans", {autoAlpha: 0, y: 30}, X({autoAlpha: 1, y: 0, duration: .5, ease: "power3.out"}), 14.763);
+  tl.to("#win", {x: 341.2, y: 553.8, scale: 1.75, rotationX: 6, rotationY: 8, rotationZ: -1, duration: 1.1, ease: "power3.inOut"}, 14.763 - .2);
+  tl.to("#opn", {scale: .92, backgroundColor: "#2E3BBF", duration: .12, yoyo: true, repeat: 1}, 16.732 + .3);
+  tl.to("#win", {y: "-=260", scale: 1.75 * .8, rotationX: 14, duration: .9, ease: "power3.inOut"}, 16.732 + .4);
+  tl.fromTo("#card", {autoAlpha: 0, y: 220, rotationX: -30}, X({autoAlpha: 1, y: 0, rotationX: 0, duration: .7, ease: "power3.out"}), 16.732 + .5);
+  tl.to("#card", {rotationY: 180, duration: .7, ease: "power2.inOut"}, 17.572 + .15);
+  full(9.683, 18.200);
+
+
+  sketch("s1", "skP"); box("s1", 90, 300, 210, 112, {seed: 3}); label("s1", 195, 372, "Fathom", {size: 50});
+  draw("s1", 20.682);
+  sketch("s2", "skP"); arrow("s2", 305, 356, 425, 356, {seed: 5, bend: -.12});
+  box("s2", 435, 300, 210, 112, {seed: 7, fill: true}); label("s2", 540, 372, "Claude", {size: 50});
+  draw("s2", 21.515);
+  sketch("s3", "skP"); label("s3", 540, 462, "+ скіл", {size: 44}); draw("s3", 23.547);
+  sketch("s4", "skP"); arrow("s4", 520, 480, 340, 560, {seed: 9, bend: .15});
+  box("s4", 120, 540, 260, 130, {seed: 11}); label("s4", 250, 593, "помилки", {size: 44});
+  draw("s4", 24.183);
+  sketch("s5", "skP"); label("s5", 250, 648, "вправи", {size: 44}); draw("s5", 25.883);
+  sketch("s6", "skP"); arrow("s6", 650, 356, 770, 356, {seed: 13, bend: .12});
+  box("s6", 780, 300, 210, 112, {seed: 15}); label("s6", 885, 372, "Notion", {size: 50});
+  draw("s6", 29.223, .35);
+  sketch("s7", "skP"); arrow("s7", 885, 420, 835, 545, {seed: 17, bend: -.2});
+  box("s7", 660, 550, 320, 112, {seed: 19, fill: true}); label("s7", 820, 622, "картка учня", {size: 46});
+  draw("s7", 30.123, .35);
+  erase("s1", 31.917); erase("s2", 31.917); erase("s3", 31.917); erase("s4", 31.917); erase("s5", 31.917); erase("s6", 31.917); erase("s7", 31.917);
+
+
+  rise("#hw", 39.354);
+  ["#c1", "#c2"].forEach(function (s, i) {
+    document.querySelector(s).innerHTML = '<b class="tick"></b>';
+    tl.to(s, {backgroundColor: "#7A1424", borderColor: "#7A1424", duration: .2}, 41.644 + i * .35);
+    tl.fromTo(s + " .tick", {scale: 0}, X({scale: 1, duration: .3, ease: "back.out(2)"}), 41.644 + i * .35);
+    tl.to("#e" + (i + 1), {opacity: 1, duration: .25}, 41.644 + i * .35);
+  });
+  tl.to("#r3", {backgroundColor: "rgba(122,20,36,.10)", duration: .3}, 43.688);
+  tl.to("#e3", {opacity: 1, duration: .25}, 43.688);
+  tl.to("#r3", {keyframes: {x: [0, -8, 7, -4, 2, 0]}, duration: .35, ease: "none"}, 43.688 + .1);
+  sink("#hw", 45.997);
+
+
+  rise("#lt", 50.370);
+  tl.to("#ok", {backgroundColor: "#7A1424", borderColor: "#7A1424", color: "#fff", duration: .2}, 51.170);
+  tl.fromTo("#sc span", {autoAlpha: 0, y: 14}, X({autoAlpha: 1, y: 0, duration: .3, stagger: .06, ease: "power3.out"}), 51.330);
+  tl.to("#b1", {backgroundColor: "#7A1424", color: "#fff", duration: .2}, 51.930);
+  sink("#lt", 52.592);
+
+  rise("#bw2", 53.002); sink("#bw2", 54.715);
+
+  rise("#crm", 55.950);
+  tl.fromTo("#ld", {autoAlpha: 0, y: -40}, X({autoAlpha: 1, y: 0, duration: .5, ease: "back.out(1.6)"}), 57.243);
+  tl.set(["#tg1", "#tg2"], {autoAlpha: 0}, 0);
+  pop("#tg1", 58.855); pop("#tg2", 59.515);
+  sink("#crm", 61.767);
+
+  shuffle(["#ct1", "#ct2"], [62.456, 64.647], 67.150);
+  pop("#ctp", 62.456);
+  half(20.432, 31.917);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>
