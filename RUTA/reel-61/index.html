@@ -113,15 +113,68 @@
                opacity: 0; }
     .cap .kt { position: relative; }
 
-    .dm { position: absolute; left: 110px; top: 300px; width: 860px; padding: 30px 36px; }
-    .dm .lbl { margin-bottom: 18px; }
-    .bub { display: inline-block; border-radius: 28px; padding: 18px 28px; font-size: 36px;
-           font-weight: 500; line-height: 1.25; }
-    .bub.in { background: #F4EDED; color: #241919; border-bottom-left-radius: 8px; }
+    /* a little glass over her footage: frosted white, a hairline rim, a soft cast */
+    .glass { position: absolute; border-radius: 36px;
+             background: rgba(255,255,255,.62);
+             -webkit-backdrop-filter: blur(22px) saturate(1.5); backdrop-filter: blur(22px) saturate(1.5);
+             box-shadow: inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 1px rgba(255,255,255,.45),
+                         0 12px 36px rgba(36,25,25,.16); }
+    .dm { left: 150px; top: 300px; width: 780px; padding: 26px 28px; }
+    .dm .hd { display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 500;
+              color: #574142; margin-bottom: 18px; }
+    .dm .hd b { width: 40px; height: 40px; border-radius: 50%; background: #7A1424; display: inline-block; }
+    .bub { display: inline-block; border-radius: 26px; padding: 16px 24px; font-size: 34px;
+           font-weight: 500; line-height: 1.25; position: relative; }
+    .bub.in { background: rgba(255,255,255,.92); color: #241919; border-bottom-left-radius: 8px; }
     .bub.me { background: #7A1424; color: #fff; border-bottom-right-radius: 8px; }
-    .rowr { display: flex; justify-content: flex-end; margin-top: 16px; }
-    .shot { position: absolute; left: 160px; top: 290px; width: 760px; border-radius: 16px;
-            box-shadow: 0 1px 3px rgba(36,25,25,.12), 0 10px 30px rgba(36,25,25,.14); }
+    .bub .st { position: absolute; left: 18px; right: 18px; top: 50%; height: 4px; margin-top: -2px;
+               border-radius: 2px; background: #fff; transform-origin: 0 50%; transform: scaleX(0); }
+    .rowr { display: flex; justify-content: flex-end; margin-top: 14px; }
+    .sys { margin-top: 14px; text-align: center; font-size: 26px; color: #574142; }
+
+    /* her real SendPulse agent screen, the two parts that matter, rebuilt crisp */
+    .sp { position: absolute; left: 90px; top: 300px; width: 900px; border-radius: 32px; background: #fff;
+          border: 2px solid #ECE6E6; padding: 34px 38px; font-family: "Google Sans", sans-serif; }
+    .sp .t { font-size: 30px; font-weight: 700; color: #1f1f1f; margin-bottom: 18px; }
+    .sp .fld { border: 2px solid #D9D9D9; border-radius: 16px; padding: 18px 22px; font-size: 27px;
+               line-height: 1.5; color: #5f5f5f; height: 186px; transition: none; }
+    .sp .web { margin-top: 26px; display: flex; align-items: center; gap: 22px; background: #F7F7F8;
+               border-radius: 20px; padding: 22px 26px; }
+    .sp .ic { width: 58px; height: 58px; border-radius: 50%; background: #DDEBFB; flex: none; }
+    .sp .wt { flex: 1; }
+    .sp .wt b { display: block; font-size: 24px; letter-spacing: .06em; color: #1f1f1f; }
+    .sp .wt span { font-size: 24px; color: #5f5f5f; }
+    .sp .sw { width: 70px; height: 38px; border-radius: 19px; background: #C9C9C9; position: relative; flex: none; }
+    .sp .sw i { position: absolute; left: 4px; top: 4px; width: 30px; height: 30px; border-radius: 50%;
+                background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
+
+    .search { left: 150px; top: 330px; width: 780px; height: 108px; border-radius: 54px; padding: 0 36px;
+              display: flex; align-items: center; gap: 22px; font-size: 36px; color: #241919; }
+    .gdots { display: flex; gap: 10px; margin-left: auto; }
+    .gdots i { width: 14px; height: 14px; border-radius: 50%; background: #7A1424; display: block; }
+    .cta { left: 120px; top: 300px; width: 840px; padding: 30px 32px; display: flex; flex-direction: column;
+           align-items: center; gap: 20px; }
+
+    #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
+    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
+    #win { position: absolute; left: 0; top: 0; width: 793px; height: 541px; background: #fff;
+           border-radius: 14px; font-family: "Google Sans", sans-serif; color: #1f1f1f;
+           box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
+           transform-origin: 0 0; will-change: transform; }
+    #win > div { position: absolute; }
+    .sp-t { font-size: 15px; font-weight: 700; } .sp-x { font-size: 18px; color: #5f6368; }
+    .sp-l { font-size: 12px; font-weight: 700; } .sp-a { font-size: 12px; color: #1a73e8; border-bottom: 1px dashed #1a73e8; }
+    .sp-s { font-size: 10px; color: #5f6368; line-height: 1.35; }
+    .sp-box { border: 1px solid #D9D9D9; border-radius: 6px; font-size: 12px; color: #5f6368; background: #fff;
+              padding: 5px 9px; overflow: hidden; white-space: nowrap; }
+    .sp-sel::after { content: "⌄"; position: absolute; right: 8px; top: 2px; color: #5f6368; }
+    .sp-card { width: 293px; height: 62px; background: #F6F7F9; border-radius: 8px; }
+    .sp-card i { position: absolute; left: 12px; top: 12px; width: 26px; height: 26px; border-radius: 50%; }
+    .sp-card b { position: absolute; left: 48px; top: 10px; font-size: 9.5px; letter-spacing: .04em; }
+    .sp-card span { position: absolute; left: 48px; top: 24px; width: 200px; font-size: 9.5px; color: #5f6368; line-height: 1.3; }
+    .sp-card em { position: absolute; left: 256px; top: 12px; width: 26px; height: 13px; border-radius: 7px; background: #C4C7C5; }
+    .sp-card em u { position: absolute; left: 1px; top: 1px; width: 11px; height: 11px; border-radius: 50%; background: #fff; }
+    .sp-btn { height: 26px; border-radius: 6px; font-size: 11px; font-weight: 500; text-align: center; line-height: 26px; }
 
     </style>
   </head>
@@ -133,59 +186,79 @@
              data-start="0" data-duration="68.417" data-media-start="0"
              muted playsinline></video>
       <div id="behind" class="L">
-
+        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:430px; font-size:250px">СТРАХ</div>
+        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:440px; font-size:200px">SendPulse</div>
       </div>
       <div id="panel">
-<img class="shot hid" id="shot" src="assets/shots/sendpulse-agent.png">
 <svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
       </div>
-      <video id="matte-half1" class="plate matte" src="assets/mattes/half1.webm"
-             data-start="12.067" data-duration="11.300" data-media-start="0"
+      <video id="matte-b1" class="plate matte" src="assets/mattes/b1.webm"
+             data-start="0.300" data-duration="2.933" data-media-start="0"
+             muted playsinline></video>
+      <video id="matte-b2" class="plate matte" src="assets/mattes/b2.webm"
+             data-start="45.767" data-duration="1.833" data-media-start="0"
              muted playsinline></video>
       <video id="matte-half2" class="plate matte" src="assets/mattes/half2.webm"
              data-start="34.200" data-duration="9.300" data-media-start="0"
              muted playsinline></video>
       <div id="front" class="L">
-<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
 
-        <div id="d1" class="card dm hid">
-          <span class="lbl">Direct · AI-агент</span>
-          <div><span class="bub in hid" id="d1q">Скільки коштує і коли можна почати?</span></div>
-          <div class="rowr"><span class="bub me hid" id="d1a">Звісно! Усе безкоштовно, почнемо вчора</span></div>
+        <div id="d1" class="glass dm hid">
+          <div class="hd"><b></b>Direct · AI-агент</div>
+          <div><span class="bub in">Скільки коштує і коли можна почати?</span></div>
+          <div class="rowr"><span class="bub me hid" id="d1a">Звісно! Усе безкоштовно, почнемо вчора<i class="st"></i></span></div>
         </div>
-<div id="one" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:300px;"><span class="num" style="color:#fff; font-size:60px">1</span> штука</div>
 
-        <div id="a1" class="pill light hid" style="left:120px; top:330px;">агент</div>
-        <div id="a2" class="pill light hid" style="left:640px; top:330px;">інтернет</div>
-        <div id="a3" class="chip hid" style="position:absolute; left:0; right:0; margin:auto; width:max-content; top:500px;"><i></i>іноді корисно</div>
-        <div id="a4" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:470px;">шанс помилки ↑</div>
-
-        <div id="g1" class="pill light hid" style="left:0; right:0; margin:auto; width:max-content; top:330px;
-             font-size:56px; font-weight:700">SendPulse</div>
-
-        <div id="d2" class="card dm hid">
-          <span class="lbl">Direct · AI-агент</span>
-          <div><span class="bub in hid" id="d2q">А ви робите доставку в Канаду?</span></div>
+        <div id="d2" class="glass dm hid">
+          <div class="hd"><b></b>Direct · AI-агент</div>
+          <div><span class="bub in">А ви робите доставку в Канаду?</span></div>
           <div class="rowr"><span class="bub me hid" id="d2a">Не знаю відповіді. Передаю вас менеджеру</span></div>
+          <div class="sys hid" id="d2s">Менеджерка приєдналась до чату</div>
         </div>
-        <div id="d2m" class="chip on hid" style="position:absolute; left:130px; top:640px;"><i></i>менеджер</div>
 
-        <div id="c" style="position:absolute; left:90px; width:900px; top:300px; display:flex; flex-wrap:wrap;
-             gap:14px; justify-content:center">
-          <span class="chip hid" id="c1"><i></i>малий чи середній бізнес</span>
-          <span class="chip hid" id="c2"><i></i>команда</span>
-          <span class="chip hid" id="c3"><i></i>менеджери</span>
-          <span class="chip hid" id="c4"><i></i>багато заявок</span>
+        <div id="ct" class="glass cta hid">
+          <div class="chips" style="justify-content:center">
+            <span class="chip"><i></i>малий і середній бізнес</span>
+            <span class="chip"><i></i>команда і менеджери</span>
+            <span class="chip"><i></i>багато заявок</span>
+          </div>
+          <div id="ctp" class="pill hid" style="position:relative">Пиши + в коментарях</div>
         </div>
-        <div id="cp" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:470px;">Пиши + в коментарях</div>
       </div>
       <div id="cover">
 
+        <div id="stage">
+          <div id="win">
+            <div class="sp-t" style="left:18px;top:12px">Main AI Agent <span style="color:#9aa0a6">✎</span></div>
+            <div class="sp-x" style="left:756px;top:10px">×</div>
+            <div class="sp-l" style="left:18px;top:48px">Інструкція для бота</div>
+            <div id="fld" class="sp-box" style="left:18px;top:68px;width:442px;height:172px;padding:8px 10px;line-height:1.45">
+              You are a helpful assistant.<br>User name:&nbsp; {{full_name}}<br>Current date:&nbsp; {{$current_datetime}}</div>
+            <div class="sp-l" style="left:18px;top:254px">Встановити цілі як умови виходу</div>
+            <div class="sp-a" style="left:18px;top:272px">Додати умову</div>
+            <div class="sp-l" style="left:482px;top:48px">Модель</div>
+            <div class="sp-box sp-sel" style="left:482px;top:68px;width:293px;height:27px">GPT-6 Luna</div>
+            <div class="sp-l" style="left:482px;top:104px">Ключ API</div>
+            <div class="sp-box sp-sel" style="left:482px;top:124px;width:293px;height:27px">Наслідувати з налаштувань облікового запису</div>
+            <div id="cw" class="sp-card" style="left:482px;top:168px"><i style="background:#DDEBFB"></i><b>ВЕБ-ПОШУК</b>
+              <span>Пошук актуальної інформації в інтернеті перед формуванням відповіді.</span><em id="tg"><u></u></em></div>
+            <div class="sp-card" style="left:482px;top:236px"><i style="background:#ECEFF3"></i><b>СЕРВЕРИ MCP</b>
+              <span>Підключення сторонніх інструментів і джерел даних.</span><em><u></u></em></div>
+            <div class="sp-card" style="left:482px;top:304px"><i style="background:#E3F5EA"></i><b>ПОШУК У ФАЙЛАХ</b>
+              <span>Формування відповіді на основі ваших завантажених файлів.</span><em><u></u></em></div>
+            <div class="sp-l" style="left:482px;top:382px">Обсяг контексту переписки</div>
+            <div class="sp-box" style="left:482px;top:400px;width:64px;height:28px;padding:5px 8px">10</div>
+            <div class="sp-s" style="left:482px;top:434px;width:200px">попередніх повідомлень підписника та бота</div>
+            <div class="sp-l" style="left:688px;top:382px;width:90px">Рівень міркувань</div>
+            <div class="sp-box sp-sel" style="left:688px;top:416px;width:86px;height:27px">None</div>
+            <div class="sp-btn" style="left:614px;top:496px;width:72px;background:#E8EAED;color:#3c4043">Скасувати</div>
+            <div class="sp-btn" style="left:692px;top:496px;width:84px;background:#1EA672;color:#fff">Застосувати</div>
+          </div>
+        </div>
       </div>
       <div id="scrim"></div>
       <div id="caps">
       <div class="wc" id="w0">НАЙБІЛЬШИЙ</div>
-      <div class="wc" id="w1">СТРАХ</div>
       <div class="wc" id="w2">З</div>
       <div class="wc" id="w3">БУДЬ-ЯКИМ</div>
       <div class="wc" id="w4">AI</div>
@@ -214,48 +287,49 @@
       <div class="wc" id="w27">ОДНУ</div>
       <div class="wc" id="w28">ШТУКУ.</div>
       <div class="wc" id="w29">КОЛИ</div>
-      <div class="wc inv" id="w30" style="top:820px">ТИ</div>
-      <div class="wc inv" id="w31" style="top:820px">НАЛАШТОВУЄШ</div>
-      <div class="wc inv" id="w32" style="top:820px">ТАКОГО</div>
-      <div class="wc inv" id="w33" style="top:820px">АГЕНТА</div>
-      <div class="wc inv" id="w34" style="top:820px">ЧЕРЕЗ</div>
-      <div class="wc inv" id="w35" style="top:820px">SENDPULSE,</div>
-      <div class="wc inv" id="w36" style="top:820px">ТО</div>
-      <div class="wc inv" id="w37" style="top:820px">ТАМ</div>
-      <div class="wc inv" id="w38" style="top:820px">Є</div>
-      <div class="wc inv" id="w39" style="top:820px">ОКРЕМЕ</div>
-      <div class="wc inv" id="w40" style="top:820px">ПОЛЕ,</div>
-      <div class="wc inv" id="w41" style="top:820px">КУДИ</div>
-      <div class="wc inv" id="w42" style="top:820px">ТИ</div>
-      <div class="wc inv" id="w43" style="top:820px">ЗАПИСУЄШ</div>
-      <div class="wc inv" id="w44" style="top:820px">ВСІ СВОЇ</div>
-      <div class="wc inv" id="w45" style="top:820px">ІНСТРУКЦІЇ</div>
-      <div class="wc inv" id="w46" style="top:820px">Й СКРИПТИ,</div>
-      <div class="wc inv" id="w47" style="top:820px">І</div>
-      <div class="wc inv" id="w48" style="top:820px">ОКРЕМО</div>
-      <div class="wc inv" id="w49" style="top:820px">КНОПКА</div>
-      <div class="wc inv" id="w50" style="top:820px">КОРИСТУВАННЯ</div>
-      <div class="wc inv" id="w51" style="top:820px">ВЕБ</div>
-      <div class="wc inv" id="w52" style="top:820px">САЙТІВ,</div>
-      <div class="wc inv" id="w53" style="top:820px">ЩОСЬ</div>
-      <div class="wc inv" id="w54" style="top:820px">ТАКОГО.</div>
-      <div class="wc inv" id="w55" style="top:820px">І</div>
-      <div class="wc inv" id="w56" style="top:820px">ЦЯ</div>
-      <div class="wc" id="w57">КНОПКА</div>
-      <div class="wc" id="w58">ОЗНАЧАЄ,</div>
-      <div class="wc" id="w59">ЩО</div>
-      <div class="wc" id="w60">АГЕНТ</div>
-      <div class="wc" id="w61">МОЖЕ</div>
-      <div class="wc" id="w62">САМ</div>
-      <div class="wc" id="w63">ВИЙТИ</div>
-      <div class="wc" id="w64">В</div>
-      <div class="wc" id="w66">І</div>
-      <div class="wc" id="w67">БРАТИ</div>
-      <div class="wc" id="w68">ЗВІДТИ</div>
-      <div class="wc" id="w69">ІНФОРМАЦІЮ.</div>
-      <div class="wc" id="w70">І</div>
-      <div class="wc" id="w71">ТАК,</div>
-      <div class="wc" id="w72">БУВАЮТЬ</div>
+      <div class="wc inv" id="w30">ТИ</div>
+      <div class="wc inv" id="w31">НАЛАШТОВУЄШ</div>
+      <div class="wc inv" id="w32">ТАКОГО</div>
+      <div class="wc inv" id="w33">АГЕНТА</div>
+      <div class="wc inv" id="w34">ЧЕРЕЗ</div>
+      <div class="wc inv" id="w35">SENDPULSE,</div>
+      <div class="wc inv" id="w36">ТО</div>
+      <div class="wc inv" id="w37">ТАМ</div>
+      <div class="wc inv" id="w38">Є</div>
+      <div class="wc inv" id="w39">ОКРЕМЕ</div>
+      <div class="wc inv" id="w40">ПОЛЕ,</div>
+      <div class="wc inv" id="w41">КУДИ</div>
+      <div class="wc inv" id="w42">ТИ</div>
+      <div class="wc inv" id="w43">ЗАПИСУЄШ</div>
+      <div class="wc inv" id="w44">ВСІ СВОЇ</div>
+      <div class="wc inv" id="w45">ІНСТРУКЦІЇ</div>
+      <div class="wc inv" id="w46">Й СКРИПТИ,</div>
+      <div class="wc inv" id="w47">І</div>
+      <div class="wc inv" id="w48">ОКРЕМО</div>
+      <div class="wc inv" id="w49">КНОПКА</div>
+      <div class="wc inv" id="w50">КОРИСТУВАННЯ</div>
+      <div class="wc inv" id="w51">ВЕБ</div>
+      <div class="wc inv" id="w52">САЙТІВ,</div>
+      <div class="wc inv" id="w53">ЩОСЬ</div>
+      <div class="wc inv" id="w54">ТАКОГО.</div>
+      <div class="wc inv" id="w55">І</div>
+      <div class="wc inv" id="w56">ЦЯ</div>
+      <div class="wc inv" id="w57">КНОПКА</div>
+      <div class="wc inv" id="w58">ОЗНАЧАЄ,</div>
+      <div class="wc inv" id="w59">ЩО</div>
+      <div class="wc inv" id="w60">АГЕНТ</div>
+      <div class="wc inv" id="w61">МОЖЕ</div>
+      <div class="wc inv" id="w62">САМ</div>
+      <div class="wc inv" id="w63">ВИЙТИ</div>
+      <div class="wc inv" id="w64">В</div>
+      <div class="wc inv" id="w65">ІНТЕРНЕТ</div>
+      <div class="wc inv" id="w66">І</div>
+      <div class="wc inv" id="w67">БРАТИ</div>
+      <div class="wc inv" id="w68">ЗВІДТИ</div>
+      <div class="wc inv" id="w69">ІНФОРМАЦІЮ.</div>
+      <div class="wc inv" id="w70">І</div>
+      <div class="wc inv" id="w71">ТАК,</div>
+      <div class="wc inv" id="w72">БУВАЮТЬ</div>
       <div class="wc" id="w73">КЕЙСИ,</div>
       <div class="wc" id="w74">ДЕ ЦЕ</div>
       <div class="wc" id="w75">РЕАЛЬНО</div>
@@ -265,6 +339,7 @@
       <div class="wc" id="w79">Ж</div>
       <div class="wc" id="w80">І</div>
       <div class="wc" id="w81">ЗБІЛЬШУЄ</div>
+      <div class="wc" id="w82">ШАНС,</div>
       <div class="wc" id="w83">ЩО ВІН</div>
       <div class="wc" id="w84">СКАЖЕ</div>
       <div class="wc" id="w85">ЩОСЬ</div>
@@ -544,7 +619,6 @@
   tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 68.417, ease: "none"}, 0);
 
   tl.set("#w0", {autoAlpha: 1}, 0.000); tl.set("#w0", {autoAlpha: 0}, 0.665);
-  tl.set("#w1", {autoAlpha: 1}, 0.750); tl.set("#w1", {autoAlpha: 0}, 0.985);
   tl.set("#w2", {autoAlpha: 1}, 1.070); tl.set("#w2", {autoAlpha: 0}, 1.265);
   tl.set("#w3", {autoAlpha: 1}, 1.350); tl.set("#w3", {autoAlpha: 0}, 1.805);
   tl.set("#w4", {autoAlpha: 1}, 1.890); tl.set("#w4", {autoAlpha: 0}, 2.025);
@@ -608,6 +682,7 @@
   tl.set("#w62", {autoAlpha: 1}, 24.697); tl.set("#w62", {autoAlpha: 0}, 24.832);
   tl.set("#w63", {autoAlpha: 1}, 24.917); tl.set("#w63", {autoAlpha: 0}, 25.152);
   tl.set("#w64", {autoAlpha: 1}, 25.237); tl.set("#w64", {autoAlpha: 0}, 25.337);
+  tl.set("#w65", {autoAlpha: 1}, 25.357); tl.set("#w65", {autoAlpha: 0}, 25.618);
   tl.set("#w66", {autoAlpha: 1}, 25.703); tl.set("#w66", {autoAlpha: 0}, 26.058);
   tl.set("#w67", {autoAlpha: 1}, 26.143); tl.set("#w67", {autoAlpha: 0}, 26.438);
   tl.set("#w68", {autoAlpha: 1}, 26.523); tl.set("#w68", {autoAlpha: 0}, 26.858);
@@ -624,6 +699,7 @@
   tl.set("#w79", {autoAlpha: 1}, 31.122); tl.set("#w79", {autoAlpha: 0}, 31.297);
   tl.set("#w80", {autoAlpha: 1}, 31.382); tl.set("#w80", {autoAlpha: 0}, 31.537);
   tl.set("#w81", {autoAlpha: 1}, 31.622); tl.set("#w81", {autoAlpha: 0}, 32.197);
+  tl.set("#w82", {autoAlpha: 1}, 32.282); tl.set("#w82", {autoAlpha: 0}, 32.857);
   tl.set("#w83", {autoAlpha: 1}, 32.942); tl.set("#w83", {autoAlpha: 0}, 33.117);
   tl.set("#w84", {autoAlpha: 1}, 33.202); tl.set("#w84", {autoAlpha: 0}, 33.537);
   tl.set("#w85", {autoAlpha: 1}, 33.622); tl.set("#w85", {autoAlpha: 0}, 33.837);
@@ -722,89 +798,67 @@
   tl.set("#w179", {autoAlpha: 1}, 65.533); tl.set("#w179", {autoAlpha: 0}, 65.718);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 67.790);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 12.417);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 22.627);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 25.107);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 25.668);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 32.032);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 32.907);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 0.520);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 0.985);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 12.367);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 28.332);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 34.583);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 42.782);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 46.126);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 47.032);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 46.146);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 46.982);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 65.553);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 68.417);
 
+  rise("#bw1", 0.500); sink("#bw1", 2.713);
 
-  pop("#d1", 0.750); pop("#d1q", 1.150);
+  rise("#d1", 2.793);
   pop("#d1a", 5.453);
-  sketch("x1", "skF"); ln("x1", 520, 470, 920, 560, {stroke: "#7A1424", strokeWidth: 7, seed: 5, halo: false});
-  ln("x1", 520, 560, 920, 470, {stroke: "#7A1424", strokeWidth: 7, seed: 9, halo: false});
-  draw("x1", 7.290, .25);
-  sketch("x1t", "skF"); label("x1t", 720, 640, "дурниця!", {size: 52, color: "#7A1424"});
-  draw("x1t", 7.590);
-  sink("#d1", 8.969); erase("x1", 8.969); erase("x1t", 8.969);
-
-  pop("#one", 11.152); sink("#one", 12.067);
-
-  fadein("#shot", 12.667, .35);
-  sketch("p1", "skP"); box("p1", 168, 345, 444, 186, {seed: 3, stroke: "#7A1424", strokeWidth: 5, fill: false});
-  draw("p1", 15.517);
-  sketch("p1a", "skP"); label("p1a", 390, 650, "інструкції й скрипти", {size: 46});
-  draw("p1a", 16.839);
-  sketch("p2", "skP"); ell("p2", 762, 480, 330, 92, {seed: 11, stroke: "#7A1424", strokeWidth: 5, fill: false});
-  draw("p2", 19.067);
-  sketch("p2a", "skP"); label("p2a", 360, 750, "кнопка «Веб»", {size: 46});
-  arrow("p2a", 500, 735, 720, 528, {seed: 13, bend: -.12});
-  draw("p2a", 20.161);
-  erase("p1", 22.227); erase("p1a", 22.227); erase("p2", 22.227); erase("p2a", 22.227);
+  tl.fromTo("#d1a .st", {scaleX: 0}, X({scaleX: 1, duration: .35, ease: "power2.out"}), 7.390);
+  tl.to("#d1a", {keyframes: {x: [0, -8, 7, -4, 2, 0]}, duration: .35, ease: "none"}, 7.390);
+  sink("#d1", 9.169);
 
 
-  pop("#a1", 23.787);
-  sketch("a12", "skF"); arrow("a12", 400, 390, 625, 390, {seed: 21, bend: .1});
-  draw("a12", 24.807, .45);
-  pop("#a2", 25.357);
-  pop("#a3", 29.737); out("#a3", 30.542);
-  pop("#a4", 32.182);
-  sink("#a1, #a2, #a4", 34.212); erase("a12", 34.212);
+  gsap.set("#win", {transformOrigin: "396px 270px"});
+  gsap.set("#win", {x: 144.0, y: 460.0 + 220, scale: 1.24 * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
+  tl.to("#win", {x: 144.0, y: 460.0, scale: 1.24, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.3, ease: "power3.out"}, 12.117 + .15);
+  tl.to("#win", {rotationX: 6, rotationY: -7, rotationZ: 1, duration: 1.9, ease: "sine.inOut"}, 12.117 + 1.45);
+  tl.to("#win", {x: 481.6, y: 709.4, scale: 2.15, rotationX: 3, rotationY: 6, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, 15.617 - .5);
+  tl.to("#fld", {borderColor: "#7A1424", boxShadow: "0 0 0 3px rgba(122,20,36,.16)", duration: .3}, 17.139);
+  tl.to("#win", {x: -552.0, y: 673.0, scale: 3.0, rotationX: -2, rotationY: -8, duration: 1.3, ease: "power3.inOut"}, 19.167 - .45);
+  tl.to("#tg", {backgroundColor: "#1EA672", duration: .2}, 22.477);
+  tl.to("#tg u", {x: 13, duration: .3, ease: "back.out(2)"}, 22.477);
+  tl.fromTo("#cw", {boxShadow: "0 0 0 0 rgba(30,166,114,.0)"}, X({boxShadow: "0 0 0 6px rgba(30,166,114,.25)", duration: .35, yoyo: true, repeat: 1}), 22.477 + .1);
+  tl.to("#win", {x: 144.0, y: 460.0, scale: 1.24, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.4, ease: "power3.inOut"}, 24.917 - .4);
+  full(12.117, 27.932);
 
 
-  sketch("q1", "skP"); ln("q1", 625, 448, 900, 512, {stroke: "#7A1424", strokeWidth: 7, seed: 31});
-  ln("q1", 625, 512, 900, 448, {stroke: "#7A1424", strokeWidth: 7, seed: 33});
-  draw("q1", 36.857, .3);
-  sketch("q1t", "skP"); label("q1t", 360, 750, "не вмикаю", {size: 46, color: "#7A1424"});
-  arrow("q1t", 500, 735, 720, 528, {seed: 35, bend: -.12, stroke: "#7A1424"});
-  draw("q1t", 37.257);
-  sketch("q2", "skP"); box("q2", 168, 345, 444, 186, {seed: 37, fill: true});
-  draw("q2", 38.404);
-  sketch("q2t", "skP"); label("q2t", 390, 650, "тільки скрипти", {size: 46});
-  draw("q2t", 38.904);
-  sketch("q3", "skP"); ell("q3", 390, 438, 520, 250, {seed: 41, stroke: "#7A1424", strokeWidth: 6, fill: false});
-  draw("q3", 40.226, .6);
-  erase("q1", 42.382); erase("q1t", 42.382); erase("q2", 42.382); erase("q2t", 42.382); erase("q3", 42.382);
+  sketch("s1", "skP"); box("s1", 380, 330, 320, 130, {seed: 3, fill: true});
+  label("s1", 540, 412, "агент", {size: 58});
+  draw("s1", 34.933);
+  sketch("s2", "skP"); arrow("s2", 380, 420, 190, 620, {seed: 5, bend: -.15});
+  box("s2", 60, 630, 280, 120, {seed: 7}); label("s2", 200, 706, "інтернет", {size: 50});
+  draw("s2", 35.733);
+  sketch("s3", "skP"); ln("s3", 70, 600, 330, 770, {stroke: "#7A1424", strokeWidth: 7, seed: 9});
+  ln("s3", 70, 770, 330, 600, {stroke: "#7A1424", strokeWidth: 7, seed: 13});
+  draw("s3", 36.857, .3);
+  sketch("s4", "skP"); arrow("s4", 700, 420, 880, 620, {seed: 15, bend: .15});
+  box("s4", 730, 630, 290, 120, {seed: 17, fill: true}); label("s4", 875, 706, "скрипти", {size: 50});
+  draw("s4", 38.304);
+  sketch("s5", "skP"); ell("s5", 700, 560, 760, 470, {seed: 19, stroke: "#7A1424", strokeWidth: 6, fill: false});
+  draw("s5", 40.226, .7);
+  erase("s1", 42.382); erase("s2", 42.382); erase("s3", 42.382); erase("s4", 42.382); erase("s5", 42.382);
 
+  rise("#bw2", 46.026); sink("#bw2", 47.282);
 
-  sketch("g1t", "skF"); label("g1t", 540, 520, "геніально", {size: 58, color: "#7A1424"});
-  under("g1t", 400, 545, 680, {stroke: "#7A1424", seed: 45});
-  draw("g1t", 42.947);
-  pop("#g1", 46.276);
-  sink("#g1", 47.126); erase("g1t", 47.126);
-
-
-  pop("#d2", 48.077); pop("#d2q", 48.477);
+  rise("#d2", 48.177);
   pop("#d2a", 53.440);
-  pop("#d2m", 55.532);
-  sketch("d2k", "skF"); label("d2k", 720, 690, "нічого не вигадує", {size: 50, color: "#7A1424"});
-  draw("d2k", 57.050);
-  sink("#d2, #d2m", 59.790); erase("d2k", 59.790);
+  fadein("#d2s", 55.582);
+  sink("#d2", 59.790);
 
 
-  pop("#c1", 60.763); pop("#c2", 62.323); pop("#c3", 62.833); pop("#c4", 63.529);
-  pop("#cp", 65.703, .6);
-  sketch("ca", "skF"); arrow("ca", 840, 560, 880, 1450, {strokeWidth: 5, seed: 97, bend: -.12});
-  draw("ca", 66.103, .55);
+  rise("#ct", 60.663);
+  pop("#ctp", 65.703);
 
-  half(12.167, 22.227);
   half(34.333, 42.382);
 
         window.__timelines["main"] = tl;

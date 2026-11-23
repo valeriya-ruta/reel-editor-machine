@@ -1,21 +1,27 @@
 # -*- coding: utf-8 -*-
 """Reel 61 — «Як зробити, щоб АІ-агент нічого не вигадував?». Posts 2026-11-21.
-Batch 2026-11-20 (raw 20261120_134413), STYLE.md §00 look (her call that day:
-"lets go back to the style that we always had, the one with the dark red").
+Batch 2026-11-20 (raw 20261120_134413). STYLE.md §00, v3 after her review of v2
+(2026-11-23):
 
-The one object is **her real SendPulse agent screen** (Drive, 2026-11-20): the
-DM goes wrong above her -> «одна штука» -> HALF 1: the screen, «Інструкція для
-бота» boxed («інструкції й скрипти»), «Веб-пошук» looped -> above: агент ->
-інтернет, «іноді корисно», then «шанс помилки» -> HALF 2: the same screen,
-Веб-пошук struck «вимкнено», the instruction box drawn red «тільки скрипти»,
-a loop round it on «ніколи» -> above: «SendPulse» pill, «геніально» -> the DM
-again: a question it can't answer, «Не знаю — передаю менеджеру», «менеджер»
--> CTA chips, «Пиши + в коментарях», an arrow down to the comments.
+  - big text behind her head again («СТРАХ», «SendPulse»)
+  - no red handwriting with a thick white halo over her footage
+  - far fewer animations: not every phrase gets a graphic («іноді корисно»
+    read as cringe / "claude vibes")
+  - nothing crowding her head or the top edge: small cards, y 300-560
+  - not a tiny blurry screenshot: the two parts of her real SendPulse screen
+    that matter («Інструкція для бота», «ВЕБ-ПОШУК»), rebuilt crisp, same labels
+  - Excalidraw only for the scheme (half 2); the rest modern Google, a little glass
+  - no CTA arrow
+
+Beats: behind «СТРАХ» -> glass DM, the reply struck on «дурницю» -> HALF 1 the
+agent settings (field lights on «інструкції», toggle row ringed on «Веб», on at
+«Ця кнопка») -> glass search pill «шукає в інтернеті» -> HALF 2 the scheme:
+агент -> інтернет struck, агент -> скрипти, a loop on «ніколи» -> behind
+«SendPulse» -> glass DM 2: «Не знаю відповіді. Передаю вас менеджеру», a
+manager joins -> CTA card.
 
 usage: python3 build.py   (then: sh work/b1021/mattes.sh 61; python3 tools/sfx.py mix 61)
 """
-import io
-import json
 import os
 import sys
 
@@ -27,11 +33,8 @@ from gstyle import G, Words, load_caps  # noqa: E402
 NN = "61"
 DUR = 68.417           # (2053 plate frames - 0.5) / 30
 g = G(dur=DUR, reel=NN)
-# her plate: hair top ≈ y 650 on the wide shot, so pushed 330 it is at ≈ 980;
-# on the panel the word captions sit with their bottom at ≈ 930
-g.PANEL_TOP = 820
+g.PANEL_TOP = 820      # panel captions: bottom 938, her pushed hair at ≈ 980
 
-# whisper's spelling of what she said -> her word (checked against the script)
 FIX = {
     u"Небільше": u"Найбільший", u"страт": u"страх", u"будь": u"будь-яким", u"яким": None,
     u"дурнетю.": u"дурницю.", u"Штукав.": u"штуку.", u"таку": u"такого",
@@ -44,190 +47,245 @@ CAPS = load_caps(NN, FIX)
 W = Words(CAPS)
 S, E = W.s, W.e
 
-B, P, F, C, J = [], [], [], [], []     # behind / panel / front / cover html, js
-BLACKOUT = []
-PLACE = []
-HALF = []
+B, P, F, C, J = [], [], [], [], []
+BLACKOUT, PLACE, HALF = [], [], []
 
 
 def js(s):
     J.append(s)
 
 
-F.append(u'<svg class="sk" id="skF" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>')
+P.append(u'<svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
+
 EXTRA = u'''
-    .dm { position: absolute; left: 110px; top: 300px; width: 860px; padding: 30px 36px; }
-    .dm .lbl { margin-bottom: 18px; }
-    .bub { display: inline-block; border-radius: 28px; padding: 18px 28px; font-size: 36px;
-           font-weight: 500; line-height: 1.25; }
-    .bub.in { background: #F4EDED; color: #241919; border-bottom-left-radius: 8px; }
+    /* a little glass over her footage: frosted white, a hairline rim, a soft cast */
+    .glass { position: absolute; border-radius: 36px;
+             background: rgba(255,255,255,.62);
+             -webkit-backdrop-filter: blur(22px) saturate(1.5); backdrop-filter: blur(22px) saturate(1.5);
+             box-shadow: inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 1px rgba(255,255,255,.45),
+                         0 12px 36px rgba(36,25,25,.16); }
+    .dm { left: 150px; top: 300px; width: 780px; padding: 26px 28px; }
+    .dm .hd { display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 500;
+              color: #574142; margin-bottom: 18px; }
+    .dm .hd b { width: 40px; height: 40px; border-radius: 50%; background: #7A1424; display: inline-block; }
+    .bub { display: inline-block; border-radius: 26px; padding: 16px 24px; font-size: 34px;
+           font-weight: 500; line-height: 1.25; position: relative; }
+    .bub.in { background: rgba(255,255,255,.92); color: #241919; border-bottom-left-radius: 8px; }
     .bub.me { background: #7A1424; color: #fff; border-bottom-right-radius: 8px; }
-    .rowr { display: flex; justify-content: flex-end; margin-top: 16px; }
-    .shot { position: absolute; left: 160px; top: 290px; width: 760px; border-radius: 16px;
-            box-shadow: 0 1px 3px rgba(36,25,25,.12), 0 10px 30px rgba(36,25,25,.14); }
+    .bub .st { position: absolute; left: 18px; right: 18px; top: 50%; height: 4px; margin-top: -2px;
+               border-radius: 2px; background: #fff; transform-origin: 0 50%; transform: scaleX(0); }
+    .rowr { display: flex; justify-content: flex-end; margin-top: 14px; }
+    .sys { margin-top: 14px; text-align: center; font-size: 26px; color: #574142; }
+
+    /* her real SendPulse agent screen, the two parts that matter, rebuilt crisp */
+    .sp { position: absolute; left: 90px; top: 300px; width: 900px; border-radius: 32px; background: #fff;
+          border: 2px solid #ECE6E6; padding: 34px 38px; font-family: "Google Sans", sans-serif; }
+    .sp .t { font-size: 30px; font-weight: 700; color: #1f1f1f; margin-bottom: 18px; }
+    .sp .fld { border: 2px solid #D9D9D9; border-radius: 16px; padding: 18px 22px; font-size: 27px;
+               line-height: 1.5; color: #5f5f5f; height: 186px; transition: none; }
+    .sp .web { margin-top: 26px; display: flex; align-items: center; gap: 22px; background: #F7F7F8;
+               border-radius: 20px; padding: 22px 26px; }
+    .sp .ic { width: 58px; height: 58px; border-radius: 50%; background: #DDEBFB; flex: none; }
+    .sp .wt { flex: 1; }
+    .sp .wt b { display: block; font-size: 24px; letter-spacing: .06em; color: #1f1f1f; }
+    .sp .wt span { font-size: 24px; color: #5f5f5f; }
+    .sp .sw { width: 70px; height: 38px; border-radius: 19px; background: #C9C9C9; position: relative; flex: none; }
+    .sp .sw i { position: absolute; left: 4px; top: 4px; width: 30px; height: 30px; border-radius: 50%;
+                background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
+
+    .search { left: 150px; top: 330px; width: 780px; height: 108px; border-radius: 54px; padding: 0 36px;
+              display: flex; align-items: center; gap: 22px; font-size: 36px; color: #241919; }
+    .gdots { display: flex; gap: 10px; margin-left: auto; }
+    .gdots i { width: 14px; height: 14px; border-radius: 50%; background: #7A1424; display: block; }
+    .cta { left: 120px; top: 300px; width: 840px; padding: 30px 32px; display: flex; flex-direction: column;
+           align-items: center; gap: 20px; }
 '''
 
-# 1 · ABOVE — the DM goes wrong -------------------------------------------------
-t_strakh, t_ahent, t_prydum = S(u"страх", 0.75), S(u"агентом,", 2.11), S(u"придумає", 5.45)
-t_durn, t_skladno = S(u"дурницю.", 7.39), S(u"складно", 8.97)
+# 1 · BEHIND — «СТРАХ» ----------------------------------------------------------
+t_strakh, e_strakh = S(u"страх", 0.75), E(u"страх", 0.75)
+B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:430px; font-size:250px">СТРАХ</div>')
+g.matte("b1", 0.3, round(S(u"який", 2.61) + 0.6 - 0.3, 3))
+js(u'  rise("#bw1", %.3f); sink("#bw1", %.3f);' % (t_strakh - 0.25, S(u"який", 2.61) + 0.1))
+g.sfx("whoosh-short", t_strakh - 0.25)
+BLACKOUT.append((t_strakh - 0.03, e_strakh))
+
+# 2 · ABOVE — a glass DM: the reply is made up ----------------------------------
+t_prydum, t_durn, t_skladno = S(u"придумає", 5.45), S(u"дурницю.", 7.39), S(u"складно", 8.97)
 F.append(u'''
-        <div id="d1" class="card dm hid">
-          <span class="lbl">Direct · AI-агент</span>
-          <div><span class="bub in hid" id="d1q">Скільки коштує і коли можна почати?</span></div>
-          <div class="rowr"><span class="bub me hid" id="d1a">Звісно! Усе безкоштовно, почнемо вчора</span></div>
+        <div id="d1" class="glass dm hid">
+          <div class="hd"><b></b>Direct · AI-агент</div>
+          <div><span class="bub in">Скільки коштує і коли можна почати?</span></div>
+          <div class="rowr"><span class="bub me hid" id="d1a">Звісно! Усе безкоштовно, почнемо вчора<i class="st"></i></span></div>
         </div>''')
 js(u'''
-  pop("#d1", %.3f); pop("#d1q", %.3f);
+  rise("#d1", %.3f);
   pop("#d1a", %.3f);
-  sketch("x1", "skF"); ln("x1", 520, 470, 920, 560, {stroke: "#7A1424", strokeWidth: 7, seed: 5, halo: false});
-  ln("x1", 520, 560, 920, 470, {stroke: "#7A1424", strokeWidth: 7, seed: 9, halo: false});
-  draw("x1", %.3f, .25);
-  sketch("x1t", "skF"); label("x1t", 720, 640, "дурниця!", {size: 52, color: "#7A1424"});
-  draw("x1t", %.3f);
-  sink("#d1", %.3f); erase("x1", %.3f); erase("x1t", %.3f);
-''' % (t_strakh, t_strakh + 0.4, t_prydum, t_durn - 0.1, t_durn + 0.2, t_skladno, t_skladno, t_skladno))
-g.sfx("pop", t_strakh); g.sfx("notification", t_prydum); g.sfx("click", t_durn)
+  tl.fromTo("#d1a .st", {scaleX: 0}, X({scaleX: 1, duration: .35, ease: "power2.out"}), %.3f);
+  tl.to("#d1a", {keyframes: {x: [0, -8, 7, -4, 2, 0]}, duration: .35, ease: "none"}, %.3f);
+  sink("#d1", %.3f);
+''' % (S(u"сам", 2.79), t_prydum, t_durn, t_durn, t_skladno + 0.2))
+g.sfx("pop", S(u"сам", 2.79)); g.sfx("notification", t_prydum); g.sfx("click", t_durn)
 
-# 2 · ABOVE — «одну штуку» ---------------------------------------------------------
-t_odnu = S(u"одну", 11.20)
-F.append(u'<div id="one" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:300px;">'
-         u'<span class="num" style="color:#fff; font-size:60px">1</span> штука</div>')
-js(u'  pop("#one", %.3f); sink("#one", %.3f);' % (t_odnu - 0.05, S(u"Коли", 12.27) - 0.2))
-g.sfx("pop", t_odnu)
+# 3 · FULL — her SendPulse agent screen as a platform-ad sequence ---------------
+# Her note 2026-11-23: "instead of keeping the screenshot super tiny, you could
+# have done full screen and showed all the parts animated, like in a platform ad
+# (the 3d angles smooth zoom ins sorta thing)". Her screenshot is 793 px wide —
+# a 2-3x zoom would blur it — so the screen is rebuilt 1:1 in HTML (same layout,
+# labels, text; coordinates are the screenshot's own pixels) and stays crisp.
+f0 = S(u"Коли", 12.27) - 0.15
+f1 = E(u"інформацію.", 26.94) + 0.25
+C.append(u"""
+        <div id="stage">
+          <div id="win">
+            <div class="sp-t" style="left:18px;top:12px">Main AI Agent <span style="color:#9aa0a6">✎</span></div>
+            <div class="sp-x" style="left:756px;top:10px">×</div>
+            <div class="sp-l" style="left:18px;top:48px">Інструкція для бота</div>
+            <div id="fld" class="sp-box" style="left:18px;top:68px;width:442px;height:172px;padding:8px 10px;line-height:1.45">
+              You are a helpful assistant.<br>User name:&nbsp; {{full_name}}<br>Current date:&nbsp; {{$current_datetime}}</div>
+            <div class="sp-l" style="left:18px;top:254px">Встановити цілі як умови виходу</div>
+            <div class="sp-a" style="left:18px;top:272px">Додати умову</div>
+            <div class="sp-l" style="left:482px;top:48px">Модель</div>
+            <div class="sp-box sp-sel" style="left:482px;top:68px;width:293px;height:27px">GPT-6 Luna</div>
+            <div class="sp-l" style="left:482px;top:104px">Ключ API</div>
+            <div class="sp-box sp-sel" style="left:482px;top:124px;width:293px;height:27px">Наслідувати з налаштувань облікового запису</div>
+            <div id="cw" class="sp-card" style="left:482px;top:168px"><i style="background:#DDEBFB"></i><b>ВЕБ-ПОШУК</b>
+              <span>Пошук актуальної інформації в інтернеті перед формуванням відповіді.</span><em id="tg"><u></u></em></div>
+            <div class="sp-card" style="left:482px;top:236px"><i style="background:#ECEFF3"></i><b>СЕРВЕРИ MCP</b>
+              <span>Підключення сторонніх інструментів і джерел даних.</span><em><u></u></em></div>
+            <div class="sp-card" style="left:482px;top:304px"><i style="background:#E3F5EA"></i><b>ПОШУК У ФАЙЛАХ</b>
+              <span>Формування відповіді на основі ваших завантажених файлів.</span><em><u></u></em></div>
+            <div class="sp-l" style="left:482px;top:382px">Обсяг контексту переписки</div>
+            <div class="sp-box" style="left:482px;top:400px;width:64px;height:28px;padding:5px 8px">10</div>
+            <div class="sp-s" style="left:482px;top:434px;width:200px">попередніх повідомлень підписника та бота</div>
+            <div class="sp-l" style="left:688px;top:382px;width:90px">Рівень міркувань</div>
+            <div class="sp-box sp-sel" style="left:688px;top:416px;width:86px;height:27px">None</div>
+            <div class="sp-btn" style="left:614px;top:496px;width:72px;background:#E8EAED;color:#3c4043">Скасувати</div>
+            <div class="sp-btn" style="left:692px;top:496px;width:84px;background:#1EA672;color:#fff">Застосувати</div>
+          </div>
+        </div>""")
+EXTRA += u"""
+    #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
+    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
+    #win { position: absolute; left: 0; top: 0; width: 793px; height: 541px; background: #fff;
+           border-radius: 14px; font-family: "Google Sans", sans-serif; color: #1f1f1f;
+           box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
+           transform-origin: 0 0; will-change: transform; }
+    #win > div { position: absolute; }
+    .sp-t { font-size: 15px; font-weight: 700; } .sp-x { font-size: 18px; color: #5f6368; }
+    .sp-l { font-size: 12px; font-weight: 700; } .sp-a { font-size: 12px; color: #1a73e8; border-bottom: 1px dashed #1a73e8; }
+    .sp-s { font-size: 10px; color: #5f6368; line-height: 1.35; }
+    .sp-box { border: 1px solid #D9D9D9; border-radius: 6px; font-size: 12px; color: #5f6368; background: #fff;
+              padding: 5px 9px; overflow: hidden; white-space: nowrap; }
+    .sp-sel::after { content: "⌄"; position: absolute; right: 8px; top: 2px; color: #5f6368; }
+    .sp-card { width: 293px; height: 62px; background: #F6F7F9; border-radius: 8px; }
+    .sp-card i { position: absolute; left: 12px; top: 12px; width: 26px; height: 26px; border-radius: 50%; }
+    .sp-card b { position: absolute; left: 48px; top: 10px; font-size: 9.5px; letter-spacing: .04em; }
+    .sp-card span { position: absolute; left: 48px; top: 24px; width: 200px; font-size: 9.5px; color: #5f6368; line-height: 1.3; }
+    .sp-card em { position: absolute; left: 256px; top: 12px; width: 26px; height: 13px; border-radius: 7px; background: #C4C7C5; }
+    .sp-card em u { position: absolute; left: 1px; top: 1px; width: 11px; height: 11px; border-radius: 50%; background: #fff; }
+    .sp-btn { height: 26px; border-radius: 6px; font-size: 11px; font-weight: 500; text-align: center; line-height: 26px; }
+"""
+t_pole, t_instr, t_knopka = S(u"поле,", 15.62), S(u"інструкції", 17.14), S(u"кнопка", 19.17)
+t_tsia, t_vyity = S(u"Ця", 22.48), S(u"вийти", 24.92)
+# camera: screen = (0,0) + p*s + (x,y). Wide shows the whole window; zooms centre
+# a point of the window at (540, 760). Field centre (239,154); web card (628,199).
+def cam(px, py, sc, cx=540, cy=730):
+    # the window turns and scales about its own centre (396, 270): a point p of
+    # it lands at O + s*(p - O) + (x, y)
+    return (round(cx - 396 - sc * (px - 396), 1), round(cy - 270 - sc * (py - 270), 1))
+WIDE = (1.24,) + cam(396, 270, 1.24)
+FLD = (2.15,) + cam(239, 154, 2.15)
+WEB = (3.0,) + cam(628, 199, 3.0)
+js(u"""
+  gsap.set("#win", {transformOrigin: "396px 270px"});
+  gsap.set("#win", {x: %(wx)s, y: %(wy)s + 220, scale: %(ws)s * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
+  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.3, ease: "power3.out"}, %(f0)s + .15);
+  tl.to("#win", {rotationX: 6, rotationY: -7, rotationZ: 1, duration: 1.9, ease: "sine.inOut"}, %(f0)s + 1.45);
+  tl.to("#win", {x: %(fx)s, y: %(fy)s, scale: %(fs)s, rotationX: 3, rotationY: 6, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, %(pole)s - .5);
+  tl.to("#fld", {borderColor: "#7A1424", boxShadow: "0 0 0 3px rgba(122,20,36,.16)", duration: .3}, %(instr)s);
+  tl.to("#win", {x: %(bx)s, y: %(by)s, scale: %(bs)s, rotationX: -2, rotationY: -8, duration: 1.3, ease: "power3.inOut"}, %(knop)s - .45);
+  tl.to("#tg", {backgroundColor: "#1EA672", duration: .2}, %(tsia)s);
+  tl.to("#tg u", {x: 13, duration: .3, ease: "back.out(2)"}, %(tsia)s);
+  tl.fromTo("#cw", {boxShadow: "0 0 0 0 rgba(30,166,114,.0)"}, X({boxShadow: "0 0 0 6px rgba(30,166,114,.25)", duration: .35, yoyo: true, repeat: 1}), %(tsia)s + .1);
+  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.4, ease: "power3.inOut"}, %(vyity)s - .4);
+  full(%(f0)s, %(f1)s);
+""" % {"wx": WIDE[1], "wy": WIDE[2], "ws": WIDE[0], "fx": FLD[1], "fy": FLD[2], "fs": FLD[0],
+       "bx": WEB[1], "by": WEB[2], "bs": WEB[0], "f0": "%.3f" % f0, "f1": "%.3f" % f1,
+       "pole": "%.3f" % t_pole, "instr": "%.3f" % t_instr, "knop": "%.3f" % t_knopka,
+       "tsia": "%.3f" % t_tsia, "vyity": "%.3f" % t_vyity})
+g.sfx("whoosh-short", f0); g.sfx("whoosh-short", t_pole - 0.5); g.sfx("whoosh-short", t_knopka - 0.45)
+g.sfx("click", t_tsia); g.sfx("whoosh-short", t_vyity - 0.4); g.sfx("whoosh-short", f1)
 
-# 3 · HALF 1 — her real SendPulse screen: the instructions, the web button --------
-h0 = S(u"Коли", 12.27) - 0.1
-h1 = S(u"Ця", 22.48) - 0.25
-HALF.append((h0, h1))
-# the screen: 760 px wide (scale .958) at (160, 290); the instruction field is
-# x 177-601 y 355-520, ВЕБ-ПОШУК x 622-903 y 451-509; the screen's lower left
-# (x 177-601, y 577-788) is empty — the labels go there
-P.append(u'<img class="shot hid" id="shot" src="assets/shots/sendpulse-agent.png">')
-P.append(u'<svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
-t_pole, t_instr = S(u"поле,", 15.62), S(u"інструкції", 17.14)
-t_knopka, t_web = S(u"кнопка", 19.17), S(u"веб", 20.56)
-js(u'''
-  fadein("#shot", %.3f, .35);
-  sketch("p1", "skP"); box("p1", 168, 345, 444, 186, {seed: 3, stroke: "#7A1424", strokeWidth: 5, fill: false});
-  draw("p1", %.3f);
-  sketch("p1a", "skP"); label("p1a", 390, 650, "інструкції й скрипти", {size: 46});
-  draw("p1a", %.3f);
-  sketch("p2", "skP"); ell("p2", 762, 480, 330, 92, {seed: 11, stroke: "#7A1424", strokeWidth: 5, fill: false});
-  draw("p2", %.3f);
-  sketch("p2a", "skP"); label("p2a", 360, 750, "кнопка «Веб»", {size: 46});
-  arrow("p2a", 500, 735, 720, 528, {seed: 13, bend: -.12});
-  draw("p2a", %.3f);
-  erase("p1"); erase("p1a"); erase("p2"); erase("p2a");
-'''.replace("erase(\"p1\"); erase(\"p1a\"); erase(\"p2\"); erase(\"p2a\");",
-            "erase(\"p1\", %.3f); erase(\"p1a\", %.3f); erase(\"p2\", %.3f); erase(\"p2a\", %.3f);" % ((h1,) * 4))
-   % (h0 + 0.5, t_pole - 0.1, t_instr - 0.3, t_knopka - 0.1, t_web - 0.4))
-g.sfx("whoosh-short", h0); g.sfx("click-soft", t_pole); g.sfx("click-soft", t_knopka)
-
-# 4 · ABOVE — what the button means: агент -> інтернет, useful, but risky ----------
-t_ahent2, t_internet = S(u"агент", 23.84), S(u"інтернет", 25.36)
-t_keisy, t_korysno = S(u"кейси,", 28.72), S(u"корисно.", 29.84)
-t_ale, t_shans, t_te = S(u"Але", 30.64), S(u"шанс,", 32.28), S(u"те.", 34.06)
-F.append(u'''
-        <div id="a1" class="pill light hid" style="left:120px; top:330px;">агент</div>
-        <div id="a2" class="pill light hid" style="left:640px; top:330px;">інтернет</div>
-        <div id="a3" class="chip hid" style="position:absolute; left:0; right:0; margin:auto; width:max-content; top:500px;"><i></i>іноді корисно</div>
-        <div id="a4" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:470px;">шанс помилки ↑</div>''')
-js(u'''
-  pop("#a1", %.3f);
-  sketch("a12", "skF"); arrow("a12", 400, 390, 625, 390, {seed: 21, bend: .1});
-  draw("a12", %.3f, .45);
-  pop("#a2", %.3f);
-  pop("#a3", %.3f); out("#a3", %.3f);
-  pop("#a4", %.3f);
-  sink("#a1, #a2, #a4", %.3f); erase("a12", %.3f);
-''' % (t_ahent2 - 0.05, t_internet - 0.55, t_internet, t_korysno - 0.1, t_ale - 0.1,
-       t_shans - 0.1, t_te + 0.15, t_te + 0.15))
-g.sfx("pop", t_ahent2); g.sfx("pop", t_internet); g.sfx("click-soft", t_korysno); g.sfx("pop", t_shans)
-BLACKOUT.append((t_internet - 0.05, E(u"інтернет", 25.36) + 0.05))
-BLACKOUT.append((t_shans - 0.05, E(u"шанс,", 32.28) + 0.05))
-
-# 5 · HALF 2 — the button off, only the scripts ------------------------------------
+# 5 · HALF 2 — the scheme (Excalidraw): no web, only scripts ----------------------
 k0 = S(u"Тому", 34.43) - 0.1
 k1 = E(u"інструкції.", 41.47) + 0.3
 HALF.append((k0, k1))
 t_vmyk, t_propys, t_nikoly = S(u"вмикати,", 36.96), S(u"прописати", 38.60), S(u"ніколи", 40.33)
 js(u'''
-  sketch("q1", "skP"); ln("q1", 625, 448, 900, 512, {stroke: "#7A1424", strokeWidth: 7, seed: 31});
-  ln("q1", 625, 512, 900, 448, {stroke: "#7A1424", strokeWidth: 7, seed: 33});
-  draw("q1", %.3f, .3);
-  sketch("q1t", "skP"); label("q1t", 360, 750, "не вмикаю", {size: 46, color: "#7A1424"});
-  arrow("q1t", 500, 735, 720, 528, {seed: 35, bend: -.12, stroke: "#7A1424"});
-  draw("q1t", %.3f);
-  sketch("q2", "skP"); box("q2", 168, 345, 444, 186, {seed: 37, fill: true});
-  draw("q2", %.3f);
-  sketch("q2t", "skP"); label("q2t", 390, 650, "тільки скрипти", {size: 46});
-  draw("q2t", %.3f);
-  sketch("q3", "skP"); ell("q3", 390, 438, 520, 250, {seed: 41, stroke: "#7A1424", strokeWidth: 6, fill: false});
-  draw("q3", %.3f, .6);
-  erase("q1", %.3f); erase("q1t", %.3f); erase("q2", %.3f); erase("q2t", %.3f); erase("q3", %.3f);
-''' % (t_vmyk - 0.1, t_vmyk + 0.3, t_propys - 0.2, t_propys + 0.3, t_nikoly - 0.1, k1, k1, k1, k1, k1))
-g.sfx("whoosh-short", k0); g.sfx("click", t_vmyk); g.sfx("click-soft", t_propys); g.sfx("click-soft", t_nikoly)
+  sketch("s1", "skP"); box("s1", 380, 330, 320, 130, {seed: 3, fill: true});
+  label("s1", 540, 412, "агент", {size: 58});
+  draw("s1", %.3f);
+  sketch("s2", "skP"); arrow("s2", 380, 420, 190, 620, {seed: 5, bend: -.15});
+  box("s2", 60, 630, 280, 120, {seed: 7}); label("s2", 200, 706, "інтернет", {size: 50});
+  draw("s2", %.3f);
+  sketch("s3", "skP"); ln("s3", 70, 600, 330, 770, {stroke: "#7A1424", strokeWidth: 7, seed: 9});
+  ln("s3", 70, 770, 330, 600, {stroke: "#7A1424", strokeWidth: 7, seed: 13});
+  draw("s3", %.3f, .3);
+  sketch("s4", "skP"); arrow("s4", 700, 420, 880, 620, {seed: 15, bend: .15});
+  box("s4", 730, 630, 290, 120, {seed: 17, fill: true}); label("s4", 875, 706, "скрипти", {size: 50});
+  draw("s4", %.3f);
+  sketch("s5", "skP"); ell("s5", 700, 560, 760, 470, {seed: 19, stroke: "#7A1424", strokeWidth: 6, fill: false});
+  draw("s5", %.3f, .7);
+  erase("s1", %.3f); erase("s2", %.3f); erase("s3", %.3f); erase("s4", %.3f); erase("s5", %.3f);
+''' % (k0 + 0.6, k0 + 1.4, t_vmyk - 0.1, t_propys - 0.3, t_nikoly - 0.1, k1, k1, k1, k1, k1))
+g.sfx("whoosh-short", k0); g.sfx("click", t_vmyk); g.sfx("click-soft", t_propys)
 
-# 6 · ABOVE — «геніально … SendPulse» -----------------------------------------------
-t_gen, t_sp = S(u"геніально,", 43.00), S(u"SendPulse.", 46.38)
-F.append(u'''
-        <div id="g1" class="pill light hid" style="left:0; right:0; margin:auto; width:max-content; top:330px;
-             font-size:56px; font-weight:700">SendPulse</div>''')
-js(u'''
-  sketch("g1t", "skF"); label("g1t", 540, 520, "геніально", {size: 58, color: "#7A1424"});
-  under("g1t", 400, 545, 680, {stroke: "#7A1424", seed: 45});
-  draw("g1t", %.3f);
-  pop("#g1", %.3f);
-  sink("#g1", %.3f); erase("g1t", %.3f);
-''' % (t_gen - 0.05, t_sp - 0.1, t_sp + 0.75, t_sp + 0.75))
-g.sfx("click-soft", t_gen); g.sfx("pop", t_sp)
-BLACKOUT.append((t_sp - 0.05, E(u"SendPulse.", 46.38) + 0.05))
+# 6 · BEHIND — «SendPulse» ----------------------------------------------------------
+t_sp, e_sp = S(u"SendPulse.", 46.38), E(u"SendPulse.", 46.38)
+B.append(u'        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:440px; font-size:200px">SendPulse</div>')
+g.matte("b2", round(t_sp - 0.6, 3), round(e_sp - t_sp + 1.2, 3))
+js(u'  rise("#bw2", %.3f); sink("#bw2", %.3f);' % (t_sp - 0.35, e_sp + 0.3))
+g.sfx("whoosh-short", t_sp - 0.35)
+BLACKOUT.append((t_sp - 0.03, e_sp))
 
-# 7 · ABOVE — the DM again: a question it can't answer ------------------------------
-t_pyt, t_znaie = S(u"питання,", 48.48), S(u"знає,", 50.10)
-t_skazhe, t_men, t_nich, t_mozhe = S(u"скаже,", 53.44), S(u"менеджеру.", 55.58), S(u"нічого", 57.05), S(u"може.", 59.59)
+# 7 · ABOVE — the glass DM again: it doesn't know -> a manager --------------------
+t_pyt, t_skazhe, t_men, t_mozhe = S(u"питання,", 48.48), S(u"скаже,", 53.44), S(u"менеджеру.", 55.58), S(u"може.", 59.59)
 F.append(u'''
-        <div id="d2" class="card dm hid">
-          <span class="lbl">Direct · AI-агент</span>
-          <div><span class="bub in hid" id="d2q">А ви робите доставку в Канаду?</span></div>
+        <div id="d2" class="glass dm hid">
+          <div class="hd"><b></b>Direct · AI-агент</div>
+          <div><span class="bub in">А ви робите доставку в Канаду?</span></div>
           <div class="rowr"><span class="bub me hid" id="d2a">Не знаю відповіді. Передаю вас менеджеру</span></div>
-        </div>
-        <div id="d2m" class="chip on hid" style="position:absolute; left:130px; top:640px;"><i></i>менеджер</div>''')
+          <div class="sys hid" id="d2s">Менеджерка приєдналась до чату</div>
+        </div>''')
 js(u'''
-  pop("#d2", %.3f); pop("#d2q", %.3f);
+  rise("#d2", %.3f);
   pop("#d2a", %.3f);
-  pop("#d2m", %.3f);
-  sketch("d2k", "skF"); label("d2k", 720, 690, "нічого не вигадує", {size: 50, color: "#7A1424"});
-  draw("d2k", %.3f);
-  sink("#d2, #d2m", %.3f); erase("d2k", %.3f);
-''' % (t_pyt - 0.4, t_pyt, t_skazhe, t_men - 0.05, t_nich, t_mozhe + 0.2, t_mozhe + 0.2))
-g.sfx("pop", t_pyt - 0.4); g.sfx("notification", t_skazhe); g.sfx("pop", t_men)
+  fadein("#d2s", %.3f);
+  sink("#d2", %.3f);
+''' % (t_pyt - 0.3, t_skazhe, t_men, t_mozhe + 0.2))
+g.sfx("pop", t_pyt - 0.3); g.sfx("notification", t_skazhe); g.sfx("ping", t_men)
 
-# 8 · CTA — who it is for, «Пиши + в коментарях», pointer down ------------------------
-t_mal, t_kom, t_men2, t_zai = S(u"малий", 60.76), S(u"команда,", 62.32), S(u"менеджери,", 62.83), S(u"заявок,", 63.53)
-t_pyshy = S(u"пиши", 65.80)
+# 8 · CTA — who it is for, «Пиши + в коментарях» -------------------------------------
+t_mal, t_pyshy = S(u"малий", 60.76), S(u"пиши", 65.80)
 F.append(u'''
-        <div id="c" style="position:absolute; left:90px; width:900px; top:300px; display:flex; flex-wrap:wrap;
-             gap:14px; justify-content:center">
-          <span class="chip hid" id="c1"><i></i>малий чи середній бізнес</span>
-          <span class="chip hid" id="c2"><i></i>команда</span>
-          <span class="chip hid" id="c3"><i></i>менеджери</span>
-          <span class="chip hid" id="c4"><i></i>багато заявок</span>
-        </div>
-        <div id="cp" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:470px;">Пиши + в коментарях</div>''')
+        <div id="ct" class="glass cta hid">
+          <div class="chips" style="justify-content:center">
+            <span class="chip"><i></i>малий і середній бізнес</span>
+            <span class="chip"><i></i>команда і менеджери</span>
+            <span class="chip"><i></i>багато заявок</span>
+          </div>
+          <div id="ctp" class="pill hid" style="position:relative">Пиши + в коментарях</div>
+        </div>''')
 js(u'''
-  pop("#c1", %.3f); pop("#c2", %.3f); pop("#c3", %.3f); pop("#c4", %.3f);
-  pop("#cp", %.3f, .6);
-  sketch("ca", "skF"); arrow("ca", 840, 560, 880, 1450, {strokeWidth: 5, seed: 97, bend: -.12});
-  draw("ca", %.3f, .55);
-''' % (t_mal, t_kom, t_men2, t_zai, t_pyshy - 0.1, t_pyshy + 0.3))
-g.sfx("pop", t_mal); g.sfx("click-soft", t_kom); g.sfx("click-soft", t_men2); g.sfx("click-soft", t_zai)
-g.sfx("pop", t_pyshy)
-BLACKOUT.append((t_pyshy - 0.05, DUR))     # the pill says it
+  rise("#ct", %.3f);
+  pop("#ctp", %.3f);
+''' % (t_mal - 0.1, t_pyshy - 0.1))
+g.sfx("pop", t_mal); g.sfx("pop", t_pyshy)
+BLACKOUT.append((t_pyshy - 0.05, DUR))
 
-# ---------------------------------------------------------------- mattes for the half screens
+# ---------------------------------------------------------------- half screens + their mattes
 for i, (a, b) in enumerate(HALF):
-    g.matte("half%d" % (i + 1), round(a - 0.1, 3), round(b - a + 1.2, 3))
+    g.matte("half2", round(a - 0.1, 3), round(b - a + 1.2, 3))     # the scheme (its cut-out was made as half2)
     js("  half(%.3f, %.3f);" % (a, b))
     PLACE.append((a + 0.4, b + 0.2, "bottom", 938))
 

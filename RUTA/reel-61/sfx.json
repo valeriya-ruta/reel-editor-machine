@@ -1,6 +1,10 @@
 [
  {
-  "t": 0.75,
+  "t": 0.5,
+  "name": "whoosh-short"
+ },
+ {
+  "t": 2.793,
   "name": "pop"
  },
  {
@@ -12,36 +16,28 @@
   "name": "click"
  },
  {
-  "t": 11.202,
-  "name": "pop"
- },
- {
-  "t": 12.167,
+  "t": 12.117,
   "name": "whoosh-short"
  },
  {
-  "t": 15.617,
-  "name": "click-soft"
+  "t": 15.117,
+  "name": "whoosh-short"
  },
  {
-  "t": 19.167,
-  "name": "click-soft"
+  "t": 18.717,
+  "name": "whoosh-short"
  },
  {
-  "t": 23.837,
-  "name": "pop"
+  "t": 22.477,
+  "name": "click"
  },
  {
-  "t": 25.357,
-  "name": "pop"
+  "t": 24.517,
+  "name": "whoosh-short"
  },
  {
-  "t": 29.837,
-  "name": "click-soft"
- },
- {
-  "t": 32.282,
-  "name": "pop"
+  "t": 27.932,
+  "name": "whoosh-short"
  },
  {
   "t": 34.333,
@@ -56,19 +52,11 @@
   "name": "click-soft"
  },
  {
-  "t": 40.326,
-  "name": "click-soft"
+  "t": 46.026,
+  "name": "whoosh-short"
  },
  {
-  "t": 42.997,
-  "name": "click-soft"
- },
- {
-  "t": 46.376,
-  "name": "pop"
- },
- {
-  "t": 48.077,
+  "t": 48.177,
   "name": "pop"
  },
  {
@@ -77,23 +65,11 @@
  },
  {
   "t": 55.582,
-  "name": "pop"
+  "name": "ping"
  },
  {
   "t": 60.763,
   "name": "pop"
- },
- {
-  "t": 62.323,
-  "name": "click-soft"
- },
- {
-  "t": 62.833,
-  "name": "click-soft"
- },
- {
-  "t": 63.529,
-  "name": "click-soft"
  },
  {
   "t": 65.803,
