@@ -137,3 +137,15 @@ her side: lines she improvised that change meaning; example UI text you invented
   `reels/`), schedule with Buffer (IG reel shared to feed + TikTok) at the slots
   in `work/b1120/POSTING.md`, caption = RUTA `write_caption` first line + the
   reel's own CTA. RUTA status → `ready`; after it goes out, `mark_posted`.
+
+## Her RUTA app — current UI only (her call, 2026-11-23)
+
+The old `app-ruta.jpg` home screen («Добрий день, Рута») is a year old and is
+archived — never show it. The CURRENT app lives on https://www.ruta.media/ruta-app
+and is saved in `app-screenshots/site-2026-11/`: real screen recordings
+(`vid-home`, `vid-braindump`, `vid-reel`, `vid-stories`, `vid-car-types`,
+`vid-threads`, `vid-plan`, `vid-memory`, 780×1688) and 10 real reviews
+(`r01–r10.webp`). When she talks about RUTA, play these recordings inside a
+clean phone in the full-screen platform-ad sequence; when she talks about how
+people like it, pile the reviews up BEHIND her (matte) so it looks like a lot.
+If the site has changed, re-download from it before building.
