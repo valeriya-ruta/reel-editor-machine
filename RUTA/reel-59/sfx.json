@@ -1,257 +1,154 @@
 [
  {
-  "t": 0.05,
-  "name": "pop",
-  "db": 0
+  "t": 1.49,
+  "name": "pop"
  },
  {
-  "t": 2.867,
-  "name": "click-soft",
-  "db": 0
+  "t": 10.253,
+  "name": "whoosh-short"
  },
  {
-  "t": 5.117,
-  "name": "pencil",
-  "db": -3
+  "t": 11.267,
+  "name": "pop"
  },
  {
-  "t": 5.8,
-  "name": "whoosh-short",
-  "db": 0
+  "t": 14.03,
+  "name": "whoosh-short"
  },
  {
-  "t": 6.87,
-  "name": "pencil",
-  "db": -2
+  "t": 15.477,
+  "name": "click-soft"
  },
  {
-  "t": 7.85,
-  "name": "pop",
-  "db": 0
+  "t": 16.097,
+  "name": "click-soft"
  },
  {
-  "t": 8.563,
-  "name": "pop",
-  "db": 0
+  "t": 18.2,
+  "name": "typing"
  },
  {
-  "t": 9.383,
-  "name": "whoosh-short",
-  "db": 0
+  "t": 20.51,
+  "name": "click"
  },
  {
-  "t": 10.103,
-  "name": "pencil",
-  "db": -2
+  "t": 22.29,
+  "name": "pop"
  },
  {
-  "t": 12.223,
-  "name": "pencil",
-  "db": -2
+  "t": 26.121,
+  "name": "notification"
  },
  {
-  "t": 14.046,
-  "name": "pop",
-  "db": 0
+  "t": 28.2,
+  "name": "whoosh-short"
  },
  {
-  "t": 15.443,
-  "name": "click-soft",
-  "db": 0
+  "t": 28.4,
+  "name": "pop"
  },
  {
-  "t": 16.063,
-  "name": "click-soft",
-  "db": 0
+  "t": 31.198,
+  "name": "whoosh-short"
  },
  {
-  "t": 18.167,
-  "name": "typing",
-  "db": -4
+  "t": 33.488,
+  "name": "click-soft"
  },
  {
-  "t": 21.777,
-  "name": "pop",
-  "db": 0
+  "t": 35.208,
+  "name": "click-soft"
  },
  {
-  "t": 22.257,
-  "name": "ping",
-  "db": 0
+  "t": 37.697,
+  "name": "click-soft"
  },
  {
-  "t": 24.728,
-  "name": "click-soft",
-  "db": 0
+  "t": 41.749,
+  "name": "notification"
  },
  {
-  "t": 26.188,
-  "name": "ping",
-  "db": 0
+  "t": 46.097,
+  "name": "pop"
  },
  {
-  "t": 27.223,
-  "name": "pencil",
-  "db": -2
+  "t": 47.457,
+  "name": "click"
  },
  {
-  "t": 28.267,
-  "name": "whoosh-short",
-  "db": 0
+  "t": 49.167,
+  "name": "pop"
  },
  {
-  "t": 28.667,
-  "name": "pencil",
-  "db": -2
+  "t": 50.967,
+  "name": "whoosh-short"
  },
  {
-  "t": 31.675,
-  "name": "pop",
-  "db": 0
+  "t": 53.017,
+  "name": "click-soft"
  },
  {
-  "t": 32.775,
-  "name": "pop",
-  "db": 0
+  "t": 55.868,
+  "name": "click-soft"
  },
  {
-  "t": 33.455,
-  "name": "pencil",
-  "db": -3
+  "t": 57.183,
+  "name": "click-soft"
  },
  {
-  "t": 34.235,
-  "name": "click-soft",
-  "db": 0
+  "t": 58.543,
+  "name": "click-soft"
  },
  {
-  "t": 36.084,
-  "name": "pop",
-  "db": 0
+  "t": 60.383,
+  "name": "click-soft"
  },
  {
-  "t": 36.444,
-  "name": "click-soft",
-  "db": 0
+  "t": 61.867,
+  "name": "pop"
  },
  {
-  "t": 37.384,
-  "name": "notification",
-  "db": 0
+  "t": 64.383,
+  "name": "whoosh-short"
  },
  {
-  "t": 41.716,
-  "name": "notification",
-  "db": 0
+  "t": 66.423,
+  "name": "click-soft"
  },
  {
-  "t": 46.563,
-  "name": "pop",
-  "db": 0
+  "t": 70.743,
+  "name": "click-soft"
  },
  {
-  "t": 47.423,
-  "name": "click",
-  "db": 0
+  "t": 73.35,
+  "name": "click"
  },
  {
-  "t": 48.983,
-  "name": "whoosh-short",
-  "db": 0
+  "t": 74.383,
+  "name": "whoosh-short"
  },
  {
-  "t": 49.433,
-  "name": "pencil",
-  "db": -2
+  "t": 74.993,
+  "name": "whoosh-short"
  },
  {
-  "t": 51.823,
-  "name": "pop",
-  "db": 0
+  "t": 77.323,
+  "name": "pop"
  },
  {
-  "t": 52.983,
-  "name": "pop",
-  "db": 0
+  "t": 78.143,
+  "name": "sparkle"
  },
  {
-  "t": 55.163,
-  "name": "pencil",
-  "db": -3
+  "t": 79.7,
+  "name": "pop"
  },
  {
-  "t": 57.15,
-  "name": "pop",
-  "db": 0
+  "t": 80.05,
+  "name": "pop"
  },
  {
-  "t": 57.523,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 58.51,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 60.15,
-  "name": "pencil",
-  "db": -3
- },
- {
-  "t": 61.733,
-  "name": "pencil",
-  "db": -2
- },
- {
-  "t": 64.6,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 65.85,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 70.77,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 73.317,
-  "name": "whoosh-short",
-  "db": 0
- },
- {
-  "t": 75.87,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 78.11,
-  "name": "sparkle",
-  "db": 0
- },
- {
-  "t": 79.767,
-  "name": "pop",
-  "db": 0
- },
- {
-  "t": 80.067,
-  "name": "pencil",
-  "db": -4
- },
- {
-  "t": 80.117,
-  "name": "click",
-  "db": 0
- },
- {
-  "t": 81.657,
-  "name": "click",
-  "db": 0
+  "t": 80.15,
+  "name": "click-soft"
  }
 ]

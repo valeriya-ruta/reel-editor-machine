@@ -84,7 +84,7 @@ EXTRA = u'''
 
 # 1 · BEHIND — «Claude» (the cover frame) ----------------------------------------
 t_kl, e_kl = S(u"Клоду", 1.15), E(u"Клоду", 1.15)
-B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:450px; font-size:220px">Claude</div>')
+B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:505px; font-size:220px">Claude</div>')
 g.matte("b1", 0.0, 2.95)
 js(u'  rise("#bw1", 0.05); sink("#bw1", %.3f);' % (E(u"відео»,", 2.31) + 0.05))
 g.sfx("whoosh-short", 0.05)
@@ -323,7 +323,7 @@ g.sfx("pop", t_saме - 0.1); g.sfx("click-soft", t_zap)
 
 # 8 · BEHIND — «твій стиль», then she ends clean --------------------------------
 t_tv, e_st = S(u"твій", 58.17), E(u"стиль,", 58.66)
-B.append(u'        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:455px; font-size:178px">твій стиль</div>')
+B.append(u'        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:500px; font-size:178px">твій стиль</div>')
 g.matte("b2", round(t_tv - 0.6, 3), 2.2)
 js(u'  rise("#bw2", %.3f); sink("#bw2", %.3f);' % (t_tv - 0.3, S(u"повно-", 59.35) - 0.05))
 g.sfx("whoosh-short", t_tv - 0.3)
