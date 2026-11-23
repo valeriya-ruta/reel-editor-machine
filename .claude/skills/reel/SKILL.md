@@ -24,6 +24,10 @@ STYLE.md is the *look*.
 - Captions come from `SCRIPTS.md`, never from ASR. Whisper supplies timing only.
 - Product Sans Black, white only, word by word, unless an animation replaces the
   words entirely.
+- **Phrase captions on request only.** If she asks for 2-3 / 3-4 word subtitles,
+  phrase subtitles, or "just subtitles, nothing else", use
+  `tools/phrasecaps.py` exactly (STYLE.md §2c): same look, 68 px, 3-4 words,
+  gentle pause trim. Don't restyle it. One word at a time stays the default.
 - 30 fps from reel 4 onward.
 - Output: `REEL-NN.mp4` on her Desktop plus a small `REEL-NN-preview.mp4`.
 
