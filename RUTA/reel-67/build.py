@@ -40,8 +40,8 @@ g.PANEL_TOP = 820      # panel captions: bottom 938, her pushed hair below
 FIX = {
     u"кажуть": u"каже", u"друсла!": u"доросла!", (u"мене", 8.7): None, u"журку,": u"менеджерку,",
     u"вона вона буде": u"вона буде", (u"А", 19.3): u"я", u"і всіх": u"у всіх",
-    u"третць": u"треш,", u"«Пробувай": u"«пробиває",
-    (u"і", 33.7): None, u"яй": u"AI-агента.", u"агенти.": None, u"Не": u"не",
+    u"третць": u"третю,", u"«Пробувай": u"«пробиває",
+    (u"і", 33.7): None, u"яй": u"AI-агента,", u"мене.": u"мене", u"агенти.": None, u"Не": u"не",
     (u"по", 45.9): u"по-різному,", u"різному,": None, u"побачила": u"побачила,",
     u"Якщо": u"якщо", (u"тобі", 56.8): u"тебе", (u"ай", 57.9): u"AI-агент", (u"ай", 58.1): None, (u"агент", 58.3): None,
     u"в дирекці.": u"в директ.", u"далі.": u"деталі.",
@@ -130,9 +130,10 @@ g.sfx("whoosh-short", t_ai - 0.25)
 BLACKOUT.append((t_ai - 0.03, e_ai))
 
 # 5 · FULL — the agent's inbox as a platform ad -----------------------------------------
-# No screenshot of hers for this one: a clean, plausible inbox with only what she
-# names — it asks (кваліфікує), the client card fills (збирає інформацію), the
-# hand-off button flips (передає менеджеру). Window coordinates are its own px.
+# No screenshot of hers for this one: a clean, plausible inbox, clearly a demo, with
+# only what she names — it asks (кваліфікує), the client card fills (збирає
+# інформацію), the hand-off button flips (передає менеджеру). No numbers, no proof.
+# Sized per the full-screen bar: 960 px wide, body 36 px, labels 28 px.
 f0 = S(u"Він", 37.1) - 0.15
 f1 = E(u"опрацювання.", 43.8) + 0.2
 t_kval, t_zbyr, t_info = S(u"кваліфікує,", 38.8), S(u"збирає", 39.9), S(u"інформацію", 40.3)
@@ -140,77 +141,79 @@ t_pered, t_menedzh, t_fin = S(u"передає", 41.3), S(u"менеджеру",
 C.append(u"""
         <div id="stage">
           <div id="win">
-            <div class="ib-top"><b></b>Direct<span class="ib-ag"><i></i>AI-агент</span></div>
+            <div class="ib-top"><b></b><span>Direct</span><span class="ib-ag"><i></i>AI-агент</span></div>
             <div class="ib-chat">
-              <div class="ib-m in">Добрий день! Хочу дізнатись про ваші послуги</div>
-              <div class="ib-m me hid" id="m1">Вітаю! Підкажіть, будь ласка, яка у вас ніша?</div>
+              <div class="ib-m in">Добрий день! Скільки коштують ваші послуги?</div>
+              <div class="ib-m me hid" id="m1">Вітаю! Підкажіть, яка у вас ніша?</div>
               <div class="ib-m in hid" id="m2">Салон краси</div>
-              <div class="ib-m me hid" id="m3">Дякую! Що хочете покращити?</div>
+              <div class="ib-m me hid" id="m3">Дякую! Передаю вас менеджерці</div>
             </div>
             <div class="ib-card" id="card">
               <div class="ib-h">Картка клієнта</div>
-              <div class="ib-f"><span>Ніша</span><em id="v1">Салон краси</em></div>
-              <div class="ib-f"><span>Запит</span><em id="v2">Послуги</em></div>
-              <div class="ib-f"><span>Статус</span><em id="v3">Кваліфіковано</em></div>
+              <div class="ib-row">
+                <div class="ib-f"><span>Ніша</span><em id="v1">Салон краси</em></div>
+                <div class="ib-f"><span>Запит</span><em id="v2">Ціна послуг</em></div>
+              </div>
               <div class="ib-btn" id="btn"><span id="bt0">Передати менеджеру</span><span id="bt1" class="hid">✓ Передано менеджеру</span></div>
             </div>
           </div>
         </div>""")
 EXTRA += u"""
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
-    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
-    #win { position: absolute; left: 0; top: 0; width: 800px; height: 560px; background: #fff;
-           border-radius: 16px; font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
+    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2400px; }
+    #win { position: absolute; left: 0; top: 0; width: 960px; height: 1060px; background: #fff;
+           border-radius: 36px; font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
            box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
            transform-origin: 0 0; will-change: transform; }
     #win > div { position: absolute; }
-    .ib-top { left: 0; top: 0; width: 800px; height: 56px; border-bottom: 1px solid #ECE6E6;
-              display: flex; align-items: center; gap: 12px; padding: 0 20px; font-size: 18px; font-weight: 700; }
-    .ib-top b { width: 30px; height: 30px; border-radius: 50%; background: #7A1424; display: inline-block; }
-    .ib-ag { margin-left: auto; font-size: 13px; font-weight: 500; color: #574142; background: #F4F1F1;
-             border-radius: 14px; padding: 6px 12px; display: inline-flex; align-items: center; gap: 7px; }
-    .ib-ag i { width: 8px; height: 8px; border-radius: 50%; background: #1EA672; display: inline-block; }
-    .ib-chat { left: 20px; top: 76px; width: 440px; display: flex; flex-direction: column; gap: 10px; }
-    .ib-m { max-width: 330px; border-radius: 16px; padding: 10px 14px; font-size: 14px; line-height: 1.35; }
-    .ib-m.in { background: #F1EEEE; color: #241919; align-self: flex-start; border-bottom-left-radius: 5px; }
-    .ib-m.me { background: #7A1424; color: #fff; align-self: flex-end; border-bottom-right-radius: 5px; }
-    .ib-card { left: 484px; top: 76px; width: 296px; height: 400px; border: 1px solid #ECE6E6; border-radius: 14px;
-               padding: 16px; background: #FCFAFA; }
-    .ib-h { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
-    .ib-f { border: 1px solid #E3DCDC; border-radius: 10px; background: #fff; padding: 8px 12px; margin-bottom: 10px;
-            height: 54px; }
-    .ib-f span { display: block; font-size: 11px; color: #6f6363; margin-bottom: 3px; }
-    .ib-f em { display: block; font-style: normal; font-size: 14px; color: #241919; opacity: 0; }
-    .ib-btn { position: absolute; left: 16px; right: 16px; bottom: 16px; height: 46px; border-radius: 23px;
-              background: #7A1424; color: #fff; font-size: 14px; font-weight: 500; text-align: center; line-height: 46px; }
+    .ib-top { left: 0; top: 0; width: 960px; height: 120px; border-bottom: 2px solid #ECE6E6; box-sizing: border-box;
+              display: flex; align-items: center; gap: 22px; padding: 0 40px; font-size: 44px; font-weight: 700; }
+    .ib-top b { width: 64px; height: 64px; border-radius: 50%; background: #7A1424; display: inline-block; }
+    .ib-ag { margin-left: auto; font-size: 32px; font-weight: 500; color: #574142; background: #F4F1F1;
+             border-radius: 30px; padding: 12px 26px; display: inline-flex; align-items: center; gap: 12px; }
+    .ib-ag i { width: 16px; height: 16px; border-radius: 50%; background: #1EA672; display: inline-block; }
+    .ib-chat { left: 40px; top: 150px; width: 880px; display: flex; flex-direction: column; gap: 18px; }
+    .ib-m { max-width: 640px; border-radius: 32px; padding: 20px 28px; font-size: 36px; line-height: 1.3; }
+    .ib-m.in { background: #F1EEEE; color: #241919; align-self: flex-start; border-bottom-left-radius: 10px; }
+    .ib-m.me { background: #7A1424; color: #fff; align-self: flex-end; border-bottom-right-radius: 10px; }
+    .ib-card { left: 40px; top: 680px; width: 880px; height: 340px; border: 2px solid #ECE6E6; border-radius: 28px;
+               padding: 26px 30px; background: #FCFAFA; box-sizing: border-box; }
+    .ib-h { font-size: 36px; font-weight: 700; margin-bottom: 20px; }
+    .ib-row { display: flex; gap: 20px; }
+    .ib-f { flex: 1; border: 2px solid #E3DCDC; border-radius: 18px; background: #fff; padding: 14px 22px; height: 108px;
+            box-sizing: border-box; }
+    .ib-f span { display: block; font-size: 28px; color: #6f6363; margin-bottom: 4px; }
+    .ib-f em { display: block; font-style: normal; font-size: 36px; color: #241919; opacity: 0; }
+    .ib-btn { position: absolute; left: 30px; right: 30px; bottom: 26px; height: 86px; border-radius: 43px;
+              background: #7A1424; color: #fff; font-size: 36px; font-weight: 500; text-align: center; line-height: 86px; }
     .ib-btn span { position: absolute; left: 0; right: 0; }
 """
-# camera: the window turns and scales about its own centre (400, 280); a point p of
-# it lands at O + s*(p - O) + (x, y). Each shot centres a point at (cx, cy).
-def cam(px, py, sc, cx=540, cy=760):
-    return (round(cx - 400 - sc * (px - 400), 1), round(cy - 280 - sc * (py - 280), 1))
-WIDE = (1.25,) + cam(400, 280, 1.25)
-CHAT = (2.05,) + cam(240, 190, 2.05)
-CARD = (2.3,) + cam(632, 210, 2.3)
-BTN = (2.9,) + cam(632, 440, 2.9)
+# camera: the window (960x1060) turns and scales about its own centre (480, 530); a
+# point p of it lands at O + s*(p - O) + (x, y). Each shot centres a point at (cx, cy).
+# Wide = the whole window, 960 px (~89 % of the width), y ~300-1360, above the caption band.
+def cam(px, py, sc, cx=540, cy=830):
+    return (round(cx - 480 - sc * (px - 480), 1), round(cy - 530 - sc * (py - 530), 1))
+WIDE = (1.0,) + cam(480, 530, 1.0)
+CHAT = (1.12,) + cam(480, 400, 1.12, cy=800)     # the chat: still the full width (1075 px)
+CARD = (1.3,) + cam(480, 800, 1.3, cy=860)       # the client card; its sides just past the frame (deliberate)
+BTN = (1.55,) + cam(480, 930, 1.55, cy=900)      # the hand-off button
 js(u"""
-  gsap.set("#win", {transformOrigin: "400px 280px"});
-  gsap.set("#win", {x: %(wx)s, y: %(wy)s + 220, scale: %(ws)s * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
-  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.2, ease: "power3.out"}, %(f0)s + .15);
-  tl.to("#win", {x: %(cx)s, y: %(cy)s, scale: %(cs)s, rotationX: 4, rotationY: 8, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, %(kval)s - .55);
+  gsap.set("#win", {transformOrigin: "480px 530px"});
+  gsap.set("#win", {x: %(wx)s, y: %(wy)s + 220, scale: %(ws)s * .86, rotationX: 22, rotationY: -18, rotationZ: 4});
+  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 7, rotationY: -9, rotationZ: 1.5, duration: 1.2, ease: "power3.out"}, %(f0)s + .15);
+  tl.to("#win", {x: %(cx)s, y: %(cy)s, scale: %(cs)s, rotationX: 3, rotationY: 6, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, %(kval)s - .7);
   pop("#m1", %(kval)s);
-  pop("#m2", %(kval)s + .55);
-  tl.to("#win", {x: %(dx)s, y: %(dy)s, scale: %(ds)s, rotationX: 2, rotationY: -8, duration: 1.0, ease: "power3.inOut"}, %(zbyr)s - .45);
+  pop("#m2", %(kval)s + .6);
+  tl.to("#win", {x: %(dx)s, y: %(dy)s, scale: %(ds)s, rotationX: 2, rotationY: -6, duration: 1.0, ease: "power3.inOut"}, %(zbyr)s - .45);
   tl.to("#v1", {opacity: 1, duration: .25}, %(info)s);
-  tl.to("#v2", {opacity: 1, duration: .25}, %(info)s + .3);
-  tl.to("#v3", {opacity: 1, duration: .25}, %(info)s + .6);
-  pop("#m3", %(info)s + .2);
-  tl.to("#win", {x: %(bx)s, y: %(by)s, scale: %(bs)s, rotationX: -3, rotationY: 6, duration: 1.0, ease: "power3.inOut"}, %(pered)s - .45);
+  tl.to("#v2", {opacity: 1, duration: .25}, %(info)s + .35);
+  tl.to("#win", {x: %(bx)s, y: %(by)s, scale: %(bs)s, rotationX: -3, rotationY: 5, duration: .9, ease: "power3.inOut"}, %(pered)s - .45);
   tl.to("#btn", {backgroundColor: "#1EA672", duration: .25}, %(men)s);
   tl.to("#bt0", {autoAlpha: 0, duration: .15}, %(men)s);
   tl.to("#bt1", {autoAlpha: 1, duration: .2}, %(men)s + .05);
-  tl.fromTo("#btn", {scale: 1}, X({scale: 1.06, duration: .18, yoyo: true, repeat: 1, ease: "power2.out"}), %(men)s);
-  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.1, ease: "power3.inOut"}, %(fin)s - .35);
+  tl.fromTo("#btn", {scale: 1}, X({scale: 1.05, duration: .18, yoyo: true, repeat: 1, ease: "power2.out"}), %(men)s);
+  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 8, rotationY: 10, rotationZ: -1.5, duration: 1.0, ease: "power3.inOut"}, %(fin)s - .45);
+  pop("#m3", %(fin)s - .1);
   full(%(f0)s, %(f1)s);
 """ % {"wx": WIDE[1], "wy": WIDE[2], "ws": WIDE[0], "cx": CHAT[1], "cy": CHAT[2], "cs": CHAT[0],
        "dx": CARD[1], "dy": CARD[2], "ds": CARD[0], "bx": BTN[1], "by": BTN[2], "bs": BTN[0],
@@ -272,7 +275,7 @@ g.sfx("pop", t_tomu + 0.1); g.sfx("notification", t_tomu + 0.9)
 # before «менеджерка» rises behind her; 15 «хуже вже не буде» right after the
 # card falls through on «пробиває дно» (doom, resigned), in the free stretch
 # «Так от, щоб такого не було» before «AI-агент».
-g.meme(F, J, "35", round(E(u"доросла!", 7.2) + 0.1, 3), dur=0.9, slot="top")
+g.meme(F, J, "35", round(E(u"доросла!", 7.2) + 0.1, 3), dur=1.0, slot="top")
 g.meme(F, J, "15", round(E(u"дно».", 29.0) + 0.1, 3), dur=1.3, slot="top")
 
 # 8 · CTA — the pill in the subtitle band (the blackout from «став» frees it) -------------
