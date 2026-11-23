@@ -1,1 +1,0 @@
-{"bw": false, "frame": {"cx": 0.5, "cy": 0.5, "flip": true, "z": 1.1}, "kind": "b", "n": 51, "speed": 1.5, "src": "M", "src_in": 85.0}
