@@ -52,6 +52,8 @@ export type EpisodeSpec = {
   audio?: string;
   /** Mode B: its word timings, merged in from `<episode>.words.json` by the loaders. */
   words?: SpokenWord[];
+  /** Subtitle spelling for words the voice needs spelled phonetically: {"тон": "/tov", "оф": ""}. */
+  subtitleMap?: Record<string, string>;
   title: string;
   /** TODO-TOV until Ruta rewrites captions and VO in her voice. */
   status?: string;
@@ -81,6 +83,9 @@ export type Shot = {
   transDur: number;
 };
 
+/** One subtitle chunk (1–3 words) and when each of its words is spoken. */
+export type SubEv = {t0: number; t1: number; words: {text: string; t: number}[]};
+
 export type CaptionEv = {t0: number; t1: number; text: string; kind: 'action' | 'minus'};
 
 export type PartTiming = {step: number; kind: 'action' | 'minus'; t0: number; t1: number; voSec: number; words: number};
@@ -95,6 +100,8 @@ export type Timeline = {
   captions: CaptionEv[];
   parts: PartTiming[];
   words: number;
+  /** Mode B: word-by-word subtitles, 1–3 words a chunk. */
+  subs: SubEv[];
   /** 'A' timed from the text, 'B' pinned to the voiceover. */
   mode: 'A' | 'B';
   warnings: string[];

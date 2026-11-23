@@ -68,8 +68,8 @@ export const framing = (spec: EpisodeSpec, shot: Shot, w: World): Cam => {
 
 const EASES: Record<string, (p: number) => number> = {
   cut: () => 1,
-  punch: outCubic,
-  whip: inOut,
+  punch: inOutSine,
+  whip: inOutSine,
   follow: inOut,
   ease: inOut,
   pull_back: inOutSine,
@@ -83,7 +83,8 @@ const mix = (a: Cam, b: Cam, e: number): Cam => ({
 });
 
 const BREATH = 1.25; // seconds per re-framing during a long hold
-const BREATH_ZOOM = 1.16;
+// Long holds just drift now: the auto punch-ins read as jitter (her note).
+const BREATH_ZOOM = 1;
 
 type Cache = {fixed: Map<number, Cam>; start: Map<number, Cam>};
 const caches = new WeakMap<Timeline, Cache>();
@@ -134,7 +135,7 @@ const camInShot = (spec: EpisodeSpec, tl: Timeline, i: number, t: number, worldA
   const hold = t - holdStart;
   if (hold > 0) {
     const total = shot.t1 - holdStart;
-    let z = cam.z * (1 + 0.035 * hold);
+    let z = cam.z * (1 + 0.02 * hold);
     if (total > 1.5) {
       const k = Math.floor(hold / BREATH);
       const local = hold - k * BREATH;
@@ -142,7 +143,7 @@ const camInShot = (spec: EpisodeSpec, tl: Timeline, i: number, t: number, worldA
       const prev = k === 0 ? 1 : (k - 1) % 2 === 1 ? BREATH_ZOOM : 1;
       z *= lerp(prev, cur, inOut(clamp(local / 0.3)));
     }
-    const sway = Math.sin(hold * 1.1 + i * 1.7) * 8;
+    const sway = Math.sin(hold * 0.7 + i * 1.7) * 5;
     cam = {...cam, z, cx: cam.cx + sway / z};
   }
   return cam;
@@ -157,7 +158,7 @@ const impactAt = (tl: Timeline, t: number) => {
     const land = ev.t0 + ev.dur;
     const q = (t - land) / 0.3;
     if (q < 0 || q > 1) continue;
-    const a = 16 * (1 - q);
+    const a = 7 * (1 - q);
     x += Math.sin(q * Math.PI * 7) * a;
     y += Math.cos(q * Math.PI * 6) * a * 0.6;
     bump *= 1 + 0.04 * Math.sin(Math.PI * q) * (1 - q);
@@ -183,7 +184,8 @@ export const cameraAt = (spec: EpisodeSpec, tl: Timeline, t: number, worldAt: Wo
     tx: FRAME_W / 2 - cam.cx * z + imp.x,
     ty: cam.ay - cam.cy * z + imp.y,
     z,
-    blurX: bx > 3 ? Math.min(bx, 18) : 0,
-    blurY: by > 3 ? Math.min(by, 18) : 0,
+    // no motion blur: smooth moves read better than smeared ones
+    blurX: bx > 1e9 ? bx : 0,
+    blurY: by > 1e9 ? by : 0,
   };
 };

@@ -11,6 +11,7 @@ import type {State, World} from '../objects/core';
 import {baseTransform} from '../objects/core';
 import {OBJECTS} from '../objects/registry';
 import {Captions} from './Captions';
+import {Subtitles} from './Subtitles';
 import {useFonts} from './fonts';
 
 export const FLOOR_Y = 1300;
@@ -97,9 +98,16 @@ export const Episode: React.FC<{spec: EpisodeSpec}> = ({spec}) => {
           {layer('air')}
         </div>
       </div>
-      {/* a soft wash under the captions so dark UI or a passing object never fights the text */}
-      <div style={{position: 'absolute', left: 0, right: 0, top: 0, height: 540, background: 'linear-gradient(rgba(250,251,252,.9) 0,rgba(250,251,252,.78) 320px,rgba(250,251,252,0) 540px)'}} />
-      <Captions captions={tl.captions} t={t} />
+      {tl.subs.length ? (
+        // with a voiceover: spoken subtitles, no headings on top
+        <Subtitles subs={tl.subs} t={t} />
+      ) : (
+        <>
+          {/* a soft wash under the captions so dark UI or a passing object never fights the text */}
+          <div style={{position: 'absolute', left: 0, right: 0, top: 0, height: 540, background: 'linear-gradient(rgba(250,251,252,.9) 0,rgba(250,251,252,.78) 320px,rgba(250,251,252,0) 540px)'}} />
+          <Captions captions={tl.captions} t={t} />
+        </>
+      )}
       {spec.audio ? <Audio src={staticFile(spec.audio)} /> : null}
     </AbsoluteFill>
   );

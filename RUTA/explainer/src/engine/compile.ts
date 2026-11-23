@@ -6,7 +6,7 @@
 
 import {OBJECTS, verbFor} from '../objects/registry';
 import {alignWords} from './align';
-import type {ActionCall, Args, Beat, CaptionEv, EpisodeSpec, Ev, Part, PartTiming, Shot, ShotSpec, Timeline} from './types';
+import type {ActionCall, Args, Beat, CaptionEv, EpisodeSpec, Ev, Part, PartTiming, Shot, ShotSpec, SubEv, Timeline} from './types';
 
 export const FPS = 30;
 export const RATE = 2.5; // words per second of Ukrainian narration
@@ -17,13 +17,64 @@ export const SHOT_MAX = 1.6; // longer beats get auto "breath" re-framings in th
 const GAP = 0.12; // breath between parts
 const END_HOLD = 0.7; // the last frame state, so it ends on the result
 
-export const VIA: Record<string, number> = {cut: 0, punch: 0.2, whip: 0.32, follow: 0.45, ease: 0.5, pull_back: 0.62};
+// Calm on purpose: every move eases over half a second or more (her note: the fast whips read as seizing).
+export const VIA: Record<string, number> = {cut: 0, punch: 0.45, whip: 0.55, follow: 0.5, ease: 0.6, pull_back: 0.7};
 export const PRESETS = ['room', 'screen', 'input_close', 'object_punch', 'character_close', 'phone_dive'] as const;
 
 const WORD_RE = /[\p{L}\p{N}][\p{L}\p{N}'’ʼ-]*/gu;
 export const countWords = (s: string) => (s.match(WORD_RE) ?? []).length;
 const wordsOf = (s: string) => s.match(WORD_RE) ?? [];
 const LEAD = 0.12; // a part (and its caption) starts just before its first word
+
+// The voice reads product names phonetically; subtitles show them as written.
+const SUB_MAP: [RegExp, string][] = [
+  [/^Клод(а|у|і|ом)?$/i, 'Claude'],
+  [/^Фатом$/i, 'Fathom'],
+  [/^Баффер$/i, 'Buffer'],
+  [/^Ноуше?н(і|а|у)?$/i, 'Notion'],
+  [/^Канв(а|і|у|ою)$/i, 'Canva'],
+  [/^Клікап(і|у|а)?$/i, 'ClickUp'],
+];
+const SUB_BREAK = /^[\s»"]*[,.!?:;—…]/;
+
+const buildSubs = (spec: EpisodeSpec, parts: {part: Part}[], starts: number[], audioEnd: number): SubEv[] => {
+  const map = spec.subtitleMap ?? {};
+  const toks: {text: string; t: number; brk: boolean}[] = [];
+  let k = 0;
+  for (const {part} of parts) {
+    for (const m of part.vo.matchAll(WORD_RE)) {
+      const raw = m[0];
+      const after = part.vo.slice((m.index ?? 0) + raw.length);
+      let text = map[raw] ?? map[raw.toLowerCase()] ?? raw;
+      for (const [re, rep] of SUB_MAP) if (re.test(text)) text = rep;
+      const brk = SUB_BREAK.test(after) || after.trim() === '';
+      if (text) toks.push({text, t: starts[k], brk});
+      else if (brk && toks.length) toks[toks.length - 1].brk = true;
+      k++;
+    }
+  }
+  const subs: SubEv[] = [];
+  let cur: {text: string; t: number}[] = [];
+  const flush = () => {
+    if (cur.length) subs.push({t0: cur[0].t - 0.05, t1: 0, words: cur});
+    cur = [];
+  };
+  toks.forEach((w) => {
+    const len = cur.reduce((a, x) => a + x.text.length + 1, 0) + w.text.length;
+    // never leave a short word (в, з, і, на…) hanging at the end of a chunk
+    const lastShort = cur.length > 0 && cur[cur.length - 1].text.length <= 2;
+    if ((cur.length >= 3 || (cur.length && len > 18)) && !lastShort) flush();
+    cur.push({text: w.text, t: w.t});
+    if (w.brk) flush();
+  });
+  flush();
+  subs.forEach((sb, i) => {
+    const next = subs[i + 1]?.t0 ?? audioEnd;
+    // hold to the next chunk, but don't linger over a long pause
+    sb.t1 = Math.min(next, sb.words[sb.words.length - 1].t + 1.1);
+  });
+  return subs;
+};
 
 export type ParsedShot = {preset: string; target?: string; via: string; zoom: number; dx: number; dy: number};
 
@@ -129,10 +180,12 @@ export const compile = (spec: EpisodeSpec): Timeline => {
 
   // Mode B: every part starts on its first spoken word, beats share the part by weight
   let starts: number[] | null = null;
+  let wordStarts: number[] = [];
   let audioEnd = 0;
   if (spec.audio && spec.words?.length) {
     const specWords = parts.flatMap((fp) => wordsOf(fp.part.vo));
     const {starts: ws, coverage} = alignWords(specWords, spec.words);
+    wordStarts = ws;
     if (coverage < 0.8) warnings.push(`only ${Math.round(coverage * 100)}% of the script's words were found in the voiceover — check the text matches the audio`);
     starts = [];
     let k = 0;
@@ -205,5 +258,6 @@ export const compile = (spec: EpisodeSpec): Timeline => {
   if (!starts && (duration < TARGET[0] || duration > TARGET[1])) warnings.push(`estimated ${duration.toFixed(1)}s is outside the ${TARGET[0]}–${TARGET[1]}s target`);
   for (const o of spec.scene.objects) if (!OBJECTS[o.type]) warnings.push(`unknown object type "${o.type}"`);
 
-  return {fps: FPS, duration, frames: Math.ceil(duration * FPS), events, byObj, shots, captions, parts: timings, words, mode: starts ? 'B' : 'A', warnings};
+  const subs = starts ? buildSubs(spec, parts, wordStarts, audioEnd) : [];
+  return {fps: FPS, duration, frames: Math.ceil(duration * FPS), events, byObj, shots, captions, subs, parts: timings, words, mode: starts ? 'B' : 'A', warnings};
 };
