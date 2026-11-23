@@ -236,7 +236,7 @@ js(u'  shuffle(["#sb0", "#sb1"], [%.3f, %.3f], %.3f);' % (SH2[0][1], SH2[1][1], 
 g.sfx("pop", SH2[0][1]); g.sfx("pop", SH2[1][1])
 
 # 7 · HALF — the scheme: buttons and the agent in one chain -----------------------
-k0 = S(u"існувати", 72.43) - 0.15
+k0 = S(u"разом,", 74.86) - 0.75
 t_razom = S(u"разом,", 74.86)
 t_prosti, t_dani = S(u"прості", 78.00), S(u"базові", 79.34)
 t_aga, t_det = S(u"AI-агента,", 82.22), S(u"деталі", 83.82)
@@ -258,7 +258,7 @@ js(u'''
   under("s5", 615, 724, 995, {seed: 11, stroke: "#7A1424"});
   draw("s5", %(det).3f - .1);
   erase("s1", %(k1).3f); erase("s2", %(k1).3f); erase("s3", %(k1).3f); erase("s4", %(k1).3f); erase("s5", %(k1).3f);
-''' % {"a": k0 + 0.6, "b": k0 + 1.1, "razom": t_razom, "dani": t_dani, "det": t_det, "k1": k1})
+''' % {"a": k0 + 0.3, "b": k0 + 0.65, "razom": t_razom + .35, "dani": t_dani, "det": t_det, "k1": k1})
 g.sfx("whoosh-short", k0); g.sfx("click-soft", t_razom); g.sfx("click-soft", t_dani); g.sfx("click-soft", t_det)
 
 # 8 · CTA — the pill in the subtitle band ----------------------------------------
