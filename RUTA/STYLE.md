@@ -131,7 +131,8 @@ shape. None anywhere.
   lists, as an option"*): instead of a row/stack of chips, the items pass
   through ONE slot like cards — each rises in from below on its word as the
   previous leaves upward. Less space over her head, more motion. Kit:
-  `shuffle(["#a", "#b"], [t1, t2], end)` + `.glass.shuf` (tools/gstyle.py).
+  `shuffle(["#a", "#b"], [t1, t2], end)` + `.shuf` (tools/gstyle.py). Each item is a
+  plain white card — no glass around it (her note).
 - **CTA pill may sit in the subtitle band** (y ≈ 1404) once the blackout from
   its word frees it — keeps the space above her head for the list.
 - **ТЕСТ CTA** («якщо ти не впевнена… пиши ТЕСТ… я змонтую твоє відео») is cut

@@ -278,13 +278,15 @@ t_pyshy = S(u"пиши", 65.80)
 CH = [(u"малий і середній бізнес", t_mal - 0.1), (u"команда і менеджери", t_kom - 0.1),
       (u"багато заявок", S(u"багато", 63.37) - 0.1)]
 for i, (txt, _) in enumerate(CH):
-    F.append(u'        <div id="sh%d" class="glass shuf hid"><span class="chip"><i></i>%s</span></div>' % (i, txt))
+    F.append(u'        <div id="sh%d" class="shuf hid"><span class="chip"><i></i>%s</span></div>' % (i, txt))
 F.append(u'''        <div id="ctp" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:1404px;
              font-size:46px; padding:28px 56px">Пиши + в коментарях</div>''')
 EXTRA += u"""
-    .shuf { left: 0; right: 0; margin: auto; width: max-content; top: 330px; padding: 14px;
-            border-radius: 30px; transform-origin: 50% 100%; }
-    .shuf .chip { font-size: 40px; padding: 14px 26px; }
+    /* her note: just the white card, no glass around it */
+    .shuf { position: absolute; left: 0; right: 0; margin: auto; width: max-content; top: 340px;
+            transform-origin: 50% 100%; }
+    .shuf .chip { font-size: 40px; padding: 16px 28px; background: #fff; border-color: #fff;
+                  box-shadow: 0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.14); }
 """
 for i, (txt, t) in enumerate(CH):
     js(u'  tl.fromTo("#sh%d", {autoAlpha: 0, y: 90, scale: .92, rotationX: -35}, X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), %.3f);' % (i, t))

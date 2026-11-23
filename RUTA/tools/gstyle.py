@@ -113,9 +113,11 @@ CSS = """
              box-shadow: inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 1px rgba(255,255,255,.45),
                          0 12px 36px rgba(36,25,25,.16); }
     /* shuffle slot: one item at a time, centred above her head */
-    .shuf { left: 0; right: 0; margin: auto; width: max-content; top: 330px; padding: 14px;
-            border-radius: 30px; transform-origin: 50%% 100%%; }
-    .shuf .chip { font-size: 40px; padding: 14px 26px; }
+    /* her note: a plain white card, no glass around it */
+    .shuf { position: absolute; left: 0; right: 0; margin: auto; width: max-content; top: 340px;
+            transform-origin: 50%% 100%%; }
+    .shuf .chip { font-size: 40px; padding: 16px 28px; background: #fff; border-color: #fff;
+                  box-shadow: 0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.14); }
 
     /* §00.3.2 behind me */
     .big { position: absolute; left: 0; width: 1080px; text-align: center;
@@ -208,7 +210,7 @@ JS = r"""
   // shuffle (her idea on reel 61, 2026-11-23): a list through ONE slot, like
   // cards — each item rises in from below on its word, the last one leaves
   // upward as the next arrives. sels: ["#a", "#b", ...], times: their words,
-  // end: when the last one goes. Markup: '<div id="a" class="glass shuf hid">
+  // end: when the last one goes. Markup: '<div id="a" class="shuf hid">
   // <span class="chip"><i></i>…</span></div>' (any element works).
   function shuffle(sels, times, end) {
     sels.forEach(function (sel, i) {
