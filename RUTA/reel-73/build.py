@@ -29,7 +29,7 @@ def js(s):
 
 # 1 · BEHIND — «OpenRouter» on the question that opens the reel (her hook word)
 t0 = S(u"OpenRouter?", 1.6) - 0.1
-B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:450px; font-size:200px">OpenRouter</div>')
+B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:450px; font-size:165px">OpenRouter</div>')
 g.matte("b1", round(t0 - 0.1, 3), 2.9)
 js(u'  rise("#bw1", %.3f); sink("#bw1", %.3f);' % (t0, t0 + 2.6))
 g.sfx("whoosh-short", t0)
