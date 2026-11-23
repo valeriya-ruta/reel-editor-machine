@@ -20,3 +20,4 @@ Stopped mid-build: 57, 58, 59, 60, 62–72 — partial work is committed under
 Resume: a fresh session on `main`, `/reel` with `RUTA/BUILD-BRIEF.md`, one builder per
 reel; their RUTA dates are already shifted (+3 days); re-check the dates against
 today before scheduling, and the ТЕСТ cut-fixes for 60/66/71 are in place.
+| 58 | Mon 23 Nov | 21:00 | 21:30 | reels/REEL-58.mp4 | 6b04466b8a7a8742ba5a9c7b / 6b04466e6c8a622ab0eddc89 | — |

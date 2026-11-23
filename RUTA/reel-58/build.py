@@ -271,7 +271,8 @@ def hl(sel, t):
 
 
 def curto(t, x, y, d=.5):   # cursor, in page coordinates
-    js(u'  tl.to("#cur", {left: %d, top: %d, duration: %s, ease: "power2.inOut"}, %.3f);' % (x, y, d, t))
+    # a transform, not left/top (sub-pixel smooth; #cur rests at left/top 300)
+    js(u'  tl.to("#cur", {x: %d, y: %d, duration: %s, ease: "power2.inOut"}, %.3f);' % (x - 300, y - 300, d, t))
 
 
 WIDE = cam(400, 270, 1.24)

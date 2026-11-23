@@ -148,7 +148,7 @@ def ico(k, col):
 
 C.append(u"""
         <div id="stage">
-          <div id="win" class="app">
+          <div id="win" class="app" data-layout-allow-overlap data-layout-allow-overflow>
             <div class="a-h1" style="left:44px;top:52px">Добрий день, Рута</div>
             <div class="a-sub" style="left:44px;top:150px">Готова створювати?</div>
             <div class="a-ring" style="left:838px;top:58px">15</div>
@@ -198,6 +198,10 @@ C.append(u"""
           </div>
         </div>""" % {"home": ico("home", "#1F4FA3"), "cal": ico("cal", "#6b6b6b"),
                      "bars": ico("bars", "#6b6b6b"), "user": ico("user", "#6b6b6b")})
+# her real screen layers on purpose (the last card scrolls under the nav bar; the
+# 3D tilt projects rows over each other) — tell the layout check it is intended
+C[-1] = C[-1].replace(u'<div class="', u'<div data-layout-allow-overlap class="').replace(
+    u'<div id="', u'<div data-layout-allow-overlap id="').replace(u'<span class="', u'<span data-layout-allow-overlap class="')
 EXTRA += u"""
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
     #stage, #stage2 { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2600px; }
