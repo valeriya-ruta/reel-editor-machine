@@ -57,7 +57,8 @@ def cam(cx0, cy0, px, py, sc, cx=540, cy=760):
 
 P.append(u'<svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
 EXTRA = ui.CSS
-NOTION_MARK = mark("notion", 26)
+NOTION_MARK = mark("notion", 46)
+CLAUDE_MARK = mark("claude", 46)
 
 # 1 · BEHIND — «CRM», the cover frame -----------------------------------------
 t_crm, e_crm = S(u"CRM-системи,", 1.31), E(u"CRM-системи,", 1.31)
@@ -108,18 +109,21 @@ g.sfx("pop", t_vkl - 0.2); g.sfx("typing", t_pyshesh); g.sfx("click", t_reie)
 # 5 · FULL 1 — Claude, Customize -> Connectors -> Notion -> Connected ------------
 f0 = S(u"Другий", 31.57) - 0.15
 f1 = E(u"Клода.", 38.85) + 0.2
-C.append(ui.CLAUDE % {"notion": NOTION_MARK})
+C.append(ui.CLAUDE % {"notion": NOTION_MARK, "claude": CLAUDE_MARK})
 t_cust, t_conn, t_shuk, t_not, t_pidk = (S(u"Customize", 34.35), S(u"Connectors,", 35.15), S(u"шукаєш", 35.83),
                                          S(u"Notion", 36.55), S(u"підключаєш", 37.17))
-O1 = (400, 260)
-WIDE = (1.2,) + cam(*O1, px=400, py=260, sc=1.2)
-SIDE = (2.1,) + cam(*O1, px=260, py=150, sc=2.1)
-SRCH = (2.2,) + cam(*O1, px=500, py=170, sc=2.2)
-ROW = (2.5,) + cam(*O1, px=520, py=230, sc=2.5)
+# window 960 x 920 (~89 % of the width), body 32-36 px; wide = the whole
+# window, y 370-1290, above the caption band. Zooms: the sidebar's Customize
+# and the Notion row are deliberate close-ups; the search shot stays full width.
+O1 = (480, 460)
+WIDE = (1.0,) + cam(*O1, px=480, py=460, sc=1.0, cy=830)
+SIDE = (1.45,) + cam(*O1, px=240, py=412, sc=1.45, cx=420, cy=760)
+SRCH = (1.12,) + cam(*O1, px=480, py=300, sc=1.12, cy=680)
+ROW = (1.4,) + cam(*O1, px=640, py=370, sc=1.4, cx=560, cy=760)
 js(u"""
-  gsap.set("#win1", {transformOrigin: "400px 260px"});
+  gsap.set("#win1", {transformOrigin: "480px 460px"});
   gsap.set("#win1", {x: %(wx)s, y: %(wy)s + 220, scale: %(ws)s * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
-  tl.to("#win1", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.2, ease: "power3.out"}, %(f0).3f + .1);
+  tl.to("#win1", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 7, rotationY: -8, rotationZ: 2, duration: 1.2, ease: "power3.out"}, %(f0).3f + .1);
   tl.to("#win1", {x: %(sx)s, y: %(sy)s, scale: %(ss)s, rotationX: 4, rotationY: 7, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, %(cust).3f - .7);
   tl.to("#cl-cust", {backgroundColor: "#E6E2D8", duration: .25}, %(cust).3f);
   tl.to("#cl-conn", {color: "#1f1f1f", borderBottomColor: "#1f1f1f", duration: .25}, %(conn).3f);
@@ -133,7 +137,7 @@ js(u"""
   tl.to("#cl-btn .a", {autoAlpha: 0, y: -14, duration: .2}, %(pidk).3f);
   tl.fromTo("#cl-btn .b", {autoAlpha: 0, y: 14}, X({autoAlpha: 1, y: 0, duration: .3, ease: "back.out(2)"}), %(pidk).3f + .08);
   tl.fromTo("#cl-row", {boxShadow: "0 0 0 0 rgba(122,20,36,0)"}, X({boxShadow: "0 0 0 5px rgba(122,20,36,.18)", duration: .35, yoyo: true, repeat: 1}), %(pidk).3f + .1);
-  tl.to("#win1", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.1, ease: "power3.inOut"}, %(pidk).3f + .8);
+  tl.to("#win1", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 10, rotationY: 8, rotationZ: -1.5, duration: 1.1, ease: "power3.inOut"}, %(pidk).3f + .8);
   full(%(f0).3f, %(f1).3f);
   tl.set("#stage1", {autoAlpha: 0}, %(f1).3f + .9);
 """ % {"wx": WIDE[1], "wy": WIDE[2], "ws": WIDE[0], "sx": SIDE[1], "sy": SIDE[2], "ss": SIDE[0],
@@ -165,19 +169,20 @@ g0 = S(u"профіт.", 53.65) - 0.2
 t_got, t_sklad, e_lid = S(u"готова", 55.60), S(u"складатимуться", 57.16), E(u"ліди.", 58.50)
 g1 = e_lid + 0.1
 C.append(ui.NOTION % {"notion": NOTION_MARK, "rows": ui.notion_rows()})
-O2 = (430, 235)
-W2 = (1.22,) + cam(*O2, px=430, py=235, sc=1.15)
-ST = (1.45,) + cam(*O2, px=400, py=290, sc=1.45)
+# window 960 x 860, rows 34 px; wide y 400-1260; the close-up keeps full width
+O2 = (480, 430)
+W2 = (1.0,) + cam(*O2, px=480, py=430, sc=1.0, cy=830)
+ST = (1.12,) + cam(*O2, px=480, py=600, sc=1.12, cy=860)
 js(u"""
-  gsap.set("#win2", {transformOrigin: "430px 235px"});
+  gsap.set("#win2", {transformOrigin: "480px 430px"});
   gsap.set("#stage2", {autoAlpha: 0}); tl.set("#stage2", {autoAlpha: 1}, %(g0).3f - .05);
   gsap.set("#win2", {x: %(wx)s, y: %(wy)s + 240, scale: %(ws)s * .85, rotationX: 26, rotationY: 18, rotationZ: -5});
-  tl.to("#win2", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 9, rotationY: 12, rotationZ: -2, duration: 1.2, ease: "power3.out"}, %(g0).3f + .1);
+  tl.to("#win2", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 7, rotationY: 8, rotationZ: -2, duration: 1.2, ease: "power3.out"}, %(g0).3f + .1);
   tl.fromTo(["#nr0", "#nr1", "#nr2"], {autoAlpha: 0, y: 14}, X({autoAlpha: 1, y: 0, duration: .35, stagger: .12, ease: "power2.out"}), %(g0).3f + .45);
   tl.to("#win2", {x: %(sx)s, y: %(sy)s, scale: %(ss)s, rotationX: 3, rotationY: -6, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, %(got).3f - .6);
   tl.fromTo("#nr3", {autoAlpha: 0, y: -24, backgroundColor: "rgba(122,20,36,.10)"}, X({autoAlpha: 1, y: 0, duration: .45, ease: "back.out(1.6)"}), %(sk).3f);
   tl.to("#nr3", {backgroundColor: "rgba(122,20,36,0)", duration: .8}, %(sk).3f + .6);
-  tl.to("#win2", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 8, rotationY: -12, rotationZ: 2, duration: 1.1, ease: "power3.inOut"}, %(sk).3f + .6);
+  tl.to("#win2", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 8, rotationY: -8, rotationZ: 1.5, duration: 1.1, ease: "power3.inOut"}, %(sk).3f + .6);
   full(%(g0).3f, %(g1).3f);
 """ % {"wx": W2[1], "wy": W2[2], "ws": W2[0], "sx": ST[1], "sy": ST[2], "ss": ST[0],
        "g0": g0, "g1": g1, "got": t_got, "sk": t_sklad})

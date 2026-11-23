@@ -12,12 +12,12 @@ heading 3 → cost categories through the slot (words only) → glass «Фінп
 |---|---|---|
 | 0.1–3.6 | behind | «Claude» (cover word) |
 | 6.35–8.4 | slot | ① AI-монтаж |
-| 8.7–15.0 | full | Claude Code 3D window: zoom to todos, склейка / субтитри / рілси tick on their words |
+| 8.7–15.0 | full | Claude Code terminal 980×1000 (y 330–1330, text 34–38 px): «Skill(монтаж)» on «скіл», todos on «робить», zoom ×1.55 into todos, склейка / субтитри / рілси tick on their words, zoom out |
 | 17.51–18.71 | meme r | 01 «ЦИТЬ» |
 | 20.3–21.8 | behind | «CapCut» |
 | 21.9–27.0 | half | scheme Claude → CapCut |
 | 29.9–34.4 | slot | ② бриф → сценарій і шот-лист |
-| 34.85–43.3 | full | Drive folder, «Шот-лист» on «кладе»; phone with the shot list on «зйомці», rows tick on «нічого не забути» |
+| 34.85–43.6 | full | Drive 980×740 (text ≥ 30 px), zoom ×1.4 into «Проєкт», «Шот-лист» lands on «кладе»; phone 600×1080 with the shot list on «зйомці», rows tick on «нічого не забути» |
 | 43.6–47.5 | slot | ③ фінплан на проєкт |
 | 47.6–53.0 | slot | техніка / дорога / асистент / передоплата / податок ФОП / скільки лишається тобі |
 | 53.13–54.23 | meme r | 14 shocked cat |

@@ -142,53 +142,56 @@
               align-items: flex-end; justify-content: flex-start; }
 
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
-    .stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
-    .win { position: absolute; left: 0; top: 0; background: #fff; border-radius: 16px;
+    .stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2400px; }
+    .win { position: absolute; left: 0; top: 0; background: #fff; border-radius: 36px;
            font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
            box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
-           transform-origin: 0 0; will-change: transform; }
-    /* Claude, Customize -> Connectors (800 x 520) */
-    #win1 { width: 800px; height: 520px; background: #FAF9F5; display: flex; }
-    .cl-side { width: 190px; background: #F3F1EA; padding: 20px 14px; border-right: 1px solid #E6E2D8; }
-    .cl-brand { font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 22px; }
-    .cl-star { color: #C15F3C; font-size: 20px; }
-    .cl-nav { font-size: 14px; color: #3d3929; padding: 9px 10px; border-radius: 8px; margin-bottom: 2px; }
-    .cl-main { flex: 1; padding: 26px 30px; }
-    .cl-h { font-size: 24px; font-weight: 700; margin-bottom: 14px; }
-    .cl-tabs { display: flex; gap: 22px; font-size: 14px; color: #73716a; border-bottom: 1px solid #E6E2D8; margin-bottom: 18px; }
-    .cl-tabs span { padding: 0 2px 10px; border-bottom: 2px solid transparent; }
-    .cl-search { height: 38px; border: 1px solid #DAD6CB; border-radius: 10px; background: #fff; display: flex;
-                 align-items: center; gap: 10px; padding: 0 12px; font-size: 15px; margin-bottom: 14px; }
-    .cl-mag { width: 13px; height: 13px; border: 2px solid #8a877d; border-radius: 50%; flex: none; }
-    .caret { display: inline-block; width: 2px; height: 18px; background: #1f1f1f; margin-left: -8px; }
-    .cl-row { height: 64px; border: 1px solid #E6E2D8; border-radius: 12px; background: #fff; display: flex;
-              align-items: center; gap: 14px; padding: 0 14px; margin-bottom: 10px; }
+           will-change: transform; }
+    /* Claude, Customize -> Connectors (960 x 920) */
+    #win1 { width: 960px; height: 920px; background: #FAF9F5; display: flex; }
+    .cl-side { width: 290px; background: #F3F1EA; padding: 40px 22px; border-right: 2px solid #E6E2D8; box-sizing: border-box; }
+    .cl-brand { font-size: 42px; font-weight: 700; display: flex; align-items: center; gap: 14px; margin: 0 0 40px 14px; }
+    .cl-brand .mark { color: #7A1424; fill: currentColor; }
+    .cl-nav { font-size: 32px; color: #3d3929; padding: 18px 18px; border-radius: 16px; margin-bottom: 6px; }
+    .cl-main { flex: 1; padding: 44px 40px; box-sizing: border-box; }
+    .cl-h { font-size: 52px; font-weight: 700; margin-bottom: 22px; }
+    .cl-tabs { display: flex; gap: 36px; font-size: 32px; color: #73716a; border-bottom: 2px solid #E6E2D8; margin-bottom: 28px; }
+    .cl-tabs span { padding: 0 2px 16px; border-bottom: 4px solid transparent; }
+    .cl-search { height: 84px; border: 2px solid #DAD6CB; border-radius: 20px; background: #fff; display: flex;
+                 align-items: center; gap: 18px; padding: 0 24px; font-size: 34px; margin-bottom: 24px; box-sizing: border-box; }
+    .cl-mag { width: 24px; height: 24px; border: 4px solid #8a877d; border-radius: 50%; flex: none; }
+    .caret { display: inline-block; width: 3px; height: 38px; background: #1f1f1f; margin-left: -14px; }
+    .cl-row { height: 120px; border: 2px solid #E6E2D8; border-radius: 22px; background: #fff; display: flex;
+              align-items: center; gap: 20px; padding: 0 22px; margin-bottom: 16px; box-sizing: border-box; }
     .cl-row.ghost { opacity: .45; }
-    .cl-logo { width: 38px; height: 38px; border-radius: 9px; border: 1px solid #E6E2D8; display: flex;
-               align-items: center; justify-content: center; color: #1f1f1f; flex: none; }
+    .cl-logo { width: 72px; height: 72px; border-radius: 16px; border: 2px solid #E6E2D8; display: flex;
+               align-items: center; justify-content: center; color: #1f1f1f; flex: none; box-sizing: border-box; }
+    .cl-logo .mark { fill: currentColor; }
     .cl-logo.g { background: #EFEDE6; }
-    .cl-txt { flex: 1; } .cl-txt b { display: block; font-size: 15px; } .cl-txt span { font-size: 12px; color: #73716a; }
-    .cl-btn { position: relative; width: 118px; height: 32px; border-radius: 8px; background: #1f1f1f; color: #fff;
-              font-size: 13px; font-weight: 500; overflow: hidden; flex: none; }
+    .cl-txt { flex: 1; } .cl-txt b { display: block; font-size: 36px; font-weight: 500; }
+    .cl-btn { position: relative; width: 200px; height: 68px; border-radius: 16px; background: #1f1f1f; color: #fff;
+              font-size: 30px; font-weight: 500; overflow: hidden; flex: none; }
     .cl-btn.off { background: #EFEDE6; color: #73716a; }
-    .cl-btn span { position: absolute; left: 0; right: 0; top: 0; line-height: 32px; text-align: center; }
+    .cl-btn span { position: absolute; left: 0; right: 0; top: 0; line-height: 68px; text-align: center; white-space: nowrap; }
     .cl-btn .b { opacity: 0; color: #1f1f1f; }
-    /* Notion database (860 x 470) */
-    #win2 { width: 860px; height: 470px; padding: 0 0 20px; }
-    .nt-top { height: 40px; display: flex; align-items: center; gap: 8px; padding: 0 16px; font-size: 13px; color: #37352f;
-              border-bottom: 1px solid #EDECE9; }
-    .nt-ic { display: inline-flex; color: #37352f; }
-    .nt-title { font-size: 36px; font-weight: 700; color: #37352f; padding: 26px 40px 10px; }
-    .nt-views { display: flex; gap: 18px; padding: 0 40px; font-size: 13px; color: #9b9a97; border-bottom: 1px solid #EDECE9; }
-    .nt-views span { padding-bottom: 8px; } .nt-views .on { color: #37352f; border-bottom: 2px solid #37352f; }
-    .nt-table { padding: 0 40px; }
-    .nt-r { display: flex; height: 50px; align-items: center; border-bottom: 1px solid #EDECE9; font-size: 15px; color: #37352f; }
-    .nt-hd { height: 38px; font-size: 13px; color: #9b9a97; }
-    .nt-r span { padding: 0 10px; white-space: nowrap; overflow: hidden; }
-    .nt-r .c1 { width: 220px; font-weight: 500; } .nt-r .c2 { width: 140px; } .nt-r .c3 { width: 160px; } .nt-r .c4 { flex: 1; color: #6b6964; }
-    .nt-hd .c1 { font-weight: 400; }
-    .nt-r em { font-style: normal; font-size: 13px; border-radius: 5px; padding: 3px 9px; }
-    em.s1 { background: #F4DFDF; color: #7A1424; } em.s2 { background: #F5EBDD; color: #6b4a1c; } em.s3 { background: #E4EEE7; color: #2d5a3c; }
+    /* Notion database (960 x 860) */
+    #win2 { width: 960px; height: 860px; }
+    .nt-top { height: 80px; display: flex; align-items: center; gap: 14px; padding: 0 30px; font-size: 28px; color: #37352f;
+              border-bottom: 2px solid #EDECE9; }
+    .nt-ic { display: inline-flex; color: #37352f; } .nt-ic .mark { fill: currentColor; }
+    .nt-sh { margin-left: auto; color: #787774; }
+    .nt-title { font-size: 76px; font-weight: 700; color: #37352f; padding: 44px 50px 18px; }
+    .nt-views { display: flex; gap: 34px; padding: 0 50px; font-size: 28px; color: #9b9a97; border-bottom: 2px solid #EDECE9; }
+    .nt-views span { padding-bottom: 14px; } .nt-views .on { color: #37352f; border-bottom: 4px solid #37352f; }
+    .nt-table { padding: 0 50px; }
+    .nt-r { display: flex; height: 100px; align-items: center; border-bottom: 2px solid #EDECE9; font-size: 34px; color: #37352f; }
+    .nt-hd { height: 74px; font-size: 28px; color: #9b9a97; }
+    .nt-new { height: 84px; font-size: 28px; color: #9b9a97; border-bottom: none; }
+    .nt-r span { padding: 0 14px; white-space: nowrap; overflow: hidden; }
+    .nt-r .c1 { width: 330px; font-weight: 500; } .nt-r .c2 { width: 230px; } .nt-r .c3 { flex: 1; }
+    .nt-hd .c1, .nt-new .c1 { font-weight: 400; }
+    .nt-r em { font-style: normal; font-size: 30px; border-radius: 10px; padding: 6px 18px; }
+    em.s1 { background: #F4DFDF; color: #7A1424; } em.s3 { background: #7A1424; color: #fff; }
 
     /* above me */
     .tab { left: 140px; top: 310px; width: 800px; padding: 18px 22px 22px; }
@@ -202,7 +205,7 @@
     .ask { left: 120px; top: 300px; width: 840px; padding: 24px 28px; }
     .ask .who { display: flex; align-items: center; gap: 10px; font-size: 24px; color: #574142; margin-bottom: 12px; }
     .ask .who .st { color: #C15F3C; font-size: 28px; }
-    .ask .in { background: rgba(255,255,255,.95); border-radius: 22px; padding: 16px 22px; font-size: 28px; line-height: 1.32;
+    .ask .in { background: rgba(255,255,255,.95); border-radius: 22px; padding: 16px 22px; font-size: 30px; line-height: 1.3;
                color: #241919; min-height: 128px; position: relative; }
     .ask .send { position: absolute; right: 16px; bottom: 14px; width: 48px; height: 48px; border-radius: 14px;
                  background: #DEBFBF; color: #fff; font-size: 28px; text-align: center; line-height: 48px; }
@@ -275,10 +278,10 @@
         <div id="stage1" class="stage">
           <div id="win1" class="win">
             <div class="cl-side">
-              <div class="cl-brand"><span class="cl-star">✳</span>Claude</div>
-              <div class="cl-nav">Новий чат</div>
-              <div class="cl-nav">Чати</div>
-              <div class="cl-nav">Проєкти</div>
+              <div class="cl-brand"><svg class="mark" width="46" height="46" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg><span>Claude</span></div>
+              <div class="cl-nav">New chat</div>
+              <div class="cl-nav">Chats</div>
+              <div class="cl-nav">Projects</div>
               <div id="cl-cust" class="cl-nav">Customize</div>
             </div>
             <div class="cl-main">
@@ -286,27 +289,29 @@
               <div class="cl-tabs"><span>Skills</span><span id="cl-conn">Connectors</span></div>
               <div id="cl-search" class="cl-search"><span class="cl-mag"></span><span id="cl-q"></span><span id="cl-caret" class="caret"></span></div>
               <div id="cl-row" class="cl-row">
-                <div class="cl-logo"><svg class="mark" width="26" height="26" viewBox="0 0 24 24"><path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z"/></svg></div>
-                <div class="cl-txt"><b>Notion</b><span>Сторінки, бази даних, нотатки</span></div>
+                <div class="cl-logo"><svg class="mark" width="46" height="46" viewBox="0 0 24 24"><path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z"/></svg></div>
+                <div class="cl-txt"><b>Notion</b></div>
                 <div id="cl-btn" class="cl-btn"><span class="a">Connect</span><span class="b">✓ Connected</span></div>
               </div>
-              <div class="cl-row ghost"><div class="cl-logo g"></div><div class="cl-txt"><b>Google Drive</b><span>Файли та документи</span></div><div class="cl-btn off"><span class="a">Connect</span></div></div>
-              <div class="cl-row ghost"><div class="cl-logo g"></div><div class="cl-txt"><b>Gmail</b><span>Пошта</span></div><div class="cl-btn off"><span class="a">Connect</span></div></div>
+              <div class="cl-row ghost"><div class="cl-logo g"></div><div class="cl-txt"><b>Google Drive</b></div><div class="cl-btn off"><span class="a">Connect</span></div></div>
+              <div class="cl-row ghost"><div class="cl-logo g"></div><div class="cl-txt"><b>Gmail</b></div><div class="cl-btn off"><span class="a">Connect</span></div></div>
+              <div class="cl-row ghost"><div class="cl-logo g"></div><div class="cl-txt"><b>Calendar</b></div><div class="cl-btn off"><span class="a">Connect</span></div></div>
             </div>
           </div>
         </div>
 
         <div id="stage2" class="stage">
           <div id="win2" class="win nt">
-            <div class="nt-top"><span class="nt-ic"><svg class="mark" width="26" height="26" viewBox="0 0 24 24"><path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z"/></svg></span>CRM</div>
+            <div class="nt-top"><span class="nt-ic"><svg class="mark" width="46" height="46" viewBox="0 0 24 24"><path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z"/></svg></span>CRM<span class="nt-sh">Share</span></div>
             <div class="nt-title">CRM</div>
-            <div class="nt-views"><span class="on">▦ Усі ліди</span><span>Дошка</span></div>
+            <div class="nt-views"><span class="on">▦ Table</span><span>Board</span></div>
             <div class="nt-table">
-              <div class="nt-r nt-hd"><span class="c1">Aa Ім'я</span><span class="c2">Звідки</span><span class="c3">Статус</span><span class="c4">Наступний крок</span></div>
-              <div id="nr0" class="nt-r"><span class="c1">Ліда (приклад)</span><span class="c2">Instagram</span><span class="c3"><em class="s1">Новий лід</em></span><span class="c4">Відповісти в DM</span></div>
-              <div id="nr1" class="nt-r"><span class="c1">Олег (приклад)</span><span class="c2">Telegram</span><span class="c3"><em class="s2">Дзвінок</em></span><span class="c4">Дзвінок у четвер</span></div>
-              <div id="nr2" class="nt-r"><span class="c1">Марта (приклад)</span><span class="c2">Сайт</span><span class="c3"><em class="s3">Клієнт</em></span><span class="c4">Повторна покупка</span></div>
-              <div id="nr3" class="nt-r hid"><span class="c1">Ірина (приклад)</span><span class="c2">Instagram</span><span class="c3"><em class="s1">Новий лід</em></span><span class="c4">Написати</span></div>
+              <div class="nt-r nt-hd"><span class="c1">Aa Ім'я</span><span class="c2">Звідки</span><span class="c3">Статус</span></div>
+              <div id="nr0" class="nt-r"><span class="c1">Клієнтка 1</span><span class="c2">Instagram</span><span class="c3"><em class="s3">Клієнт</em></span></div>
+              <div id="nr1" class="nt-r"><span class="c1">Клієнтка 2</span><span class="c2">Сайт</span><span class="c3"><em class="s3">Клієнт</em></span></div>
+              <div id="nr2" class="nt-r"><span class="c1">Клієнтка 3</span><span class="c2">Telegram</span><span class="c3"><em class="s1">Лід</em></span></div>
+              <div id="nr3" class="nt-r hid"><span class="c1">Клієнтка 4</span><span class="c2">Instagram</span><span class="c3"><em class="s1">Новий лід</em></span></div>
+              <div class="nt-r nt-new"><span class="c1">+ New</span></div>
             </div>
           </div>
         </div>
@@ -940,23 +945,23 @@
   tl.set("#url", {textContent: "notion.com"}, 29.647);
   pop("#sgn", 30.852); sink("#tb", 31.367);
 
-  gsap.set("#win1", {transformOrigin: "400px 260px"});
-  gsap.set("#win1", {x: 140.0, y: 500.0 + 220, scale: 1.2 * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
-  tl.to("#win1", {x: 140.0, y: 500.0, scale: 1.2, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.2, ease: "power3.out"}, 31.417 + .1);
-  tl.to("#win1", {x: 434.0, y: 731.0, scale: 2.1, rotationX: 4, rotationY: 7, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, 34.353 - .7);
+  gsap.set("#win1", {transformOrigin: "480px 460px"});
+  gsap.set("#win1", {x: 60.0, y: 370.0 + 220, scale: 1.0 * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
+  tl.to("#win1", {x: 60.0, y: 370.0, scale: 1.0, rotationX: 7, rotationY: -8, rotationZ: 2, duration: 1.2, ease: "power3.out"}, 31.417 + .1);
+  tl.to("#win1", {x: 288.0, y: 369.6, scale: 1.45, rotationX: 4, rotationY: 7, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, 34.353 - .7);
   tl.to("#cl-cust", {backgroundColor: "#E6E2D8", duration: .25}, 34.353);
   tl.to("#cl-conn", {color: "#1f1f1f", borderBottomColor: "#1f1f1f", duration: .25}, 35.153);
-  tl.to("#win1", {x: -80.0, y: 698.0, scale: 2.2, rotationX: -2, rotationY: -6, duration: 1.0, ease: "power3.inOut"}, 35.833 - .5);
+  tl.to("#win1", {x: 60.0, y: 399.2, scale: 1.12, rotationX: -2, rotationY: -6, duration: 1.0, ease: "power3.inOut"}, 35.833 - .5);
   tl.to("#cl-search", {borderColor: "#1f1f1f", duration: .2}, 35.833);
   tl.set("#cl-q", {textContent: "N"}, 36.552); tl.set("#cl-q", {textContent: "No"}, 36.552 + .06);
   tl.set("#cl-q", {textContent: "Not"}, 36.552 + .12); tl.set("#cl-q", {textContent: "Noti"}, 36.552 + .18);
   tl.set("#cl-q", {textContent: "Notio"}, 36.552 + .24); tl.set("#cl-q", {textContent: "Notion"}, 36.552 + .30);
-  tl.to("#win1", {x: -160.0, y: 575.0, scale: 2.5, rotationX: 2, rotationY: 5, duration: .8, ease: "power3.inOut"}, 37.172 - .55);
+  tl.to("#win1", {x: -144.0, y: 426.0, scale: 1.4, rotationX: 2, rotationY: 5, duration: .8, ease: "power3.inOut"}, 37.172 - .55);
   tl.to("#cl-btn", {backgroundColor: "#E4EEE7", duration: .25}, 37.172);
   tl.to("#cl-btn .a", {autoAlpha: 0, y: -14, duration: .2}, 37.172);
   tl.fromTo("#cl-btn .b", {autoAlpha: 0, y: 14}, X({autoAlpha: 1, y: 0, duration: .3, ease: "back.out(2)"}), 37.172 + .08);
   tl.fromTo("#cl-row", {boxShadow: "0 0 0 0 rgba(122,20,36,0)"}, X({boxShadow: "0 0 0 5px rgba(122,20,36,.18)", duration: .35, yoyo: true, repeat: 1}), 37.172 + .1);
-  tl.to("#win1", {x: 140.0, y: 500.0, scale: 1.2, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.1, ease: "power3.inOut"}, 37.172 + .8);
+  tl.to("#win1", {x: 60.0, y: 370.0, scale: 1.0, rotationX: 10, rotationY: 8, rotationZ: -1.5, duration: 1.1, ease: "power3.inOut"}, 37.172 + .8);
   full(31.417, 39.448);
   tl.set("#stage1", {autoAlpha: 0}, 39.448 + .9);
 
@@ -994,15 +999,15 @@
   tl.to("#snd", {backgroundColor: "#7A1424", scale: 1.15, duration: .2, yoyo: true, repeat: 1}, 53.033);
   sink("#ask", 53.362);
 
-  gsap.set("#win2", {transformOrigin: "430px 235px"});
+  gsap.set("#win2", {transformOrigin: "480px 430px"});
   gsap.set("#stage2", {autoAlpha: 0}); tl.set("#stage2", {autoAlpha: 1}, 53.452 - .05);
-  gsap.set("#win2", {x: 110.0, y: 525.0 + 240, scale: 1.22 * .85, rotationX: 26, rotationY: 18, rotationZ: -5});
-  tl.to("#win2", {x: 110.0, y: 525.0, scale: 1.22, rotationX: 9, rotationY: 12, rotationZ: -2, duration: 1.2, ease: "power3.out"}, 53.452 + .1);
+  gsap.set("#win2", {x: 60.0, y: 400.0 + 240, scale: 1.0 * .85, rotationX: 26, rotationY: 18, rotationZ: -5});
+  tl.to("#win2", {x: 60.0, y: 400.0, scale: 1.0, rotationX: 7, rotationY: 8, rotationZ: -2, duration: 1.2, ease: "power3.out"}, 53.452 + .1);
   tl.fromTo(["#nr0", "#nr1", "#nr2"], {autoAlpha: 0, y: 14}, X({autoAlpha: 1, y: 0, duration: .35, stagger: .12, ease: "power2.out"}), 53.452 + .45);
-  tl.to("#win2", {x: 153.5, y: 445.2, scale: 1.45, rotationX: 3, rotationY: -6, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, 55.603 - .6);
+  tl.to("#win2", {x: 60.0, y: 239.6, scale: 1.12, rotationX: 3, rotationY: -6, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, 55.603 - .6);
   tl.fromTo("#nr3", {autoAlpha: 0, y: -24, backgroundColor: "rgba(122,20,36,.10)"}, X({autoAlpha: 1, y: 0, duration: .45, ease: "back.out(1.6)"}), 57.163);
   tl.to("#nr3", {backgroundColor: "rgba(122,20,36,0)", duration: .8}, 57.163 + .6);
-  tl.to("#win2", {x: 110.0, y: 525.0, scale: 1.22, rotationX: 8, rotationY: -12, rotationZ: 2, duration: 1.1, ease: "power3.inOut"}, 57.163 + .6);
+  tl.to("#win2", {x: 60.0, y: 400.0, scale: 1.0, rotationX: 8, rotationY: -8, rotationZ: 1.5, duration: 1.1, ease: "power3.inOut"}, 57.163 + .6);
   full(53.452, 58.982);
 
 
