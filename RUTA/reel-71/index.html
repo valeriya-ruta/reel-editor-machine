@@ -125,6 +125,22 @@
                opacity: 0; }
     .cap .kt { position: relative; }
 
+    /* comic-relief memes (assets/memes/MEMES.md). Her note 2026-11-23: no plaque,
+       no frame, no glass card — the image is slapped straight onto the reel, in
+       the zones she marked, so her face and the captions stay readable:
+         c / top  the band above her head (y 40-520, full width)
+         r        beside her head on the right (x 740-1060, y 550-1310)
+         l        low left, over her shoulder (x 40-460, y 1140-1370)
+       A pair = two slots at the same t (top + r, or l + r). */
+    .meme { position: absolute; display: flex; }
+    .meme img { display: block; max-width: 100%; max-height: 100%; }
+    .meme.c, .meme.top { left: 60px; top: 40px; width: 960px; height: 480px;
+                         align-items: center; justify-content: center; }
+    .meme.r { left: 740px; top: 550px; width: 320px; height: 760px;
+              align-items: center; justify-content: flex-end; }
+    .meme.l { left: 40px; top: 1140px; width: 420px; height: 230px;
+              align-items: flex-end; justify-content: flex-start; }
+
     .tcard { left: 0; right: 0; margin: auto; width: max-content; top: 330px; padding: 30px 56px;
              display: flex; align-items: center; gap: 30px; }
     .tcard .num { font-size: 120px; position: relative; }
@@ -191,6 +207,9 @@
         <div id="sh1" class="shuf hid"><span class="chip"><i></i>швидше, ніж чекати монтажера</span></div>
         <div id="sh2" class="shuf hid"><span class="chip"><i></i>безкоштовно</span></div>
         <div id="sh3" class="shuf hid"><span class="chip"><i></i>лише підписка на Клод</span></div>
+        <div id="mm1" class="meme top hid"><img src="assets/memes/30-old-man-nikhuia-sobi.jpg"></div>
+        <div id="mm2" class="meme r hid"><img src="assets/memes/35-hamster-sunglasses.jpg"></div>
+        <div id="mm3" class="meme top hid"><img src="assets/memes/59-cockatiel-alividerchi.jpg"></div>
       </div>
       <div id="cover">
 
@@ -898,6 +917,12 @@
   tl.to("#ph", {rotationX: 10, rotationY: 14, rotationZ: -2, y: 390.0 - 30, duration: 2.6, ease: "sine.inOut"}, 68.427 - .4);
   full(59.133, 71.037);
 
+  tl.fromTo("#mm1", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 43.448);
+  tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 44.468);
+  tl.fromTo("#mm2", {autoAlpha: 0, scale: .72, rotation: -3.5}, X({autoAlpha: 1, scale: 1, rotation: 1.5, duration: .28, ease: POP}), 49.189);
+  tl.to("#mm2", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 50.209);
+  tl.fromTo("#mm3", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 72.682);
+  tl.to("#mm3", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 73.702);
   half(24.048, 31.000);
   half(33.383, 43.398);
 

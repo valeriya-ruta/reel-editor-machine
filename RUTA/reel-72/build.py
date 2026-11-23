@@ -33,8 +33,17 @@ exec(open(os.path.join(HERE, "fix.py"), encoding="utf-8").read())
 CAPS = load_caps(NN, FIX)
 W = Words(CAPS)
 S, E = W.s, W.e
+g.cta_start = S(u"Якщо", 91.87)     # the CTA line's first word: no meme from here on
+
+# MEMES (her rule 2026-11-23: comic relief, after the beat lands; MEMES.md)
+F_M, J_M = [], []
+# 51 Shrek side-look: "they all just added AI and raised the price" -> you know what I mean
+g.meme(F_M, J_M, "51", round(E(u"ціну.", 8.8) + 0.1, 3), dur=1.2, slot="top")
+# 01 ЦИТЬ: "we don't need the bot to add anything of its own, right?" -> shh, bot
+g.meme(F_M, J_M, "01", round(E(u"правильно?", 40.1) + 0.1, 3), dur=1.2, slot="l")
 
 B, P, F, C, J = [], [], [], [], []
+F += F_M; J += J_M
 BLACKOUT, PLACE, HALF = [], [], []
 
 
@@ -85,7 +94,7 @@ BLACKOUT.append((0.0, E(u"AI-агент", 0.53) + 0.02))
 
 # 2 · BEHIND — «хардкод-бот» ----------------------------------------------------
 t_hk, e_hk = S(u"хардкод-бот.", 16.63), E(u"хардкод-бот.", 16.63)
-B.append(u'        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:540px; font-size:180px">хардкод-бот</div>')
+B.append(u'        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:560px; font-size:150px">хардкод-бот</div>')
 g.matte("b2", round(t_hk - 0.6, 3), round(e_hk - t_hk + 1.3, 3))
 js(u'  rise("#bw2", %.3f); sink("#bw2", %.3f);' % (t_hk - 0.3, e_hk + 0.35))
 g.sfx("whoosh-short", t_hk - 0.3)

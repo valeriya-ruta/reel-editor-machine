@@ -35,7 +35,7 @@ FIX = {
     u"По": u"По-перше,", u"Перше": None, u"звичайна": u"звичайні", u"картинка.": u"картки", u"таки": None,
     u"квісла.": u"Quizlet.", u"сет,": u"сет", u"впізлят.": u"в Quizlet.",
     (u"а", 28.5): u"А", u"Notion": u"Notion,",
-    u"зробити": u"зробити,", (u"це", 45.2): u"Це", u"чотверте,": u"четверте,",
+    (u"урок,", 27.2): u"урок", u"зробити": u"зробити,", (u"це", 45.2): u"Це", u"чотверте,": u"четверте,",
     u"колодом": u"Claude", (u"в", 51.4): None, u"шкалу,": u"шкалу.",
     u"в Сенпусі": u"в SendPulse", u"коду,": u"коду.",
     u"Сьоромся": u"CRM-систему.", u"з того.": None, u"Це": u"це",
@@ -52,6 +52,9 @@ BLACKOUT, PLACE, HALF = [], [], []
 
 def js(s):
     J.append(s)
+
+
+g.cta_start = S(u"Тому", 61.87)    # the CTA line «Тому обов'язково збережи…»: no meme from here
 
 
 P.append(u'<svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
@@ -229,6 +232,11 @@ js(u'''
 g.sfx("whoosh-short", k0); g.sfx("click-soft", t_cl2); g.sfx("click-soft", t_pom); g.sfx("click-soft", t_not)
 g.sfx("pencil", t_lah - 0.3)
 
+# 4b · MEME — «перевірку я б… не віддавала повністю Клоду» -> 13, the paw: «stop».
+# Her line is a firm no; the paw says it. Clear stretch: list card 3 left at
+# «Саму»+0.4, the checklist rises on «організовувати».
+g.meme(F, J, "13", E(u"Клоду,", 38.02) + 0.1, dur=1.0, slot="r")
+
 # 5 · ABOVE — a glass homework checklist: ticks, and the one nobody should miss ---------
 t_org, t_maks, t_vytr, t_mozh = S(u"організовувати", 39.55), S(u"максимально", 41.64), S(u"витрачала", 43.69), S(u"можна.", 45.70)
 F.append(u'''
@@ -260,8 +268,8 @@ js(u'''
   tl.to("#e3", {opacity: 1, duration: .25}, %(vytr)s);
   tl.to("#r3", {keyframes: {x: [0, -8, 7, -4, 2, 0]}, duration: .35, ease: "none"}, %(vytr)s + .1);
   sink("#hw", %(out)s);
-''' % {"org": "%.3f" % (t_org - 0.2), "maks": "%.3f" % t_maks, "vytr": "%.3f" % t_vytr, "out": "%.3f" % (t_mozh + 0.3)})
-g.sfx("pop", t_org - 0.2); g.sfx("click-soft", t_maks); g.sfx("click-soft", t_maks + 0.35); g.sfx("notification", t_vytr)
+''' % {"org": "%.3f" % t_org, "maks": "%.3f" % t_maks, "vytr": "%.3f" % t_vytr, "out": "%.3f" % (t_mozh + 0.3)})
+g.sfx("pop", t_org); g.sfx("click-soft", t_maks); g.sfx("click-soft", t_maks + 0.35); g.sfx("notification", t_vytr)
 
 # 6 · ABOVE — a glass level test: a question, then the scale --------------------------
 t_pyt, t_shk, t_lanc = S(u"питання", 50.67), S(u"шкалу.", 51.53), S(u"Ланцюжок", 51.99)

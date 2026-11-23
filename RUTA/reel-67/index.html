@@ -125,6 +125,22 @@
                opacity: 0; }
     .cap .kt { position: relative; }
 
+    /* comic-relief memes (assets/memes/MEMES.md). Her note 2026-11-23: no plaque,
+       no frame, no glass card — the image is slapped straight onto the reel, in
+       the zones she marked, so her face and the captions stay readable:
+         c / top  the band above her head (y 40-520, full width)
+         r        beside her head on the right (x 740-1060, y 550-1310)
+         l        low left, over her shoulder (x 40-460, y 1140-1370)
+       A pair = two slots at the same t (top + r, or l + r). */
+    .meme { position: absolute; display: flex; }
+    .meme img { display: block; max-width: 100%; max-height: 100%; }
+    .meme.c, .meme.top { left: 60px; top: 40px; width: 960px; height: 480px;
+                         align-items: center; justify-content: center; }
+    .meme.r { left: 740px; top: 550px; width: 320px; height: 760px;
+              align-items: center; justify-content: flex-end; }
+    .meme.l { left: 40px; top: 1140px; width: 420px; height: 230px;
+              align-items: flex-end; justify-content: flex-start; }
+
     .dm { left: 150px; top: 300px; width: 780px; padding: 26px 28px; }
     .dm .hd { display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 500;
               color: #574142; margin-bottom: 18px; }
@@ -212,6 +228,8 @@
           <div><span class="bub in">А доставка у вас є?</span></div>
           <div class="rowr"><span class="bub me hid" id="d3a">Так! Підкажіть, у яке місто?</span></div>
         </div>
+        <div id="mm1" class="meme top hid"><img src="assets/memes/35-hamster-sunglasses.jpg"></div>
+        <div id="mm2" class="meme top hid"><img src="assets/memes/15-cat-hand-mouth-hirshe-ne-bude.jpg"></div>
         <div id="ctp" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:1404px;
              font-size:46px; padding:28px 56px">Став + або пиши в Direct</div>
       </div>
@@ -252,7 +270,7 @@
       <div class="wc" id="w11">ВСІХ</div>
       <div class="wc" id="w12">ПОДАТКІВ</div>
       <div class="wc" id="w13">І</div>
-      <div class="wc" id="w14">КАЖУТЬ</div>
+      <div class="wc" id="w14">КАЖЕ</div>
       <div class="wc" id="w15">СОБІ:</div>
       <div class="wc" id="w16">ВСЕ,</div>
       <div class="wc" id="w17">Я</div>
@@ -809,6 +827,10 @@
   pop("#d3a", 57.200);
   sink("#d3", 61.129);
 
+  tl.fromTo("#mm1", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 7.809);
+  tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 8.529);
+  tl.fromTo("#mm2", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 30.318);
+  tl.to("#mm2", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 31.438);
   pop("#ctp", 61.044);
   half(44.676, 56.365);
 

@@ -23,39 +23,46 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 from gstyle import G, Words, load_caps, mark  # noqa: E402
 
 NN = "64"
-DUR = 76.0            # (plate frames - 0.5) / 30
+DUR = 76.183           # (2286 plate frames - 0.5) / 30
 g = G(dur=DUR, reel=NN)
-g.PANEL_TOP = 820
+g.PANEL_TOP = 820      # panel captions: bottom 938, her pushed hair at ≈ 960
 
 FIX = {
+    u"з клод": u"з Claude", (u"По", 6.3): None, u"Перше": u"По-перше,", u"Форума.": u"Форма.",
+    u"таблецію,": u"таблицю,", u"а контактеру": u"а конектор", u"бирає": u"бере",
+    u"транскритує": u"транскрипт", u"противитися,": u"перевірити,", u"поправити.": u"поправити",
+    u"ганіально.": u"геніально.", u"симпульс": u"SendPulse", (u"ще", 48.8): u"що", u"Та": u"та",
+    u"шли": u"шле", u"людей?": u"людей,", u"Пушить": u"пушить", u"їх.": u"їх,", u"Власне,": u"власне,",
+    u".ц": u"це", u"син": u"SendPulse", u"пульс": None, u"націлається": u"надсилає",
+    u"треба.": u"треба", u"зробила": u"зробила.", u"Четверте": u"четверте", u"Збережеся": u"Збережи,", (u"ми", 73.3): u"щоб не", u"Тобто": u"Тобто,",
 }
 CAPS = load_caps(NN, FIX)
 W = Words(CAPS)
 S, E = W.s, W.e
 # every beat on its word (STYLE §4a.1)
 T = dict(
-    claude0=S(u"з клод", 5.0),
-    b1a=S(u"автоматизації", 4.3) - 0.9, b1b=E(u"зробила", 5.7) + 0.25,
-    pt=[(S(u"Перше", 6.7) - 0.1, S(u"Звичайна", 9.1) - 0.2),
-        (S(u"Друге", 24.4) - 0.1, S(u"Скіл", 27.6) - 0.1),
-        (S(u"Третє", 37.4) - 0.1, S(u"Запланована", 39.5) + 0.3),
-        (S(u"Четверте", 47.2) - 0.1, S(u"клієнтка", 49.2) - 0.1),
-        (S(u"пʼяте", 60.6) - 0.1, S(u"Fathom", 63.0) - 0.6)],
-    f0=S(u"Звичайна", 9.1) - 0.1, form=S(u"Google", 9.7),
-    vidp=S(u"відповіді", 10.5), tabl=S(u"таблецію,", 11.6),
-    drive=S(u"Drive", 13.1), shchor=S(u"щоранку", 16.3), rez=S(u"резюме", 17.7),
-    chogo=S(u"чого", 19.5), zavazh=S(u"заважає,", 21.0), pochat=S(u"почати.", 21.8),
-    f1=E(u"почати.", 21.8) + 0.2,
-    pl0=S(u"Скіл", 27.6), plfill=S(u"збирає", 31.1) - 0.2, popr=S(u"поправити.", 34.1),
-    vidpr=S(u"відправити.", 34.9), pl1=E(u"відправити.", 34.9) + 0.3,
-    tg0=S(u"пише", 42.4), tg1=E(u"плану.", 45.4) + 0.3,
-    b2a=S(u"клієнтка", 49.2) - 0.1, b2b=E(u"зникла.", 49.9) + 0.4,
-    ls0=S(u"дивиться,", 51.7) - 0.2, row0=S(u"відповідає", 53.2), row1=S(u"застряг", 54.1),
-    push=S(u"Пушить", 57.9), ls1=E(u"крок.", 59.9) + 0.2,
-    k0=S(u"Fathom", 63.0) - 0.5, fath=S(u"Fathom", 63.0), cla5=S(u"Claude", 64.5), sam=S(u"самарі,", 65.3),
-    sp5=S(u"син", 67.9), klnt=S(u"клієнтці.", 69.3), k1=E(u"клієнтці.", 69.3) + 0.2,
-    cta=S(u"Збережеся", 72.5),
+    cl=S(u"з Claude", 5.0), cle=E(u"з Claude", 5.0), zrob=E(u"зробила", 5.74),
+    pt=[S(u"По-перше,", 6.66) - 0.1, S(u"Друге", 24.43) - 0.1, S(u"Третє", 37.37) - 0.1,
+        S(u"четверте", 47.22) - 0.1, S(u"пʼяте", 60.6) - 0.1],
+    pt_out=[S(u"Звичайна", 9.14) - 0.15, S(u"Скіл", 27.63) - 0.05, S(u"Запланована", 39.47) + 0.3,
+            S(u"клієнтка", 49.17) + 0.6, S(u"Fathom", 63.02) - 0.55],
+    f0=S(u"Звичайна", 9.14) - 0.1, form=S(u"Google", 9.74),
+    vidp=S(u"відповіді", 10.49), tabl=S(u"таблицю,", 11.57),
+    drive=S(u"Drive", 13.09), shchor=S(u"щоранку", 16.34), rez=S(u"резюме", 17.72),
+    chogo=S(u"чого", 19.47), zavazh=S(u"заважає,", 21.05), pochat=S(u"почати.", 21.83),
+    f1=E(u"почати.", 21.83) + 0.2,
+    pl0=S(u"Скіл", 27.63), plfill=S(u"збирає", 31.08) - 0.2, popr=S(u"поправити", 34.06),
+    vidpr=S(u"відправити.", 34.86), pl1=E(u"відправити.", 34.86) + 0.2,
+    gen=E(u"геніально.", 36.76),
+    tg0=S(u"пише", 42.36), tg1=E(u"плану.", 45.45) + 0.3,
+    znykla=E(u"зникла.", 49.85),
+    ls0=S(u"дивиться,", 51.66) - 0.2, row0=S(u"відповідає", 53.19), row1=S(u"застряг", 54.09),
+    push=S(u"пушить", 57.93), ls1=E(u"крок.", 59.95),
+    k0=S(u"Fathom", 63.02) - 0.5, fath=S(u"Fathom", 63.02), cla5=S(u"Claude", 64.47), sam=S(u"самарі,", 65.33),
+    sp5=S(u"SendPulse", 67.87), klnt=S(u"клієнтці.", 69.35), k1=E(u"клієнтці.", 69.35) + 0.2,
+    cta=S(u"Збережи,", 72.53),
 )
+g.cta_start = T["cta"]
 
 B, P, F, C, J = [], [], [], [], []
 BLACKOUT, PLACE, HALF = [], [], []
@@ -107,21 +114,19 @@ EXTRA = u'''
 '''
 
 # 1 · BEHIND — «Claude»: the hook word and the cover frame ------------------------
-t_cl = T["claude0"]
 B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:430px; font-size:230px">Claude</div>')
-g.matte("b1", round(T["b1a"] - 0.3, 3), round(T["b1b"] - T["b1a"] + 0.7, 3))
-js(u'  rise("#bw1", %.3f); sink("#bw1", %.3f);' % (T["b1a"], T["b1b"]))
-g.sfx("whoosh-short", T["b1a"])
+g.matte("b1", round(T["cl"] - 0.6, 3), round(T["zrob"] - T["cl"] + 1.2, 3))
+js(u'  rise("#bw1", %.3f); sink("#bw1", %.3f);' % (T["cl"] - 0.35, T["zrob"] + 0.25))
+g.sfx("whoosh-short", T["cl"] - 0.35)
+BLACKOUT.append((T["cl"] - 0.03, T["cle"]))
 
-# 2 · SHUFFLE — the five points, one slot ------------------------------------------
+# 2 · SHUFFLE — the five points pass through ONE slot, each on its word -----------
 PTS = [(u"1", u"Анкета перед першою сесією"), (u"2", u"План на 30 · 60 · 90 днів"),
        (u"3", u"Щоденні чек-іни"), (u"4", u"Сигнал: клієнтка зникла"), (u"5", u"Після сесії")]
 for i, (n, txt) in enumerate(PTS):
     F.append(u'        <div id="pt%d" class="shuf hid"><span class="chip"><span class="n">%s</span>%s</span></div>' % (i, n, txt))
-    a, b = T["pt"][i]
-    js(u'  tl.fromTo("#pt%d", {autoAlpha: 0, y: 90, scale: .92, rotationX: -35}, X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), %.3f);' % (i, a))
-    js(u'  tl.to("#pt%d", {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, %.3f);' % (i, b))
-    g.sfx("pop", a)
+    js(u'  shuffle(["#pt%d"], [%.3f], %.3f);' % (i, T["pt"][i], T["pt_out"][i]))
+    g.sfx("pop", T["pt"][i])
 
 # 3 · FULL — point 1 as a platform ad: form -> sheet -> Claude task -> résumé -------
 f0, f1 = T["f0"], T["f1"]
@@ -166,23 +171,23 @@ EXTRA += u"""
            font-family: "Google Sans", sans-serif; color: #1f1f1f; will-change: transform; }
     .pn { position: absolute; background: #fff; border-radius: 22px; overflow: hidden;
           box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 24px 60px rgba(36,25,25,.18); }
-    .gf-band { height: 14px; background: #673AB7; }
+    .gf-band { height: 14px; background: #7A1424; }
     .gf-t { font-size: 30px; font-weight: 700; line-height: 1.15; padding: 22px 26px 8px; }
     .gf-q { font-size: 20px; font-weight: 500; color: #3c4043; padding: 16px 26px 6px; }
     .gf-f { margin: 0 26px; height: 2px; background: #DADCE0; margin-top: 26px; }
     .gf-b { position: absolute; left: 26px; bottom: 26px; padding: 12px 26px; border-radius: 8px;
-            background: #673AB7; color: #fff; font-size: 20px; font-weight: 500; }
+            background: #7A1424; color: #fff; font-size: 20px; font-weight: 500; }
     .sh-top { display: flex; align-items: center; gap: 12px; padding: 20px 22px; font-size: 22px; font-weight: 500;
               border-bottom: 1px solid #E3E3E3; }
-    .sh-top i { width: 28px; height: 34px; border-radius: 4px; background: #1E8E3E; display: block; }
+    .sh-top i { width: 28px; height: 34px; border-radius: 4px; background: #7A1424; display: block; }
     .sh-r { display: grid; grid-template-columns: 1fr 1.3fr 1.3fr; height: 56px; border-bottom: 1px solid #E3E3E3; }
     .sh-r span { border-right: 1px solid #E3E3E3; padding: 0 12px; display: flex; align-items: center;
                  font-size: 17px; font-weight: 700; color: #3c4043; }
     .sh-r u { display: block; height: 10px; width: 80%; border-radius: 5px; background: #E8EAED; }
     .sh-h { background: #F8F9FA; }
-    .sh-n u { background: #CEEAD6; }
+    .sh-n u { background: #F2C7CA; }
     .ct-hd { display: flex; align-items: center; gap: 14px; padding: 26px 30px 12px; font-size: 30px; }
-    .ct-hd .mark { color: #D97757; }
+    .ct-hd .mark { color: #7A1424; }
     .ct-ch { margin-left: auto; font-size: 24px; padding: 8px 20px; border-radius: 999px; background: #F3EEEE; color: #574142; }
     .ct-p { margin: 8px 30px; padding: 18px 22px; border: 2px solid #E6DEDE; border-radius: 16px;
             font-size: 24px; line-height: 1.4; color: #3c4043; }
@@ -224,7 +229,7 @@ go("gf", T["form"] - 0.45, 1.0, 4, 8, 0)
 js(u'  tl.fromTo("#gfb", {scale: 1}, X({scale: .92, duration: .15, yoyo: true, repeat: 1}), %.3f);' % (T["vidp"]))
 go("sh", T["vidp"] + 0.2, 1.0, 3, -8, 0)
 js(u'  tl.fromTo("#shn", {autoAlpha: 0, y: -30}, X({autoAlpha: 1, y: 0, duration: .45, ease: "back.out(1.6)"}), %.3f);' % T["tabl"])
-js(u'  tl.fromTo("#shn", {backgroundColor: "rgba(30,142,62,.18)"}, X({backgroundColor: "rgba(30,142,62,0)", duration: 1.2}), %.3f);' % (T["tabl"] + 0.3))
+js(u'  tl.fromTo("#shn", {backgroundColor: "rgba(122,20,36,.14)"}, X({backgroundColor: "rgba(122,20,36,0)", duration: 1.2}), %.3f);' % (T["tabl"] + 0.3))
 go("ct", T["drive"] - 0.6, 1.1, 3, 2, 0)
 js(u'  tl.to("#ctg", {backgroundColor: "#7A1424", duration: .2}, %.3f);' % T["drive"])
 js(u'  tl.to("#ctg u", {x: 24, duration: .3, ease: "back.out(2)"}, %.3f);' % T["drive"])
@@ -260,6 +265,9 @@ js(u'''
 ''' % {"a": T["pl0"], "fill": T["plfill"], "edit": T["popr"], "send": T["vidpr"], "b": T["pl1"]})
 g.sfx("pop", T["pl0"]); g.sfx("click-soft", T["popr"]); g.sfx("click", T["vidpr"])
 
+# MEME — «Мені здається, що це взагалі геніально» -> 35 deal-with-it hamster ---------
+g.meme(F, J, "35", T["gen"] + 0.1, dur=1.2, slot="r")
+
 # 5 · ABOVE — the Telegram bot check-in --------------------------------------------
 F.append(u'''
         <div id="tg" class="glass gc hid">
@@ -269,11 +277,9 @@ F.append(u'''
 js(u'  rise("#tg", %.3f); sink("#tg", %.3f);' % (T["tg0"], T["tg1"]))
 g.sfx("notification", T["tg0"])
 
-# 6 · BEHIND — «зникла» ----------------------------------------------------------------
-B.append(u'        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:440px; font-size:230px">зникла</div>')
-g.matte("b2", round(T["b2a"] - 0.3, 3), round(T["b2b"] - T["b2a"] + 0.7, 3))
-js(u'  rise("#bw2", %.3f); sink("#bw2", %.3f);' % (T["b2a"], T["b2b"]))
-g.sfx("whoosh-short", T["b2a"])
+# MEME — «клієнтка зникла» -> 59 «алівідерчі» (the bird peeking out, bye) ------------
+# (in place of a second behind-me word: one moment for this line, not two)
+g.meme(F, J, "59", T["znykla"] + 0.1, dur=1.1, slot="top")
 
 # 7 · ABOVE — who went quiet, and «Нагадати» pressed ----------------------------------
 F.append(u'''

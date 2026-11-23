@@ -26,12 +26,13 @@ NN = "66"
 DUR = float(open(os.path.join(HERE, "DUR")).read()) if os.path.exists(os.path.join(HERE, "DUR")) else 60.316
 g = G(dur=DUR, reel=NN)
 g.PANEL_TOP = 820      # panel captions: bottom 938, her pushed hair at ≈ 980
+g.cta_start = round(DUR - 2.0, 3)   # no CTA (ТЕСТ cut): memes stay off the last 2 s
 
 FIX = {
     u"змонтується": u"«змонтуй", u"відео.": u"відео»,",
     u"кожену": u"кожну", (u"І", 44.8): u"і",
     u"Налаштувати": u"налаштувати", u"монтажу": u"монтажу.",
-    u"вона": u"а", (u"до", 59.2): u"не", u"полно": u"повно-", u"значить": u"значить,", u"суті": u"суті,",
+    u"вона": u"а", (u"до", 59.2): u"не", u"полно": u"повно-клодівський.", u"клодівський.": None, u"значить": u"значить,", u"суті": u"суті,",
 }
 CAPS = load_caps(NN, FIX)
 W = Words(CAPS)
@@ -135,13 +136,13 @@ js(u'''
   sketch("r3", "skP"); ln("r3", 340, 650, 740, 610, {stroke: "#7A1424", strokeWidth: 8, seed: 27});
   draw("r3", %.3f, .3);
   erase("r1", %.3f); erase("r2", %.3f); erase("r3", %.3f);
-''' % (t_moi - 0.15, t_kli - 0.2, t_riz - 0.2, t_riz - 0.2, t_ref - 0.35, t_zrob - 0.1,
+''' % (t_moi - 0.15, t_kli - 0.2, t_ref - 0.6, t_ref - 0.6, t_ref - 0.35, t_zrob - 0.1,
        t_tut - 0.15, h1, h1, h1))
 g.sfx("whoosh-short", h0); g.sfx("click-soft", t_moi); g.sfx("click-soft", t_kli)
 g.sfx("click-soft", t_ref); g.sfx("click", t_tut)
 
 # 4 · FULL 1 — dozens of the same reel ---------------------------------------
-a0 = S(u"переглянути", 25.17) - 0.45
+a0 = S(u"десятки", 26.23) - 0.4      # starts on «десятки»: the side-eye meme gets «фігня»
 a1 = E(u"рілсів.", 28.55) + 0.3
 t_des, t_odn = S(u"десятки", 26.23), S(u"однакових", 27.97)
 cards = []
@@ -318,16 +319,24 @@ js(u'''
   tl.fromTo("#bar1", {scaleX: 0}, X({scaleX: 1, duration: 1.0, ease: "power2.out"}), %.3f);
   tl.fromTo("#bar2", {scaleX: 0}, X({scaleX: .16, duration: .35, ease: "power2.out"}), %.3f);
   sink("#bc", %.3f);
-''' % (t_saме - 0.1, t_naib - 0.05, t_zap, t_tomu + 0.15))
-g.sfx("pop", t_saме - 0.1); g.sfx("click-soft", t_zap)
+''' % (S(u"займає", 49.30) - 0.15, t_naib - 0.05, t_zap, t_tomu + 0.15))
+g.sfx("pop", S(u"займає", 49.30) - 0.15); g.sfx("click-soft", t_zap)
 
 # 8 · BEHIND — «твій стиль», then she ends clean --------------------------------
 t_tv, e_st = S(u"твій", 58.17), E(u"стиль,", 58.66)
 B.append(u'        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:500px; font-size:178px">твій стиль</div>')
 g.matte("b2", round(t_tv - 0.6, 3), 2.2)
-js(u'  rise("#bw2", %.3f); sink("#bw2", %.3f);' % (t_tv - 0.3, S(u"повно-", 59.35) - 0.05))
+js(u'  rise("#bw2", %.3f); sink("#bw2", %.3f);' % (t_tv - 0.3, S(u"повно-клодівський.", 59.35) - 0.05))
 g.sfx("whoosh-short", t_tv - 0.3)
 BLACKOUT.append((t_tv - 0.03, e_st))
+
+# 9 · MEMES — comic relief, after the beat lands (MEMES.md) ----------------------
+# 07 side-eye: the viewer's «та це якась фігня»   (clear 21.4-25.8: half gone, wall not yet)
+g.meme(F, J, "07", round(E(u"фігня,", 23.5) + 0.1, 3), dur=1.1, slot="r")
+# 39 «батя, я стараюсь»: her «Велика робота!»     (full 2 gone at ≈46.5, bars rise at «займає»)
+g.meme(F, J, "39", round(E(u"робота!", 47.6) + 0.1, 3), dur=1.1, slot="l")
+# 35 deal-with-it hamster: «встановити його нескладно… кілька скілів і інструкцій»
+g.meme(F, J, "35", round(E(u"інструкцій.", 55.2) + 0.1, 3), dur=1.1, slot="top")
 
 # ---------------------------------------------------------------- half screen + its matte
 for i, (a, b) in enumerate(HALF):

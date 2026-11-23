@@ -54,12 +54,13 @@ FIX = {
     (u"Якщо", 100.1): u"якщо", u"справляється.": u"справляється,", u"Купи": u"купа",
     u"гугляться": u"губляться", (u"саме", 83.1): u"це", (u"ж", 83.3): u"майже",
     u"не впливає.": u"не впливає", (u"ваш", 84.1): u"вартість.", (u"тість.", 84.3): None, u"відповіді": u"відповіді,", u"ставь": u"став", u"вдові": u"в тебе", (u"що вони", 107.1): u"вони",
-    u"налаштувати.": u"налаштувати,",
+    u"налаштувати.": u"налаштувати,", (u"5", 27.9): u"5.5,", (u".5.", 28.4): None,
 }
 FIX.update(globals().get("FIX_HEARD", {}))
 CAPS = load_caps(NN, FIX)
 W = Words(CAPS)
 S, E = W.s, W.e
+g.cta_start = S(u"Тому,", 99.9)    # «Тому, якщо в тебе ще немає менеджера…» — no meme from here on
 
 B, P, F, C, J = [], [], [], [], []
 BLACKOUT, PLACE, HALF = [], [], []
@@ -283,6 +284,8 @@ js(u'''
   pop("#ceq", %.3f);
   sink("#cmp", %.3f);
 ''' % (t_son - 0.25, t_hai2 - 0.05, t_tri - 0.05, t_rizn, t_ido - 0.35))
+# MEME 1 — «а гроші зекономиш.»: deal-with-it hamster, right of her head, before the card
+g.meme(F, J, "35", E(u"зекономиш.", 34.5) + 0.05, dur=0.85, slot="r")
 g.sfx("pop", t_son - 0.25); g.sfx("pop", t_hai2); g.sfx("kaching", t_dor); g.sfx("click-soft", t_rizn)
 
 # FULL 3 — «ПОШУК У ФАЙЛАХ» goes grey; it all goes into the instruction --------
@@ -377,6 +380,10 @@ js(u'''
 ''' % (t_pysav - 0.3, t_propys, t_dekil - 0.05, t_raziv + 0.15, t_tomu2 + 0.1))
 g.sfx("pop", t_pysav - 0.3); g.sfx("typing", t_propys); g.sfx("typing", t_dekil - 0.05)
 
+# MEME 2 — «сам він про це не здогадається»: the clueless goat, above her head,
+# in the gap between the instruction card and the DM
+g.meme(F, J, "44", E(u"здогадається,", 93.1) + 0.05, dur=0.85, slot="top")
+
 # 8 · ABOVE — glass DM: left alone it writes an essay -------------------------
 t_pysaty, t_vel, t_rozsh, t_posl, e_dali = (S(u"писати", 94.77), S(u"великі,", 95.27), S(u"розширені", 96.04),
                                            S(u"послуги", 98.22), E(u"далі.", 99.44))
@@ -394,8 +401,8 @@ js(u'''
   tl.fromTo("#g2", {height: 0, autoAlpha: 0}, X({height: "auto", autoAlpha: 1, duration: .45, ease: "power2.out"}), %.3f);
   tl.fromTo("#g3", {height: 0, autoAlpha: 0}, X({height: "auto", autoAlpha: 1, duration: .45, ease: "power2.out"}), %.3f);
   sink("#dm", %.3f);
-''' % (t_pysaty - 0.5, t_vel - 0.1, t_rozsh + 0.1, t_posl - 0.2, e_dali + 0.15))
-g.sfx("pop", t_pysaty - 0.5); g.sfx("notification", t_vel); g.sfx("notification", t_posl - 0.2)
+''' % (t_pysaty - 0.2, t_vel - 0.1, t_rozsh + 0.1, t_posl - 0.2, e_dali + 0.15))
+g.sfx("pop", t_pysaty - 0.2); g.sfx("notification", t_vel); g.sfx("notification", t_posl - 0.2)
 
 # 9 · CTA — who it is for, one card at a time; «Став + в коментарях» -----------
 t_stav = S(u"став", 109.68)

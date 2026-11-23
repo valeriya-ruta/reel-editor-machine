@@ -38,7 +38,7 @@ g = G(dur=DUR, reel=NN)
 g.PANEL_TOP = 820      # panel captions: bottom 938, her pushed hair below
 
 FIX = {
-    u"друсла!": u"доросла!", (u"мене", 8.7): None, u"журку,": u"менеджерку,",
+    u"кажуть": u"каже", u"друсла!": u"доросла!", (u"мене", 8.7): None, u"журку,": u"менеджерку,",
     u"вона вона буде": u"вона буде", (u"А", 19.3): u"я", u"і всіх": u"у всіх",
     u"третць": u"треш,", u"«Пробувай": u"«пробиває",
     (u"і", 33.7): None, u"яй": u"AI-агента.", u"агенти.": None, u"Не": u"не",
@@ -52,6 +52,7 @@ S, E = W.s, W.e
 
 B, P, F, C, J = [], [], [], [], []
 BLACKOUT, PLACE, HALF = [], [], []
+g.cta_start = S(u"Тому", 56.3)      # «Тому якщо тебе зацікавив…» — no meme from here on
 
 
 def js(s):
@@ -265,6 +266,14 @@ js(u'''
   sink("#d3", %.3f);
 ''' % (t_tomu + 0.1, t_tomu + 0.9, t_dopom + 0.25))
 g.sfx("pop", t_tomu + 0.1); g.sfx("notification", t_tomu + 0.9)
+
+# 7b · MEMES (assets/memes/MEMES.md) — comic relief, after the beat lands --------------
+# 35 hamster in sunglasses on «я доросла!» (deal-with-it cool), top band, gone
+# before «менеджерка» rises behind her; 15 «хуже вже не буде» right after the
+# card falls through on «пробиває дно» (doom, resigned), in the free stretch
+# «Так от, щоб такого не було» before «AI-агент».
+g.meme(F, J, "35", round(E(u"доросла!", 7.2) + 0.1, 3), dur=0.9, slot="top")
+g.meme(F, J, "15", round(E(u"дно».", 29.0) + 0.1, 3), dur=1.3, slot="top")
 
 # 8 · CTA — the pill in the subtitle band (the blackout from «став» frees it) -------------
 t_stav = S(u"став", 61.1)

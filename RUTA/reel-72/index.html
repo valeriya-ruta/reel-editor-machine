@@ -125,6 +125,22 @@
                opacity: 0; }
     .cap .kt { position: relative; }
 
+    /* comic-relief memes (assets/memes/MEMES.md). Her note 2026-11-23: no plaque,
+       no frame, no glass card — the image is slapped straight onto the reel, in
+       the zones she marked, so her face and the captions stay readable:
+         c / top  the band above her head (y 40-520, full width)
+         r        beside her head on the right (x 740-1060, y 550-1310)
+         l        low left, over her shoulder (x 40-460, y 1140-1370)
+       A pair = two slots at the same t (top + r, or l + r). */
+    .meme { position: absolute; display: flex; }
+    .meme img { display: block; max-width: 100%; max-height: 100%; }
+    .meme.c, .meme.top { left: 60px; top: 40px; width: 960px; height: 480px;
+                         align-items: center; justify-content: center; }
+    .meme.r { left: 740px; top: 550px; width: 320px; height: 760px;
+              align-items: center; justify-content: flex-end; }
+    .meme.l { left: 40px; top: 1140px; width: 420px; height: 230px;
+              align-items: flex-end; justify-content: flex-start; }
+
     /* the chat window of both full screens: a clean Direct-style thread */
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
     #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
@@ -158,14 +174,14 @@
   </head>
   <body>
     <div id="root" data-composition-id="main" data-start="0"
-         data-width="1080" data-height="1920" data-duration="101.617" data-fps="30">
+         data-width="1080" data-height="1920" data-duration="101.616" data-fps="30">
 
       <video id="vid" class="plate" src="assets/base.mp4"
-             data-start="0" data-duration="101.617" data-media-start="0"
+             data-start="0" data-duration="101.616" data-media-start="0"
              muted playsinline></video>
       <div id="behind" class="L">
         <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:520px; font-size:210px">AI-агент</div>
-        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:540px; font-size:180px">хардкод-бот</div>
+        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:560px; font-size:150px">хардкод-бот</div>
       </div>
       <div id="panel">
 <svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
@@ -180,6 +196,8 @@
              data-start="72.167" data-duration="13.600" data-media-start="0"
              muted playsinline></video>
       <div id="front" class="L">
+        <div id="mm1" class="meme top hid"><img src="assets/memes/51-shrek-side-look.jpg"></div>
+        <div id="mm2" class="meme l hid"><img src="assets/memes/01-tsyt-seagull-shush.jpg"></div>
         <div id="sa0" class="shuf hid"><span class="chip"><i></i>Ім'я</span></div>
         <div id="sa1" class="shuf hid"><span class="chip"><i></i>Номер телефону</span></div>
         <div id="sa2" class="shuf hid"><span class="chip"><i></i>Інфо про вебінар</span></div>
@@ -479,7 +497,7 @@
       </div>
 
       <audio id="vo" src="assets/base.mp4"
-             data-start="0" data-duration="101.617" data-media-start="0"></audio>
+             data-start="0" data-duration="101.616" data-media-start="0"></audio>
     </div>
 
     <script>
@@ -670,7 +688,7 @@
   function erase(name, t) { tl.to("#sk-" + name, {autoAlpha: 0, duration: .3, ease: "power2.in"}, t); }
 
   gsap.set(PUSH, {transformOrigin: "540px 900px"});
-  tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 101.617, ease: "none"}, 0);
+  tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 101.616, ease: "none"}, 0);
 
   tl.set("#w3", {autoAlpha: 1}, 0.950); tl.set("#w3", {autoAlpha: 0}, 1.645);
   tl.set("#w4", {autoAlpha: 1}, 1.730); tl.set("#w4", {autoAlpha: 0}, 1.830);
@@ -941,8 +959,12 @@
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 72.530);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 85.047);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 96.640);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 101.617);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 101.616);
 
+  tl.fromTo("#mm1", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 9.315);
+  tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 10.335);
+  tl.fromTo("#mm2", {autoAlpha: 0, scale: .72, rotation: -6.5}, X({autoAlpha: 1, scale: 1, rotation: -1.5, duration: .28, ease: POP}), 40.615);
+  tl.to("#mm2", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 41.635);
   rise("#bw1", 0.05); sink("#bw1", 2.75);
   rise("#bw2", 16.330); sink("#bw2", 17.932);
 

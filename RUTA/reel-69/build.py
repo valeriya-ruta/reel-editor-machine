@@ -70,6 +70,7 @@ def apply_repl(caps, repl):
 CAPS = apply_repl(CAPS, REPL)
 W = Words(CAPS)
 S, E = W.s, W.e
+g.cta_start = S(u"Тому", 68.37)      # the CTA line («Тому збережи…») — no meme from here
 
 B, P, F, C, J = [], [], [], [], []
 BLACKOUT, PLACE, HALF = [], [], []
@@ -191,6 +192,10 @@ js(u"""
        "f0": "%.3f" % f0, "f1": "%.3f" % f1, "skl": "%.3f" % t_skl, "sub": "%.3f" % t_sub, "ril": "%.3f" % t_ril})
 g.sfx("whoosh-short", f0); g.sfx("whoosh-short", t_skl - 1.25)
 g.sfx("click", t_skl); g.sfx("click", t_sub); g.sfx("click", t_ril); g.sfx("whoosh-short", f1)
+
+# ---------------------------------------------------------------- MEME 01 «ЦИТЬ» after «Я про це рідко кажу,»
+# a clear stretch: FULL 1 is gone, «CapCut» rises at 20.3
+g.meme(F, J, "01", round(E(u"кажу,", 16.97) + 0.1, 3), dur=1.2, slot="r")
 
 # ---------------------------------------------------------------- 3 · BEHIND «CapCut» -> HALF 1 Claude -> CapCut
 t_cc, e_cc = S(u"CapCut,", 21.22), E(u"CapCut,", 21.22)
@@ -321,9 +326,13 @@ for i, (txt, t) in enumerate(CAT):
     F.append(u'        <div id="ct%d" class="shuf cat hid"><span class="chip">%s</span></div>' % (i, txt))
     g.sfx("click-soft" if i else "pop", t)
 t_zb, t_gd = S(u"зберігає", 53.55), S(u"Google", 55.55)
+t_ruky = E(u"руки,", 52.89)
 for i, (txt, t) in enumerate(CAT):
     slot_in("#ct%d" % i, t - 0.1)
-    slot_out("#ct%d" % i, (CAT[i + 1][1] - 0.1 if i + 1 < len(CAT) else t_zb - 0.1) - 0.05)
+    slot_out("#ct%d" % i, (CAT[i + 1][1] - 0.1 if i + 1 < len(CAT) else t_ruky - 0.35) - 0.05)
+# MEME 14 (shocked cat) on «скільки реально залишається тобі на руки» — the reveal
+g.meme(F, J, "14", round(t_ruky + 0.1, 3), dur=1.1, slot="r")
+t_tab = S(u"таблицю,", 54.39)
 
 F.append(u'''
         <div id="sv" class="glass hid" style="left:0; right:0; margin:auto; width:max-content; top:320px; padding:26px 34px;
@@ -348,8 +357,8 @@ EXTRA += u"""
                    border: solid #fff; border-width: 0 5px 5px 0; transform: rotate(45deg); }
 """
 t_p4 = S(u"Четверте", 56.37)
-js(u'  rise("#sv", %.3f); pop("#sv .svok", %.3f); sink("#sv", %.3f);' % (t_zb, t_gd, t_p4 - 0.45))
-g.sfx("pop", t_zb); g.sfx("ping", t_gd)
+js(u'  rise("#sv", %.3f); pop("#sv .svok", %.3f); sink("#sv", %.3f);' % (t_tab - 0.05, t_gd, t_p4 - 0.45))
+g.sfx("pop", t_tab - 0.05); g.sfx("ping", t_gd)
 
 # ---------------------------------------------------------------- 6 · item 4 + HALF 2 the LUT scheme
 heading(4, 4, u"однаковий колір з різних камер", t_p4 - 0.05, S(u"Кидаєш", 59.53) - 0.2)

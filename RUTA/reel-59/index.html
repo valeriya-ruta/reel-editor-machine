@@ -125,6 +125,22 @@
                opacity: 0; }
     .cap .kt { position: relative; }
 
+    /* comic-relief memes (assets/memes/MEMES.md). Her note 2026-11-23: no plaque,
+       no frame, no glass card — the image is slapped straight onto the reel, in
+       the zones she marked, so her face and the captions stay readable:
+         c / top  the band above her head (y 40-520, full width)
+         r        beside her head on the right (x 740-1060, y 550-1310)
+         l        low left, over her shoulder (x 40-460, y 1140-1370)
+       A pair = two slots at the same t (top + r, or l + r). */
+    .meme { position: absolute; display: flex; }
+    .meme img { display: block; max-width: 100%; max-height: 100%; }
+    .meme.c, .meme.top { left: 60px; top: 40px; width: 960px; height: 480px;
+                         align-items: center; justify-content: center; }
+    .meme.r { left: 740px; top: 550px; width: 320px; height: 760px;
+              align-items: center; justify-content: flex-end; }
+    .meme.l { left: 40px; top: 1140px; width: 420px; height: 230px;
+              align-items: flex-end; justify-content: flex-start; }
+
     .gl { left: 150px; top: 300px; width: 780px; padding: 26px 30px; }
     .gl .hd { display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 500;
               color: #574142; margin-bottom: 16px; }
@@ -218,10 +234,12 @@
           <div class="hd"><svg class="mark" width="34" height="34" viewBox="0 0 24 24"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg> Питання з Threads</div>
           <div class="q">Які автоматизації можна використати репетиторці?</div>
         </div>
+        <div id="mm1" class="meme top hid"><img src="assets/memes/34-kitten-khikhanky-zakinchylys.jpg"></div>
         <div id="li0" class="shuf hid"><span class="chip"><b>1</b>CRM учнів і фінанси</span></div>
         <div id="li1" class="shuf hid"><span class="chip"><b>2</b>Нагадування про урок і оплату</span></div>
         <div id="li2" class="shuf hid"><span class="chip"><b>3</b>Афтеркер</span></div>
         <div id="li3" class="shuf hid"><span class="chip"><b>4</b>Тести у форматі НМТ</span></div>
+        <div id="mm2" class="meme top hid"><img src="assets/memes/05-pu-pu-pu-rat.jpg"></div>
 
         <div id="tg" class="glass gl hid">
           <div class="hd"><svg class="mark" width="32" height="32" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg> Бот репетиторки</div>
@@ -343,10 +361,10 @@
       <div class="wc inv" id="w66">ЦИФРОЮ,</div>
       <div class="wc inv" id="w67">А</div>
       <div class="wc inv" id="w68">НЕ ДЕСЬ</div>
-      <div class="wc inv" id="w69">ЩОСЬ</div>
-      <div class="wc inv" id="w70">ТАМ</div>
-      <div class="wc inv" id="w71">ПРИБЛИЗНО.</div>
-      <div class="wc inv" id="w72">ДРУГЕ,</div>
+      <div class="wc" id="w69">ЩОСЬ</div>
+      <div class="wc" id="w70">ТАМ</div>
+      <div class="wc" id="w71">ПРИБЛИЗНО.</div>
+      <div class="wc" id="w72">ДРУГЕ,</div>
       <div class="wc" id="w73">ЦЕ</div>
       <div class="wc" id="w74">НАГАДУВАННЯ</div>
       <div class="wc" id="w75">ПРО</div>
@@ -899,7 +917,7 @@
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 10.473);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 11.182);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 14.280);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 28.600);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 27.386);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 31.448);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 41.133);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 51.217);
@@ -912,6 +930,8 @@
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 83.483);
 
   rise("#th", 1.490); sink("#th", 5.750);
+  tl.fromTo("#mm1", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 9.298);
+  tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 9.968);
   rise("#bw1", 10.253); sink("#bw1", 12.003);
   shuffle(["#li0"], [11.267], 13.980);
 
@@ -934,11 +954,12 @@
   tl.to("#win1", {x: 140.0, y: 465.5, scale: 1.450, rotationX: 2, rotationY: 7, duration: 1.1, ease: "power3.inOut"}, 24.761 - .6);
   tl.fromTo("#u2", {autoAlpha: 0, y: 30}, X({autoAlpha: 1, y: 0, duration: .4, ease: RISE}), 24.761);
   tl.fromTo("#r2", {autoAlpha: 0, y: 20}, X({autoAlpha: 1, y: 0, duration: .45, ease: RISE}), 26.221 - .1);
-  tl.to("#win1", {x: 140.0, y: 480.0, scale: 1.200, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.2, ease: "power3.inOut"}, 27.256 - .2);
-  gsap.set("#st1", {autoAlpha: 1}); tl.set("#st1", {autoAlpha: 0}, 28.200 + .9);
-  full(14.030, 28.200);
+  gsap.set("#st1", {autoAlpha: 1}); tl.set("#st1", {autoAlpha: 0}, 26.986 + .9);
+  full(14.030, 26.986);
 
-  shuffle(["#li1"], [28.400], 31.198);
+  tl.fromTo("#mm2", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 28.415);
+  tl.to("#mm2", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 29.035);
+  shuffle(["#li1"], [29.230], 31.198);
 
   sketch("a1", "skP"); box("a1", 50, 300, 420, 110, {seed: 3});
   label("a1", 260, 372, "Google Calendar", {size: 48});

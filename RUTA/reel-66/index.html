@@ -125,6 +125,22 @@
                opacity: 0; }
     .cap .kt { position: relative; }
 
+    /* comic-relief memes (assets/memes/MEMES.md). Her note 2026-11-23: no plaque,
+       no frame, no glass card — the image is slapped straight onto the reel, in
+       the zones she marked, so her face and the captions stay readable:
+         c / top  the band above her head (y 40-520, full width)
+         r        beside her head on the right (x 740-1060, y 550-1310)
+         l        low left, over her shoulder (x 40-460, y 1140-1370)
+       A pair = two slots at the same t (top + r, or l + r). */
+    .meme { position: absolute; display: flex; }
+    .meme img { display: block; max-width: 100%; max-height: 100%; }
+    .meme.c, .meme.top { left: 60px; top: 40px; width: 960px; height: 480px;
+                         align-items: center; justify-content: center; }
+    .meme.r { left: 740px; top: 550px; width: 320px; height: 760px;
+              align-items: center; justify-content: flex-end; }
+    .meme.l { left: 40px; top: 1140px; width: 420px; height: 230px;
+              align-items: flex-end; justify-content: flex-start; }
+
     .dm { left: 150px; top: 300px; width: 780px; padding: 24px 28px; }
     .bub { display: inline-block; border-radius: 26px; padding: 16px 26px; font-size: 36px;
            font-weight: 500; line-height: 1.25; }
@@ -247,6 +263,9 @@
           <div class="r"><span class="l">налаштування стилю</span><span class="tr"><i id="bar1"></i></span></div>
           <div class="r"><span class="l">запуск монтажу</span><span class="tr"><i id="bar2"></i></span></div>
         </div>
+        <div id="mm1" class="meme r hid"><img src="assets/memes/07-cillian-side-eye.jpg"></div>
+        <div id="mm2" class="meme l hid"><img src="assets/memes/39-woman-batia-ia-staraius.jpg"></div>
+        <div id="mm3" class="meme top hid"><img src="assets/memes/35-hamster-sunglasses.jpg"></div>
       </div>
       <div id="cover">
 
@@ -345,8 +364,8 @@
       <div class="wc" id="w66">ЩО</div>
       <div class="wc" id="w67">МЕНІ</div>
       <div class="wc" id="w68">ТРЕБА</div>
-      <div class="wc inv" id="w69">ПЕРЕГЛЯНУТИ</div>
-      <div class="wc inv" id="w70">ДЕСЯТКИ</div>
+      <div class="wc" id="w69">ПЕРЕГЛЯНУТИ</div>
+      <div class="wc" id="w70">ДЕСЯТКИ</div>
       <div class="wc inv" id="w71">ПО</div>
       <div class="wc inv" id="w72">СУТІ,</div>
       <div class="wc inv" id="w73">ОДНАКОВИХ</div>
@@ -427,8 +446,7 @@
       <div class="wc" id="w148">БУВ</div>
       <div class="wc" id="w151">А</div>
       <div class="wc" id="w152">НЕ</div>
-      <div class="wc" id="w153">ПОВНО-</div>
-      <div class="wc" id="w154">КЛОДІВСЬКИЙ.</div>
+      <div class="wc" id="w153">ПОВНО-КЛОДІВСЬКИЙ.</div>
       </div>
 
       <audio id="vo" src="assets/base.mp4"
@@ -776,14 +794,13 @@
   tl.set("#w151", {autoAlpha: 1}, 58.935); tl.set("#w151", {autoAlpha: 0}, 59.090);
   tl.set("#w152", {autoAlpha: 1}, 59.175); tl.set("#w152", {autoAlpha: 0}, 59.275);
   tl.set("#w153", {autoAlpha: 1}, 59.355); tl.set("#w153", {autoAlpha: 0}, 59.510);
-  tl.set("#w154", {autoAlpha: 1}, 59.595); tl.set("#w154", {autoAlpha: 0}, 60.115);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 60.215);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 59.610);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 0.916);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 1.561);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 7.250);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 16.817);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 24.973);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 26.082);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 29.848);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 36.696);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 47.448);
@@ -809,7 +826,7 @@
   ln("p2", 690, 680, 870, 680, {seed: 10}); ln("p2", 720, 708, 840, 708, {seed: 11});
   label("p2", 780, 790, "клієнтки", {size: 52});
   draw("p2", 10.584, .45);
-  erase("p1", 12.481); erase("p2", 12.481);
+  erase("p1", 13.941); erase("p2", 13.941);
   sketch("r1", "skP"); box("r1", 80, 400, 320, 140, {seed: 21, fill: true});
   label("r1", 240, 485, "референс", {size: 50});
   arrow("r1", 410, 470, 660, 470, {seed: 22, bend: .12});
@@ -822,14 +839,14 @@
   erase("r1", 16.417); erase("r2", 16.417); erase("r3", 16.417);
 
 
-  tl.set("#wall", {autoAlpha: 1}, 24.723);
+  tl.set("#wall", {autoAlpha: 1}, 25.832);
   gsap.set("#grid", {rotationX: 34, rotationZ: -14, rotationY: 8, scale: 1.05, y: 160});
   tl.fromTo("#grid .rc", {autoAlpha: 0, scale: .7, y: 60}, X({autoAlpha: 1, scale: 1, y: 0, duration: .45, ease: "back.out(1.5)",
-            stagger: {each: .045, from: "start"}}), 24.723 + .25);
-  tl.fromTo("#grid", {y: 160}, X({y: -420, rotationZ: -8, scale: 1.12, duration: 5.325, ease: "sine.inOut"}), 24.723 + .2);
+            stagger: {each: .045, from: "start"}}), 25.832 + .25);
+  tl.fromTo("#grid", {y: 160}, X({y: -420, rotationZ: -8, scale: 1.12, duration: 4.216, ease: "sine.inOut"}), 25.832 + .2);
   tl.to("#grid .rc u", {opacity: 1, duration: .25, stagger: {each: .012, from: "center"}}, 27.923);
   tl.set("#wall", {autoAlpha: 0}, 29.448 + .9);
-  full(24.723, 29.448);
+  full(25.832, 29.448);
 
   shuffle(["#ck0", "#ck1", "#ck2"], [30.103, 32.043, 35.156], 36.393);
   tl.fromTo("#ck0 .cb b", {opacity: 0, scale: .5}, X({opacity: 1, scale: 1, duration: .35, ease: POP}), 30.603);
@@ -865,12 +882,18 @@
   tl.set("#stage", {autoAlpha: 0}, 47.948);
   full(36.446, 47.048);
 
-  rise("#bc", 48.397);
+  rise("#bc", 49.187);
   tl.fromTo("#bar1", {scaleX: 0}, X({scaleX: 1, duration: 1.0, ease: "power2.out"}), 49.707);
   tl.fromTo("#bar2", {scaleX: 0}, X({scaleX: .16, duration: .35, ease: "power2.out"}), 51.355);
   sink("#bc", 52.612);
 
   rise("#bw2", 57.875); sink("#bw2", 59.305);
+  tl.fromTo("#mm1", {autoAlpha: 0, scale: .72, rotation: -3.5}, X({autoAlpha: 1, scale: 1, rotation: 1.5, duration: .28, ease: POP}), 23.998);
+  tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 24.918);
+  tl.fromTo("#mm2", {autoAlpha: 0, scale: .72, rotation: -6.5}, X({autoAlpha: 1, scale: 1, rotation: -1.5, duration: .28, ease: POP}), 48.182);
+  tl.to("#mm2", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 49.102);
+  tl.fromTo("#mm3", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 55.870);
+  tl.to("#mm3", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 56.790);
   half(7.000, 16.417);
 
         window.__timelines["main"] = tl;

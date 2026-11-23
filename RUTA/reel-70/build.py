@@ -34,7 +34,7 @@ g.PANEL_TOP = 820
 
 FIX = {
     u"глідами.": u"лідами", u"за собі": u"собі", u"твій": u"твої", u"чате": u"чати",
-    u"ему скрішет": u"йому скріншот", u"та ісей": u"і се, і", u"35": u"35-те", u"те,": None,
+    u"ему скрішет": u"йому скріншот", u"та ісей": u"те, і се, і", u"35": u"35-те", u"те,": None,
     u"в якому": u"в яку", u"Дякуємо! ні.": u"ні.",
 }
 CAPS = load_caps(NN, FIX)
@@ -75,6 +75,13 @@ for i, (txt, t) in enumerate(Q):
     F.append(u'        <div id="q%d" class="shuf hid"><span class="chip"><i></i>%s</span></div>' % (i, txt))
     g.sfx("pop", t - 0.1)
 js(u'  shuffle(["#q0", "#q1", "#q2"], [%s], %.3f);' % (", ".join("%.3f" % (t - 0.1) for _, t in Q), t_pog))
+
+# 2b · MEMES — comic relief after the beat lands (assets/memes/MEMES.md) --------
+g.cta_start = S(u"Тому", 75.47)
+# «погані новини» -> the fun part is over, now serious
+g.meme(F, J, "34", E(u"новини.", 9.64) + 0.1, dur=1.2, slot="top")
+# «точно не з власного досвіду» -> the guilty smirk, over her «ні, ні, ні» laugh
+g.meme(F, J, "50", E(u"досвіду.", 17.38) + 0.1, dur=1.2, slot="r")
 
 # 3 · BEHIND — «5 хвилин» -------------------------------------------------------
 t_5, e_5 = S(u"5", 22.74), E(u"хвилин.", 23.02)

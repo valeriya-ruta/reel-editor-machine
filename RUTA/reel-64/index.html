@@ -125,6 +125,22 @@
                opacity: 0; }
     .cap .kt { position: relative; }
 
+    /* comic-relief memes (assets/memes/MEMES.md). Her note 2026-11-23: no plaque,
+       no frame, no glass card — the image is slapped straight onto the reel, in
+       the zones she marked, so her face and the captions stay readable:
+         c / top  the band above her head (y 40-520, full width)
+         r        beside her head on the right (x 740-1060, y 550-1310)
+         l        low left, over her shoulder (x 40-460, y 1140-1370)
+       A pair = two slots at the same t (top + r, or l + r). */
+    .meme { position: absolute; display: flex; }
+    .meme img { display: block; max-width: 100%; max-height: 100%; }
+    .meme.c, .meme.top { left: 60px; top: 40px; width: 960px; height: 480px;
+                         align-items: center; justify-content: center; }
+    .meme.r { left: 740px; top: 550px; width: 320px; height: 760px;
+              align-items: center; justify-content: flex-end; }
+    .meme.l { left: 40px; top: 1140px; width: 420px; height: 230px;
+              align-items: flex-end; justify-content: flex-start; }
+
     .glass { position: absolute; border-radius: 36px; background: rgba(255,255,255,.62);
              -webkit-backdrop-filter: blur(22px) saturate(1.5); backdrop-filter: blur(22px) saturate(1.5);
              box-shadow: inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 1px rgba(255,255,255,.45),
@@ -168,23 +184,23 @@
            font-family: "Google Sans", sans-serif; color: #1f1f1f; will-change: transform; }
     .pn { position: absolute; background: #fff; border-radius: 22px; overflow: hidden;
           box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 24px 60px rgba(36,25,25,.18); }
-    .gf-band { height: 14px; background: #673AB7; }
+    .gf-band { height: 14px; background: #7A1424; }
     .gf-t { font-size: 30px; font-weight: 700; line-height: 1.15; padding: 22px 26px 8px; }
     .gf-q { font-size: 20px; font-weight: 500; color: #3c4043; padding: 16px 26px 6px; }
     .gf-f { margin: 0 26px; height: 2px; background: #DADCE0; margin-top: 26px; }
     .gf-b { position: absolute; left: 26px; bottom: 26px; padding: 12px 26px; border-radius: 8px;
-            background: #673AB7; color: #fff; font-size: 20px; font-weight: 500; }
+            background: #7A1424; color: #fff; font-size: 20px; font-weight: 500; }
     .sh-top { display: flex; align-items: center; gap: 12px; padding: 20px 22px; font-size: 22px; font-weight: 500;
               border-bottom: 1px solid #E3E3E3; }
-    .sh-top i { width: 28px; height: 34px; border-radius: 4px; background: #1E8E3E; display: block; }
+    .sh-top i { width: 28px; height: 34px; border-radius: 4px; background: #7A1424; display: block; }
     .sh-r { display: grid; grid-template-columns: 1fr 1.3fr 1.3fr; height: 56px; border-bottom: 1px solid #E3E3E3; }
     .sh-r span { border-right: 1px solid #E3E3E3; padding: 0 12px; display: flex; align-items: center;
                  font-size: 17px; font-weight: 700; color: #3c4043; }
     .sh-r u { display: block; height: 10px; width: 80%; border-radius: 5px; background: #E8EAED; }
     .sh-h { background: #F8F9FA; }
-    .sh-n u { background: #CEEAD6; }
+    .sh-n u { background: #F2C7CA; }
     .ct-hd { display: flex; align-items: center; gap: 14px; padding: 26px 30px 12px; font-size: 30px; }
-    .ct-hd .mark { color: #D97757; }
+    .ct-hd .mark { color: #7A1424; }
     .ct-ch { margin-left: auto; font-size: 24px; padding: 8px 20px; border-radius: 999px; background: #F3EEEE; color: #574142; }
     .ct-p { margin: 8px 30px; padding: 18px 22px; border: 2px solid #E6DEDE; border-radius: 16px;
             font-size: 24px; line-height: 1.4; color: #3c4043; }
@@ -204,26 +220,22 @@
   </head>
   <body>
     <div id="root" data-composition-id="main" data-start="0"
-         data-width="1080" data-height="1920" data-duration="76.000" data-fps="30">
+         data-width="1080" data-height="1920" data-duration="76.183" data-fps="30">
 
       <video id="vid" class="plate" src="assets/base.mp4"
-             data-start="0" data-duration="76.000" data-media-start="0"
+             data-start="0" data-duration="76.183" data-media-start="0"
              muted playsinline></video>
       <div id="behind" class="L">
         <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:430px; font-size:230px">Claude</div>
-        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:440px; font-size:230px">зникла</div>
       </div>
       <div id="panel">
 <svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
       </div>
       <video id="matte-b1" class="plate matte" src="assets/mattes/b1.webm"
-             data-start="3.100" data-duration="3.833" data-media-start="0"
-             muted playsinline></video>
-      <video id="matte-b2" class="plate matte" src="assets/mattes/b2.webm"
-             data-start="48.767" data-duration="2.333" data-media-start="0"
+             data-start="4.400" data-duration="2.467" data-media-start="0"
              muted playsinline></video>
       <video id="matte-half1" class="plate matte" src="assets/mattes/half1.webm"
-             data-start="62.400" data-duration="8.933" data-media-start="0"
+             data-start="62.400" data-duration="9.000" data-media-start="0"
              muted playsinline></video>
       <div id="front" class="L">
         <div id="pt0" class="shuf hid"><span class="chip"><span class="n">1</span>Анкета перед першою сесією</span></div>
@@ -236,11 +248,13 @@
           <div class="hd"><svg class="mark" width="30" height="30" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg> Скіл · план клієнтки<span class="tm"><span id="plb" class="gbtn">Надіслати</span></span></div>
           <div class="cols"><div class="col"><b>30 днів</b><div class="row"><span class="check"></span><i class="line"></i></div><div class="row"><span class="check"></span><i class="line"></i></div></div><div class="col"><b>60 днів</b><div class="row"><span class="check"></span><i class="line"></i></div><div class="row"><span class="check"></span><i class="line"></i></div></div><div class="col"><b>90 днів</b><div class="row"><span class="check"></span><i class="line"></i></div><div class="row"><span class="check"></span><i class="line"></i></div></div></div>
         </div>
+        <div id="mm1" class="meme r hid"><img src="assets/memes/35-hamster-sunglasses.jpg"></div>
 
         <div id="tg" class="glass gc hid">
           <div class="hd"><svg class="mark" width="30" height="30" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg> Telegram-бот · через SendPulse<span class="tm">щовечора</span></div>
           <div><span class="bub">Як сьогодні з диханням? Вдалось зробити вправу з твого плану?</span></div>
         </div>
+        <div id="mm2" class="meme top hid"><img src="assets/memes/59-cockatiel-alividerchi.jpg"></div>
 
         <div id="ls" class="glass gc hid">
           <div class="hd"><svg class="mark" width="30" height="30" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg> Тобі · клієнтки, які зникли</div>
@@ -301,180 +315,177 @@
       <div class="wc" id="w10">ОСЬ</div>
       <div class="wc" id="w11">ЯКІ</div>
       <div class="wc" id="w12">АВТОМАТИЗАЦІЇ</div>
-      <div class="wc" id="w13">З КЛОД</div>
       <div class="wc" id="w14">Я</div>
       <div class="wc" id="w15">Б СОБІ</div>
-      <div class="wc" id="w16">ЗРОБИЛА</div>
-      <div class="wc" id="w17">ПО</div>
-      <div class="wc" id="w18">ПЕРШЕ</div>
-      <div class="wc" id="w19">ЦЕ АНКЕТА</div>
-      <div class="wc" id="w20">ПЕРЕД</div>
-      <div class="wc" id="w21">ПЕРШОЮ</div>
-      <div class="wc" id="w22">СЕСІЄЮ.</div>
-      <div class="wc" id="w23">ЗВИЧАЙНА</div>
-      <div class="wc inv" id="w24">GOOGLE</div>
-      <div class="wc inv" id="w25">ФОРУМА.</div>
-      <div class="wc inv" id="w26">ВІДПОВІДІ</div>
-      <div class="wc inv" id="w27">ПАДАЮТЬ</div>
-      <div class="wc inv" id="w28">У</div>
-      <div class="wc inv" id="w29">ТАБЛЕЦІЮ,</div>
-      <div class="wc inv" id="w30">А КОНТАКТЕРУ</div>
-      <div class="wc inv" id="w31">GOOGLE</div>
-      <div class="wc inv" id="w32">DRIVE</div>
-      <div class="wc inv" id="w33">ДАЄ</div>
-      <div class="wc inv" id="w34">CLAUDE</div>
-      <div class="wc inv" id="w35">ЇЇ ПРОЧИТАТИ,</div>
-      <div class="wc inv" id="w36">І</div>
-      <div class="wc inv" id="w37">ЗАПЛАНОВАНА</div>
-      <div class="wc inv" id="w38">ЗАДАЧА</div>
-      <div class="wc inv" id="w39">ЩОРАНКУ</div>
-      <div class="wc inv" id="w40">РОБИТЬ</div>
-      <div class="wc inv" id="w41">КОРОТКЕ</div>
-      <div class="wc inv" id="w42">РЕЗЮМЕ</div>
-      <div class="wc inv" id="w43">ПО</div>
-      <div class="wc inv" id="w44">КОЖНІЙ</div>
-      <div class="wc inv" id="w45">НОВІЙ</div>
-      <div class="wc inv" id="w46">КЛІЄНТЦІ:</div>
-      <div class="wc inv" id="w47">ЧОГО</div>
-      <div class="wc inv" id="w48">ВОНА</div>
-      <div class="wc inv" id="w49">ХОЧЕ</div>
-      <div class="wc inv" id="w50">НАСПРАВДІ,</div>
-      <div class="wc inv" id="w51">ЩО ЇЙ</div>
-      <div class="wc inv" id="w52">ЗАВАЖАЄ,</div>
-      <div class="wc inv" id="w53">З ЧОГО</div>
-      <div class="wc inv" id="w54">ПОЧАТИ.</div>
-      <div class="wc inv" id="w55">НУ</div>
-      <div class="wc inv" id="w56">І,</div>
-      <div class="wc inv" id="w57">ВЛАСНЕ,</div>
-      <div class="wc" id="w58">ЯКІ</div>
-      <div class="wc" id="w59">КРАЩЕ</div>
-      <div class="wc" id="w60">ПРОДАТИ?</div>
-      <div class="wc" id="w61">ДРУГЕ</div>
-      <div class="wc" id="w62">ЦЕ</div>
-      <div class="wc" id="w63">ПЛАН</div>
-      <div class="wc" id="w64">НА</div>
-      <div class="wc" id="w65">30,</div>
-      <div class="wc" id="w66">60,</div>
-      <div class="wc" id="w67">90</div>
-      <div class="wc" id="w68">ДНІВ.</div>
-      <div class="wc" id="w69">СКІЛ</div>
-      <div class="wc" id="w70">БИРАЄ</div>
-      <div class="wc" id="w71">АНКЕТУ</div>
-      <div class="wc" id="w72">І</div>
-      <div class="wc" id="w73">ТРАНСКРИТУЄ</div>
-      <div class="wc" id="w74">З</div>
-      <div class="wc" id="w75">ПЕРШОГО</div>
-      <div class="wc" id="w76">ДЗВІНКА</div>
-      <div class="wc" id="w77">З</div>
-      <div class="wc" id="w78">FATHOM</div>
-      <div class="wc" id="w79">І</div>
-      <div class="wc" id="w80">САМ</div>
-      <div class="wc" id="w81">ЗБИРАЄ</div>
-      <div class="wc" id="w82">ПЛАН,</div>
-      <div class="wc" id="w83">ЯКИЙ</div>
-      <div class="wc" id="w84">ТОБІ</div>
-      <div class="wc" id="w85">ЛИШАЄТЬСЯ</div>
-      <div class="wc" id="w86">ТІЛЬКИ</div>
-      <div class="wc" id="w87">ПРОТИВИТИСЯ,</div>
-      <div class="wc" id="w88">ПОПРАВИТИ.</div>
-      <div class="wc" id="w89">І</div>
-      <div class="wc" id="w90">ВІДПРАВИТИ.</div>
-      <div class="wc" id="w91">МЕНІ</div>
-      <div class="wc" id="w92">ЗДАЄТЬСЯ,</div>
-      <div class="wc" id="w93">ЩО</div>
-      <div class="wc" id="w94">ЦЕ ВЗАГАЛІ</div>
-      <div class="wc" id="w95">ГАНІАЛЬНО.</div>
-      <div class="wc" id="w96">ТРЕТЄ</div>
-      <div class="wc" id="w97">ЦЕ</div>
-      <div class="wc" id="w98">ЩОДЕННІ</div>
-      <div class="wc" id="w99">ЧЕК-ІНИ.</div>
-      <div class="wc" id="w100">ЗАПЛАНОВАНА</div>
-      <div class="wc" id="w101">ЗАДАЧА</div>
-      <div class="wc" id="w102">ЩОВЕЧОРА</div>
-      <div class="wc" id="w103">ЧЕРЕЗ</div>
-      <div class="wc" id="w104">КОНЕКТОР</div>
-      <div class="wc" id="w105">СИМПУЛЬС</div>
-      <div class="wc" id="w106">ПИШЕ</div>
-      <div class="wc" id="w107">КЛІЄНТКАМ</div>
-      <div class="wc" id="w108">У ТЕЛЕГРАМ-БОТ</div>
-      <div class="wc" id="w109">ПИТАННЯ,</div>
-      <div class="wc" id="w110">ВИХОДЯЧИ</div>
-      <div class="wc" id="w111">З</div>
-      <div class="wc" id="w112">ЇХНЬОГО</div>
-      <div class="wc" id="w113">ПЛАНУ.</div>
-      <div class="wc" id="w114">І</div>
-      <div class="wc" id="w115">ВИХОДЯЧИ</div>
-      <div class="wc" id="w116">З</div>
-      <div class="wc" id="w117">ЦЬОГО,</div>
-      <div class="wc" id="w118">ЧЕТВЕРТЕ</div>
-      <div class="wc" id="w119">ЦЕ</div>
-      <div class="wc" id="w120">СИГНАЛ,</div>
-      <div class="wc" id="w121">ЩЕ</div>
-      <div class="wc" id="w122">КЛІЄНТКА</div>
-      <div class="wc" id="w123">ЗНИКЛА.</div>
-      <div class="wc" id="w124">ТОБТО</div>
-      <div class="wc" id="w125">ТА</div>
-      <div class="wc" id="w126">САМА</div>
-      <div class="wc" id="w127">ЗАДАЧА</div>
-      <div class="wc" id="w128">ДИВИТЬСЯ,</div>
-      <div class="wc" id="w129">ХТО</div>
-      <div class="wc" id="w130">ВЖЕ</div>
-      <div class="wc" id="w131">ДЕКІЛЬКА</div>
-      <div class="wc" id="w132">ДНІВ</div>
-      <div class="wc" id="w133">НЕ</div>
-      <div class="wc" id="w134">ВІДПОВІДАЄ</div>
-      <div class="wc" id="w135">АБО</div>
-      <div class="wc" id="w136">ЗАСТРЯГ</div>
-      <div class="wc" id="w137">НА</div>
-      <div class="wc" id="w138">ОДНОМУ</div>
-      <div class="wc" id="w139">КРОЦІ,</div>
-      <div class="wc" id="w140">І</div>
-      <div class="wc" id="w141">ШЛИ</div>
-      <div class="wc" id="w142">ТОБІ</div>
-      <div class="wc" id="w143">СПИСОК</div>
-      <div class="wc" id="w144">ЦИХ</div>
-      <div class="wc" id="w145">ЛЮДЕЙ?</div>
-      <div class="wc" id="w146">І</div>
-      <div class="wc" id="w147">МОЖЛИВО</div>
-      <div class="wc" id="w148">НАВІТЬ</div>
-      <div class="wc" id="w149">ПУШИТЬ</div>
-      <div class="wc" id="w150">ЇХ.</div>
-      <div class="wc" id="w151">ВЛАСНЕ,</div>
-      <div class="wc" id="w152">ЗРОБИТИ</div>
-      <div class="wc" id="w153">ЦЕЙ</div>
-      <div class="wc" id="w154">КРОК.</div>
-      <div class="wc" id="w155">І</div>
-      <div class="wc" id="w156">ПʼЯТЕ</div>
-      <div class="wc" id="w157">ОКРЕМО</div>
-      <div class="wc" id="w158">.Ц</div>
-      <div class="wc" id="w159">ПІСЛЯ</div>
-      <div class="wc" id="w160">СЕСІЇ.</div>
-      <div class="wc inv" id="w161" style="top:820px">FATHOM</div>
-      <div class="wc inv" id="w162" style="top:820px">ЗАПИСУЄ</div>
-      <div class="wc inv" id="w163" style="top:820px">ДЗВІНОК,</div>
-      <div class="wc inv" id="w164" style="top:820px">CLAUDE</div>
-      <div class="wc inv" id="w165" style="top:820px">РОБИТЬ</div>
-      <div class="wc inv" id="w166" style="top:820px">САМАРІ,</div>
-      <div class="wc inv" id="w167" style="top:820px">ДОМОВЛЕНОСТІ</div>
-      <div class="wc inv" id="w168" style="top:820px">Й</div>
-      <div class="wc inv" id="w169" style="top:820px">ЗАДАЧІ,</div>
-      <div class="wc inv" id="w170" style="top:820px">І</div>
-      <div class="wc inv" id="w171" style="top:820px">ЧЕРЕЗ</div>
-      <div class="wc inv" id="w172" style="top:820px">СИН</div>
-      <div class="wc inv" id="w173" style="top:820px">ПУЛЬС</div>
-      <div class="wc inv" id="w174" style="top:820px">НАЦІЛАЄТЬСЯ</div>
-      <div class="wc inv" id="w175" style="top:820px">ВСЕ</div>
-      <div class="wc inv" id="w176" style="top:820px">КЛІЄНТЦІ.</div>
-      <div class="wc inv" id="w177" style="top:820px">ТОБІ</div>
-      <div class="wc" id="w178">НАВІТЬ</div>
-      <div class="wc" id="w179">НЕ</div>
-      <div class="wc" id="w180">ТРЕБА.</div>
-      <div class="wc" id="w181">РОБИТИ</div>
-      <div class="wc" id="w182">НОТАТКИ.</div>
+      <div class="wc" id="w16">ЗРОБИЛА.</div>
+      <div class="wc" id="w17">ПО-ПЕРШЕ,</div>
+      <div class="wc" id="w18">ЦЕ АНКЕТА</div>
+      <div class="wc" id="w19">ПЕРЕД</div>
+      <div class="wc" id="w20">ПЕРШОЮ</div>
+      <div class="wc" id="w21">СЕСІЄЮ.</div>
+      <div class="wc" id="w22">ЗВИЧАЙНА</div>
+      <div class="wc inv" id="w23">GOOGLE</div>
+      <div class="wc inv" id="w24">ФОРМА.</div>
+      <div class="wc inv" id="w25">ВІДПОВІДІ</div>
+      <div class="wc inv" id="w26">ПАДАЮТЬ</div>
+      <div class="wc inv" id="w27">У</div>
+      <div class="wc inv" id="w28">ТАБЛИЦЮ,</div>
+      <div class="wc inv" id="w29">А КОНЕКТОР</div>
+      <div class="wc inv" id="w30">GOOGLE</div>
+      <div class="wc inv" id="w31">DRIVE</div>
+      <div class="wc inv" id="w32">ДАЄ</div>
+      <div class="wc inv" id="w33">CLAUDE</div>
+      <div class="wc inv" id="w34">ЇЇ ПРОЧИТАТИ,</div>
+      <div class="wc inv" id="w35">І</div>
+      <div class="wc inv" id="w36">ЗАПЛАНОВАНА</div>
+      <div class="wc inv" id="w37">ЗАДАЧА</div>
+      <div class="wc inv" id="w38">ЩОРАНКУ</div>
+      <div class="wc inv" id="w39">РОБИТЬ</div>
+      <div class="wc inv" id="w40">КОРОТКЕ</div>
+      <div class="wc inv" id="w41">РЕЗЮМЕ</div>
+      <div class="wc inv" id="w42">ПО</div>
+      <div class="wc inv" id="w43">КОЖНІЙ</div>
+      <div class="wc inv" id="w44">НОВІЙ</div>
+      <div class="wc inv" id="w45">КЛІЄНТЦІ:</div>
+      <div class="wc inv" id="w46">ЧОГО</div>
+      <div class="wc inv" id="w47">ВОНА</div>
+      <div class="wc inv" id="w48">ХОЧЕ</div>
+      <div class="wc inv" id="w49">НАСПРАВДІ,</div>
+      <div class="wc inv" id="w50">ЩО ЇЙ</div>
+      <div class="wc inv" id="w51">ЗАВАЖАЄ,</div>
+      <div class="wc inv" id="w52">З ЧОГО</div>
+      <div class="wc inv" id="w53">ПОЧАТИ.</div>
+      <div class="wc inv" id="w54">НУ</div>
+      <div class="wc inv" id="w55">І,</div>
+      <div class="wc inv" id="w56">ВЛАСНЕ,</div>
+      <div class="wc" id="w57">ЯКІ</div>
+      <div class="wc" id="w58">КРАЩЕ</div>
+      <div class="wc" id="w59">ПРОДАТИ?</div>
+      <div class="wc" id="w60">ДРУГЕ</div>
+      <div class="wc" id="w61">ЦЕ</div>
+      <div class="wc" id="w62">ПЛАН</div>
+      <div class="wc" id="w63">НА</div>
+      <div class="wc" id="w64">30,</div>
+      <div class="wc" id="w65">60,</div>
+      <div class="wc" id="w66">90</div>
+      <div class="wc" id="w67">ДНІВ.</div>
+      <div class="wc" id="w68">СКІЛ</div>
+      <div class="wc" id="w69">БЕРЕ</div>
+      <div class="wc" id="w70">АНКЕТУ</div>
+      <div class="wc" id="w71">І</div>
+      <div class="wc" id="w72">ТРАНСКРИПТ</div>
+      <div class="wc" id="w73">З</div>
+      <div class="wc" id="w74">ПЕРШОГО</div>
+      <div class="wc" id="w75">ДЗВІНКА</div>
+      <div class="wc" id="w76">З</div>
+      <div class="wc" id="w77">FATHOM</div>
+      <div class="wc" id="w78">І</div>
+      <div class="wc" id="w79">САМ</div>
+      <div class="wc" id="w80">ЗБИРАЄ</div>
+      <div class="wc" id="w81">ПЛАН,</div>
+      <div class="wc" id="w82">ЯКИЙ</div>
+      <div class="wc" id="w83">ТОБІ</div>
+      <div class="wc" id="w84">ЛИШАЄТЬСЯ</div>
+      <div class="wc" id="w85">ТІЛЬКИ</div>
+      <div class="wc" id="w86">ПЕРЕВІРИТИ,</div>
+      <div class="wc" id="w87">ПОПРАВИТИ</div>
+      <div class="wc" id="w88">І</div>
+      <div class="wc" id="w89">ВІДПРАВИТИ.</div>
+      <div class="wc" id="w90">МЕНІ</div>
+      <div class="wc" id="w91">ЗДАЄТЬСЯ,</div>
+      <div class="wc" id="w92">ЩО</div>
+      <div class="wc" id="w93">ЦЕ ВЗАГАЛІ</div>
+      <div class="wc" id="w94">ГЕНІАЛЬНО.</div>
+      <div class="wc" id="w95">ТРЕТЄ</div>
+      <div class="wc" id="w96">ЦЕ</div>
+      <div class="wc" id="w97">ЩОДЕННІ</div>
+      <div class="wc" id="w98">ЧЕК-ІНИ.</div>
+      <div class="wc" id="w99">ЗАПЛАНОВАНА</div>
+      <div class="wc" id="w100">ЗАДАЧА</div>
+      <div class="wc" id="w101">ЩОВЕЧОРА</div>
+      <div class="wc" id="w102">ЧЕРЕЗ</div>
+      <div class="wc" id="w103">КОНЕКТОР</div>
+      <div class="wc" id="w104">SENDPULSE</div>
+      <div class="wc" id="w105">ПИШЕ</div>
+      <div class="wc" id="w106">КЛІЄНТКАМ</div>
+      <div class="wc" id="w107">У ТЕЛЕГРАМ-БОТ</div>
+      <div class="wc" id="w108">ПИТАННЯ,</div>
+      <div class="wc" id="w109">ВИХОДЯЧИ</div>
+      <div class="wc" id="w110">З</div>
+      <div class="wc" id="w111">ЇХНЬОГО</div>
+      <div class="wc" id="w112">ПЛАНУ.</div>
+      <div class="wc" id="w113">І</div>
+      <div class="wc" id="w114">ВИХОДЯЧИ</div>
+      <div class="wc" id="w115">З</div>
+      <div class="wc" id="w116">ЦЬОГО,</div>
+      <div class="wc" id="w117">ЧЕТВЕРТЕ</div>
+      <div class="wc" id="w118">ЦЕ</div>
+      <div class="wc" id="w119">СИГНАЛ,</div>
+      <div class="wc" id="w120">ЩО</div>
+      <div class="wc" id="w121">КЛІЄНТКА</div>
+      <div class="wc" id="w122">ЗНИКЛА.</div>
+      <div class="wc" id="w123">ТОБТО,</div>
+      <div class="wc" id="w124">ТА</div>
+      <div class="wc" id="w125">САМА</div>
+      <div class="wc" id="w126">ЗАДАЧА</div>
+      <div class="wc" id="w127">ДИВИТЬСЯ,</div>
+      <div class="wc" id="w128">ХТО</div>
+      <div class="wc" id="w129">ВЖЕ</div>
+      <div class="wc" id="w130">ДЕКІЛЬКА</div>
+      <div class="wc" id="w131">ДНІВ</div>
+      <div class="wc" id="w132">НЕ</div>
+      <div class="wc" id="w133">ВІДПОВІДАЄ</div>
+      <div class="wc" id="w134">АБО</div>
+      <div class="wc" id="w135">ЗАСТРЯГ</div>
+      <div class="wc" id="w136">НА</div>
+      <div class="wc" id="w137">ОДНОМУ</div>
+      <div class="wc" id="w138">КРОЦІ,</div>
+      <div class="wc" id="w139">І</div>
+      <div class="wc" id="w140">ШЛЕ</div>
+      <div class="wc" id="w141">ТОБІ</div>
+      <div class="wc" id="w142">СПИСОК</div>
+      <div class="wc" id="w143">ЦИХ</div>
+      <div class="wc" id="w144">ЛЮДЕЙ,</div>
+      <div class="wc" id="w145">І</div>
+      <div class="wc" id="w146">МОЖЛИВО</div>
+      <div class="wc" id="w147">НАВІТЬ</div>
+      <div class="wc" id="w148">ПУШИТЬ</div>
+      <div class="wc" id="w149">ЇХ,</div>
+      <div class="wc" id="w150">ВЛАСНЕ,</div>
+      <div class="wc" id="w151">ЗРОБИТИ</div>
+      <div class="wc" id="w152">ЦЕЙ</div>
+      <div class="wc" id="w153">КРОК.</div>
+      <div class="wc" id="w154">І</div>
+      <div class="wc" id="w155">ПʼЯТЕ</div>
+      <div class="wc" id="w156">ОКРЕМО</div>
+      <div class="wc" id="w157">ЦЕ</div>
+      <div class="wc" id="w158">ПІСЛЯ</div>
+      <div class="wc" id="w159">СЕСІЇ.</div>
+      <div class="wc inv" id="w160" style="top:820px">FATHOM</div>
+      <div class="wc inv" id="w161" style="top:820px">ЗАПИСУЄ</div>
+      <div class="wc inv" id="w162" style="top:820px">ДЗВІНОК,</div>
+      <div class="wc inv" id="w163" style="top:820px">CLAUDE</div>
+      <div class="wc inv" id="w164" style="top:820px">РОБИТЬ</div>
+      <div class="wc inv" id="w165" style="top:820px">САМАРІ,</div>
+      <div class="wc inv" id="w166" style="top:820px">ДОМОВЛЕНОСТІ</div>
+      <div class="wc inv" id="w167" style="top:820px">Й</div>
+      <div class="wc inv" id="w168" style="top:820px">ЗАДАЧІ,</div>
+      <div class="wc inv" id="w169" style="top:820px">І</div>
+      <div class="wc inv" id="w170" style="top:820px">ЧЕРЕЗ</div>
+      <div class="wc inv" id="w171" style="top:820px">SENDPULSE</div>
+      <div class="wc inv" id="w172" style="top:820px">НАДСИЛАЄ</div>
+      <div class="wc inv" id="w173" style="top:820px">ВСЕ</div>
+      <div class="wc inv" id="w174" style="top:820px">КЛІЄНТЦІ.</div>
+      <div class="wc inv" id="w175" style="top:820px">ТОБІ</div>
+      <div class="wc" id="w176">НАВІТЬ</div>
+      <div class="wc" id="w177">НЕ</div>
+      <div class="wc" id="w178">ТРЕБА</div>
+      <div class="wc" id="w179">РОБИТИ</div>
+      <div class="wc" id="w180">НОТАТКИ.</div>
       </div>
 
       <audio id="vo" src="assets/base.mp4"
-             data-start="0" data-duration="76.000" data-media-start="0"></audio>
+             data-start="0" data-duration="76.183" data-media-start="0"></audio>
     </div>
 
     <script>
@@ -665,7 +676,7 @@
   function erase(name, t) { tl.to("#sk-" + name, {autoAlpha: 0, duration: .3, ease: "power2.in"}, t); }
 
   gsap.set(PUSH, {transformOrigin: "540px 900px"});
-  tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 76.000, ease: "none"}, 0);
+  tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 76.183, ease: "none"}, 0);
 
   tl.set("#w0", {autoAlpha: 1}, 0.000); tl.set("#w0", {autoAlpha: 0}, 0.497);
   tl.set("#w1", {autoAlpha: 1}, 0.582); tl.set("#w1", {autoAlpha: 0}, 0.682);
@@ -680,196 +691,190 @@
   tl.set("#w10", {autoAlpha: 1}, 3.623); tl.set("#w10", {autoAlpha: 0}, 4.058);
   tl.set("#w11", {autoAlpha: 1}, 4.143); tl.set("#w11", {autoAlpha: 0}, 4.243);
   tl.set("#w12", {autoAlpha: 1}, 4.323); tl.set("#w12", {autoAlpha: 0}, 4.918);
-  tl.set("#w13", {autoAlpha: 1}, 5.003); tl.set("#w13", {autoAlpha: 0}, 5.178);
   tl.set("#w14", {autoAlpha: 1}, 5.263); tl.set("#w14", {autoAlpha: 0}, 5.418);
   tl.set("#w15", {autoAlpha: 1}, 5.503); tl.set("#w15", {autoAlpha: 0}, 5.658);
-  tl.set("#w16", {autoAlpha: 1}, 5.743); tl.set("#w16", {autoAlpha: 0}, 6.248);
-  tl.set("#w17", {autoAlpha: 1}, 6.333); tl.set("#w17", {autoAlpha: 0}, 6.578);
-  tl.set("#w18", {autoAlpha: 1}, 6.663); tl.set("#w18", {autoAlpha: 0}, 7.158);
-  tl.set("#w19", {autoAlpha: 1}, 7.243); tl.set("#w19", {autoAlpha: 0}, 7.778);
-  tl.set("#w20", {autoAlpha: 1}, 7.863); tl.set("#w20", {autoAlpha: 0}, 8.098);
-  tl.set("#w21", {autoAlpha: 1}, 8.183); tl.set("#w21", {autoAlpha: 0}, 8.478);
-  tl.set("#w22", {autoAlpha: 1}, 8.563); tl.set("#w22", {autoAlpha: 0}, 9.057);
-  tl.set("#w23", {autoAlpha: 1}, 9.142); tl.set("#w23", {autoAlpha: 0}, 9.657);
-  tl.set("#w24", {autoAlpha: 1}, 9.742); tl.set("#w24", {autoAlpha: 0}, 9.917);
-  tl.set("#w25", {autoAlpha: 1}, 10.002); tl.set("#w25", {autoAlpha: 0}, 10.403);
-  tl.set("#w26", {autoAlpha: 1}, 10.488); tl.set("#w26", {autoAlpha: 0}, 10.983);
-  tl.set("#w27", {autoAlpha: 1}, 11.068); tl.set("#w27", {autoAlpha: 0}, 11.323);
-  tl.set("#w28", {autoAlpha: 1}, 11.408); tl.set("#w28", {autoAlpha: 0}, 11.508);
-  tl.set("#w29", {autoAlpha: 1}, 11.568); tl.set("#w29", {autoAlpha: 0}, 12.163);
-  tl.set("#w30", {autoAlpha: 1}, 12.248); tl.set("#w30", {autoAlpha: 0}, 12.743);
-  tl.set("#w31", {autoAlpha: 1}, 12.828); tl.set("#w31", {autoAlpha: 0}, 13.003);
-  tl.set("#w32", {autoAlpha: 1}, 13.088); tl.set("#w32", {autoAlpha: 0}, 13.303);
-  tl.set("#w33", {autoAlpha: 1}, 13.388); tl.set("#w33", {autoAlpha: 0}, 13.643);
-  tl.set("#w34", {autoAlpha: 1}, 13.728); tl.set("#w34", {autoAlpha: 0}, 13.928);
-  tl.set("#w35", {autoAlpha: 1}, 14.013); tl.set("#w35", {autoAlpha: 0}, 14.748);
-  tl.set("#w36", {autoAlpha: 1}, 14.833); tl.set("#w36", {autoAlpha: 0}, 15.038);
-  tl.set("#w37", {autoAlpha: 1}, 15.123); tl.set("#w37", {autoAlpha: 0}, 15.758);
-  tl.set("#w38", {autoAlpha: 1}, 15.843); tl.set("#w38", {autoAlpha: 0}, 16.258);
-  tl.set("#w39", {autoAlpha: 1}, 16.343); tl.set("#w39", {autoAlpha: 0}, 16.718);
-  tl.set("#w40", {autoAlpha: 1}, 16.803); tl.set("#w40", {autoAlpha: 0}, 17.118);
-  tl.set("#w41", {autoAlpha: 1}, 17.203); tl.set("#w41", {autoAlpha: 0}, 17.638);
-  tl.set("#w42", {autoAlpha: 1}, 17.723); tl.set("#w42", {autoAlpha: 0}, 18.048);
-  tl.set("#w43", {autoAlpha: 1}, 18.133); tl.set("#w43", {autoAlpha: 0}, 18.329);
-  tl.set("#w44", {autoAlpha: 1}, 18.414); tl.set("#w44", {autoAlpha: 0}, 18.569);
-  tl.set("#w45", {autoAlpha: 1}, 18.654); tl.set("#w45", {autoAlpha: 0}, 18.789);
-  tl.set("#w46", {autoAlpha: 1}, 18.874); tl.set("#w46", {autoAlpha: 0}, 19.384);
-  tl.set("#w47", {autoAlpha: 1}, 19.469); tl.set("#w47", {autoAlpha: 0}, 19.684);
-  tl.set("#w48", {autoAlpha: 1}, 19.769); tl.set("#w48", {autoAlpha: 0}, 19.884);
-  tl.set("#w49", {autoAlpha: 1}, 19.969); tl.set("#w49", {autoAlpha: 0}, 20.204);
-  tl.set("#w50", {autoAlpha: 1}, 20.289); tl.set("#w50", {autoAlpha: 0}, 20.804);
-  tl.set("#w51", {autoAlpha: 1}, 20.889); tl.set("#w51", {autoAlpha: 0}, 20.989);
-  tl.set("#w52", {autoAlpha: 1}, 21.049); tl.set("#w52", {autoAlpha: 0}, 21.524);
-  tl.set("#w53", {autoAlpha: 1}, 21.609); tl.set("#w53", {autoAlpha: 0}, 21.744);
-  tl.set("#w54", {autoAlpha: 1}, 21.829); tl.set("#w54", {autoAlpha: 0}, 22.515);
-  tl.set("#w55", {autoAlpha: 1}, 22.600); tl.set("#w55", {autoAlpha: 0}, 22.725);
-  tl.set("#w56", {autoAlpha: 1}, 22.810); tl.set("#w56", {autoAlpha: 0}, 22.910);
-  tl.set("#w57", {autoAlpha: 1}, 22.950); tl.set("#w57", {autoAlpha: 0}, 23.225);
-  tl.set("#w58", {autoAlpha: 1}, 23.310); tl.set("#w58", {autoAlpha: 0}, 23.410);
-  tl.set("#w59", {autoAlpha: 1}, 23.470); tl.set("#w59", {autoAlpha: 0}, 23.705);
-  tl.set("#w60", {autoAlpha: 1}, 23.790); tl.set("#w60", {autoAlpha: 0}, 24.348);
-  tl.set("#w61", {autoAlpha: 1}, 24.433); tl.set("#w61", {autoAlpha: 0}, 25.098);
-  tl.set("#w62", {autoAlpha: 1}, 25.183); tl.set("#w62", {autoAlpha: 0}, 25.283);
-  tl.set("#w63", {autoAlpha: 1}, 25.323); tl.set("#w63", {autoAlpha: 0}, 25.423);
-  tl.set("#w64", {autoAlpha: 1}, 25.483); tl.set("#w64", {autoAlpha: 0}, 25.718);
-  tl.set("#w65", {autoAlpha: 1}, 25.803); tl.set("#w65", {autoAlpha: 0}, 26.098);
-  tl.set("#w66", {autoAlpha: 1}, 26.183); tl.set("#w66", {autoAlpha: 0}, 26.618);
-  tl.set("#w67", {autoAlpha: 1}, 26.703); tl.set("#w67", {autoAlpha: 0}, 27.138);
-  tl.set("#w68", {autoAlpha: 1}, 27.223); tl.set("#w68", {autoAlpha: 0}, 27.548);
-  tl.set("#w69", {autoAlpha: 1}, 27.633); tl.set("#w69", {autoAlpha: 0}, 28.018);
-  tl.set("#w70", {autoAlpha: 1}, 28.103); tl.set("#w70", {autoAlpha: 0}, 28.378);
-  tl.set("#w71", {autoAlpha: 1}, 28.463); tl.set("#w71", {autoAlpha: 0}, 28.798);
-  tl.set("#w72", {autoAlpha: 1}, 28.883); tl.set("#w72", {autoAlpha: 0}, 28.983);
-  tl.set("#w73", {autoAlpha: 1}, 29.023); tl.set("#w73", {autoAlpha: 0}, 29.398);
-  tl.set("#w74", {autoAlpha: 1}, 29.483); tl.set("#w74", {autoAlpha: 0}, 29.583);
-  tl.set("#w75", {autoAlpha: 1}, 29.623); tl.set("#w75", {autoAlpha: 0}, 29.738);
-  tl.set("#w76", {autoAlpha: 1}, 29.823); tl.set("#w76", {autoAlpha: 0}, 30.098);
-  tl.set("#w77", {autoAlpha: 1}, 30.183); tl.set("#w77", {autoAlpha: 0}, 30.283);
-  tl.set("#w78", {autoAlpha: 1}, 30.323); tl.set("#w78", {autoAlpha: 0}, 30.458);
-  tl.set("#w79", {autoAlpha: 1}, 30.543); tl.set("#w79", {autoAlpha: 0}, 30.738);
-  tl.set("#w80", {autoAlpha: 1}, 30.823); tl.set("#w80", {autoAlpha: 0}, 30.998);
-  tl.set("#w81", {autoAlpha: 1}, 31.083); tl.set("#w81", {autoAlpha: 0}, 31.478);
-  tl.set("#w82", {autoAlpha: 1}, 31.563); tl.set("#w82", {autoAlpha: 0}, 31.853);
-  tl.set("#w83", {autoAlpha: 1}, 31.938); tl.set("#w83", {autoAlpha: 0}, 32.233);
-  tl.set("#w84", {autoAlpha: 1}, 32.318); tl.set("#w84", {autoAlpha: 0}, 32.433);
-  tl.set("#w85", {autoAlpha: 1}, 32.518); tl.set("#w85", {autoAlpha: 0}, 32.913);
-  tl.set("#w86", {autoAlpha: 1}, 32.998); tl.set("#w86", {autoAlpha: 0}, 33.213);
-  tl.set("#w87", {autoAlpha: 1}, 33.298); tl.set("#w87", {autoAlpha: 0}, 33.973);
-  tl.set("#w88", {autoAlpha: 1}, 34.058); tl.set("#w88", {autoAlpha: 0}, 34.393);
-  tl.set("#w89", {autoAlpha: 1}, 34.478); tl.set("#w89", {autoAlpha: 0}, 34.773);
-  tl.set("#w90", {autoAlpha: 1}, 34.858); tl.set("#w90", {autoAlpha: 0}, 35.482);
-  tl.set("#w91", {autoAlpha: 1}, 35.567); tl.set("#w91", {autoAlpha: 0}, 35.812);
-  tl.set("#w92", {autoAlpha: 1}, 35.897); tl.set("#w92", {autoAlpha: 0}, 36.072);
-  tl.set("#w93", {autoAlpha: 1}, 36.157); tl.set("#w93", {autoAlpha: 0}, 36.257);
-  tl.set("#w94", {autoAlpha: 1}, 36.257); tl.set("#w94", {autoAlpha: 0}, 36.672);
-  tl.set("#w95", {autoAlpha: 1}, 36.757); tl.set("#w95", {autoAlpha: 0}, 37.282);
-  tl.set("#w96", {autoAlpha: 1}, 37.367); tl.set("#w96", {autoAlpha: 0}, 38.012);
-  tl.set("#w97", {autoAlpha: 1}, 38.097); tl.set("#w97", {autoAlpha: 0}, 38.197);
-  tl.set("#w98", {autoAlpha: 1}, 38.217); tl.set("#w98", {autoAlpha: 0}, 38.792);
-  tl.set("#w99", {autoAlpha: 1}, 38.877); tl.set("#w99", {autoAlpha: 0}, 39.382);
-  tl.set("#w100", {autoAlpha: 1}, 39.467); tl.set("#w100", {autoAlpha: 0}, 40.172);
-  tl.set("#w101", {autoAlpha: 1}, 40.257); tl.set("#w101", {autoAlpha: 0}, 40.631);
-  tl.set("#w102", {autoAlpha: 1}, 40.716); tl.set("#w102", {autoAlpha: 0}, 41.151);
-  tl.set("#w103", {autoAlpha: 1}, 41.236); tl.set("#w103", {autoAlpha: 0}, 41.371);
-  tl.set("#w104", {autoAlpha: 1}, 41.456); tl.set("#w104", {autoAlpha: 0}, 41.752);
-  tl.set("#w105", {autoAlpha: 1}, 41.837); tl.set("#w105", {autoAlpha: 0}, 42.271);
-  tl.set("#w106", {autoAlpha: 1}, 42.356); tl.set("#w106", {autoAlpha: 0}, 42.532);
-  tl.set("#w107", {autoAlpha: 1}, 42.617); tl.set("#w107", {autoAlpha: 0}, 42.969);
-  tl.set("#w108", {autoAlpha: 1}, 43.054); tl.set("#w108", {autoAlpha: 0}, 43.574);
-  tl.set("#w109", {autoAlpha: 1}, 43.659); tl.set("#w109", {autoAlpha: 0}, 44.194);
-  tl.set("#w110", {autoAlpha: 1}, 44.279); tl.set("#w110", {autoAlpha: 0}, 44.874);
-  tl.set("#w111", {autoAlpha: 1}, 44.959); tl.set("#w111", {autoAlpha: 0}, 45.059);
-  tl.set("#w112", {autoAlpha: 1}, 45.099); tl.set("#w112", {autoAlpha: 0}, 45.360);
-  tl.set("#w113", {autoAlpha: 1}, 45.445); tl.set("#w113", {autoAlpha: 0}, 45.982);
-  tl.set("#w114", {autoAlpha: 1}, 46.067); tl.set("#w114", {autoAlpha: 0}, 46.272);
-  tl.set("#w115", {autoAlpha: 1}, 46.357); tl.set("#w115", {autoAlpha: 0}, 46.752);
-  tl.set("#w116", {autoAlpha: 1}, 46.837); tl.set("#w116", {autoAlpha: 0}, 46.937);
-  tl.set("#w117", {autoAlpha: 1}, 46.977); tl.set("#w117", {autoAlpha: 0}, 47.132);
-  tl.set("#w118", {autoAlpha: 1}, 47.217); tl.set("#w118", {autoAlpha: 0}, 47.972);
-  tl.set("#w119", {autoAlpha: 1}, 48.057); tl.set("#w119", {autoAlpha: 0}, 48.172);
-  tl.set("#w120", {autoAlpha: 1}, 48.257); tl.set("#w120", {autoAlpha: 0}, 48.715);
-  tl.set("#w121", {autoAlpha: 1}, 48.800); tl.set("#w121", {autoAlpha: 0}, 49.085);
-  tl.set("#w122", {autoAlpha: 1}, 49.170); tl.set("#w122", {autoAlpha: 0}, 49.765);
-  tl.set("#w123", {autoAlpha: 1}, 49.850); tl.set("#w123", {autoAlpha: 0}, 50.274);
-  tl.set("#w124", {autoAlpha: 1}, 50.359); tl.set("#w124", {autoAlpha: 0}, 50.714);
-  tl.set("#w125", {autoAlpha: 1}, 50.799); tl.set("#w125", {autoAlpha: 0}, 50.934);
-  tl.set("#w126", {autoAlpha: 1}, 51.019); tl.set("#w126", {autoAlpha: 0}, 51.174);
-  tl.set("#w127", {autoAlpha: 1}, 51.259); tl.set("#w127", {autoAlpha: 0}, 51.574);
-  tl.set("#w128", {autoAlpha: 1}, 51.659); tl.set("#w128", {autoAlpha: 0}, 52.020);
-  tl.set("#w129", {autoAlpha: 1}, 52.105); tl.set("#w129", {autoAlpha: 0}, 52.205);
-  tl.set("#w130", {autoAlpha: 1}, 52.245); tl.set("#w130", {autoAlpha: 0}, 52.420);
-  tl.set("#w131", {autoAlpha: 1}, 52.505); tl.set("#w131", {autoAlpha: 0}, 52.740);
-  tl.set("#w132", {autoAlpha: 1}, 52.825); tl.set("#w132", {autoAlpha: 0}, 52.940);
-  tl.set("#w133", {autoAlpha: 1}, 53.025); tl.set("#w133", {autoAlpha: 0}, 53.125);
-  tl.set("#w134", {autoAlpha: 1}, 53.185); tl.set("#w134", {autoAlpha: 0}, 53.740);
-  tl.set("#w135", {autoAlpha: 1}, 53.825); tl.set("#w135", {autoAlpha: 0}, 54.000);
-  tl.set("#w136", {autoAlpha: 1}, 54.085); tl.set("#w136", {autoAlpha: 0}, 54.380);
-  tl.set("#w137", {autoAlpha: 1}, 54.465); tl.set("#w137", {autoAlpha: 0}, 54.565);
-  tl.set("#w138", {autoAlpha: 1}, 54.585); tl.set("#w138", {autoAlpha: 0}, 54.800);
-  tl.set("#w139", {autoAlpha: 1}, 54.885); tl.set("#w139", {autoAlpha: 0}, 55.182);
-  tl.set("#w140", {autoAlpha: 1}, 55.267); tl.set("#w140", {autoAlpha: 0}, 55.412);
-  tl.set("#w141", {autoAlpha: 1}, 55.497); tl.set("#w141", {autoAlpha: 0}, 55.632);
-  tl.set("#w142", {autoAlpha: 1}, 55.717); tl.set("#w142", {autoAlpha: 0}, 55.832);
-  tl.set("#w143", {autoAlpha: 1}, 55.917); tl.set("#w143", {autoAlpha: 0}, 56.172);
-  tl.set("#w144", {autoAlpha: 1}, 56.257); tl.set("#w144", {autoAlpha: 0}, 56.392);
-  tl.set("#w145", {autoAlpha: 1}, 56.477); tl.set("#w145", {autoAlpha: 0}, 56.915);
-  tl.set("#w146", {autoAlpha: 1}, 57.000); tl.set("#w146", {autoAlpha: 0}, 57.125);
-  tl.set("#w147", {autoAlpha: 1}, 57.210); tl.set("#w147", {autoAlpha: 0}, 57.505);
-  tl.set("#w148", {autoAlpha: 1}, 57.590); tl.set("#w148", {autoAlpha: 0}, 57.848);
-  tl.set("#w149", {autoAlpha: 1}, 57.933); tl.set("#w149", {autoAlpha: 0}, 58.418);
-  tl.set("#w150", {autoAlpha: 1}, 58.503); tl.set("#w150", {autoAlpha: 0}, 58.782);
-  tl.set("#w151", {autoAlpha: 1}, 58.867); tl.set("#w151", {autoAlpha: 0}, 59.402);
-  tl.set("#w152", {autoAlpha: 1}, 59.487); tl.set("#w152", {autoAlpha: 0}, 59.722);
-  tl.set("#w153", {autoAlpha: 1}, 59.807); tl.set("#w153", {autoAlpha: 0}, 59.907);
-  tl.set("#w154", {autoAlpha: 1}, 59.947); tl.set("#w154", {autoAlpha: 0}, 60.282);
-  tl.set("#w155", {autoAlpha: 1}, 60.367); tl.set("#w155", {autoAlpha: 0}, 60.512);
-  tl.set("#w156", {autoAlpha: 1}, 60.597); tl.set("#w156", {autoAlpha: 0}, 60.892);
-  tl.set("#w157", {autoAlpha: 1}, 60.977); tl.set("#w157", {autoAlpha: 0}, 61.352);
-  tl.set("#w158", {autoAlpha: 1}, 61.437); tl.set("#w158", {autoAlpha: 0}, 61.948);
-  tl.set("#w159", {autoAlpha: 1}, 62.033); tl.set("#w159", {autoAlpha: 0}, 62.578);
-  tl.set("#w160", {autoAlpha: 1}, 62.663); tl.set("#w160", {autoAlpha: 0}, 62.938);
-  tl.set("#w161", {autoAlpha: 1}, 63.023); tl.set("#w161", {autoAlpha: 0}, 63.371);
-  tl.set("#w162", {autoAlpha: 1}, 63.456); tl.set("#w162", {autoAlpha: 0}, 63.876);
-  tl.set("#w163", {autoAlpha: 1}, 63.961); tl.set("#w163", {autoAlpha: 0}, 64.380);
-  tl.set("#w164", {autoAlpha: 1}, 64.465); tl.set("#w164", {autoAlpha: 0}, 64.813);
-  tl.set("#w165", {autoAlpha: 1}, 64.898); tl.set("#w165", {autoAlpha: 0}, 65.245);
-  tl.set("#w166", {autoAlpha: 1}, 65.330); tl.set("#w166", {autoAlpha: 0}, 65.678);
-  tl.set("#w167", {autoAlpha: 1}, 65.763); tl.set("#w167", {autoAlpha: 0}, 66.543);
-  tl.set("#w168", {autoAlpha: 1}, 66.628); tl.set("#w168", {autoAlpha: 0}, 66.728);
-  tl.set("#w169", {autoAlpha: 1}, 66.795); tl.set("#w169", {autoAlpha: 0}, 67.243);
-  tl.set("#w170", {autoAlpha: 1}, 67.328); tl.set("#w170", {autoAlpha: 0}, 67.583);
-  tl.set("#w171", {autoAlpha: 1}, 67.668); tl.set("#w171", {autoAlpha: 0}, 67.783);
-  tl.set("#w172", {autoAlpha: 1}, 67.868); tl.set("#w172", {autoAlpha: 0}, 67.968);
-  tl.set("#w173", {autoAlpha: 1}, 68.048); tl.set("#w173", {autoAlpha: 0}, 68.343);
-  tl.set("#w174", {autoAlpha: 1}, 68.428); tl.set("#w174", {autoAlpha: 0}, 69.123);
-  tl.set("#w175", {autoAlpha: 1}, 69.208); tl.set("#w175", {autoAlpha: 0}, 69.308);
-  tl.set("#w176", {autoAlpha: 1}, 69.348); tl.set("#w176", {autoAlpha: 0}, 70.015);
-  tl.set("#w177", {autoAlpha: 1}, 70.100); tl.set("#w177", {autoAlpha: 0}, 70.626);
-  tl.set("#w178", {autoAlpha: 1}, 70.711); tl.set("#w178", {autoAlpha: 0}, 70.946);
-  tl.set("#w179", {autoAlpha: 1}, 71.031); tl.set("#w179", {autoAlpha: 0}, 71.131);
-  tl.set("#w180", {autoAlpha: 1}, 71.211); tl.set("#w180", {autoAlpha: 0}, 71.366);
-  tl.set("#w181", {autoAlpha: 1}, 71.451); tl.set("#w181", {autoAlpha: 0}, 71.666);
-  tl.set("#w182", {autoAlpha: 1}, 71.751); tl.set("#w182", {autoAlpha: 0}, 72.382);
+  tl.set("#w16", {autoAlpha: 1}, 5.743); tl.set("#w16", {autoAlpha: 0}, 6.578);
+  tl.set("#w17", {autoAlpha: 1}, 6.663); tl.set("#w17", {autoAlpha: 0}, 7.158);
+  tl.set("#w18", {autoAlpha: 1}, 7.243); tl.set("#w18", {autoAlpha: 0}, 7.778);
+  tl.set("#w19", {autoAlpha: 1}, 7.863); tl.set("#w19", {autoAlpha: 0}, 8.098);
+  tl.set("#w20", {autoAlpha: 1}, 8.183); tl.set("#w20", {autoAlpha: 0}, 8.478);
+  tl.set("#w21", {autoAlpha: 1}, 8.563); tl.set("#w21", {autoAlpha: 0}, 9.057);
+  tl.set("#w22", {autoAlpha: 1}, 9.142); tl.set("#w22", {autoAlpha: 0}, 9.657);
+  tl.set("#w23", {autoAlpha: 1}, 9.742); tl.set("#w23", {autoAlpha: 0}, 9.917);
+  tl.set("#w24", {autoAlpha: 1}, 10.002); tl.set("#w24", {autoAlpha: 0}, 10.403);
+  tl.set("#w25", {autoAlpha: 1}, 10.488); tl.set("#w25", {autoAlpha: 0}, 10.983);
+  tl.set("#w26", {autoAlpha: 1}, 11.068); tl.set("#w26", {autoAlpha: 0}, 11.323);
+  tl.set("#w27", {autoAlpha: 1}, 11.408); tl.set("#w27", {autoAlpha: 0}, 11.508);
+  tl.set("#w28", {autoAlpha: 1}, 11.568); tl.set("#w28", {autoAlpha: 0}, 12.163);
+  tl.set("#w29", {autoAlpha: 1}, 12.248); tl.set("#w29", {autoAlpha: 0}, 12.743);
+  tl.set("#w30", {autoAlpha: 1}, 12.828); tl.set("#w30", {autoAlpha: 0}, 13.003);
+  tl.set("#w31", {autoAlpha: 1}, 13.088); tl.set("#w31", {autoAlpha: 0}, 13.303);
+  tl.set("#w32", {autoAlpha: 1}, 13.388); tl.set("#w32", {autoAlpha: 0}, 13.643);
+  tl.set("#w33", {autoAlpha: 1}, 13.728); tl.set("#w33", {autoAlpha: 0}, 13.928);
+  tl.set("#w34", {autoAlpha: 1}, 14.013); tl.set("#w34", {autoAlpha: 0}, 14.748);
+  tl.set("#w35", {autoAlpha: 1}, 14.833); tl.set("#w35", {autoAlpha: 0}, 15.038);
+  tl.set("#w36", {autoAlpha: 1}, 15.123); tl.set("#w36", {autoAlpha: 0}, 15.758);
+  tl.set("#w37", {autoAlpha: 1}, 15.843); tl.set("#w37", {autoAlpha: 0}, 16.258);
+  tl.set("#w38", {autoAlpha: 1}, 16.343); tl.set("#w38", {autoAlpha: 0}, 16.718);
+  tl.set("#w39", {autoAlpha: 1}, 16.803); tl.set("#w39", {autoAlpha: 0}, 17.118);
+  tl.set("#w40", {autoAlpha: 1}, 17.203); tl.set("#w40", {autoAlpha: 0}, 17.638);
+  tl.set("#w41", {autoAlpha: 1}, 17.723); tl.set("#w41", {autoAlpha: 0}, 18.048);
+  tl.set("#w42", {autoAlpha: 1}, 18.133); tl.set("#w42", {autoAlpha: 0}, 18.329);
+  tl.set("#w43", {autoAlpha: 1}, 18.414); tl.set("#w43", {autoAlpha: 0}, 18.569);
+  tl.set("#w44", {autoAlpha: 1}, 18.654); tl.set("#w44", {autoAlpha: 0}, 18.789);
+  tl.set("#w45", {autoAlpha: 1}, 18.874); tl.set("#w45", {autoAlpha: 0}, 19.384);
+  tl.set("#w46", {autoAlpha: 1}, 19.469); tl.set("#w46", {autoAlpha: 0}, 19.684);
+  tl.set("#w47", {autoAlpha: 1}, 19.769); tl.set("#w47", {autoAlpha: 0}, 19.884);
+  tl.set("#w48", {autoAlpha: 1}, 19.969); tl.set("#w48", {autoAlpha: 0}, 20.204);
+  tl.set("#w49", {autoAlpha: 1}, 20.289); tl.set("#w49", {autoAlpha: 0}, 20.804);
+  tl.set("#w50", {autoAlpha: 1}, 20.889); tl.set("#w50", {autoAlpha: 0}, 20.989);
+  tl.set("#w51", {autoAlpha: 1}, 21.049); tl.set("#w51", {autoAlpha: 0}, 21.524);
+  tl.set("#w52", {autoAlpha: 1}, 21.609); tl.set("#w52", {autoAlpha: 0}, 21.744);
+  tl.set("#w53", {autoAlpha: 1}, 21.829); tl.set("#w53", {autoAlpha: 0}, 22.515);
+  tl.set("#w54", {autoAlpha: 1}, 22.600); tl.set("#w54", {autoAlpha: 0}, 22.725);
+  tl.set("#w55", {autoAlpha: 1}, 22.810); tl.set("#w55", {autoAlpha: 0}, 22.910);
+  tl.set("#w56", {autoAlpha: 1}, 22.950); tl.set("#w56", {autoAlpha: 0}, 23.225);
+  tl.set("#w57", {autoAlpha: 1}, 23.310); tl.set("#w57", {autoAlpha: 0}, 23.410);
+  tl.set("#w58", {autoAlpha: 1}, 23.470); tl.set("#w58", {autoAlpha: 0}, 23.705);
+  tl.set("#w59", {autoAlpha: 1}, 23.790); tl.set("#w59", {autoAlpha: 0}, 24.348);
+  tl.set("#w60", {autoAlpha: 1}, 24.433); tl.set("#w60", {autoAlpha: 0}, 25.098);
+  tl.set("#w61", {autoAlpha: 1}, 25.183); tl.set("#w61", {autoAlpha: 0}, 25.283);
+  tl.set("#w62", {autoAlpha: 1}, 25.323); tl.set("#w62", {autoAlpha: 0}, 25.423);
+  tl.set("#w63", {autoAlpha: 1}, 25.483); tl.set("#w63", {autoAlpha: 0}, 25.718);
+  tl.set("#w64", {autoAlpha: 1}, 25.803); tl.set("#w64", {autoAlpha: 0}, 26.098);
+  tl.set("#w65", {autoAlpha: 1}, 26.183); tl.set("#w65", {autoAlpha: 0}, 26.618);
+  tl.set("#w66", {autoAlpha: 1}, 26.703); tl.set("#w66", {autoAlpha: 0}, 27.138);
+  tl.set("#w67", {autoAlpha: 1}, 27.223); tl.set("#w67", {autoAlpha: 0}, 27.548);
+  tl.set("#w68", {autoAlpha: 1}, 27.633); tl.set("#w68", {autoAlpha: 0}, 28.018);
+  tl.set("#w69", {autoAlpha: 1}, 28.103); tl.set("#w69", {autoAlpha: 0}, 28.378);
+  tl.set("#w70", {autoAlpha: 1}, 28.463); tl.set("#w70", {autoAlpha: 0}, 28.798);
+  tl.set("#w71", {autoAlpha: 1}, 28.883); tl.set("#w71", {autoAlpha: 0}, 28.983);
+  tl.set("#w72", {autoAlpha: 1}, 29.023); tl.set("#w72", {autoAlpha: 0}, 29.398);
+  tl.set("#w73", {autoAlpha: 1}, 29.483); tl.set("#w73", {autoAlpha: 0}, 29.583);
+  tl.set("#w74", {autoAlpha: 1}, 29.623); tl.set("#w74", {autoAlpha: 0}, 29.738);
+  tl.set("#w75", {autoAlpha: 1}, 29.823); tl.set("#w75", {autoAlpha: 0}, 30.098);
+  tl.set("#w76", {autoAlpha: 1}, 30.183); tl.set("#w76", {autoAlpha: 0}, 30.283);
+  tl.set("#w77", {autoAlpha: 1}, 30.323); tl.set("#w77", {autoAlpha: 0}, 30.458);
+  tl.set("#w78", {autoAlpha: 1}, 30.543); tl.set("#w78", {autoAlpha: 0}, 30.738);
+  tl.set("#w79", {autoAlpha: 1}, 30.823); tl.set("#w79", {autoAlpha: 0}, 30.998);
+  tl.set("#w80", {autoAlpha: 1}, 31.083); tl.set("#w80", {autoAlpha: 0}, 31.478);
+  tl.set("#w81", {autoAlpha: 1}, 31.563); tl.set("#w81", {autoAlpha: 0}, 31.853);
+  tl.set("#w82", {autoAlpha: 1}, 31.938); tl.set("#w82", {autoAlpha: 0}, 32.233);
+  tl.set("#w83", {autoAlpha: 1}, 32.318); tl.set("#w83", {autoAlpha: 0}, 32.433);
+  tl.set("#w84", {autoAlpha: 1}, 32.518); tl.set("#w84", {autoAlpha: 0}, 32.913);
+  tl.set("#w85", {autoAlpha: 1}, 32.998); tl.set("#w85", {autoAlpha: 0}, 33.213);
+  tl.set("#w86", {autoAlpha: 1}, 33.298); tl.set("#w86", {autoAlpha: 0}, 33.973);
+  tl.set("#w87", {autoAlpha: 1}, 34.058); tl.set("#w87", {autoAlpha: 0}, 34.393);
+  tl.set("#w88", {autoAlpha: 1}, 34.478); tl.set("#w88", {autoAlpha: 0}, 34.773);
+  tl.set("#w89", {autoAlpha: 1}, 34.858); tl.set("#w89", {autoAlpha: 0}, 35.482);
+  tl.set("#w90", {autoAlpha: 1}, 35.567); tl.set("#w90", {autoAlpha: 0}, 35.812);
+  tl.set("#w91", {autoAlpha: 1}, 35.897); tl.set("#w91", {autoAlpha: 0}, 36.072);
+  tl.set("#w92", {autoAlpha: 1}, 36.157); tl.set("#w92", {autoAlpha: 0}, 36.257);
+  tl.set("#w93", {autoAlpha: 1}, 36.257); tl.set("#w93", {autoAlpha: 0}, 36.672);
+  tl.set("#w94", {autoAlpha: 1}, 36.757); tl.set("#w94", {autoAlpha: 0}, 37.282);
+  tl.set("#w95", {autoAlpha: 1}, 37.367); tl.set("#w95", {autoAlpha: 0}, 38.012);
+  tl.set("#w96", {autoAlpha: 1}, 38.097); tl.set("#w96", {autoAlpha: 0}, 38.197);
+  tl.set("#w97", {autoAlpha: 1}, 38.217); tl.set("#w97", {autoAlpha: 0}, 38.792);
+  tl.set("#w98", {autoAlpha: 1}, 38.877); tl.set("#w98", {autoAlpha: 0}, 39.382);
+  tl.set("#w99", {autoAlpha: 1}, 39.467); tl.set("#w99", {autoAlpha: 0}, 40.172);
+  tl.set("#w100", {autoAlpha: 1}, 40.257); tl.set("#w100", {autoAlpha: 0}, 40.631);
+  tl.set("#w101", {autoAlpha: 1}, 40.716); tl.set("#w101", {autoAlpha: 0}, 41.151);
+  tl.set("#w102", {autoAlpha: 1}, 41.236); tl.set("#w102", {autoAlpha: 0}, 41.371);
+  tl.set("#w103", {autoAlpha: 1}, 41.456); tl.set("#w103", {autoAlpha: 0}, 41.752);
+  tl.set("#w104", {autoAlpha: 1}, 41.837); tl.set("#w104", {autoAlpha: 0}, 42.271);
+  tl.set("#w105", {autoAlpha: 1}, 42.356); tl.set("#w105", {autoAlpha: 0}, 42.532);
+  tl.set("#w106", {autoAlpha: 1}, 42.617); tl.set("#w106", {autoAlpha: 0}, 42.969);
+  tl.set("#w107", {autoAlpha: 1}, 43.054); tl.set("#w107", {autoAlpha: 0}, 43.574);
+  tl.set("#w108", {autoAlpha: 1}, 43.659); tl.set("#w108", {autoAlpha: 0}, 44.194);
+  tl.set("#w109", {autoAlpha: 1}, 44.279); tl.set("#w109", {autoAlpha: 0}, 44.874);
+  tl.set("#w110", {autoAlpha: 1}, 44.959); tl.set("#w110", {autoAlpha: 0}, 45.059);
+  tl.set("#w111", {autoAlpha: 1}, 45.099); tl.set("#w111", {autoAlpha: 0}, 45.360);
+  tl.set("#w112", {autoAlpha: 1}, 45.445); tl.set("#w112", {autoAlpha: 0}, 45.982);
+  tl.set("#w113", {autoAlpha: 1}, 46.067); tl.set("#w113", {autoAlpha: 0}, 46.272);
+  tl.set("#w114", {autoAlpha: 1}, 46.357); tl.set("#w114", {autoAlpha: 0}, 46.752);
+  tl.set("#w115", {autoAlpha: 1}, 46.837); tl.set("#w115", {autoAlpha: 0}, 46.937);
+  tl.set("#w116", {autoAlpha: 1}, 46.977); tl.set("#w116", {autoAlpha: 0}, 47.132);
+  tl.set("#w117", {autoAlpha: 1}, 47.217); tl.set("#w117", {autoAlpha: 0}, 47.972);
+  tl.set("#w118", {autoAlpha: 1}, 48.057); tl.set("#w118", {autoAlpha: 0}, 48.172);
+  tl.set("#w119", {autoAlpha: 1}, 48.257); tl.set("#w119", {autoAlpha: 0}, 48.715);
+  tl.set("#w120", {autoAlpha: 1}, 48.800); tl.set("#w120", {autoAlpha: 0}, 49.085);
+  tl.set("#w121", {autoAlpha: 1}, 49.170); tl.set("#w121", {autoAlpha: 0}, 49.765);
+  tl.set("#w122", {autoAlpha: 1}, 49.850); tl.set("#w122", {autoAlpha: 0}, 50.274);
+  tl.set("#w123", {autoAlpha: 1}, 50.359); tl.set("#w123", {autoAlpha: 0}, 50.714);
+  tl.set("#w124", {autoAlpha: 1}, 50.799); tl.set("#w124", {autoAlpha: 0}, 50.934);
+  tl.set("#w125", {autoAlpha: 1}, 51.019); tl.set("#w125", {autoAlpha: 0}, 51.174);
+  tl.set("#w126", {autoAlpha: 1}, 51.259); tl.set("#w126", {autoAlpha: 0}, 51.574);
+  tl.set("#w127", {autoAlpha: 1}, 51.659); tl.set("#w127", {autoAlpha: 0}, 52.020);
+  tl.set("#w128", {autoAlpha: 1}, 52.105); tl.set("#w128", {autoAlpha: 0}, 52.205);
+  tl.set("#w129", {autoAlpha: 1}, 52.245); tl.set("#w129", {autoAlpha: 0}, 52.420);
+  tl.set("#w130", {autoAlpha: 1}, 52.505); tl.set("#w130", {autoAlpha: 0}, 52.740);
+  tl.set("#w131", {autoAlpha: 1}, 52.825); tl.set("#w131", {autoAlpha: 0}, 52.940);
+  tl.set("#w132", {autoAlpha: 1}, 53.025); tl.set("#w132", {autoAlpha: 0}, 53.125);
+  tl.set("#w133", {autoAlpha: 1}, 53.185); tl.set("#w133", {autoAlpha: 0}, 53.740);
+  tl.set("#w134", {autoAlpha: 1}, 53.825); tl.set("#w134", {autoAlpha: 0}, 54.000);
+  tl.set("#w135", {autoAlpha: 1}, 54.085); tl.set("#w135", {autoAlpha: 0}, 54.380);
+  tl.set("#w136", {autoAlpha: 1}, 54.465); tl.set("#w136", {autoAlpha: 0}, 54.565);
+  tl.set("#w137", {autoAlpha: 1}, 54.585); tl.set("#w137", {autoAlpha: 0}, 54.800);
+  tl.set("#w138", {autoAlpha: 1}, 54.885); tl.set("#w138", {autoAlpha: 0}, 55.182);
+  tl.set("#w139", {autoAlpha: 1}, 55.267); tl.set("#w139", {autoAlpha: 0}, 55.412);
+  tl.set("#w140", {autoAlpha: 1}, 55.497); tl.set("#w140", {autoAlpha: 0}, 55.632);
+  tl.set("#w141", {autoAlpha: 1}, 55.717); tl.set("#w141", {autoAlpha: 0}, 55.832);
+  tl.set("#w142", {autoAlpha: 1}, 55.917); tl.set("#w142", {autoAlpha: 0}, 56.172);
+  tl.set("#w143", {autoAlpha: 1}, 56.257); tl.set("#w143", {autoAlpha: 0}, 56.392);
+  tl.set("#w144", {autoAlpha: 1}, 56.477); tl.set("#w144", {autoAlpha: 0}, 56.915);
+  tl.set("#w145", {autoAlpha: 1}, 57.000); tl.set("#w145", {autoAlpha: 0}, 57.125);
+  tl.set("#w146", {autoAlpha: 1}, 57.210); tl.set("#w146", {autoAlpha: 0}, 57.505);
+  tl.set("#w147", {autoAlpha: 1}, 57.590); tl.set("#w147", {autoAlpha: 0}, 57.848);
+  tl.set("#w148", {autoAlpha: 1}, 57.933); tl.set("#w148", {autoAlpha: 0}, 58.418);
+  tl.set("#w149", {autoAlpha: 1}, 58.503); tl.set("#w149", {autoAlpha: 0}, 58.782);
+  tl.set("#w150", {autoAlpha: 1}, 58.867); tl.set("#w150", {autoAlpha: 0}, 59.402);
+  tl.set("#w151", {autoAlpha: 1}, 59.487); tl.set("#w151", {autoAlpha: 0}, 59.722);
+  tl.set("#w152", {autoAlpha: 1}, 59.807); tl.set("#w152", {autoAlpha: 0}, 59.907);
+  tl.set("#w153", {autoAlpha: 1}, 59.947); tl.set("#w153", {autoAlpha: 0}, 60.282);
+  tl.set("#w154", {autoAlpha: 1}, 60.367); tl.set("#w154", {autoAlpha: 0}, 60.512);
+  tl.set("#w155", {autoAlpha: 1}, 60.597); tl.set("#w155", {autoAlpha: 0}, 60.892);
+  tl.set("#w156", {autoAlpha: 1}, 60.977); tl.set("#w156", {autoAlpha: 0}, 61.352);
+  tl.set("#w157", {autoAlpha: 1}, 61.437); tl.set("#w157", {autoAlpha: 0}, 61.948);
+  tl.set("#w158", {autoAlpha: 1}, 62.033); tl.set("#w158", {autoAlpha: 0}, 62.578);
+  tl.set("#w159", {autoAlpha: 1}, 62.663); tl.set("#w159", {autoAlpha: 0}, 62.938);
+  tl.set("#w160", {autoAlpha: 1}, 63.023); tl.set("#w160", {autoAlpha: 0}, 63.371);
+  tl.set("#w161", {autoAlpha: 1}, 63.456); tl.set("#w161", {autoAlpha: 0}, 63.876);
+  tl.set("#w162", {autoAlpha: 1}, 63.961); tl.set("#w162", {autoAlpha: 0}, 64.380);
+  tl.set("#w163", {autoAlpha: 1}, 64.465); tl.set("#w163", {autoAlpha: 0}, 64.813);
+  tl.set("#w164", {autoAlpha: 1}, 64.898); tl.set("#w164", {autoAlpha: 0}, 65.245);
+  tl.set("#w165", {autoAlpha: 1}, 65.330); tl.set("#w165", {autoAlpha: 0}, 65.678);
+  tl.set("#w166", {autoAlpha: 1}, 65.763); tl.set("#w166", {autoAlpha: 0}, 66.543);
+  tl.set("#w167", {autoAlpha: 1}, 66.628); tl.set("#w167", {autoAlpha: 0}, 66.728);
+  tl.set("#w168", {autoAlpha: 1}, 66.795); tl.set("#w168", {autoAlpha: 0}, 67.243);
+  tl.set("#w169", {autoAlpha: 1}, 67.328); tl.set("#w169", {autoAlpha: 0}, 67.583);
+  tl.set("#w170", {autoAlpha: 1}, 67.668); tl.set("#w170", {autoAlpha: 0}, 67.783);
+  tl.set("#w171", {autoAlpha: 1}, 67.868); tl.set("#w171", {autoAlpha: 0}, 68.343);
+  tl.set("#w172", {autoAlpha: 1}, 68.428); tl.set("#w172", {autoAlpha: 0}, 69.123);
+  tl.set("#w173", {autoAlpha: 1}, 69.208); tl.set("#w173", {autoAlpha: 0}, 69.308);
+  tl.set("#w174", {autoAlpha: 1}, 69.348); tl.set("#w174", {autoAlpha: 0}, 70.082);
+  tl.set("#w175", {autoAlpha: 1}, 70.167); tl.set("#w175", {autoAlpha: 0}, 70.693);
+  tl.set("#w176", {autoAlpha: 1}, 70.778); tl.set("#w176", {autoAlpha: 0}, 71.013);
+  tl.set("#w177", {autoAlpha: 1}, 71.098); tl.set("#w177", {autoAlpha: 0}, 71.198);
+  tl.set("#w178", {autoAlpha: 1}, 71.278); tl.set("#w178", {autoAlpha: 0}, 71.433);
+  tl.set("#w179", {autoAlpha: 1}, 71.518); tl.set("#w179", {autoAlpha: 0}, 71.733);
+  tl.set("#w180", {autoAlpha: 1}, 71.818); tl.set("#w180", {autoAlpha: 0}, 72.448);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 76.041);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 76.107);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 4.773);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 5.178);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 9.292);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 23.115);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 62.773);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 70.615);
-  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 72.217);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 76.000);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 70.682);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 72.283);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 76.183);
 
-  rise("#bw1", 3.423); sink("#bw1", 6.498);
-  tl.fromTo("#pt0", {autoAlpha: 0, y: 90, scale: .92, rotationX: -35}, X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), 6.563);
-  tl.to("#pt0", {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, 8.942);
-  tl.fromTo("#pt1", {autoAlpha: 0, y: 90, scale: .92, rotationX: -35}, X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), 24.333);
-  tl.to("#pt1", {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, 27.533);
-  tl.fromTo("#pt2", {autoAlpha: 0, y: 90, scale: .92, rotationX: -35}, X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), 37.267);
-  tl.to("#pt2", {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, 39.767);
-  tl.fromTo("#pt3", {autoAlpha: 0, y: 90, scale: .92, rotationX: -35}, X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), 47.117);
-  tl.to("#pt3", {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, 49.070);
-  tl.fromTo("#pt4", {autoAlpha: 0, y: 90, scale: .92, rotationX: -35}, X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), 60.497);
-  tl.to("#pt4", {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, 62.423);
+  rise("#bw1", 4.653); sink("#bw1", 6.498);
+  shuffle(["#pt0"], [6.563], 8.992);
+  shuffle(["#pt1"], [24.333], 27.583);
+  shuffle(["#pt2"], [37.267], 39.767);
+  shuffle(["#pt3"], [47.117], 49.770);
+  shuffle(["#pt4"], [60.497], 62.473);
 
   gsap.set("#win", {transformOrigin: "450px 620px"});
   gsap.set("#win", {x: 90.0, y: 220.0 + 240, scale: 0.8 * .86, rotationX: 26, rotationY: -18, rotationZ: 5});
@@ -880,12 +885,12 @@
   tl.fromTo("#gfb", {scale: 1}, X({scale: .92, duration: .15, yoyo: true, repeat: 1}), 10.488);
   tl.to("#win", {x: -274.2, y: 824.5, scale: 1.55, rotationX: 3, rotationY: -8, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, 10.688);
   tl.fromTo("#shn", {autoAlpha: 0, y: -30}, X({autoAlpha: 1, y: 0, duration: .45, ease: "back.out(1.6)"}), 11.568);
-  tl.fromTo("#shn", {backgroundColor: "rgba(30,142,62,.18)"}, X({backgroundColor: "rgba(30,142,62,0)", duration: 1.2}), 11.868);
-  tl.to("#win", {x: 90.0, y: 116.0, scale: 1.3, rotationX: 2, rotationY: 6, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, 12.488);
+  tl.fromTo("#shn", {backgroundColor: "rgba(122,20,36,.14)"}, X({backgroundColor: "rgba(122,20,36,0)", duration: 1.2}), 11.868);
+  tl.to("#win", {x: 90.0, y: 116.5, scale: 1.15, rotationX: 3, rotationY: 2, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, 12.488);
   tl.to("#ctg", {backgroundColor: "#7A1424", duration: .2}, 13.088);
   tl.to("#ctg u", {x: 24, duration: .3, ease: "back.out(2)"}, 13.088);
   tl.to("#ctw", {backgroundColor: "#7A1424", color: "#fff", duration: .25}, 16.343);
-  tl.to("#win", {x: 90.0, y: -358.5, scale: 1.3, rotationX: -2, rotationY: -6, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, 17.223);
+  tl.to("#win", {x: 90.0, y: -297.5, scale: 1.15, rotationX: -2, rotationY: -3, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, 17.223);
   tl.set("#rc0", {className: "check on"}, 19.469);
   tl.fromTo("#rc0", {scale: .6}, X({scale: 1, duration: .4, ease: POP}), 19.469);
   tl.set("#rc1", {className: "check on"}, 21.049);
@@ -899,36 +904,39 @@
   tl.to("#pl .col:nth-child(2) .row:nth-child(3) .line", {backgroundColor: "#F2C7CA", width: "60%", duration: .4}, 34.058);
   tl.set("#plb", {className: "gbtn done", textContent: "✓ Надіслано"}, 34.858);
   tl.fromTo("#plb", {scale: .8}, X({scale: 1, duration: .4, ease: POP}), 34.858);
-  sink("#pl", 35.782);
+  sink("#pl", 35.682);
 
+  tl.fromTo("#mm1", {autoAlpha: 0, scale: .72, rotation: -3.5}, X({autoAlpha: 1, scale: 1, rotation: 1.5, duration: .28, ease: POP}), 37.382);
+  tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 38.402);
   rise("#tg", 42.356); sink("#tg", 46.282);
-  rise("#bw2", 49.070); sink("#bw2", 50.674);
+  tl.fromTo("#mm2", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 50.374);
+  tl.to("#mm2", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 51.294);
 
   rise("#ls", 51.459);
   rise("#ls0", 53.185, 30); rise("#ls1", 54.085, 30);
   tl.set(["#lb0", "#lb1"], {className: "gbtn done", textContent: "✓ Надіслано"}, 57.933);
   tl.fromTo(["#lb0", "#lb1"], {scale: .8}, X({scale: 1, duration: .4, stagger: .12, ease: POP}), 57.933);
-  sink("#ls", 60.482);
+  sink("#ls", 60.282);
 
 
-  sketch("s1", "skP"); box("s1", 90, 330, 380, 130, {seed: 3}); label("s1", 280, 412, "Fathom: дзвінок", {size: 50});
+  sketch("s1", "skP"); box("s1", 90, 310, 360, 120, {seed: 3}); label("s1", 270, 388, "Fathom: дзвінок", {size: 48});
   draw("s1", 62.723);
-  sketch("s2", "skP"); arrow("s2", 470, 395, 640, 395, {seed: 5, bend: -.08});
-  box("s2", 650, 320, 340, 150, {seed: 7, fill: true}); label("s2", 820, 412, "Claude", {size: 58});
+  sketch("s2", "skP"); arrow("s2", 455, 370, 590, 370, {seed: 5, bend: -.08});
+  box("s2", 600, 290, 390, 260, {seed: 7, fill: true}); label("s2", 795, 360, "Claude", {size: 58});
   draw("s2", 63.965);
-  sketch("s3", "skP"); label("s3", 820, 540, "самарі", {size: 44}); label("s3", 820, 600, "домовленості", {size: 44});
-  label("s3", 820, 660, "задачі", {size: 44});
+  sketch("s3", "skP"); label("s3", 795, 425, "самарі", {size: 42}); label("s3", 795, 475, "домовленості", {size: 42});
+  label("s3", 795, 525, "задачі", {size: 42});
   draw("s3", 65.230);
-  sketch("s4", "skP"); arrow("s4", 700, 700, 470, 790, {seed: 9, bend: -.12});
-  box("s4", 110, 720, 350, 130, {seed: 11}); label("s4", 285, 802, "SendPulse", {size: 52});
+  sketch("s4", "skP"); arrow("s4", 600, 500, 330, 600, {seed: 9, bend: .1});
+  box("s4", 90, 610, 350, 120, {seed: 11}); label("s4", 265, 688, "SendPulse", {size: 52});
   draw("s4", 67.268);
-  sketch("s5", "skP"); arrow("s5", 460, 820, 640, 880, {seed: 15, bend: .1});
-  ell("s5", 820, 880, 330, 130, {seed: 17}); label("s5", 820, 896, "клієнтка", {size: 50});
+  sketch("s5", "skP"); arrow("s5", 450, 670, 610, 670, {seed: 15, bend: -.06});
+  ell("s5", 800, 670, 340, 130, {seed: 17}); label("s5", 800, 686, "клієнтка", {size: 50});
   draw("s5", 68.948);
-  erase("s1", 70.215); erase("s2", 70.215); erase("s3", 70.215); erase("s4", 70.215); erase("s5", 70.215);
+  erase("s1", 70.282); erase("s2", 70.282); erase("s3", 70.282); erase("s4", 70.282); erase("s5", 70.282);
 
-  pop("#ctp", 72.467);
-  half(62.523, 70.215);
+  pop("#ctp", 72.533);
+  half(62.523, 70.282);
 
         window.__timelines["main"] = tl;
       }

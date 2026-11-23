@@ -125,6 +125,22 @@
                opacity: 0; }
     .cap .kt { position: relative; }
 
+    /* comic-relief memes (assets/memes/MEMES.md). Her note 2026-11-23: no plaque,
+       no frame, no glass card — the image is slapped straight onto the reel, in
+       the zones she marked, so her face and the captions stay readable:
+         c / top  the band above her head (y 40-520, full width)
+         r        beside her head on the right (x 740-1060, y 550-1310)
+         l        low left, over her shoulder (x 40-460, y 1140-1370)
+       A pair = two slots at the same t (top + r, or l + r). */
+    .meme { position: absolute; display: flex; }
+    .meme img { display: block; max-width: 100%; max-height: 100%; }
+    .meme.c, .meme.top { left: 60px; top: 40px; width: 960px; height: 480px;
+                         align-items: center; justify-content: center; }
+    .meme.r { left: 740px; top: 550px; width: 320px; height: 760px;
+              align-items: center; justify-content: flex-end; }
+    .meme.l { left: 40px; top: 1140px; width: 420px; height: 230px;
+              align-items: flex-end; justify-content: flex-start; }
+
     /* the running list: a numbered heading through the shuffle slot */
     .shuf .chip { font-size: 42px; }
     .shuf .chip b { display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px;
@@ -225,6 +241,7 @@
              muted playsinline></video>
       <div id="front" class="L">
         <div id="hd1" class="shuf hid"><span class="chip"><b>1</b>AI-монтаж</span></div>
+        <div id="mm1" class="meme r hid"><img src="assets/memes/01-tsyt-seagull-shush.jpg"></div>
         <div id="hd2" class="shuf hid"><span class="chip"><b>2</b>бриф → сценарій і шот-лист</span></div>
         <div id="hd3" class="shuf hid"><span class="chip"><b>3</b>фінплан на проєкт</span></div>
         <div id="ct0" class="shuf cat hid"><span class="chip">техніка</span></div>
@@ -233,6 +250,7 @@
         <div id="ct3" class="shuf cat hid"><span class="chip">передоплата</span></div>
         <div id="ct4" class="shuf cat hid"><span class="chip">податок ФОП</span></div>
         <div id="ct5" class="shuf cat hid"><span class="chip">скільки лишається тобі</span></div>
+        <div id="mm2" class="meme r hid"><img src="assets/memes/14-cat-shocked-closeup.jpg"></div>
 
         <div id="sv" class="glass hid" style="left:0; right:0; margin:auto; width:max-content; top:320px; padding:26px 34px;
              display:flex; align-items:center; gap:22px">
@@ -855,6 +873,8 @@
   tl.to("#cc", {x: 140.0, y: 500.0, scale: 1.25, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.0, ease: "power3.inOut"}, 13.717 + .45);
   full(8.720, 15.407);
 
+  tl.fromTo("#mm1", {autoAlpha: 0, scale: .72, rotation: -3.5}, X({autoAlpha: 1, scale: 1, rotation: 1.5, duration: .28, ease: POP}), 17.507);
+  tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 18.527);
   rise("#bw2", 20.290); sink("#bw2", 21.770);
 
   sketch("a1", "skP"); box("a1", 110, 400, 330, 140, {seed: 3, fill: true});
@@ -900,8 +920,10 @@
   tl.fromTo("#ct4", {autoAlpha: 0, y: 90, scale: .92, rotationX: -35}, X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), 50.373);
   tl.to("#ct4", {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, 51.203);
   tl.fromTo("#ct5", {autoAlpha: 0, y: 90, scale: .92, rotationX: -35}, X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), 51.253);
-  tl.to("#ct5", {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, 53.403);
-  rise("#sv", 53.553); pop("#sv .svok", 55.553); sink("#sv", 55.917);
+  tl.to("#ct5", {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, 52.628);
+  tl.fromTo("#mm2", {autoAlpha: 0, scale: .72, rotation: -3.5}, X({autoAlpha: 1, scale: 1, rotation: 1.5, duration: .28, ease: POP}), 53.128);
+  tl.to("#mm2", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 54.048);
+  rise("#sv", 54.343); pop("#sv .svok", 55.553); sink("#sv", 55.917);
 
   sketch("c1", "skP"); box("c1", 90, 320, 230, 110, {seed: 21}); label("c1", 205, 390, "камера 1", {size: 42});
   box("c1", 90, 560, 230, 110, {seed: 23}); label("c1", 205, 630, "камера 2", {size: 42});

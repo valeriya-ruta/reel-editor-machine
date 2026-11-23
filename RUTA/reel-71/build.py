@@ -27,6 +27,7 @@ from gstyle import G, Words, load_caps, mark  # noqa: E402
 NN = "71"
 DUR = 76.583           # (2298 plate frames - 0.5) / 30
 g = G(dur=DUR, reel=NN)
+g.cta_start = round(DUR - 2.0, 3)   # no CTA (the ТЕСТ CTA is cut): memes stay off the last 2 s
 g.PANEL_TOP = 826      # panel captions: bottom 944, her pushed hair at ≈ 1000
 
 FIX = {
@@ -229,6 +230,14 @@ g.sfx("whoosh-short", f0); g.sfx("whoosh-short", t_10a - 0.9); g.sfx("click-soft
 g.sfx("whoosh-short", t_vidd - 0.4); g.sfx("click", t_montazh); g.sfx("whoosh-short", t_kilka - 0.3)
 g.sfx("chime", t_hotov - 0.1); g.sfx("whoosh-short", f1)
 
+# 7 · MEMES — comic relief, slapped straight on, in the free stretches ---------------
+# 30 «НІХУЯ СОБІ» — the long video can take «навіть годину» (right after half 2 leaves)
+g.meme(F, J, "30", round(h2b + 0.05, 3), dur=1.2, slot="top")
+# 35 hamster in sunglasses — «Але навіть так!»: still faster, deal with it
+g.meme(F, J, "35", round(E(u"так!", 48.7) + 0.1, 3), dur=1.2, slot="r")
+# 59 «алівідерчі» — «не прив'язана до комп'ютера»: bye, computer
+g.meme(F, J, "59", round(E(u"комп'ютера,", 71.9) + 0.1, 3), dur=1.2, slot="top")
+
 # ---------------------------------------------------------------- half screens + their mattes
 for i, (a, b) in enumerate(HALF):
     g.matte("half%d" % (i + 1), round(a - 0.1, 3), round(b - a + 1.2, 3))
@@ -243,6 +252,7 @@ def main():
                      js="\n".join(J), chunks=chunks, blackout=BLACKOUT, extra_css=EXTRA)
     g.write(HERE, doc)
     print("index.html  %d caption chunks, %d sfx cues, %d mattes" % (len(chunks), len(g.cues), len(g.mattes)))
+    print("memes", [(m[0], round(m[1], 2), round(m[2], 2)) for m in g.memes])
     print("half spans", [(round(a, 2), round(b, 2)) for a, b in HALF], "full", round(f0, 2), round(f1, 2))
     print(" ".join("%s/%.1f" % (c["w"], c["s"]) for c in CAPS))
 

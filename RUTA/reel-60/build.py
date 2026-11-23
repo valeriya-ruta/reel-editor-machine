@@ -10,16 +10,16 @@ fill it on $20, only three long reels fill it, and on €100 it barely moves.
 Only numbers she says: $20, 5 годин, 5 рілсів, 2-3 хв, 5-6 хв, 3 рілси,
 €100, 10-15.
 
-Beats: behind «Claude» (cover) -> HALF 1 the scheme: two equal tasks, very
+Beats: behind «Claude» (cover) -> meme 12 on «непередбачувана» -> HALF 1 the scheme: two equal tasks, very
 different token bars -> FULL 1 the Claude limit window: $20, zoom into the
 5-hour bar, five reels fill it -> shuffle: експертні відео / з суфлера /
-2-3 хвилини / більше ніж 5 -> shuffle: 5-6 хвилин / багато вставок / помилки
+2-3 хвилини -> meme 35 «більше, ніж пʼять» -> shuffle: 5-6 хвилин / багато вставок / помилки
 -> FULL 2 the same window, three reels fill the bar -> glass card: «Оптимізація
 токенів» switches on -> HALF 2 the scheme: шаблон анімації -> рілс, «з нуля»
 struck -> glass pill «Claude · €100» -> behind «10–15» -> glass limit card: the
 bar is a sliver, barely moves -> ends on her.
 
-usage: python3 build.py   (then: mattes, sfx mix — see work/b1120/AGENT-BRIEF.md)
+usage: python3 build.py   (then: RUTA/BUILD-BRIEF.md steps 6-10)
 """
 import os
 import sys
@@ -32,6 +32,7 @@ from gstyle import G, Words, load_caps, mark  # noqa: E402
 NN = "60"
 DUR = 68.550           # (2057 plate frames - 0.5) / 30
 g = G(dur=DUR, reel=NN)
+g.cta_start = DUR - 2.0   # no CTA line left (ТЕСТ is cut); her rule for this reel: memes off the last 2 s
 g.PANEL_TOP = 820      # panel captions: bottom 938, her pushed hair below
 
 FIX = {
@@ -200,10 +201,10 @@ g.sfx("whoosh-short", g0); g.sfx("pop", t_tri); g.sfx("whoosh-short", g1)
 
 # 4 · SHUFFLE — what kind of video gets five, what kind gets three -----------------
 L1 = [(u"експертні відео", S(u"експертні", 27.19)), (u"з суфлера", S(u"з суфлера,", 29.37)),
-      (u"2–3 хвилини", S(u"дві-три", 30.92)), (u"більше ніж 5", S(u"більше,", 32.92))]
+      (u"2–3 хвилини", S(u"дві-три", 30.92))]   # «більше, ніж пʼять» is the meme's beat, not a chip
 L2 = [(u"5–6 хвилин", S(u"5-6,", 35.60)), (u"багато вставок", S(u"багато", 36.42)),
       (u"помилки", S(u"помилок.", 37.82))]
-for tag, lst, end in (("p", L1, E(u"пʼять.", 33.48) + 0.2), ("q", L2, g0)):
+for tag, lst, end in (("p", L1, S(u"більше,", 32.92) - 0.1), ("q", L2, g0)):
     for i, (txt, t) in enumerate(lst):
         F.append(u'        <div id="%s%d" class="shuf hid"><span class="chip"><i></i>%s</span></div>' % (tag, i, txt))
         g.sfx("pop", t - 0.1)
@@ -274,6 +275,12 @@ js(u'''
   sink("#lim", %.3f);
 ''' % (t_ne - 0.35, t_ne + 0.3, DUR - 0.45))
 g.sfx("pop", t_ne - 0.35)
+
+# 10 · MEMES — comic relief (assets/memes/MEMES.md), slapped on above her head ---------
+# 12 hamster praying: «юсадж це штука непередбачувана» — you can't know, you hope.
+# 35 hamster in sunglasses: «тоді можна навіть і більше, ніж пʼять» — the win.
+g.meme(F, J, "12", round(E(u"непередбачувана,", 7.93) + 0.1, 3), dur=1.2, slot="top")
+g.meme(F, J, "35", round(E(u"пʼять.", 33.48) + 0.1, 3), dur=1.2, slot="top")
 
 # ---------------------------------------------------------------- half screens + their mattes
 for i, (a, b) in enumerate(HALF):

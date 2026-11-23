@@ -125,6 +125,22 @@
                opacity: 0; }
     .cap .kt { position: relative; }
 
+    /* comic-relief memes (assets/memes/MEMES.md). Her note 2026-11-23: no plaque,
+       no frame, no glass card — the image is slapped straight onto the reel, in
+       the zones she marked, so her face and the captions stay readable:
+         c / top  the band above her head (y 40-520, full width)
+         r        beside her head on the right (x 740-1060, y 550-1310)
+         l        low left, over her shoulder (x 40-460, y 1140-1370)
+       A pair = two slots at the same t (top + r, or l + r). */
+    .meme { position: absolute; display: flex; }
+    .meme img { display: block; max-width: 100%; max-height: 100%; }
+    .meme.c, .meme.top { left: 60px; top: 40px; width: 960px; height: 480px;
+                         align-items: center; justify-content: center; }
+    .meme.r { left: 740px; top: 550px; width: 320px; height: 760px;
+              align-items: center; justify-content: flex-end; }
+    .meme.l { left: 40px; top: 1140px; width: 420px; height: 230px;
+              align-items: flex-end; justify-content: flex-start; }
+
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
     #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
     #win { position: absolute; left: 0; top: 0; width: 720px; height: 1080px; background: #fff;
@@ -184,6 +200,7 @@
              data-start="35.300" data-duration="12.700" data-media-start="0"
              muted playsinline></video>
       <div id="front" class="L">
+        <div id="mm1" class="meme top hid"><img src="assets/memes/43-pavement-figure-bliashcho-kuda.jpg"></div>
         <div id="sh0" class="shuf hid"><span class="chip"><i></i>дивиться відео</span></div>
         <div id="sh1" class="shuf hid"><span class="chip"><i></i>монтує</span></div>
         <div id="sh2" class="shuf hid"><span class="chip"><i></i>відеовставки</span></div>
@@ -191,6 +208,7 @@
         <div id="sh4" class="shuf hid"><span class="chip"><i></i>аудіовставки</span></div>
         <div id="sh5" class="shuf hid"><span class="chip"><i></i>вжухи і піньки</span></div>
         <div id="shH" class="shuf hid"><span class="chip hfrow"><b class="hi"></b>hyperframes<em id="tH"><u></u></em></span></div>
+        <div id="mm2" class="meme r hid"><img src="assets/memes/35-hamster-sunglasses.jpg"></div>
         <div id="usd" class="pill light hid" style="left:0; right:0; margin:auto; width:max-content; top:360px;
              font-size:52px; padding:24px 48px"><b style="color:#7A1424; font-weight:700">$5–10</b>&nbsp;зекономлено</div>
         <div id="ctp" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:1404px;
@@ -205,7 +223,7 @@
             <div class="cw-h">Skills</div>
             <div class="cw-search">Search</div>
             <div class="cw-add">+</div>
-            <div id="lv"><div id="ls"><div class="sr" style="top:0px"><i style="background:#F3E6E6"></i><b style="width:269px"></b><s style="width:436px"></s><em id="t0"><u></u></em></div><div class="sr" style="top:96px"><i style="background:#ECEFF3"></i><b style="width:278px"></b><s style="width:288px"></s><em id="t1"><u></u></em></div><div class="sr" style="top:192px"><i style="background:#EFE9F5"></i><b style="width:298px"></b><s style="width:322px"></s><em id="t2"><u></u></em></div><div class="sr" style="top:288px"><i style="background:#E8F1EC"></i><b style="width:260px"></b><s style="width:380px"></s><em id="t3"><u></u></em></div><div class="sr" style="top:384px"><i style="background:#F5EFE4"></i><b style="width:217px"></b><s style="width:432px"></s><em id="t4"><u></u></em></div><div class="sr" style="top:480px"><i style="background:#F3E6E6"></i><b style="width:234px"></b><s style="width:372px"></s><em id="t5"><u></u></em></div><div class="sr" style="top:576px"><i style="background:#ECEFF3"></i><b style="width:291px"></b><s style="width:352px"></s><em id="t6"><u></u></em></div><div class="sr" style="top:672px"><i style="background:#EFE9F5"></i><b style="width:192px"></b><s style="width:401px"></s><em id="t7"><u></u></em></div><div class="sr" style="top:768px"><i style="background:#E8F1EC"></i><b style="width:181px"></b><s style="width:270px"></s><em id="t8"><u></u></em></div><div class="sr" style="top:864px"><i style="background:#F5EFE4"></i><b style="width:289px"></b><s style="width:383px"></s><em id="t9"><u></u></em></div><div class="sr" style="top:960px"><i style="background:#F3E6E6"></i><b style="width:177px"></b><s style="width:347px"></s><em id="t10"><u></u></em></div><div class="sr" style="top:1056px"><i style="background:#ECEFF3"></i><b style="width:164px"></b><s style="width:283px"></s><em id="t11"><u></u></em></div><div class="sr" style="top:1152px"><i style="background:#EFE9F5"></i><b style="width:195px"></b><s style="width:309px"></s><em id="t12"><u></u></em></div><div class="sr" style="top:1248px"><i style="background:#E8F1EC"></i><b style="width:199px"></b><s style="width:261px"></s><em id="t13"><u></u></em></div><div class="sr" style="top:1344px"><i style="background:#F5EFE4"></i><b style="width:285px"></b><s style="width:368px"></s><em id="t14"><u></u></em></div><div class="sr" style="top:1440px"><i style="background:#F3E6E6"></i><b style="width:262px"></b><s style="width:397px"></s><em id="t15"><u></u></em></div><div class="sr" style="top:1536px"><i style="background:#ECEFF3"></i><b style="width:246px"></b><s style="width:394px"></s><em id="t16"><u></u></em></div><div class="sr" style="top:1632px"><i style="background:#EFE9F5"></i><b style="width:182px"></b><s style="width:439px"></s><em id="t17"><u></u></em></div><div class="sr" style="top:1728px"><i style="background:#E8F1EC"></i><b style="width:293px"></b><s style="width:266px"></s><em id="t18"><u></u></em></div><div class="sr" style="top:1824px"><i style="background:#F5EFE4"></i><b style="width:300px"></b><s style="width:420px"></s><em id="t19"><u></u></em></div><div class="sr" style="top:1920px"><i style="background:#F3E6E6"></i><b style="width:187px"></b><s style="width:411px"></s><em id="t20"><u></u></em></div><div class="sr" style="top:2016px"><i style="background:#ECEFF3"></i><b style="width:295px"></b><s style="width:348px"></s><em id="t21"><u></u></em></div><div class="sr" style="top:2112px"><i style="background:#EFE9F5"></i><b style="width:186px"></b><s style="width:291px"></s><em id="t22"><u></u></em></div><div class="sr" style="top:2208px"><i style="background:#E8F1EC"></i><b style="width:152px"></b><s style="width:382px"></s><em id="t23"><u></u></em></div><div class="sr" style="top:2304px"><i style="background:#F5EFE4"></i><b style="width:247px"></b><s style="width:415px"></s><em id="t24"><u></u></em></div><div class="sr" style="top:2400px"><i style="background:#F3E6E6"></i><b style="width:223px"></b><s style="width:280px"></s><em id="t25"><u></u></em></div></div></div>
+            <div id="lv"><div id="ls"><div class="sr" style="top:0px"><i style="background:#F3E6E6"></i><b style="width:269px"></b><s style="width:436px"></s><em id="t0"><u></u></em></div><div class="sr" style="top:96px"><i style="background:#EFE9E8"></i><b style="width:278px"></b><s style="width:288px"></s><em id="t1"><u></u></em></div><div class="sr" style="top:192px"><i style="background:#F6EDED"></i><b style="width:298px"></b><s style="width:322px"></s><em id="t2"><u></u></em></div><div class="sr" style="top:288px"><i style="background:#EAE3E3"></i><b style="width:260px"></b><s style="width:380px"></s><em id="t3"><u></u></em></div><div class="sr" style="top:384px"><i style="background:#F1E8E6"></i><b style="width:217px"></b><s style="width:432px"></s><em id="t4"><u></u></em></div><div class="sr" style="top:480px"><i style="background:#F3E6E6"></i><b style="width:234px"></b><s style="width:372px"></s><em id="t5"><u></u></em></div><div class="sr" style="top:576px"><i style="background:#EFE9E8"></i><b style="width:291px"></b><s style="width:352px"></s><em id="t6"><u></u></em></div><div class="sr" style="top:672px"><i style="background:#F6EDED"></i><b style="width:192px"></b><s style="width:401px"></s><em id="t7"><u></u></em></div><div class="sr" style="top:768px"><i style="background:#EAE3E3"></i><b style="width:181px"></b><s style="width:270px"></s><em id="t8"><u></u></em></div><div class="sr" style="top:864px"><i style="background:#F1E8E6"></i><b style="width:289px"></b><s style="width:383px"></s><em id="t9"><u></u></em></div><div class="sr" style="top:960px"><i style="background:#F3E6E6"></i><b style="width:177px"></b><s style="width:347px"></s><em id="t10"><u></u></em></div><div class="sr" style="top:1056px"><i style="background:#EFE9E8"></i><b style="width:164px"></b><s style="width:283px"></s><em id="t11"><u></u></em></div><div class="sr" style="top:1152px"><i style="background:#F6EDED"></i><b style="width:195px"></b><s style="width:309px"></s><em id="t12"><u></u></em></div><div class="sr" style="top:1248px"><i style="background:#EAE3E3"></i><b style="width:199px"></b><s style="width:261px"></s><em id="t13"><u></u></em></div><div class="sr" style="top:1344px"><i style="background:#F1E8E6"></i><b style="width:285px"></b><s style="width:368px"></s><em id="t14"><u></u></em></div><div class="sr" style="top:1440px"><i style="background:#F3E6E6"></i><b style="width:262px"></b><s style="width:397px"></s><em id="t15"><u></u></em></div><div class="sr" style="top:1536px"><i style="background:#EFE9E8"></i><b style="width:246px"></b><s style="width:394px"></s><em id="t16"><u></u></em></div><div class="sr" style="top:1632px"><i style="background:#F6EDED"></i><b style="width:182px"></b><s style="width:439px"></s><em id="t17"><u></u></em></div><div class="sr" style="top:1728px"><i style="background:#EAE3E3"></i><b style="width:293px"></b><s style="width:266px"></s><em id="t18"><u></u></em></div><div class="sr" style="top:1824px"><i style="background:#F1E8E6"></i><b style="width:300px"></b><s style="width:420px"></s><em id="t19"><u></u></em></div><div class="sr" style="top:1920px"><i style="background:#F3E6E6"></i><b style="width:187px"></b><s style="width:411px"></s><em id="t20"><u></u></em></div><div class="sr" style="top:2016px"><i style="background:#EFE9E8"></i><b style="width:295px"></b><s style="width:348px"></s><em id="t21"><u></u></em></div><div class="sr" style="top:2112px"><i style="background:#F6EDED"></i><b style="width:186px"></b><s style="width:291px"></s><em id="t22"><u></u></em></div><div class="sr" style="top:2208px"><i style="background:#EAE3E3"></i><b style="width:152px"></b><s style="width:382px"></s><em id="t23"><u></u></em></div><div class="sr" style="top:2304px"><i style="background:#F1E8E6"></i><b style="width:247px"></b><s style="width:415px"></s><em id="t24"><u></u></em></div><div class="sr" style="top:2400px"><i style="background:#F3E6E6"></i><b style="width:223px"></b><s style="width:280px"></s><em id="t25"><u></u></em></div></div></div>
           </div>
         </div>
       </div>
@@ -298,7 +316,7 @@
       <div class="wc" id="w85">ЦЕ</div>
       <div class="wc" id="w86">РОБИТЬ</div>
       <div class="wc" id="w87">ОДИН</div>
-      <div class="wc" id="w88">СКІЛ</div>
+      <div class="wc" id="w88">СКІЛ.</div>
       <div class="wc" id="w89">ВСЯ</div>
       <div class="wc" id="w90">ІНША</div>
       <div class="wc" id="w91">ЧАСТИНА</div>
@@ -339,7 +357,7 @@
       <div class="wc" id="w126">ВЕСЬ</div>
       <div class="wc" id="w127">СЕКРЕТ,</div>
       <div class="wc" id="w128">ЗА ЯКИЙ</div>
-      <div class="wc" id="w129">ПЛАТЯТЬ</div>
+      <div class="wc" id="w129">ПЛАТЯТЬ,</div>
       <div class="wc" id="w130">МОЖЕ,</div>
       <div class="wc" id="w131">НА ШАЛЕНІ</div>
       <div class="wc" id="w132">ГРОШІ,</div>
@@ -736,9 +754,13 @@
   tl.to("#t19", {backgroundColor: "#7A1424", duration: .15}, 9.330); tl.to("#t19 u", {x: 30, duration: .2, ease: "back.out(2)"}, 9.330);
   tl.to("#t20", {backgroundColor: "#7A1424", duration: .15}, 9.494); tl.to("#t20 u", {x: 30, duration: .2, ease: "back.out(2)"}, 9.494);
   tl.to("#t21", {backgroundColor: "#7A1424", duration: .15}, 9.652); tl.to("#t21 u", {x: 30, duration: .2, ease: "back.out(2)"}, 9.652);
+  tl.fromTo("#mm1", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 14.615);
+  tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 15.635);
   rise("#bw2", 19.913); sink("#bw2", 22.098);
-  shuffle(["#sh0", "#sh1", "#sh2", "#sh3", "#sh4", "#sh5", "#shH"], [22.979, 24.233, 25.249, 26.329, 28.146, 29.226, 31.839], 33.865);
+  shuffle(["#sh0", "#sh1", "#sh2", "#sh3", "#sh4", "#sh5", "#shH"], [22.979, 24.233, 25.249, 26.329, 28.146, 29.226, 31.839], 33.715);
   tl.to("#tH", {backgroundColor: "#7A1424", duration: .15}, 32.414); tl.to("#tH u", {x: 30, duration: .25, ease: "back.out(2)"}, 32.414);
+  tl.fromTo("#mm2", {autoAlpha: 0, scale: .72, rotation: -3.5}, X({autoAlpha: 1, scale: 1, rotation: 1.5, duration: .28, ease: POP}), 33.515);
+  tl.to("#mm2", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 34.535);
 
   sketch("s1", "skP");
   box("s1", 90, 310, 430, 230, {seed: 3}); label("s1", 128, 372, "1", {size: 60, anchor: "start", color: "#7A1424"});

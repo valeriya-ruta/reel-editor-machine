@@ -378,7 +378,7 @@ for i, (lb, nv, t) in enumerate(AI):
     F.append(u'        <div id="ai%d" class="shuf hid" style="top:320px"><div class="ncard"><span class="lb">%s</span><span class="nv">%s</span></div></div>'
              % (i, lb, nv))
     g.sfx("kaching", t)
-js(u'  shuffle(["#ai0", "#ai1"], [%.3f, %.3f], %.3f);' % (AI[0][2] - 0.1, AI[1][2] - 0.1, E(u"круто.", 102.11) + 0.1))
+js(u'  shuffle(["#ai0", "#ai1"], [%.3f, %.3f], %.3f);' % (AI[0][2] - 0.1, AI[1][2] - 0.1, S(u"круто.", 102.11) + 0.05))
 
 # 10 · ABOVE — the scraper: waits for Meta's API, free for now ------------------
 t_skr, t_meta, t_bezk = S(u"скрейпер,", 103.94), S(u"Мета", 108.55), S(u"безкоштовно,", 111.64)
@@ -476,6 +476,14 @@ js(u'''
        "sh": "%.3f" % t_shukai})
 g.sfx("pop", t_pyshy - 0.1); g.sfx("typing", t_ruta - 0.1); g.sfx("pop", t_shukai + 0.1)
 BLACKOUT.append((t_pyshy - 0.15, DUR))
+
+# 15 · MEMES — comic relief after the beat lands (assets/memes/MEMES.md), off every
+# other graphic. 52 «gossip»: she is about to spill what the app earns; 14 «and the
+# price was…»: right on her question; 35 «deal with it»: $1,50 a user, «дуже круто».
+g.cta_start = S(u"Тому", 127.9)
+g.meme(F, J, "52", round(E(u"витрати.", 9.1) + 0.1, 3), dur=1.2, slot="top")
+g.meme(F, J, "14", round(E(u"додаток?", 48.2) + 0.1, 3), dur=1.15, slot="r")
+g.meme(F, J, "35", round(E(u"круто.", 102.1) + 0.1, 3), dur=1.0, slot="r")
 
 # ---------------------------------------------------------------- half screens + their mattes
 for i, (a, b) in enumerate(HALF):

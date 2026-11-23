@@ -14,8 +14,19 @@ ends clean on her. ТЕСТ CTA cut (cut-fix.json).
 | 0.05–2.4 | behind | «Claude» (matte b1) |
 | 2.7–6.9 | above | glass chat: «Змонтуй відео» → reply «Готово · стиль за замовчуванням» on «дефолту» |
 | 7.0–16.4 | half | phones «мої» (8.0) / «клієнтки» (10.8); «референс → Claude» (14.2), «зроби як тут» (15.4), struck (15.9) |
-| 24.7–28.9 | full | wall of identical reels, ring on «однакових» |
+| 24.0–25.1 | meme | 07 side-eye, slot r |
+| 25.8–29.4 | full | wall of identical reels (from «десятки»), ring on «однакових» |
 | 30.1–36.4 | above | shuffle checklist ×3, ticks |
 | 36.4–46.3 | full | media library: toggle, grid, select ×3, rename, add to library |
-| 48.4–52.6 | above | glass bars |
+| 48.2–49.3 | meme | 39 «батя, я стараюсь», slot l |
+| 49.2–52.6 | above | glass bars (from «займає») |
+| 55.9–57.0 | meme | 35 deal-with-it hamster, slot top |
 | 57.9–59.3 | behind | «твій стиль» (matte b2) |
+
+## Memes (MEMES.md; no CTA in this reel, so none in the last 2 s: g.cta_start = DUR − 2)
+
+| meme | t | reacts to | why |
+|---|---|---|---|
+| 07 cillian side-eye (r) | 24.0 | «І ви зараз думаєте, що це якась фігня» | the viewer's sceptical look, before she proves it isn't |
+| 39 «батя, я стараюсь» (l) | 48.2 | «…додаю в окрему систему. Велика робота!» | all that effort, unseen |
+| 35 hamster in sunglasses (top) | 55.9 | «встановити його нескладно, там кілька скілів і інструкцій» | the easy part, deal with it — before «складно саме докрутити» |

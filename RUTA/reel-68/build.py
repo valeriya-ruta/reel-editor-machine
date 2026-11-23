@@ -32,7 +32,7 @@ FIX = {
     u"февна,": u"певна,",
     u"заходом,": u"загалом,", u"якщо...": u"якщо", u"подчитати": u"почитати",
     u"Насправді": u"насправді", u"Коли": u"коли", u"клієнкам": u"клієнткам",
-    u"скіл.": u"скіл", u"Hyperframes.": u"Hyperframes.",
+    u"скіл.": u"скіл", (u"скіл.", 32.8): u"скіл.", u"платять": u"платять,", u"Hyperframes.": u"Hyperframes.",
     u"дивить": u"дивиться", (u"це", 23.4): None,
     (u"аудіо", 28.2): u"аудіовставки,", (u"вставки,", 28.7): None,
     u"текст.": u"текст,",
@@ -46,6 +46,7 @@ FIX = {
 CAPS = load_caps(NN, FIX)
 W = Words(CAPS)
 S, E = W.s, W.e
+g.cta_start = S(u"Тому", 52.7)   # «Тому якщо було корисно, то обов'язково підпишись»: no meme from here
 
 B, P, F, C, J = [], [], [], [], []
 BLACKOUT, PLACE, HALF = [], [], []
@@ -75,7 +76,7 @@ import random
 rnd = random.Random(68)
 rows = []
 for i in range(ROWS):
-    tint = ["#F3E6E6", "#ECEFF3", "#EFE9F5", "#E8F1EC", "#F5EFE4"][i % 5]
+    tint = ["#F3E6E6", "#EFE9E8", "#F6EDED", "#EAE3E3", "#F1E8E6"][i % 5]   # white + dark-red tints only
     rows.append(u'<div class="sr" style="top:%dpx"><i style="background:%s"></i><b style="width:%dpx"></b>'
                 u'<s style="width:%dpx"></s><em id="t%d"><u></u></em></div>'
                 % (i * ROW_H, tint, rnd.randint(150, 300), rnd.randint(260, 440), i))
@@ -155,6 +156,10 @@ g.sfx("whoosh-short", f0); g.sfx("whoosh-short", t_spys + 0.4); g.sfx("whoosh-sh
 for k in range(5):
     g.sfx("click-soft", t_spys + 0.5 + k * 0.85, db=-4)
 
+# MEME 1 — «кожен рекомендує щось своє» -> 43 «Бля шо куда» (lost among the options);
+# her own cuts carry 9.8-20.0, nothing else is up here
+g.meme(F, J, "43", E(u"своє.", 14.17) + 0.1, dur=1.2, slot="top")
+
 # 3 · BEHIND — «Hyperframes», on «один скіл — це hyperframes» -------------------------
 t_odyn, t_hf, e_hf = S(u"один", 20.1), S(u"Hyperframes.", 20.9), E(u"Hyperframes.", 20.9)
 B.append(u'        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:590px; font-size:150px">Hyperframes</div>')
@@ -183,11 +188,15 @@ EXTRA += u"""
     .hfrow em u { position: absolute; left: 3px; top: 3px; width: 28px; height: 28px; border-radius: 50%; background: #fff;
                   box-shadow: 0 1px 3px rgba(0,0,0,.25); }
 """
-shuf_end = E(u"скіл.", 32.8) + 0.45
+shuf_end = E(u"скіл.", 32.8) + 0.3
 js(u'  shuffle(%s, [%s], %.3f);' % (str(sels).replace("'", '"'), ", ".join("%.3f" % t for t in times), shuf_end))
 js(u'  tl.to("#tH", {backgroundColor: "#7A1424", duration: .15}, %.3f); tl.to("#tH u", {x: 30, duration: .25, ease: "back.out(2)"}, %.3f);'
    % (t_odyn2, t_odyn2))
 g.sfx("pop", times[-1]); g.sfx("click", t_odyn2)
+
+# MEME 2 — «…все це робить один скіл.» -> 35 the hamster in sunglasses (deal with it);
+# slot r, clear of the shuffle slot above her head; the half screen opens at «це дві частини»
+g.meme(F, J, "35", E(u"скіл.", 32.83) + 0.1, dur=1.2, slot="r")   # beside her head: the row is still leaving the slot above it
 
 # 5 · HALF — the scheme: two parts. 1 стиль; 2 хмара -> телефон, the laptop struck --
 k0 = S(u"це", 35.6) - 0.15
@@ -262,5 +271,4 @@ def main():
     print("index.html  %d caption chunks, %d sfx cues, %d mattes" % (len(chunks), len(g.cues), len(g.mattes)))
 
 
-if __name__ == "__main__" or True:
-    main()
+main()

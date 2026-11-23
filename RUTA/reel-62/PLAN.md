@@ -15,11 +15,19 @@ the half-screen scheme of a token budget -> «Пиши коротко.» typed �
 | 3.1–6.9 | above | shuffle: кваліфікує людей → спілкується → доводить до продажу |
 | 7.1–12.5 | FULL 1 | window flies in tilted; «два»: Інструкція field + token field ringed; «забити»: the rest greys |
 | 17.8–29.1 | FULL 2 | zoomed in the field: Скрипт / Цільова аудиторія / Контекст type in on their words; camera to «Модель», list opens on «обирати», Claude Haiku picked on «Haiku» |
+| 35.10–35.95 | meme r | **35** hamster in sunglasses after «а гроші зекономиш.» (a win: cheaper model, same quality) |
 | 36.0–44.0 | above | card Sonnet \| Haiku; «×3–4» on «три чи чотири», «=» on «різниці» |
 | 44.3–51.0 | FULL 3 | zoom to ПОШУК У ФАЙЛАХ, greys on «пропустити»; camera back to the instruction field on «можна дати» |
 | 56.9–59.9 | behind | «Токени» |
 | 64.5–76.0 | HALF | Excalidraw: token budget = думає + відповідь; «500»: a small box all думає; відповідь struck |
 | 76.3–84.2 | FULL 4 | token field 500 → 2000 on «2000», zoom out on «не впливає» |
 | 85.8–91.8 | above | «Інструкція для бота» card: «Пиши коротко.» on «прописати», twice more on «декілька разів» |
-| 94.3–99.6 | above | glass DM: the agent's reply keeps growing (великі / розширені / послуги) |
+| 93.71–94.56 | meme top | **44** «Я бачу ти ні бе ні ме» after «сам він про це не здогадається» (the agent is clueless unless told) |
+| 94.6–99.6 | above | glass DM: the agent's reply keeps growing (великі / розширені / послуги) |
 | 100.8–end | above + band | shuffle: немає менеджера / не справляється / купа заявок / губляться без відповіді; pill «Став + в коментарях» from «став», captions black out |
+
+## Memes (BUILD-BRIEF, MEMES.md)
+
+- **35** @ 35.10 (slot r, 0.85 s): «…а гроші зекономиш.». Deal-with-it cool after a win. It lands in the clear stretch between FULL 2 and the Sonnet | Haiku card.
+- **44** @ 93.71 (slot top, 0.85 s): «Тому що сам він про це не здогадається». The clueless goat, between the instruction card and the DM (the DM's rise moved to 94.57).
+- No third meme. «дивним?» collides with the behind word «Токени», and «просто забити» collides with FULL 1's exit. `g.cta_start` = 99.9 («Тому, якщо в тебе…»).

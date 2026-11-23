@@ -125,6 +125,22 @@
                opacity: 0; }
     .cap .kt { position: relative; }
 
+    /* comic-relief memes (assets/memes/MEMES.md). Her note 2026-11-23: no plaque,
+       no frame, no glass card — the image is slapped straight onto the reel, in
+       the zones she marked, so her face and the captions stay readable:
+         c / top  the band above her head (y 40-520, full width)
+         r        beside her head on the right (x 740-1060, y 550-1310)
+         l        low left, over her shoulder (x 40-460, y 1140-1370)
+       A pair = two slots at the same t (top + r, or l + r). */
+    .meme { position: absolute; display: flex; }
+    .meme img { display: block; max-width: 100%; max-height: 100%; }
+    .meme.c, .meme.top { left: 60px; top: 40px; width: 960px; height: 480px;
+                         align-items: center; justify-content: center; }
+    .meme.r { left: 740px; top: 550px; width: 320px; height: 760px;
+              align-items: center; justify-content: flex-end; }
+    .meme.l { left: 40px; top: 1140px; width: 420px; height: 230px;
+              align-items: flex-end; justify-content: flex-start; }
+
     /* the running list: a number badge on a plain white card (her note: no glass around it) */
     .shuf .chip b.n { width: 50px; height: 50px; border-radius: 50%; background: #7A1424; color: #fff;
                       display: inline-flex; align-items: center; justify-content: center; font-size: 30px;
@@ -231,6 +247,7 @@
         <div id="l1" class="shuf hid"><span class="chip"><b class="n">2</b>Щоденник помилок</span></div>
         <div id="l2" class="shuf hid"><span class="chip"><b class="n">3</b>Перевірка домашок</span></div>
         <div id="l3" class="shuf hid"><span class="chip"><b class="n">4</b>Тест на рівень</span></div>
+        <div id="mm1" class="meme r hid"><img src="assets/memes/13-cat-paw-stop.jpg"></div>
 
         <div id="hw" class="glass hid" style="left:190px; top:290px; width:700px; padding:22px 30px">
           <div class="hd">Домашки<small>цей тиждень</small></div>
@@ -352,7 +369,7 @@
       <div class="wc inv" id="w64" style="top:740px">ВПРАВИ</div>
       <div class="wc inv" id="w65" style="top:740px">НА</div>
       <div class="wc inv" id="w66" style="top:740px">НАСТУПНИЙ</div>
-      <div class="wc inv" id="w67" style="top:740px">УРОК,</div>
+      <div class="wc inv" id="w67" style="top:740px">УРОК</div>
       <div class="wc inv" id="w68" style="top:740px">ДЛЯ</div>
       <div class="wc inv" id="w69" style="top:740px">ВІДПРАЦЮВАННЯ.</div>
       <div class="wc inv" id="w70" style="top:740px">А</div>
@@ -865,8 +882,10 @@
   draw("s7", 30.123, .35);
   erase("s1", 31.917); erase("s2", 31.917); erase("s3", 31.917); erase("s4", 31.917); erase("s5", 31.917); erase("s6", 31.917); erase("s7", 31.917);
 
+  tl.fromTo("#mm1", {autoAlpha: 0, scale: .72, rotation: -3.5}, X({autoAlpha: 1, scale: 1, rotation: 1.5, duration: .28, ease: POP}), 38.489);
+  tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 39.309);
 
-  rise("#hw", 39.354);
+  rise("#hw", 39.554);
   ["#c1", "#c2"].forEach(function (s, i) {
     document.querySelector(s).innerHTML = '<b class="tick"></b>';
     tl.to(s, {backgroundColor: "#7A1424", borderColor: "#7A1424", duration: .2}, 41.644 + i * .35);

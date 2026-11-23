@@ -35,6 +35,7 @@ from gstyle import G, Words, load_caps, mark  # noqa: E402
 NN = "59"
 DUR = 83.483           # (2505 plate frames - 0.5) / 30
 g = G(dur=DUR, reel=NN)
+g.cta_start = None     # set below, once S() exists: «Тому збережи…»
 g.PANEL_TOP = 780      # panel captions: bottom 898; her pushed hair at ≈ 925-940
 
 FIX = {
@@ -58,6 +59,7 @@ FIX = {
 CAPS = load_caps(NN, FIX)
 W = Words(CAPS)
 S, E = W.s, W.e
+g.cta_start = S(u"Тому", 79.80)
 
 B, P, F, C, J = [], [], [], [], []
 BLACKOUT, PLACE, HALF = [], [], []
@@ -120,6 +122,9 @@ js(u'  rise("#th", %.3f); sink("#th", %.3f);' % (t_pyt, t_kor - 0.15))
 g.sfx("pop", t_pyt)
 BLACKOUT.append((t_yaki - 0.03, t_kor - 0.05))
 
+# ---------------------------------------------------------------- meme 34: «якби я була репетиторкою з математики чи історії»
+g.meme(F, J, "34", E(u"історії,", 8.56) + 0.1, dur=0.85, slot="top")
+
 # ---------------------------------------------------------------- behind «Claude»
 t_cl = S(u"з Claude.", 10.70)
 B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:440px; font-size:220px">Claude</div>')
@@ -143,7 +148,7 @@ def item(i, t0, t1):
 t_pershe = S(u"По-перше,", 11.27)
 item(0, t_pershe, S(u"Підключаєш", 14.08) - 0.1)
 f0 = S(u"Підключаєш", 14.08) - 0.05
-f1 = S(u"Друге,", 28.40) - 0.2
+f1 = S(u"а", 26.74) + 0.25        # out on «а не десь…»: her face carries the punchline
 C.append(u"""
         <div id="st1" class="stage">
           <div id="win1" class="win" style="background:#FBFAF7">
@@ -220,7 +225,6 @@ js(u"""
   tl.to("#win1", %(q)s, rotationX: 2, rotationY: 7, duration: 1.1, ease: "power3.inOut"}, %(skil).3f - .6);
   tl.fromTo("#u2", {autoAlpha: 0, y: 30}, X({autoAlpha: 1, y: 0, duration: .4, ease: RISE}), %(skil).3f);
   tl.fromTo("#r2", {autoAlpha: 0, y: 20}, X({autoAlpha: 1, y: 0, duration: .45, ease: RISE}), %(tsyf).3f - .1);
-  tl.to("#win1", %(wide)s, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.2, ease: "power3.inOut"}, %(ne).3f - .2);
   gsap.set("#st1", {autoAlpha: 1}); tl.set("#st1", {autoAlpha: 0}, %(f1).3f + .9);
   full(%(f0).3f, %(f1).3f);
 """ % {"wide": WIDE1, "wy": "%.1f" % 0, "inp": cam(250, 500, 2.2), "chat": cam(400, 190, 1.4),
@@ -231,8 +235,11 @@ g.sfx("whoosh-short", f0); g.sfx("click-soft", t_notion); g.sfx("click-soft", t_
 g.sfx("typing", t_olia - 0.1); g.sfx("click", t_uroky); g.sfx("pop", t_opl)
 g.sfx("notification", t_tsyf - 0.1); g.sfx("whoosh-short", f1)
 
+# ---------------------------------------------------------------- meme 05: «а не десь щось там приблизно»
+g.meme(F, J, "05", E(u"приблизно.", 28.06) + 0.1, dur=0.8, slot="top")
+
 # ---------------------------------------------------------------- 2 · reminders
-t_druhe = S(u"Друге,", 28.40)
+t_druhe = S(u"нагадування", 29.20)   # the card lands on its own word, after the meme
 h1a = S(u"В", 31.35) - 0.15
 item(1, t_druhe, h1a)
 h1b = S(u"А", 40.93) - 0.2
