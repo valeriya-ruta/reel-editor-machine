@@ -1,0 +1,18 @@
+CAPTIONS 76   script 63 | whisper-corrected 4 | her wording 9
+
+WHISPER MISHEARD -> script spelling restored (3)
+    12.47s  0.88  телефону                         <- телефона
+    13.19s  0.80  Claude,                          <- Клод
+    22.00s  0.91  підприємиця                      <- підприємеця
+
+SHE IMPROVISED -> her wording kept (7)
+     2.37s  script: АІ системи                   said: єйсистеми
+     7.94s  script: рахує                        said: працює
+    15.62s  script: Те                           said: Та
+        -  script: взагалі неважливо, з чого ти said: — (cut)
+    21.32s  script: СММниця                      said: самемноця
+    24.34s  script: 24/7                         said: 24 на 7, то
+    25.58s  script: —                            said: плюс
+
+REVIEW -- could go either way (1)
+    14.63s  script: у твоєму                   said: в своєму                   (0.71)
