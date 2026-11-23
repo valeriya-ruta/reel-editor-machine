@@ -107,6 +107,16 @@ CSS = """
     .mark { display: block; }
     .mark path { fill: currentColor; }
 
+    /* glass (her review of 61): frosted white over her footage, a hairline rim */
+    .glass { position: absolute; border-radius: 36px; background: rgba(255,255,255,.62);
+             -webkit-backdrop-filter: blur(22px) saturate(1.5); backdrop-filter: blur(22px) saturate(1.5);
+             box-shadow: inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 1px rgba(255,255,255,.45),
+                         0 12px 36px rgba(36,25,25,.16); }
+    /* shuffle slot: one item at a time, centred above her head */
+    .shuf { left: 0; right: 0; margin: auto; width: max-content; top: 330px; padding: 14px;
+            border-radius: 30px; transform-origin: 50%% 100%%; }
+    .shuf .chip { font-size: 40px; padding: 14px 26px; }
+
     /* §00.3.2 behind me */
     .big { position: absolute; left: 0; width: 1080px; text-align: center;
            font-weight: 700; line-height: 0.9; letter-spacing: -0.04em;
@@ -194,6 +204,20 @@ JS = r"""
   function fadein(sel, t, d) { tl.fromTo(sel, {autoAlpha: 0}, X({autoAlpha: 1, duration: d || .4}), t); }
   function out(sel, t) { tl.to(sel, {autoAlpha: 0, scale: .9, duration: .3, ease: "power2.in"}, t); }
   function sink(sel, t) { tl.to(sel, {autoAlpha: 0, y: 40, duration: .35, ease: "power2.in"}, t); }
+
+  // shuffle (her idea on reel 61, 2026-11-23): a list through ONE slot, like
+  // cards — each item rises in from below on its word, the last one leaves
+  // upward as the next arrives. sels: ["#a", "#b", ...], times: their words,
+  // end: when the last one goes. Markup: '<div id="a" class="glass shuf hid">
+  // <span class="chip"><i></i>…</span></div>' (any element works).
+  function shuffle(sels, times, end) {
+    sels.forEach(function (sel, i) {
+      tl.fromTo(sel, {autoAlpha: 0, y: 90, scale: .92, rotationX: -35},
+                X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), times[i]);
+      var out = i + 1 < sels.length ? times[i + 1] : end;
+      tl.to(sel, {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, out - .05);
+    });
+  }
 
   // §00.3.3 half screen: the panel comes down as the video goes down
   function half(t0, t1) {
