@@ -19,3 +19,11 @@ in the subtitle band, then the Direct pill.
 | 68.1–70.5 | above (shuffle) | Послуги / Продукти |
 | 72.3–84.8 | half (matte half1) | scheme: кнопки, AI-агент, arrow on «разом», базові дані, деталі запиту |
 | 96.8–end | subtitle band | pill «Пиши + у коментарях» -> «або в Direct: розкажи про свій бізнес» |
+
+Memes (MEMES.md): 51 Shrek side-look @ ~9.2 s (top) after «додати AI і задрати ціну» — the knowing
+smirk; 01 ЦИТЬ @ ~40.6 s (l) after «щоб бот дописував щось від себе, правильно?» — shh, bot.
+
+Full screens rebuilt to the reel-67 bar (2026-11-23 pass): window 960 px wide at rest, body 40 px,
+labels 28-44 px; shots keep the window inside y ~270-1420; the bag-shop thread opens on the
+Direct profile header and scrolls up as the hand-off lands. Demo text (not hers): «Привіт! Обери,
+що тебе цікавить:», «Варіант А/Б», «Сценарій А/Б», the bag-shop exchange.

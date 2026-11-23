@@ -54,34 +54,40 @@ def js(s):
 P.append(u'<svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
 
 EXTRA = u'''
-    /* the chat window of both full screens: a clean Direct-style thread */
+    /* the chat window of both full screens: a clean Direct-style thread, sized per the
+       full-screen bar (reel-67): 960 px wide at rest, body 36 px, labels >= 28 px */
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
-    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
-    .win { position: absolute; left: 0; top: 0; width: 600px; height: 680px; background: #fff;
-           border-radius: 34px; font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
+    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2400px; }
+    .win { position: absolute; left: 0; top: 0; width: 960px; background: #fff;
+           border-radius: 36px; font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
            box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
-           transform-origin: 300px 340px; will-change: transform; }
-    .win .hd { position: absolute; left: 0; top: 0; width: 600px; height: 96px; border-bottom: 1px solid #EEE6E6;
-               display: flex; align-items: center; gap: 16px; padding: 0 26px; }
-    .win .av { width: 54px; height: 54px; border-radius: 50%; background: #7A1424; flex: none;
-               color: #fff; font-weight: 700; font-size: 26px; display: flex; align-items: center; justify-content: center; }
-    .win .nm { font-size: 26px; font-weight: 700; }
-    .win .st { font-size: 19px; color: #6f6363; }
-    .win .th { position: absolute; left: 0; top: 96px; width: 600px; padding: 26px 24px; }
-    .m { display: flex; margin-bottom: 14px; }
+           will-change: transform; }
+    .win .hd { position: absolute; left: 0; top: 0; width: 960px; height: 140px; background: #fff; z-index: 2; border-bottom: 2px solid #ECE6E6;
+               box-sizing: border-box; display: flex; align-items: center; gap: 22px; padding: 0 40px; }
+    .win .av { width: 72px; height: 72px; border-radius: 50%; background: #7A1424; flex: none;
+               color: #fff; font-weight: 700; font-size: 34px; display: flex; align-items: center; justify-content: center; }
+    .win .nm { font-size: 44px; font-weight: 700; line-height: 1.1; }
+    .win .st { font-size: 28px; color: #6f6363; }
+    .win .tag { margin-left: auto; font-size: 30px; font-weight: 700; letter-spacing: .03em; color: #7A1424;
+                background: #FFF0F0; border-radius: 30px; padding: 12px 26px; }
+    .win .th { position: absolute; left: 0; top: 140px; width: 960px; padding: 32px 40px; box-sizing: border-box; }
+    .m { display: flex; margin-bottom: 18px; }
     .m.r { justify-content: flex-end; }
-    .b { max-width: 430px; border-radius: 26px; padding: 15px 22px; font-size: 25px; line-height: 1.3; }
-    .m.l .b { background: #F1ECEC; border-bottom-left-radius: 8px; }
-    .m.r .b { background: #7A1424; color: #fff; border-bottom-right-radius: 8px; }
-    .btns { display: flex; gap: 12px; margin: -2px 0 18px 0; }
-    .bt { width: 205px; height: 64px; border-radius: 18px; border: 2px solid #7A1424; color: #7A1424;
-          font-size: 25px; font-weight: 500; display: flex; align-items: center; justify-content: center; background: #fff; }
-    .sysm { text-align: center; font-size: 20px; color: #6f6363; margin: 8px 0 14px; }
-    .dots { display: inline-flex; gap: 8px; padding: 20px 24px; }
-    .dots i { width: 12px; height: 12px; border-radius: 50%; background: #9c8b8b; display: block; }
+    .b { max-width: 760px; border-radius: 32px; padding: 20px 30px; font-size: 40px; line-height: 1.3; }
+    .m.l .b { background: #F1EEEE; color: #241919; border-bottom-left-radius: 10px; }
+    .m.r .b { background: #7A1424; color: #fff; border-bottom-right-radius: 10px; }
+    .btns { display: flex; gap: 20px; margin: 0 0 22px 0; }
+    .bt { width: 360px; height: 100px; border-radius: 24px; border: 3px solid #7A1424; color: #7A1424; box-sizing: border-box;
+          font-size: 38px; font-weight: 500; display: flex; align-items: center; justify-content: center; background: #fff; }
+    .sysm { text-align: center; font-size: 30px; color: #6f6363; margin: 10px 0 14px; }
+    .dots { display: inline-flex; gap: 10px; padding: 26px 30px; }
+    .dots i { width: 16px; height: 16px; border-radius: 50%; background: #9c8b8b; display: block; }
+    .prof { text-align: center; padding: 6px 0 28px; }
+    .pav { width: 120px; height: 120px; border-radius: 50%; background: #7A1424; color: #fff; margin: 0 auto 14px;
+           font-size: 56px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .pnm { font-size: 40px; font-weight: 700; }
+    .pst { font-size: 28px; color: #6f6363; margin-top: 4px; }
     .shuf .chip { font-size: 46px; padding: 18px 32px; }
-    .tag { display: inline-block; font-size: 17px; font-weight: 700; letter-spacing: .05em; color: #7A1424;
-           background: #FFF0F0; border-radius: 8px; padding: 3px 9px; margin-left: 8px; vertical-align: middle; }
 '''
 
 # 1 · BEHIND — «AI-агент», the hook word and the cover frame ----------------------
@@ -94,13 +100,14 @@ BLACKOUT.append((0.0, E(u"AI-агент", 0.53) + 0.02))
 
 # 2 · BEHIND — «хардкод-бот» ----------------------------------------------------
 t_hk, e_hk = S(u"хардкод-бот.", 16.63), E(u"хардкод-бот.", 16.63)
-B.append(u'        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:560px; font-size:150px">хардкод-бот</div>')
+B.append(u'        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:545px; font-size:165px">хардкод-бот</div>')
 g.matte("b2", round(t_hk - 0.6, 3), round(e_hk - t_hk + 1.3, 3))
 js(u'  rise("#bw2", %.3f); sink("#bw2", %.3f);' % (t_hk - 0.3, e_hk + 0.35))
 g.sfx("whoosh-short", t_hk - 0.3)
 BLACKOUT.append((t_hk - 0.03, e_hk))
 
 # 3 · FULL 1 — the button bot, a platform-ad sequence ---------------------------
+H1, H2, SCROLL2 = 860, 1000, 120
 f0 = S(u"скрипт:", 19.59) - 0.45
 t_pov, t_knop = S(u"повідомлення,", 20.32), S(u"кнопки,", 21.60)
 t_a, t_tudy = S(u"А", 22.57), S(u"туди,", 23.33)
@@ -109,64 +116,69 @@ t_sam = S(u"Ніякої", 25.43)
 f1 = E(u"самодіяльності.", 26.18) + 0.2
 C.append(u"""
         <div id="stage">
-          <div id="w1" class="win">
-            <div class="hd"><div class="av">Б</div><div><div class="nm">Бот <span class="tag">КНОПКИ</span></div><div class="st">Direct</div></div></div>
+          <div id="w1" class="win" style="height:%(h1)dpx">
+            <div class="hd"><div class="av">Б</div><div><div class="nm">Чат-бот</div><div class="st">Direct</div></div><span class="tag">КНОПКИ</span></div>
             <div class="th">
               <div class="m l" id="w1d"><div class="b dots"><i></i><i></i><i></i></div></div>
               <div class="m l hid" id="w1m"><div class="b">Привіт! Обери, що тебе цікавить:</div></div>
               <div class="btns hid" id="w1k"><div class="bt" id="w1a">Варіант А</div><div class="bt" id="w1b">Варіант Б</div></div>
               <div class="m r hid" id="w1ra"><div class="b">Варіант А</div></div>
-              <div class="m l hid" id="w1sa"><div class="b">Сценарій А →</div></div>
+              <div class="m l hid" id="w1sa"><div class="b">Сценарій А</div></div>
               <div class="m r hid" id="w1rb"><div class="b">Варіант Б</div></div>
-              <div class="m l hid" id="w1sb"><div class="b">Сценарій Б →</div></div>
+              <div class="m l hid" id="w1sb"><div class="b">Сценарій Б</div></div>
             </div>
           </div>
-          <div id="w2" class="win" style="visibility:hidden">
-            <div class="hd"><div class="av">С</div><div><div class="nm">Магазин сумок <span class="tag">AI-АГЕНТ</span></div><div class="st">Direct</div></div></div>
-            <div class="th">
+          <div id="w2" class="win" style="height:%(h2)dpx; visibility:hidden">
+            <div class="hd"><div class="av">С</div><div><div class="nm">Магазин сумок</div><div class="st">Direct</div></div><span class="tag">AI-АГЕНТ</span></div>
+            <div class="th" id="w2th">
+              <div class="prof"><div class="pav">С</div><div class="pnm">Магазин сумок</div><div class="pst">Instagram</div></div>
               <div class="m r hid" id="w2c1"><div class="b">Привіт! Хочу сумку</div></div>
               <div class="m l hid" id="w2d"><div class="b dots"><i></i><i></i><i></i></div></div>
-              <div class="m l hid" id="w2a1"><div class="b">Привіт! На щодень чи на вихід? І що має в неї влазити?</div></div>
-              <div class="m r hid" id="w2c2"><div class="b">На щодень, щоб влазив ноутбук</div></div>
-              <div class="m l hid" id="w2a2"><div class="b">Зрозуміла! Передаю менеджерці — вона підбере моделі</div></div>
+              <div class="m l hid" id="w2a1"><div class="b">Привіт! На щодень чи на вихід? Що має в неї влазити?</div></div>
+              <div class="m r hid" id="w2c2"><div class="b">На щодень, і щоб влазив ноутбук</div></div>
+              <div class="m l hid" id="w2a2"><div class="b">Зрозуміла! Передаю менеджерці, вона підбере моделі</div></div>
               <div class="sysm hid" id="w2s">Менеджерка приєдналась до чату</div>
             </div>
           </div>
-        </div>""")
+        </div>""" % {"h1": H1, "h2": H2})
 
 
-def cam(px, py, sc, cx=540, cy=760):
-    """the window scales about its centre (300, 340): window point p lands at (cx, cy)"""
-    return (round(cx - 300 - sc * (px - 300), 1), round(cy - 340 - sc * (py - 340), 1))
-
-
-def at(sc, px=300, py=340, cy=760):
-    x, y = cam(px, py, sc, cy=cy)
+def at(sc, py, cy, H):
+    """camera: window (960 x H) turns and scales about its centre (480, H/2); window row py
+    lands at frame y cy, horizontally centred. Returns the gsap props + its frame top/bottom."""
+    o = H / 2.0
+    x = round(540 - 480, 1)
+    y = round(cy - o - sc * (py - o), 1)
+    top, bot = cy - sc * py, cy + sc * (H - py)
+    SHOTS.append((sc, py, cy, H, round(top), round(bot)))
     return "x: %s, y: %s, scale: %s" % (x, y, sc)
 
 
-WIDE = at(1.45)
+SHOTS = []
+W1_OPEN, W1_WIDE = at(1.12, 220, 600, H1), at(1.0, H1 / 2, 820, H1)
+W1_BTN, W1_DOWN = at(1.1, 300, 640, H1), at(1.06, 520, 820, H1)
 js(u"""
-  gsap.set("#w1", {%(wide)s, rotationX: 24, rotationY: -20, rotationZ: 5, yPercent: 0});
-  gsap.set("#w1", {y: "+=220", scale: 1.45 * .86});
-  tl.to("#w1", {%(wide)s, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.3, ease: "power3.out"}, %(f0).3f + .15);
+  gsap.set("#w1", {transformOrigin: "480px %(o1)dpx"});
+  gsap.set("#w1", {%(open)s, rotationX: 24, rotationY: -20, rotationZ: 5});
+  gsap.set("#w1", {y: "+=220", scale: .96});
+  tl.to("#w1", {%(open)s, rotationX: 9, rotationY: -10, rotationZ: 2, duration: 1.3, ease: "power3.out"}, %(f0).3f + .15);
   tl.to("#w1d i", {y: -6, duration: .25, stagger: .1, yoyo: true, repeat: 3, ease: "sine.inOut"}, %(f0).3f + .4);
   tl.set("#w1d", {display: "none"}, %(pov).3f - .1);
   fadein("#w1m", %(pov).3f - .1, .3); tl.fromTo("#w1m", {y: 20}, X({y: 0, duration: .4, ease: RISE}), %(pov).3f - .1);
-  tl.to("#w1", {%(btn)s, rotationX: 4, rotationY: -6, rotationZ: 1, duration: 1.1, ease: "power3.inOut"}, %(knop).3f - .5);
+  tl.to("#w1", {%(btn)s, rotationX: 4, rotationY: -5, rotationZ: 1, duration: 1.1, ease: "power3.inOut"}, %(knop).3f - .5);
   fadein("#w1k", %(knop).3f, .3); tl.fromTo("#w1k", {y: 20}, X({y: 0, duration: .4, ease: RISE}), %(knop).3f);
   tl.to("#w1a", {backgroundColor: "#7A1424", color: "#fff", scale: .94, duration: .15}, %(a).3f);
   tl.to("#w1a", {scale: 1, duration: .2}, %(a).3f + .15);
   fadein("#w1ra", %(a).3f + .2, .25);
   fadein("#w1sa", %(tudy).3f - .1, .3);
-  tl.to("#w1", {%(down)s, rotationX: 2, rotationY: 6, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, %(tudy).3f);
+  tl.to("#w1", {%(down)s, rotationX: 2, rotationY: 5, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, %(tudy).3f);
   tl.to("#w1b", {backgroundColor: "#7A1424", color: "#fff", scale: .94, duration: .15}, %(b).3f);
   tl.to("#w1b", {scale: 1, duration: .2}, %(b).3f + .15);
   fadein("#w1rb", %(b).3f + .2, .25);
   fadein("#w1sb", %(suda).3f - .1, .3);
-  tl.to("#w1", {%(wide)s, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.2, ease: "power3.inOut"}, %(sam).3f - .3);
+  tl.to("#w1", {%(wide)s, rotationX: 9, rotationY: 12, rotationZ: -2, duration: 1.2, ease: "power3.inOut"}, %(sam).3f - .3);
   full(%(f0).3f, %(f1).3f);
-""" % {"wide": WIDE, "btn": at(1.7, 300, 300), "down": at(1.65, 300, 420),
+""" % {"o1": H1 // 2, "open": W1_OPEN, "wide": W1_WIDE, "btn": W1_BTN, "down": W1_DOWN,
        "f0": f0, "f1": f1, "pov": t_pov, "knop": t_knop, "a": t_a, "tudy": t_tudy,
        "b": t_b, "suda": t_suda, "sam": t_sam})
 g.sfx("whoosh-short", f0); g.sfx("pop", t_pov); g.sfx("pop", t_knop)
@@ -189,12 +201,15 @@ t_dir, t_opyt = S(u"пише", 55.22), S(u"опитає,", 57.14)
 t_yaka, t_men = S(u"яка", 58.20), S(u"менеджеру.", 60.66)
 t_tobto, t_knp = S(u"Тобто", 61.27), S(u"кнопках.", 65.40)
 q1 = E(u"кнопках.", 65.40) + 0.25
+W2_OPEN, W2_MID = at(1.08, 330, 700, H2), at(1.1, 520, 860, H2)
+W2_LOW, W2_WIDE = at(1.06, 640, 900, H2), at(1.0, H2 / 2, 830, H2)
 js(u"""
   tl.set("#w1", {autoAlpha: 0}, %(q0).3f); tl.set("#w2", {autoAlpha: 1}, %(q0).3f);
-  gsap.set("#w2", {%(wide)s, rotationX: 22, rotationY: 20, rotationZ: -5});
-  gsap.set("#w2", {y: "+=220", scale: 1.45 * .86});
-  tl.to("#w2", {%(wide)s, rotationX: 8, rotationY: 12, rotationZ: -2, duration: 1.3, ease: "power3.out"}, %(q0).3f + .15);
-  fadein("#w2c1", %(dir).3f, .3); tl.fromTo("#w2c1", {y: 20}, X({y: 0, duration: .4, ease: RISE}), %(dir).3f);
+  gsap.set("#w2", {transformOrigin: "480px %(o2)dpx"});
+  gsap.set("#w2", {%(open)s, rotationX: 22, rotationY: 20, rotationZ: -5});
+  gsap.set("#w2", {y: "+=220", scale: .94});
+  tl.to("#w2", {%(open)s, rotationX: 8, rotationY: 10, rotationZ: -2, duration: 1.3, ease: "power3.out"}, %(q0).3f + .15);
+  fadein("#w2c1", %(lyud).3f, .3); tl.fromTo("#w2c1", {y: 20}, X({y: 0, duration: .4, ease: RISE}), %(lyud).3f);
   fadein("#w2d", %(dir).3f + .6, .2);
   tl.to("#w2d i", {y: -6, duration: .25, stagger: .1, yoyo: true, repeat: 3, ease: "sine.inOut"}, %(dir).3f + .7);
   tl.set("#w2d", {display: "none"}, %(opyt).3f - .05);
@@ -202,12 +217,13 @@ js(u"""
   fadein("#w2a1", %(opyt).3f, .3); tl.fromTo("#w2a1", {y: 20}, X({y: 0, duration: .4, ease: RISE}), %(opyt).3f);
   fadein("#w2c2", %(yaka).3f, .3); tl.fromTo("#w2c2", {y: 20}, X({y: 0, duration: .4, ease: RISE}), %(yaka).3f);
   tl.to("#w2", {%(low)s, rotationX: 2, rotationY: -5, duration: 1.1, ease: "power3.inOut"}, %(men).3f - .9);
+  tl.to("#w2th", {y: -%(scroll)d, duration: .6, ease: "power3.inOut"}, %(men).3f - .6);
   fadein("#w2a2", %(men).3f - .5, .3); tl.fromTo("#w2a2", {y: 20}, X({y: 0, duration: .4, ease: RISE}), %(men).3f - .5);
   fadein("#w2s", %(men).3f + .3, .4);
-  tl.to("#w2", {%(wide)s, rotationX: 10, rotationY: -14, rotationZ: 2, duration: 1.3, ease: "power3.inOut"}, %(tobto).3f);
+  tl.to("#w2", {%(wide)s, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.3, ease: "power3.inOut"}, %(tobto).3f);
   full(%(q0).3f, %(q1).3f);
-""" % {"wide": WIDE, "mid": at(1.65, 300, 300), "low": at(1.6, 300, 430),
-       "q0": q0, "q1": q1, "dir": t_dir, "opyt": t_opyt, "yaka": t_yaka, "men": t_men, "tobto": t_tobto})
+""" % {"o2": H2 // 2, "open": W2_OPEN, "mid": W2_MID, "low": W2_LOW, "wide": W2_WIDE, "scroll": SCROLL2,
+       "q0": q0, "q1": q1, "lyud": S(u"людина", 54.9) - 0.1, "dir": t_dir, "opyt": t_opyt, "yaka": t_yaka, "men": t_men, "tobto": t_tobto})
 g.sfx("whoosh-short", q0); g.sfx("notification", t_dir); g.sfx("pop", t_opyt)
 g.sfx("pop", t_yaka); g.sfx("ping", t_men + 0.3); g.sfx("whoosh-short", t_tobto); g.sfx("whoosh-short", q1)
 
@@ -227,19 +243,19 @@ t_aga, t_det = S(u"AI-агента,", 82.22), S(u"деталі", 83.82)
 k1 = E(u"запиту", 84.24) + 0.15
 HALF.append((k0, k1))
 js(u'''
-  sketch("s1", "skP"); box("s1", 90, 380, 370, 170, {seed: 3});
-  label("s1", 275, 485, "кнопки", {size: 64});
+  sketch("s1", "skP"); box("s1", 70, 400, 410, 200, {seed: 3});
+  label("s1", 275, 520, "кнопки", {size: 74});
   draw("s1", %(a).3f);
-  sketch("s2", "skP"); box("s2", 620, 380, 370, 170, {seed: 7, fill: true});
-  label("s2", 805, 485, "AI-агент", {size: 64});
+  sketch("s2", "skP"); box("s2", 600, 400, 410, 200, {seed: 7, fill: true});
+  label("s2", 805, 520, "AI-агент", {size: 74});
   draw("s2", %(b).3f);
-  sketch("s3", "skP"); arrow("s3", 470, 465, 610, 465, {seed: 5, bend: -.18, strokeWidth: 5});
+  sketch("s3", "skP"); arrow("s3", 490, 500, 590, 500, {seed: 5, bend: -.18, strokeWidth: 5});
   draw("s3", %(razom).3f - .3);
-  sketch("s4", "skP"); label("s4", 275, 650, "базові дані", {size: 54});
-  under("s4", 140, 672, 410, {seed: 9});
+  sketch("s4", "skP"); label("s4", 275, 700, "базові дані", {size: 62});
+  under("s4", 110, 724, 440, {seed: 9});
   draw("s4", %(dani).3f - .1);
-  sketch("s5", "skP"); label("s5", 805, 650, "деталі запиту", {size: 54, color: "#7A1424"});
-  under("s5", 650, 672, 960, {seed: 11, stroke: "#7A1424"});
+  sketch("s5", "skP"); label("s5", 805, 700, "деталі запиту", {size: 62, color: "#7A1424"});
+  under("s5", 615, 724, 995, {seed: 11, stroke: "#7A1424"});
   draw("s5", %(det).3f - .1);
   erase("s1", %(k1).3f); erase("s2", %(k1).3f); erase("s3", %(k1).3f); erase("s4", %(k1).3f); erase("s5", %(k1).3f);
 ''' % {"a": k0 + 0.6, "b": k0 + 1.1, "razom": t_razom, "dani": t_dani, "det": t_det, "k1": k1})
