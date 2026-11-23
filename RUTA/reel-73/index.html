@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <title>Reel 73 — Що таке OpenRouter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+    @font-face { font-family: "Google Sans"; font-weight: 400; font-display: block;
+                 src: url("assets/fonts/GoogleSans-400.ttf") format("truetype"); }
+    @font-face { font-family: "Google Sans"; font-weight: 500; font-display: block;
+                 src: url("assets/fonts/GoogleSans-500.ttf") format("truetype"); }
+    @font-face { font-family: "Google Sans"; font-weight: 700; font-display: block;
+                 src: url("assets/fonts/GoogleSans-700.ttf") format("truetype"); }
+    @font-face { font-family: "ProductSans"; font-weight: 900; font-display: block;
+                 src: url("assets/fonts/ProductSans-Black.woff") format("woff"); }
+    @font-face { font-family: "Pangolin"; font-weight: 400; font-display: block;
+                 src: url("assets/fonts/Pangolin.ttf") format("truetype"); }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    #root { position: relative; width: 1080px; height: 1920px; overflow: hidden;
+            background: #fff; font-family: "Google Sans", system-ui, sans-serif;
+            color: #241919;
+            --primary: #7A1424; --on-surface: #241919; --on-surface-var: #574142;
+            --outline-var: #DEBFBF; --container-low: #FFF0F0; --chip: #FFF8F7; }
+    .plate { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+             object-fit: cover; }
+    .L { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+         pointer-events: none; }
+    .hid { opacity: 0; visibility: hidden; }
+
+    /* §00.3.1 above me */
+    .card { position: absolute; background: #FFFFFF; border-radius: 40px;
+            box-shadow: 0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.10);
+            padding: 36px 40px; }
+    .card .lbl { display: block; font-weight: 500; font-size: 28px;
+                 color: var(--on-surface-var); margin-bottom: 20px; }
+    .card .ttl { display: block; font-weight: 700; font-size: 56px; line-height: 1.08;
+                 letter-spacing: -0.02em; color: var(--on-surface); }
+    .chips { display: flex; flex-wrap: wrap; gap: 14px; }
+    .chip { display: inline-flex; align-items: center; gap: 12px;
+            border: 2px solid var(--outline-var); border-radius: 16px;
+            padding: 14px 24px; font-weight: 500; font-size: 36px;
+            color: var(--on-surface); background: var(--chip); }
+    .chip i { width: 16px; height: 16px; border-radius: 50%; background: var(--primary);
+              display: inline-block; flex: none; }
+    .chip.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .chip.on i { background: #fff; }
+    .pill { position: absolute; display: inline-flex; align-items: center; gap: 16px;
+            background: var(--primary); color: #fff; border-radius: 999px;
+            padding: 30px 54px; font-weight: 500; font-size: 46px; white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(36,25,25,.12), 0 10px 30px rgba(122,20,36,.22); }
+    .pill.light { background: #fff; color: var(--on-surface);
+                  box-shadow: 0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.10); }
+    .num { font-weight: 700; letter-spacing: -0.04em; color: var(--primary); line-height: 1; }
+    .row { display: flex; align-items: center; gap: 18px; }
+    .check { width: 44px; height: 44px; border-radius: 12px; flex: none;
+             border: 3px solid var(--outline-var); background: #fff; position: relative; }
+    .check.on { background: var(--primary); border-color: var(--primary); }
+    .check.on::after { content: ""; position: absolute; left: 13px; top: 5px; width: 11px;
+                       height: 22px; border: solid #fff; border-width: 0 5px 5px 0;
+                       transform: rotate(45deg); }
+    .line { display: block; height: 18px; border-radius: 9px; background: #EFE3E3; }
+    .logo { width: 64px; height: 64px; flex: none; }
+    .logo path { fill: var(--primary); }
+    .mark { display: block; }
+    .mark path { fill: currentColor; }
+
+    /* glass (her review of 61): frosted white over her footage, a hairline rim */
+    .glass { position: absolute; border-radius: 36px; background: rgba(255,255,255,.62);
+             -webkit-backdrop-filter: blur(22px) saturate(1.5); backdrop-filter: blur(22px) saturate(1.5);
+             box-shadow: inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 1px rgba(255,255,255,.45),
+                         0 12px 36px rgba(36,25,25,.16); }
+    /* shuffle slot: one item at a time, centred above her head */
+    /* her note: a plain white card, no glass around it */
+    .shuf { position: absolute; left: 0; right: 0; margin: auto; width: max-content; top: 340px;
+            transform-origin: 50% 100%; }
+    .shuf .chip { font-size: 40px; padding: 16px 28px; background: #fff; border-color: #fff;
+                  box-shadow: 0 1px 3px rgba(36,25,25,.10), 0 10px 30px rgba(36,25,25,.14); }
+
+    /* §00.3.2 behind me */
+    .big { position: absolute; left: 0; width: 1080px; text-align: center;
+           font-weight: 700; line-height: 0.9; letter-spacing: -0.04em;
+           /* white, her call 2026-10-21: the red read badly over the room */
+           color: #FFFFFF; white-space: nowrap;
+           text-shadow: 0 6px 40px rgba(20,12,12,.30), 0 2px 8px rgba(20,12,12,.22); }
+
+    /* §00.3.3 half screen. Its parked position (up, off frame) is set from JS
+       with gsap.set: a CSS translate here would be parsed by GSAP as a px offset
+       and then stacked under yPercent, and the panel stalls a quarter of the
+       way in (reel 41's first snapshot). Same for #cover. */
+    #panel { position: absolute; left: 0; top: 0; width: 1080px; height: 1240px;
+             background: #FFFFFF; }
+    /* §00.3.4 full screen */
+    #cover { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+             background: #FFFFFF; }
+
+    /* §00.5 sketches */
+    .sk { position: absolute; left: 0; top: 0; overflow: visible; }
+    .sk text, .hand { font-family: "Pangolin", cursive; fill: #1E1E1E; color: #1E1E1E; }
+    #front .sk { filter: drop-shadow(0 3px 10px rgba(20,12,12,.22)); }
+    .hand { position: absolute; white-space: nowrap; }
+
+    /* captions — exactly as before §00 (her call 2026-10-21, over the boxed
+       phrases of the spec): kit.py's rail, word by word, upper case */
+    #scrim { position: absolute; left: 20px; top: 1247px; width: 1040px; height: 450px;
+             background-image: url("assets/underlay.png"); background-size: 100% 100%;
+             background-repeat: no-repeat; opacity: 0; visibility: hidden; pointer-events: none; }
+    .wc { position: absolute; left: 0; width: 1080px; top: 1413px; height: 118px;
+          line-height: 118px; text-align: center; color: #fff;
+          font-family: "ProductSans", system-ui, sans-serif; font-size: 90px; font-weight: 900;
+          letter-spacing: -0.015em; white-space: nowrap; opacity: 0; visibility: hidden; }
+    .wc.inv { color: #241919; }
+    /* §00.2 boxed phrase captions (spec; not in use — see .wc) */
+    #caps { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+            pointer-events: none; }
+    .cap { position: absolute; left: 0; width: 1080px; display: flex;
+           justify-content: center; opacity: 0; visibility: hidden; }
+    .cap .box { display: inline-block; max-width: 720px; text-align: center;
+                background: rgba(255,255,255,.94); border-radius: 28px; padding: 16px 30px;
+                font-weight: 500; font-size: 54px; line-height: 1.25; letter-spacing: -0.01em;
+                color: #241919; box-shadow: 0 2px 10px rgba(36,25,25,.10);
+                text-wrap: balance; }
+    .cap .k { position: relative; display: inline-block; padding: 0 .32em; }
+    .cap .kb { position: absolute; inset: 0; border-radius: 999px; background: #7A1424;
+               opacity: 0; }
+    .cap .kt { position: relative; }
+
+    /* comic-relief memes (assets/memes/MEMES.md): a white-framed sticker over her footage,
+       under the captions. c = one big, l / r = a pair. Inside the no-go zones' margins. */
+    .meme { position: absolute; display: flex; align-items: center; justify-content: center; }
+    .meme img { display: block; max-width: 100%; max-height: 100%; border: 10px solid #fff;
+                border-radius: 30px; box-shadow: 0 2px 6px rgba(20,12,12,.18), 0 18px 46px rgba(20,12,12,.28); }
+    .meme.c { left: 180px; top: 330px; width: 720px; height: 900px; }
+    .meme.l { left: 100px; top: 400px; width: 400px; height: 500px; }
+    .meme.r { left: 500px; top: 560px; width: 400px; height: 500px; }
+
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0"
+         data-width="1080" data-height="1920" data-duration="64.883" data-fps="30">
+
+      <video id="vid" class="plate" src="assets/base.mp4"
+             data-start="0" data-duration="64.883" data-media-start="0"
+             muted playsinline></video>
+      <div id="behind" class="L">
+        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:450px; font-size:200px">OpenRouter</div>
+      </div>
+      <div id="panel">
+
+      </div>
+      <video id="matte-b1" class="plate matte" src="assets/mattes/b1.webm"
+             data-start="1.400" data-duration="2.967" data-media-start="0"
+             muted playsinline></video>
+      <div id="front" class="L">
+        <div id="m0" class="shuf hid"><span class="chip"><i></i>Claude</span></div>
+        <div id="m1" class="shuf hid"><span class="chip"><i></i>ChatGPT</span></div>
+        <div id="m2" class="shuf hid"><span class="chip"><i></i>NanoBanana</span></div>
+        <div id="m3" class="shuf hid"><span class="chip"><i></i>Kling</span></div>
+        <div id="c0" class="shuf hid"><span class="chip"><i></i>підписка — 9 $ / міс</span></div>
+        <div id="c1" class="shuf hid"><span class="chip"><i></i>OpenRouter — від 5 $</span></div>
+        <div id="mm1" class="meme c hid"><img src="assets/memes/20-dog-glasses-phone-treba-zh-take.jpg"></div>
+      </div>
+      <div id="cover">
+
+      </div>
+      <div id="scrim"></div>
+      <div id="caps">
+      <div class="wc" id="w0">ТАК</div>
+      <div class="wc" id="w1">ОТ.</div>
+      <div class="wc" id="w2">ЩО</div>
+      <div class="wc" id="w3">ТАКЕ</div>
+      <div class="wc" id="w4">OPENROUTER?</div>
+      <div class="wc" id="w5">OPENROUTER</div>
+      <div class="wc" id="w6">–</div>
+      <div class="wc" id="w7">ЦЕ</div>
+      <div class="wc" id="w8">ПЛАТФОРМА,</div>
+      <div class="wc" id="w9">ЯКА</div>
+      <div class="wc" id="w10">МАЄ</div>
+      <div class="wc" id="w11">В</div>
+      <div class="wc" id="w12">СОБІ</div>
+      <div class="wc" id="w13">ВСІ</div>
+      <div class="wc" id="w14">МОДЕЛІ.</div>
+      <div class="wc" id="w15">ТОБТО</div>
+      <div class="wc" id="w16">ВСІ</div>
+      <div class="wc" id="w17">МОДЕЛІ</div>
+      <div class="wc" id="w18">ВІД</div>
+      <div class="wc" id="w19">КЛОДА,</div>
+      <div class="wc" id="w20">ВІД</div>
+      <div class="wc" id="w21">CHATGPT,</div>
+      <div class="wc" id="w22">NANOBANANA,</div>
+      <div class="wc" id="w23">KLING,</div>
+      <div class="wc" id="w24">ВСІ</div>
+      <div class="wc" id="w25">AI-МОДЕЛІ,</div>
+      <div class="wc" id="w26">ЯКІ</div>
+      <div class="wc" id="w27">Є,</div>
+      <div class="wc" id="w28">ВОНИ</div>
+      <div class="wc" id="w29">Є</div>
+      <div class="wc" id="w30">В</div>
+      <div class="wc" id="w31">ОДНІЙ</div>
+      <div class="wc" id="w32">ПЛАТФОРМІ.</div>
+      <div class="wc" id="w33">І</div>
+      <div class="wc" id="w34">НАЙПРИКОЛЬНІШЕ,</div>
+      <div class="wc" id="w35">ЩО</div>
+      <div class="wc" id="w36">ТИ</div>
+      <div class="wc" id="w37">КЛАДЕШ</div>
+      <div class="wc" id="w38">ТУДИ</div>
+      <div class="wc" id="w39">СВОЇ</div>
+      <div class="wc" id="w40">КРЕДИТИ,</div>
+      <div class="wc" id="w41">ТОБТО</div>
+      <div class="wc" id="w42">ТИ</div>
+      <div class="wc" id="w43">КЛАДЕШ,</div>
+      <div class="wc" id="w44">НЕ</div>
+      <div class="wc" id="w45">ЗНАЮ,</div>
+      <div class="wc" id="w46">5</div>
+      <div class="wc" id="w47">ДОЛАРІВ,</div>
+      <div class="wc" id="w48">І</div>
+      <div class="wc" id="w49">ТИ</div>
+      <div class="wc" id="w50">ОТРИМУЄШ</div>
+      <div class="wc" id="w51">ДОСТУП</div>
+      <div class="wc" id="w52">ДО</div>
+      <div class="wc" id="w53">МОДЕЛЕЙ</div>
+      <div class="wc" id="w54">ЗА</div>
+      <div class="wc" id="w55">РИНКОВОЮ</div>
+      <div class="wc" id="w56">ЦІНОЮ.</div>
+      <div class="wc" id="w57">ТОБТО,</div>
+      <div class="wc" id="w58">НАПРИКЛАД,</div>
+      <div class="wc" id="w59">ЗГЕНЕРУВАТИ</div>
+      <div class="wc" id="w60">ОДНУ</div>
+      <div class="wc" id="w61">КАРТИНКУ</div>
+      <div class="wc" id="w62">В</div>
+      <div class="wc" id="w63">NANOBANANA</div>
+      <div class="wc" id="w64">КОШТУЄ</div>
+      <div class="wc" id="w65">0.0025</div>
+      <div class="wc" id="w66">ЗАМІСТЬ</div>
+      <div class="wc" id="w67">ТОГО,</div>
+      <div class="wc" id="w68">ЩОБ</div>
+      <div class="wc" id="w69">ПІДПИСУВАТИСЬ</div>
+      <div class="wc" id="w70">ЗА</div>
+      <div class="wc" id="w71">9</div>
+      <div class="wc" id="w72">ДОЛАРІВ</div>
+      <div class="wc" id="w73">НА</div>
+      <div class="wc" id="w74">NANOBANANA</div>
+      <div class="wc" id="w75">АБО</div>
+      <div class="wc" id="w76">НА</div>
+      <div class="wc" id="w77">HIGGSFIELD,</div>
+      <div class="wc" id="w78">ТИ</div>
+      <div class="wc" id="w79">ЗАКИДАЄШ</div>
+      <div class="wc" id="w80">ТУДИ,</div>
+      <div class="wc" id="w81">НАПРИКЛАД,</div>
+      <div class="wc" id="w82">5</div>
+      <div class="wc" id="w83">ДОЛАРІВ,</div>
+      <div class="wc" id="w84">І</div>
+      <div class="wc" id="w85">ТИ</div>
+      <div class="wc" id="w86">МОЖЕШ</div>
+      <div class="wc" id="w87">ГЕНЕРУВАТИ</div>
+      <div class="wc" id="w88">КАРТИНКИ,</div>
+      <div class="wc" id="w89">ГЕНЕРУВАТИ</div>
+      <div class="wc" id="w90">ВІДЕО,</div>
+      <div class="wc" id="w91">РОБИТИ</div>
+      <div class="wc" id="w92">ЗАПИТИ</div>
+      <div class="wc" id="w93">В</div>
+      <div class="wc" id="w94">МОДЕЛІ</div>
+      <div class="wc" id="w95">CHATGPT,</div>
+      <div class="wc" id="w96">КОРОЧЕ,</div>
+      <div class="wc" id="w97">ТИ</div>
+      <div class="wc" id="w98">МОЖЕШ</div>
+      <div class="wc" id="w99">РОБИТИ</div>
+      <div class="wc" id="w100">ВСЕ,</div>
+      <div class="wc" id="w101">ЩО</div>
+      <div class="wc" id="w102">ЗАВГОДНО.</div>
+      <div class="wc" id="w103">І</div>
+      <div class="wc" id="w104">ЦЕ</div>
+      <div class="wc" id="w105">СУПЕРЗРУЧНО,</div>
+      <div class="wc" id="w106">КОЛИ</div>
+      <div class="wc" id="w107">ТОБІ</div>
+      <div class="wc" id="w108">ЦЕ</div>
+      <div class="wc" id="w109">ВЛАСНЕ</div>
+      <div class="wc" id="w110">ТРЕБА.</div>
+      <div class="wc" id="w111">НАПРИКЛАД,</div>
+      <div class="wc" id="w112">Я</div>
+      <div class="wc" id="w113">ДЛЯ</div>
+      <div class="wc" id="w114">ТОГО,</div>
+      <div class="wc" id="w115">ЩОБ</div>
+      <div class="wc" id="w116">ГЕНЕРУВАТИ</div>
+      <div class="wc" id="w117">КАРТИНКИ,</div>
+      <div class="wc" id="w118">Я</div>
+      <div class="wc" id="w119">НІКУДИ</div>
+      <div class="wc" id="w120">НЕ</div>
+      <div class="wc" id="w121">ВИХОДЖУ,</div>
+      <div class="wc" id="w122">В</div>
+      <div class="wc" id="w123">МЕНЕ</div>
+      <div class="wc" id="w124">ПІДКЛЮЧЕНО</div>
+      <div class="wc" id="w125">OPENROUTER,</div>
+      <div class="wc" id="w126">ВІН</div>
+      <div class="wc" id="w127">САМ</div>
+      <div class="wc" id="w128">ПИШЕ</div>
+      <div class="wc" id="w129">ПРОМПТ,</div>
+      <div class="wc" id="w130">САМ</div>
+      <div class="wc" id="w131">ГЕНЕРУЄ</div>
+      <div class="wc" id="w132">КАРТИНКУ.</div>
+      <div class="wc" id="w133">І</div>
+      <div class="wc" id="w134">ВІН</div>
+      <div class="wc" id="w135">МОЖЕ</div>
+      <div class="wc" id="w136">НАВІТЬ</div>
+      <div class="wc" id="w137">СПРОБУВАТИ</div>
+      <div class="wc" id="w138">ДЕКІЛЬКА</div>
+      <div class="wc" id="w139">МОДЕЛЕЙ,</div>
+      <div class="wc" id="w140">І</div>
+      <div class="wc" id="w141">ЦЕ</div>
+      <div class="wc" id="w142">НЕ</div>
+      <div class="wc" id="w143">СТРАШНО,</div>
+      <div class="wc" id="w144">БО</div>
+      <div class="wc" id="w145">ЦЕ</div>
+      <div class="wc" id="w146">КОПІЙКИ,</div>
+      <div class="wc" id="w147">ЦЕ</div>
+      <div class="wc" id="w148">ГРОШІ.</div>
+      <div class="wc" id="w149">ЄДИНЕ,</div>
+      <div class="wc" id="w150">ЩО</div>
+      <div class="wc" id="w151">ТУДИ</div>
+      <div class="wc" id="w152">ПРОСТО</div>
+      <div class="wc" id="w153">ТРЕБА</div>
+      <div class="wc" id="w154">КЛАСТИ</div>
+      <div class="wc" id="w155">ГРОШІ,</div>
+      <div class="wc" id="w156">І</div>
+      <div class="wc" id="w157">ПЕРІОДИЧНО</div>
+      <div class="wc" id="w158">ВОНИ</div>
+      <div class="wc" id="w159">БУДУТЬ</div>
+      <div class="wc" id="w160">ТАМ</div>
+      <div class="wc" id="w161">ЗВІДТИ</div>
+      <div class="wc" id="w162">ЗНІМАТИСЯ.</div>
+      </div>
+
+      <audio id="vo" src="assets/base.mp4"
+             data-start="0" data-duration="64.883" data-media-start="0"></audio>
+    </div>
+
+    <script>
+      function build() {
+        var tl = gsap.timeline({paused: true});
+
+  function bez(x1, y1, x2, y2) {
+    function a(p1, p2) { return 1 - 3 * p2 + 3 * p1; }
+    function b(p1, p2) { return 3 * p2 - 6 * p1; }
+    function c(p1) { return 3 * p1; }
+    function at(t, p1, p2) { return ((a(p1, p2) * t + b(p1, p2)) * t + c(p1)) * t; }
+    function slope(t, p1, p2) { return 3 * a(p1, p2) * t * t + 2 * b(p1, p2) * t + c(p1); }
+    return function (x) {
+      if (x <= 0) return 0; if (x >= 1) return 1;
+      var t = x;
+      for (var i = 0; i < 8; i++) {
+        var s = slope(t, x1, x2); if (Math.abs(s) < 1e-6) break;
+        t -= (at(t, x1, x2) - x) / s;
+      }
+      t = Math.min(1, Math.max(0, t));
+      return at(t, y1, y2);
+    };
+  }
+  var POP = bez(.34, 1.56, .64, 1), RISE = bez(.2, .9, .25, 1), SLIDE = bez(.65, 0, .25, 1);
+  var PUSH = "#vid, .matte";
+  gsap.set("#panel", {yPercent: -101}); gsap.set("#cover", {yPercent: 101});
+  var NO = {immediateRender: false};
+  function X(o) { for (var k in NO) o[k] = NO[k]; return o; }
+
+  // arrivals (§00.7): pops 0.5-0.6 s, rise-ins 0.7 s; exits quicker, easing in
+  function pop(sel, t, d) {
+    tl.fromTo(sel, {autoAlpha: 0, scale: .6}, X({autoAlpha: 1, scale: 1, duration: d || .55, ease: POP}), t);
+  }
+  function rise(sel, t, dy) {
+    tl.fromTo(sel, {autoAlpha: 0, y: dy || 60}, X({autoAlpha: 1, y: 0, duration: .7, ease: RISE}), t);
+  }
+  function fadein(sel, t, d) { tl.fromTo(sel, {autoAlpha: 0}, X({autoAlpha: 1, duration: d || .4}), t); }
+  function out(sel, t) { tl.to(sel, {autoAlpha: 0, scale: .9, duration: .3, ease: "power2.in"}, t); }
+  function sink(sel, t) { tl.to(sel, {autoAlpha: 0, y: 40, duration: .35, ease: "power2.in"}, t); }
+
+  // shuffle (her idea on reel 61, 2026-11-23): a list through ONE slot, like
+  // cards — each item rises in from below on its word, the last one leaves
+  // upward as the next arrives. sels: ["#a", "#b", ...], times: their words,
+  // end: when the last one goes. Markup: '<div id="a" class="shuf hid">
+  // <span class="chip"><i></i>…</span></div>' (any element works).
+  function shuffle(sels, times, end) {
+    sels.forEach(function (sel, i) {
+      tl.fromTo(sel, {autoAlpha: 0, y: 90, scale: .92, rotationX: -35},
+                X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), times[i]);
+      var out = i + 1 < sels.length ? times[i + 1] : end;
+      tl.to(sel, {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, out - .05);
+    });
+  }
+
+  // §00.3.3 half screen: the panel comes down as the video goes down
+  function half(t0, t1) {
+    tl.fromTo("#panel", {yPercent: -101}, X({yPercent: 0, duration: .85, ease: SLIDE}), t0);
+    tl.fromTo(PUSH, {y: 0}, X({y: 330, duration: .85, ease: SLIDE}), t0);
+    tl.to("#panel", {yPercent: -101, duration: .85, ease: SLIDE}, t1);
+    tl.to(PUSH, {y: 0, duration: .85, ease: SLIDE}, t1);
+  }
+  // §00.3.4 full screen: white up from the bottom over everything
+  function full(t0, t1) {
+    tl.fromTo("#cover", {yPercent: 101}, X({yPercent: 0, duration: .85, ease: SLIDE}), t0);
+    tl.to("#cover", {yPercent: 101, duration: .85, ease: SLIDE}, t1);
+  }
+
+  // ---- §00.5 Excalidraw sketches (rough.js), drawn on stroke by stroke ----
+  // roughness 1 ≈ Excalidraw's own default — 2.4 was "too sloppy" (her review of 41)
+  var SKO = {roughness: 1.0, bowing: 1.0, strokeWidth: 4.5, stroke: "#1E1E1E",
+             disableMultiStroke: false, preserveVertices: false};
+  var HACH = {fill: "#F2C7CA", fillStyle: "hachure", hachureGap: 16, hachureAngle: -41,
+              fillWeight: 2.5};
+  var _ink = "#1E1E1E";
+  function opt(o, seed) { var r = {}; for (var k in SKO) r[k] = SKO[k]; r.stroke = _ink;
+    for (var k2 in (o || {})) r[k2] = o[k2]; r.seed = seed; return r; }
+  function hatch(o) { var r = {}; for (var k in HACH) r[k] = HACH[k];
+    for (var k2 in (o || {})) r[k2] = o[k2]; return r; }
+  function rrectD(x, y, w, h, r) {
+    return "M" + (x + r) + " " + y + " H" + (x + w - r) + " A" + r + " " + r + " 0 0 1 " + (x + w) + " " + (y + r) +
+           " V" + (y + h - r) + " A" + r + " " + r + " 0 0 1 " + (x + w - r) + " " + (y + h) +
+           " H" + (x + r) + " A" + r + " " + r + " 0 0 1 " + x + " " + (y + h - r) +
+           " V" + (y + r) + " A" + r + " " + r + " 0 0 1 " + (x + r) + " " + y + " Z";
+  }
+  var SK = {};
+  // a sketch is a named group of rough shapes inside one <svg class="sk">
+  function sketch(name, svgId) {
+    var svg = document.getElementById(svgId);
+    var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("id", "sk-" + name); svg.appendChild(g);
+    // Over her footage (her review of 41, "not passing even AA"): a thin line
+    // of any one colour fails against her light room — white included. So
+    // over the footage closed shapes are solid white stickers with the dark
+    // Excalidraw outline, and open strokes and free labels are dark ink with a
+    // thick white halo, which reads on light and dark ground alike. On the
+    // white panel and cover nothing changes. Explicit colours win.
+    var foot = !!(svg.closest && svg.closest("#front"));
+    SK[name] = {g: g, rc: rough.svg(svg), shapes: [], foot: foot, boxes: [], ink: "#1E1E1E"};
+    return SK[name];
+  }
+  function _add(s, node, kind, o) {   // o.halo === false: a stroke over a white card / pill (a strike-through) needs none
+    s.g.appendChild(node);
+    var paths = [].slice.call(node.querySelectorAll ? node.querySelectorAll("path") : []);
+    if (node.tagName === "path") paths = [node];
+    paths.forEach(function (p) {
+      var f = p.getAttribute("fill");
+      if (f && f !== "none") { p.style.opacity = 0; p.dataset.fill = "1"; return; }  // a solid fill fades in
+      var L = 0; try { L = p.getTotalLength(); } catch (e) {}
+      if (s.foot && !(o && o.halo === false)) {   // the white halo under a stroke over the footage
+        var h = p.cloneNode(false);
+        h.setAttribute("stroke", "#FFFFFF");
+        h.setAttribute("stroke-width", (parseFloat(p.getAttribute("stroke-width")) || 4.5) + 8);
+        p.parentNode.insertBefore(h, p);
+        p._halo = h;
+      }
+      [p, p._halo].forEach(function (q) { if (!q) return;
+        q.style.strokeDasharray = L + " " + (L + 2); q.style.strokeDashoffset = L + 1;
+        q.style.strokeLinecap = "round"; q.style.strokeLinejoin = "round"; });
+    });
+    s.shapes.push({paths: paths, kind: kind || "stroke"});
+  }
+  // a closed shape over the footage: solid white with a dark outline (see sketch())
+  function _closed(s, oo, o, x, y, w, h) {
+    if (s.foot && !(o && o.fill === false)) {
+      oo.fill = "#FFFFFF"; oo.fillStyle = "solid";
+      if (!(o && o.stroke)) oo.stroke = "#1E1E1E";
+      s.boxes.push([x, y, x + w, y + h]);
+    }
+    return oo;
+  }
+  function box(name, x, y, w, h, o) { _ink = SK[name].ink;      // rounded rough box, radius 28 (§00.5.2)
+    var s = SK[name], r = (o && o.r) || 28;
+    var oo = opt(o, (o && o.seed) || 7);
+    if (o && o.fill) { var f = hatch(o.fill === true ? {} : {fill: o.fill}); for (var k in f) oo[k] = f[k]; }
+    else _closed(s, oo, o, x, y, w, h);
+    _add(s, s.rc.path(rrectD(x, y, w, h, r), oo));
+  }
+  function ell(name, cx, cy, w, h, o) { _ink = SK[name].ink; var s = SK[name];
+    _add(s, s.rc.ellipse(cx, cy, w, h, _closed(s, opt(o, (o && o.seed) || 11), o, cx - w / 2, cy - h / 2, w, h))); }
+  // any closed hand-drawn outline (a cloud…): d is an SVG path, bbox its bounds
+  function blob(name, d, bbox, o) { _ink = SK[name].ink; var s = SK[name];
+    _add(s, s.rc.path(d, _closed(s, opt(o, (o && o.seed) || 23), o, bbox[0], bbox[1], bbox[2], bbox[3]))); }
+  function ln(name, x1, y1, x2, y2, o) { _ink = SK[name].ink; var s = SK[name];
+    _add(s, s.rc.line(x1, y1, x2, y2, opt(o, (o && o.seed) || 13)), null, o); }
+  function under(name, x1, y, x2, o) { _ink = SK[name].ink; var s = SK[name];      // a hand underline
+    _add(s, s.rc.curve([[x1, y + 4], [(x1 + x2) / 2, y - 6], [x2, y + 2]], opt(o, (o && o.seed) || 17)), null, o); }
+  function arrow(name, x1, y1, x2, y2, o) { _ink = SK[name].ink;
+    var s = SK[name], oo = opt(o, (o && o.seed) || 19), bend = (o && o.bend != null) ? o.bend : .12;
+    var mx = (x1 + x2) / 2 + (y2 - y1) * bend, my = (y1 + y2) / 2 - (x2 - x1) * bend;
+    _add(s, s.rc.curve([[x1, y1], [mx, my], [x2, y2]], oo), null, o);
+    var ang = Math.atan2(y2 - my, x2 - mx), L = 38, sp = .5;
+    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang - sp), y2 - L * Math.sin(ang - sp), oo), "head", o);
+    _add(s, s.rc.line(x2, y2, x2 - L * Math.cos(ang + sp), y2 - L * Math.sin(ang + sp), oo), "head", o);
+  }
+  function label(name, x, y, txt, o) {   // Pangolin, fades in after its shapes
+    var s = SK[name], t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    t.setAttribute("x", x); t.setAttribute("y", y);
+    t.setAttribute("text-anchor", (o && o.anchor) || "middle");
+    t.setAttribute("font-size", (o && o.size) || 50);
+    var inside = s.boxes.some(function (b) { return x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3] + 20; });
+    t.style.fill = (o && o.color) || "#1E1E1E";
+    if (s.foot && !inside) {         // a free label over the footage gets the white halo too
+      t.style.stroke = "#FFFFFF"; t.style.strokeWidth = "12px"; t.style.paintOrder = "stroke";
+      t.style.strokeLinejoin = "round";
+    }
+    t.textContent = txt; t.style.opacity = 0; s.g.appendChild(t);
+    s.shapes.push({text: t});
+  }
+  // draw a sketch on from time t: each stroke 0.7 s, in sequence (the next one
+  // starts as the last is two-thirds done); a label fades in after its box.
+  function draw(name, t, per) {
+    var s = SK[name], at = t; per = per || .7;
+    s.shapes.forEach(function (sh) {
+      if (sh.text) { tl.to(sh.text, {opacity: 1, duration: .35}, at + .05); return; }
+      // an arrowhead is a flick, not a stroke: the arrow reads as one gesture
+      if (sh.kind === "head") {
+        sh.paths.forEach(function (p) { tl.to([p, p._halo].filter(Boolean), {strokeDashoffset: 0, duration: .18, ease: "power1.out"}, at); });
+        at += .12; return;
+      }
+      sh.paths.forEach(function (p, i) {
+        if (p.dataset.fill) { tl.to(p, {opacity: 1, duration: .3}, at); return; }
+        tl.to([p, p._halo].filter(Boolean), {strokeDashoffset: 0, duration: per, ease: "power1.inOut"}, at + i * .12);
+      });
+      at += per * .66 + (sh.paths.length - 1) * .12;
+    });
+    return at;
+  }
+  function erase(name, t) { tl.to("#sk-" + name, {autoAlpha: 0, duration: .3, ease: "power2.in"}, t); }
+
+  gsap.set(PUSH, {transformOrigin: "540px 900px"});
+  tl.fromTo(PUSH, {scale: 1}, {scale: 1.045, duration: 64.883, ease: "none"}, 0);
+
+  tl.set("#w0", {autoAlpha: 1}, 0.120); tl.set("#w0", {autoAlpha: 0}, 0.315);
+  tl.set("#w1", {autoAlpha: 1}, 0.400); tl.set("#w1", {autoAlpha: 0}, 1.235);
+  tl.set("#w2", {autoAlpha: 1}, 1.320); tl.set("#w2", {autoAlpha: 0}, 1.420);
+  tl.set("#w3", {autoAlpha: 1}, 1.420); tl.set("#w3", {autoAlpha: 0}, 1.535);
+  tl.set("#w4", {autoAlpha: 1}, 1.620); tl.set("#w4", {autoAlpha: 0}, 2.575);
+  tl.set("#w5", {autoAlpha: 1}, 2.660); tl.set("#w5", {autoAlpha: 0}, 3.095);
+  tl.set("#w6", {autoAlpha: 1}, 3.180); tl.set("#w6", {autoAlpha: 0}, 3.280);
+  tl.set("#w7", {autoAlpha: 1}, 3.340); tl.set("#w7", {autoAlpha: 0}, 3.440);
+  tl.set("#w8", {autoAlpha: 1}, 3.440); tl.set("#w8", {autoAlpha: 0}, 3.915);
+  tl.set("#w9", {autoAlpha: 1}, 4.000); tl.set("#w9", {autoAlpha: 0}, 4.100);
+  tl.set("#w10", {autoAlpha: 1}, 4.120); tl.set("#w10", {autoAlpha: 0}, 4.275);
+  tl.set("#w11", {autoAlpha: 1}, 4.360); tl.set("#w11", {autoAlpha: 0}, 4.460);
+  tl.set("#w12", {autoAlpha: 1}, 4.460); tl.set("#w12", {autoAlpha: 0}, 4.560);
+  tl.set("#w13", {autoAlpha: 1}, 4.640); tl.set("#w13", {autoAlpha: 0}, 4.875);
+  tl.set("#w14", {autoAlpha: 1}, 4.960); tl.set("#w14", {autoAlpha: 0}, 5.635);
+  tl.set("#w15", {autoAlpha: 1}, 5.720); tl.set("#w15", {autoAlpha: 0}, 5.955);
+  tl.set("#w16", {autoAlpha: 1}, 6.040); tl.set("#w16", {autoAlpha: 0}, 6.215);
+  tl.set("#w17", {autoAlpha: 1}, 6.300); tl.set("#w17", {autoAlpha: 0}, 6.575);
+  tl.set("#w18", {autoAlpha: 1}, 6.660); tl.set("#w18", {autoAlpha: 0}, 6.835);
+  tl.set("#w19", {autoAlpha: 1}, 6.920); tl.set("#w19", {autoAlpha: 0}, 7.255);
+  tl.set("#w20", {autoAlpha: 1}, 7.340); tl.set("#w20", {autoAlpha: 0}, 7.440);
+  tl.set("#w21", {autoAlpha: 1}, 7.480); tl.set("#w21", {autoAlpha: 0}, 8.235);
+  tl.set("#w22", {autoAlpha: 1}, 8.320); tl.set("#w22", {autoAlpha: 0}, 9.195);
+  tl.set("#w23", {autoAlpha: 1}, 9.280); tl.set("#w23", {autoAlpha: 0}, 9.995);
+  tl.set("#w24", {autoAlpha: 1}, 10.080); tl.set("#w24", {autoAlpha: 0}, 10.515);
+  tl.set("#w25", {autoAlpha: 1}, 10.600); tl.set("#w25", {autoAlpha: 0}, 11.235);
+  tl.set("#w26", {autoAlpha: 1}, 11.320); tl.set("#w26", {autoAlpha: 0}, 11.435);
+  tl.set("#w27", {autoAlpha: 1}, 11.520); tl.set("#w27", {autoAlpha: 0}, 11.855);
+  tl.set("#w28", {autoAlpha: 1}, 11.940); tl.set("#w28", {autoAlpha: 0}, 12.075);
+  tl.set("#w29", {autoAlpha: 1}, 12.160); tl.set("#w29", {autoAlpha: 0}, 12.260);
+  tl.set("#w30", {autoAlpha: 1}, 12.340); tl.set("#w30", {autoAlpha: 0}, 12.440);
+  tl.set("#w31", {autoAlpha: 1}, 12.440); tl.set("#w31", {autoAlpha: 0}, 12.540);
+  tl.set("#w32", {autoAlpha: 1}, 12.580); tl.set("#w32", {autoAlpha: 0}, 13.355);
+  tl.set("#w33", {autoAlpha: 1}, 13.440); tl.set("#w33", {autoAlpha: 0}, 13.875);
+  tl.set("#w34", {autoAlpha: 1}, 13.960); tl.set("#w34", {autoAlpha: 0}, 14.475);
+  tl.set("#w35", {autoAlpha: 1}, 14.560); tl.set("#w35", {autoAlpha: 0}, 14.660);
+  tl.set("#w36", {autoAlpha: 1}, 14.720); tl.set("#w36", {autoAlpha: 0}, 14.835);
+  tl.set("#w37", {autoAlpha: 1}, 14.920); tl.set("#w37", {autoAlpha: 0}, 15.175);
+  tl.set("#w38", {autoAlpha: 1}, 15.260); tl.set("#w38", {autoAlpha: 0}, 15.415);
+  tl.set("#w39", {autoAlpha: 1}, 15.500); tl.set("#w39", {autoAlpha: 0}, 15.695);
+  tl.set("#w40", {autoAlpha: 1}, 15.780); tl.set("#w40", {autoAlpha: 0}, 16.095);
+  tl.set("#w41", {autoAlpha: 1}, 16.180); tl.set("#w41", {autoAlpha: 0}, 16.295);
+  tl.set("#w42", {autoAlpha: 1}, 16.380); tl.set("#w42", {autoAlpha: 0}, 16.480);
+  tl.set("#w43", {autoAlpha: 1}, 16.520); tl.set("#w43", {autoAlpha: 0}, 16.795);
+  tl.set("#w44", {autoAlpha: 1}, 16.880); tl.set("#w44", {autoAlpha: 0}, 16.995);
+  tl.set("#w45", {autoAlpha: 1}, 17.080); tl.set("#w45", {autoAlpha: 0}, 17.180);
+  tl.set("#w46", {autoAlpha: 1}, 17.240); tl.set("#w46", {autoAlpha: 0}, 17.475);
+  tl.set("#w47", {autoAlpha: 1}, 17.560); tl.set("#w47", {autoAlpha: 0}, 18.235);
+  tl.set("#w48", {autoAlpha: 1}, 18.320); tl.set("#w48", {autoAlpha: 0}, 18.435);
+  tl.set("#w49", {autoAlpha: 1}, 18.520); tl.set("#w49", {autoAlpha: 0}, 18.675);
+  tl.set("#w50", {autoAlpha: 1}, 18.760); tl.set("#w50", {autoAlpha: 0}, 20.135);
+  tl.set("#w51", {autoAlpha: 1}, 20.220); tl.set("#w51", {autoAlpha: 0}, 20.435);
+  tl.set("#w52", {autoAlpha: 1}, 20.520); tl.set("#w52", {autoAlpha: 0}, 20.620);
+  tl.set("#w53", {autoAlpha: 1}, 20.680); tl.set("#w53", {autoAlpha: 0}, 20.935);
+  tl.set("#w54", {autoAlpha: 1}, 21.020); tl.set("#w54", {autoAlpha: 0}, 21.175);
+  tl.set("#w55", {autoAlpha: 1}, 21.260); tl.set("#w55", {autoAlpha: 0}, 21.695);
+  tl.set("#w56", {autoAlpha: 1}, 21.780); tl.set("#w56", {autoAlpha: 0}, 22.635);
+  tl.set("#w57", {autoAlpha: 1}, 22.720); tl.set("#w57", {autoAlpha: 0}, 22.955);
+  tl.set("#w58", {autoAlpha: 1}, 23.040); tl.set("#w58", {autoAlpha: 0}, 23.435);
+  tl.set("#w59", {autoAlpha: 1}, 23.520); tl.set("#w59", {autoAlpha: 0}, 23.935);
+  tl.set("#w60", {autoAlpha: 1}, 24.020); tl.set("#w60", {autoAlpha: 0}, 24.135);
+  tl.set("#w61", {autoAlpha: 1}, 24.220); tl.set("#w61", {autoAlpha: 0}, 24.575);
+  tl.set("#w62", {autoAlpha: 1}, 24.660); tl.set("#w62", {autoAlpha: 0}, 24.760);
+  tl.set("#w63", {autoAlpha: 1}, 24.760); tl.set("#w63", {autoAlpha: 0}, 25.255);
+  tl.set("#w64", {autoAlpha: 1}, 25.340); tl.set("#w64", {autoAlpha: 0}, 25.695);
+  tl.set("#w65", {autoAlpha: 1}, 25.780); tl.set("#w65", {autoAlpha: 0}, 28.315);
+  tl.set("#w66", {autoAlpha: 1}, 28.400); tl.set("#w66", {autoAlpha: 0}, 28.695);
+  tl.set("#w67", {autoAlpha: 1}, 28.780); tl.set("#w67", {autoAlpha: 0}, 28.935);
+  tl.set("#w68", {autoAlpha: 1}, 29.020); tl.set("#w68", {autoAlpha: 0}, 29.120);
+  tl.set("#w69", {autoAlpha: 1}, 29.120); tl.set("#w69", {autoAlpha: 0}, 29.675);
+  tl.set("#w70", {autoAlpha: 1}, 29.760); tl.set("#w70", {autoAlpha: 0}, 29.995);
+  tl.set("#w71", {autoAlpha: 1}, 30.080); tl.set("#w71", {autoAlpha: 0}, 30.315);
+  tl.set("#w72", {autoAlpha: 1}, 30.400); tl.set("#w72", {autoAlpha: 0}, 30.615);
+  tl.set("#w73", {autoAlpha: 1}, 30.700); tl.set("#w73", {autoAlpha: 0}, 30.800);
+  tl.set("#w74", {autoAlpha: 1}, 30.800); tl.set("#w74", {autoAlpha: 0}, 31.375);
+  tl.set("#w75", {autoAlpha: 1}, 31.460); tl.set("#w75", {autoAlpha: 0}, 31.955);
+  tl.set("#w76", {autoAlpha: 1}, 32.040); tl.set("#w76", {autoAlpha: 0}, 32.255);
+  tl.set("#w77", {autoAlpha: 1}, 32.340); tl.set("#w77", {autoAlpha: 0}, 33.535);
+  tl.set("#w78", {autoAlpha: 1}, 33.620); tl.set("#w78", {autoAlpha: 0}, 33.720);
+  tl.set("#w79", {autoAlpha: 1}, 33.780); tl.set("#w79", {autoAlpha: 0}, 34.215);
+  tl.set("#w80", {autoAlpha: 1}, 34.300); tl.set("#w80", {autoAlpha: 0}, 34.400);
+  tl.set("#w81", {autoAlpha: 1}, 34.420); tl.set("#w81", {autoAlpha: 0}, 34.755);
+  tl.set("#w82", {autoAlpha: 1}, 34.840); tl.set("#w82", {autoAlpha: 0}, 35.035);
+  tl.set("#w83", {autoAlpha: 1}, 35.120); tl.set("#w83", {autoAlpha: 0}, 35.715);
+  tl.set("#w84", {autoAlpha: 1}, 35.800); tl.set("#w84", {autoAlpha: 0}, 35.900);
+  tl.set("#w85", {autoAlpha: 1}, 35.960); tl.set("#w85", {autoAlpha: 0}, 36.060);
+  tl.set("#w86", {autoAlpha: 1}, 36.100); tl.set("#w86", {autoAlpha: 0}, 36.455);
+  tl.set("#w87", {autoAlpha: 1}, 36.540); tl.set("#w87", {autoAlpha: 0}, 37.035);
+  tl.set("#w88", {autoAlpha: 1}, 37.120); tl.set("#w88", {autoAlpha: 0}, 37.595);
+  tl.set("#w89", {autoAlpha: 1}, 37.680); tl.set("#w89", {autoAlpha: 0}, 38.115);
+  tl.set("#w90", {autoAlpha: 1}, 38.200); tl.set("#w90", {autoAlpha: 0}, 38.875);
+  tl.set("#w91", {autoAlpha: 1}, 38.960); tl.set("#w91", {autoAlpha: 0}, 39.195);
+  tl.set("#w92", {autoAlpha: 1}, 39.280); tl.set("#w92", {autoAlpha: 0}, 39.635);
+  tl.set("#w93", {autoAlpha: 1}, 39.720); tl.set("#w93", {autoAlpha: 0}, 39.820);
+  tl.set("#w94", {autoAlpha: 1}, 39.840); tl.set("#w94", {autoAlpha: 0}, 40.155);
+  tl.set("#w95", {autoAlpha: 1}, 40.240); tl.set("#w95", {autoAlpha: 0}, 40.835);
+  tl.set("#w96", {autoAlpha: 1}, 40.920); tl.set("#w96", {autoAlpha: 0}, 41.135);
+  tl.set("#w97", {autoAlpha: 1}, 41.220); tl.set("#w97", {autoAlpha: 0}, 41.320);
+  tl.set("#w98", {autoAlpha: 1}, 41.320); tl.set("#w98", {autoAlpha: 0}, 41.420);
+  tl.set("#w99", {autoAlpha: 1}, 41.460); tl.set("#w99", {autoAlpha: 0}, 41.675);
+  tl.set("#w100", {autoAlpha: 1}, 41.760); tl.set("#w100", {autoAlpha: 0}, 41.895);
+  tl.set("#w101", {autoAlpha: 1}, 41.980); tl.set("#w101", {autoAlpha: 0}, 42.080);
+  tl.set("#w102", {autoAlpha: 1}, 42.100); tl.set("#w102", {autoAlpha: 0}, 42.735);
+  tl.set("#w103", {autoAlpha: 1}, 42.820); tl.set("#w103", {autoAlpha: 0}, 42.920);
+  tl.set("#w104", {autoAlpha: 1}, 42.980); tl.set("#w104", {autoAlpha: 0}, 43.080);
+  tl.set("#w105", {autoAlpha: 1}, 43.160); tl.set("#w105", {autoAlpha: 0}, 43.895);
+  tl.set("#w106", {autoAlpha: 1}, 43.980); tl.set("#w106", {autoAlpha: 0}, 44.155);
+  tl.set("#w107", {autoAlpha: 1}, 44.240); tl.set("#w107", {autoAlpha: 0}, 44.475);
+  tl.set("#w108", {autoAlpha: 1}, 44.560); tl.set("#w108", {autoAlpha: 0}, 44.735);
+  tl.set("#w109", {autoAlpha: 1}, 44.820); tl.set("#w109", {autoAlpha: 0}, 45.175);
+  tl.set("#w110", {autoAlpha: 1}, 45.260); tl.set("#w110", {autoAlpha: 0}, 45.475);
+  tl.set("#w111", {autoAlpha: 1}, 45.560); tl.set("#w111", {autoAlpha: 0}, 46.495);
+  tl.set("#w112", {autoAlpha: 1}, 46.580); tl.set("#w112", {autoAlpha: 0}, 46.680);
+  tl.set("#w113", {autoAlpha: 1}, 46.680); tl.set("#w113", {autoAlpha: 0}, 46.780);
+  tl.set("#w114", {autoAlpha: 1}, 46.780); tl.set("#w114", {autoAlpha: 0}, 46.880);
+  tl.set("#w115", {autoAlpha: 1}, 46.940); tl.set("#w115", {autoAlpha: 0}, 47.040);
+  tl.set("#w116", {autoAlpha: 1}, 47.040); tl.set("#w116", {autoAlpha: 0}, 47.335);
+  tl.set("#w117", {autoAlpha: 1}, 47.420); tl.set("#w117", {autoAlpha: 0}, 47.875);
+  tl.set("#w118", {autoAlpha: 1}, 47.960); tl.set("#w118", {autoAlpha: 0}, 48.255);
+  tl.set("#w119", {autoAlpha: 1}, 48.340); tl.set("#w119", {autoAlpha: 0}, 48.635);
+  tl.set("#w120", {autoAlpha: 1}, 48.720); tl.set("#w120", {autoAlpha: 0}, 48.835);
+  tl.set("#w121", {autoAlpha: 1}, 48.920); tl.set("#w121", {autoAlpha: 0}, 49.235);
+  tl.set("#w122", {autoAlpha: 1}, 49.320); tl.set("#w122", {autoAlpha: 0}, 49.420);
+  tl.set("#w123", {autoAlpha: 1}, 49.420); tl.set("#w123", {autoAlpha: 0}, 49.520);
+  tl.set("#w124", {autoAlpha: 1}, 49.540); tl.set("#w124", {autoAlpha: 0}, 49.895);
+  tl.set("#w125", {autoAlpha: 1}, 49.980); tl.set("#w125", {autoAlpha: 0}, 50.535);
+  tl.set("#w126", {autoAlpha: 1}, 50.620); tl.set("#w126", {autoAlpha: 0}, 50.720);
+  tl.set("#w127", {autoAlpha: 1}, 50.780); tl.set("#w127", {autoAlpha: 0}, 50.880);
+  tl.set("#w128", {autoAlpha: 1}, 50.960); tl.set("#w128", {autoAlpha: 0}, 51.235);
+  tl.set("#w129", {autoAlpha: 1}, 51.320); tl.set("#w129", {autoAlpha: 0}, 51.835);
+  tl.set("#w130", {autoAlpha: 1}, 51.920); tl.set("#w130", {autoAlpha: 0}, 52.020);
+  tl.set("#w131", {autoAlpha: 1}, 52.080); tl.set("#w131", {autoAlpha: 0}, 52.375);
+  tl.set("#w132", {autoAlpha: 1}, 52.460); tl.set("#w132", {autoAlpha: 0}, 53.315);
+  tl.set("#w133", {autoAlpha: 1}, 53.400); tl.set("#w133", {autoAlpha: 0}, 53.500);
+  tl.set("#w134", {autoAlpha: 1}, 53.500); tl.set("#w134", {autoAlpha: 0}, 53.600);
+  tl.set("#w135", {autoAlpha: 1}, 53.640); tl.set("#w135", {autoAlpha: 0}, 53.775);
+  tl.set("#w136", {autoAlpha: 1}, 53.860); tl.set("#w136", {autoAlpha: 0}, 54.075);
+  tl.set("#w137", {autoAlpha: 1}, 54.160); tl.set("#w137", {autoAlpha: 0}, 54.575);
+  tl.set("#w138", {autoAlpha: 1}, 54.660); tl.set("#w138", {autoAlpha: 0}, 55.055);
+  tl.set("#w139", {autoAlpha: 1}, 55.140); tl.set("#w139", {autoAlpha: 0}, 55.455);
+  tl.set("#w140", {autoAlpha: 1}, 55.540); tl.set("#w140", {autoAlpha: 0}, 55.640);
+  tl.set("#w141", {autoAlpha: 1}, 55.680); tl.set("#w141", {autoAlpha: 0}, 55.780);
+  tl.set("#w142", {autoAlpha: 1}, 55.820); tl.set("#w142", {autoAlpha: 0}, 55.935);
+  tl.set("#w143", {autoAlpha: 1}, 56.020); tl.set("#w143", {autoAlpha: 0}, 56.315);
+  tl.set("#w144", {autoAlpha: 1}, 56.400); tl.set("#w144", {autoAlpha: 0}, 56.515);
+  tl.set("#w145", {autoAlpha: 1}, 56.600); tl.set("#w145", {autoAlpha: 0}, 57.435);
+  tl.set("#w146", {autoAlpha: 1}, 57.520); tl.set("#w146", {autoAlpha: 0}, 58.695);
+  tl.set("#w147", {autoAlpha: 1}, 58.780); tl.set("#w147", {autoAlpha: 0}, 58.880);
+  tl.set("#w148", {autoAlpha: 1}, 58.880); tl.set("#w148", {autoAlpha: 0}, 59.755);
+  tl.set("#w149", {autoAlpha: 1}, 59.840); tl.set("#w149", {autoAlpha: 0}, 60.255);
+  tl.set("#w150", {autoAlpha: 1}, 60.340); tl.set("#w150", {autoAlpha: 0}, 60.440);
+  tl.set("#w151", {autoAlpha: 1}, 60.440); tl.set("#w151", {autoAlpha: 0}, 60.540);
+  tl.set("#w152", {autoAlpha: 1}, 60.560); tl.set("#w152", {autoAlpha: 0}, 60.815);
+  tl.set("#w153", {autoAlpha: 1}, 60.900); tl.set("#w153", {autoAlpha: 0}, 61.095);
+  tl.set("#w154", {autoAlpha: 1}, 61.180); tl.set("#w154", {autoAlpha: 0}, 61.395);
+  tl.set("#w155", {autoAlpha: 1}, 61.480); tl.set("#w155", {autoAlpha: 0}, 61.975);
+  tl.set("#w156", {autoAlpha: 1}, 62.060); tl.set("#w156", {autoAlpha: 0}, 62.160);
+  tl.set("#w157", {autoAlpha: 1}, 62.160); tl.set("#w157", {autoAlpha: 0}, 62.515);
+  tl.set("#w158", {autoAlpha: 1}, 62.600); tl.set("#w158", {autoAlpha: 0}, 62.735);
+  tl.set("#w159", {autoAlpha: 1}, 62.820); tl.set("#w159", {autoAlpha: 0}, 63.015);
+  tl.set("#w160", {autoAlpha: 1}, 63.100); tl.set("#w160", {autoAlpha: 0}, 63.515);
+  tl.set("#w161", {autoAlpha: 1}, 63.600); tl.set("#w161", {autoAlpha: 0}, 63.795);
+  tl.set("#w162", {autoAlpha: 1}, 63.880); tl.set("#w162", {autoAlpha: 0}, 64.760);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
+  tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 64.860);
+
+  rise("#bw1", 1.520); sink("#bw1", 4.120);
+  shuffle(["#m0","#m1","#m2","#m3"], [6.820,7.380,8.220,9.180], 12.480);
+  shuffle(["#c0","#c1"], [29.900, 34.620], 37.280);
+  tl.fromTo("#mm1", {autoAlpha: 0, scale: .72, rotation: -7.5}, X({autoAlpha: 1, scale: 1, rotation: -2.5, duration: .28, ease: POP}), 42.760);
+  tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 43.880);
+
+        window.__timelines["main"] = tl;
+      }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      else build();
+    </script>
+  </body>
+</html>
