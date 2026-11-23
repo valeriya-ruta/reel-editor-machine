@@ -123,11 +123,11 @@ CSS = u"""
     .tab .go { margin-left: auto; background: #241919; color: #fff; border-radius: 26px; font-size: 26px; padding: 10px 24px; }
     .ask { left: 120px; top: 300px; width: 840px; padding: 24px 28px; }
     .ask .who { display: flex; align-items: center; gap: 10px; font-size: 24px; color: #574142; margin-bottom: 12px; }
-    .ask .who .st { color: #C15F3C; font-size: 28px; }
-    .ask .in { background: rgba(255,255,255,.95); border-radius: 22px; padding: 16px 22px; font-size: 30px; line-height: 1.3;
+    .ask .who .st { color: #7A1424; font-size: 28px; }
+    .ask .in { background: rgba(255,255,255,.95); border-radius: 22px; padding: 16px 86px 16px 22px; font-size: 30px; line-height: 1.3;
                color: #241919; min-height: 128px; position: relative; }
     .ask .send { position: absolute; right: 16px; bottom: 14px; width: 48px; height: 48px; border-radius: 14px;
-                 background: #DEBFBF; color: #fff; font-size: 28px; text-align: center; line-height: 48px; }
+                 background: #A2676F; color: #fff; font-size: 28px; text-align: center; line-height: 48px; }
     .dm { left: 150px; top: 300px; width: 780px; padding: 24px 28px; }
     .dm .hd { display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 500; color: #574142; margin-bottom: 16px; }
     .dm .hd b { width: 40px; height: 40px; border-radius: 50%; background: #7A1424; display: inline-block; }

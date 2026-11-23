@@ -184,6 +184,7 @@ js(u"""
   tl.to("#nr3", {backgroundColor: "rgba(122,20,36,0)", duration: .8}, %(sk).3f + .6);
   tl.to("#win2", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 8, rotationY: -8, rotationZ: 1.5, duration: 1.1, ease: "power3.inOut"}, %(sk).3f + .6);
   full(%(g0).3f, %(g1).3f);
+  tl.set("#stage2", {autoAlpha: 0}, %(g1).3f + .9);
 """ % {"wx": W2[1], "wy": W2[2], "ws": W2[0], "sx": ST[1], "sy": ST[2], "ss": ST[0],
        "g0": g0, "g1": g1, "got": t_got, "sk": t_sklad})
 g.sfx("whoosh-short", g0); g.sfx("whoosh-short", t_got - 0.6); g.sfx("pop", t_sklad); g.sfx("whoosh-short", g1)

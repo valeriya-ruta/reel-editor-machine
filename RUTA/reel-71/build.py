@@ -182,7 +182,7 @@ EXTRA += u"""
     #win .hd { height: 120px; box-sizing: border-box; display: flex; align-items: center; gap: 20px;
                padding: 0 40px; font-size: 44px; font-weight: 700; border-bottom: 2px solid #ECE6E6; }
     #win .hd svg { fill: #7A1424; }
-    #rows { padding: 12px 40px; }
+    #rows { padding: 8px 40px 0; }
     .prow { position: relative; display: flex; align-items: center; height: 92px; border-bottom: 2px solid #F3ECEC; }
     .prow:last-child { border-bottom: 0; }
     .prow .th { width: 56px; height: 72px; border-radius: 12px; background: #E9DCDC; flex: none; margin-right: 28px;
