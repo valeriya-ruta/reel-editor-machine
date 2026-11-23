@@ -28,10 +28,10 @@ DUR = 90.017           # (2701 plate frames - 0.5) / 30
 g = G(dur=DUR, reel=NN)
 
 FIX = {
-    u"можу": u"може", u"про чось,": u"про щось,", u"Перша": u"Перше", u"цепь": u"—",
+    u"можу": u"може", u"про чось,": u"про щось,", u"Перша": u"Перше", u"цепь": u"це",
     u"пауза": u"пауза,", u"Ніж": u"між", u"Входиш": u"входиш", u"Тут": u"тут", u"Не": u"не",
     u"Так": u"так", u"корисно": u"корисно,", u"\"довше\"": u"«довше»",
-    u"\"заблокували": u"«заблокували", u"акаунт\"": u"акаунт»,", u"Ми": u"я",
+    u"\"заблокували": u"«заблокували", u"акаунт\"": u"акаунт»,", u"Ми": u"ми",
 }
 CAPS = load_caps(NN, FIX)
 W = Words(CAPS)
@@ -254,7 +254,7 @@ def enter(t, c):
 
 
 def typ(sel, t, d, n):
-    js(u'  tl.fromTo("%s", {clipPath: "inset(0% 100% 0% 0%)"}, X({clipPath: "inset(0% 0% 0% 0%)", duration: %s, ease: "steps(%d)"}), %.3f);' % (sel, d, n, t))
+    js(u'  tl.fromTo("%s", {clipPath: "inset(0%% 100%% 0%% 0%%)"}, X({clipPath: "inset(0%% 0%% 0%% 0%%)", duration: %s, ease: "steps(%d)"}), %.3f);' % (sel, d, n, t))
 
 
 def show(sel, t):

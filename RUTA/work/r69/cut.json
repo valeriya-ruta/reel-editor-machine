@@ -1,10 +1,10 @@
 {
- "source": "/home/user/reel-editor-machine/work/inbox-1120/20261120_140030.mp4",
+ "source": "/home/user/reel-editor-machine/RUTA/work/inbox-1120/20261120_140030.mp4",
  "face": [
   0.5,
   0.45
  ],
- "duration": 71.6,
+ "duration": 71.6667,
  "clips": [
   {
    "i": 0,
@@ -171,8 +171,8 @@
   {
    "i": 18,
    "src_in": 87.139,
-   "frames": 97,
-   "dur": 3.2333,
+   "frames": 99,
+   "dur": 3.3,
    "tl": 68.3667,
    "frame": "in",
    "text": "Тому збережи, щоб не загубити і перейшли своїй колесі."
