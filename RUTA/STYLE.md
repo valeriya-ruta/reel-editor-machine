@@ -104,6 +104,32 @@ shape. None anywhere.
 - **A pointer to the comments points down** toward the lower right, never up.
 - Her verdict on the result: *"perfect delicious"*.
 
+**Her review of reel 61 (2026-11-23) — natural editing; amends everything above:**
+- *"I'm striving for a more natural editing style, where I only show things that
+  are really necessary, but we are not animating every single word for the sake
+  of animations."* A graphic only where it carries information. «іноді корисно»
+  as a chip read as cringe / "Claude vibes". Roughly one meaningful moment per
+  sentence group, not per phrase.
+- **Scene change every 2–3 s by other means**: her cuts and punch-ins, a
+  behind-me word, a full screen, a camera move inside a full screen — not a
+  new chip.
+- **Behind-me big text is part of every reel** (one or two words, the hook and
+  a name).
+- **Real UI = a full-screen platform-ad sequence**: the screen floats in 3D,
+  tilts, the camera zooms smoothly into the part she names, a control changes
+  state on its word, zooms back out. Never a tiny screenshot on a panel. When
+  her screenshot is too small to zoom (it blurs past 1.5×), rebuild it 1:1 in
+  HTML from the screenshot (same layout, labels, text) — `reel-61/build.py`.
+- **Excalidraw only for real highlights and schemes** (the half screen's
+  diagram). Never red handwriting with a thick white halo over her footage.
+- **Everything else modern Google, slight glass occasionally** (`.glass` in
+  reel-61: frosted white, hairline rim, soft cast).
+- **Give her head room**: cards small, y 300–560, never crowding her hair or
+  the top edge.
+- **No decorative pointer arrows** (the CTA arrow "is shit").
+- **ТЕСТ CTA** («якщо ти не впевнена… пиши ТЕСТ… я змонтую твоє відео») is cut
+  out of the reel entirely, even if the ending turns abrupt.
+
 Still in force from below: spelling from her script (§2), a graphic lands on
 its word and never outstays its sentence (§4, §4a), every object nameable, no
 invented stats, proof is a screenshot, her closeups are comedy (NO_PAINT).
