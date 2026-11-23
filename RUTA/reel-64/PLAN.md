@@ -16,14 +16,14 @@ Colours: white + #7A1424 only (no Google brand hues in the rebuilt UI).
 |---|---|---|
 | 4.65–6.5 | behind | «Claude» rises behind her head (matte b1) |
 | 6.6–9.0 | shuffle | «1 Анкета перед першою сесією» |
-| 9.0–22.7 | FULL | platform ad: form (zoom) → «Надіслати» pressed on «відповіді» → sheet, a new row lands on «таблицю» → Claude scheduled task, Google Drive switch on at «Drive», «Щоранку» lights on its word → résumé: three rows tick on «чого / заважає / почати» → zoom out |
+| 9.0–22.7 | FULL | platform ad (window 980 px = 91 % width, y 285–1395; task + résumé on top, form + sheet below so zooms never run under the captions; text ≥ 30 px, labels ≥ 26 px): form (zoom) → «Надіслати» pressed on «відповіді» → sheet, a new row lands on «таблицю» → Claude scheduled task, Google Drive switch on at «Drive», «Щоранку» lights on its word → résumé: three rows tick on «чого / заважає / почати» → zoom out |
 | 22.6–24.3 | — | «Ну і, власне, які краще продати?» captions only |
 | 24.3–27.6 | shuffle | «2 План на 30 · 60 · 90 днів» |
 | 27.6–35.7 | above (glass) | plan card 30/60/90; columns fill on «збирає», a line edited on «поправити», «Надіслати» → «✓ Надіслано» on «відправити» |
-| 37.27–39.8 | shuffle | «3 Щоденні чек-іни» |
+| 38.48–39.8 | shuffle | «3 Щоденні чек-іни» (lands on «чек-іни», once meme 35 has gone) |
 | 42.4–46.3 | above (glass) | Telegram bot message via SendPulse |
 | 47.1–49.8 | shuffle | «4 Сигнал: клієнтка зникла» |
-| 51.5–60.3 | above (glass) | list to her: two clients (quiet several days / stuck on one step), «Нагадати» → sent on «пушить» |
+| 51.5–60.3 | above (glass) | list to her: two «Клієнтка» rows, no invented names (quiet several days / stuck on one step), «Нагадати» → sent on «пушить» |
 | 60.5–62.5 | shuffle | «5 Після сесії» |
 | 62.5–70.3 | HALF | scheme: Fathom: дзвінок → Claude (самарі, домовленості, задачі) → SendPulse → клієнтка (matte half1) |
 | 72.53–end | CTA | pill «Збережи і перешли знайомій коучці» in the subtitle band |
@@ -32,5 +32,5 @@ Colours: white + #7A1424 only (no Google brand hues in the rebuilt UI).
 
 | meme | time | slot | reacts to | why |
 |---|---|---|---|---|
-| 35 hamster-sunglasses | 37.38–38.58 | r | «Мені здається, що це взагалі геніально.» | deal-with-it cool after her "genius" brag |
-| 59 cockatiel «алівідерчі» | 50.37–51.47 | top | «…сигнал, що клієнтка зникла.» | the client peeking out and saying bye — literally the disappearing client; replaces a second behind-me word on this line |
+| 35 hamster-sunglasses | 37.38–38.38 | r | «Мені здається, що це взагалі геніально.» | deal-with-it cool after her "genius" brag |
+| 59 cockatiel «алівідерчі» | 50.37–51.37 | top | «…сигнал, що клієнтка зникла.» | the client peeking out and saying bye — literally the disappearing client; replaces a second behind-me word on this line |

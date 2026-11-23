@@ -22,3 +22,4 @@ reel; their RUTA dates are already shifted (+3 days); re-check the dates against
 today before scheduling, and the ТЕСТ cut-fixes for 60/66/71 are in place.
 | 58 | Mon 23 Nov | 21:00 | 21:30 | reels/REEL-58.mp4 | 6b04466b8a7a8742ba5a9c7b / 6b04466e6c8a622ab0eddc89 | — |
 | 57 | Mon 23 Nov | 19:00 | 20:00 | reels/REEL-57-v2.mp4 (current app + reviews) | 6b045136d39fa53288492368 / 6b0451385fa57e36d0dce030 | — |
+| 60 | Tue 24 Nov | 21:00 | 21:30 | reels/REEL-60.mp4 | 6b0472bc6b0f5eaba88ea18d / 6b0472bd6b0f5eaba88eaa9c | — |
