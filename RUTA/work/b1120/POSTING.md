@@ -21,3 +21,4 @@ Resume: a fresh session on `main`, `/reel` with `RUTA/BUILD-BRIEF.md`, one build
 reel; their RUTA dates are already shifted (+3 days); re-check the dates against
 today before scheduling, and the ТЕСТ cut-fixes for 60/66/71 are in place.
 | 58 | Mon 23 Nov | 21:00 | 21:30 | reels/REEL-58.mp4 | 6b04466b8a7a8742ba5a9c7b / 6b04466e6c8a622ab0eddc89 | — |
+| 57 | Mon 23 Nov | 19:00 | 20:00 | reels/REEL-57.mp4 | 6b04492dffec7536549982ff / 6b04492ff23a24bb20dad0a9 | — |

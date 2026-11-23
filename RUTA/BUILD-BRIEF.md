@@ -108,7 +108,7 @@ Never `npx hyperframes` / `./hf` (broken here). Use `$HF`. Never HeyGen.
    each, half screens ≤ 12 s each, at most two of each).
 8. `cd reel-NN && $HF check` → 0 errors (contrast warnings on rebuilt UI
    hint text are OK).
-9. **Render, locally**: `rm -rf reel-NN/renders/work-*; $H $HF render reel-NN -o reel-NN/renders/REEL-NN.mp4 --workers 3 --low-memory-mode --quiet`
+9. **Render, locally** (over ~70 s, or when it refuses for disk: prefix `HF_DE_PARALLEL_STREAM=true` — streaming encode): `rm -rf reel-NN/renders/work-*; $H $HF render reel-NN -o reel-NN/renders/REEL-NN.mp4 --workers 3 --low-memory-mode --quiet`
    (run from `RUTA/`; if the CLI wants the dir differently, `cd reel-NN` first).
 10. **Verify** (all must hold, or fix and re-render):
     - frames == plate frames; `ffmpeg -v error -i REEL-NN.mp4 -f null -` prints nothing
