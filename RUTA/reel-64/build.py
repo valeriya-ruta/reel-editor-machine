@@ -225,13 +225,15 @@ def go(view, t, d=1.1, rx=0, ry=0, rz=0, ease="power3.inOut"):
     s, x, y = V[view]
     js(u'  tl.to("#win", {x: %s, y: %s, scale: %s, rotationX: %s, rotationY: %s, rotationZ: %s, duration: %s, ease: "%s"}, %.3f);'
        % (x, y, s, rx, ry, rz, d, ease, t))
+# it lands straight on the form (one tween: an overlapping entrance tween would
+# win the last frames sequentially rendered and flash back to wide)
 s, x, y = V["wide"]
+gs, gx, gy = V["gf"]
 js(u"""
   gsap.set("#win", {x: %s, y: %s + 240, scale: %s * .86, rotationX: 24, rotationY: -18, rotationZ: 4});
-  tl.to("#win", {x: %s, y: %s, scale: %s, rotationX: 8, rotationY: -8, rotationZ: 1.5, duration: 1.2, ease: "power3.out"}, %.3f);
+  tl.to("#win", {x: %s, y: %s, scale: %s, rotationX: 4, rotationY: 8, rotationZ: 0, duration: 1.2, ease: "power3.out"}, %.3f);
   full(%.3f, %.3f);
-""" % (x, y, s, x, y, s, f0 + 0.1, f0, f1))
-go("gf", T["form"] - 0.45, 1.0, 4, 8, 0)
+""" % (x, y, s, gx, gy, gs, f0 + 0.1, f0, f1))
 js(u'  tl.fromTo("#gfb", {scale: 1}, X({scale: .92, duration: .15, yoyo: true, repeat: 1}), %.3f);' % (T["vidp"]))
 go("sh", T["vidp"] + 0.2, 1.0, 3, -8, 0)
 js(u'  tl.fromTo("#shn", {autoAlpha: 0, y: -30}, X({autoAlpha: 1, y: 0, duration: .45, ease: "back.out(1.6)"}), %.3f);' % T["tabl"])

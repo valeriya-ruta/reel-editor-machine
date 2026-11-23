@@ -96,16 +96,16 @@ t_to, t_def, t_kld, t_ale = S(u"то", 2.73), S(u"дефолту,", 3.85), S(u"�
 F.append(u'''
         <div id="c1" class="glass dm hid">
           <div class="rowr"><span class="bub me">Змонтуй відео</span></div>
-          <div class="rowl hid" id="c1a"><span class="av">%s</span>
+        </div>
+        <div id="c1a" class="glass dm hid" style="top:428px">
+          <div class="rowl" style="margin-top:0"><span class="av">%s</span>
             <span class="bub in rep"><i class="vt"></i>Готово · стиль за замовчуванням</span></div>
         </div>''' % mark("claude", 34))
 js(u'''
   rise("#c1", %.3f);
-  gsap.set("#c1a", {height: 0, marginTop: 0, overflow: "hidden"});
-  tl.to("#c1a", {height: "auto", marginTop: 16, duration: .3, ease: "power2.out"}, %.3f - .05);
-  pop("#c1a", %.3f);
-  sink("#c1", %.3f);
-''' % (t_to - 0.05, t_def - 0.05, t_def - 0.05, t_ale - 0.25))
+  rise("#c1a", %.3f, 40);
+  sink("#c1, #c1a", %.3f);
+''' % (t_to - 0.05, t_def - 0.05, t_ale - 0.25))
 g.sfx("pop", t_to - 0.05); g.sfx("notification", t_def - 0.05)
 
 # 3 · HALF — two reels, two looks; then «референс -> Claude» struck --------------
@@ -298,9 +298,9 @@ s, x, y = V["WIDE"]
 js(u'''
   tl.set("#stage", {autoAlpha: 1}, %(u0)s);
   gsap.set("#win", {x: %(x)s, y: %(y)s + 240, scale: %(s)s * .85, rotationX: 24, rotationY: -20, rotationZ: 5});
-  tl.to("#win", {x: %(x)s, y: %(y)s, scale: %(s)s, rotationX: 8, rotationY: -10, rotationZ: 2, duration: 1.1, ease: "power3.out"}, %(u0)s + .15);
-''' % {"u0": "%.3f" % u0, "x": x, "y": y, "s": s})
-js(at("ACC", t_dost - 0.7, 0.9, 4, 6, 0))
+  tl.to("#win", {x: %(ax)s, y: %(ay)s, scale: %(as)s, rotationX: 4, rotationY: 6, rotationZ: 0, duration: 1.3, ease: "power3.out"}, %(u0)s + .15);
+''' % {"u0": "%.3f" % u0, "x": x, "y": y, "s": s, "as": V["ACC"][0], "ax": V["ACC"][1], "ay": V["ACC"][2]})
+# the entrance lands straight on the access row (one move, no overlapping tweens)
 js(u'  tl.to("#acc", {backgroundColor: "#7A1424", duration: .2}, %.3f); tl.to("#acc u", {x: 42, duration: .3, ease: "back.out(2)"}, %.3f);' % (t_dost + 0.1, t_dost + 0.1))
 js(at("GRID", t_kart - 0.3, 1.1, 5, -6, 1))
 js(at("WIDE", t_prod - 0.2, 1.4, 3, 7, -1, "sine.inOut"))

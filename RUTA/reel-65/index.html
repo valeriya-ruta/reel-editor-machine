@@ -212,7 +212,7 @@
              data-start="0.000" data-duration="4.400" data-media-start="0"
              muted playsinline></video>
       <video id="matte-half1" class="plate matte" src="assets/mattes/half1.webm"
-             data-start="26.867" data-duration="10.533" data-media-start="0"
+             data-start="26.867" data-duration="10.333" data-media-start="0"
              muted playsinline></video>
       <video id="matte-half2" class="plate matte" src="assets/mattes/half2.webm"
              data-start="51.600" data-duration="13.267" data-media-start="0"
@@ -833,7 +833,7 @@
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 8.367);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 23.602);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 27.217);
-  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 36.665);
+  tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 36.465);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 51.973);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.25}, 64.123);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 70.253);
@@ -844,7 +844,7 @@
   gsap.set("#win", {transformOrigin: "450px 575px"});
   gsap.set("#win", {x: 90, y: 488.8, scale: 0.903, rotationX: 24, rotationY: -20, rotationZ: 5});
   tl.to("#win", {x: 90, y: 268.8, scale: 1.05, rotationX: 6, rotationY: -6, rotationZ: 1, duration: 0.75, ease: "power3.out"}, 8.217);
-  tl.to("#win", {x: 90, y: 319.0, scale: 1.12, rotationX: 4, rotationY: 4, rotationZ: 0, duration: 0.9, ease: "power3.inOut"}, 8.867);
+  tl.to("#win", {x: 90, y: 319.0, scale: 1.12, rotationX: 4, rotationY: 4, rotationZ: 0, duration: 0.9, ease: "power3.inOut"}, 8.987);
   tl.to("#tgc", {backgroundColor: "#7A1424", duration: .2}, 9.337);
   tl.to("#tgc u", {x: 38, duration: .3, ease: "back.out(2)"}, 9.337);
   tl.fromTo("#rCal", {boxShadow: "0 0 0 0 rgba(122,20,36,0)"}, X({boxShadow: "0 0 0 6px rgba(122,20,36,.18)", duration: .35, yoyo: true, repeat: 1}), 9.437);
@@ -886,9 +886,9 @@
   sketch("a5", "skP"); arrow("a5", 728, 692, 528, 692, {seed: 13, bend: .06});
   box("a5", 180, 625, 335, 135, {seed: 15}); label("a5", 347, 712, "Lightroom", {size: 54});
   draw("a5", 34.351);
-  erase("a1", 36.265); erase("a2", 36.265); erase("a3", 36.265); erase("a4", 36.265); erase("a5", 36.265);
+  erase("a1", 36.065); erase("a2", 36.065); erase("a3", 36.065); erase("a4", 36.065); erase("a5", 36.065);
 
-  shuffle(["#l3"], [35.950], 40.489);
+  shuffle(["#l3"], [36.300], 40.489);
   tl.fromTo("#l3 .st", {scaleX: 0}, X({scaleX: 1, duration: .3, ease: "power2.out"}), 39.719);
   tl.to("#l3 .tag", {opacity: .55, duration: .3}, 40.019);
   shuffle(["#l3a"], [42.217], 43.287);
@@ -931,7 +931,7 @@
   shuffle(["#c1"], [70.723], 72.241);
   shuffle(["#c2"], [72.241], 74.550);
   pop("#ctp", 70.483);
-  half(26.967, 36.265);
+  half(26.967, 36.065);
   half(51.723, 63.723);
 
         window.__timelines["main"] = tl;

@@ -198,7 +198,7 @@ js(u'  gsap.set("#win", {transformOrigin: "%dpx %dpx"});' % (OX, OY))
 js(u'  gsap.set("#win", {x: %s, y: %s, scale: %s, rotationX: 24, rotationY: -20, rotationZ: 5});'
    % (WIDE[1], WIDE[2] + 220, WIDE[0] * 0.86))
 js(at(WIDE, 6, -6, 1, 0.75, "power3.out", f0 + 0.1))
-js(at(CON, 4, 4, 0, 0.9, "power3.inOut", f0 + 0.75))
+js(at(CON, 4, 4, 0, 0.9, "power3.inOut", f0 + 0.87))
 js(u'  tl.to("#tgc", {backgroundColor: "#7A1424", duration: .2}, %.3f);' % t_goo)
 js(u'  tl.to("#tgc u", {x: 38, duration: .3, ease: "back.out(2)"}, %.3f);' % t_goo)
 js(u'  tl.fromTo("#rCal", {boxShadow: "0 0 0 0 rgba(122,20,36,0)"}, X({boxShadow: "0 0 0 6px rgba(122,20,36,.18)", duration: .35, yoyo: true, repeat: 1}), %.3f);' % (t_goo + 0.1))
@@ -228,7 +228,7 @@ slot("l2", u'<b class="n">2</b>LUT з референсу', S(u"LUT", 25.85) - 0.
 
 # 5 · HALF 1 — the LUT scheme ----------------------------------------------------------
 k0 = S(u"Ти", 27.02) - 0.05
-k1 = E(u"у Lightroom.", 35.40) + 0.35
+k1 = E(u"у Lightroom.", 35.40) + 0.15
 HALF.append((k0, k1))
 t_foto, t_skr, t_cube, t_lr = S(u"фото,", 27.88), S(u"скрипт", 31.59), S(u".cube", 33.11), S(u"у Lightroom.", 35.40)
 js(u'''
@@ -254,7 +254,7 @@ g.sfx("whoosh-short", k0); g.sfx("click-soft", t_skr); g.sfx("pop", t_cube); g.s
 t_tr, t_ni = S(u"Третє", 36.00), S(u"ні", 39.82)
 t_af, t_im = S(u"Aftershoot", 42.27), S(u"Imagen,", 43.34)
 slot("l3", u'<b class="n">3</b>Відбір і обробка<span class="tag">Claude<i class="st"></i></span>',
-     t_tr - 0.05, E(u"чого.", 40.08) + 0.05)
+     t_tr + 0.3, E(u"чого.", 40.08) + 0.05)   # after the half screen's panel has lifted
 js(u'  tl.fromTo("#l3 .st", {scaleX: 0}, X({scaleX: 1, duration: .3, ease: "power2.out"}), %.3f);' % (t_ni - 0.1))
 js(u'  tl.to("#l3 .tag", {opacity: .55, duration: .3}, %.3f);' % (t_ni + 0.2))
 g.sfx("click", t_ni - 0.1)

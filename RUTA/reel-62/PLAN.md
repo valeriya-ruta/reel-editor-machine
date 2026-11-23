@@ -41,3 +41,4 @@ the half-screen scheme of a token budget -> «Пиши коротко.» typed �
   field (×2.0). The token field and the Sonnet/Haiku list entries are not on her screenshot (added, her wording).
 - Head room: the «Інструкція для бота» card (bottom ≈ y 540) and the DM (bottom y 548) moved up off her hair (≈ 600).
 - Caption: «і ти бачиш» -> «І ти бачиш».
+- The three typed instruction lines are one text block revealed by shrinking white covers (no stacked rows to collide under the tilt).

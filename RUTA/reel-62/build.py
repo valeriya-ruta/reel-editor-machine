@@ -135,9 +135,8 @@ C.append(u"""
             <div class="sp-l" style="left:36px;top:92px">Інструкція для бота</div>
             <div id="fld" class="sp-box" style="left:36px;top:130px;width:900px;height:292px;padding:12px 18px;line-height:1.42;white-space:normal;color:#5f6368">
               You are a helpful assistant.<br>User name:&nbsp; {{full_name}}<br>Current date:&nbsp; {{$current_datetime}}
-              <div class="ty" id="ty1"><b>Скрипт:</b> привітайся, дізнайся запит, запропонуй дзвінок</div>
-              <div class="ty" id="ty2"><b>Цільова аудиторія:</b> власниці малого бізнесу</div>
-              <div class="ty" id="ty3"><b>Контекст:</b> послуги, ціни, умови, часті питання</div></div>
+              <div class="ty"><b>Скрипт:</b> привітайся, дізнайся запит, запропонуй дзвінок<br><b>Цільова аудиторія:</b> власниці малого бізнесу<br><b>Контекст:</b> послуги, ціни, умови, часті питання</div>
+              <i class="tc" id="ty1" style="top:140px"></i><i class="tc" id="ty2" style="top:184px"></i><i class="tc" id="ty3" style="top:228px"></i></div>
             <div class="sp-l o" style="left:36px;top:432px;width:420px">Встановити цілі як умови виходу</div>
             <div class="sp-a o" style="left:36px;top:502px">Додати умову</div>
             <div class="sp-l" id="tokl" style="left:36px;top:578px;width:420px">Максимальна кількість токенів</div>
@@ -155,7 +154,7 @@ C.append(u"""
             <div id="sel" class="sp-box sp-sel o2" style="left:486px;top:478px;width:450px;height:62px;padding:0 18px;line-height:58px">
               <span id="sv1">GPT-6 Luna</span><span id="sv2">%(HAIKU)s</span></div>
             <div id="kl" class="sp-l o" style="left:486px;top:552px">Ключ API</div>
-            <div id="kv" class="sp-box sp-sel o" style="left:486px;top:600px;width:450px;height:62px;padding:0 18px;line-height:58px">Наслідувати з налаштувань…</div>
+            <div id="kv" class="sp-box sp-sel o" style="left:486px;top:600px;width:450px;height:62px;padding:0 18px;line-height:58px">Наслідувати з налашт…</div>
             <div id="cw" class="sp-card o" style="left:486px;top:684px"><i style="background:#DDEBFB"></i><b>ВЕБ-ПОШУК</b>
               <span>Пошук актуальної інформації в інтернеті перед формуванням відповіді.</span><em><u></u></em></div>
             <div class="sp-card o" style="left:486px;top:864px"><i style="background:#ECEFF3"></i><b>СЕРВЕРИ MCP</b>
@@ -188,7 +187,10 @@ EXTRA += u"""
     .sp-card em { position: absolute; left: 376px; top: 20px; width: 56px; height: 28px; border-radius: 14px; background: #C4C7C5; }
     .sp-card em u { position: absolute; left: 3px; top: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; }
     .sp-btn { height: 64px; border-radius: 12px; font-size: 30px; font-weight: 500; text-align: center; line-height: 64px; }
-    #fld .ty { height: 38px; line-height: 38px; margin-top: 6px; color: #1f1f1f; white-space: nowrap; overflow: hidden; clip-path: inset(0 100% 0 0); }
+    /* the three typed lines are ONE text block (no stacked line boxes to collide under the 3D
+       tilt); each line is revealed by an empty white cover shrinking off it to the right */
+    #fld .ty { line-height: 44px; color: #1f1f1f; white-space: nowrap; }
+    #fld .tc { position: absolute; left: 2px; right: 2px; height: 44px; background: #fff; transform-origin: 100% 50%; }
     #fld .ty b { font-weight: 700; }
     #tok span { position: absolute; left: 18px; top: 0; }
     #tk2 { opacity: 0; }
@@ -253,9 +255,9 @@ js(u"""
   tl.set("#win", %(f0)s, %(b0).3f);
   tl.to("#win", %(f1)s, %(b0).3f + .1);
   tl.to("#fld", {%(ring)s, duration: .3}, %(b0).3f + .7);
-  tl.to("#ty1", {clipPath: "inset(0 0%% 0 0)", duration: .7, ease: "steps(22)"}, %(skr).3f - .1);
-  tl.to("#ty2", {clipPath: "inset(0 0%% 0 0)", duration: .6, ease: "steps(18)"}, %(aud).3f - .05);
-  tl.to("#ty3", {clipPath: "inset(0 0%% 0 0)", duration: .8, ease: "steps(24)"}, %(kon).3f - .1);
+  tl.to("#ty1", {scaleX: 0, duration: .7, ease: "steps(22)"}, %(skr).3f - .1);
+  tl.to("#ty2", {scaleX: 0, duration: .6, ease: "steps(18)"}, %(aud).3f - .05);
+  tl.to("#ty3", {scaleX: 0, duration: .8, ease: "steps(24)"}, %(kon).3f - .1);
   tl.to("#fld", {%(unring)s, duration: .3}, %(mod).3f - .5);
   tl.to("#win", %(m1)s, %(mod).3f - .55);
   tl.fromTo("#dd", {autoAlpha: 0, scaleY: .6}, X({autoAlpha: 1, scaleY: 1, duration: .3, ease: "power2.out"}), %(obyr).3f);
