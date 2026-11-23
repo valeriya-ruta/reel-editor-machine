@@ -174,17 +174,17 @@
     .shuf .chip .cb b::after { content: ""; position: absolute; left: 14px; top: 6px; width: 10px; height: 20px;
                                border: solid #fff; border-width: 0 5px 5px 0; transform: rotate(45deg); }
 
-    .ph { position: absolute; width: 220px; height: 391px; border-radius: 22px; overflow: hidden;
+    .ph { position: absolute; width: 320px; height: 450px; border-radius: 28px; overflow: hidden;
           box-shadow: 0 2px 6px rgba(36,25,25,.12), 0 14px 30px rgba(36,25,25,.16); }
-    .ph img { width: 220px; height: 391px; object-fit: cover; display: block; }
+    .ph img { width: 320px; height: 450px; object-fit: cover; object-position: 50% 30%; display: block; }
     .ph .mk { position: absolute; inset: 0; background: #262626; }
     .mk i { position: absolute; display: block; border-radius: 8px; background: #fff; }
-    .mk .h1 { left: 22px; top: 40px; width: 176px; height: 26px; }
-    .mk .h2 { left: 22px; top: 78px; width: 120px; height: 26px; }
-    .mk .vd { position: absolute; left: 22px; top: 130px; width: 176px; height: 150px; border-radius: 14px;
+    .mk .h1 { left: 30px; top: 44px; width: 260px; height: 36px; }
+    .mk .h2 { left: 30px; top: 94px; width: 170px; height: 36px; }
+    .mk .vd { position: absolute; left: 30px; top: 160px; width: 260px; height: 180px; border-radius: 18px;
               background: linear-gradient(160deg, #6d6d6d, #4a4a4a); }
-    .mk .sb { left: 22px; top: 304px; width: 176px; height: 20px; background: #9a9a9a; border-radius: 10px; }
-    .mk .s2 { top: 334px; width: 110px; }
+    .mk .sb { left: 30px; top: 366px; width: 260px; height: 24px; background: #9a9a9a; border-radius: 12px; }
+    .mk .s2 { top: 402px; width: 160px; }
 
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); overflow: hidden; }
     #wall { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2000px; }
@@ -253,8 +253,8 @@
       <div id="panel">
 <svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>
 
-<div id="ph1" class="ph hid" style="left:175px; top:305px"><img src="assets/r61.jpg"></div>
-<div id="ph2" class="ph hid" style="left:665px; top:305px"><div class="mk"><i class="h1"></i><i class="h2"></i>
+<div id="ph1" class="ph hid" style="left:170px; top:272px"><img src="assets/r61.jpg"></div>
+<div id="ph2" class="ph hid" style="left:590px; top:272px"><div class="mk"><i class="h1"></i><i class="h2"></i>
   <div class="vd"></div><i class="sb"></i><i class="sb s2"></i></div></div>
       </div>
       <video id="matte-b1" class="plate matte" src="assets/mattes/b1.webm"
@@ -831,11 +831,11 @@
   sink("#c1, #c1a", 6.850);
 
 
-  sketch("p1", "skP"); box("p1", 160, 290, 250, 421, {seed: 3, r: 30});
-  label("p1", 285, 772, "мої", {size: 52});
+  sketch("p1", "skP"); box("p1", 158, 260, 344, 474, {seed: 3, r: 34});
+  label("p1", 330, 792, "мої", {size: 54});
   draw("p1", 7.860, .45); fadein("#ph1", 7.960, .35);
-  sketch("p2", "skP"); box("p2", 650, 290, 250, 421, {seed: 7, r: 30});
-  label("p2", 775, 772, "клієнтки", {size: 52});
+  sketch("p2", "skP"); box("p2", 578, 260, 344, 474, {seed: 7, r: 34});
+  label("p2", 750, 792, "клієнтки", {size: 54});
   draw("p2", 10.584, .45); fadein("#ph2", 10.684, .35);
   erase("p1", 13.941); erase("p2", 13.941); out("#ph1", 13.941); out("#ph2", 13.941);
 

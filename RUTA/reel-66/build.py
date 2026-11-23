@@ -115,28 +115,28 @@ HALF.append((h0, h1))
 t_moi, t_kli, t_ref, t_zrob, t_tut = S(u"мої", 8.01), S(u"клієнтки", 10.78), S(u"референси", 14.54), S(u"«зроби", 15.50), S(u"тут».", 16.00)
 t_riz = S(u"різниця", 12.68)
 P.append(u'''
-<div id="ph1" class="ph hid" style="left:175px; top:305px"><img src="assets/r61.jpg"></div>
-<div id="ph2" class="ph hid" style="left:665px; top:305px"><div class="mk"><i class="h1"></i><i class="h2"></i>
+<div id="ph1" class="ph hid" style="left:170px; top:272px"><img src="assets/r61.jpg"></div>
+<div id="ph2" class="ph hid" style="left:590px; top:272px"><div class="mk"><i class="h1"></i><i class="h2"></i>
   <div class="vd"></div><i class="sb"></i><i class="sb s2"></i></div></div>''')
 EXTRA += u"""
-    .ph { position: absolute; width: 220px; height: 391px; border-radius: 22px; overflow: hidden;
+    .ph { position: absolute; width: 320px; height: 450px; border-radius: 28px; overflow: hidden;
           box-shadow: 0 2px 6px rgba(36,25,25,.12), 0 14px 30px rgba(36,25,25,.16); }
-    .ph img { width: 220px; height: 391px; object-fit: cover; display: block; }
+    .ph img { width: 320px; height: 450px; object-fit: cover; object-position: 50% 30%; display: block; }
     .ph .mk { position: absolute; inset: 0; background: #262626; }
     .mk i { position: absolute; display: block; border-radius: 8px; background: #fff; }
-    .mk .h1 { left: 22px; top: 40px; width: 176px; height: 26px; }
-    .mk .h2 { left: 22px; top: 78px; width: 120px; height: 26px; }
-    .mk .vd { position: absolute; left: 22px; top: 130px; width: 176px; height: 150px; border-radius: 14px;
+    .mk .h1 { left: 30px; top: 44px; width: 260px; height: 36px; }
+    .mk .h2 { left: 30px; top: 94px; width: 170px; height: 36px; }
+    .mk .vd { position: absolute; left: 30px; top: 160px; width: 260px; height: 180px; border-radius: 18px;
               background: linear-gradient(160deg, #6d6d6d, #4a4a4a); }
-    .mk .sb { left: 22px; top: 304px; width: 176px; height: 20px; background: #9a9a9a; border-radius: 10px; }
-    .mk .s2 { top: 334px; width: 110px; }
+    .mk .sb { left: 30px; top: 366px; width: 260px; height: 24px; background: #9a9a9a; border-radius: 12px; }
+    .mk .s2 { top: 402px; width: 160px; }
 """
 js(u'''
-  sketch("p1", "skP"); box("p1", 160, 290, 250, 421, {seed: 3, r: 30});
-  label("p1", 285, 772, "мої", {size: 52});
+  sketch("p1", "skP"); box("p1", 158, 260, 344, 474, {seed: 3, r: 34});
+  label("p1", 330, 792, "мої", {size: 54});
   draw("p1", %.3f, .45); fadein("#ph1", %.3f, .35);
-  sketch("p2", "skP"); box("p2", 650, 290, 250, 421, {seed: 7, r: 30});
-  label("p2", 775, 772, "клієнтки", {size: 52});
+  sketch("p2", "skP"); box("p2", 578, 260, 344, 474, {seed: 7, r: 34});
+  label("p2", 750, 792, "клієнтки", {size: 54});
   draw("p2", %.3f, .45); fadein("#ph2", %.3f, .35);
   erase("p1", %.3f); erase("p2", %.3f); out("#ph1", %.3f); out("#ph2", %.3f);
 ''' % (t_moi - 0.15, t_moi - 0.05, t_kli - 0.2, t_kli - 0.1, t_ref - 0.6, t_ref - 0.6, t_ref - 0.6, t_ref - 0.6))
