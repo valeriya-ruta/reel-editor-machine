@@ -24,6 +24,24 @@ Truly blocked → say so in the report and stop.
    HTML), the half-screen Excalidraw scheme, the `shuffle` CTA chips, the CTA
    pill in the subtitle band.
 
+## Memes: comic relief (her rules, 2026-11-23: every reel gets them)
+
+63 reaction memes live in `assets/memes/`; **`assets/memes/MEMES.md` is the index**
+(caption, feeling, when to use) and holds the rules. Read it in full, then for THIS
+reel pick **1-3 moments** (cap 3 images) where a meme *is* the feeling of what she just said
+(a missed deadline, a wrong-button panic, a "client asks for more"). Not a quota, but
+don't ship a reel with none unless truly nothing fits.
+
+- `g.cta_start = <the CTA line's first word time>` right after `g = G(...)`; then
+  `g.meme(F, J, "42", t, dur=1.2)` per meme (`slot="l"` + `slot="r"` at the same `t` for a pair).
+  The kit refuses a 4th image, one touching the CTA, or an unplanned overlap, and
+  copies the files into `reel-NN/assets/memes/`.
+- Place it just after the word/phrase it reacts to (`E(word) + 0.1`), never mid-line.
+- A pair only with a long clear stretch around it. Memes sit under captions and over her footage;
+  keep them off beats that already have a behind-me word, card, half or full screen.
+- First 3 s allowed if it fits; profanity allowed; English reel -> caption-free memes only.
+- Write the picks into `PLAN.md` (meme NN, time, the line it reacts to, why).
+
 ## What she wants (her words, 2026-11-23)
 
 - *"a more natural editing style, where I only show things that are really
@@ -96,7 +114,9 @@ Never `npx hyperframes` / `./hf` (broken here). Use `$HF`. Never HeyGen.
     - sync: at 3 times with no graphic up, PSNR of a 500×400 face crop of the
       render vs `assets/base.mp4` is highest at the same time vs ±0.4 s
       (see `work/scratch/r61c.sh` for the commands)
-    - one contact sheet of 6–8 frames from the RENDER, read once
+    - one contact sheet of 6–8 frames from the RENDER, read once (include a frame with a meme up: it
+      must not cover the captions, and the image must not be cut off)
+    - `ls reel-NN/assets/memes` has ≤ 3 files and none is after the CTA's first word
 11. **Don't commit, push, or touch the RUTA app.** The orchestrator does.
 
 ## Report (≤ 15 lines)
@@ -104,7 +124,7 @@ Never `npx hyperframes` / `./hf` (broken here). Use `$HF`. Never HeyGen.
 ```
 REEL-NN «title»  DUR s  frames n/n  decode 0  sync ok  check: passed
 cut: raw s -> s; anything she said that was dropped / kept on purpose
-behind-me word(s): …   full screens: …   half screens: …
+behind-me word(s): …   full screens: …   half screens: …   memes: NN@t, …
 captions fixed: n (unsure: …)
 her side: lines she improvised that change meaning; example UI text you invented
 ```
