@@ -3,7 +3,7 @@
 Short vertical explainers (Ukrainian, 1080×1920, 30 fps, 40–50 s, never over
 58 s). Each episode is an evolution ladder for one creator task: you do X → but
 Y → so you do the next thing, ending on the modern AI setup. Remotion project,
-separate from the HyperFrames reel pipeline in the repo root.
+separate from the HyperFrames reel pipeline around it in `RUTA/`.
 
 How the voiceover and captions are written: [`VO-STYLE.md`](VO-STYLE.md).
 

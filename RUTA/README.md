@@ -69,6 +69,7 @@ she records + cuts + grades        (her laptop, 5-10 min)
 | `tools/asr.py` | whisper wrapper, word-level timestamps |
 | `reel-03/` | reel 3 — «дизайн без Фігми». `build.py` generates `index.html` |
 | `assets/` | her logos and fonts |
+| `explainer/` | the "AI evolution" explainer series: a separate Remotion project, one spec file per episode. See [`explainer/README.md`](explainer/README.md) |
 
 ## Building a reel
 
