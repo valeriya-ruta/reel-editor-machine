@@ -158,7 +158,7 @@ t_sprav, t_tel = S(u"справами.", 68.4), S(u"телефона,", 70.6)
 f1 = S(u"не", 71.1) - 0.1
 rows = []
 for i in range(10):
-    rows.append(u'''            <div class="r" id="r%d"><b class="th"></b><span class="nm">Рілс %02d</span>
+    rows.append(u'''            <div class="prow" id="r%d"><b class="th"></b><span class="nm">Рілс %02d</span>
               <span class="stt s0">сире відео</span><span class="stt s1">монтаж<em><i></i><i></i><i></i></em></span><span class="stt s2"><span class="check on"></span></span></div>''' % (i, i + 1))
 C.append(u"""
         <div id="stage">
@@ -181,19 +181,19 @@ EXTRA += u"""
                font-weight: 700; color: #7A1424; border-bottom: 1px solid #F0E4E4; }
     #scr .hd span { color: #241919; }
     #rows { padding: 8px 18px; }
-    .r { position: relative; display: flex; align-items: center; height: 66px; border-bottom: 1px solid #F4EBEB; }
-    .r .th { width: 38px; height: 50px; border-radius: 8px; background: #E9DCDC; flex: none; margin-right: 16px;
+    .prow { position: relative; display: flex; align-items: center; height: 66px; border-bottom: 1px solid #F4EBEB; }
+    .prow .th { width: 38px; height: 50px; border-radius: 8px; background: #E9DCDC; flex: none; margin-right: 16px;
              position: relative; }
-    .r .th::after { content: ""; position: absolute; left: 14px; top: 17px; border-left: 12px solid #fff;
+    .prow .th::after { content: ""; position: absolute; left: 14px; top: 17px; border-left: 12px solid #fff;
                     border-top: 8px solid transparent; border-bottom: 8px solid transparent; }
-    .r .nm { font-size: 22px; font-weight: 500; }
-    .r .stt { position: absolute; right: 4px; top: 0; height: 66px; display: flex; align-items: center;
+    .prow .nm { font-size: 22px; font-weight: 500; }
+    .prow .stt { position: absolute; right: 4px; top: 0; height: 66px; display: flex; align-items: center;
               font-size: 17px; font-weight: 500; }
-    .r .s0 { color: #8A7373; } .r .s1 { color: #7A1424; opacity: 0; } .r .s2 { opacity: 0; }
-    .r .s1 em { display: inline-flex; gap: 4px; margin-left: 6px; }
-    .r .s1 em i { width: 6px; height: 6px; border-radius: 50%; background: #7A1424; display: block; }
-    .r .check { width: 34px; height: 34px; border-radius: 10px; }
-    .r .check.on::after { left: 10px; top: 3px; width: 9px; height: 18px; border-width: 0 4px 4px 0; }
+    .prow .s0 { color: #8A7373; } .prow .s1 { color: #7A1424; opacity: 0; } .prow .s2 { opacity: 0; }
+    .prow .s1 em { display: inline-flex; gap: 4px; margin-left: 6px; }
+    .prow .s1 em i { width: 6px; height: 6px; border-radius: 50%; background: #7A1424; display: block; }
+    .prow .check { width: 34px; height: 34px; border-radius: 10px; }
+    .prow .check.on::after { left: 10px; top: 3px; width: 9px; height: 18px; border-width: 0 4px 4px 0; }
 """
 
 
@@ -209,17 +209,17 @@ STAT = (2.1,) + cam(330, 380, 2.1, cy=960)
 js(u"""
   gsap.set("#ph", {transformOrigin: "220px 410px"});
   gsap.set("#ph", {x: %(wx)s, y: %(wy)s + 240, scale: %(ws)s * .86, rotationX: 24, rotationY: 20, rotationZ: -5});
-  gsap.set(".r", {autoAlpha: 0, x: 40});
+  gsap.set(".prow", {autoAlpha: 0, x: 40});
   tl.to("#ph", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 8, rotationY: 12, rotationZ: -2, duration: 1.3, ease: "power3.out"}, %(f0)s + .15);
   tl.to("#ph", {x: %(lx)s, y: %(ly)s, scale: %(ls)s, rotationX: 3, rotationY: -6, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, %(t10a)s - .9);
-  tl.to(".r", {autoAlpha: 1, x: 0, duration: .35, ease: "power2.out", stagger: .07}, %(t10a)s - .05);
+  tl.to(".prow", {autoAlpha: 1, x: 0, duration: .35, ease: "power2.out", stagger: .07}, %(t10a)s - .05);
   tl.to("#ph", {x: %(sx)s, y: %(sy)s, scale: %(ss)s, rotationX: -2, rotationY: 7, duration: 1.2, ease: "power3.inOut"}, %(vidd)s - .4);
-  tl.to(".r .s0", {opacity: 0, duration: .2, stagger: .05}, %(mont)s);
-  tl.to(".r .s1", {opacity: 1, duration: .2, stagger: .05}, %(mont)s + .1);
-  tl.fromTo(".r .s1 em i", {opacity: .25}, X({opacity: 1, duration: .3, repeat: 7, yoyo: true, stagger: .1, ease: "sine.inOut"}), %(mont)s + .4);
+  tl.to(".prow .s0", {opacity: 0, duration: .2, stagger: .05}, %(mont)s);
+  tl.to(".prow .s1", {opacity: 1, duration: .2, stagger: .05}, %(mont)s + .1);
+  tl.fromTo(".prow .s1 em i", {opacity: .25}, X({opacity: 1, duration: .3, repeat: 7, yoyo: true, stagger: .1, ease: "sine.inOut"}), %(mont)s + .4);
   tl.to("#ph", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 6, rotationY: -12, rotationZ: 2, duration: 1.3, ease: "power3.inOut"}, %(kilka)s - .3);
-  tl.to(".r .s1", {opacity: 0, duration: .15, stagger: .08}, %(hotov)s - .2);
-  tl.fromTo(".r .s2", {opacity: 0, scale: .4}, X({opacity: 1, scale: 1, duration: .35, ease: POP, stagger: .08}), %(hotov)s - .1);
+  tl.to(".prow .s1", {opacity: 0, duration: .15, stagger: .08}, %(hotov)s - .2);
+  tl.fromTo(".prow .s2", {opacity: 0, scale: .4}, X({opacity: 1, scale: 1, duration: .35, ease: POP, stagger: .08}), %(hotov)s - .1);
   tl.to("#ph", {rotationX: 10, rotationY: 14, rotationZ: -2, y: %(wy)s - 30, duration: 2.6, ease: "sine.inOut"}, %(sprav)s - .4);
   full(%(f0)s, %(f1)s);
 """ % {"wx": WIDE[1], "wy": WIDE[2], "ws": WIDE[0], "lx": LIST[1], "ly": LIST[2], "ls": LIST[0],

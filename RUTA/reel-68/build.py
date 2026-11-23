@@ -133,7 +133,7 @@ t_spys, t_klod, t_mont = S(u"список", 4.4), S(u"Клода,", 7.1), S(u"м
 js(u"""
   gsap.set("#win", {transformOrigin: "360px 540px"});
   gsap.set("#win", {x: %(wx)s, y: %(wy)s + 240, scale: %(ws)s * .86, rotationX: 26, rotationY: -20, rotationZ: 5});
-  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 10, rotationY: -12, rotationZ: 2, duration: 1.2, ease: "power3.out"}, %(f0)s + .1);
+  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 10, rotationY: -12, rotationZ: 2, duration: 1.0, ease: "power3.out"}, %(f0)s + .1);
   tl.to("#win", {x: %(lx)s, y: %(ly)s, scale: %(ls)s, rotationX: 4, rotationY: 8, rotationZ: 0, duration: 1.6, ease: "power3.inOut"}, %(spys)s + .4);
   tl.fromTo("#ls", {y: 0}, X({y: -%(scroll)d, duration: %(sd).3f, ease: "power1.in"}), %(spys)s);
   tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s * .96, rotationX: 12, rotationY: 14, rotationZ: -2, duration: 1.3, ease: "power3.inOut"}, %(mont)s - .9);
