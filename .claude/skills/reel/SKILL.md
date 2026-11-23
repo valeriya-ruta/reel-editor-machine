@@ -67,6 +67,11 @@ reel number). Every other look is in `archive/` and never used unless she asks f
 it by name. `tools/matte.py` cuts her out (≈1 s/frame on the cloud box with
 `MATTE_REMBG=1`). The ТЕСТ CTA is always cut out of the reel.
 
+**Memes (her rule, 2026-11-23): every reel gets 1-3 reaction memes as comic relief.**
+Pick from `RUTA/assets/memes/MEMES.md` (index + rules: max 3, a pair only with a long break
+between animations, never in the CTA, profanity fine, first 3 s fine) and place them with
+`g.meme()` in `tools/gstyle.py`; `BUILD-BRIEF.md` says how.
+
 **Render locally, never HeyGen** (her call, 2026-11-20): from `RUTA/`,
 `sh work/b1021/heavy.sh <hyperframes> render reel-NN -o reel-NN/renders/REEL-NN.mp4 --workers 3 --low-memory-mode`.
 Every heavy step (cut, sound mix, matte, render) goes through `heavy.sh` — two

@@ -69,6 +69,7 @@ she records + cuts + grades        (her laptop, 5-10 min)
 | `tools/asr.py` | whisper wrapper, word-level timestamps |
 | `reel-03/` | reel 3 — «дизайн без Фігми». `build.py` generates `index.html` |
 | `assets/` | her logos and fonts |
+| `assets/memes/` | 63 reaction memes + `MEMES.md` index (caption, feeling, when to use). Comic relief, max 2 per reel |
 
 ## Building a reel
 
