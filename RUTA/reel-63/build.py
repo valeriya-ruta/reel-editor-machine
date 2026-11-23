@@ -108,7 +108,7 @@ C.append(u"""
               <div class="c-set">
                 <div class="c-sh"><i class="qz">Q</i><b>Нові слова уроку</b></div>
                 <div class="c-mini"><span>homework</span><span>deadline</span><span>to borrow</span><span>rehearsal</span></div>
-                <div id="opn" class="c-btn">Відкрити в Quizlet</div>
+                <div id="opn" class="c-btn" data-layout-allow-occlusion>Відкрити в Quizlet</div>
               </div>
             </div>
             <div id="inp" class="c-inp">
@@ -117,7 +117,7 @@ C.append(u"""
               <div class="c-send">↑</div>
             </div>
           </div>
-          <div id="card" class="qcard"><div class="qf"><small>Quizlet</small>homework</div><div class="qb"><small>Quizlet</small>домашнє завдання</div></div>
+          <div id="card" class="qcard" data-layout-allow-occlusion><div class="qf" data-layout-allow-occlusion><small>Quizlet</small>homework</div><div class="qb" data-layout-allow-occlusion><small>Quizlet</small>домашнє завдання</div></div>
         </div>""" % {"cl": CLAUDE})
 EXTRA += u"""
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
@@ -193,7 +193,9 @@ js(u"""
   tl.to("#opn", {scale: .92, backgroundColor: "#2E3BBF", duration: .12, yoyo: true, repeat: 1}, %(uch)s + .3);
   tl.to("#win", {y: "-=260", scale: %(as)s * .8, rotationX: 14, duration: .9, ease: "power3.inOut"}, %(uch)s + .4);
   tl.fromTo("#card", {autoAlpha: 0, y: 220, rotationX: -30}, X({autoAlpha: 1, y: 0, rotationX: 0, duration: .7, ease: "power3.out"}), %(uch)s + .5);
+  gsap.set("#card .qb", {autoAlpha: 0});
   tl.to("#card", {rotationY: 180, duration: .7, ease: "power2.inOut"}, %(vidk)s + .15);
+  tl.set("#card .qf", {autoAlpha: 0}, %(vidk)s + .5); tl.set("#card .qb", {autoAlpha: 1}, %(vidk)s + .5);
   full(%(f0)s, %(f1)s);
 """ % {"wx": WIDE[1], "wy": WIDE[2], "ws": WIDE[0], "mx": MEN[1], "my": MEN[2], "ms": MEN[0],
        "ix": INP[1], "iy": INP[2], "is": INP[0], "ax": ANS[1], "ay": ANS[2], "as": ANS[0],
