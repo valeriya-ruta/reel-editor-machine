@@ -125,64 +125,86 @@
                opacity: 0; }
     .cap .kt { position: relative; }
 
+    /* comic-relief memes (assets/memes/MEMES.md). Her note 2026-11-23: no plaque,
+       no frame, no glass card — the image is slapped straight onto the reel, in
+       the zones she marked, so her face and the captions stay readable:
+         c / top  the band above her head (y 40-520, full width)
+         r        beside her head on the right (x 740-1060, y 550-1310)
+         l        low left, over her shoulder (x 40-460, y 1140-1370)
+       A pair = two slots at the same t (top + r, or l + r). */
+    .meme { position: absolute; display: flex; }
+    .meme img { display: block; max-width: 100%; max-height: 100%; }
+    .meme.c, .meme.top { left: 60px; top: 40px; width: 960px; height: 480px;
+                         align-items: center; justify-content: center; }
+    .meme.r { left: 740px; top: 550px; width: 320px; height: 760px;
+              align-items: center; justify-content: flex-end; }
+    .meme.l { left: 40px; top: 1140px; width: 420px; height: 230px;
+              align-items: flex-end; justify-content: flex-start; }
+
     /* the running list: a numbered heading through the shuffle slot */
     .shuf .chip { font-size: 42px; }
     .shuf .chip b { display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px;
                     border-radius: 50%; background: #7A1424; color: #fff; font-size: 32px; font-weight: 700;
                     margin-left: -8px; }
     .shuf.cat .chip { font-size: 46px; padding: 18px 34px; }
-    #root .cover-bg { position: absolute; inset: 0;
-                      background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
-    .stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
+    #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
+    .stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2400px; }
     .win { position: absolute; left: 0; top: 0; border-radius: 14px; font-family: "Google Sans", sans-serif;
            box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
            transform-origin: 0 0; will-change: transform; overflow: hidden; }
     .win > div { position: absolute; }
 
-    #cc { width: 800px; height: 520px; background: #262624; color: #E8E4DE;
-          font-family: "SF Mono", "DejaVu Sans Mono", Menlo, monospace; }
-    .cc-bar { left: 0; top: 0; width: 800px; height: 34px; background: #1E1D1B; }
-    .cc-bar i { position: absolute; top: 11px; width: 12px; height: 12px; border-radius: 50%; background: #4A4844; }
-    .cc-bar i:nth-child(1) { left: 14px; } .cc-bar i:nth-child(2) { left: 34px; } .cc-bar i:nth-child(3) { left: 54px; }
-    .cc-bar span { position: absolute; left: 0; right: 0; top: 8px; text-align: center; font-size: 13px; color: #8E8A84; }
-    .cc-hi { width: 748px; border: 1.5px solid #D97757; border-radius: 10px; padding: 18px 20px; font-size: 19px; }
-    .cc-hi b { color: #D97757; font-weight: 400; margin-right: 6px; } .cc-hi strong { font-weight: 700; }
-    .cc-ln { font-size: 19px; white-space: nowrap; } .cc-g { color: #8E8A84; } .cc-o { color: #D97757; }
-    .cc-td { font-size: 19px; white-space: nowrap; color: #E8E4DE; }
-    .cc-td u { text-decoration: none; display: inline-block; width: 30px; color: #8E8A84; }
+    #cc { width: 980px; height: 1000px; background: #262624; color: #E8E4DE; border-radius: 24px;
+          font-family: "DejaVu Sans Mono", Menlo, monospace; }
+    .cc-bar { left: 0; top: 0; width: 980px; height: 60px; background: #1E1D1B; }
+    .cc-bar i { position: absolute; top: 21px; width: 18px; height: 18px; border-radius: 50%; background: #4A4844; }
+    .cc-bar i:nth-child(1) { left: 24px; } .cc-bar i:nth-child(2) { left: 52px; } .cc-bar i:nth-child(3) { left: 80px; }
+    .cc-bar span { position: absolute; left: 0; right: 0; top: 14px; text-align: center; font-size: 26px; color: #9A958E;
+                   font-family: "Google Sans", sans-serif; }
+    .cc-hi { width: 908px; border: 2px solid #D97757; border-radius: 16px; padding: 26px 28px; font-size: 34px; }
+    .cc-hi b { color: #D97757; font-weight: 400; margin-right: 8px; } .cc-hi strong { font-weight: 700; }
+    .cc-hi > div { line-height: 1.2; }
+    .cc-hi > div + div { margin-top: 14px; }
+    .cc-dim { font-size: 26px; color: #9A958E; }
+    .cc-ln { font-size: 36px; white-space: nowrap; } .cc-g { color: #9A958E; } .cc-o { color: #D97757; }
+    .cc-td { font-size: 36px; white-space: nowrap; color: #E8E4DE; }
+    .cc-td u { text-decoration: none; display: inline-block; width: 56px; color: #9A958E; }
     .cc-td s { text-decoration: none; }
-    .cc-td.on u { color: #D97757; } .cc-td.on s { color: #8E8A84; text-decoration: line-through; }
-    .cc-in { width: 760px; height: 46px; border: 1.5px solid #4A4844; border-radius: 10px; padding: 10px 14px; font-size: 19px; }
-    .cur { display: inline-block; width: 10px; height: 20px; background: #E8E4DE; vertical-align: -3px; }
+    .cc-td.on u { color: #D97757; } .cc-td.on s { color: #9A958E; text-decoration: line-through; }
+    .cc-in { width: 908px; height: 84px; border: 2px solid #4A4844; border-radius: 16px; padding: 18px 24px; font-size: 36px; }
+    .cc-hint { font-size: 26px; color: #9A958E; }
+    .cur { display: inline-block; width: 18px; height: 38px; background: #E8E4DE; vertical-align: -6px; }
 
-    #gd { width: 800px; height: 500px; background: #F8FAFD; color: #1F1F1F; }
-    .gd-top { left: 0; top: 0; width: 800px; height: 64px; padding: 18px 22px; font-size: 22px; color: #444746; }
-    .gd-logo { display: inline-block; width: 30px; height: 26px; margin-right: 12px; vertical-align: -5px;
-               background: conic-gradient(from 30deg, #7A1424 0 120deg, #B04A58 0 240deg, #D98C96 0);
-               clip-path: polygon(50% 0, 100% 86%, 0 86%); }
-    .gd-q { position: absolute; left: 220px; top: 12px; width: 520px; height: 40px; border-radius: 20px;
-            background: #E9EEF6; font-size: 15px; color: #5f6368; padding: 10px 20px; }
-    .gd-new { left: 16px; top: 72px; width: 130px; height: 44px; border-radius: 14px; background: #fff;
-              box-shadow: 0 1px 3px rgba(0,0,0,.18); font-size: 15px; font-weight: 500; padding: 12px 16px; }
-    .gd-nav { left: 8px; width: 180px; height: 32px; border-radius: 16px; font-size: 14px; padding: 7px 18px; color: #1f1f1f; }
+    #gd { width: 980px; height: 740px; background: #F8FAFD; color: #1F1F1F; border-radius: 28px; }
+    .gd-top { left: 0; top: 0; width: 980px; height: 104px; padding: 28px 30px; font-size: 38px; color: #444746;
+              display: flex; align-items: center; gap: 14px; }
+    .gd-logo .mark { color: #7A1424; }
+    .gd-q { position: absolute; left: 260px; top: 20px; width: 690px; height: 64px; border-radius: 32px;
+            background: #E9EEF6; font-size: 30px; color: #5f6368; padding: 14px 32px; }
+    .gd-new { left: 24px; top: 128px; height: 78px; border-radius: 22px; background: #fff;
+              box-shadow: 0 1px 3px rgba(0,0,0,.18); font-size: 30px; font-weight: 500; padding: 20px 28px; }
+    .gd-nav { left: 12px; width: 280px; height: 58px; border-radius: 29px; font-size: 30px; padding: 11px 26px;
+              color: #1f1f1f; white-space: nowrap; }
     .gd-nav.on { background: #F2DADD; font-weight: 700; }
-    .gd-crumb { left: 210px; top: 80px; font-size: 22px; color: #1f1f1f; } .gd-crumb span { color: #5f6368; margin: 0 6px; }
-    .gd-head { left: 210px; top: 156px; width: 570px; font-size: 13px; font-weight: 500; color: #444746;
-               border-bottom: 1px solid #E1E3E1; padding-bottom: 10px; }
-    .gd-row { left: 210px; width: 570px; height: 48px; font-size: 16px; padding: 14px 8px; border-bottom: 1px solid #E1E3E1;
+    .gd-crumb { left: 330px; top: 136px; font-size: 40px; color: #1f1f1f; } .gd-crumb span { color: #5f6368; margin: 0 8px; }
+    .gd-head { left: 330px; top: 222px; width: 620px; font-size: 26px; font-weight: 500; color: #444746;
+               border-bottom: 2px solid #E1E3E1; padding-bottom: 16px; }
+    .gd-row { left: 330px; width: 620px; height: 110px; font-size: 36px; padding: 32px 14px; border-bottom: 2px solid #E1E3E1;
               background: #F8FAFD; }
-    .gd-row i.doc { display: inline-block; width: 16px; height: 20px; border-radius: 3px; background: #7A1424;
-                    margin-right: 14px; vertical-align: -4px; }
-    #ph { position: absolute; left: 330px; top: 420px; width: 420px; height: 860px; border-radius: 64px;
-          background: #1F1B1B; padding: 18px; box-shadow: 0 2px 6px rgba(36,25,25,.12), 0 40px 90px rgba(36,25,25,.28);
+    .gd-row i.doc { display: inline-block; width: 30px; height: 38px; border-radius: 5px; background: #7A1424;
+                    margin-right: 24px; vertical-align: -6px; }
+    #ph { position: absolute; left: 240px; top: 310px; width: 600px; height: 1080px; border-radius: 80px;
+          background: #1F1B1B; padding: 20px; box-shadow: 0 2px 6px rgba(36,25,25,.12), 0 40px 90px rgba(36,25,25,.28);
           will-change: transform; }
-    .ph-scr { width: 384px; height: 824px; border-radius: 48px; background: #fff; padding: 84px 30px; }
-    .ph-t { font-size: 40px; font-weight: 700; color: #241919; margin-bottom: 34px; letter-spacing: -0.02em; }
-    .ph-r { display: flex; align-items: center; gap: 14px; height: 92px; border-bottom: 2px solid #F1E7E7; }
-    .ph-r b { font-size: 24px; font-weight: 500; color: #574142; white-space: nowrap; }
-    .ph-r .line { flex: 1; height: 14px; }
-    .ph-r .check { width: 38px; height: 38px; }
-    .ph-r .check.on::after { left: 11px; top: 3px; width: 9px; height: 19px; border-width: 0 4px 4px 0; }
+    .ph-scr { width: 560px; height: 1040px; border-radius: 62px; background: #fff; padding: 96px 44px 0; }
+    .ph-t { font-size: 58px; font-weight: 700; color: #241919; letter-spacing: -0.02em; }
+    .ph-s { display: flex; align-items: center; gap: 12px; font-size: 30px; color: #574142; margin: 10px 0 26px; }
+    .ph-s .mark { color: #7A1424; }
+    .ph-r { display: flex; align-items: center; gap: 22px; height: 118px; border-bottom: 2px solid #F1E7E7; }
+    .ph-r b { font-size: 38px; font-weight: 500; color: #241919; white-space: nowrap; }
+    .ph-r .line { flex: 1; height: 18px; }
+    .ph-r .check { width: 52px; height: 52px; }
+    .ph-r .check.on::after { left: 15px; top: 5px; width: 12px; height: 25px; border-width: 0 5px 5px 0; }
 
     .svic { width: 64px; height: 64px; border-radius: 16px; background: #7A1424; position: relative; flex: none; }
     .svic::before { content: ""; position: absolute; left: 14px; top: 16px; width: 36px; height: 32px;
@@ -225,6 +247,7 @@
              muted playsinline></video>
       <div id="front" class="L">
         <div id="hd1" class="shuf hid"><span class="chip"><b>1</b>AI-монтаж</span></div>
+        <div id="mm1" class="meme r hid"><img src="assets/memes/01-tsyt-seagull-shush.jpg"></div>
         <div id="hd2" class="shuf hid"><span class="chip"><b>2</b>бриф → сценарій і шот-лист</span></div>
         <div id="hd3" class="shuf hid"><span class="chip"><b>3</b>фінплан на проєкт</span></div>
         <div id="ct0" class="shuf cat hid"><span class="chip">техніка</span></div>
@@ -233,6 +256,7 @@
         <div id="ct3" class="shuf cat hid"><span class="chip">передоплата</span></div>
         <div id="ct4" class="shuf cat hid"><span class="chip">податок ФОП</span></div>
         <div id="ct5" class="shuf cat hid"><span class="chip">скільки лишається тобі</span></div>
+        <div id="mm2" class="meme r hid"><img src="assets/memes/14-cat-shocked-closeup.jpg"></div>
 
         <div id="sv" class="glass hid" style="left:0; right:0; margin:auto; width:max-content; top:320px; padding:26px 34px;
              display:flex; align-items:center; gap:22px">
@@ -246,43 +270,42 @@
       </div>
       <div id="cover">
 
-        <div class="cover-bg" id="bg1"></div>
         <div class="stage" id="st1">
           <div id="cc" class="win">
             <div class="cc-bar"><i></i><i></i><i></i><span>claude — ~/projects/video</span></div>
-            <div class="cc-hi" style="left:26px;top:58px">
-              <b>✻</b> Welcome to <strong>Claude Code</strong>!</div>
-            <div class="cc-ln" style="left:26px;top:150px"><span class="cc-g">&gt;</span> /монтаж</div>
-            <div class="cc-ln" style="left:26px;top:198px"><span class="cc-o">⏺</span> Skill(монтаж)</div>
-            <div class="cc-ln" style="left:26px;top:240px"><span class="cc-o">⏺</span> Update Todos</div>
-            <div class="cc-td" id="td1" style="left:58px;top:282px"><u>☐</u><s>чорнова склейка</s></div>
-            <div class="cc-td" id="td2" style="left:58px;top:322px"><u>☐</u><s>субтитри</s></div>
-            <div class="cc-td" id="td3" style="left:58px;top:362px"><u>☐</u><s>рілси з довгого відео</s></div>
-            <div class="cc-in" style="left:20px;top:440px"><span class="cc-g">&gt;</span> <i class="cur"></i></div>
+            <div class="cc-hi" style="left:36px;top:92px">
+              <div><b>✻</b> Welcome to <strong>Claude Code</strong>!</div>
+              <div class="cc-dim">/help for help</div>
+              <div class="cc-dim">cwd: ~/projects/video</div></div>
+            <div class="cc-ln" style="left:40px;top:340px"><span class="cc-g">&gt;</span> /монтаж</div>
+            <div class="cc-ln" id="cs1" style="left:40px;top:418px"><span class="cc-o">⏺</span> Skill(монтаж)</div>
+            <div class="cc-ln" id="cs2" style="left:40px;top:496px"><span class="cc-o">⏺</span> Update Todos</div>
+            <div class="cc-td" id="td1" style="left:92px;top:568px"><u>☐</u><s>чорнова склейка</s></div>
+            <div class="cc-td" id="td2" style="left:92px;top:640px"><u>☐</u><s>субтитри</s></div>
+            <div class="cc-td" id="td3" style="left:92px;top:712px"><u>☐</u><s>рілси з довгого відео</s></div>
+            <div class="cc-in" style="left:36px;top:840px"><span class="cc-g">&gt;</span> <i class="cur"></i></div>
+            <div class="cc-hint" style="left:52px;top:944px">? for shortcuts</div>
           </div>
         </div>
 
         <div class="stage" id="st2">
           <div id="gd" class="win">
-            <div class="gd-top"><span class="gd-logo"></span>Диск<div class="gd-q">Пошук на Диску</div></div>
+            <div class="gd-top"><span class="gd-logo"><svg class="mark" width="44" height="44" viewBox="0 0 24 24"><path d="M12.01 1.485c-2.082 0-3.754.02-3.743.047.01.02 1.708 3.001 3.774 6.62l3.76 6.574h3.76c2.081 0 3.753-.02 3.742-.047-.005-.02-1.708-3.001-3.775-6.62l-3.76-6.574zm-4.76 1.73a789.828 789.861 0 0 0-3.63 6.319L0 15.868l1.89 3.298 1.885 3.297 3.62-6.335 3.618-6.33-1.88-3.287C8.1 4.704 7.255 3.22 7.25 3.214zm2.259 12.653-.203.348c-.114.198-.96 1.672-1.88 3.287a423.93 423.948 0 0 1-1.698 2.97c-.01.026 3.24.042 7.222.042h7.244l1.796-3.157c.992-1.734 1.85-3.23 1.906-3.323l.104-.167h-7.249z"/></svg></span>Диск<div class="gd-q">Пошук на Диску</div></div>
             <div class="gd-new">＋ Створити</div>
-            <div class="gd-nav on" style="top:128px">Мій диск</div>
-            <div class="gd-nav" style="top:166px">Спільні зі мною</div>
-            <div class="gd-nav" style="top:204px">Нещодавні</div>
+            <div class="gd-nav on" style="top:236px">Мій диск</div>
+            <div class="gd-nav" style="top:306px">Спільні зі мною</div>
+            <div class="gd-nav" style="top:376px">Нещодавні</div>
             <div class="gd-crumb">Мій диск <span>›</span> Проєкт</div>
             <div class="gd-head">Назва</div>
-            <div class="gd-row" style="top:198px"><i class="doc"></i>Бриф</div>
-            <div class="gd-row" style="top:246px"><i class="doc"></i>Сценарій</div>
-            <div class="gd-row gd-new-row" id="gsl" style="top:294px"><i class="doc"></i>Шот-лист</div>
+            <div class="gd-row" style="top:290px"><i class="doc"></i>Бриф</div>
+            <div class="gd-row" style="top:400px"><i class="doc"></i>Сценарій</div>
+            <div class="gd-row" id="gsl" style="top:510px"><i class="doc"></i>Шот-лист</div>
           </div>
           <div id="ph">
             <div class="ph-scr">
               <div class="ph-t">Шот-лист</div>
-              <div class="ph-r"><span class="check" id="pc1"></span><b>Кадр 1</b><i class="line"></i></div>
-              <div class="ph-r"><span class="check" id="pc2"></span><b>Кадр 2</b><i class="line"></i></div>
-              <div class="ph-r"><span class="check" id="pc3"></span><b>Кадр 3</b><i class="line"></i></div>
-              <div class="ph-r"><span class="check" id="pc4"></span><b>Кадр 4</b><i class="line"></i></div>
-              <div class="ph-r"><span class="check" id="pc5"></span><b>Кадр 5</b><i class="line"></i></div>
+              <div class="ph-s"><svg class="mark" width="30" height="30" viewBox="0 0 24 24"><path d="M12.01 1.485c-2.082 0-3.754.02-3.743.047.01.02 1.708 3.001 3.774 6.62l3.76 6.574h3.76c2.081 0 3.753-.02 3.742-.047-.005-.02-1.708-3.001-3.775-6.62l-3.76-6.574zm-4.76 1.73a789.828 789.861 0 0 0-3.63 6.319L0 15.868l1.89 3.298 1.885 3.297 3.62-6.335 3.618-6.33-1.88-3.287C8.1 4.704 7.255 3.22 7.25 3.214zm2.259 12.653-.203.348c-.114.198-.96 1.672-1.88 3.287a423.93 423.948 0 0 1-1.698 2.97c-.01.026 3.24.042 7.222.042h7.244l1.796-3.157c.992-1.734 1.85-3.23 1.906-3.323l.104-.167h-7.249z"/></svg> Проєкт</div>
+              <div class="ph-r"><span class="check" id="pc1"></span><b>Кадр 1</b><i class="line"></i></div><div class="ph-r"><span class="check" id="pc2"></span><b>Кадр 2</b><i class="line"></i></div><div class="ph-r"><span class="check" id="pc3"></span><b>Кадр 3</b><i class="line"></i></div><div class="ph-r"><span class="check" id="pc4"></span><b>Кадр 4</b><i class="line"></i></div><div class="ph-r"><span class="check" id="pc5"></span><b>Кадр 5</b><i class="line"></i></div><div class="ph-r"><span class="check" id="pc6"></span><b>Кадр 6</b><i class="line"></i></div>
             </div>
           </div>
         </div>
@@ -387,7 +410,7 @@
       <div class="wc inv" id="w99">ТИ</div>
       <div class="wc inv" id="w100">ПРОСТО</div>
       <div class="wc inv" id="w101">ВІДКРИВАЄШ</div>
-      <div class="wc inv" id="w102">ЩОСЬ</div>
+      <div class="wc inv" id="w102">ЙОГО</div>
       <div class="wc inv" id="w103">З</div>
       <div class="wc inv" id="w104">ТЕЛЕФОНА,</div>
       <div class="wc inv" id="w105">ЩОБ НІЧОГО</div>
@@ -842,51 +865,56 @@
 
   rise("#bw1", 0.10); sink("#bw1", 3.640);
 
-  gsap.set("#cc", {transformOrigin: "400px 260px"});
-  gsap.set("#cc", {x: 140.0, y: 500.0 + 220, scale: 1.25 * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
-  tl.to("#cc", {x: 140.0, y: 500.0, scale: 1.25, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.2, ease: "power3.out"}, 8.720 + .15);
-  tl.to("#cc", {x: 455.0, y: 383.5, scale: 2.1, rotationX: 3, rotationY: 7, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, 11.355 - 1.25);
+  gsap.set("#cc", {transformOrigin: "490px 500px"});
+  gsap.set(["#cs1", "#cs2", "#td1", "#td2", "#td3"], {autoAlpha: 0});
+  gsap.set("#cc", {x: 50.0, y: 330.0 + 240, scale: 1.0 * .86, rotationX: 24, rotationY: -18, rotationZ: 4});
+  tl.to("#cc", {x: 50.0, y: 330.0, scale: 1.0, rotationX: 6, rotationY: -8, rotationZ: 1, duration: 1.2, ease: "power3.out"}, 8.720 + .1);
+  tl.fromTo("#cs1", {autoAlpha: 0, x: -20}, X({autoAlpha: 1, x: 0, duration: .3}), 9.777);
+  tl.fromTo(["#cs2", "#td1", "#td2", "#td3"], {autoAlpha: 0, y: 14}, X({autoAlpha: 1, y: 0, duration: .3, stagger: .08}), 10.497);
+  tl.to("#cc", {x: 298.0, y: 113.0, scale: 1.55, rotationX: 3, rotationY: 6, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, 11.355 - 1.0);
   tl.set("#td1", {className: "cc-td on"}, 11.355);
   tl.fromTo("#td1 u", {scale: 1.6}, X({scale: 1, duration: .3, ease: "back.out(2)"}), 11.355);
   tl.set("#td2", {className: "cc-td on"}, 12.337);
   tl.fromTo("#td2 u", {scale: 1.6}, X({scale: 1, duration: .3, ease: "back.out(2)"}), 12.337);
   tl.set("#td3", {className: "cc-td on"}, 13.717);
   tl.fromTo("#td3 u", {scale: 1.6}, X({scale: 1, duration: .3, ease: "back.out(2)"}), 13.717);
-  tl.to("#cc", {x: 140.0, y: 500.0, scale: 1.25, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.0, ease: "power3.inOut"}, 13.717 + .45);
+  tl.to("#cc", {x: 50.0, y: 330.0, scale: 1.0, rotationX: 7, rotationY: 10, rotationZ: -1, duration: .8, ease: "power3.inOut"}, 13.717 + .35);
   full(8.720, 15.407);
 
+  tl.fromTo("#mm1", {autoAlpha: 0, scale: .72, rotation: -3.5}, X({autoAlpha: 1, scale: 1, rotation: 1.5, duration: .28, ease: POP}), 17.507);
+  tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 18.527);
   rise("#bw2", 20.290); sink("#bw2", 21.770);
 
   sketch("a1", "skP"); box("a1", 110, 400, 330, 140, {seed: 3, fill: true});
   label("a1", 275, 486, "Claude", {size: 62});
   label("a1", 275, 640, "нарізав", {size: 50});
-  draw("a1", 22.742);
+  draw("a1", 22.542);
   sketch("a2", "skP"); arrow("a2", 460, 470, 630, 470, {seed: 5, bend: -.12});
   box("a2", 650, 400, 330, 140, {seed: 7}); label("a2", 815, 486, "CapCut", {size: 62});
   label("a2", 815, 640, "доредагувати", {size: 50});
-  draw("a2", 25.010);
+  draw("a2", 23.742);
   erase("a1", 27.432); erase("a2", 27.432);
 
   half(21.870, 27.432);
 
-  gsap.set("#gd", {transformOrigin: "400px 250px"});
+  gsap.set("#gd", {transformOrigin: "490px 370px"});
   gsap.set("#gsl", {autoAlpha: 0, y: -30});
-  gsap.set("#ph", {autoAlpha: 0});
   gsap.set("#st2", {autoAlpha: 0});
-  gsap.set("#ph", {transformOrigin: "50% 50%", scale: 1.2});
+  gsap.set("#ph", {autoAlpha: 0, transformOrigin: "50% 50%"});
   tl.set("#st1", {autoAlpha: 0}, 34.850 - .05);
   tl.set("#st2", {autoAlpha: 1}, 34.850 - .05);
-  gsap.set("#gd", {x: 140.0, y: 510.0 + 220, scale: 1.3 * .86, rotationX: 24, rotationY: 20, rotationZ: -5});
-  tl.to("#gd", {x: 140.0, y: 510.0, scale: 1.3, rotationX: 9, rotationY: 12, rotationZ: -2, duration: 1.2, ease: "power3.out"}, 34.850 + .15);
-  tl.to("#gd", {x: 206.0, y: 353.6, scale: 2.3, rotationX: 3, rotationY: -6, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, 37.930 - 1.0);
+  gsap.set("#gd", {x: 50.0, y: 460.0 + 240, scale: 1.0 * .86, rotationX: 24, rotationY: 18, rotationZ: -4});
+  tl.to("#gd", {x: 50.0, y: 460.0, scale: 1.0, rotationX: 6, rotationY: 8, rotationZ: -1, duration: 1.2, ease: "power3.out"}, 34.850 + .1);
+  tl.to("#gd", {x: -160.0, y: 380.0, scale: 1.4, rotationX: 3, rotationY: -5, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, 37.930 - 1.15);
   tl.to("#gsl", {autoAlpha: 1, y: 0, duration: .45, ease: "back.out(1.6)", immediateRender: false}, 37.930);
   tl.fromTo("#gsl", {backgroundColor: "#F8FAFD"}, X({backgroundColor: "#F2DADD", duration: .3}), 37.930 + .1);
-  tl.to("#gd", {x: 140.0 - 260, y: 510.0 - 120, scale: 1.3 * .7, rotationY: 24, autoAlpha: 0, duration: .9, ease: "power3.inOut"}, 40.636 - .3);
-  tl.fromTo("#ph", {autoAlpha: 0, y: 700, rotationX: 28, rotationY: -16}, X({autoAlpha: 1, y: 0, rotationX: 6, rotationY: -8, duration: 1.0, ease: "power3.out"}), 40.636 - .2);
-  tl.to("#ph", {rotationX: 2, rotationY: 4, duration: 2.2, ease: "sine.inOut"}, 40.636 + .8);
+  tl.to("#gd", {x: 50.0 - 300, y: 460.0 - 160, scale: 1.0 * .7, rotationY: 24, autoAlpha: 0, duration: .8, ease: "power3.inOut"}, 40.636 - .3);
+  tl.fromTo("#ph", {autoAlpha: 0, y: 800, rotationX: 26, rotationY: -14, scale: 1}, X({autoAlpha: 1, y: 0, rotationX: 5, rotationY: -7, duration: 1.0, ease: "power3.out"}), 40.636 - .2);
+  tl.to("#ph", {rotationX: 2, rotationY: 5, scale: 1.04, duration: 2.0, ease: "sine.inOut"}, 40.636 + .8);
   tl.set("#pc1", {className: "check on"}, 42.596);
-  tl.set("#pc2", {className: "check on"}, 42.896);
-  tl.set("#pc3", {className: "check on"}, 43.196);
+  tl.set("#pc2", {className: "check on"}, 42.816);
+  tl.set("#pc3", {className: "check on"}, 43.036);
+  tl.set("#pc4", {className: "check on"}, 43.256);
   full(34.850, 43.648);
 
   tl.fromTo("#ct0", {autoAlpha: 0, y: 90, scale: .92, rotationX: -35}, X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), 47.567);
@@ -900,22 +928,25 @@
   tl.fromTo("#ct4", {autoAlpha: 0, y: 90, scale: .92, rotationX: -35}, X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), 50.373);
   tl.to("#ct4", {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, 51.203);
   tl.fromTo("#ct5", {autoAlpha: 0, y: 90, scale: .92, rotationX: -35}, X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), 51.253);
-  tl.to("#ct5", {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, 53.403);
-  rise("#sv", 53.553); pop("#sv .svok", 55.553); sink("#sv", 55.917);
+  tl.to("#ct5", {autoAlpha: 0, y: -80, scale: .92, rotationX: 35, duration: .4, ease: "power2.in"}, 52.628);
+  tl.fromTo("#mm2", {autoAlpha: 0, scale: .72, rotation: -3.5}, X({autoAlpha: 1, scale: 1, rotation: 1.5, duration: .28, ease: POP}), 53.128);
+  tl.to("#mm2", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 54.048);
+  rise("#sv", 54.343); pop("#sv .svok", 55.553); sink("#sv", 55.917);
 
-  sketch("c1", "skP"); box("c1", 90, 320, 230, 110, {seed: 21}); label("c1", 205, 390, "камера 1", {size: 42});
-  box("c1", 90, 560, 230, 110, {seed: 23}); label("c1", 205, 630, "камера 2", {size: 42});
-  draw("c1", 60.263, .4);
-  sketch("c2", "skP"); arrow("c2", 330, 380, 420, 470, {seed: 25, bend: .1}); arrow("c2", 330, 615, 420, 530, {seed: 27, bend: -.1});
-  box("c2", 430, 440, 260, 120, {seed: 29, fill: true}); label("c2", 560, 512, "Claude Code", {size: 42});
-  label("c2", 560, 615, "скрипт", {size: 44});
-  draw("c2", 61.303, .4);
-  sketch("c3", "skP"); arrow("c3", 700, 500, 790, 500, {seed: 31}); box("c3", 800, 440, 190, 120, {seed: 33});
-  label("c3", 895, 512, "LUT", {size: 58});
-  draw("c3", 62.783, .4);
-  sketch("c4", "skP"); label("c4", 870, 640, "як одна камера", {size: 44, stroke: "#7A1424", fill: "#7A1424"});
-  draw("c4", 66.015);
-  erase("c1", 67.330); erase("c2", 67.330); erase("c3", 67.330); erase("c4", 67.330);
+  sketch("c1", "skP"); box("c1", 430, 440, 260, 120, {seed: 29, fill: true}); label("c1", 560, 512, "Claude Code", {size: 42});
+  draw("c1", 60.133, .4);
+  sketch("c2", "skP"); box("c2", 90, 320, 230, 110, {seed: 21}); label("c2", 205, 390, "камера 1", {size: 42});
+  box("c2", 90, 560, 230, 110, {seed: 23}); label("c2", 205, 630, "камера 2", {size: 42});
+  arrow("c2", 330, 380, 420, 470, {seed: 25, bend: .1}); arrow("c2", 330, 615, 420, 530, {seed: 27, bend: -.1});
+  draw("c2", 60.513, .35);
+  sketch("c3", "skP"); label("c3", 560, 615, "скрипт", {size: 44});
+  draw("c3", 61.703);
+  sketch("c4", "skP"); arrow("c4", 700, 500, 790, 500, {seed: 31}); box("c4", 800, 440, 190, 120, {seed: 33});
+  label("c4", 895, 512, "LUT", {size: 58});
+  draw("c4", 62.383, .35);
+  sketch("c5", "skP"); label("c5", 870, 640, "як одна камера", {size: 44, stroke: "#7A1424", fill: "#7A1424"});
+  draw("c5", 66.015);
+  erase("c1", 67.330); erase("c2", 67.330); erase("c3", 67.330); erase("c4", 67.330); erase("c5", 67.330);
 
   half(59.383, 67.330);
   tl.fromTo("#hd1", {autoAlpha: 0, y: 90, scale: .92, rotationX: -35}, X({autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: .55, ease: "back.out(1.4)"}), 6.350);

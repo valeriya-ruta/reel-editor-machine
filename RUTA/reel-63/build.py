@@ -35,7 +35,7 @@ FIX = {
     u"По": u"По-перше,", u"Перше": None, u"звичайна": u"звичайні", u"картинка.": u"картки", u"таки": None,
     u"квісла.": u"Quizlet.", u"сет,": u"сет", u"впізлят.": u"в Quizlet.",
     (u"а", 28.5): u"А", u"Notion": u"Notion,",
-    u"зробити": u"зробити,", (u"це", 45.2): u"Це", u"чотверте,": u"четверте,",
+    (u"урок,", 27.2): u"урок", u"зробити": u"зробити,", (u"це", 45.2): u"Це", u"чотверте,": u"четверте,",
     u"колодом": u"Claude", (u"в", 51.4): None, u"шкалу,": u"шкалу.",
     u"в Сенпусі": u"в SendPulse", u"коду,": u"коду.",
     u"Сьоромся": u"CRM-систему.", u"з того.": None, u"Це": u"це",
@@ -52,6 +52,9 @@ BLACKOUT, PLACE, HALF = [], [], []
 
 def js(s):
     J.append(s)
+
+
+g.cta_start = S(u"Тому", 61.87)    # the CTA line «Тому обов'язково збережи…»: no meme from here
 
 
 P.append(u'<svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
@@ -86,111 +89,124 @@ for i, txt in enumerate(LIST):
 
 # 3 · FULL — a Claude chat as a platform-ad sequence: Quizlet ---------------------------
 # No screenshot of hers for this: a clean Claude-like chat rebuilt in HTML, only
-# the labels she says (конектор Quizlet, список слів / транскрипт, готовий сет,
-# учень відкриває). Window 800×560, camera like reel 61.
+# the labels she says (конектор Quizlet, список слів, готовий сет, учень
+# відкриває). Coordinator's bar (2026-11-23): the window fills ~90 % of the
+# width and most of the height, body ≥ 30 px, labels ≥ 26 px, no frame mostly
+# empty. Window 980×1060 at scale 1, centred (x 50, y 240 → 1300).
 f0 = S(u"У", 9.73) - 0.05
 f1 = S(u"Друге", 18.70) - 0.5
-CLAUDE = mark("claude", 30, "cm")
+CLAUDE = mark("claude", 44, "cm")
+HERO = mark("claude", 190, "cm")
 C.append(u"""
         <div id="stage">
           <div id="win">
             <div class="c-top">%(cl)s<span>Claude</span></div>
+            <div id="hero" class="c-hero">%(hero)s</div>
+            <div id="ans" class="c-ans">
+              <div class="c-ah">%(cl)s<span>Готово — сет у Quizlet</span></div>
+              <div class="c-set">
+                <div class="c-sh"><i class="qz">Q</i><b>Нові слова уроку</b><small>4 картки</small></div>
+                <div class="c-mini" data-layout-allow-occlusion><span data-layout-allow-occlusion>homework</span><span data-layout-allow-occlusion>deadline</span><span data-layout-allow-occlusion>to borrow</span><span data-layout-allow-occlusion>rehearsal</span></div>
+                <div id="opn" class="c-btn" data-layout-allow-occlusion>Відкрити в Quizlet</div>
+              </div>
+            </div>
             <div id="menu" class="c-menu">
               <div class="c-mt">Конектори</div>
               <div id="mq" class="c-row"><i class="qz">Q</i>Quizlet<em id="tq"><u></u></em></div>
               <div class="c-row"><i style="background:#ECE6E6;color:#574142">N</i>Notion<em><u></u></em></div>
             </div>
-            <div id="ans" class="c-ans">
-              <div class="c-ah">%(cl)s<span>Готово — сет у Quizlet</span></div>
-              <div class="c-set">
-                <div class="c-sh"><i class="qz">Q</i><b>Нові слова уроку</b></div>
-                <div class="c-mini"><span>homework</span><span>deadline</span><span>to borrow</span><span>rehearsal</span></div>
-                <div id="opn" class="c-btn">Відкрити в Quizlet</div>
-              </div>
-            </div>
             <div id="inp" class="c-inp">
+              <div class="c-txt"><span id="typ1">Зроби сет карток:</span><br><span id="typ2">homework, deadline, to borrow, rehearsal</span></div>
               <div class="c-plus">+</div>
-              <div class="c-txt"><span id="typ">Зроби сет карток: homework, deadline, to borrow, rehearsal</span></div>
+              <div id="qchip" class="c-chip"><i class="qz">Q</i>Quizlet</div>
               <div class="c-send">↑</div>
             </div>
           </div>
-          <div id="card" class="qcard"><div class="qf"><small>Quizlet</small>homework</div><div class="qb"><small>Quizlet</small>домашнє завдання</div></div>
-        </div>""" % {"cl": CLAUDE})
+          <div id="card" class="qcard" data-layout-allow-occlusion><div class="qf" data-layout-allow-occlusion><small data-layout-allow-occlusion>Quizlet</small>homework</div><div class="qb" data-layout-allow-occlusion><small data-layout-allow-occlusion>Quizlet</small>домашнє завдання</div></div>
+        </div>""" % {"cl": CLAUDE, "hero": HERO})
 EXTRA += u"""
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
-    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
-    #win { position: absolute; left: 0; top: 0; width: 800px; height: 560px; background: #FAF9F5;
-           border-radius: 18px; font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
-           box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22); will-change: transform; }
+    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2600px; }
+    #win { position: absolute; left: 0; top: 0; width: 980px; height: 1060px; background: #FAF9F5;
+           border-radius: 36px; font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
+           box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 40px 100px rgba(36,25,25,.22); will-change: transform; }
     #win > div { position: absolute; }
     .cm { fill: #D97757; }
-    .c-top { left: 22px; top: 18px; display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 500; }
-    .qz { display: inline-flex; width: 26px; height: 26px; border-radius: 7px; background: #4255FF; color: #fff;
-          font-style: normal; font-size: 15px; font-weight: 700; align-items: center; justify-content: center; }
-    .c-menu { left: 40px; top: 300px; width: 290px; background: #fff; border-radius: 14px; padding: 10px;
-              box-shadow: 0 6px 24px rgba(0,0,0,.14); }
-    .c-mt { font-size: 12px; color: #6b6b6b; padding: 4px 8px 6px; }
-    .c-row { display: flex; align-items: center; gap: 10px; font-size: 16px; padding: 8px; border-radius: 8px; position: relative; }
-    .c-row i { width: 26px; height: 26px; border-radius: 7px; font-style: normal; font-size: 14px; font-weight: 700;
+    .c-top { left: 40px; top: 34px; display: flex; align-items: center; gap: 14px; font-size: 36px; font-weight: 500; }
+    .c-hero { left: 0; right: 0; top: 180px; display: flex; justify-content: center; }
+    .qz { display: inline-flex; width: 44px; height: 44px; border-radius: 12px; background: #4255FF; color: #fff;
+          font-style: normal; font-size: 26px; font-weight: 700; align-items: center; justify-content: center; flex: none; }
+    .c-menu { left: 40px; top: 430px; width: 600px; background: #fff; border-radius: 26px; padding: 18px;
+              box-shadow: 0 10px 40px rgba(0,0,0,.16); }
+    .c-mt { font-size: 28px; color: #6b6b6b; padding: 6px 14px 12px; }
+    .c-row { display: flex; align-items: center; gap: 18px; font-size: 36px; padding: 16px 14px; border-radius: 14px; position: relative; }
+    .c-row i { width: 48px; height: 48px; border-radius: 12px; font-style: normal; font-size: 26px; font-weight: 700;
                display: inline-flex; align-items: center; justify-content: center; }
-    .c-row em { position: absolute; right: 10px; top: 13px; width: 32px; height: 18px; border-radius: 9px; background: #C4C7C5; }
-    .c-row em u { position: absolute; left: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
-    .c-inp { left: 40px; top: 446px; width: 720px; height: 82px; background: #fff; border: 1px solid #E3DED6;
-             border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
-    .c-plus { position: absolute; left: 14px; top: 24px; width: 34px; height: 34px; border-radius: 50%;
-              border: 1px solid #DDD; text-align: center; line-height: 32px; font-size: 22px; color: #555; }
-    .c-txt { position: absolute; left: 62px; top: 28px; width: 590px; font-size: 18px; color: #1f1f1f; white-space: nowrap; overflow: hidden; }
-    #typ { display: inline-block; clip-path: inset(0 100% 0 0); }
-    .c-send { position: absolute; right: 14px; top: 22px; width: 38px; height: 38px; border-radius: 10px;
-              background: #D97757; color: #fff; text-align: center; line-height: 38px; font-size: 20px; font-weight: 700; }
-    .c-ans { left: 40px; top: 74px; width: 720px; }
-    .c-ah { display: flex; align-items: center; gap: 10px; font-size: 18px; margin-bottom: 14px; }
-    .c-set { background: #fff; border: 1px solid #E3DED6; border-radius: 16px; padding: 18px 20px; width: 480px; }
-    .c-sh { display: flex; align-items: center; gap: 10px; font-size: 18px; margin-bottom: 14px; }
-    .c-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-    .c-mini span { border: 1px solid #E6E8F0; border-radius: 10px; padding: 14px 12px; font-size: 16px; text-align: center;
-                   box-shadow: 0 1px 2px rgba(0,0,0,.05); }
-    .c-btn { display: inline-block; background: #4255FF; color: #fff; border-radius: 22px; padding: 10px 22px; font-size: 15px; font-weight: 500; }
-    .qcard { position: absolute; left: 190px; top: 560px; width: 700px; height: 440px; transform-style: preserve-3d; }
-    .qcard > div { position: absolute; inset: 0; background: #fff; border-radius: 36px; backface-visibility: hidden;
+    .c-row em { position: absolute; right: 16px; top: 28px; width: 64px; height: 36px; border-radius: 18px; background: #C4C7C5; }
+    .c-row em u { position: absolute; left: 4px; top: 4px; width: 28px; height: 28px; border-radius: 50%; background: #fff; }
+    .c-inp { left: 40px; top: 720px; width: 900px; height: 300px; background: #fff; border: 2px solid #E3DED6;
+             border-radius: 34px; box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+    .c-txt { position: absolute; left: 36px; top: 34px; width: 830px; font-size: 38px; line-height: 1.4; color: #1f1f1f; }
+    .c-txt span { display: inline-block; white-space: nowrap; clip-path: inset(0 100% 0 0); }
+    .c-plus { position: absolute; left: 30px; bottom: 28px; width: 64px; height: 64px; border-radius: 50%;
+              border: 2px solid #DDD; text-align: center; line-height: 60px; font-size: 40px; color: #555; }
+    .c-chip { position: absolute; left: 112px; bottom: 30px; display: flex; align-items: center; gap: 12px; font-size: 30px;
+              padding: 8px 20px 8px 10px; border-radius: 30px; background: #EEF0FF; color: #2E3BBF; }
+    .c-send { position: absolute; right: 30px; bottom: 28px; width: 68px; height: 68px; border-radius: 18px;
+              background: #D97757; color: #fff; text-align: center; line-height: 68px; font-size: 38px; font-weight: 700; }
+    .c-ans { left: 40px; top: 120px; width: 900px; }
+    .c-ah { display: flex; align-items: center; gap: 14px; font-size: 34px; margin-bottom: 22px; }
+    .c-set { background: #fff; border: 2px solid #E3DED6; border-radius: 30px; padding: 30px 32px; }
+    .c-sh { display: flex; align-items: center; gap: 16px; font-size: 36px; margin-bottom: 24px; }
+    .c-sh small { margin-left: auto; font-size: 28px; color: #6b6b6b; }
+    .c-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 26px; }
+    .c-mini span { border: 2px solid #E6E8F0; border-radius: 18px; padding: 30px 16px; font-size: 36px; text-align: center;
+                   box-shadow: 0 2px 4px rgba(0,0,0,.05); }
+    .c-btn { display: inline-block; background: #4255FF; color: #fff; border-radius: 40px; padding: 18px 40px; font-size: 32px; font-weight: 500; }
+    .qcard { position: absolute; left: 110px; top: 720px; width: 860px; height: 540px; transform-style: preserve-3d; }
+    .qcard > div { position: absolute; inset: 0; background: #fff; border-radius: 44px; backface-visibility: hidden;
                    display: flex; align-items: center; justify-content: center; font-family: "Google Sans", sans-serif;
-                   font-size: 76px; font-weight: 500; color: #241919; text-align: center; padding: 0 40px;
-                   box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22); }
-    .qcard .qb { transform: rotateY(180deg); font-size: 64px; }
-    .qcard small { position: absolute; left: 34px; top: 26px; font-size: 26px; color: #4255FF; font-weight: 700; }
+                   font-size: 96px; font-weight: 500; color: #241919; text-align: center; padding: 0 50px;
+                   box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 40px 100px rgba(36,25,25,.24); }
+    .qcard .qb { transform: rotateY(180deg); font-size: 80px; }
+    .qcard small { position: absolute; left: 44px; top: 34px; font-size: 32px; color: #4255FF; font-weight: 700; }
 """
 t_kon, t_quiz = S(u"конектор", 11.14), S(u"Quizlet.", 11.52)
 t_kyd, t_otr, t_uch, t_vidk = S(u"кидаєш", 12.36), S(u"отримуєш", 14.76), S(u"учень", 16.73), S(u"відкриває", 17.57)
 
 
-def cam(px, py, sc, cx=540, cy=760):
-    # the window scales about its own centre (400, 280): a point p of it lands at O + s*(p-O) + (x, y)
-    return (round(cx - 400 - sc * (px - 400), 1), round(cy - 280 - sc * (py - 280), 1))
+def cam(px, py, sc, cx=540, cy=770):
+    # the window scales about its own centre (490, 530): a point p of it lands at O + s*(p-O) + (x, y)
+    return (round(cx - 490 - sc * (px - 490), 1), round(cy - 530 - sc * (py - 530), 1))
 
 
-WIDE = (1.2,) + cam(400, 280, 1.2)
-MEN = (2.6,) + cam(185, 345, 2.6)
-INP = (1.7,) + cam(400, 487, 1.7)
-ANS = (1.75,) + cam(285, 215, 1.75, cy=720)
+WIDE = (1.0,) + cam(490, 530, 1.0)
+MEN = (1.4,) + cam(340, 570, 1.4)          # deliberate zoom into the connectors menu
+INP = (1.08,) + cam(490, 700, 1.08)       # the input + the logo above it
+ANS = (1.04,) + cam(490, 470, 1.04, cy=740)
 js(u"""
-  gsap.set("#win", {transformOrigin: "400px 280px"});
-  gsap.set(["#menu", "#ans", "#card"], {autoAlpha: 0});
-  gsap.set("#win", {x: %(wx)s, y: %(wy)s + 220, scale: %(ws)s * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
-  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.1, ease: "power3.out"}, %(f0)s + .1);
-  tl.fromTo("#menu", {autoAlpha: 0, y: 12}, X({autoAlpha: 1, y: 0, duration: .3}), %(kon)s - .9);
-  tl.to("#win", {x: %(mx)s, y: %(my)s, scale: %(ms)s, rotationX: 3, rotationY: 6, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, %(kon)s - .6);
+  gsap.set("#win", {transformOrigin: "490px 530px"});
+  gsap.set(["#menu", "#ans", "#card", "#qchip"], {autoAlpha: 0});
+  gsap.set("#win", {x: %(wx)s, y: %(wy)s + 220, scale: %(ws)s * .86, rotationX: 22, rotationY: -18, rotationZ: 4});
+  tl.to("#win", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 4, rotationY: -8, rotationZ: 1.5, duration: .75, ease: "power3.out"}, %(f0)s + .1);
+  tl.fromTo("#menu", {autoAlpha: 0, y: 16}, X({autoAlpha: 1, y: 0, duration: .3}), %(kon)s - .9);
+  tl.to("#win", {x: %(mx)s, y: %(my)s, scale: %(ms)s, rotationX: 3, rotationY: 5, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, %(kon)s - .6);
   tl.to("#tq", {backgroundColor: "#4255FF", duration: .2}, %(quiz)s);
-  tl.to("#tq u", {x: 14, duration: .3, ease: "back.out(2)"}, %(quiz)s);
+  tl.to("#tq u", {x: 28, duration: .3, ease: "back.out(2)"}, %(quiz)s);
   tl.to("#menu", {autoAlpha: 0, duration: .25}, %(kyd)s - .35);
-  tl.to("#win", {x: %(ix)s, y: %(iy)s, scale: %(is)s, rotationX: -3, rotationY: -6, duration: 1.0, ease: "power3.inOut"}, %(kyd)s - .5);
-  tl.fromTo("#typ", {clipPath: "inset(0 100%% 0 0)"}, X({clipPath: "inset(0 0%% 0 0)", duration: 1.9, ease: "steps(28)"}), %(kyd)s);
-  tl.to("#typ", {autoAlpha: 0, duration: .2}, %(otr)s - .2);
-  tl.fromTo("#ans", {autoAlpha: 0, y: 30}, X({autoAlpha: 1, y: 0, duration: .5, ease: "power3.out"}), %(otr)s);
-  tl.to("#win", {x: %(ax)s, y: %(ay)s, scale: %(as)s, rotationX: 6, rotationY: 8, rotationZ: -1, duration: 1.1, ease: "power3.inOut"}, %(otr)s - .2);
+  tl.fromTo("#qchip", {autoAlpha: 0, scale: .6}, X({autoAlpha: 1, scale: 1, duration: .35, ease: "back.out(2)"}), %(kyd)s - .3);
+  tl.to("#win", {x: %(ix)s, y: %(iy)s, scale: %(is)s, rotationX: -3, rotationY: -5, duration: 1.0, ease: "power3.inOut"}, %(kyd)s - .5);
+  tl.fromTo("#typ1", {clipPath: "inset(0 100%% 0 0)"}, X({clipPath: "inset(0 0%% 0 0)", duration: .6, ease: "steps(14)"}), %(kyd)s);
+  tl.fromTo("#typ2", {clipPath: "inset(0 100%% 0 0)"}, X({clipPath: "inset(0 0%% 0 0)", duration: 1.3, ease: "steps(26)"}), %(kyd)s + .6);
+  tl.to(["#typ1", "#typ2", "#hero"], {autoAlpha: 0, duration: .2}, %(otr)s - .2);
+  tl.fromTo("#ans", {autoAlpha: 0, y: 40}, X({autoAlpha: 1, y: 0, duration: .5, ease: "power3.out"}), %(otr)s);
+  tl.to("#win", {x: %(ax)s, y: %(ay)s, scale: %(as)s, rotationX: 3, rotationY: 6, rotationZ: -1, duration: 1.1, ease: "power3.inOut"}, %(otr)s - .2);
   tl.to("#opn", {scale: .92, backgroundColor: "#2E3BBF", duration: .12, yoyo: true, repeat: 1}, %(uch)s + .3);
-  tl.to("#win", {y: "-=260", scale: %(as)s * .8, rotationX: 14, duration: .9, ease: "power3.inOut"}, %(uch)s + .4);
-  tl.fromTo("#card", {autoAlpha: 0, y: 220, rotationX: -30}, X({autoAlpha: 1, y: 0, rotationX: 0, duration: .7, ease: "power3.out"}), %(uch)s + .5);
+  tl.to("#win", {y: "-=150", scale: %(as)s * .96, rotationX: 10, duration: .9, ease: "power3.inOut"}, %(uch)s + .4);
+  tl.fromTo("#card", {autoAlpha: 0, y: 260, rotationX: -30}, X({autoAlpha: 1, y: 0, rotationX: 0, duration: .7, ease: "power3.out"}), %(uch)s + .5);
+  gsap.set("#card .qb", {autoAlpha: 0});
   tl.to("#card", {rotationY: 180, duration: .7, ease: "power2.inOut"}, %(vidk)s + .15);
+  tl.set("#card .qf", {autoAlpha: 0}, %(vidk)s + .5); tl.set("#card .qb", {autoAlpha: 1}, %(vidk)s + .5);
   full(%(f0)s, %(f1)s);
 """ % {"wx": WIDE[1], "wy": WIDE[2], "ws": WIDE[0], "mx": MEN[1], "my": MEN[2], "ms": MEN[0],
        "ix": INP[1], "iy": INP[2], "is": INP[0], "ax": ANS[1], "ay": ANS[2], "as": ANS[0],
@@ -229,6 +245,11 @@ js(u'''
 g.sfx("whoosh-short", k0); g.sfx("click-soft", t_cl2); g.sfx("click-soft", t_pom); g.sfx("click-soft", t_not)
 g.sfx("pencil", t_lah - 0.3)
 
+# 4b · MEME — «перевірку я б… не віддавала повністю Клоду» -> 13, the paw: «stop».
+# Her line is a firm no; the paw says it. Clear stretch: list card 3 left at
+# «Саму»+0.4, the checklist rises on «організовувати».
+g.meme(F, J, "13", E(u"Клоду,", 38.02) + 0.1, dur=1.0, slot="r")
+
 # 5 · ABOVE — a glass homework checklist: ticks, and the one nobody should miss ---------
 t_org, t_maks, t_vytr, t_mozh = S(u"організовувати", 39.55), S(u"максимально", 41.64), S(u"витрачала", 43.69), S(u"можна.", 45.70)
 F.append(u'''
@@ -260,8 +281,8 @@ js(u'''
   tl.to("#e3", {opacity: 1, duration: .25}, %(vytr)s);
   tl.to("#r3", {keyframes: {x: [0, -8, 7, -4, 2, 0]}, duration: .35, ease: "none"}, %(vytr)s + .1);
   sink("#hw", %(out)s);
-''' % {"org": "%.3f" % (t_org - 0.2), "maks": "%.3f" % t_maks, "vytr": "%.3f" % t_vytr, "out": "%.3f" % (t_mozh + 0.3)})
-g.sfx("pop", t_org - 0.2); g.sfx("click-soft", t_maks); g.sfx("click-soft", t_maks + 0.35); g.sfx("notification", t_vytr)
+''' % {"org": "%.3f" % t_org, "maks": "%.3f" % t_maks, "vytr": "%.3f" % t_vytr, "out": "%.3f" % (t_mozh + 0.3)})
+g.sfx("pop", t_org); g.sfx("click-soft", t_maks); g.sfx("click-soft", t_maks + 0.35); g.sfx("notification", t_vytr)
 
 # 6 · ABOVE — a glass level test: a question, then the scale --------------------------
 t_pyt, t_shk, t_lanc = S(u"питання", 50.67), S(u"шкалу.", 51.53), S(u"Ланцюжок", 51.99)

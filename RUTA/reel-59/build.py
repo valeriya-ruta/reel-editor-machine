@@ -35,6 +35,7 @@ from gstyle import G, Words, load_caps, mark  # noqa: E402
 NN = "59"
 DUR = 83.483           # (2505 plate frames - 0.5) / 30
 g = G(dur=DUR, reel=NN)
+g.cta_start = None     # set below, once S() exists: «Тому збережи…»
 g.PANEL_TOP = 780      # panel captions: bottom 898; her pushed hair at ≈ 925-940
 
 FIX = {
@@ -58,6 +59,7 @@ FIX = {
 CAPS = load_caps(NN, FIX)
 W = Words(CAPS)
 S, E = W.s, W.e
+g.cta_start = S(u"Тому", 79.80)
 
 B, P, F, C, J = [], [], [], [], []
 BLACKOUT, PLACE, HALF = [], [], []
@@ -120,12 +122,15 @@ js(u'  rise("#th", %.3f); sink("#th", %.3f);' % (t_pyt, t_kor - 0.15))
 g.sfx("pop", t_pyt)
 BLACKOUT.append((t_yaki - 0.03, t_kor - 0.05))
 
+# ---------------------------------------------------------------- meme 34: «якби я була репетиторкою з математики чи історії»
+g.meme(F, J, "34", E(u"історії,", 8.56) + 0.1, dur=1.0, slot="top")
+
 # ---------------------------------------------------------------- behind «Claude»
 t_cl = S(u"з Claude.", 10.70)
 B.append(u'        <div id="bw1" class="big hid" data-layout-allow-occlusion style="top:440px; font-size:220px">Claude</div>')
 g.matte("b1", round(t_cl - 0.7, 3), 2.4)
-js(u'  rise("#bw1", %.3f); sink("#bw1", %.3f);' % (t_cl - 0.45, t_cl + 1.3))
-g.sfx("whoosh-short", t_cl - 0.45)
+js(u'  rise("#bw1", %.3f); sink("#bw1", %.3f);' % (t_cl - 0.35, t_cl + 1.3))
+g.sfx("whoosh-short", t_cl - 0.35)
 BLACKOUT.append((t_cl - 0.03, E(u"з Claude.", 10.70)))
 
 # ---------------------------------------------------------------- the list slot
@@ -140,99 +145,119 @@ def item(i, t0, t1):
 
 
 # ---------------------------------------------------------------- 1 · FULL: Claude chat
+# One window, 960 px wide (89 % of the frame) and 1080 tall, type at 26-34 px
+# when zoomed out; the camera goes close to each thing she names.
 t_pershe = S(u"По-перше,", 11.27)
 item(0, t_pershe, S(u"Підключаєш", 14.08) - 0.1)
 f0 = S(u"Підключаєш", 14.08) - 0.05
-f1 = S(u"Друге,", 28.40) - 0.2
+f1 = S(u"а", 26.74) + 0.25        # out on «а не десь…»: her face carries the punchline
 C.append(u"""
+        <div id="fb" class="fadeband"></div>
         <div id="st1" class="stage">
-          <div id="win1" class="win" style="background:#FBFAF7">
-            <div style="left:0;top:0;width:800px;height:46px;border-bottom:1px solid #ECE7E2;background:#fff"></div>
-            <div style="left:20px;top:12px;display:flex;align-items:center;gap:9px;font-size:16px;font-weight:700;color:#7A1424">%(claude)s<span style="color:#1f1f1f">Claude</span></div>
-            <div style="left:610px;top:15px;font-size:12px;color:#8a8580">Учні та оплати</div>
+          <div id="win1" class="win w1">
+            <div style="left:0;top:0;width:960px;height:96px;border-bottom:1.5px solid #ECE7E2;background:#fff"></div>
+            <div style="left:32px;top:26px;display:flex;align-items:center;gap:14px;font-size:34px;font-weight:700;color:#7A1424">%(claude)s<span style="color:#1f1f1f">Claude</span></div>
+            <div style="right:32px;top:34px;font-size:26px;color:#8a8580">Учні та оплати</div>
 
-            <div id="u1" class="ub" style="left:470px;top:66px">Оля заплатила за 4 уроки</div>
-            <div id="r1" style="left:40px;top:112px;width:720px">
+            <div id="gr" style="left:64px;top:640px;display:flex;align-items:center;gap:20px;font-size:50px;color:#3a3330">%(claudeL)s Чим допомогти?</div>
+
+            <div id="u1" class="ub" style="right:40px;top:132px">Оля заплатила за 4 уроки</div>
+            <div id="r1" style="left:40px;top:236px;width:880px">
               <div class="tool">%(notion)s Notion · Учні та оплати · додано рядок</div>
               <div class="tbl">
                 <div class="tr th"><span>Учень</span><span>Уроки</span><span>Оплата</span></div>
                 <div class="tr" id="row"><span>Оля</span><span>4</span><span><i id="tk" class="ok"></i>оплачено</span></div>
               </div>
             </div>
-            <div id="u2" class="ub" style="left:446px;top:262px">Скільки я заробила за листопад?</div>
-            <div id="r2" style="left:40px;top:308px;font-size:15px;color:#1f1f1f;display:flex;align-items:center;gap:10px">
+            <div id="u2" class="ub" style="right:40px;top:500px">Скільки я заробила за листопад?</div>
+            <div id="r2" style="left:40px;top:604px;font-size:32px;color:#1f1f1f;display:flex;align-items:center;gap:16px">
               За листопад, за даними таблиці: <span class="red"></span></div>
 
-            <div id="inp" style="left:40px;top:440px;width:720px;height:96px;background:#fff;border:1px solid #E3DED8;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,.04)">
-              <div id="ph" style="position:absolute;left:18px;top:14px;font-size:15px;color:#9b958f">Напиши Claude…</div>
-              <div id="ty" style="position:absolute;left:18px;top:14px;font-size:15px;color:#1f1f1f;white-space:nowrap;clip-path:inset(0%% 100%% 0%% 0%%)">Оля заплатила за 4 уроки</div>
-              <div id="cn" class="cn" style="position:absolute;left:14px;top:56px">%(notion)s Notion</div>
-              <div id="cg" class="cn" style="position:absolute;left:112px;top:56px">%(drive)s Google Drive</div>
-              <div id="snd" style="position:absolute;right:12px;top:54px;width:30px;height:30px;border-radius:9px;background:#D8B9BD;color:#fff;font-size:17px;text-align:center;line-height:30px">↑</div>
+            <div id="inp" style="left:40px;top:820px;width:880px;height:216px;background:#fff;border:1.5px solid #E3DED8;border-radius:28px;box-shadow:0 2px 10px rgba(0,0,0,.05)">
+              <div id="ph" style="position:absolute;left:30px;top:30px;font-size:32px;color:#9b958f">Напиши Claude…</div>
+              <div id="ty" style="position:absolute;left:30px;top:30px;font-size:32px;color:#1f1f1f;white-space:nowrap;clip-path:inset(0%% 100%% 0%% 0%%)">Оля заплатила за 4 уроки</div>
+              <div id="cn" class="cn" style="position:absolute;left:24px;top:130px">%(notion)s Notion</div>
+              <div id="cg" class="cn" style="position:absolute;left:200px;top:130px">%(drive)s Google Drive</div>
+              <div id="snd" style="position:absolute;right:24px;top:128px;width:60px;height:60px;border-radius:18px;background:#D8B9BD;color:#fff;font-size:34px;text-align:center;line-height:60px">↑</div>
             </div>
           </div>
-        </div>""" % {"claude": mark("claude", 20), "notion": mark("notion", 13), "drive": mark("googledrive", 13)})
+        </div>""" % {"claude": mark("claude", 40), "claudeL": mark("claude", 58), "notion": mark("notion", 26),
+                     "drive": mark("googledrive", 26)})
 EXTRA += u"""
-    .ub { background: #EFE9E3; border-radius: 14px; padding: 9px 14px; font-size: 15px; color: #1f1f1f; white-space: nowrap; }
-    .tool { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: #6b6560;
-            border: 1px solid #E6E0DA; border-radius: 9px; padding: 5px 10px; background: #fff; margin-bottom: 10px; }
-    .tbl { width: 460px; border: 1px solid #E6E0DA; border-radius: 10px; background: #fff; overflow: hidden; }
-    .tr { display: grid; grid-template-columns: 1.4fr 1fr 1.3fr; padding: 9px 14px; font-size: 14px; align-items: center; }
-    .tr.th { background: #F6F3F0; color: #6b6560; font-size: 12px; font-weight: 700; }
-    .tr span { display: flex; align-items: center; gap: 7px; }
-    .ok { display: inline-block; width: 15px; height: 15px; border-radius: 4px; background: #7A1424; position: relative; }
-    .ok::after { content: ""; position: absolute; left: 5px; top: 1px; width: 4px; height: 9px;
-                 border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
-    .red { display: inline-block; width: 110px; height: 20px; border-radius: 6px; background: #E8DCDC; }
-    .cn { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #6b6560;
-          border: 1px solid #E3DED8; border-radius: 999px; padding: 5px 11px; background: #fff; }
+    .w1 { width: 960px; height: 1080px; background: #FBFAF7; border-radius: 32px; transform-origin: 480px 540px; }
+    .w1 > div, .w2 > div { position: absolute; }
+    .fadeband { position: absolute; left: 0; top: 1330px; width: 1080px; height: 590px; z-index: 5;
+                background: linear-gradient(to bottom, rgba(243,235,235,0) 0, #F3EBEB 60px, #F1E7E7 100%); }
+    .ub { background: #EFE9E3; border-radius: 26px; padding: 18px 28px; font-size: 32px; color: #1f1f1f; white-space: nowrap; }
+    .tool { display: inline-flex; align-items: center; gap: 12px; font-size: 26px; color: #6b6560;
+            border: 1.5px solid #E6E0DA; border-radius: 16px; padding: 10px 18px; background: #fff; margin-bottom: 16px; }
+    .tbl { width: 760px; border: 1.5px solid #E6E0DA; border-radius: 18px; background: #fff; overflow: hidden; }
+    .tr { display: grid; grid-template-columns: 1.3fr 1fr 1.5fr; padding: 16px 26px; font-size: 32px; align-items: center; }
+    .tr.th { background: #F6F3F0; color: #6b6560; font-size: 26px; font-weight: 700; }
+    .tr span { display: flex; align-items: center; gap: 12px; }
+    .ok { display: inline-block; width: 32px; height: 32px; border-radius: 8px; background: #7A1424; position: relative; }
+    .ok::after { content: ""; position: absolute; left: 10px; top: 3px; width: 9px; height: 18px;
+                 border: solid #fff; border-width: 0 4px 4px 0; transform: rotate(45deg); }
+    .red { display: inline-block; width: 190px; height: 40px; border-radius: 10px; background: #E8DCDC; }
+    .cn { display: inline-flex; align-items: center; gap: 10px; font-size: 26px; color: #6b6560; white-space: nowrap;
+          border: 1.5px solid #E3DED8; border-radius: 999px; padding: 10px 20px; background: #fff; }
     .cn .mark, .tool .mark { color: #3c3c3c; }
 """
 
 
-def cam(px, py, sc, cx=540, cy=760):
-    # the window scales about its own centre (400, 280): a point p lands at
+def cam(px, py, sc, cx=540, cy=820, w=960, h=1080):
+    # the window scales about its own centre (w/2, h/2): a point p lands at
     # O + s*(p - O) + (x, y)
-    return "{x: %.1f, y: %.1f, scale: %.3f" % (cx - 400 - sc * (px - 400), cy - 280 - sc * (py - 280), sc)
+    ox, oy = w / 2.0, h / 2.0
+    return "{x: %.1f, y: %.1f, scale: %.3f" % (cx - ox - sc * (px - ox), cy - oy - sc * (py - oy), sc)
 
 
 t_notion, t_gd = S(u"Notion", 15.48), S(u"Google", 16.10)
 t_olia, t_uroky, t_vnos, t_opl = S(u"«Оля", 18.30), S(u"уроки».", 20.51), S(u"вносить", 21.81), S(u"оплату,", 22.29)
 t_skil, t_tsyf, t_ne = S(u"«скільки", 24.76), S(u"цифрою,", 26.22), S(u"не десь", 27.26)
-WIDE1 = cam(400, 280, 1.2)
+WIDE1 = cam(290, 840, 2.0, cy=800)    # opens already close on the input: no empty chat
 js(u"""
-  gsap.set("#win1", %(wide)s, rotationX: 24, rotationY: -20, rotationZ: 5});
-  gsap.set("#win1", {y: "+=220", scale: 1.2 * .86});
+  gsap.set("#win1", %(wide)s, rotationX: 18, rotationY: -14, rotationZ: 3});
+  gsap.set("#win1", {y: "+=200", scale: 2.0 * .88});
   gsap.set(["#u1", "#r1", "#u2", "#r2"], {autoAlpha: 0});
-  tl.to("#win1", %(wide)s, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.3, ease: "power3.out"}, %(f0).3f + .12);
-  tl.to("#win1", %(inp)s, rotationX: 3, rotationY: 6, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, %(notion).3f - .7);
+  tl.to("#win1", %(wide)s, rotationX: 5, rotationY: -3, rotationZ: 1, duration: 1.1, ease: "power3.out"}, %(f0).3f + .12);
+  tl.to("#win1", %(chips)s, rotationX: 3, rotationY: 3, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, %(notion).3f - .75);
   tl.to("#cn", {borderColor: "#7A1424", backgroundColor: "#FBEFF0", color: "#7A1424", duration: .25}, %(notion).3f);
   tl.to("#cg", {borderColor: "#7A1424", backgroundColor: "#FBEFF0", color: "#7A1424", duration: .25}, %(gd).3f);
+  tl.to("#win1", %(type)s, rotationX: 2, rotationY: -2, duration: 1.0, ease: "power3.inOut"}, %(olia).3f - .6);
   tl.set("#ph", {autoAlpha: 0}, %(olia).3f - .1);
   tl.fromTo("#ty", {clipPath: "inset(0%% 100%% 0%% 0%%)"}, X({clipPath: "inset(0%% 0%% 0%% 0%%)", duration: %(tyd).3f, ease: "steps(24)"}), %(olia).3f - .1);
   tl.to("#snd", {backgroundColor: "#7A1424", duration: .15}, %(uroky).3f);
+  tl.to("#snd", {keyframes: {scale: [1, .88, 1]}, duration: .25}, %(uroky).3f);
   tl.set("#ty", {autoAlpha: 0}, %(uroky).3f + .25); tl.set("#ph", {autoAlpha: 1}, %(uroky).3f + .25);
-  tl.to("#win1", %(chat)s, rotationX: -2, rotationY: -7, duration: 1.0, ease: "power3.inOut"}, %(uroky).3f + .05);
-  tl.fromTo("#u1", {autoAlpha: 0, y: 30}, X({autoAlpha: 1, y: 0, duration: .4, ease: RISE}), %(uroky).3f + .25);
-  tl.fromTo("#r1", {autoAlpha: 0, y: 20}, X({autoAlpha: 1, y: 0, duration: .45, ease: RISE}), %(vnos).3f - .1);
+  tl.to("#gr", {autoAlpha: 0, duration: .25}, %(uroky).3f + .1);
+  tl.to("#win1", %(chat)s, rotationX: -2, rotationY: -5, duration: .5, ease: "power3.inOut"}, %(uroky).3f + .05);
+  tl.fromTo("#u1", {autoAlpha: 0, y: 30}, X({autoAlpha: 1, y: 0, duration: .4, ease: RISE}), %(uroky).3f + .15);
+  tl.fromTo("#r1", {autoAlpha: 0, y: 20}, X({autoAlpha: 1, y: 0, duration: .45, ease: RISE}), %(uroky).3f + .3);
+  tl.to("#win1", %(row)s, rotationX: 2, rotationY: 4, duration: .9, ease: "power3.inOut"}, %(vnos).3f + .05);
   tl.fromTo("#row", {backgroundColor: "#FBEFF0"}, X({backgroundColor: "#FFFFFF", duration: 1.2}), %(vnos).3f + .3);
   tl.fromTo("#tk", {scale: 0}, X({scale: 1, duration: .4, ease: POP}), %(opl).3f);
-  tl.to("#win1", %(q)s, rotationX: 2, rotationY: 7, duration: 1.1, ease: "power3.inOut"}, %(skil).3f - .6);
+  tl.to("#win1", %(q)s, rotationX: 2, rotationY: -5, duration: 1.1, ease: "power3.inOut"}, %(skil).3f - .7);
   tl.fromTo("#u2", {autoAlpha: 0, y: 30}, X({autoAlpha: 1, y: 0, duration: .4, ease: RISE}), %(skil).3f);
   tl.fromTo("#r2", {autoAlpha: 0, y: 20}, X({autoAlpha: 1, y: 0, duration: .45, ease: RISE}), %(tsyf).3f - .1);
-  tl.to("#win1", %(wide)s, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.2, ease: "power3.inOut"}, %(ne).3f - .2);
+  tl.to("#win1", %(ans)s, rotationX: 1, rotationY: 4, duration: .9, ease: "power3.inOut"}, %(tsyf).3f - .2);
   gsap.set("#st1", {autoAlpha: 1}); tl.set("#st1", {autoAlpha: 0}, %(f1).3f + .9);
   full(%(f0).3f, %(f1).3f);
-""" % {"wide": WIDE1, "wy": "%.1f" % 0, "inp": cam(250, 500, 2.2), "chat": cam(400, 190, 1.4),
-       "q": cam(400, 290, 1.45), "f0": f0, "f1": f1, "notion": t_notion, "gd": t_gd, "olia": t_olia,
+""" % {"wide": WIDE1, "chips": cam(300, 840, 2.0, cy=800), "type": cam(340, 840, 1.85, cy=800),
+       "chat": cam(430, 300, 1.45, cy=700), "row": cam(400, 400, 1.6, cy=1000),
+       "q": cam(480, 560, 1.15, cy=820), "ans": cam(445, 560, 1.3, cy=820),
+       "f0": f0, "f1": f1, "notion": t_notion, "gd": t_gd, "olia": t_olia,
        "uroky": t_uroky, "tyd": t_uroky - t_olia - 0.1, "vnos": t_vnos, "opl": t_opl, "skil": t_skil,
-       "tsyf": t_tsyf, "ne": t_ne})
+       "tsyf": t_tsyf})
 g.sfx("whoosh-short", f0); g.sfx("click-soft", t_notion); g.sfx("click-soft", t_gd)
 g.sfx("typing", t_olia - 0.1); g.sfx("click", t_uroky); g.sfx("pop", t_opl)
 g.sfx("notification", t_tsyf - 0.1); g.sfx("whoosh-short", f1)
 
+# ---------------------------------------------------------------- meme 05: «а не десь щось там приблизно»
+g.meme(F, J, "05", E(u"приблизно.", 28.06) + 0.1, dur=1.0, slot="top")
+
 # ---------------------------------------------------------------- 2 · reminders
-t_druhe = S(u"Друге,", 28.40)
+t_druhe = S(u"нагадування", 29.20) + 0.22   # the card lands inside its word, once the meme has gone
 h1a = S(u"В", 31.35) - 0.15
 item(1, t_druhe, h1a)
 h1b = S(u"А", 40.93) - 0.2
@@ -310,54 +335,63 @@ g.sfx("whoosh-short", h2a); g.sfx("click-soft", t_fat); g.sfx("click-soft", t_cl
 g.sfx("click-soft", t_kons); g.sfx("click-soft", t_sp2); g.sfx("click-soft", t_uch2)
 
 # ---------------------------------------------------------------- 4 · FULL: the НМТ test
+# Same rules: one 960 x 1000 window, 26-44 px type, the camera goes to the
+# chip / the question / the answer she names.
 t_chetv = S(u"Четверте,", 61.57)
 g0 = S(u"Тобто", 64.53) - 0.15
 item(3, t_chetv + 0.3, g0 - 0.05)
 g1 = S(u"то", 74.53) - 0.15
 OPTS = [(u"А", u"2"), (u"Б", u"4"), (u"В", u"6"), (u"Г", u"10")]
-opts = u"".join(u'<div class="op" id="op%d" style="left:%dpx;top:%dpx"><b>%s</b>%s</div>'
-                % (i, 40 + (i % 2) * 370, 300 + (i // 2) * 74, a, v) for i, (a, v) in enumerate(OPTS))
+opts = u"".join(u'<div class="op" id="op%d" style="left:40px;top:%dpx"><b>%s</b>%s</div>'
+                % (i, 400 + i * 112, a, v) for i, (a, v) in enumerate(OPTS))
 C.append(u"""
         <div id="st2" class="stage">
-          <div id="win2" class="win">
-            <div style="left:0;top:0;width:800px;height:54px;border-bottom:1px solid #EEE"></div>
-            <div style="left:24px;top:15px;font-size:17px;font-weight:700">Тест НМТ · Математика</div>
-            <div id="ks" class="cn" style="left:418px;top:14px">✦ скіл «тест за темою»</div>
-            <div id="kg" class="cn" style="left:606px;top:14px">%(drive)s Google Drive</div>
-            <div style="left:40px;top:84px;font-size:13px;color:#6b6560">Завдання 7 з 20</div>
-            <div style="left:40px;top:106px;width:720px;height:6px;border-radius:3px;background:#F1E7E7"></div>
-            <div style="left:40px;top:106px;width:252px;height:6px;border-radius:3px;background:#7A1424"></div>
-            <div id="qq" style="left:40px;top:150px;font-size:26px;font-weight:700;line-height:1.3">Розвʼяжіть рівняння:<br><span style="font-weight:400">2x + 6 = 14</span></div>
+          <div id="win2" class="win w2">
+            <div style="left:0;top:0;width:960px;height:96px;border-bottom:1.5px solid #EEE"></div>
+            <div style="left:32px;top:28px;font-size:32px;font-weight:700">НМТ · Математика</div>
+            <div id="ks" class="cn" style="left:360px;top:22px">✦ скіл «тест за темою»</div>
+            <div id="kg" class="cn" style="left:690px;top:22px">%(drive)s Google Drive</div>
+            <div style="left:40px;top:128px;font-size:26px;color:#6b6560">Завдання 7 з 20</div>
+            <div style="left:40px;top:176px;width:880px;height:12px;border-radius:6px;background:#F1E7E7"></div>
+            <div style="left:40px;top:176px;width:308px;height:12px;border-radius:6px;background:#7A1424"></div>
+            <div id="qq" style="left:40px;top:230px;font-size:44px;font-weight:700;line-height:1.3">Розвʼяжіть рівняння:<br><span style="font-weight:400">2x + 6 = 14</span></div>
             %(opts)s
-            <div style="left:620px;top:470px;width:140px;height:44px;border-radius:12px;background:#7A1424;color:#fff;font-size:15px;font-weight:500;text-align:center;line-height:44px">Далі</div>
+            <div style="right:40px;top:880px;width:220px;height:76px;border-radius:20px;background:#7A1424;color:#fff;font-size:30px;font-weight:500;text-align:center;line-height:76px">Далі</div>
           </div>
-        </div>""" % {"drive": mark("googledrive", 13), "opts": opts})
+        </div>""" % {"drive": mark("googledrive", 26), "opts": opts})
 EXTRA += u"""
-    .op { width: 350px; height: 60px; border: 1.5px solid #E3DED8; border-radius: 12px; display: flex;
-          align-items: center; gap: 14px; padding: 0 16px; font-size: 18px; background: #fff; }
-    .op b { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid #CFC6C6; display: inline-flex;
-            align-items: center; justify-content: center; font-size: 14px; color: #574142; }
+    .w2 { width: 960px; height: 1000px; background: #fff; border-radius: 32px; transform-origin: 480px 500px; }
+    .op { width: 880px; height: 96px; border: 2px solid #E3DED8; border-radius: 22px; display: flex;
+          align-items: center; gap: 26px; padding: 0 28px; font-size: 34px; background: #fff; box-sizing: border-box; }
+    .op b { width: 52px; height: 52px; border-radius: 50%; border: 2px solid #CFC6C6; display: inline-flex;
+            align-items: center; justify-content: center; font-size: 26px; color: #574142; box-sizing: border-box; }
 """
 t_test, t_nmt, t_gd2, t_porish, t_azart = S(u"«тест", 66.42), S(u"інформацію", 68.86), S(u"Google", 70.74), \
     S(u"й порішав", 73.35), S(u"азартом,", 73.99)
-WIDE2 = cam(400, 280, 1.2)
+
+
+def cam2(px, py, sc, cy=820):
+    return cam(px, py, sc, cy=cy, h=1000)
+
+
+WIDE2 = cam2(480, 500, 1.0)
 js(u"""
-  gsap.set("#win2", %(wide)s, rotationX: 24, rotationY: 20, rotationZ: -5});
-  gsap.set("#win2", {y: "+=220", scale: 1.2 * .86});
-  tl.to("#win2", %(wide)s, rotationX: 9, rotationY: 12, rotationZ: -2, duration: 1.3, ease: "power3.out"}, %(g0).3f + .12);
-  tl.to("#win2", %(sk)s, rotationX: 3, rotationY: -6, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, %(test).3f - .7);
+  gsap.set("#win2", %(wide)s, rotationX: 18, rotationY: 14, rotationZ: -3});
+  gsap.set("#win2", {y: "+=200", scale: .88});
+  tl.to("#win2", %(wide)s, rotationX: 6, rotationY: 6, rotationZ: -1, duration: 1.1, ease: "power3.out"}, %(g0).3f + .12);
+  tl.to("#win2", %(sk)s, rotationX: 3, rotationY: -4, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, %(test).3f - .7);
   tl.to("#ks", {borderColor: "#7A1424", backgroundColor: "#FBEFF0", color: "#7A1424", duration: .25}, %(test).3f);
-  tl.to("#win2", %(qq)s, rotationX: -2, rotationY: 6, duration: 1.1, ease: "power3.inOut"}, %(nmt).3f - .6);
-  tl.to("#win2", %(sk2)s, rotationX: 2, rotationY: -5, duration: 1.0, ease: "power3.inOut"}, %(gd2).3f - .6);
+  tl.to("#win2", %(qq)s, rotationX: -2, rotationY: 5, duration: 1.0, ease: "power3.inOut"}, %(nmt).3f - .6);
+  tl.to("#win2", %(sk2)s, rotationX: 2, rotationY: -4, duration: 1.0, ease: "power3.inOut"}, %(gd2).3f - .6);
   tl.to("#kg", {borderColor: "#7A1424", backgroundColor: "#FBEFF0", color: "#7A1424", duration: .25}, %(gd2).3f);
-  tl.to("#win2", %(ops)s, rotationX: 4, rotationY: 8, rotationZ: -1, duration: 1.2, ease: "power3.inOut"}, %(gd2).3f + .9);
+  tl.to("#win2", %(ops)s, rotationX: 4, rotationY: 6, rotationZ: -1, duration: 1.1, ease: "power3.inOut"}, %(gd2).3f + .9);
   tl.to("#op1", {borderColor: "#7A1424", backgroundColor: "#FBEFF0", duration: .2}, %(porish).3f);
   tl.to("#op1 b", {backgroundColor: "#7A1424", borderColor: "#7A1424", color: "#fff", duration: .2}, %(porish).3f);
-  tl.to("#op1", {keyframes: {scale: [1, .96, 1]}, duration: .3}, %(porish).3f);
+  tl.to("#op1", {keyframes: {scale: [1, .97, 1]}, duration: .3}, %(porish).3f);
   gsap.set("#st2", {autoAlpha: 0}); tl.set("#st2", {autoAlpha: 1}, %(g0).3f - .05);
   full(%(g0).3f, %(g1).3f);
-""" % {"wide": WIDE2, "g0": g0, "g1": g1, "sk": cam(560, 40, 2.4), "qq": cam(240, 200, 2.0),
-       "sk2": cam(640, 40, 2.4), "ops": cam(400, 330, 1.3), "test": t_test, "nmt": t_nmt,
+""" % {"wide": WIDE2, "g0": g0, "g1": g1, "sk": cam2(480, 60, 1.25, cy=380), "qq": cam2(320, 300, 1.5, cy=720),
+       "sk2": cam2(500, 60, 1.22, cy=380), "ops": cam2(480, 640, 1.2, cy=860), "test": t_test, "nmt": t_nmt,
        "gd2": t_gd2, "porish": t_porish})
 g.sfx("whoosh-short", g0); g.sfx("click-soft", t_test); g.sfx("click-soft", t_gd2)
 g.sfx("click", t_porish); g.sfx("whoosh-short", g1)

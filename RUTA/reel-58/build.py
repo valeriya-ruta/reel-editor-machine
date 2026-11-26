@@ -36,6 +36,7 @@ FIX = {
 CAPS = load_caps(NN, FIX)
 W = Words(CAPS)
 S, E = W.s, W.e
+g.cta_start = S(u"Якщо", 87.07)     # «Якщо тобі було корисно… підпишись»: no meme from here on
 
 B, P, F, C, J = [], [], [], [], []
 BLACKOUT, PLACE, HALF = [], [], []
@@ -270,7 +271,8 @@ def hl(sel, t):
 
 
 def curto(t, x, y, d=.5):   # cursor, in page coordinates
-    js(u'  tl.to("#cur", {left: %d, top: %d, duration: %s, ease: "power2.inOut"}, %.3f);' % (x, y, d, t))
+    # a transform, not left/top (sub-pixel smooth; #cur rests at left/top 300)
+    js(u'  tl.to("#cur", {x: %d, y: %d, duration: %s, ease: "power2.inOut"}, %.3f);' % (x - 300, y - 300, d, t))
 
 
 WIDE = cam(400, 270, 1.24)
@@ -334,6 +336,12 @@ js(u'''
   sink("#al", %.3f);
 ''' % (t_mozh - 0.3, t_shap, t_tomu + 0.35))
 g.sfx("notification", t_mozh - 0.3); g.sfx("click", t_shap)
+
+# MEMES — comic relief (assets/memes/MEMES.md), slapped straight on in her zones --
+# 50 · the guilty smirk, right of her head, after «Інстаграму це не подобається,»
+g.meme(F, J, "50", E(u"подобається,", 47.38) + 0.1, dur=1.2, slot="r")
+# 35 · deal-with-it hamster above her head, after «150 повідомлень без жодної проблеми,»
+g.meme(F, J, "35", E(u"проблеми,", 85.15) + 0.1, dur=1.15, slot="top")
 
 # 7 · HALF — rule 1, the pause (Excalidraw scheme) ------------------------------------
 k0 = S(u"Перше", 55.40) - 0.15

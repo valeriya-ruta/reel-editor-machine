@@ -125,6 +125,22 @@
                opacity: 0; }
     .cap .kt { position: relative; }
 
+    /* comic-relief memes (assets/memes/MEMES.md). Her note 2026-11-23: no plaque,
+       no frame, no glass card — the image is slapped straight onto the reel, in
+       the zones she marked, so her face and the captions stay readable:
+         c / top  the band above her head (y 40-520, full width)
+         r        beside her head on the right (x 740-1060, y 550-1310)
+         l        low left, over her shoulder (x 40-460, y 1140-1370)
+       A pair = two slots at the same t (top + r, or l + r). */
+    .meme { position: absolute; display: flex; }
+    .meme img { display: block; max-width: 100%; max-height: 100%; }
+    .meme.c, .meme.top { left: 60px; top: 40px; width: 960px; height: 480px;
+                         align-items: center; justify-content: center; }
+    .meme.r { left: 740px; top: 550px; width: 320px; height: 760px;
+              align-items: center; justify-content: flex-end; }
+    .meme.l { left: 40px; top: 1140px; width: 420px; height: 230px;
+              align-items: flex-end; justify-content: flex-start; }
+
     .dm { left: 150px; top: 300px; width: 780px; padding: 26px 28px; }
     .dm .hd { display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 500;
               color: #574142; margin-bottom: 18px; }
@@ -141,31 +157,32 @@
     .rowr { display: flex; justify-content: flex-end; margin-top: 14px; }
 
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
-    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
-    #win { position: absolute; left: 0; top: 0; width: 800px; height: 560px; background: #fff;
-           border-radius: 16px; font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
+    #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2400px; }
+    #win { position: absolute; left: 0; top: 0; width: 960px; height: 1060px; background: #fff;
+           border-radius: 36px; font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
            box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
            transform-origin: 0 0; will-change: transform; }
     #win > div { position: absolute; }
-    .ib-top { left: 0; top: 0; width: 800px; height: 56px; border-bottom: 1px solid #ECE6E6;
-              display: flex; align-items: center; gap: 12px; padding: 0 20px; font-size: 18px; font-weight: 700; }
-    .ib-top b { width: 30px; height: 30px; border-radius: 50%; background: #7A1424; display: inline-block; }
-    .ib-ag { margin-left: auto; font-size: 13px; font-weight: 500; color: #574142; background: #F4F1F1;
-             border-radius: 14px; padding: 6px 12px; display: inline-flex; align-items: center; gap: 7px; }
-    .ib-ag i { width: 8px; height: 8px; border-radius: 50%; background: #1EA672; display: inline-block; }
-    .ib-chat { left: 20px; top: 76px; width: 440px; display: flex; flex-direction: column; gap: 10px; }
-    .ib-m { max-width: 330px; border-radius: 16px; padding: 10px 14px; font-size: 14px; line-height: 1.35; }
-    .ib-m.in { background: #F1EEEE; color: #241919; align-self: flex-start; border-bottom-left-radius: 5px; }
-    .ib-m.me { background: #7A1424; color: #fff; align-self: flex-end; border-bottom-right-radius: 5px; }
-    .ib-card { left: 484px; top: 76px; width: 296px; height: 400px; border: 1px solid #ECE6E6; border-radius: 14px;
-               padding: 16px; background: #FCFAFA; }
-    .ib-h { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
-    .ib-f { border: 1px solid #E3DCDC; border-radius: 10px; background: #fff; padding: 8px 12px; margin-bottom: 10px;
-            height: 54px; }
-    .ib-f span { display: block; font-size: 11px; color: #6f6363; margin-bottom: 3px; }
-    .ib-f em { display: block; font-style: normal; font-size: 14px; color: #241919; opacity: 0; }
-    .ib-btn { position: absolute; left: 16px; right: 16px; bottom: 16px; height: 46px; border-radius: 23px;
-              background: #7A1424; color: #fff; font-size: 14px; font-weight: 500; text-align: center; line-height: 46px; }
+    .ib-top { left: 0; top: 0; width: 960px; height: 120px; border-bottom: 2px solid #ECE6E6; box-sizing: border-box;
+              display: flex; align-items: center; gap: 22px; padding: 0 40px; font-size: 44px; font-weight: 700; }
+    .ib-top b { width: 64px; height: 64px; border-radius: 50%; background: #7A1424; display: inline-block; }
+    .ib-ag { margin-left: auto; font-size: 32px; font-weight: 500; color: #574142; background: #F4F1F1;
+             border-radius: 30px; padding: 12px 26px; display: inline-flex; align-items: center; gap: 12px; }
+    .ib-ag i { width: 16px; height: 16px; border-radius: 50%; background: #1EA672; display: inline-block; }
+    .ib-chat { left: 40px; top: 150px; width: 880px; display: flex; flex-direction: column; gap: 18px; }
+    .ib-m { max-width: 640px; border-radius: 32px; padding: 20px 28px; font-size: 36px; line-height: 1.3; }
+    .ib-m.in { background: #F1EEEE; color: #241919; align-self: flex-start; border-bottom-left-radius: 10px; }
+    .ib-m.me { background: #7A1424; color: #fff; align-self: flex-end; border-bottom-right-radius: 10px; }
+    .ib-card { left: 40px; top: 680px; width: 880px; height: 340px; border: 2px solid #ECE6E6; border-radius: 28px;
+               padding: 26px 30px; background: #FCFAFA; box-sizing: border-box; }
+    .ib-h { font-size: 36px; font-weight: 700; margin-bottom: 20px; }
+    .ib-row { display: flex; gap: 20px; }
+    .ib-f { flex: 1; border: 2px solid #E3DCDC; border-radius: 18px; background: #fff; padding: 14px 22px; height: 108px;
+            box-sizing: border-box; }
+    .ib-f span { display: block; font-size: 28px; color: #6f6363; margin-bottom: 4px; }
+    .ib-f em { display: block; font-style: normal; font-size: 36px; color: #241919; opacity: 0; }
+    .ib-btn { position: absolute; left: 30px; right: 30px; bottom: 26px; height: 86px; border-radius: 43px;
+              background: #7A1424; color: #fff; font-size: 36px; font-weight: 500; text-align: center; line-height: 86px; }
     .ib-btn span { position: absolute; left: 0; right: 0; }
 
     </style>
@@ -212,6 +229,8 @@
           <div><span class="bub in">А доставка у вас є?</span></div>
           <div class="rowr"><span class="bub me hid" id="d3a">Так! Підкажіть, у яке місто?</span></div>
         </div>
+        <div id="mm1" class="meme top hid"><img src="assets/memes/35-hamster-sunglasses.jpg"></div>
+        <div id="mm2" class="meme top hid"><img src="assets/memes/15-cat-hand-mouth-hirshe-ne-bude.jpg"></div>
         <div id="ctp" class="pill hid" style="left:0; right:0; margin:auto; width:max-content; top:1404px;
              font-size:46px; padding:28px 56px">Став + або пиши в Direct</div>
       </div>
@@ -219,18 +238,19 @@
 
         <div id="stage">
           <div id="win">
-            <div class="ib-top"><b></b>Direct<span class="ib-ag"><i></i>AI-агент</span></div>
+            <div class="ib-top"><b></b><span>Direct</span><span class="ib-ag"><i></i>AI-агент</span></div>
             <div class="ib-chat">
-              <div class="ib-m in">Добрий день! Хочу дізнатись про ваші послуги</div>
-              <div class="ib-m me hid" id="m1">Вітаю! Підкажіть, будь ласка, яка у вас ніша?</div>
+              <div class="ib-m in">Добрий день! Скільки коштують ваші послуги?</div>
+              <div class="ib-m me hid" id="m1">Вітаю! Підкажіть, яка у вас ніша?</div>
               <div class="ib-m in hid" id="m2">Салон краси</div>
-              <div class="ib-m me hid" id="m3">Дякую! Що хочете покращити?</div>
+              <div class="ib-m me hid" id="m3">Дякую! Передаю вас менеджерці</div>
             </div>
             <div class="ib-card" id="card">
               <div class="ib-h">Картка клієнта</div>
-              <div class="ib-f"><span>Ніша</span><em id="v1">Салон краси</em></div>
-              <div class="ib-f"><span>Запит</span><em id="v2">Послуги</em></div>
-              <div class="ib-f"><span>Статус</span><em id="v3">Кваліфіковано</em></div>
+              <div class="ib-row">
+                <div class="ib-f"><span>Ніша</span><em id="v1">Салон краси</em></div>
+                <div class="ib-f"><span>Запит</span><em id="v2">Ціна послуг</em></div>
+              </div>
               <div class="ib-btn" id="btn"><span id="bt0">Передати менеджеру</span><span id="bt1" class="hid">✓ Передано менеджеру</span></div>
             </div>
           </div>
@@ -252,7 +272,7 @@
       <div class="wc" id="w11">ВСІХ</div>
       <div class="wc" id="w12">ПОДАТКІВ</div>
       <div class="wc" id="w13">І</div>
-      <div class="wc" id="w14">КАЖУТЬ</div>
+      <div class="wc" id="w14">КАЖЕ</div>
       <div class="wc" id="w15">СОБІ:</div>
       <div class="wc" id="w16">ВСЕ,</div>
       <div class="wc" id="w17">Я</div>
@@ -264,7 +284,7 @@
       <div class="wc" id="w24">СИДІТИ</div>
       <div class="wc" id="w25">В ЧАТІ</div>
       <div class="wc" id="w26">ЗАМІСТЬ</div>
-      <div class="wc" id="w27">МЕНЕ.</div>
+      <div class="wc" id="w27">МЕНЕ</div>
       <div class="wc" id="w28">І ВІДПОВІДАТИ</div>
       <div class="wc" id="w29">КЛІЄНТАМ.</div>
       <div class="wc" id="w30">І</div>
@@ -288,7 +308,7 @@
       <div class="wc" id="w48">Я</div>
       <div class="wc" id="w49">СПОДІВАЮСЯ,</div>
       <div class="wc" id="w50">ЩО</div>
-      <div class="wc" id="w51">В УСІХ</div>
+      <div class="wc" id="w51">У ВСІХ</div>
       <div class="wc" id="w52">ТАК</div>
       <div class="wc" id="w53">І</div>
       <div class="wc" id="w54">БУДЕ.</div>
@@ -308,86 +328,87 @@
       <div class="wc" id="w68">ТИ</div>
       <div class="wc" id="w69">ПОТРАПЛЯЄШ</div>
       <div class="wc" id="w70">В</div>
-      <div class="wc" id="w71">ОЦЮ</div>
-      <div class="wc" id="w72">КАТЕГОРІЮ</div>
-      <div class="wc" id="w73">«ПРОБИВАЄ</div>
-      <div class="wc" id="w74">ДНО».</div>
-      <div class="wc" id="w75">ТАК</div>
-      <div class="wc" id="w76">ОТ,</div>
-      <div class="wc" id="w77">ЩОБ</div>
-      <div class="wc" id="w78">ТАКОГО</div>
-      <div class="wc" id="w79">НЕ</div>
-      <div class="wc" id="w80">БУЛО,</div>
-      <div class="wc" id="w81">Я</div>
-      <div class="wc" id="w82">РЕКОМЕНДУЮ</div>
-      <div class="wc" id="w83">НАЛАШТУВАТИ</div>
-      <div class="wc" id="w85">ЯКИЙ</div>
-      <div class="wc" id="w86">РОБИТЬ</div>
-      <div class="wc" id="w87">ПЛЮС-МІНУС</div>
-      <div class="wc" id="w88">ТУ</div>
-      <div class="wc" id="w89">САМУ</div>
-      <div class="wc" id="w90">РОБОТУ.</div>
-      <div class="wc" id="w91">ВІН</div>
-      <div class="wc" id="w92">НЕ</div>
-      <div class="wc inv" id="w93">ПРОДАЄ,</div>
-      <div class="wc inv" id="w94">А</div>
-      <div class="wc inv" id="w95">САМЕ</div>
-      <div class="wc inv" id="w96">КВАЛІФІКУЄ,</div>
-      <div class="wc inv" id="w97">ЗБИРАЄ</div>
-      <div class="wc inv" id="w98">ІНФОРМАЦІЮ</div>
-      <div class="wc inv" id="w99">І</div>
-      <div class="wc inv" id="w100">ПЕРЕДАЄ</div>
-      <div class="wc inv" id="w101">ЇЇ</div>
-      <div class="wc inv" id="w102">ДАЛІ</div>
-      <div class="wc inv" id="w103">МЕНЕДЖЕРУ</div>
-      <div class="wc inv" id="w104">НА</div>
-      <div class="wc inv" id="w105">ФІНАЛЬНЕ</div>
-      <div class="wc inv" id="w106">ОПРАЦЮВАННЯ.</div>
-      <div class="wc inv" id="w107">І</div>
-      <div class="wc inv" id="w108">ПРАЦЮВАТИ</div>
-      <div class="wc inv" id="w109" style="top:820px">ВІН</div>
-      <div class="wc inv" id="w110" style="top:820px">МОЖЕ</div>
-      <div class="wc inv" id="w111" style="top:820px">ПО-РІЗНОМУ,</div>
-      <div class="wc inv" id="w112" style="top:820px">НАПРИКЛАД,</div>
-      <div class="wc inv" id="w113" style="top:820px">ЦІЛОДОБОВО,</div>
-      <div class="wc inv" id="w114" style="top:820px">АБО</div>
-      <div class="wc inv" id="w115" style="top:820px">ДАЮЧИ</div>
-      <div class="wc inv" id="w116" style="top:820px">СПОЧАТКУ</div>
-      <div class="wc inv" id="w117" style="top:820px">ШАНС</div>
-      <div class="wc inv" id="w118" style="top:820px">МЕНЕДЖЕРЦІ</div>
-      <div class="wc inv" id="w119" style="top:820px">ВІДПОВІСТИ</div>
-      <div class="wc inv" id="w120" style="top:820px">САМІЙ,</div>
-      <div class="wc inv" id="w121" style="top:820px">А</div>
-      <div class="wc inv" id="w122" style="top:820px">ЯКЩО</div>
-      <div class="wc inv" id="w123" style="top:820px">ВОНА</div>
-      <div class="wc inv" id="w124" style="top:820px">НЕ</div>
-      <div class="wc inv" id="w125" style="top:820px">ПОБАЧИЛА,</div>
-      <div class="wc inv" id="w126" style="top:820px">ТО ВЖЕ</div>
-      <div class="wc inv" id="w127" style="top:820px">ВІДПОВІДАЄ</div>
-      <div class="wc inv" id="w128" style="top:820px">САМ,</div>
-      <div class="wc inv" id="w129" style="top:820px">АБО</div>
-      <div class="wc inv" id="w130" style="top:820px">ВЗАГАЛІ</div>
-      <div class="wc inv" id="w131" style="top:820px">ТІЛЬКИ</div>
-      <div class="wc inv" id="w132" style="top:820px">ВНОЧІ,</div>
-      <div class="wc inv" id="w133" style="top:820px">КОЛИ</div>
-      <div class="wc inv" id="w134" style="top:820px">ВСІ</div>
-      <div class="wc inv" id="w135" style="top:820px">СПЛЯТЬ.</div>
-      <div class="wc inv" id="w136" style="top:820px">ТОМУ</div>
-      <div class="wc inv" id="w137" style="top:820px">ЯКЩО</div>
-      <div class="wc" id="w138">ТОБІ</div>
-      <div class="wc" id="w139">ЗАЦІКАВИВ</div>
-      <div class="wc" id="w140">ТАКИЙ</div>
-      <div class="wc" id="w141">AI-АГЕНТ</div>
-      <div class="wc" id="w142">І</div>
-      <div class="wc" id="w143">ТИ</div>
-      <div class="wc" id="w144">ТЕПЕР</div>
-      <div class="wc" id="w145">ДУМАЄШ,</div>
-      <div class="wc" id="w146">ЩО</div>
-      <div class="wc" id="w147">ТОБІ</div>
-      <div class="wc" id="w148">ЦЕ</div>
-      <div class="wc" id="w149">РЕАЛЬНО</div>
-      <div class="wc" id="w150">ДОПОМОЖЕ,</div>
-      <div class="wc" id="w151">ТО</div>
+      <div class="wc" id="w71">ТРЕТЮ,</div>
+      <div class="wc" id="w72">В</div>
+      <div class="wc" id="w73">КАТЕГОРІЮ</div>
+      <div class="wc" id="w74">«ПРОБИВАЄ</div>
+      <div class="wc" id="w75">ДНО».</div>
+      <div class="wc" id="w76">ТАК</div>
+      <div class="wc" id="w77">ОТ,</div>
+      <div class="wc" id="w78">ЩОБ</div>
+      <div class="wc" id="w79">ТАКОГО</div>
+      <div class="wc" id="w80">НЕ</div>
+      <div class="wc" id="w81">БУЛО,</div>
+      <div class="wc" id="w82">Я</div>
+      <div class="wc" id="w83">РЕКОМЕНДУЮ</div>
+      <div class="wc" id="w84">НАЛАШТУВАТИ</div>
+      <div class="wc" id="w86">ЯКИЙ</div>
+      <div class="wc" id="w87">РОБИТЬ</div>
+      <div class="wc" id="w88">ПЛЮС-МІНУС</div>
+      <div class="wc" id="w89">ТУ</div>
+      <div class="wc" id="w90">САМУ</div>
+      <div class="wc" id="w91">РОБОТУ.</div>
+      <div class="wc" id="w92">ВІН</div>
+      <div class="wc" id="w93">НЕ</div>
+      <div class="wc inv" id="w94">ПРОДАЄ,</div>
+      <div class="wc inv" id="w95">А</div>
+      <div class="wc inv" id="w96">САМЕ</div>
+      <div class="wc inv" id="w97">КВАЛІФІКУЄ,</div>
+      <div class="wc inv" id="w98">ЗБИРАЄ</div>
+      <div class="wc inv" id="w99">ІНФОРМАЦІЮ</div>
+      <div class="wc inv" id="w100">І</div>
+      <div class="wc inv" id="w101">ПЕРЕДАЄ</div>
+      <div class="wc inv" id="w102">ЇЇ</div>
+      <div class="wc inv" id="w103">ДАЛІ</div>
+      <div class="wc inv" id="w104">МЕНЕДЖЕРУ</div>
+      <div class="wc inv" id="w105">НА</div>
+      <div class="wc inv" id="w106">ФІНАЛЬНЕ</div>
+      <div class="wc inv" id="w107">ОПРАЦЮВАННЯ.</div>
+      <div class="wc inv" id="w108">І</div>
+      <div class="wc inv" id="w109">ПРАЦЮВАТИ</div>
+      <div class="wc inv" id="w110" style="top:820px">ВІН</div>
+      <div class="wc inv" id="w111" style="top:820px">МОЖЕ</div>
+      <div class="wc inv" id="w112" style="top:820px">ПО-РІЗНОМУ,</div>
+      <div class="wc inv" id="w113" style="top:820px">НАПРИКЛАД,</div>
+      <div class="wc inv" id="w114" style="top:820px">ЦІЛОДОБОВО,</div>
+      <div class="wc inv" id="w115" style="top:820px">АБО</div>
+      <div class="wc inv" id="w116" style="top:820px">ДАЮЧИ</div>
+      <div class="wc inv" id="w117" style="top:820px">СПОЧАТКУ</div>
+      <div class="wc inv" id="w118" style="top:820px">ШАНС</div>
+      <div class="wc inv" id="w119" style="top:820px">МЕНЕДЖЕРЦІ</div>
+      <div class="wc inv" id="w120" style="top:820px">ВІДПОВІСТИ</div>
+      <div class="wc inv" id="w121" style="top:820px">САМІЙ,</div>
+      <div class="wc inv" id="w122" style="top:820px">А</div>
+      <div class="wc inv" id="w123" style="top:820px">ЯКЩО</div>
+      <div class="wc inv" id="w124" style="top:820px">ВОНА</div>
+      <div class="wc inv" id="w125" style="top:820px">НЕ</div>
+      <div class="wc inv" id="w126" style="top:820px">ПОБАЧИЛА,</div>
+      <div class="wc inv" id="w127" style="top:820px">ТО ВЖЕ</div>
+      <div class="wc inv" id="w128" style="top:820px">ВІДПОВІДАЄ</div>
+      <div class="wc inv" id="w129" style="top:820px">САМ,</div>
+      <div class="wc inv" id="w130" style="top:820px">АБО</div>
+      <div class="wc inv" id="w131" style="top:820px">ВЗАГАЛІ</div>
+      <div class="wc inv" id="w132" style="top:820px">ТІЛЬКИ</div>
+      <div class="wc inv" id="w133" style="top:820px">ВНОЧІ,</div>
+      <div class="wc inv" id="w134" style="top:820px">КОЛИ</div>
+      <div class="wc inv" id="w135" style="top:820px">ВСІ</div>
+      <div class="wc inv" id="w136" style="top:820px">СПЛЯТЬ.</div>
+      <div class="wc inv" id="w137" style="top:820px">ТОМУ</div>
+      <div class="wc inv" id="w138" style="top:820px">ЯКЩО</div>
+      <div class="wc" id="w139">ТЕБЕ</div>
+      <div class="wc" id="w140">ЗАЦІКАВИВ</div>
+      <div class="wc" id="w141">ТАКИЙ</div>
+      <div class="wc" id="w142">AI-АГЕНТ</div>
+      <div class="wc" id="w143">І</div>
+      <div class="wc" id="w144">ТИ</div>
+      <div class="wc" id="w145">ТЕПЕР</div>
+      <div class="wc" id="w146">ДУМАЄШ,</div>
+      <div class="wc" id="w147">ЩО</div>
+      <div class="wc" id="w148">ТОБІ</div>
+      <div class="wc" id="w149">ЦЕ</div>
+      <div class="wc" id="w150">РЕАЛЬНО</div>
+      <div class="wc" id="w151">ДОПОМОЖЕ,</div>
+      <div class="wc" id="w152">ТО</div>
       </div>
 
       <audio id="vo" src="assets/base.mp4"
@@ -654,86 +675,87 @@
   tl.set("#w68", {autoAlpha: 1}, 26.583); tl.set("#w68", {autoAlpha: 0}, 26.683);
   tl.set("#w69", {autoAlpha: 1}, 26.743); tl.set("#w69", {autoAlpha: 0}, 27.258);
   tl.set("#w70", {autoAlpha: 1}, 27.343); tl.set("#w70", {autoAlpha: 0}, 27.443);
-  tl.set("#w71", {autoAlpha: 1}, 27.463); tl.set("#w71", {autoAlpha: 0}, 28.018);
-  tl.set("#w72", {autoAlpha: 1}, 28.103); tl.set("#w72", {autoAlpha: 0}, 28.478);
-  tl.set("#w73", {autoAlpha: 1}, 28.563); tl.set("#w73", {autoAlpha: 0}, 28.918);
-  tl.set("#w74", {autoAlpha: 1}, 29.003); tl.set("#w74", {autoAlpha: 0}, 30.218);
-  tl.set("#w75", {autoAlpha: 1}, 30.303); tl.set("#w75", {autoAlpha: 0}, 30.658);
-  tl.set("#w76", {autoAlpha: 1}, 30.743); tl.set("#w76", {autoAlpha: 0}, 31.138);
-  tl.set("#w77", {autoAlpha: 1}, 31.223); tl.set("#w77", {autoAlpha: 0}, 31.323);
-  tl.set("#w78", {autoAlpha: 1}, 31.323); tl.set("#w78", {autoAlpha: 0}, 31.538);
-  tl.set("#w79", {autoAlpha: 1}, 31.623); tl.set("#w79", {autoAlpha: 0}, 31.758);
-  tl.set("#w80", {autoAlpha: 1}, 31.843); tl.set("#w80", {autoAlpha: 0}, 32.082);
-  tl.set("#w81", {autoAlpha: 1}, 32.167); tl.set("#w81", {autoAlpha: 0}, 32.452);
-  tl.set("#w82", {autoAlpha: 1}, 32.537); tl.set("#w82", {autoAlpha: 0}, 32.972);
-  tl.set("#w83", {autoAlpha: 1}, 33.057); tl.set("#w83", {autoAlpha: 0}, 33.872);
-  tl.set("#w85", {autoAlpha: 1}, 34.636); tl.set("#w85", {autoAlpha: 0}, 35.051);
-  tl.set("#w86", {autoAlpha: 1}, 35.136); tl.set("#w86", {autoAlpha: 0}, 35.519);
-  tl.set("#w87", {autoAlpha: 1}, 35.604); tl.set("#w87", {autoAlpha: 0}, 36.222);
-  tl.set("#w88", {autoAlpha: 1}, 36.307); tl.set("#w88", {autoAlpha: 0}, 36.407);
-  tl.set("#w89", {autoAlpha: 1}, 36.467); tl.set("#w89", {autoAlpha: 0}, 36.662);
-  tl.set("#w90", {autoAlpha: 1}, 36.747); tl.set("#w90", {autoAlpha: 0}, 37.043);
-  tl.set("#w91", {autoAlpha: 1}, 37.128); tl.set("#w91", {autoAlpha: 0}, 37.263);
-  tl.set("#w92", {autoAlpha: 1}, 37.348); tl.set("#w92", {autoAlpha: 0}, 37.543);
-  tl.set("#w93", {autoAlpha: 1}, 37.628); tl.set("#w93", {autoAlpha: 0}, 38.053);
-  tl.set("#w94", {autoAlpha: 1}, 38.138); tl.set("#w94", {autoAlpha: 0}, 38.473);
-  tl.set("#w95", {autoAlpha: 1}, 38.558); tl.set("#w95", {autoAlpha: 0}, 38.713);
-  tl.set("#w96", {autoAlpha: 1}, 38.798); tl.set("#w96", {autoAlpha: 0}, 39.820);
-  tl.set("#w97", {autoAlpha: 1}, 39.905); tl.set("#w97", {autoAlpha: 0}, 40.180);
-  tl.set("#w98", {autoAlpha: 1}, 40.265); tl.set("#w98", {autoAlpha: 0}, 40.980);
-  tl.set("#w99", {autoAlpha: 1}, 41.065); tl.set("#w99", {autoAlpha: 0}, 41.240);
-  tl.set("#w100", {autoAlpha: 1}, 41.325); tl.set("#w100", {autoAlpha: 0}, 41.680);
-  tl.set("#w101", {autoAlpha: 1}, 41.765); tl.set("#w101", {autoAlpha: 0}, 41.900);
-  tl.set("#w102", {autoAlpha: 1}, 41.985); tl.set("#w102", {autoAlpha: 0}, 42.260);
-  tl.set("#w103", {autoAlpha: 1}, 42.345); tl.set("#w103", {autoAlpha: 0}, 42.882);
-  tl.set("#w104", {autoAlpha: 1}, 42.967); tl.set("#w104", {autoAlpha: 0}, 43.252);
-  tl.set("#w105", {autoAlpha: 1}, 43.337); tl.set("#w105", {autoAlpha: 0}, 43.732);
-  tl.set("#w106", {autoAlpha: 1}, 43.817); tl.set("#w106", {autoAlpha: 0}, 44.615);
-  tl.set("#w107", {autoAlpha: 1}, 44.700); tl.set("#w107", {autoAlpha: 0}, 44.841);
-  tl.set("#w108", {autoAlpha: 1}, 44.926); tl.set("#w108", {autoAlpha: 0}, 45.321);
-  tl.set("#w109", {autoAlpha: 1}, 45.406); tl.set("#w109", {autoAlpha: 0}, 45.506);
-  tl.set("#w110", {autoAlpha: 1}, 45.586); tl.set("#w110", {autoAlpha: 0}, 45.781);
-  tl.set("#w111", {autoAlpha: 1}, 45.866); tl.set("#w111", {autoAlpha: 0}, 46.241);
-  tl.set("#w112", {autoAlpha: 1}, 46.326); tl.set("#w112", {autoAlpha: 0}, 46.801);
-  tl.set("#w113", {autoAlpha: 1}, 46.886); tl.set("#w113", {autoAlpha: 0}, 47.442);
-  tl.set("#w114", {autoAlpha: 1}, 47.527); tl.set("#w114", {autoAlpha: 0}, 48.002);
-  tl.set("#w115", {autoAlpha: 1}, 48.087); tl.set("#w115", {autoAlpha: 0}, 48.402);
-  tl.set("#w116", {autoAlpha: 1}, 48.487); tl.set("#w116", {autoAlpha: 0}, 48.902);
-  tl.set("#w117", {autoAlpha: 1}, 48.987); tl.set("#w117", {autoAlpha: 0}, 49.202);
-  tl.set("#w118", {autoAlpha: 1}, 49.287); tl.set("#w118", {autoAlpha: 0}, 49.922);
-  tl.set("#w119", {autoAlpha: 1}, 50.007); tl.set("#w119", {autoAlpha: 0}, 50.542);
-  tl.set("#w120", {autoAlpha: 1}, 50.627); tl.set("#w120", {autoAlpha: 0}, 51.009);
-  tl.set("#w121", {autoAlpha: 1}, 51.094); tl.set("#w121", {autoAlpha: 0}, 51.194);
-  tl.set("#w122", {autoAlpha: 1}, 51.194); tl.set("#w122", {autoAlpha: 0}, 51.369);
-  tl.set("#w123", {autoAlpha: 1}, 51.454); tl.set("#w123", {autoAlpha: 0}, 51.554);
-  tl.set("#w124", {autoAlpha: 1}, 51.614); tl.set("#w124", {autoAlpha: 0}, 51.769);
-  tl.set("#w125", {autoAlpha: 1}, 51.854); tl.set("#w125", {autoAlpha: 0}, 52.289);
-  tl.set("#w126", {autoAlpha: 1}, 52.374); tl.set("#w126", {autoAlpha: 0}, 52.549);
-  tl.set("#w127", {autoAlpha: 1}, 52.634); tl.set("#w127", {autoAlpha: 0}, 53.069);
-  tl.set("#w128", {autoAlpha: 1}, 53.154); tl.set("#w128", {autoAlpha: 0}, 53.709);
-  tl.set("#w129", {autoAlpha: 1}, 53.794); tl.set("#w129", {autoAlpha: 0}, 53.929);
-  tl.set("#w130", {autoAlpha: 1}, 54.014); tl.set("#w130", {autoAlpha: 0}, 54.269);
-  tl.set("#w131", {autoAlpha: 1}, 54.354); tl.set("#w131", {autoAlpha: 0}, 54.569);
-  tl.set("#w132", {autoAlpha: 1}, 54.654); tl.set("#w132", {autoAlpha: 0}, 55.189);
-  tl.set("#w133", {autoAlpha: 1}, 55.274); tl.set("#w133", {autoAlpha: 0}, 55.374);
-  tl.set("#w134", {autoAlpha: 1}, 55.374); tl.set("#w134", {autoAlpha: 0}, 55.669);
-  tl.set("#w135", {autoAlpha: 1}, 55.754); tl.set("#w135", {autoAlpha: 0}, 56.215);
-  tl.set("#w136", {autoAlpha: 1}, 56.300); tl.set("#w136", {autoAlpha: 0}, 56.445);
-  tl.set("#w137", {autoAlpha: 1}, 56.530); tl.set("#w137", {autoAlpha: 0}, 56.745);
-  tl.set("#w138", {autoAlpha: 1}, 56.830); tl.set("#w138", {autoAlpha: 0}, 56.985);
-  tl.set("#w139", {autoAlpha: 1}, 57.070); tl.set("#w139", {autoAlpha: 0}, 57.505);
-  tl.set("#w140", {autoAlpha: 1}, 57.590); tl.set("#w140", {autoAlpha: 0}, 57.825);
-  tl.set("#w141", {autoAlpha: 1}, 57.910); tl.set("#w141", {autoAlpha: 0}, 58.445);
-  tl.set("#w142", {autoAlpha: 1}, 58.530); tl.set("#w142", {autoAlpha: 0}, 58.630);
-  tl.set("#w143", {autoAlpha: 1}, 58.670); tl.set("#w143", {autoAlpha: 0}, 58.770);
-  tl.set("#w144", {autoAlpha: 1}, 58.770); tl.set("#w144", {autoAlpha: 0}, 58.925);
-  tl.set("#w145", {autoAlpha: 1}, 59.010); tl.set("#w145", {autoAlpha: 0}, 59.325);
-  tl.set("#w146", {autoAlpha: 1}, 59.410); tl.set("#w146", {autoAlpha: 0}, 59.510);
-  tl.set("#w147", {autoAlpha: 1}, 59.550); tl.set("#w147", {autoAlpha: 0}, 59.650);
-  tl.set("#w148", {autoAlpha: 1}, 59.710); tl.set("#w148", {autoAlpha: 0}, 59.810);
-  tl.set("#w149", {autoAlpha: 1}, 59.830); tl.set("#w149", {autoAlpha: 0}, 59.985);
-  tl.set("#w150", {autoAlpha: 1}, 60.070); tl.set("#w150", {autoAlpha: 0}, 60.879);
-  tl.set("#w151", {autoAlpha: 1}, 60.964); tl.set("#w151", {autoAlpha: 0}, 61.064);
+  tl.set("#w71", {autoAlpha: 1}, 27.463); tl.set("#w71", {autoAlpha: 0}, 27.918);
+  tl.set("#w72", {autoAlpha: 1}, 28.003); tl.set("#w72", {autoAlpha: 0}, 28.103);
+  tl.set("#w73", {autoAlpha: 1}, 28.103); tl.set("#w73", {autoAlpha: 0}, 28.478);
+  tl.set("#w74", {autoAlpha: 1}, 28.563); tl.set("#w74", {autoAlpha: 0}, 28.918);
+  tl.set("#w75", {autoAlpha: 1}, 29.003); tl.set("#w75", {autoAlpha: 0}, 30.218);
+  tl.set("#w76", {autoAlpha: 1}, 30.303); tl.set("#w76", {autoAlpha: 0}, 30.658);
+  tl.set("#w77", {autoAlpha: 1}, 30.743); tl.set("#w77", {autoAlpha: 0}, 31.138);
+  tl.set("#w78", {autoAlpha: 1}, 31.223); tl.set("#w78", {autoAlpha: 0}, 31.323);
+  tl.set("#w79", {autoAlpha: 1}, 31.323); tl.set("#w79", {autoAlpha: 0}, 31.538);
+  tl.set("#w80", {autoAlpha: 1}, 31.623); tl.set("#w80", {autoAlpha: 0}, 31.758);
+  tl.set("#w81", {autoAlpha: 1}, 31.843); tl.set("#w81", {autoAlpha: 0}, 32.082);
+  tl.set("#w82", {autoAlpha: 1}, 32.167); tl.set("#w82", {autoAlpha: 0}, 32.452);
+  tl.set("#w83", {autoAlpha: 1}, 32.537); tl.set("#w83", {autoAlpha: 0}, 32.972);
+  tl.set("#w84", {autoAlpha: 1}, 33.057); tl.set("#w84", {autoAlpha: 0}, 33.872);
+  tl.set("#w86", {autoAlpha: 1}, 34.636); tl.set("#w86", {autoAlpha: 0}, 35.051);
+  tl.set("#w87", {autoAlpha: 1}, 35.136); tl.set("#w87", {autoAlpha: 0}, 35.519);
+  tl.set("#w88", {autoAlpha: 1}, 35.604); tl.set("#w88", {autoAlpha: 0}, 36.222);
+  tl.set("#w89", {autoAlpha: 1}, 36.307); tl.set("#w89", {autoAlpha: 0}, 36.407);
+  tl.set("#w90", {autoAlpha: 1}, 36.467); tl.set("#w90", {autoAlpha: 0}, 36.662);
+  tl.set("#w91", {autoAlpha: 1}, 36.747); tl.set("#w91", {autoAlpha: 0}, 37.043);
+  tl.set("#w92", {autoAlpha: 1}, 37.128); tl.set("#w92", {autoAlpha: 0}, 37.263);
+  tl.set("#w93", {autoAlpha: 1}, 37.348); tl.set("#w93", {autoAlpha: 0}, 37.543);
+  tl.set("#w94", {autoAlpha: 1}, 37.628); tl.set("#w94", {autoAlpha: 0}, 38.053);
+  tl.set("#w95", {autoAlpha: 1}, 38.138); tl.set("#w95", {autoAlpha: 0}, 38.473);
+  tl.set("#w96", {autoAlpha: 1}, 38.558); tl.set("#w96", {autoAlpha: 0}, 38.713);
+  tl.set("#w97", {autoAlpha: 1}, 38.798); tl.set("#w97", {autoAlpha: 0}, 39.820);
+  tl.set("#w98", {autoAlpha: 1}, 39.905); tl.set("#w98", {autoAlpha: 0}, 40.180);
+  tl.set("#w99", {autoAlpha: 1}, 40.265); tl.set("#w99", {autoAlpha: 0}, 40.980);
+  tl.set("#w100", {autoAlpha: 1}, 41.065); tl.set("#w100", {autoAlpha: 0}, 41.240);
+  tl.set("#w101", {autoAlpha: 1}, 41.325); tl.set("#w101", {autoAlpha: 0}, 41.680);
+  tl.set("#w102", {autoAlpha: 1}, 41.765); tl.set("#w102", {autoAlpha: 0}, 41.900);
+  tl.set("#w103", {autoAlpha: 1}, 41.985); tl.set("#w103", {autoAlpha: 0}, 42.260);
+  tl.set("#w104", {autoAlpha: 1}, 42.345); tl.set("#w104", {autoAlpha: 0}, 42.882);
+  tl.set("#w105", {autoAlpha: 1}, 42.967); tl.set("#w105", {autoAlpha: 0}, 43.252);
+  tl.set("#w106", {autoAlpha: 1}, 43.337); tl.set("#w106", {autoAlpha: 0}, 43.732);
+  tl.set("#w107", {autoAlpha: 1}, 43.817); tl.set("#w107", {autoAlpha: 0}, 44.615);
+  tl.set("#w108", {autoAlpha: 1}, 44.700); tl.set("#w108", {autoAlpha: 0}, 44.841);
+  tl.set("#w109", {autoAlpha: 1}, 44.926); tl.set("#w109", {autoAlpha: 0}, 45.321);
+  tl.set("#w110", {autoAlpha: 1}, 45.406); tl.set("#w110", {autoAlpha: 0}, 45.506);
+  tl.set("#w111", {autoAlpha: 1}, 45.586); tl.set("#w111", {autoAlpha: 0}, 45.781);
+  tl.set("#w112", {autoAlpha: 1}, 45.866); tl.set("#w112", {autoAlpha: 0}, 46.241);
+  tl.set("#w113", {autoAlpha: 1}, 46.326); tl.set("#w113", {autoAlpha: 0}, 46.801);
+  tl.set("#w114", {autoAlpha: 1}, 46.886); tl.set("#w114", {autoAlpha: 0}, 47.442);
+  tl.set("#w115", {autoAlpha: 1}, 47.527); tl.set("#w115", {autoAlpha: 0}, 48.002);
+  tl.set("#w116", {autoAlpha: 1}, 48.087); tl.set("#w116", {autoAlpha: 0}, 48.402);
+  tl.set("#w117", {autoAlpha: 1}, 48.487); tl.set("#w117", {autoAlpha: 0}, 48.902);
+  tl.set("#w118", {autoAlpha: 1}, 48.987); tl.set("#w118", {autoAlpha: 0}, 49.202);
+  tl.set("#w119", {autoAlpha: 1}, 49.287); tl.set("#w119", {autoAlpha: 0}, 49.922);
+  tl.set("#w120", {autoAlpha: 1}, 50.007); tl.set("#w120", {autoAlpha: 0}, 50.542);
+  tl.set("#w121", {autoAlpha: 1}, 50.627); tl.set("#w121", {autoAlpha: 0}, 51.009);
+  tl.set("#w122", {autoAlpha: 1}, 51.094); tl.set("#w122", {autoAlpha: 0}, 51.194);
+  tl.set("#w123", {autoAlpha: 1}, 51.194); tl.set("#w123", {autoAlpha: 0}, 51.369);
+  tl.set("#w124", {autoAlpha: 1}, 51.454); tl.set("#w124", {autoAlpha: 0}, 51.554);
+  tl.set("#w125", {autoAlpha: 1}, 51.614); tl.set("#w125", {autoAlpha: 0}, 51.769);
+  tl.set("#w126", {autoAlpha: 1}, 51.854); tl.set("#w126", {autoAlpha: 0}, 52.289);
+  tl.set("#w127", {autoAlpha: 1}, 52.374); tl.set("#w127", {autoAlpha: 0}, 52.549);
+  tl.set("#w128", {autoAlpha: 1}, 52.634); tl.set("#w128", {autoAlpha: 0}, 53.069);
+  tl.set("#w129", {autoAlpha: 1}, 53.154); tl.set("#w129", {autoAlpha: 0}, 53.709);
+  tl.set("#w130", {autoAlpha: 1}, 53.794); tl.set("#w130", {autoAlpha: 0}, 53.929);
+  tl.set("#w131", {autoAlpha: 1}, 54.014); tl.set("#w131", {autoAlpha: 0}, 54.269);
+  tl.set("#w132", {autoAlpha: 1}, 54.354); tl.set("#w132", {autoAlpha: 0}, 54.569);
+  tl.set("#w133", {autoAlpha: 1}, 54.654); tl.set("#w133", {autoAlpha: 0}, 55.189);
+  tl.set("#w134", {autoAlpha: 1}, 55.274); tl.set("#w134", {autoAlpha: 0}, 55.374);
+  tl.set("#w135", {autoAlpha: 1}, 55.374); tl.set("#w135", {autoAlpha: 0}, 55.669);
+  tl.set("#w136", {autoAlpha: 1}, 55.754); tl.set("#w136", {autoAlpha: 0}, 56.215);
+  tl.set("#w137", {autoAlpha: 1}, 56.300); tl.set("#w137", {autoAlpha: 0}, 56.445);
+  tl.set("#w138", {autoAlpha: 1}, 56.530); tl.set("#w138", {autoAlpha: 0}, 56.745);
+  tl.set("#w139", {autoAlpha: 1}, 56.830); tl.set("#w139", {autoAlpha: 0}, 56.985);
+  tl.set("#w140", {autoAlpha: 1}, 57.070); tl.set("#w140", {autoAlpha: 0}, 57.505);
+  tl.set("#w141", {autoAlpha: 1}, 57.590); tl.set("#w141", {autoAlpha: 0}, 57.825);
+  tl.set("#w142", {autoAlpha: 1}, 57.910); tl.set("#w142", {autoAlpha: 0}, 58.445);
+  tl.set("#w143", {autoAlpha: 1}, 58.530); tl.set("#w143", {autoAlpha: 0}, 58.630);
+  tl.set("#w144", {autoAlpha: 1}, 58.670); tl.set("#w144", {autoAlpha: 0}, 58.770);
+  tl.set("#w145", {autoAlpha: 1}, 58.770); tl.set("#w145", {autoAlpha: 0}, 58.925);
+  tl.set("#w146", {autoAlpha: 1}, 59.010); tl.set("#w146", {autoAlpha: 0}, 59.325);
+  tl.set("#w147", {autoAlpha: 1}, 59.410); tl.set("#w147", {autoAlpha: 0}, 59.510);
+  tl.set("#w148", {autoAlpha: 1}, 59.550); tl.set("#w148", {autoAlpha: 0}, 59.650);
+  tl.set("#w149", {autoAlpha: 1}, 59.710); tl.set("#w149", {autoAlpha: 0}, 59.810);
+  tl.set("#w150", {autoAlpha: 1}, 59.830); tl.set("#w150", {autoAlpha: 0}, 59.985);
+  tl.set("#w151", {autoAlpha: 1}, 60.070); tl.set("#w151", {autoAlpha: 0}, 60.879);
+  tl.set("#w152", {autoAlpha: 1}, 60.964); tl.set("#w152", {autoAlpha: 0}, 61.064);
   tl.to("#scrim", {autoAlpha: 1, duration: 0.5}, 0.000);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.6}, 65.151);
   tl.to("#scrim", {autoAlpha: 0, duration: 0.20}, 8.684);
@@ -761,23 +783,22 @@
 
   rise("#bw2", 33.707); sink("#bw2", 36.843);
 
-  gsap.set("#win", {transformOrigin: "400px 280px"});
-  gsap.set("#win", {x: 140.0, y: 480.0 + 220, scale: 1.25 * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
-  tl.to("#win", {x: 140.0, y: 480.0, scale: 1.25, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.2, ease: "power3.out"}, 36.978 + .15);
-  tl.to("#win", {x: 468.0, y: 664.5, scale: 2.05, rotationX: 4, rotationY: 8, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, 38.798 - .55);
+  gsap.set("#win", {transformOrigin: "480px 530px"});
+  gsap.set("#win", {x: 60.0, y: 300.0 + 220, scale: 1.0 * .86, rotationX: 22, rotationY: -18, rotationZ: 4});
+  tl.to("#win", {x: 60.0, y: 300.0, scale: 1.0, rotationX: 7, rotationY: -9, rotationZ: 1.5, duration: 1.2, ease: "power3.out"}, 36.978 + .15);
+  tl.to("#win", {x: 60.0, y: 277.0, scale: 1.1, rotationX: 3, rotationY: 4, rotationZ: 0, duration: 1.0, ease: "power3.inOut"}, 38.798 - .7);
   pop("#m1", 38.798);
-  pop("#m2", 38.798 + .55);
-  tl.to("#win", {x: -393.6, y: 641.0, scale: 2.3, rotationX: 2, rotationY: -8, duration: 1.0, ease: "power3.inOut"}, 39.905 - .45);
+  pop("#m2", 38.798 + .6);
+  tl.to("#win", {x: 60.0, y: 158.8, scale: 1.16, rotationX: 2, rotationY: -2, duration: 1.0, ease: "power3.inOut"}, 39.905 - .45);
   tl.to("#v1", {opacity: 1, duration: .25}, 40.265);
-  tl.to("#v2", {opacity: 1, duration: .25}, 40.265 + .3);
-  tl.to("#v3", {opacity: 1, duration: .25}, 40.265 + .6);
-  pop("#m3", 40.265 + .2);
-  tl.to("#win", {x: -532.8, y: 16.0, scale: 2.9, rotationX: -3, rotationY: 6, duration: 1.0, ease: "power3.inOut"}, 41.325 - .45);
+  tl.to("#v2", {opacity: 1, duration: .25}, 40.265 + .35);
+  tl.to("#win", {x: 60.0, y: 75.4, scale: 1.22, rotationX: -2, rotationY: 1, duration: .9, ease: "power3.inOut"}, 41.325 - .45);
   tl.to("#btn", {backgroundColor: "#1EA672", duration: .25}, 42.345);
   tl.to("#bt0", {autoAlpha: 0, duration: .15}, 42.345);
   tl.to("#bt1", {autoAlpha: 1, duration: .2}, 42.345 + .05);
-  tl.fromTo("#btn", {scale: 1}, X({scale: 1.06, duration: .18, yoyo: true, repeat: 1, ease: "power2.out"}), 42.345);
-  tl.to("#win", {x: 140.0, y: 480.0, scale: 1.25, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.1, ease: "power3.inOut"}, 43.337 - .35);
+  tl.fromTo("#btn", {scale: 1}, X({scale: 1.05, duration: .18, yoyo: true, repeat: 1, ease: "power2.out"}), 42.345);
+  tl.to("#win", {x: 60.0, y: 300.0, scale: 1.0, rotationX: 8, rotationY: 10, rotationZ: -1.5, duration: 1.0, ease: "power3.inOut"}, 43.337 - .45);
+  pop("#m3", 43.337 - .1);
   full(36.978, 44.815);
 
 
@@ -807,6 +828,10 @@
   pop("#d3a", 57.200);
   sink("#d3", 61.129);
 
+  tl.fromTo("#mm1", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 7.809);
+  tl.to("#mm1", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 8.629);
+  tl.fromTo("#mm2", {autoAlpha: 0, scale: .72, rotation: -5.0}, X({autoAlpha: 1, scale: 1, rotation: 0.0, duration: .28, ease: POP}), 30.318);
+  tl.to("#mm2", {autoAlpha: 0, scale: .94, duration: .18, ease: "power2.in"}, 31.438);
   pop("#ctp", 61.044);
   half(44.676, 56.365);
 

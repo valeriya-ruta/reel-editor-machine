@@ -34,8 +34,8 @@ g.PANEL_TOP = 820
 
 FIX = {
     u"глідами.": u"лідами", u"за собі": u"собі", u"твій": u"твої", u"чате": u"чати",
-    u"ему скрішет": u"йому скріншот", u"та ісей": u"і се, і", u"35": u"35-те", u"те,": None,
-    u"в якому": u"в яку",
+    u"ему скрішет": u"йому скріншот", u"та ісей": u"те, і се, і", u"35": u"35-те", u"те,": None,
+    u"в якому": u"в яку", u"Дякуємо! ні.": u"ні.",
 }
 CAPS = load_caps(NN, FIX)
 W = Words(CAPS)
@@ -57,7 +57,8 @@ def cam(cx0, cy0, px, py, sc, cx=540, cy=760):
 
 P.append(u'<svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
 EXTRA = ui.CSS
-NOTION_MARK = mark("notion", 26)
+NOTION_MARK = mark("notion", 46)
+CLAUDE_MARK = mark("claude", 46)
 
 # 1 · BEHIND — «CRM», the cover frame -----------------------------------------
 t_crm, e_crm = S(u"CRM-системи,", 1.31), E(u"CRM-системи,", 1.31)
@@ -76,16 +77,23 @@ for i, (txt, t) in enumerate(Q):
     g.sfx("pop", t - 0.1)
 js(u'  shuffle(["#q0", "#q1", "#q2"], [%s], %.3f);' % (", ".join("%.3f" % (t - 0.1) for _, t in Q), t_pog))
 
+# 2b · MEMES — comic relief after the beat lands (assets/memes/MEMES.md) --------
+g.cta_start = S(u"Тому", 75.47)
+# «погані новини» -> the fun part is over, now serious
+g.meme(F, J, "34", E(u"новини.", 9.64) + 0.1, dur=1.2, slot="top")
+# «точно не з власного досвіду» -> the guilty smirk, over her «ні, ні, ні» laugh
+g.meme(F, J, "50", E(u"досвіду.", 17.38) + 0.1, dur=1.2, slot="r")
+
 # 3 · BEHIND — «5 хвилин» -------------------------------------------------------
-t_5, e_5 = S(u"5", 22.01), E(u"хвилин.", 22.29)
-B.append(u'        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:430px; font-size:230px">5 хвилин</div>')
+t_5, e_5 = S(u"5", 22.74), E(u"хвилин.", 23.02)
+B.append(u'        <div id="bw2" class="big hid" data-layout-allow-occlusion style="top:440px; font-size:210px">5 хвилин</div>')
 g.matte("b2", round(t_5 - 0.6, 3), round(e_5 - t_5 + 1.3, 3))
 js(u'  rise("#bw2", %.3f); sink("#bw2", %.3f);' % (t_5 - 0.35, e_5 + 0.35))
 g.sfx("whoosh-short", t_5 - 0.35)
 BLACKOUT.append((t_5 - 0.03, e_5))
 
 # 4 · ABOVE — step 1: a glass browser tab, notion.com typed, sign up -----------
-t_vkl, t_pyshesh, t_reie = S(u"вкладку", 27.28), S(u"пишеш", 28.18), S(u"реєструєшся.", 29.98)
+t_vkl, t_pyshesh, t_reie = S(u"вкладку", 28.28), S(u"пишеш", 29.18), S(u"реєструєшся.", 30.98)
 F.append(u'''
         <div id="tb" class="glass tab hid">
           <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="t">Нова вкладка</span></div>
@@ -95,24 +103,27 @@ URL = u"notion.com"
 js(u'  rise("#tb", %.3f);' % (t_vkl - 0.2))
 for k in range(1, len(URL) + 1):
     js(u'  tl.set("#url", {textContent: "%s"}, %.3f);' % (URL[:k], t_pyshesh + 0.06 * k))
-js(u'  pop("#sgn", %.3f); sink("#tb", %.3f);' % (t_reie, S(u"Другий", 30.57) - 0.2))
+js(u'  pop("#sgn", %.3f); sink("#tb", %.3f);' % (t_reie, S(u"Другий", 31.57) - 0.2))
 g.sfx("pop", t_vkl - 0.2); g.sfx("typing", t_pyshesh); g.sfx("click", t_reie)
 
 # 5 · FULL 1 — Claude, Customize -> Connectors -> Notion -> Connected ------------
-f0 = S(u"Другий", 30.57) - 0.15
-f1 = E(u"Клода.", 37.85) + 0.2
-C.append(ui.CLAUDE % {"notion": NOTION_MARK})
-t_cust, t_conn, t_shuk, t_not, t_pidk = (S(u"Customize", 33.35), S(u"Connectors,", 34.15), S(u"шукаєш", 34.83),
-                                         S(u"Notion", 35.55), S(u"підключаєш", 36.17))
-O1 = (400, 260)
-WIDE = (1.2,) + cam(*O1, px=400, py=260, sc=1.2)
-SIDE = (2.1,) + cam(*O1, px=260, py=150, sc=2.1)
-SRCH = (2.2,) + cam(*O1, px=500, py=170, sc=2.2)
-ROW = (2.5,) + cam(*O1, px=520, py=230, sc=2.5)
+f0 = S(u"Другий", 31.57) - 0.15
+f1 = E(u"Клода.", 38.85) + 0.2
+C.append(ui.CLAUDE % {"notion": NOTION_MARK, "claude": CLAUDE_MARK})
+t_cust, t_conn, t_shuk, t_not, t_pidk = (S(u"Customize", 34.35), S(u"Connectors,", 35.15), S(u"шукаєш", 35.83),
+                                         S(u"Notion", 36.55), S(u"підключаєш", 37.17))
+# window 960 x 920 (~89 % of the width), body 32-36 px; wide = the whole
+# window, y 370-1290, above the caption band. Zooms: the sidebar's Customize
+# and the Notion row are deliberate close-ups; the search shot stays full width.
+O1 = (480, 460)
+WIDE = (1.0,) + cam(*O1, px=480, py=460, sc=1.0, cy=830)
+SIDE = (1.45,) + cam(*O1, px=240, py=412, sc=1.45, cx=420, cy=760)
+SRCH = (1.12,) + cam(*O1, px=480, py=300, sc=1.12, cy=680)
+ROW = (1.4,) + cam(*O1, px=640, py=370, sc=1.4, cx=560, cy=760)
 js(u"""
-  gsap.set("#win1", {transformOrigin: "400px 260px"});
+  gsap.set("#win1", {transformOrigin: "480px 460px"});
   gsap.set("#win1", {x: %(wx)s, y: %(wy)s + 220, scale: %(ws)s * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
-  tl.to("#win1", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 9, rotationY: -12, rotationZ: 2, duration: 1.2, ease: "power3.out"}, %(f0).3f + .1);
+  tl.to("#win1", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 7, rotationY: -8, rotationZ: 2, duration: 1.2, ease: "power3.out"}, %(f0).3f + .1);
   tl.to("#win1", {x: %(sx)s, y: %(sy)s, scale: %(ss)s, rotationX: 4, rotationY: 7, rotationZ: 0, duration: 1.1, ease: "power3.inOut"}, %(cust).3f - .7);
   tl.to("#cl-cust", {backgroundColor: "#E6E2D8", duration: .25}, %(cust).3f);
   tl.to("#cl-conn", {color: "#1f1f1f", borderBottomColor: "#1f1f1f", duration: .25}, %(conn).3f);
@@ -126,7 +137,7 @@ js(u"""
   tl.to("#cl-btn .a", {autoAlpha: 0, y: -14, duration: .2}, %(pidk).3f);
   tl.fromTo("#cl-btn .b", {autoAlpha: 0, y: 14}, X({autoAlpha: 1, y: 0, duration: .3, ease: "back.out(2)"}), %(pidk).3f + .08);
   tl.fromTo("#cl-row", {boxShadow: "0 0 0 0 rgba(122,20,36,0)"}, X({boxShadow: "0 0 0 5px rgba(122,20,36,.18)", duration: .35, yoyo: true, repeat: 1}), %(pidk).3f + .1);
-  tl.to("#win1", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 10, rotationY: 14, rotationZ: -2, duration: 1.1, ease: "power3.inOut"}, %(pidk).3f + .8);
+  tl.to("#win1", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 10, rotationY: 8, rotationZ: -1.5, duration: 1.1, ease: "power3.inOut"}, %(pidk).3f + .8);
   full(%(f0).3f, %(f1).3f);
   tl.set("#stage1", {autoAlpha: 0}, %(f1).3f + .9);
 """ % {"wx": WIDE[1], "wy": WIDE[2], "ws": WIDE[0], "sx": SIDE[1], "sy": SIDE[2], "ss": SIDE[0],
@@ -136,8 +147,8 @@ g.sfx("whoosh-short", f0); g.sfx("whoosh-short", t_cust - 0.7); g.sfx("click-sof
 g.sfx("typing", t_not); g.sfx("click", t_pidk); g.sfx("whoosh-short", f1)
 
 # 6 · ABOVE — step 3: a glass Claude prompt, typed with her words ---------------
-t_chat, t_na, t_kl = S(u"новий", 40.34), S(u"на", 41.52), E(u"клієнтами.", 51.28)
-t_vse = S(u"все,", 52.26)
+t_chat, t_na, t_kl = S(u"новий", 41.34), S(u"на", 42.52), E(u"клієнтами.", 52.28)
+t_vse = S(u"все,", 53.26)
 typed = [c for c in CAPS if t_na - 0.01 <= c["s"] <= t_kl]
 spans = u" ".join(u'<span id="pw%d" class="hid">%s</span>' % (i, c["w"]) for i, c in enumerate(typed))
 F.append(u'''
@@ -148,39 +159,41 @@ F.append(u'''
 js(u'  rise("#ask", %.3f);' % (t_chat - 0.1))
 for i, c in enumerate(typed):
     js(u'  tl.set("#pw%d", {autoAlpha: 1}, %.3f);' % (i, c["s"]))
-js(u'  tl.to("#snd", {backgroundColor: "#7A1424", scale: 1.15, duration: .2, yoyo: true, repeat: 1}, %.3f);' % (S(u"І", 52.03)))
+js(u'  tl.to("#snd", {backgroundColor: "#7A1424", scale: 1.15, duration: .2, yoyo: true, repeat: 1}, %.3f);' % (S(u"І", 53.03)))
 js(u'  sink("#ask", %.3f);' % (t_vse + 0.1))
-g.sfx("pop", t_chat - 0.1); g.sfx("typing", t_na); g.sfx("click", S(u"І", 52.03))
+g.sfx("pop", t_chat - 0.1); g.sfx("typing", t_na); g.sfx("click", S(u"І", 53.03))
 BLACKOUT.append((t_na - 0.03, t_kl + 0.05))
 
 # 7 · FULL 2 — the CRM lands in Notion; a new lead drops in ----------------------
-g0 = S(u"профіт.", 52.65) - 0.2
-t_got, t_sklad, e_lid = S(u"готова", 54.60), S(u"складатимуться", 56.16), E(u"ліди.", 57.50)
+g0 = S(u"профіт.", 53.65) - 0.2
+t_got, t_sklad, e_lid = S(u"готова", 55.60), S(u"складатимуться", 57.16), E(u"ліди.", 58.50)
 g1 = e_lid + 0.1
 C.append(ui.NOTION % {"notion": NOTION_MARK, "rows": ui.notion_rows()})
-O2 = (430, 235)
-W2 = (1.15,) + cam(*O2, px=430, py=235, sc=1.15)
-ST = (1.45,) + cam(*O2, px=400, py=290, sc=1.45)
+# window 960 x 860, rows 34 px; wide y 400-1260; the close-up keeps full width
+O2 = (480, 430)
+W2 = (1.0,) + cam(*O2, px=480, py=430, sc=1.0, cy=830)
+ST = (1.12,) + cam(*O2, px=480, py=600, sc=1.12, cy=860)
 js(u"""
-  gsap.set("#win2", {transformOrigin: "430px 235px"});
+  gsap.set("#win2", {transformOrigin: "480px 430px"});
   gsap.set("#stage2", {autoAlpha: 0}); tl.set("#stage2", {autoAlpha: 1}, %(g0).3f - .05);
   gsap.set("#win2", {x: %(wx)s, y: %(wy)s + 240, scale: %(ws)s * .85, rotationX: 26, rotationY: 18, rotationZ: -5});
-  tl.to("#win2", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 9, rotationY: 12, rotationZ: -2, duration: 1.2, ease: "power3.out"}, %(g0).3f + .1);
+  tl.to("#win2", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 7, rotationY: 8, rotationZ: -2, duration: 1.2, ease: "power3.out"}, %(g0).3f + .1);
   tl.fromTo(["#nr0", "#nr1", "#nr2"], {autoAlpha: 0, y: 14}, X({autoAlpha: 1, y: 0, duration: .35, stagger: .12, ease: "power2.out"}), %(g0).3f + .45);
   tl.to("#win2", {x: %(sx)s, y: %(sy)s, scale: %(ss)s, rotationX: 3, rotationY: -6, rotationZ: 0, duration: 1.2, ease: "power3.inOut"}, %(got).3f - .6);
   tl.fromTo("#nr3", {autoAlpha: 0, y: -24, backgroundColor: "rgba(122,20,36,.10)"}, X({autoAlpha: 1, y: 0, duration: .45, ease: "back.out(1.6)"}), %(sk).3f);
   tl.to("#nr3", {backgroundColor: "rgba(122,20,36,0)", duration: .8}, %(sk).3f + .6);
-  tl.to("#win2", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 8, rotationY: -12, rotationZ: 2, duration: 1.1, ease: "power3.inOut"}, %(sk).3f + .6);
+  tl.to("#win2", {x: %(wx)s, y: %(wy)s, scale: %(ws)s, rotationX: 8, rotationY: -8, rotationZ: 1.5, duration: 1.1, ease: "power3.inOut"}, %(sk).3f + .6);
   full(%(g0).3f, %(g1).3f);
+  tl.set("#stage2", {autoAlpha: 0}, %(g1).3f + .9);
 """ % {"wx": W2[1], "wy": W2[2], "ws": W2[0], "sx": ST[1], "sy": ST[2], "ss": ST[0],
        "g0": g0, "g1": g1, "got": t_got, "sk": t_sklad})
 g.sfx("whoosh-short", g0); g.sfx("whoosh-short", t_got - 0.6); g.sfx("pop", t_sklad); g.sfx("whoosh-short", g1)
 
 # 8 · HALF — the scheme: чати / скріншот -> скіл CRM -> CRM ---------------------
-k0 = S(u"налаштувати", 60.58) - 0.35
-k1 = E(u"загубився.", 69.12) + 0.1
+k0 = S(u"налаштувати", 61.58) - 0.35
+k1 = E(u"загубився.", 70.12) + 0.1
 HALF.append((k0, k1))
-t_skil, t_dyv, t_skr, t_vnos = S(u"скіл", 61.40), S(u"дивиться", 62.78), S(u"йому скріншот", 65.00), S(u"вносить", 66.58)
+t_skil, t_dyv, t_skr, t_vnos = S(u"скіл", 62.40), S(u"дивиться", 63.78), S(u"йому скріншот", 66.00), S(u"вносить", 67.58)
 js(u'''
   sketch("s1", "skP"); box("s1", 410, 450, 270, 130, {seed: 3, fill: true});
   label("s1", 545, 528, "скіл CRM", {size: 50});
@@ -199,7 +212,7 @@ js(u'''
 g.sfx("whoosh-short", k0); g.sfx("click-soft", t_skil); g.sfx("click-soft", t_skr); g.sfx("click", t_vnos)
 
 # 9 · ABOVE — a glass draft her skill wrote, sent on «відправити» ---------------
-t_gotuie, t_vidp = S(u"готує", 71.18), S(u"відправити.", 73.75)
+t_gotuie, t_vidp = S(u"готує", 72.18), S(u"відправити.", 74.75)
 F.append(u'''
         <div id="dr" class="glass dm hid">
           <div class="hd"><b></b>Чернетка від скіла CRM</div>
@@ -210,15 +223,15 @@ js(u'''
   rise("#dr", %.3f);
   tl.to("#drb", {backgroundColor: "#7A1424", scale: 1.08, duration: .18, yoyo: true, repeat: 1}, %.3f);
   sink("#dr", %.3f);
-''' % (t_gotuie - 0.2, t_vidp, S(u"Тому", 74.47) - 0.1))
+''' % (t_gotuie - 0.2, t_vidp, S(u"Тому", 75.47) - 0.1))
 g.sfx("pop", t_gotuie - 0.2); g.sfx("click", t_vidp)
 
 # 10 · CTA — the slot: Підписатись, then her list; «Напиши + в коментарях» ------
-t_pidp = S(u"підпишись.", 76.78)
-t_nap = S(u"напиши", 82.61)
-CH = [(u"Підписатись", t_pidp - 0.1), (u"не просто CRM", S(u"CRM,", 79.24) - 0.15),
-      (u"агент", S(u"агент,", 80.07) - 0.1), (u"навчання", S(u"навчання,", 80.43) - 0.05),
-      (u"і 35-те", S(u"35-те", 81.35) - 0.1)]
+t_pidp = S(u"підпишись.", 77.78)
+t_nap = S(u"напиши", 83.61)
+CH = [(u"Підписатись", t_pidp - 0.1), (u"не просто CRM", S(u"CRM,", 80.24) - 0.15),
+      (u"агент", S(u"агент,", 81.07) - 0.1), (u"навчання", S(u"навчання,", 81.43) - 0.05),
+      (u"і 35-те", S(u"35-те", 82.35) - 0.1)]
 for i, (txt, t) in enumerate(CH):
     F.append(u'        <div id="c%d" class="shuf hid"><span class="chip"><i></i>%s</span></div>' % (i, txt))
     g.sfx("pop", t)

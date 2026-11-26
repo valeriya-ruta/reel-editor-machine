@@ -12,10 +12,6 @@
   "name": "whoosh-short"
  },
  {
-  "t": 8.547,
-  "name": "whoosh-short"
- },
- {
   "t": 9.337,
   "name": "click"
  },
@@ -24,19 +20,19 @@
   "name": "whoosh-short"
  },
  {
-  "t": 12.857,
+  "t": 12.707,
   "name": "whoosh-short"
  },
  {
-  "t": 13.757,
+  "t": 13.557,
   "name": "click-soft"
  },
  {
-  "t": 15.403,
+  "t": 15.203,
   "name": "click-soft"
  },
  {
-  "t": 15.763,
+  "t": 15.563,
   "name": "click-soft"
  },
  {
@@ -48,7 +44,11 @@
   "name": "whoosh-short"
  },
  {
-  "t": 24.75,
+  "t": 24.815,
+  "name": "pop"
+ },
+ {
+  "t": 25.797,
   "name": "pop"
  },
  {
@@ -68,12 +68,16 @@
   "name": "click-soft"
  },
  {
-  "t": 35.95,
+  "t": 36.3,
   "name": "pop"
  },
  {
   "t": 39.719,
   "name": "click"
+ },
+ {
+  "t": 40.539,
+  "name": "pop"
  },
  {
   "t": 42.217,

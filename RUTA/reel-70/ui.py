@@ -6,10 +6,10 @@ CLAUDE = u"""
         <div id="stage1" class="stage">
           <div id="win1" class="win">
             <div class="cl-side">
-              <div class="cl-brand"><span class="cl-star">✳</span>Claude</div>
-              <div class="cl-nav">Новий чат</div>
-              <div class="cl-nav">Чати</div>
-              <div class="cl-nav">Проєкти</div>
+              <div class="cl-brand">%(claude)s<span>Claude</span></div>
+              <div class="cl-nav">New chat</div>
+              <div class="cl-nav">Chats</div>
+              <div class="cl-nav">Projects</div>
               <div id="cl-cust" class="cl-nav">Customize</div>
             </div>
             <div class="cl-main">
@@ -18,30 +18,33 @@ CLAUDE = u"""
               <div id="cl-search" class="cl-search"><span class="cl-mag"></span><span id="cl-q"></span><span id="cl-caret" class="caret"></span></div>
               <div id="cl-row" class="cl-row">
                 <div class="cl-logo">%(notion)s</div>
-                <div class="cl-txt"><b>Notion</b><span>Сторінки, бази даних, нотатки</span></div>
+                <div class="cl-txt"><b>Notion</b></div>
                 <div id="cl-btn" class="cl-btn"><span class="a">Connect</span><span class="b">✓ Connected</span></div>
               </div>
-              <div class="cl-row ghost"><div class="cl-logo g"></div><div class="cl-txt"><b>Google Drive</b><span>Файли та документи</span></div><div class="cl-btn off"><span class="a">Connect</span></div></div>
-              <div class="cl-row ghost"><div class="cl-logo g"></div><div class="cl-txt"><b>Gmail</b><span>Пошта</span></div><div class="cl-btn off"><span class="a">Connect</span></div></div>
+              <div class="cl-row ghost"><div class="cl-logo g"></div><div class="cl-txt"><b>Google Drive</b></div><div class="cl-btn off"><span class="a">Connect</span></div></div>
+              <div class="cl-row ghost"><div class="cl-logo g"></div><div class="cl-txt"><b>Gmail</b></div><div class="cl-btn off"><span class="a">Connect</span></div></div>
+              <div class="cl-row ghost"><div class="cl-logo g"></div><div class="cl-txt"><b>Calendar</b></div><div class="cl-btn off"><span class="a">Connect</span></div></div>
             </div>
           </div>
         </div>"""
 
-# Notion database: example rows, labelled as such — no money, no real people
-ROWS = [(u"Ліда (приклад)", u"Instagram", u"Новий лід", "s1"),
-        (u"Олег (приклад)", u"Telegram", u"Дзвінок", "s2"),
-        (u"Марта (приклад)", u"Сайт", u"Клієнт", "s3"),
-        (u"Ірина (приклад)", u"Instagram", u"Новий лід", "s1")]
+# Notion database: only what she names (leads and past clients), generic
+# names, no money, no stats.
+ROWS = [(u"Клієнтка 1", u"Instagram", u"Клієнт", "s3"),
+        (u"Клієнтка 2", u"Сайт", u"Клієнт", "s3"),
+        (u"Клієнтка 3", u"Telegram", u"Лід", "s1"),
+        (u"Клієнтка 4", u"Instagram", u"Новий лід", "s1")]
 
 NOTION = u"""
         <div id="stage2" class="stage">
           <div id="win2" class="win nt">
-            <div class="nt-top"><span class="nt-ic">%(notion)s</span>CRM</div>
+            <div class="nt-top"><span class="nt-ic">%(notion)s</span>CRM<span class="nt-sh">Share</span></div>
             <div class="nt-title">CRM</div>
-            <div class="nt-views"><span class="on">▦ Усі ліди</span><span>Дошка</span></div>
+            <div class="nt-views"><span class="on">▦ Table</span><span>Board</span></div>
             <div class="nt-table">
-              <div class="nt-r nt-hd"><span class="c1">Aa Ім'я</span><span class="c2">Звідки</span><span class="c3">Статус</span><span class="c4">Наступний крок</span></div>
+              <div class="nt-r nt-hd"><span class="c1">Aa Ім'я</span><span class="c2">Звідки</span><span class="c3">Статус</span></div>
 %(rows)s
+              <div class="nt-r nt-new"><span class="c1">+ New</span></div>
             </div>
           </div>
         </div>"""
@@ -49,63 +52,65 @@ NOTION = u"""
 
 def notion_rows():
     out = []
-    steps = [u"Відповісти в DM", u"Дзвінок у четвер", u"Повторна покупка", u"Написати"]
     for i, (n, src, st, cls) in enumerate(ROWS):
         out.append(u'              <div id="nr%d" class="nt-r%s"><span class="c1">%s</span><span class="c2">%s</span>'
-                   u'<span class="c3"><em class="%s">%s</em></span><span class="c4">%s</span></div>'
-                   % (i, " hid" if i == 3 else "", n, src, cls, st, steps[i]))
+                   u'<span class="c3"><em class="%s">%s</em></span></div>'
+                   % (i, " hid" if i == 3 else "", n, src, cls, st))
     return "\n".join(out)
 
 
 CSS = u"""
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
-    .stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
-    .win { position: absolute; left: 0; top: 0; background: #fff; border-radius: 16px;
+    .stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2400px; }
+    .win { position: absolute; left: 0; top: 0; background: #fff; border-radius: 36px;
            font-family: "Google Sans", sans-serif; color: #1f1f1f; overflow: hidden;
            box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
-           transform-origin: 0 0; will-change: transform; }
-    /* Claude, Customize -> Connectors (800 x 520) */
-    #win1 { width: 800px; height: 520px; background: #FAF9F5; display: flex; }
-    .cl-side { width: 190px; background: #F3F1EA; padding: 20px 14px; border-right: 1px solid #E6E2D8; }
-    .cl-brand { font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 22px; }
-    .cl-star { color: #C15F3C; font-size: 20px; }
-    .cl-nav { font-size: 14px; color: #3d3929; padding: 9px 10px; border-radius: 8px; margin-bottom: 2px; }
-    .cl-main { flex: 1; padding: 26px 30px; }
-    .cl-h { font-size: 24px; font-weight: 700; margin-bottom: 14px; }
-    .cl-tabs { display: flex; gap: 22px; font-size: 14px; color: #73716a; border-bottom: 1px solid #E6E2D8; margin-bottom: 18px; }
-    .cl-tabs span { padding: 0 2px 10px; border-bottom: 2px solid transparent; }
-    .cl-search { height: 38px; border: 1px solid #DAD6CB; border-radius: 10px; background: #fff; display: flex;
-                 align-items: center; gap: 10px; padding: 0 12px; font-size: 15px; margin-bottom: 14px; }
-    .cl-mag { width: 13px; height: 13px; border: 2px solid #8a877d; border-radius: 50%; flex: none; }
-    .caret { display: inline-block; width: 2px; height: 18px; background: #1f1f1f; margin-left: -8px; }
-    .cl-row { height: 64px; border: 1px solid #E6E2D8; border-radius: 12px; background: #fff; display: flex;
-              align-items: center; gap: 14px; padding: 0 14px; margin-bottom: 10px; }
+           will-change: transform; }
+    /* Claude, Customize -> Connectors (960 x 920) */
+    #win1 { width: 960px; height: 920px; background: #FAF9F5; display: flex; }
+    .cl-side { width: 290px; background: #F3F1EA; padding: 40px 22px; border-right: 2px solid #E6E2D8; box-sizing: border-box; }
+    .cl-brand { font-size: 42px; font-weight: 700; display: flex; align-items: center; gap: 14px; margin: 0 0 40px 14px; }
+    .cl-brand .mark { color: #7A1424; fill: currentColor; }
+    .cl-nav { font-size: 32px; color: #3d3929; padding: 18px 18px; border-radius: 16px; margin-bottom: 6px; }
+    .cl-main { flex: 1; padding: 44px 40px; box-sizing: border-box; }
+    .cl-h { font-size: 52px; font-weight: 700; margin-bottom: 22px; }
+    .cl-tabs { display: flex; gap: 36px; font-size: 32px; color: #73716a; border-bottom: 2px solid #E6E2D8; margin-bottom: 28px; }
+    .cl-tabs span { padding: 0 2px 16px; border-bottom: 4px solid transparent; }
+    .cl-search { height: 84px; border: 2px solid #DAD6CB; border-radius: 20px; background: #fff; display: flex;
+                 align-items: center; gap: 18px; padding: 0 24px; font-size: 34px; margin-bottom: 24px; box-sizing: border-box; }
+    .cl-mag { width: 24px; height: 24px; border: 4px solid #8a877d; border-radius: 50%; flex: none; }
+    .caret { display: inline-block; width: 3px; height: 38px; background: #1f1f1f; margin-left: -14px; }
+    .cl-row { height: 120px; border: 2px solid #E6E2D8; border-radius: 22px; background: #fff; display: flex;
+              align-items: center; gap: 20px; padding: 0 22px; margin-bottom: 16px; box-sizing: border-box; }
     .cl-row.ghost { opacity: .45; }
-    .cl-logo { width: 38px; height: 38px; border-radius: 9px; border: 1px solid #E6E2D8; display: flex;
-               align-items: center; justify-content: center; color: #1f1f1f; flex: none; }
+    .cl-logo { width: 72px; height: 72px; border-radius: 16px; border: 2px solid #E6E2D8; display: flex;
+               align-items: center; justify-content: center; color: #1f1f1f; flex: none; box-sizing: border-box; }
+    .cl-logo .mark { fill: currentColor; }
     .cl-logo.g { background: #EFEDE6; }
-    .cl-txt { flex: 1; } .cl-txt b { display: block; font-size: 15px; } .cl-txt span { font-size: 12px; color: #73716a; }
-    .cl-btn { position: relative; width: 118px; height: 32px; border-radius: 8px; background: #1f1f1f; color: #fff;
-              font-size: 13px; font-weight: 500; overflow: hidden; flex: none; }
+    .cl-txt { flex: 1; } .cl-txt b { display: block; font-size: 36px; font-weight: 500; }
+    .cl-btn { position: relative; width: 200px; height: 68px; border-radius: 16px; background: #1f1f1f; color: #fff;
+              font-size: 30px; font-weight: 500; overflow: hidden; flex: none; }
     .cl-btn.off { background: #EFEDE6; color: #73716a; }
-    .cl-btn span { position: absolute; left: 0; right: 0; top: 0; line-height: 32px; text-align: center; }
+    .cl-btn span { position: absolute; left: 0; right: 0; top: 0; line-height: 68px; text-align: center; white-space: nowrap; }
     .cl-btn .b { opacity: 0; color: #1f1f1f; }
-    /* Notion database (860 x 470) */
-    #win2 { width: 860px; height: 470px; padding: 0 0 20px; }
-    .nt-top { height: 40px; display: flex; align-items: center; gap: 8px; padding: 0 16px; font-size: 13px; color: #37352f;
-              border-bottom: 1px solid #EDECE9; }
-    .nt-ic { display: inline-flex; color: #37352f; }
-    .nt-title { font-size: 36px; font-weight: 700; color: #37352f; padding: 26px 40px 10px; }
-    .nt-views { display: flex; gap: 18px; padding: 0 40px; font-size: 13px; color: #9b9a97; border-bottom: 1px solid #EDECE9; }
-    .nt-views span { padding-bottom: 8px; } .nt-views .on { color: #37352f; border-bottom: 2px solid #37352f; }
-    .nt-table { padding: 0 40px; }
-    .nt-r { display: flex; height: 50px; align-items: center; border-bottom: 1px solid #EDECE9; font-size: 15px; color: #37352f; }
-    .nt-hd { height: 38px; font-size: 13px; color: #9b9a97; }
-    .nt-r span { padding: 0 10px; white-space: nowrap; overflow: hidden; }
-    .nt-r .c1 { width: 220px; font-weight: 500; } .nt-r .c2 { width: 140px; } .nt-r .c3 { width: 160px; } .nt-r .c4 { flex: 1; color: #6b6964; }
-    .nt-hd .c1 { font-weight: 400; }
-    .nt-r em { font-style: normal; font-size: 13px; border-radius: 5px; padding: 3px 9px; }
-    em.s1 { background: #F4DFDF; color: #7A1424; } em.s2 { background: #F5EBDD; color: #6b4a1c; } em.s3 { background: #E4EEE7; color: #2d5a3c; }
+    /* Notion database (960 x 860) */
+    #win2 { width: 960px; height: 860px; }
+    .nt-top { height: 80px; display: flex; align-items: center; gap: 14px; padding: 0 30px; font-size: 28px; color: #37352f;
+              border-bottom: 2px solid #EDECE9; }
+    .nt-ic { display: inline-flex; color: #37352f; } .nt-ic .mark { fill: currentColor; }
+    .nt-sh { margin-left: auto; color: #787774; }
+    .nt-title { font-size: 76px; font-weight: 700; color: #37352f; padding: 44px 50px 18px; }
+    .nt-views { display: flex; gap: 34px; padding: 0 50px; font-size: 28px; color: #9b9a97; border-bottom: 2px solid #EDECE9; }
+    .nt-views span { padding-bottom: 14px; } .nt-views .on { color: #37352f; border-bottom: 4px solid #37352f; }
+    .nt-table { padding: 0 50px; }
+    .nt-r { display: flex; height: 100px; align-items: center; border-bottom: 2px solid #EDECE9; font-size: 34px; color: #37352f; }
+    .nt-hd { height: 74px; font-size: 28px; color: #9b9a97; }
+    .nt-new { height: 84px; font-size: 28px; color: #9b9a97; border-bottom: none; }
+    .nt-r span { padding: 0 14px; white-space: nowrap; overflow: hidden; }
+    .nt-r .c1 { width: 330px; font-weight: 500; } .nt-r .c2 { width: 230px; } .nt-r .c3 { flex: 1; }
+    .nt-hd .c1, .nt-new .c1 { font-weight: 400; }
+    .nt-r em { font-style: normal; font-size: 30px; border-radius: 10px; padding: 6px 18px; }
+    em.s1 { background: #F4DFDF; color: #7A1424; } em.s3 { background: #7A1424; color: #fff; }
 
     /* above me */
     .tab { left: 140px; top: 310px; width: 800px; padding: 18px 22px 22px; }
@@ -118,11 +123,11 @@ CSS = u"""
     .tab .go { margin-left: auto; background: #241919; color: #fff; border-radius: 26px; font-size: 26px; padding: 10px 24px; }
     .ask { left: 120px; top: 300px; width: 840px; padding: 24px 28px; }
     .ask .who { display: flex; align-items: center; gap: 10px; font-size: 24px; color: #574142; margin-bottom: 12px; }
-    .ask .who .st { color: #C15F3C; font-size: 28px; }
-    .ask .in { background: rgba(255,255,255,.95); border-radius: 22px; padding: 16px 22px; font-size: 28px; line-height: 1.32;
+    .ask .who .st { color: #7A1424; font-size: 28px; }
+    .ask .in { background: rgba(255,255,255,.95); border-radius: 22px; padding: 16px 86px 16px 22px; font-size: 30px; line-height: 1.3;
                color: #241919; min-height: 128px; position: relative; }
     .ask .send { position: absolute; right: 16px; bottom: 14px; width: 48px; height: 48px; border-radius: 14px;
-                 background: #DEBFBF; color: #fff; font-size: 28px; text-align: center; line-height: 48px; }
+                 background: #A2676F; color: #fff; font-size: 28px; text-align: center; line-height: 48px; }
     .dm { left: 150px; top: 300px; width: 780px; padding: 24px 28px; }
     .dm .hd { display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 500; color: #574142; margin-bottom: 16px; }
     .dm .hd b { width: 40px; height: 40px; border-radius: 50%; background: #7A1424; display: inline-block; }

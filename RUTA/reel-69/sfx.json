@@ -12,7 +12,11 @@
   "name": "whoosh-short"
  },
  {
-  "t": 10.105,
+  "t": 9.777,
+  "name": "click-soft"
+ },
+ {
+  "t": 10.355,
   "name": "whoosh-short"
  },
  {
@@ -30,6 +34,10 @@
  {
   "t": 15.407,
   "name": "whoosh-short"
+ },
+ {
+  "t": 17.507,
+  "name": "pop"
  },
  {
   "t": 20.29,
@@ -56,7 +64,7 @@
   "name": "whoosh-short"
  },
  {
-  "t": 36.93,
+  "t": 36.78,
   "name": "whoosh-short"
  },
  {
@@ -72,11 +80,15 @@
   "name": "click-soft"
  },
  {
-  "t": 42.896,
+  "t": 42.816,
   "name": "click-soft"
  },
  {
-  "t": 43.196,
+  "t": 43.036,
+  "name": "click-soft"
+ },
+ {
+  "t": 43.256,
   "name": "click-soft"
  },
  {
@@ -112,7 +124,11 @@
   "name": "click-soft"
  },
  {
-  "t": 53.553,
+  "t": 53.128,
+  "name": "pop"
+ },
+ {
+  "t": 54.343,
   "name": "pop"
  },
  {

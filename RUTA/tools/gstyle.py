@@ -361,16 +361,23 @@ JS = r"""
 
 
 MEME_CSS = """
-    /* comic-relief memes (assets/memes/MEMES.md): a white-framed sticker over her footage,
-       under the captions. c = one big, l / r = a pair. Inside the no-go zones' margins. */
-    .meme { position: absolute; display: flex; align-items: center; justify-content: center; }
-    .meme img { display: block; max-width: 100%; max-height: 100%; border: 10px solid #fff;
-                border-radius: 30px; box-shadow: 0 2px 6px rgba(20,12,12,.18), 0 18px 46px rgba(20,12,12,.28); }
-    .meme.c { left: 180px; top: 330px; width: 720px; height: 900px; }
-    .meme.l { left: 100px; top: 400px; width: 400px; height: 500px; }
-    .meme.r { left: 500px; top: 560px; width: 400px; height: 500px; }
+    /* comic-relief memes (assets/memes/MEMES.md). Her note 2026-11-23: no plaque,
+       no frame, no glass card — the image is slapped straight onto the reel, in
+       the zones she marked, so her face and the captions stay readable:
+         c / top  the band above her head (y 40-520, full width)
+         r        beside her head on the right (x 740-1060, y 550-1310)
+         l        low left, over her shoulder (x 40-460, y 1140-1370)
+       A pair = two slots at the same t (top + r, or l + r). */
+    .meme { position: absolute; display: flex; }
+    .meme img { display: block; max-width: 100%; max-height: 100%; }
+    .meme.c, .meme.top { left: 60px; top: 40px; width: 960px; height: 480px;
+                         align-items: center; justify-content: center; }
+    .meme.r { left: 740px; top: 550px; width: 320px; height: 760px;
+              align-items: center; justify-content: flex-end; }
+    .meme.l { left: 40px; top: 1140px; width: 420px; height: 230px;
+              align-items: flex-end; justify-content: flex-start; }
 """
-MEME_SLOTS = {"c": -2.5, "l": -4.0, "r": 3.0}      # slot -> resting tilt, degrees
+MEME_SLOTS = {"c": 0.0, "top": 0.0, "l": -1.5, "r": 1.5}   # slot -> resting tilt, degrees
 MEME_MAX = 3                                        # images per reel (her rule 2026-11-23)
 
 

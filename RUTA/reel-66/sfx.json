@@ -32,7 +32,11 @@
   "name": "click"
  },
  {
-  "t": 24.723,
+  "t": 23.998,
+  "name": "pop"
+ },
+ {
+  "t": 25.832,
   "name": "whoosh-short"
  },
  {
@@ -104,12 +108,20 @@
   "name": "whoosh-short"
  },
  {
-  "t": 48.397,
+  "t": 48.182,
+  "name": "pop"
+ },
+ {
+  "t": 49.187,
   "name": "pop"
  },
  {
   "t": 51.355,
   "name": "click-soft"
+ },
+ {
+  "t": 55.87,
+  "name": "pop"
  },
  {
   "t": 57.875,

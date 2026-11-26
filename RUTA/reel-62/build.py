@@ -54,12 +54,13 @@ FIX = {
     (u"Якщо", 100.1): u"якщо", u"справляється.": u"справляється,", u"Купи": u"купа",
     u"гугляться": u"губляться", (u"саме", 83.1): u"це", (u"ж", 83.3): u"майже",
     u"не впливає.": u"не впливає", (u"ваш", 84.1): u"вартість.", (u"тість.", 84.3): None, u"відповіді": u"відповіді,", u"ставь": u"став", u"вдові": u"в тебе", (u"що вони", 107.1): u"вони",
-    u"налаштувати.": u"налаштувати,",
+    u"налаштувати.": u"налаштувати,", (u"і", 106.3): u"І", (u"5", 27.9): u"5.5,", (u".5.", 28.4): None,
 }
 FIX.update(globals().get("FIX_HEARD", {}))
 CAPS = load_caps(NN, FIX)
 W = Words(CAPS)
 S, E = W.s, W.e
+g.cta_start = S(u"Тому,", 99.9)    # «Тому, якщо в тебе ще немає менеджера…» — no meme from here on
 
 B, P, F, C, J = [], [], [], [], []
 BLACKOUT, PLACE, HALF = [], [], []
@@ -72,7 +73,7 @@ def js(s):
 P.append(u'<svg class="sk" id="skP" data-layout-allow-occlusion width="1080" height="1240" viewBox="0 0 1080 1240"></svg>')
 
 EXTRA = u'''
-    .dm { left: 130px; width: 820px; padding: 18px 22px; bottom: 1322px; }
+    .dm { left: 130px; width: 820px; padding: 18px 22px; bottom: 1372px; }   /* bottom y 548: clear of her hair (≈ 600 here) */
     .bub { display: inline-block; border-radius: 26px; padding: 12px 20px; font-size: 27px;
            font-weight: 500; line-height: 1.3; position: relative; max-width: 720px; }
     .bub.in { background: rgba(255,255,255,.92); color: #241919; border-bottom-left-radius: 8px; }
@@ -91,10 +92,10 @@ EXTRA = u'''
     .cmp .eq { font-size: 96px; font-weight: 700; color: #7A1424; line-height: 1; margin-top: 24px; }
 
     /* her instruction, typed: «Пиши коротко.» */
-    .ins { left: 0; right: 0; margin: auto; width: 680px; top: 300px; padding: 26px 30px; }
+    .ins { left: 0; right: 0; margin: auto; width: 680px; top: 290px; padding: 24px 30px; }
     .ins .t { font-size: 26px; font-weight: 700; color: #1f1f1f; margin-bottom: 14px; }
-    .ins .f { border: 2px solid #D9D9D9; border-radius: 16px; padding: 14px 20px; font-size: 34px;
-              line-height: 1.4; color: #241919; height: 172px; }
+    .ins .f { border: 2px solid #D9D9D9; border-radius: 16px; padding: 12px 20px; font-size: 30px;
+              line-height: 1.38; color: #241919; height: 146px; }   /* card bottom ≈ y 540, her hair ≈ 600 */
     .ins .f div { white-space: nowrap; overflow: hidden; }
 '''
 
@@ -117,46 +118,49 @@ for i, (txt, _) in enumerate(SH1):
 js(u'  shuffle([%s], [%s], %.3f);' % (", ".join('"#sa%d"' % i for i in range(len(SH1))),
                                       ", ".join("%.3f" % t for _, t in SH1), E(u"продажу.", 6.42) + 0.15))
 
-# 3 · FULL — her SendPulse agent screen (reel-61's 1:1 rebuild) ------------------
-# Four visits to one window: the overview («важливі тільки два»), the field and
-# the model list, the files card, the token limit. The token field is NOT on her
-# screenshot (her screen shows «Обсяг контексту» / «Рівень міркувань»): it is
-# added in the empty left column, the label in SendPulse's wording.
+# 3 · FULL — her SendPulse agent screen, the same labels and text as
+# app-screenshots/sendpulse-ai-agent-settings.png, laid out as a portrait version of it
+# (the coordinator's full-screen bar, 2026-11-23): 972 px wide = 90 % of the frame at
+# scale 1, labels 26 px, body 30 px, so the wide shot reads without a zoom and nothing
+# is cropped at the sides unless the camera zooms into one element on purpose.
+# Four visits to one window: the overview («важливі тільки два»), the field and the model
+# list, the files card, the token limit. The token field is NOT on her screenshot (her
+# screen shows «Обсяг контексту» / «Рівень міркувань»): it is added in her settings'
+# wording, with only the numbers she says (500, 2000).
 C.append(u"""
         <div id="stage">
           <div id="win">
-            <div class="sp-t o" style="left:18px;top:12px">Main AI Agent <span style="color:#9aa0a6">✎</span></div>
-            <div class="sp-x o" style="left:756px;top:10px">×</div>
-            <div class="sp-l" style="left:18px;top:48px">Інструкція для бота</div>
-            <div id="fld" class="sp-box" style="left:18px;top:68px;width:442px;height:172px;padding:8px 10px;line-height:1.45;white-space:normal">
+            <div class="sp-t o" style="left:36px;top:34px">Main AI Agent <span style="color:#9aa0a6">✎</span></div>
+            <div class="sp-x o" style="left:912px;top:20px">×</div>
+            <div class="sp-l" style="left:36px;top:92px">Інструкція для бота</div>
+            <div id="fld" class="sp-box" style="left:36px;top:130px;width:900px;height:292px;padding:12px 18px;line-height:1.42;white-space:normal;color:#5f6368">
               You are a helpful assistant.<br>User name:&nbsp; {{full_name}}<br>Current date:&nbsp; {{$current_datetime}}
-              <div class="ty" id="ty1"><b>Скрипт:</b> привітайся, дізнайся запит, запропонуй дзвінок</div>
-              <div class="ty" id="ty2"><b>Цільова аудиторія:</b> власниці малого бізнесу</div>
-              <div class="ty" id="ty3"><b>Контекст:</b> послуги, ціни, умови, відповіді на часті питання</div></div>
-            <div class="sp-l o" style="left:18px;top:254px">Встановити цілі як умови виходу</div>
-            <div class="sp-a o" style="left:18px;top:272px">Додати умову</div>
-            <div class="sp-l" id="tokl" style="left:18px;top:316px">Максимальна кількість токенів</div>
-            <div id="tok" class="sp-box" style="left:18px;top:336px;width:96px;height:28px;padding:5px 9px;color:#1f1f1f">
+              <div class="ty"><b>Скрипт:</b> привітайся, дізнайся запит, запропонуй дзвінок<br><b>Цільова аудиторія:</b> власниці малого бізнесу<br><b>Контекст:</b> послуги, ціни, умови, часті питання</div>
+              <i class="tc" id="ty1" style="top:140px"></i><i class="tc" id="ty2" style="top:184px"></i><i class="tc" id="ty3" style="top:228px"></i></div>
+            <div class="sp-l o" style="left:36px;top:432px;width:420px">Встановити цілі як умови виходу</div>
+            <div class="sp-a o" style="left:36px;top:502px">Додати умову</div>
+            <div class="sp-l" id="tokl" style="left:36px;top:578px;width:420px">Максимальна кількість токенів</div>
+            <div id="tok" class="sp-box" style="left:36px;top:624px;width:170px;height:62px;padding:0 18px;line-height:58px;color:#1f1f1f">
               <span id="tk5">500</span><span id="tk2">2000</span></div>
-            <div class="sp-s" id="toks" style="left:124px;top:343px">на одну відповідь бота</div>
-            <div class="sp-l o2" style="left:482px;top:48px">Модель</div>
-            <div id="sel" class="sp-box sp-sel o2" style="left:482px;top:68px;width:293px;height:27px">
+            <div class="sp-s" id="toks" style="left:226px;top:626px;width:230px">на одну відповідь бота</div>
+            <div class="sp-l o" style="left:36px;top:716px">Рівень міркувань</div>
+            <div class="sp-box sp-sel o" style="left:36px;top:762px;width:220px;height:62px;padding:0 18px;line-height:58px">None</div>
+            <div class="sp-l o" style="left:36px;top:850px;width:420px">Обсяг контексту переписки</div>
+            <div class="sp-box o" style="left:36px;top:896px;width:110px;height:62px;padding:0 18px;line-height:58px">10</div>
+            <div class="sp-s o" style="left:36px;top:972px;width:420px">попередніх повідомлень підписника та бота</div>
+            <div class="sp-btn o" style="left:36px;top:1070px;width:200px;background:#E8EAED;color:#3c4043">Скасувати</div>
+            <div class="sp-btn o" style="left:252px;top:1070px;width:220px;background:#1EA672;color:#fff">Застосувати</div>
+            <div class="sp-l o2" style="left:486px;top:432px">Модель</div>
+            <div id="sel" class="sp-box sp-sel o2" style="left:486px;top:478px;width:450px;height:62px;padding:0 18px;line-height:58px">
               <span id="sv1">GPT-6 Luna</span><span id="sv2">%(HAIKU)s</span></div>
-            <div class="sp-l o" style="left:482px;top:104px">Ключ API</div>
-            <div class="sp-box sp-sel o" style="left:482px;top:124px;width:293px;height:27px">Наслідувати з налаштувань облікового запису</div>
-            <div class="sp-card o" style="left:482px;top:168px"><i style="background:#DDEBFB"></i><b>ВЕБ-ПОШУК</b>
+            <div id="kl" class="sp-l o" style="left:486px;top:552px">Ключ API</div>
+            <div id="kv" class="sp-box sp-sel o" style="left:486px;top:600px;width:450px;height:62px;padding:0 18px;line-height:58px">Наслідувати з налашт…</div>
+            <div id="cw" class="sp-card o" style="left:486px;top:684px"><i style="background:#DDEBFB"></i><b>ВЕБ-ПОШУК</b>
               <span>Пошук актуальної інформації в інтернеті перед формуванням відповіді.</span><em><u></u></em></div>
-            <div class="sp-card o" style="left:482px;top:236px"><i style="background:#ECEFF3"></i><b>СЕРВЕРИ MCP</b>
+            <div class="sp-card o" style="left:486px;top:864px"><i style="background:#ECEFF3"></i><b>СЕРВЕРИ MCP</b>
               <span>Підключення сторонніх інструментів і джерел даних.</span><em><u></u></em></div>
-            <div id="fc" class="sp-card o" style="left:482px;top:304px"><i style="background:#E3F5EA"></i><b>ПОШУК У ФАЙЛАХ</b>
+            <div id="fc" class="sp-card o" style="left:486px;top:1044px"><i style="background:#E3F5EA"></i><b>ПОШУК У ФАЙЛАХ</b>
               <span>Формування відповіді на основі ваших завантажених файлів.</span><em><u></u></em></div>
-            <div class="sp-l o" style="left:482px;top:382px">Обсяг контексту переписки</div>
-            <div class="sp-box o" style="left:482px;top:400px;width:64px;height:28px;padding:5px 8px">10</div>
-            <div class="sp-s o" style="left:482px;top:434px;width:200px">попередніх повідомлень підписника та бота</div>
-            <div class="sp-l o" style="left:688px;top:382px;width:90px">Рівень міркувань</div>
-            <div class="sp-box sp-sel o" style="left:688px;top:416px;width:86px;height:27px">None</div>
-            <div class="sp-btn o" style="left:614px;top:496px;width:72px;background:#E8EAED;color:#3c4043">Скасувати</div>
-            <div class="sp-btn o" style="left:692px;top:496px;width:84px;background:#1EA672;color:#fff">Застосувати</div>
             <div id="dd">
               <div class="op">GPT-6 Luna</div><div class="op">Claude Sonnet</div><div class="op" id="opH">%(HAIKU)s</div></div>
           </div>
@@ -164,57 +168,64 @@ C.append(u"""
 EXTRA += u"""
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
     #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
-    #win { position: absolute; left: 0; top: 0; width: 793px; height: 541px; background: #fff;
-           border-radius: 14px; font-family: "Google Sans", sans-serif; color: #1f1f1f;
-           box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
+    #win { position: absolute; left: 0; top: 0; width: 972px; height: 1234px; background: #fff;
+           border-radius: 28px; font-family: "Google Sans", sans-serif; color: #1f1f1f;
+           box-shadow: 0 2px 8px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
            transform-origin: 0 0; will-change: transform; }
     #win > div { position: absolute; }
-    .sp-t { font-size: 15px; font-weight: 700; } .sp-x { font-size: 18px; color: #5f6368; }
-    .sp-l { font-size: 12px; font-weight: 700; } .sp-a { font-size: 12px; color: #1a73e8; border-bottom: 1px dashed #1a73e8; }
-    .sp-s { font-size: 10px; color: #5f6368; line-height: 1.35; }
-    .sp-box { border: 1px solid #D9D9D9; border-radius: 6px; font-size: 12px; color: #5f6368; background: #fff;
-              padding: 5px 9px; overflow: hidden; white-space: nowrap; }
-    .sp-sel::after { content: "⌄"; position: absolute; right: 8px; top: 2px; color: #5f6368; }
-    .sp-card { width: 293px; height: 62px; background: #F6F7F9; border-radius: 8px; }
-    .sp-card i { position: absolute; left: 12px; top: 12px; width: 26px; height: 26px; border-radius: 50%; }
-    .sp-card b { position: absolute; left: 48px; top: 10px; font-size: 9.5px; letter-spacing: .04em; }
-    .sp-card span { position: absolute; left: 48px; top: 24px; width: 200px; font-size: 9.5px; color: #5f6368; line-height: 1.3; }
-    .sp-card em { position: absolute; left: 256px; top: 12px; width: 26px; height: 13px; border-radius: 7px; background: #C4C7C5; }
-    .sp-card em u { position: absolute; left: 1px; top: 1px; width: 11px; height: 11px; border-radius: 50%; background: #fff; }
-    .sp-btn { height: 26px; border-radius: 6px; font-size: 11px; font-weight: 500; text-align: center; line-height: 26px; }
-    #fld .ty { color: #1f1f1f; white-space: nowrap; overflow: hidden; clip-path: inset(0 100% 0 0); }
+    .sp-t { font-size: 38px; font-weight: 700; } .sp-x { font-size: 44px; color: #5f6368; }
+    .sp-l { font-size: 26px; font-weight: 700; line-height: 1.3; }
+    .sp-a { font-size: 30px; color: #1a73e8; border-bottom: 2px dashed #1a73e8; }
+    .sp-s { font-size: 26px; color: #5f6368; line-height: 1.3; }
+    .sp-box { border: 2px solid #D9D9D9; border-radius: 12px; font-size: 30px; color: #5f6368; background: #fff;
+              overflow: hidden; white-space: nowrap; box-sizing: border-box; }
+    .sp-sel::after { content: "⌄"; position: absolute; right: 18px; top: -6px; color: #5f6368; font-size: 32px; }
+    .sp-card { width: 450px; height: 174px; background: #F6F7F9; border-radius: 16px; }
+    .sp-card i { position: absolute; left: 18px; top: 18px; width: 48px; height: 48px; border-radius: 50%; }
+    .sp-card b { position: absolute; left: 80px; top: 28px; font-size: 26px; letter-spacing: .03em; }
+    .sp-card span { position: absolute; left: 18px; top: 74px; width: 414px; font-size: 26px; color: #5f6368; line-height: 1.25; }
+    .sp-card em { position: absolute; left: 376px; top: 20px; width: 56px; height: 28px; border-radius: 14px; background: #C4C7C5; }
+    .sp-card em u { position: absolute; left: 3px; top: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; }
+    .sp-btn { height: 64px; border-radius: 12px; font-size: 30px; font-weight: 500; text-align: center; line-height: 64px; }
+    /* the three typed lines are ONE text block (no stacked line boxes to collide under the 3D
+       tilt); each line is revealed by an empty white cover shrinking off it to the right */
+    #fld .ty { line-height: 44px; color: #1f1f1f; white-space: nowrap; }
+    #fld .tc { position: absolute; left: 2px; right: 2px; height: 44px; background: #fff; transform-origin: 100% 50%; }
     #fld .ty b { font-weight: 700; }
-    #tok span { position: absolute; left: 9px; top: 5px; }
+    #tok span { position: absolute; left: 18px; top: 0; }
     #tk2 { opacity: 0; }
-    #sel span { position: absolute; left: 9px; top: 5px; } #sv2 { opacity: 0; color: #1f1f1f; }
-    #dd { left: 482px; top: 97px; width: 293px; background: #fff; border-radius: 6px; padding: 4px 0;
+    #sel span { position: absolute; left: 18px; top: 0; } #sv2 { opacity: 0; color: #1f1f1f; }
+    #dd { left: 486px; top: 546px; width: 450px; background: #fff; border-radius: 12px; padding: 8px 0;
           box-shadow: 0 2px 6px rgba(0,0,0,.12), 0 8px 24px rgba(0,0,0,.14); transform-origin: 50% 0;
-          opacity: 0; visibility: hidden; }
-    #dd .op { position: relative; height: 26px; line-height: 26px; padding: 0 10px; font-size: 12px; color: #1f1f1f; }
+          opacity: 0; visibility: hidden; z-index: 5; }
+    #dd .op { position: relative; height: 60px; line-height: 60px; padding: 0 20px; font-size: 30px; color: #1f1f1f; }
 """
 
-
-def cam(px, py, sc, cx=540, cy=730):
-    # the window turns and scales about its own centre (396, 270): a point p of
-    # it lands at O + s*(p - O) + (x, y); this centres p on (cx, cy)
-    return (round(cx - 396 - sc * (px - 396), 1), round(cy - 270 - sc * (py - 270), 1))
+OX, OY = 486, 617      # the window's own centre: it turns and scales about it
 
 
-def V(name, px, py, sc, **rot):
-    x, y = cam(px, py, sc)
-    o = {"x": x, "y": y, "scale": sc, "rotationX": 0, "rotationY": 0, "rotationZ": 0}
+def cam(px, py, sc, cx=540, cy=760):
+    # a point p of the window lands at O + s*(p - O) + (x, y); this centres p on (cx, cy)
+    return (round(cx - OX - sc * (px - OX), 1), round(cy - OY - sc * (py - OY), 1))
+
+
+def V(name, px, py, sc, cy=760, dy=0, **rot):
+    x, y = cam(px, py, sc, cy=cy)
+    o = {"x": x, "y": round(y + dy, 1), "scale": sc, "rotationX": 0, "rotationY": 0, "rotationZ": 0}
     o.update(rot)
+    o["rotationZ"] = 0      # no roll: long UI rows stay level (and their boxes never touch)
     return "{%s}" % ", ".join("%s: %s" % (k, v) for k, v in o.items())
 
 
-WIDE = lambda **r: V("wide", 396, 270, 1.24, **r)    # noqa: E731
-FLD = lambda **r: V("fld", 239, 154, 2.15, **r)      # noqa: E731
-MOD = lambda **r: V("mod", 628, 118, 2.7, **r)       # noqa: E731
-FIL = lambda **r: V("fil", 628, 335, 2.9, **r)       # noqa: E731
-TOK = lambda **r: V("tok", 150, 344, 3.1, **r)       # noqa: E731
-TOKW = lambda **r: V("tokw", 250, 300, 1.9, **r)     # noqa: E731
+# wide: the whole window, 972 px of 1080, y 236-1470
+WIDE = lambda sc=1.0, **r: V("wide", OX, OY, sc, cy=845, **r)     # noqa: E731
+FLD = lambda sc=1.06, **r: V("fld", 486, 300, sc, cy=680, **r)     # noqa: E731  the field, whole width (its text uncut)
+MOD = lambda sc=1.7, **r: V("mod", 711, 590, sc, **r)             # noqa: E731  the select + its open list
+FIL = lambda sc=1.6, **r: V("fil", 711, 1000, sc, cy=900, **r)           # noqa: E731  ПОШУК У ФАЙЛАХ
+TOK = lambda sc=2.0, **r: V("tok", 250, 640, sc, **r)             # noqa: E731  the token field + its label
 
-js(u'  gsap.set("#win", {transformOrigin: "396px 270px"});')
+js(u'  gsap.set("#win", {transformOrigin: "%dpx %dpx"});' % (OX, OY))
+
 RING = u'boxShadow: "0 0 0 3px rgba(122,20,36,.85), 0 0 0 9px rgba(122,20,36,.14)", borderColor: "#7A1424"'
 UNRING = u'boxShadow: "0 0 0 0px rgba(122,20,36,0), 0 0 0 0px rgba(122,20,36,0)", borderColor: "#D9D9D9"'
 
@@ -228,9 +239,9 @@ js(u"""
   tl.to(["#fld", "#tok"], {%(ring)s, duration: .3}, %(dva).3f);
   tl.to(".o, .o2, #toks", {opacity: .28, duration: .5}, %(zab).3f - .25);
   full(%(a0).3f, %(a1).3f);
-""" % {"w0": WIDE(rotationX=24, rotationY=-20, rotationZ=5).replace("y: ", "y: 220 + ").replace("scale: 1.24", "scale: 1.07"),
-       "w1": WIDE(rotationX=9, rotationY=-12, rotationZ=2)[:-1] + ", duration: 1.3, ease: \"power3.out\"}",
-       "w2": WIDE(rotationX=5, rotationY=8, rotationZ=-1)[:-1] + ", duration: 2.6, ease: \"sine.inOut\"}",
+""" % {"w0": WIDE(sc=0.86, dy=240, rotationX=18, rotationY=-14, rotationZ=3),
+       "w1": WIDE(rotationX=5, rotationY=-6, rotationZ=1)[:-1] + ", duration: 1.3, ease: \"power3.out\"}",
+       "w2": WIDE(sc=0.98, rotationX=3, rotationY=5, rotationZ=-1)[:-1] + ", duration: 2.6, ease: \"sine.inOut\"}",
        "a0": a0, "a1": a1, "dva": t_dva, "zab": t_zab, "ring": RING})
 g.sfx("whoosh-short", a0); g.sfx("click", t_dva); g.sfx("whoosh-short", a1)
 
@@ -244,14 +255,16 @@ js(u"""
   tl.set("#win", %(f0)s, %(b0).3f);
   tl.to("#win", %(f1)s, %(b0).3f + .1);
   tl.to("#fld", {%(ring)s, duration: .3}, %(b0).3f + .7);
-  tl.to("#ty1", {clipPath: "inset(0 0%% 0 0)", duration: .7, ease: "steps(22)"}, %(skr).3f - .1);
-  tl.to("#ty2", {clipPath: "inset(0 0%% 0 0)", duration: .6, ease: "steps(18)"}, %(aud).3f - .05);
-  tl.to("#ty3", {clipPath: "inset(0 0%% 0 0)", duration: .8, ease: "steps(24)"}, %(kon).3f - .1);
+  tl.to("#ty1", {scaleX: 0, duration: .7, ease: "steps(22)"}, %(skr).3f - .1);
+  tl.to("#ty2", {scaleX: 0, duration: .6, ease: "steps(18)"}, %(aud).3f - .05);
+  tl.to("#ty3", {scaleX: 0, duration: .8, ease: "steps(24)"}, %(kon).3f - .1);
   tl.to("#fld", {%(unring)s, duration: .3}, %(mod).3f - .5);
   tl.to("#win", %(m1)s, %(mod).3f - .55);
   tl.fromTo("#dd", {autoAlpha: 0, scaleY: .6}, X({autoAlpha: 1, scaleY: 1, duration: .3, ease: "power2.out"}), %(obyr).3f);
   tl.to("#opH", {backgroundColor: "#F3E7E8", duration: .15}, %(haiku).3f - .25);
+  tl.to("#kl, #kv, #cw", {autoAlpha: 0, duration: .15}, %(obyr).3f);
   tl.to("#dd", {autoAlpha: 0, duration: .2}, %(haiku).3f + .35);
+  tl.to("#kl, #kv, #cw", {autoAlpha: 1, duration: .2}, %(haiku).3f + .5);
   tl.to("#sv1", {opacity: 0, duration: .1}, %(haiku).3f + .35);
   tl.to("#sv2", {opacity: 1, duration: .1}, %(haiku).3f + .4);
   tl.to("#sel", {%(ring)s, duration: .3}, %(haiku).3f + .4);
@@ -259,10 +272,10 @@ js(u"""
   full(%(b0).3f, %(b1).3f);
 """ % {"b0": b0, "b1": b1, "skr": t_skr, "aud": t_aud, "kon": t_kon, "mod": t_mod, "obyr": t_obyr,
        "haiku": t_haiku, "ring": RING, "unring": UNRING,
-       "f0": FLD(rotationX=14, rotationY=-16, rotationZ=3).replace("scale: 2.15", "scale: 1.9"),
-       "f1": FLD(rotationX=4, rotationY=-6, rotationZ=1)[:-1] + ", duration: 1.6, ease: \"power3.out\"}",
-       "m1": MOD(rotationX=-3, rotationY=9)[:-1] + ", duration: 1.2, ease: \"power3.inOut\"}",
-       "m2": MOD(rotationX=-1, rotationY=4).replace("scale: 2.7", "scale: 2.45")[:-1] + ", duration: 1.6, ease: \"sine.inOut\"}"})
+       "f0": FLD(sc=0.95, rotationX=10, rotationY=-8, rotationZ=2),
+       "f1": FLD(rotationX=3, rotationY=-2, rotationZ=0.5)[:-1] + ", duration: 1.6, ease: \"power3.out\"}",
+       "m1": MOD(rotationX=0, rotationY=9)[:-1] + ", duration: 1.2, ease: \"power3.inOut\"}",
+       "m2": WIDE(rotationX=0, rotationY=3)[:-1] + ", duration: 1.6, ease: \"sine.inOut\"}"})
 g.sfx("whoosh-short", b0); g.sfx("typing", t_skr - 0.1); g.sfx("typing", t_kon - 0.1)
 g.sfx("whoosh-short", t_mod - 0.55); g.sfx("click-soft", t_obyr); g.sfx("click", t_haiku + 0.35)
 g.sfx("whoosh-short", b1)
@@ -283,6 +296,8 @@ js(u'''
   pop("#ceq", %.3f);
   sink("#cmp", %.3f);
 ''' % (t_son - 0.25, t_hai2 - 0.05, t_tri - 0.05, t_rizn, t_ido - 0.35))
+# MEME 1 — «а гроші зекономиш.»: deal-with-it hamster, right of her head, before the card
+g.meme(F, J, "35", E(u"зекономиш.", 34.5) + 0.05, dur=0.85, slot="r")
 g.sfx("pop", t_son - 0.25); g.sfx("pop", t_hai2); g.sfx("kaching", t_dor); g.sfx("click-soft", t_rizn)
 
 # FULL 3 — «ПОШУК У ФАЙЛАХ» goes grey; it all goes into the instruction --------
@@ -298,10 +313,10 @@ js(u"""
   tl.to("#fld", {%(ring)s, duration: .3}, %(mozh).3f + .9);
   full(%(c0).3f, %(c1).3f);
 """ % {"c0": c0, "c1": c1, "zav": t_zav, "prop": t_prop, "mozh": t_mozh, "ring": RING, "unring": UNRING,
-       "w0": WIDE(rotationX=-14, rotationY=18, rotationZ=-3).replace("scale: 1.24", "scale: 1.1"),
-       "w1": WIDE(rotationX=-5, rotationY=10, rotationZ=-1)[:-1] + ", duration: 1.0, ease: \"power3.out\"}",
-       "f1": FIL(rotationX=2, rotationY=-8)[:-1] + ", duration: 1.2, ease: \"power3.inOut\"}",
-       "f2": FLD(rotationX=3, rotationY=7, rotationZ=-1)[:-1] + ", duration: 1.3, ease: \"power3.inOut\"}"})
+       "w0": WIDE(sc=0.9, dy=200, rotationX=0, rotationY=12, rotationZ=-2),
+       "w1": WIDE(rotationX=0, rotationY=6, rotationZ=-1)[:-1] + ", duration: 1.0, ease: \"power3.out\"}",
+       "f1": FIL(rotationX=0, rotationY=-5)[:-1] + ", duration: 1.2, ease: \"power3.inOut\"}",
+       "f2": FLD(rotationX=0, rotationY=2, rotationZ=-0.5)[:-1] + ", duration: 1.3, ease: \"power3.inOut\"}"})
 g.sfx("whoosh-short", c0); g.sfx("whoosh-short", t_zav - 0.45); g.sfx("click-soft", t_prop)
 g.sfx("whoosh-short", t_mozh - 0.3); g.sfx("whoosh-short", c1)
 
@@ -353,10 +368,10 @@ js(u"""
   tl.to("#win", %(t3)s, %(vpl).3f - .6);
   full(%(d0).3f, %(d1).3f);
 """ % {"d0": d0, "d1": d1, "t2k": t_2000, "adek": t_adek, "vpl": t_vpl, "ring": RING, "unring": UNRING,
-       "t0": TOK(rotationX=16, rotationY=14, rotationZ=-2).replace("scale: 3.1", "scale: 2.6"),
-       "t1": TOK(rotationX=3, rotationY=4)[:-1] + ", duration: 1.2, ease: \"power3.out\"}",
-       "t2": TOK(rotationX=2, rotationY=-6).replace("scale: 3.1", "scale: 2.8")[:-1] + ", duration: 2.6, ease: \"sine.inOut\"}",
-       "t3": WIDE(rotationX=8, rotationY=-12, rotationZ=2)[:-1] + ", duration: 1.4, ease: \"power3.inOut\"}"})
+       "t0": TOK(sc=1.6, rotationX=0, rotationY=12, rotationZ=-2),
+       "t1": TOK(rotationX=0, rotationY=4)[:-1] + ", duration: 1.2, ease: \"power3.out\"}",
+       "t2": TOK(sc=1.85, rotationX=0, rotationY=-6)[:-1] + ", duration: 2.6, ease: \"sine.inOut\"}",
+       "t3": WIDE(rotationX=0, rotationY=-6, rotationZ=1)[:-1] + ", duration: 1.4, ease: \"power3.inOut\"}"})
 g.sfx("whoosh-short", d0); g.sfx("click", t_2000); g.sfx("whoosh-short", t_vpl - 0.6); g.sfx("whoosh-short", d1)
 
 # 7 · ABOVE — «Пиши коротко.» into the instruction, then again and again -------
@@ -377,6 +392,10 @@ js(u'''
 ''' % (t_pysav - 0.3, t_propys, t_dekil - 0.05, t_raziv + 0.15, t_tomu2 + 0.1))
 g.sfx("pop", t_pysav - 0.3); g.sfx("typing", t_propys); g.sfx("typing", t_dekil - 0.05)
 
+# MEME 2 — «сам він про це не здогадається»: the clueless goat, above her head,
+# in the gap between the instruction card and the DM
+g.meme(F, J, "44", E(u"здогадається,", 93.1) + 0.05, dur=0.85, slot="top")
+
 # 8 · ABOVE — glass DM: left alone it writes an essay -------------------------
 t_pysaty, t_vel, t_rozsh, t_posl, e_dali = (S(u"писати", 94.77), S(u"великі,", 95.27), S(u"розширені", 96.04),
                                            S(u"послуги", 98.22), E(u"далі.", 99.44))
@@ -394,8 +413,8 @@ js(u'''
   tl.fromTo("#g2", {height: 0, autoAlpha: 0}, X({height: "auto", autoAlpha: 1, duration: .45, ease: "power2.out"}), %.3f);
   tl.fromTo("#g3", {height: 0, autoAlpha: 0}, X({height: "auto", autoAlpha: 1, duration: .45, ease: "power2.out"}), %.3f);
   sink("#dm", %.3f);
-''' % (t_pysaty - 0.5, t_vel - 0.1, t_rozsh + 0.1, t_posl - 0.2, e_dali + 0.15))
-g.sfx("pop", t_pysaty - 0.5); g.sfx("notification", t_vel); g.sfx("notification", t_posl - 0.2)
+''' % (t_pysaty - 0.2, t_vel - 0.1, t_rozsh + 0.1, t_posl - 0.2, e_dali + 0.15))
+g.sfx("pop", t_pysaty - 0.2); g.sfx("notification", t_vel); g.sfx("notification", t_posl - 0.2)
 
 # 9 · CTA — who it is for, one card at a time; «Став + в коментарях» -----------
 t_stav = S(u"став", 109.68)

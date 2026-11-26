@@ -10,16 +10,16 @@ fill it on $20, only three long reels fill it, and on €100 it barely moves.
 Only numbers she says: $20, 5 годин, 5 рілсів, 2-3 хв, 5-6 хв, 3 рілси,
 €100, 10-15.
 
-Beats: behind «Claude» (cover) -> HALF 1 the scheme: two equal tasks, very
+Beats: behind «Claude» (cover) -> meme 12 on «непередбачувана» -> HALF 1 the scheme: two equal tasks, very
 different token bars -> FULL 1 the Claude limit window: $20, zoom into the
 5-hour bar, five reels fill it -> shuffle: експертні відео / з суфлера /
-2-3 хвилини / більше ніж 5 -> shuffle: 5-6 хвилин / багато вставок / помилки
+2-3 хвилини -> meme 35 «більше, ніж пʼять» -> shuffle: 5-6 хвилин / багато вставок / помилки
 -> FULL 2 the same window, three reels fill the bar -> glass card: «Оптимізація
 токенів» switches on -> HALF 2 the scheme: шаблон анімації -> рілс, «з нуля»
 struck -> glass pill «Claude · €100» -> behind «10–15» -> glass limit card: the
 bar is a sliver, barely moves -> ends on her.
 
-usage: python3 build.py   (then: mattes, sfx mix — see work/b1120/AGENT-BRIEF.md)
+usage: python3 build.py   (then: RUTA/BUILD-BRIEF.md steps 6-10)
 """
 import os
 import sys
@@ -32,6 +32,7 @@ from gstyle import G, Words, load_caps, mark  # noqa: E402
 NN = "60"
 DUR = 68.550           # (2057 plate frames - 0.5) / 30
 g = G(dur=DUR, reel=NN)
+g.cta_start = DUR - 2.0   # no CTA line left (ТЕСТ is cut); her rule for this reel: memes off the last 2 s
 g.PANEL_TOP = 820      # panel captions: bottom 938, her pushed hair below
 
 FIX = {
@@ -78,6 +79,8 @@ EXTRA = u'''
            border-radius: 999px; }
     .eur svg path { fill: #7A1424; }
     .eur b { color: #7A1424; }
+    /* as reel-57: the plain white card in the shuffle slot, a size up */
+    .shuf .chip { font-size: 48px; padding: 18px 34px; }
 '''
 
 # 1 · BEHIND — «Claude» (the cover frame: the hook word that attracts) -------------
@@ -122,7 +125,7 @@ t_20, t_5h, t_zmon, t_5r = S(u"20", 21.20), S(u"пʼятигодинний", 22.
 g0 = S(u"Тоді", 38.47) - 0.2
 g1 = E(u"ліміт.", 40.85) + 0.1
 t_tri, t_5h2 = S(u"три", 39.11), S(u"пʼятигодинний", 40.27)
-REEL = u'<i class="rl"><svg viewBox="0 0 24 24" width="40" height="40"><path d="M8 5v14l11-7z" fill="#fff"/></svg></i>'
+REEL = u'<i class="rl"><svg viewBox="0 0 24 24" width="64" height="64"><path d="M8 5v14l11-7z" fill="#fff"/></svg></i>'
 SEGA = u"".join(u'<div class="sg" id="sa%d">%s</div>' % (i, REEL) for i in range(5))
 SEGB = u"".join(u'<div class="sg" id="sb%d">%s</div>' % (i, REEL) for i in range(3))
 C.append(u"""
@@ -136,42 +139,42 @@ C.append(u"""
               <div class="cw-n"><span id="nA">5 рілсів</span><span id="nB">3 рілси</span></div>
             </div>
           </div>
-        </div>""" % {"mk": mark("claude", 54), "a": SEGA, "b": SEGB})
+        </div>""" % {"mk": mark("claude", 64), "a": SEGA, "b": SEGB})
 EXTRA += u"""
     #cover { background: radial-gradient(120% 80% at 50% 35%, #FFFFFF 0%, #F6EFEF 70%, #F1E7E7 100%); }
     #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 2200px; }
-    #win { position: absolute; left: 0; top: 0; width: 840px; height: 600px; background: #fff;
-           border-radius: 22px; font-family: "Google Sans", sans-serif; color: #1f1f1f;
+    #win { position: absolute; left: 0; top: 0; width: 900px; height: 1000px; background: #fff;
+           border-radius: 28px; font-family: "Google Sans", sans-serif; color: #1f1f1f;
            box-shadow: 0 2px 6px rgba(36,25,25,.10), 0 30px 80px rgba(36,25,25,.22);
-           transform-origin: 0 0; will-change: transform; padding: 36px 42px; }
-    .cw-top { display: flex; align-items: center; gap: 14px; font-size: 42px; font-weight: 700; }
+           transform-origin: 0 0; will-change: transform; padding: 44px 44px; }
+    .cw-top { display: flex; align-items: center; gap: 16px; font-size: 52px; font-weight: 700; height: 70px; }
     .cw-top svg path { fill: #7A1424; }
-    .cw-plan { margin-top: 28px; display: flex; align-items: baseline; gap: 14px; padding: 18px 22px;
-               border: 2px solid #ECE6E6; border-radius: 16px; }
-    .cw-l { font-size: 32px; color: #574142; flex: 1; }
-    .cw-plan b { font-size: 66px; color: #241919; letter-spacing: -0.02em; }
-    .cw-m { font-size: 28px; color: #574142; }
-    .cw-lim { margin-top: 26px; padding: 20px 22px; background: #FBF6F6; border-radius: 16px; }
-    .cw-l2 { font-size: 36px; font-weight: 700; color: #241919; margin-bottom: 16px; }
-    .cw-bar { position: relative; height: 92px; border-radius: 14px; background: #EFE3E3; overflow: hidden; }
-    .segs { position: absolute; inset: 4px; display: flex; gap: 4px; }
-    .sg { flex: 1; border-radius: 10px; background: #7A1424; transform-origin: 0 50%; transform: scaleX(0);
+    .cw-plan { margin-top: 36px; display: flex; align-items: baseline; gap: 16px; padding: 26px 30px;
+               border: 3px solid #ECE6E6; border-radius: 22px; height: 150px; box-sizing: border-box; }
+    .cw-l { font-size: 40px; color: #574142; flex: 1; }
+    .cw-plan b { font-size: 88px; color: #241919; letter-spacing: -0.02em; line-height: 1; }
+    .cw-m { font-size: 34px; color: #574142; }
+    .cw-lim { margin-top: 36px; padding: 34px 30px; background: #FBF6F6; border-radius: 22px; height: 580px; box-sizing: border-box; }
+    .cw-l2 { font-size: 50px; font-weight: 700; color: #241919; margin-bottom: 30px; }
+    .cw-bar { position: relative; height: 280px; border-radius: 20px; background: #EFE3E3; overflow: hidden; }
+    .segs { position: absolute; inset: 6px; display: flex; gap: 6px; }
+    .sg { flex: 1; border-radius: 14px; background: #7A1424; transform-origin: 0 50%; transform: scaleX(0);
           display: flex; align-items: center; justify-content: center; }
     .rl { display: block; line-height: 0; }
-    .cw-n { position: relative; height: 54px; margin-top: 14px; font-size: 42px; font-weight: 700; color: #7A1424; }
+    .cw-n { position: relative; height: 90px; margin-top: 30px; font-size: 76px; font-weight: 700; color: #7A1424; }
     .cw-n span { position: absolute; left: 0; top: 0; opacity: 0; }
 """
-# camera: the window turns and scales about its centre (380, 260); a point p of
+# camera: the window (900x1000) turns and scales about its centre (450, 500); a point p of
 # it lands at O + s*(p - O) + (x, y). Wide = whole window; BAR = the limit block.
-def cam(px, py, sc, cx=540, cy=830):
-    return (round(cx - 420 - sc * (px - 420), 1), round(cy - 300 - sc * (py - 300), 1))
-WIDE = (1.08,) + cam(420, 300, 1.08)
-PLAN = (1.22,) + cam(420, 200, 1.22)
-BAR = (1.32,) + cam(420, 420, 1.32)
+def cam(px, py, sc, cx=540, cy=820):
+    return (round(cx - 450 - sc * (px - 450), 1), round(cy - 500 - sc * (py - 500), 1))
+WIDE = (1.05,) + cam(450, 500, 1.05)          # 945 x 1050: ~88 % of the width, y 295-1345
+PLAN = (1.12,) + cam(450, 330, 1.12, cy=660)   # a push toward the $20 plan, top at y 290
+BAR = (1.22,) + cam(450, 650, 1.22, cy=1010)   # the 5-hour limit block; sides just past the frame (deliberate)
 seg_a = u"\n".join(u'  tl.to("#sa%d", {scaleX: 1, duration: .25, ease: "power2.out"}, %.3f);' % (i, t_zmon + 0.12 * i + 0.15) for i in range(5))
 seg_b = u"\n".join(u'  tl.to("#sb%d", {scaleX: 1, duration: .35, ease: "power2.out"}, %.3f);' % (i, t_tri + 0.22 * i) for i in range(3))
 js(u"""
-  gsap.set("#win", {transformOrigin: "420px 300px"});
+  gsap.set("#win", {transformOrigin: "450px 500px"});
   gsap.set("#segB, #nB", {autoAlpha: 0});
   gsap.set("#win", {x: %(wx)s, y: %(wy)s + 220, scale: %(ws)s * .86, rotationX: 24, rotationY: -20, rotationZ: 5});
   tl.to("#win", {x: %(px)s, y: %(py)s, scale: %(ps)s, rotationX: 8, rotationY: -10, rotationZ: 2, duration: 1.2, ease: "power3.out"}, %(f0)s + .15);
@@ -200,10 +203,10 @@ g.sfx("whoosh-short", g0); g.sfx("pop", t_tri); g.sfx("whoosh-short", g1)
 
 # 4 · SHUFFLE — what kind of video gets five, what kind gets three -----------------
 L1 = [(u"експертні відео", S(u"експертні", 27.19)), (u"з суфлера", S(u"з суфлера,", 29.37)),
-      (u"2–3 хвилини", S(u"дві-три", 30.92)), (u"більше ніж 5", S(u"більше,", 32.92))]
+      (u"2–3 хвилини", S(u"дві-три", 30.92))]   # «більше, ніж пʼять» is the meme's beat, not a chip
 L2 = [(u"5–6 хвилин", S(u"5-6,", 35.60)), (u"багато вставок", S(u"багато", 36.42)),
       (u"помилки", S(u"помилок.", 37.82))]
-for tag, lst, end in (("p", L1, E(u"пʼять.", 33.48) + 0.2), ("q", L2, g0)):
+for tag, lst, end in (("p", L1, S(u"більше,", 32.92) - 0.1), ("q", L2, g0)):
     for i, (txt, t) in enumerate(lst):
         F.append(u'        <div id="%s%d" class="shuf hid"><span class="chip"><i></i>%s</span></div>' % (tag, i, txt))
         g.sfx("pop", t - 0.1)
@@ -274,6 +277,12 @@ js(u'''
   sink("#lim", %.3f);
 ''' % (t_ne - 0.35, t_ne + 0.3, DUR - 0.45))
 g.sfx("pop", t_ne - 0.35)
+
+# 10 · MEMES — comic relief (assets/memes/MEMES.md), slapped on above her head ---------
+# 12 hamster praying: «юсадж це штука непередбачувана» — you can't know, you hope.
+# 35 hamster in sunglasses: «тоді можна навіть і більше, ніж пʼять» — the win.
+g.meme(F, J, "12", round(E(u"непередбачувана,", 7.93) + 0.1, 3), dur=1.2, slot="top")
+g.meme(F, J, "35", round(E(u"пʼять.", 33.48) + 0.1, 3), dur=1.2, slot="top")
 
 # ---------------------------------------------------------------- half screens + their mattes
 for i, (a, b) in enumerate(HALF):

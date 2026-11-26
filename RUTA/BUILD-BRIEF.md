@@ -37,7 +37,8 @@ don't ship a reel with none unless truly nothing fits.
   The kit refuses a 4th image, one touching the CTA, or an unplanned overlap, and
   copies the files into `reel-NN/assets/memes/`.
 - Place it just after the word/phrase it reacts to (`E(word) + 0.1`), never mid-line.
-- A pair only with a long clear stretch around it. Memes sit under captions and over her footage;
+- Slapped straight on, no frame or card, in her zones: slot `top` (above her head), `r` (right of
+  her head), `l` (low left). A pair only with a long clear stretch around it. Memes sit under captions and over her footage;
   keep them off beats that already have a behind-me word, card, half or full screen.
 - First 3 s allowed if it fits; profanity allowed; English reel -> caption-free memes only.
 - Write the picks into `PLAN.md` (meme NN, time, the line it reacts to, why).
@@ -107,7 +108,7 @@ Never `npx hyperframes` / `./hf` (broken here). Use `$HF`. Never HeyGen.
    each, half screens ≤ 12 s each, at most two of each).
 8. `cd reel-NN && $HF check` → 0 errors (contrast warnings on rebuilt UI
    hint text are OK).
-9. **Render, locally**: `rm -rf reel-NN/renders/work-*; $H $HF render reel-NN -o reel-NN/renders/REEL-NN.mp4 --workers 3 --low-memory-mode --quiet`
+9. **Render, locally** (over ~70 s, or when it refuses for disk: prefix `HF_DE_PARALLEL_STREAM=true` — streaming encode): `rm -rf reel-NN/renders/work-*; $H $HF render reel-NN -o reel-NN/renders/REEL-NN.mp4 --workers 3 --low-memory-mode --quiet`
    (run from `RUTA/`; if the CLI wants the dir differently, `cd reel-NN` first).
 10. **Verify** (all must hold, or fix and re-render):
     - frames == plate frames; `ffmpeg -v error -i REEL-NN.mp4 -f null -` prints nothing
@@ -136,3 +137,15 @@ her side: lines she improvised that change meaning; example UI text you invented
   `reels/`), schedule with Buffer (IG reel shared to feed + TikTok) at the slots
   in `work/b1120/POSTING.md`, caption = RUTA `write_caption` first line + the
   reel's own CTA. RUTA status → `ready`; after it goes out, `mark_posted`.
+
+## Her RUTA app — current UI only (her call, 2026-11-23)
+
+The old `app-ruta.jpg` home screen («Добрий день, Рута») is a year old and is
+archived — never show it. The CURRENT app lives on https://www.ruta.media/ruta-app
+and is saved in `app-screenshots/site-2026-11/`: real screen recordings
+(`vid-home`, `vid-braindump`, `vid-reel`, `vid-stories`, `vid-car-types`,
+`vid-threads`, `vid-plan`, `vid-memory`, 780×1688) and 10 real reviews
+(`r01–r10.webp`). When she talks about RUTA, play these recordings inside a
+clean phone in the full-screen platform-ad sequence; when she talks about how
+people like it, pile the reviews up BEHIND her (matte) so it looks like a lot.
+If the site has changed, re-download from it before building.
