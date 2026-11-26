@@ -1,0 +1,272 @@
+{
+  "version": 1,
+  "historyId": "737c272d-2658-4ac8-a963-dbc8ee158337",
+  "currentRevision": "57f7ac84-564b-4e53-b357-70c7d0935829",
+  "pendingChanges": false,
+  "files": {
+    "assets/fonts/GoogleSans-400.ttf": {
+      "hash": "b2f6dc74bbf5d5b06ef424eb64e1e50a606c747a834332bfe57d134cced660ea",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/b2/b2f6dc74bbf5d5b06ef424eb64e1e50a606c747a834332bfe57d134cced660ea"
+    },
+    "assets/fonts/GoogleSans-500.ttf": {
+      "hash": "fe737f2be423cc7510110ba17cd1fc49e19b2f55448f948f653facf1f165d884",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/fe/fe737f2be423cc7510110ba17cd1fc49e19b2f55448f948f653facf1f165d884"
+    },
+    "assets/fonts/GoogleSans-700.ttf": {
+      "hash": "7e045403cecf3fbee1e2ad8dc5354df6417a1f9f1278c901fee8ac9f4bc5e5d4",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/7e/7e045403cecf3fbee1e2ad8dc5354df6417a1f9f1278c901fee8ac9f4bc5e5d4"
+    },
+    "assets/fonts/Pangolin.ttf": {
+      "hash": "5a955a14fd95baa9e8bac95985c7e36d7ddbbc37205c3797d61d5439441ef2db",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/5a/5a955a14fd95baa9e8bac95985c7e36d7ddbbc37205c3797d61d5439441ef2db"
+    },
+    "assets/fonts/ProductSans-Black.woff": {
+      "hash": "8b8e7a8014c240a8f02436c4f99c2d63b8c070724caef64337c7db2c8c83e462",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/8b/8b8e7a8014c240a8f02436c4f99c2d63b8c070724caef64337c7db2c8c83e462"
+    },
+    "assets/fonts/ProductSans-Bold.ttf": {
+      "hash": "c1bd19e0b629291f56f7cf828a2e832124fd9164c063b1ae901d5439f1096163",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/c1/c1bd19e0b629291f56f7cf828a2e832124fd9164c063b1ae901d5439f1096163"
+    },
+    "assets/fonts/ProductSans-Medium.ttf": {
+      "hash": "68f690d4d66bfe861bada25318be1c9aa54b453250d22241d0615db686cb2ee3",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/68/68f690d4d66bfe861bada25318be1c9aa54b453250d22241d0615db686cb2ee3"
+    },
+    "assets/fonts/ProductSans-Medium.woff": {
+      "hash": "63c5fb0f1314f555587c1e4c991f148da32128d376148385cff604a499385b6d",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/63/63c5fb0f1314f555587c1e4c991f148da32128d376148385cff604a499385b6d"
+    },
+    "assets/fonts/ProductSans-Regular.ttf": {
+      "hash": "744c8a7361c451f94009ee1d640420f1a9d6835082ef74ac7bbb92a8f4589589",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/74/744c8a7361c451f94009ee1d640420f1a9d6835082ef74ac7bbb92a8f4589589"
+    },
+    "assets/grain.png": {
+      "hash": "9c7d3be2390bf74608bc41ae748d3e1489ce57a9558e2c358c9ebc1c120973e7",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/9c/9c7d3be2390bf74608bc41ae748d3e1489ce57a9558e2c358c9ebc1c120973e7"
+    },
+    "assets/memes/20-dog-glasses-phone-treba-zh-take.jpg": {
+      "hash": "391afefdada8f0564f4e9a510f0d93aebb6b6b4ab236f2c5bd198e9bf5f2ff1e",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/39/391afefdada8f0564f4e9a510f0d93aebb6b6b4ab236f2c5bd198e9bf5f2ff1e"
+    },
+    "build.py": {
+      "hash": "800faf31909e5ad3fc5d313792e062baeab4df57dec9d6aac987e7704a7aca3c",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/80/800faf31909e5ad3fc5d313792e062baeab4df57dec9d6aac987e7704a7aca3c"
+    },
+    "hyperframes.json": {
+      "hash": "c1174bf0e2f94d48b99c414a9f1fdba65be898c4fb8a9464e773a632d22d15eb",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/c1/c1174bf0e2f94d48b99c414a9f1fdba65be898c4fb8a9464e773a632d22d15eb"
+    },
+    "index.html": {
+      "hash": "2a80dd474eaf8d272161d17ac554a41641517a51792642f32e33296dd349e16c",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/2a/2a80dd474eaf8d272161d17ac554a41641517a51792642f32e33296dd349e16c"
+    },
+    "meta.json": {
+      "hash": "6f2222cb90356addc88c4574fa047c6c1b5120b818c69d193fe1357ae73124ee",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/6f/6f2222cb90356addc88c4574fa047c6c1b5120b818c69d193fe1357ae73124ee"
+    },
+    "package.json": {
+      "hash": "f74568718e2b39ebe0ce3c6e14858b248dd9131dfc2b93254364462514182707",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/f7/f74568718e2b39ebe0ce3c6e14858b248dd9131dfc2b93254364462514182707"
+    },
+    "sfx.json": {
+      "hash": "cfb59f7c2ecbdab26e3d5fb4cd86a6621b4ee6d9b0fe87c8b427d9ca22074b52",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/cf/cfb59f7c2ecbdab26e3d5fb4cd86a6621b4ee6d9b0fe87c8b427d9ca22074b52"
+    },
+    "assets/base.mp4": {
+      "hash": "345863a29c3ba8e662330f16fded8bb5f2a5f2ec8654fbb658f5716ec9475358",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/34/345863a29c3ba8e662330f16fded8bb5f2a5f2ec8654fbb658f5716ec9475358"
+    },
+    "assets/mattes/b1.webm": {
+      "hash": "fc6ec66c66300f66ae3217a9392586e386b2c5e080aea0abbce66900d664f8c7",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/fc/fc6ec66c66300f66ae3217a9392586e386b2c5e080aea0abbce66900d664f8c7"
+    },
+    "assets/underlay.png": {
+      "hash": "dc52c9b1d7491fad5b693a9568e639cc65b53dcd902b925c2938a71e4638424a",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/dc/dc52c9b1d7491fad5b693a9568e639cc65b53dcd902b925c2938a71e4638424a"
+    },
+    "assets/voice.mp4": {
+      "hash": "345863a29c3ba8e662330f16fded8bb5f2a5f2ec8654fbb658f5716ec9475358",
+      "content": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/34/345863a29c3ba8e662330f16fded8bb5f2a5f2ec8654fbb658f5716ec9475358"
+    }
+  },
+  "revisions": {
+    "913fba85-be4b-4526-b356-5884f8ee0214": {
+      "actor": {
+        "kind": "outside",
+        "name": "Outside"
+      },
+      "label": "Changed outside the app",
+      "startedAt": 1795450821775,
+      "endedAt": 1795450821779,
+      "files": {
+        "assets/js/rough-4.6.6.js": {
+          "before": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/68/6853af8619532f3939b156cd16824d2e14f31e71d3df306ad5558eeafacab194",
+          "after": null
+        },
+        "build.py": {
+          "before": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/9e/9e55bd6c74e114920eaf7f86def43318eec6b470c22d1c63092e3eb5e2b6a79b",
+          "after": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/b7/b7b44d2b50991c0ee9d7f12fc22a8497972735aa85b3a92d73279c423b5f2e19"
+        },
+        "index.html": {
+          "before": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/5d/5d8550b0c3365f5dfa957e61076e250b695977a9c386e3dc250cd0610e29cee2",
+          "after": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/9a/9a3ce1755f248f9391c6b2895cae5b8cf6f6b669ab16e103d25fa77e0bdba62b"
+        }
+      }
+    },
+    "57f7ac84-564b-4e53-b357-70c7d0935829": {
+      "actor": {
+        "kind": "outside",
+        "name": "Outside"
+      },
+      "label": "Changed outside the app",
+      "startedAt": 1795451389219,
+      "endedAt": 1795451389224,
+      "files": {
+        "build.py": {
+          "before": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/b7/b7b44d2b50991c0ee9d7f12fc22a8497972735aa85b3a92d73279c423b5f2e19",
+          "after": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/80/800faf31909e5ad3fc5d313792e062baeab4df57dec9d6aac987e7704a7aca3c"
+        },
+        "index.html": {
+          "before": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/9a/9a3ce1755f248f9391c6b2895cae5b8cf6f6b669ab16e103d25fa77e0bdba62b",
+          "after": "/root/.cache/hyperframes/history/737c272d-2658-4ac8-a963-dbc8ee158337/blobs/2a/2a80dd474eaf8d272161d17ac554a41641517a51792642f32e33296dd349e16c"
+        }
+      }
+    }
+  },
+  "checks": {
+    "latest": {
+      "revision": "913fba85-be4b-4526-b356-5884f8ee0214",
+      "id": "89613513-7579-43e5-b623-52dd6db0479b"
+    },
+    "revisions": {
+      "913fba85-be4b-4526-b356-5884f8ee0214": [
+        {
+          "id": "89613513-7579-43e5-b623-52dd6db0479b",
+          "scope": "project",
+          "report": "/home/user/reel-editor-machine/RUTA/reel-73/.hyperframes/artifacts/checks/89613513-7579-43e5-b623-52dd6db0479b.json",
+          "metadata": {
+            "ok": true,
+            "browserSkipped": false,
+            "options": {
+              "samples": 9,
+              "atTransitions": false,
+              "maxIssues": 80,
+              "collapseStatic": true,
+              "tolerance": 2,
+              "timeout": 45000,
+              "cache": true,
+              "contrast": true,
+              "craft": true,
+              "strict": false,
+              "snapshots": false,
+              "safeZones": [
+                "tiktok",
+                "reels",
+                "shorts"
+              ],
+              "browserGpuMode": "auto",
+              "includeUnmounted": false
+            }
+          },
+          "createdAt": 1795450863984,
+          "contentHash": "1970e70466dbb64ed04f1cc1a48c17ad2a58ecc5446952a24235db8f6cb3934f",
+          "revision": "913fba85-be4b-4526-b356-5884f8ee0214",
+          "inputFingerprint": "3f8c733870a83a27eb5504cce4bf443c41f7cc4d4aa306921cff20e8bf65a9e1",
+          "inputScope": "local-project-files",
+          "attribution": "recorded-revision"
+        }
+      ]
+    },
+    "unversioned": [
+      {
+        "id": "d613ed17-1c75-46cd-9b63-1ff09b040bb6",
+        "scope": "project",
+        "report": "/home/user/reel-editor-machine/RUTA/reel-73/.hyperframes/artifacts/checks/d613ed17-1c75-46cd-9b63-1ff09b040bb6.json",
+        "metadata": {
+          "ok": false,
+          "browserSkipped": false,
+          "options": {
+            "samples": 9,
+            "atTransitions": false,
+            "maxIssues": 80,
+            "collapseStatic": true,
+            "tolerance": 2,
+            "timeout": 45000,
+            "cache": true,
+            "contrast": true,
+            "craft": true,
+            "strict": false,
+            "snapshots": false,
+            "safeZones": [
+              "tiktok",
+              "reels",
+              "shorts"
+            ],
+            "browserGpuMode": "auto",
+            "includeUnmounted": false
+          }
+        },
+        "createdAt": 1795450751095,
+        "contentHash": "7b524ba6aa2690baedb4a24c62f1c98099894d47ff93a60febb65ae24413f3ca",
+        "revision": null,
+        "inputFingerprint": "cd4789bf19de6bbef277d5fa7b1fa5aad6641a257b68094531085c7aa7fc7d49",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      },
+      {
+        "id": "fbc03196-1ec3-41bd-a05e-ae0f2a202342",
+        "scope": "project",
+        "report": "/home/user/reel-editor-machine/RUTA/reel-73/.hyperframes/artifacts/checks/fbc03196-1ec3-41bd-a05e-ae0f2a202342.json",
+        "metadata": {
+          "ok": false,
+          "browserSkipped": false,
+          "options": {
+            "samples": 9,
+            "atTransitions": false,
+            "maxIssues": 80,
+            "collapseStatic": true,
+            "tolerance": 2,
+            "timeout": 45000,
+            "cache": true,
+            "contrast": true,
+            "craft": true,
+            "strict": false,
+            "snapshots": false,
+            "safeZones": [
+              "tiktok",
+              "reels",
+              "shorts"
+            ],
+            "browserGpuMode": "auto",
+            "includeUnmounted": false
+          }
+        },
+        "createdAt": 1795450814110,
+        "contentHash": "7b524ba6aa2690baedb4a24c62f1c98099894d47ff93a60febb65ae24413f3ca",
+        "revision": null,
+        "inputFingerprint": "cd4789bf19de6bbef277d5fa7b1fa5aad6641a257b68094531085c7aa7fc7d49",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      }
+    ]
+  },
+  "snapshots": {
+    "latest": null,
+    "revisions": {},
+    "unversioned": []
+  },
+  "renders": {
+    "latest": {
+      "id": "e1a5d54a-1cf4-448c-8bed-faa17e63240d",
+      "completedAt": 1795451800505,
+      "output": "/home/user/reel-editor-machine/RUTA/reel-73/renders/REEL-73.mp4",
+      "status": "completed",
+      "revision": "57f7ac84-564b-4e53-b357-70c7d0935829"
+    },
+    "retainedRevisions": [
+      "57f7ac84-564b-4e53-b357-70c7d0935829",
+      "913fba85-be4b-4526-b356-5884f8ee0214"
+    ]
+  },
+  "pendingArtifactCleanup": []
+}
