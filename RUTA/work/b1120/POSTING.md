@@ -32,11 +32,9 @@ today before scheduling, and the ТЕСТ cut-fixes for 60/66/71 are in place.
 | 66 | Fri 27 Nov | 19:00 | 20:00 | reels/REEL-66.mp4 | 6b0497206dffe25404dc52a3 / 6b0497210191a6ffcb8c0531 | — |
 | 68 | Sat 28 Nov | 19:00 | 20:00 | reels/REEL-68.mp4 | 6b049a25f7265001e0cd26bd / 6b049a270191a6ffcb8d1e6c | — |
 
-## Pending — Buffer full (free plan: 10 scheduled per channel). Top up as posts go out.
+| 69 | Sat 28 Nov | 21:00 | 21:30 | reels/REEL-69.mp4 | 6b07497b3610f1bc9167a078 / 6b07497db39ac731b6fc9c78 | — |
+| 70 | Sun 29 Nov | 19:00 | 20:00 | reels/REEL-70.mp4 | 6b0749808e7e43ca693b1ed1 / 6b0749847ef3c56ccf7a4b08 | — |
+| 71 | Sun 29 Nov | 21:00 | 21:30 | reels/REEL-71.mp4 | 6b074987bffb0dd07330ef2b / 6b074988bffb0dd07330ef9e | — |
+| 72 | Mon 30 Nov | 19:00 | 20:00 | reels/REEL-72.mp4 | 6b07498ab39ac731b6fc9fb5 / 6b07498c209be591e2df70d8 | — |
 
-| reel | RUTA date | IG (Kyiv) | TikTok | Cloudinary URL | caption |
-|---|---|---|---|---|---|
-| 71 | Sun 29 Nov | 21:00 | 21:30 | https://res.cloudinary.com/vi6dvmfv/video/upload/v1795464892/reels/REEL-71.mp4 | Реальний час монтажу рілса через Клод — від 15 хвилин до години, залежно від сирого відео. |
-| 70 | Sun 29 Nov | 19:00 | 20:00 | https://res.cloudinary.com/vi6dvmfv/video/upload/v1795465277/reels/REEL-70.mp4 | CRM за 5 хвилин через Notion і Клода — без коду, без таблиць Excel. / Напиши + в коментарях 👇 |
-| 72 | Mon 30 Nov | 19:00 | 20:00 | https://res.cloudinary.com/vi6dvmfv/video/upload/v1795465755/reels/REEL-72.mp4 | Хардкод-бот чи AI-агент — різниця, яка змінить твою воронку продажів. / Пиши + у коментарях або в Direct 👇 |
-| 69 | Sat 28 Nov | 21:00 | 21:30 | https://res.cloudinary.com/vi6dvmfv/video/upload/v1795466081/reels/REEL-69.mp4 | Чотири автоматизації Claude, які зекономлять відеографці купу годин. / Збережи і перешли колезі 🔖 |
+Pending: none — 69–72 left the Notion Content Vault for Buffer on 2026-11-25.
